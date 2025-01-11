@@ -5,7 +5,6 @@ import Button from '../../components/Button';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import React, { useContext, useEffect, useState } from 'react';
-import { MdOutlineAddPhotoAlternate } from 'react-icons/md';
 import { inputsContext } from '../../components/Context';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
@@ -111,7 +110,6 @@ export default function Profile() {
                     }
                   />
                 </div>
-                {/* <MdOutlineAddPhotoAlternate className="absolute text-one text-xl -top-12 right-1 z-50" /> */}
               </div>
             </div>
 
@@ -157,7 +155,7 @@ export default function Profile() {
                 <Link href={'/myPosts'} className="w-full">
                   <h1 className="text-nowrap text-start w-full select-none cursor-pointer ">
                     <span className="text-one  text-2xl ml-2 ">#</span>
-                    وصفاتي{' '}
+                    إعلاناتي{' '}
                   </h1>
                 </Link>
                 <div className="flex items-center w-full">
@@ -168,7 +166,7 @@ export default function Profile() {
                 <Link href={'/favoritePosts'} className="w-full">
                   <h1 className="text-nowrap text-start w-full select-none cursor-pointer ">
                     <span className="text-one  text-2xl ml-2 ">#</span>
-                    وصفات أعجبتني{' '}
+                    إعلانات أعجبتني{' '}
                   </h1>
                 </Link>
                 <div className="flex items-center w-full">
@@ -176,10 +174,10 @@ export default function Profile() {
                 </div>
               </div>
               <div className="flex flex-col items-center gap-2 justify-between rounded-lg px-8 py-2 w-full my-2">
-                <Link href={'/newRecipe'} className="w-full">
+                <Link href={'/newPost'} className="w-full">
                   <h1 className="text-nowrap text-start w-full select-none cursor-pointer ">
                     <span className="text-one  text-2xl ml-2 ">#</span>
-                    إنشاء وصفة جديدة
+                    إنشاء إعلان جديد
                   </h1>
                 </Link>
                 <div className="flex items-center w-full">

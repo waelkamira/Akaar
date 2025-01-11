@@ -21,13 +21,13 @@ export default function CustomToast({
               <Image
                 priority
                 className="h-10 w-10 rounded-xl"
-                src="/bahiga.png"
+                src="https://i.imgur.com/rXaNY0v.png"
                 alt="photo"
                 fill
               />
             </div>
             <div className="ml-3 flex-1">
-              <h1 className="text-sm">بهيجة اشرق لبن</h1>
+              <h1 className="text-xl">عقار</h1>
             </div>
           </div>
         </div>

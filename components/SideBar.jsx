@@ -113,9 +113,9 @@ export default function SideBar() {
               alt="photo"
             />
           </div>
-          <div className="px-2 rounded-r-lg bg-four overflow-hidden my-4">
+          {/* <div className="px-2 rounded-r-lg bg-four overflow-hidden my-4">
             <Categories />
-          </div>
+          </div> */}
         </div>
       )}
     </div>

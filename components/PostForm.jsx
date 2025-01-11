@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import SelectComponent from './SelectComponent';
 import { inputsContext } from './Context';
@@ -28,21 +28,29 @@ export default function PostForm({ setIsVisible, isVisible, cancel = true }) {
   const userImage = CurrentUser()?.image || session?.data?.user?.image;
   const createdBy = CurrentUser()?.email;
   const { data, dispatch, addImages } = useContext(inputsContext);
-  console.log('addImages ************************', addImages);
+  // console.log('addImages ************************', addImages);
 
   const [errors, setErrors] = useState({
     propertyName: false,
-    propertyNameErrorMessage: 'حقل الوصف مطلوب',
+    propertyNameErrorMessage: 'هذا الحقل مطلوب',
+
+    propertyArea: false,
+    propertyAreaErrorMessage: 'حقل المساحة مطلوب',
+
     propertyType: false,
     propertyTypeErrorMessage: 'اختيار نوع العقار مطلوب',
+
     propertyPrice: false,
     propertyPriceErrorMessage: 'حقل السعر مطلوب',
+
     propertyCity: false,
     propertyCityErrorMessage: 'حقل المدينة مطلوب',
+
     description: false,
     descriptionErrorMessage: 'حقل الوصف مطلوب',
+
     contactPhoneNumber: false,
-    contactPhoneNumberErrorMessage: 'حقل الوصف مطلوب',
+    contactPhoneNumberErrorMessage: 'حقل السعر مطلوب',
   });
 
   const [inputs, setInputs] = useState({
@@ -62,7 +70,6 @@ export default function PostForm({ setIsVisible, isVisible, cancel = true }) {
     link: '',
     hearts: 0,
   });
-  // console.log('data', data);
   console.log('inputs ************************', inputs);
 
   useEffect(() => {
@@ -88,10 +95,6 @@ export default function PostForm({ setIsVisible, isVisible, cancel = true }) {
     addImages[4],
   ]);
 
-  if ((isVisible = false)) {
-    setErrors({ propertyName: false, description: false });
-  }
-
   async function handleSubmit(e) {
     e.preventDefault();
     setErrors({
@@ -106,19 +109,18 @@ export default function PostForm({ setIsVisible, isVisible, cancel = true }) {
 
     if (
       addImages?.length > 0 &&
-      inputs.propertyName &&
-      inputs.propertyType &&
-      inputs.propertyPrice &&
-      inputs.propertyArea &&
-      inputs.propertyCity &&
-      inputs.contactPhoneNumber &&
-      inputs.description &&
+      inputs?.propertyName &&
+      inputs?.propertyType &&
+      inputs?.propertyPrice &&
+      inputs?.propertyArea &&
+      inputs?.propertyCity &&
+      inputs?.contactPhoneNumber &&
+      inputs?.description &&
       userImage &&
       userName &&
       createdBy
     ) {
       try {
-        console.log('inputs -----------------------------------', inputs);
         const response = await fetch('/api/allPosts', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -132,7 +134,27 @@ export default function PostForm({ setIsVisible, isVisible, cancel = true }) {
 
         if (response.ok) {
           dispatch({ type: 'New_RECIPE', payload: inputs });
+          dispatch({ type: 'ADD_IMAGE', payload: [] });
+          dispatch({ type: 'PROPERTY_TYPE', payload: '' });
+          dispatch({ type: 'PROPERTY_CITY', payload: '' });
           setIsVisible(false);
+          setInputs({
+            image: '',
+            image1: '',
+            image2: '',
+            image3: '',
+            image4: '',
+            propertyName: '',
+            propertyType: '',
+            propertyPrice: '',
+            propertyCity: '',
+            propertyArea: '',
+            contactPhoneNumber: '',
+            description: '',
+            link: '',
+            hearts: 0,
+          });
+
           toast.custom((t) => (
             <CustomToast
               t={t}
@@ -150,23 +172,8 @@ export default function PostForm({ setIsVisible, isVisible, cancel = true }) {
             contactPhoneNumber: false,
             description: false,
           });
+
           handleClick();
-          setInputs({
-            image: '',
-            image1: '',
-            image2: '',
-            image3: '',
-            image4: '',
-            propertyName: '',
-            propertyType: '',
-            propertyPrice: '',
-            propertyCity: '',
-            propertyArea: '',
-            contactPhoneNumber: '',
-            description: '',
-            link: '',
-            hearts: 0,
-          });
         } else {
           console.log('something went wrong!');
         }
@@ -189,7 +196,7 @@ export default function PostForm({ setIsVisible, isVisible, cancel = true }) {
         setErrors({ ...errors, propertyName: true });
 
         toast.custom((t) => (
-          <CustomToast t={t} message={'اسم العقار مطلوب 😐'} />
+          <CustomToast t={t} message={' عنوان الإعلان مطلوب 😐'} />
         ));
       } else if (!inputs.propertyType) {
         console.log('propertyType');
@@ -298,7 +305,7 @@ export default function PostForm({ setIsVisible, isVisible, cancel = true }) {
                 <div className="flex flex-col items-center justify-center my-4 w-full">
                   {errors.propertyName && (
                     <h1 className="text-one text-2xl text-start w-full animate-bounce">
-                      اسم العقار مطلوب
+                      هذا الحقل مطلوب{' '}
                     </h1>
                   )}
                   <div className="flex items-center gap-2 w-full justify-start my-2">
@@ -306,12 +313,12 @@ export default function PostForm({ setIsVisible, isVisible, cancel = true }) {
                       <span className="text-one text-2xl ml-2">
                         <FaHouseDamage />
                       </span>
-                      اسم العقار: (إجباري)
+                      اسم مناسب للإعلان: (إجباري)
                     </h1>
                   </div>
 
                   <input
-                    value={inputs.propertyName}
+                    value={inputs?.propertyName}
                     autoFocus
                     onChange={(e) =>
                       setInputs({ ...inputs, propertyName: e.target.value })
@@ -373,7 +380,7 @@ export default function PostForm({ setIsVisible, isVisible, cancel = true }) {
 
               <div className="w-full">
                 <div className="flex flex-col items-center justify-center my-4 w-full">
-                  {errors.propertyPrice && (
+                  {errors.propertyArea && (
                     <h1 className="text-one text-2xl text-start w-full animate-bounce">
                       مساحة العقار مطلوبة
                     </h1>
@@ -470,7 +477,7 @@ export default function PostForm({ setIsVisible, isVisible, cancel = true }) {
             </div>
 
             <textarea
-              value={inputs.description}
+              value={inputs?.description}
               onChange={(e) =>
                 setInputs({ ...inputs, description: e.target.value })
               }
@@ -530,6 +537,10 @@ export default function PostForm({ setIsVisible, isVisible, cancel = true }) {
                   setIsVisible(false);
                   setInputs({
                     image: '',
+                    image1: '',
+                    image2: '',
+                    image3: '',
+                    image4: '',
                     propertyName: '',
                     propertyType: '',
                     propertyPrice: '',

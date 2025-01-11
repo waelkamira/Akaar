@@ -44,7 +44,7 @@ export default function SideBarMenu({ setIsOpen }) {
       )}
       {session?.status === 'authenticated' && (
         <div>
-          <Button title={'إنشاء وصفة'} path="/newRecipe" />
+          <Button title={'إنشاء وصفة'} path="/newPost" />
           <Button title={'شو أطبخ اليوم؟'} path={'/whatToCookToday'} />
           <Button title={'طبخاتي'} path="/myPosts" />
           <Button title={'وصفات أعجبتني'} path={'/favoritePosts'} />

@@ -110,7 +110,7 @@ export default function TheGarden() {
           <span className="text-one"> {userRecipesCount}</span> وصفات
         </h1>
         <div className="w-full sm:w-1/3 gap-4 my-8">
-          <Button title={'إنشاء وصفة جديدة'} style={' '} path="/newRecipe" />
+          <Button title={'إنشاء وصفة جديدة'} style={' '} path="/newPost" />
         </div>
         <BackButton />
         <div className="absolute flex flex-col items-start gap-2 z-50 top-2 right-2 sm:top-4 sm:right-4 xl:right-12 xl:top-12 ">

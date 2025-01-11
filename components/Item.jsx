@@ -15,7 +15,6 @@ import ImageSlider from './imageSlider';
 export default function Item({
   contactPhoneNumber,
   createdAt,
-  createdBy,
   description,
   image,
   image1,

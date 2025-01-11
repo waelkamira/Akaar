@@ -129,7 +129,7 @@ export default function Page() {
         <BackButton />
       </div>
       <div className="w-full sm:w-1/3 gap-4 my-8">
-        <Button title={'إنشاء وصفة جديدة'} style={' '} path="/newRecipe" />
+        <Button title={'إنشاء وصفة جديدة'} style={' '} path="/newPost" />
       </div>
       <div className="my-8">
         {userFavorites?.length === 0 && (

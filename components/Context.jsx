@@ -11,7 +11,7 @@ function inputsReducer(currentState, action) {
     case 'New_RECIPE':
       return {
         ...currentState,
-        newRecipe: action?.payload,
+        newPost: action?.payload,
       };
     case 'PROPERTY_TYPE':
       return {
@@ -23,11 +23,6 @@ function inputsReducer(currentState, action) {
         },
       };
     case 'PROPERTY_CITY':
-      console.log(
-        'action.payload.propertyCity',
-        action.payload.propertyCity,
-        action.payload.modelName
-      );
       return {
         ...currentState,
         data: {
@@ -67,7 +62,7 @@ function inputsReducer(currentState, action) {
         ...currentState,
         action: action?.payload,
       };
-    case 'MY_RECIPES':
+    case 'MY_POSTS':
       return {
         ...currentState,
         myPosts: action?.payload,
@@ -86,7 +81,7 @@ export function InputsContextProvider({ children }) {
     imageError: {},
     profile_image: {},
     allPosts: [],
-    newRecipe: {},
+    newPost: {},
     deletedRecipe: {},
     deleteFavoritePost: {},
     action: {},
