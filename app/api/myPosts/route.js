@@ -1,10 +1,5 @@
-// إعداد Supabase
-import { createClient } from '@supabase/supabase-js';
-import { NextResponse } from 'next/server';
-import NodeCache from 'node-cache';
 import { authOptions } from '../authOptions/route';
 import { getServerSession } from 'next-auth';
-
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
@@ -45,12 +40,12 @@ export async function GET(req) {
     return new Response(
       JSON.stringify({
         count: userPostsCount,
-        recipes: userPosts,
+        posts: userPosts,
       }),
       { status: 200 }
     );
   } catch (error) {
-    console.error('Error fetching user recipes data:', error);
+    console.error('Error fetching user posts data:', error);
     return new Response(JSON.stringify({ error: 'Internal Server Error' }), {
       status: 500,
     });
@@ -64,13 +59,13 @@ export async function DELETE(req) {
 
   if (!id || !email) {
     return new Response(
-      JSON.stringify({ error: 'يجب توفير معرف الوجبة والبريد الإلكتروني' }),
+      JSON.stringify({ error: 'يجب توفير معرف الإعلان والبريد الإلكتروني' }),
       { status: 400 }
     );
   }
 
   try {
-    // تحقق إذا كانت الوجبة موجودة
+    // تحقق إذا كانت الإعلان موجودة
     const property = await prisma.property.findFirst({
       where: { id, createdBy: email },
     });
@@ -78,13 +73,13 @@ export async function DELETE(req) {
     if (!property) {
       return new Response(
         JSON.stringify({
-          error: 'لم يتم العثور على الوجبة أو لا تملك صلاحية حذف هذه الوجبة',
+          error: 'لم يتم العثور على الإعلان أو لا تملك صلاحية حذف هذه الإعلان',
         }),
         { status: 404 }
       );
     }
 
-    // حذف الوجبة
+    // حذف الإعلان
     await prisma.property.delete({ where: { id } });
 
     return new Response(JSON.stringify({ message: 'تم الحذف بنجاح ✔' }), {

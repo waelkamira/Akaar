@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-  @apply bg-four sm:bg-gradient-to-tr from-one to-five sm:py-8 xl:px-32 rubik px-2;
+  @apply bg-white rubik;
 }
 body {
   font-family: 'Rubik', sans-serif;

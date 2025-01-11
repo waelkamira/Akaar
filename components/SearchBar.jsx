@@ -96,7 +96,7 @@ export default function SearchBar() {
 
   return (
     <Suspense>
-      <div className="flex justify-end w-full">
+      {/* <div className="flex justify-end w-full">
         <div className="relative w-full xl:w-44 h-20 overflow-hidden rounded-xl">
           <Image
             priority
@@ -106,7 +106,7 @@ export default function SearchBar() {
             alt="photo"
           />
         </div>
-      </div>
+      </div> */}
 
       <div
         className={

@@ -1,7 +1,6 @@
 'use client';
 import { useSession } from 'next-auth/react';
 import SmallItem from '../../components/SmallItem';
-import Image from 'next/image';
 import React, { useContext, useEffect, useState } from 'react';
 import { IoMdClose } from 'react-icons/io';
 import toast from 'react-hot-toast';
@@ -18,14 +17,13 @@ import Loading from '../../components/Loading';
 import { useRouter } from 'next/navigation';
 import { MdEdit } from 'react-icons/md';
 
-export default function myPosts() {
+export default function MyPosts() {
   const [isOpen, setIsOpen] = useState(false);
-  const [recipeId, setRecipeId] = useState('');
+  const [postId, setpostId] = useState('');
   const [isVisible, setIsVisible] = useState(false);
   const { dispatch } = useContext(inputsContext);
   const [pageNumber, setPageNumber] = useState(1);
-  const [currentUser, setCurrentUser] = useState('');
-  const [userRecipesCount, setUserRecipesCount] = useState(0);
+  const [userPostsCount, setUserPostsCount] = useState(0);
   const session = useSession();
   const [myPosts, setmyPosts] = useState([]);
   const router = useRouter();
@@ -41,30 +39,27 @@ export default function myPosts() {
     await fetch(`/api/myPosts?page=${pageNumber}&email=${email}&limit=5`)
       .then((res) => res?.json())
       .then((res) => {
-        setmyPosts(res?.recipes);
-        setUserRecipesCount(res?.count);
-        // console.log(res?.recipes);
-        dispatch({ type: 'MY_RECIPES', payload: res });
+        setmyPosts(res?.posts);
+        setUserPostsCount(res?.count);
+        console.log(res?.posts);
+        dispatch({ type: 'MY_POSTS', payload: res });
       });
   };
 
   //? هذه الدالة لحذف المنشورات
-  async function handleDeletePost(recipeId) {
+  async function handleDeletePost(postId) {
     const email = session?.data?.user?.email;
-    const response = await fetch(
-      `/api/allPosts?email=${email}&id=${recipeId}`,
-      {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: recipeId, email: email }),
-      }
-    );
+    const response = await fetch(`/api/allPosts?email=${email}&id=${postId}`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: postId, email: email }),
+    });
 
     if (response.ok) {
       toast.custom((t) => (
         <CustomToast
           t={t}
-          message={'تم حذف هذا البوست من قائمة وصفاتك'}
+          message={'تم حذف هذا الإعلان من قائمة إعلاناتك'}
           redEmoji={'✖'}
         />
       ));
@@ -91,11 +86,11 @@ export default function myPosts() {
         <div className="absolute flex flex-col items-center my-4 bg-four/95 z-50 inset-0 text-white">
           <div className="sticky top-72 w-full ">
             <h1 className="text-center text-lg sm:text-3xl">
-              هل تريد حذف هذه الوصفة نهائيا؟
+              هل تريد حذف هذه الإعلان نهائيا؟
             </h1>
             <div className="flex justify-between items-center w-full h-24 sm:h-28 z-50 gap-8 p-8">
               <button
-                onClick={() => handleDeletePost(recipeId)}
+                onClick={() => handleDeletePost(postId)}
                 className="btn rounded-xl w-full h-full border border-white hover:border-0"
               >
                 حذف
@@ -110,44 +105,27 @@ export default function myPosts() {
           </div>
         </div>
       )}
-      <div className="hidden xl:block relative w-full h-24 sm:h-[200px] rounded-lg overflow-hidden shadow-lg shadow-one">
-        <Image
-          priority
-          src={'/photo (18).png'}
-          layout="fill"
-          objectFit="cover"
-          alt="photo"
-        />
-      </div>
-      <div className="relative w-full h-52 overflow-hidden xl:mt-8">
-        <Image
-          priority
-          src={'/photo (28).png'}
-          layout="fill"
-          objectFit="contain"
-          alt="photo"
-        />
-      </div>
+
       <div className="flex flex-col justify-start items-center w-full gap-4 my-8">
         <div className="w-full sm:w-1/3 gap-4 my-8">
-          <Button title={'إنشاء وصفة جديدة'} style={' '} path="/newRecipe" />
+          <Button title={'إنشاء إعلان جديدة'} style={' '} path="/newPost" />
         </div>
         <BackButton />
         <h1 className="grow text-lg lg:text-2xl w-full text-white">
           <span className="text-one  text-2xl ml-2">#</span>
-          وصفاتي <span className="text-one"> {userRecipesCount}</span>
+          وصفاتي <span className="text-one"> {userPostsCount}</span>
         </h1>
       </div>
       <div className="my-8">
         {myPosts?.length === 0 && (
           <Loading
-            myMessage={'😉 لا يوجد نتائج لعرضها ,لم تقم بإنشاء أي وصفة بعد'}
+            myMessage={'😉 لا يوجد نتائج لعرضها ,لم تقم بإنشاء أي إعلان بعد'}
           />
         )}
 
         <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 gap-8 justify-center items-center w-full ">
           {myPosts?.length > 0 &&
-            myPosts.map((recipe, index) => (
+            myPosts.map((post, index) => (
               <div
                 className="relative flex flex-col items-start justify-start gap-0 bg-twelve rounded-lg overflow-hidden"
                 key={index}
@@ -156,7 +134,7 @@ export default function myPosts() {
                   <div className="flex justify-between items-center bg-twelve w-full pt-4 px-4">
                     <div
                       className="flex flex-col items-center justify-center cursor-pointer bg-four rounded-lg p-2 md:text-2xl text-white hover:bg-one"
-                      onClick={() => router.push(`/editPost/${recipe?.id}`)}
+                      onClick={() => router.push(`/editPost/${post?.id}`)}
                     >
                       <MdEdit className="" />
 
@@ -166,7 +144,7 @@ export default function myPosts() {
                       className="flex flex-col items-center justify-center cursor-pointer bg-four rounded-lg p-2 md:text-2xl text-white hover:bg-one"
                       onClick={() => {
                         setIsVisible(true);
-                        setRecipeId(recipe?.id);
+                        setpostId(post?.id);
                       }}
                     >
                       <IoMdClose className="" />
@@ -174,7 +152,7 @@ export default function myPosts() {
                     </div>
                   </div>
                 )}
-                <SmallItem recipe={recipe} index={index} show={false} />
+                <SmallItem post={post} index={index} show={false} />
               </div>
             ))}
         </div>
