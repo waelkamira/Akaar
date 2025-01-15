@@ -9,10 +9,10 @@ generator client {
 model Property {
   id                   String   @id @default(uuid())
   image                String
-  image1                String?
-  image2                String?
-  image3                String?
-  image4                String?
+  image1               String?
+  image2               String?
+  image3               String?
+  image4               String?
   propertyName         String
   propertyType         String
   propertyPrice        String
@@ -20,6 +20,8 @@ model Property {
   propertyCity         String
   contactPhoneNumber   String
   description          String
+  lng                  Float?
+  lat                  Float?
   link                 String?   @default("") // الحقل المفقود
   hearts               Int      @default(0)
   userName             String

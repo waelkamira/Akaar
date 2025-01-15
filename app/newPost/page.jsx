@@ -19,7 +19,7 @@ export default function NewRecipe() {
   const session = useSession();
   return (
     <div
-      className="relative flex justify-center items-start gap-4 overflow-auto w-full h-full border border-five xl:p-8 bg-four  right-0 top-0 2xl:-top-8 rounded-lg z-50"
+      className="relative flex justify-center items-start gap-4 overflow-auto w-full h-full border border-five xl:p-8 bg-four  right-0 top-0 2xl:-top-8 rounded-lg z-50 xl:mt-8"
       onClick={() => setIsVisible(false)}
     >
       <div className="absolute flex flex-col items-start gap-2 z-50 top-2 right-2 sm:top-4 sm:right-4 xl:right-12 xl:top-12 ">
@@ -53,12 +53,10 @@ export default function NewRecipe() {
           {session?.status === 'unauthenticated' && (
             <div className="p-4 bg-four rounded-lg m-2 md:m-8 border border-one text-center">
               <h1 className="text-lg md:text-2xl p-2  text-white">
-                يجب عليك تسجيل الدخول أولا لكي تتمكن من إنشاء وصفة جديدة
+                يجب عليك تسجيل الدخول أولا لكي تتمكن من إنشاء إعلان جديد
               </h1>
-              <Link href={'/login'}>
-                {' '}
-                <Button title={'تسجيل الدخول'} />
-              </Link>{' '}
+
+              <Button title={'تسجيل الدخول'} path="/login" style={' '} />
             </div>
           )}
           {session?.status === 'authenticated' && (

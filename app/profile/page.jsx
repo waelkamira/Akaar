@@ -2,7 +2,7 @@
 import CurrentUser from '../../components/CurrentUser';
 import ImageUpload from '../../components/ImageUpload';
 import Button from '../../components/Button';
-import { useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import React, { useContext, useEffect, useState } from 'react';
 import { inputsContext } from '../../components/Context';

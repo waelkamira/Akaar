@@ -45,7 +45,7 @@ pre {
 
 .btn {
   position: relative;
-  background: rgba(255, 255, 255, 0.171);
+  background: rgb(78, 78, 78);
   /* color: rgb(255, 255, 255); */
   height: 100%;
   z-index: 1;
@@ -59,7 +59,7 @@ pre {
   left: 0;
   width: 0%;
   height: 100%;
-  background: rgb(145, 96, 38);
+  background: #22c55e;
   /* color: rgb(255, 255, 255); */
   height: 100%;
   z-index: -1;

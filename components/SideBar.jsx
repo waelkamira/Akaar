@@ -5,9 +5,7 @@ import { signOut, useSession } from 'next-auth/react';
 import Button from './Button';
 import Image from 'next/image';
 import CurrentUser from '../components/CurrentUser';
-import TheGarden from './Garden';
-import Categories from './Categories';
-import NewRecipeButton from './NewRecipeButton';
+import NewPostButton from './NewPostButton';
 import Loading from './Loading';
 import LoadingPhoto from './LoadingPhoto';
 
@@ -85,7 +83,7 @@ export default function SideBar() {
               />
             </div>
             <div className="hidden lg:flex flex-col justify-between items-center w-full h-full rounded-r-lg">
-              <NewRecipeButton />
+              <NewPostButton />
             </div>
 
             <Button title={'إعلاناتي'} style={' '} path="/myPosts" />
@@ -98,11 +96,6 @@ export default function SideBar() {
               <Button title={'المستخدمين'} style={' '} path="/users" />
             )}
           </div>
-          {/* {userRecipeCount > 0 && (
-            <div className="p-4 rounded-r-lg bg-four overflow-hidden my-4">
-              <TheGarden />
-            </div>
-          )} */}
 
           <div className="relative w-full h-52 rounded-lg">
             <Image
@@ -113,9 +106,6 @@ export default function SideBar() {
               alt="photo"
             />
           </div>
-          {/* <div className="px-2 rounded-r-lg bg-four overflow-hidden my-4">
-            <Categories />
-          </div> */}
         </div>
       )}
     </div>

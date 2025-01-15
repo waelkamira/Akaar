@@ -7,7 +7,7 @@ import { useSession } from 'next-auth/react';
 import Button from './Button';
 import UploadingAndDisplayingImage from './UploadingAndDisplayingImage';
 
-export default function NewRecipeButton() {
+export default function NewPostButton() {
   const [isVisible, setIsVisible] = useState(false);
   const session = useSession();
 

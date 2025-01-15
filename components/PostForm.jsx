@@ -19,15 +19,19 @@ import { MdOutlinePriceCheck } from 'react-icons/md';
 import { GiRotaryPhone } from 'react-icons/gi';
 import { MdOutlineFeaturedPlayList } from 'react-icons/md';
 import { RxVideo } from 'react-icons/rx';
+import SyriaMap from './map/SyriaMap';
+import OnClickMap from './map/onClickMap';
+import { useRouter } from 'next/navigation';
 
 export default function PostForm({ setIsVisible, isVisible, cancel = true }) {
   const [url, setUrl] = useState('');
   const [embedLink, setEmbedLink] = useState('');
   const session = useSession();
+  const router = useRouter();
   const userName = CurrentUser()?.name;
   const userImage = CurrentUser()?.image || session?.data?.user?.image;
   const createdBy = CurrentUser()?.email;
-  const { data, dispatch, addImages } = useContext(inputsContext);
+  const { data, dispatch, addImages, location } = useContext(inputsContext);
   // console.log('addImages ************************', addImages);
 
   const [errors, setErrors] = useState({
@@ -67,6 +71,8 @@ export default function PostForm({ setIsVisible, isVisible, cancel = true }) {
     propertyCity: '',
     contactPhoneNumber: '',
     description: '',
+    lat: '',
+    lng: '',
     link: '',
     hearts: 0,
   });
@@ -75,13 +81,15 @@ export default function PostForm({ setIsVisible, isVisible, cancel = true }) {
   useEffect(() => {
     setInputs({
       ...inputs,
-      propertyType: data?.propertyType?.label,
-      propertyCity: data?.propertyCity?.label,
-      image: addImages[0],
-      image1: addImages[1],
-      image2: addImages[2],
-      image3: addImages[3],
-      image4: addImages[4],
+      propertyType: data?.propertyType?.label || '',
+      propertyCity: data?.propertyCity?.label || '',
+      image: addImages?.[0] || '',
+      image1: addImages?.[1] || '',
+      image2: addImages?.[2] || '',
+      image3: addImages?.[3] || '',
+      image4: addImages?.[4] || '',
+      lat: location?.[0] || '',
+      lng: location?.[1] || '',
     });
     handleGenerateEmbed();
   }, [
@@ -93,6 +101,7 @@ export default function PostForm({ setIsVisible, isVisible, cancel = true }) {
     addImages[2],
     addImages[3],
     addImages[4],
+    location,
   ]);
 
   async function handleSubmit(e) {
@@ -137,6 +146,7 @@ export default function PostForm({ setIsVisible, isVisible, cancel = true }) {
           dispatch({ type: 'ADD_IMAGE', payload: [] });
           dispatch({ type: 'PROPERTY_TYPE', payload: '' });
           dispatch({ type: 'PROPERTY_CITY', payload: '' });
+          dispatch({ type: 'LOCATION', payload: [] });
           setIsVisible(false);
           setInputs({
             image: '',
@@ -150,8 +160,10 @@ export default function PostForm({ setIsVisible, isVisible, cancel = true }) {
             propertyCity: '',
             propertyArea: '',
             contactPhoneNumber: '',
-            description: '',
+            lat: '',
+            lng: '',
             link: '',
+            location: [],
             hearts: 0,
           });
 
@@ -172,7 +184,7 @@ export default function PostForm({ setIsVisible, isVisible, cancel = true }) {
             contactPhoneNumber: false,
             description: false,
           });
-
+          router.push('/');
           handleClick();
         } else {
           console.log('something went wrong!');
@@ -488,7 +500,8 @@ export default function PostForm({ setIsVisible, isVisible, cancel = true }) {
               className="scrollBar flex text-right w-full p-2 rounded-lg text-xl placeholder:text-md placeholder:sm:text-xl h-36 outline-2 focus:outline-one"
             ></textarea>
           </div>
-
+          {/* <SyriaMap /> */}
+          <OnClickMap />
           <div className="w-full">
             <div className="flex items-center gap-2 w-full justify-start my-2 ">
               {' '}
@@ -548,6 +561,8 @@ export default function PostForm({ setIsVisible, isVisible, cancel = true }) {
                     propertyCity: '',
                     contactPhoneNumber: '',
                     description: '',
+                    lng: '',
+                    lat: '',
                     link: '',
                     hearts: 0,
                   });
