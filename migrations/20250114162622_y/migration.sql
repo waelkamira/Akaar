@@ -13,6 +13,8 @@ CREATE TABLE "Property" (
     "propertyCity" TEXT NOT NULL,
     "contactPhoneNumber" TEXT NOT NULL,
     "description" TEXT NOT NULL,
+    "lng" REAL,
+    "lat" REAL,
     "link" TEXT DEFAULT '',
     "hearts" INTEGER NOT NULL DEFAULT 0,
     "userName" TEXT NOT NULL,

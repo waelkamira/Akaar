@@ -67,6 +67,11 @@ function inputsReducer(currentState, action) {
         ...currentState,
         myPosts: action?.payload,
       };
+    case 'LOCATION':
+      return {
+        ...currentState,
+        location: action?.payload,
+      };
 
     default:
       return currentState;
@@ -86,6 +91,7 @@ export function InputsContextProvider({ children }) {
     deleteFavoritePost: {},
     action: {},
     myPosts: [],
+    location: [],
   });
   // console.log('from Context', state);
 

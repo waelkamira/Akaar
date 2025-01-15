@@ -11,6 +11,7 @@ import { formatDistanceToNow } from 'date-fns/formatDistanceToNow';
 import Loading from './Loading';
 import LoadingPhoto from './LoadingPhoto';
 import ImageSlider from './imageSlider';
+import SyriaMap from './map/SyriaMap';
 
 export default function Item({
   contactPhoneNumber,
@@ -21,6 +22,8 @@ export default function Item({
   image2,
   image3,
   image4,
+  lng,
+  lat,
   link,
   propertyArea,
   propertyCity,
@@ -164,7 +167,7 @@ export default function Item({
                     {description}
                   </h1>
                 </div>
-
+                {lng !== '' && lat !== '' && <SyriaMap lng={lng} lat={lat} />}
                 {(link || iframeSrc) && (
                   <div className="flex justify-between items-center my-4 sm:my-8 lg:my-16 bg-four h-10 sm:h-16 rounded-lg w-full overflow-visible">
                     <h1 className="text-white  text-2xl lg:text-3xl w-full my-2 select-none">

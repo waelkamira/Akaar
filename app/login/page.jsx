@@ -11,6 +11,7 @@ import { signIn, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import CustomToast from '../../components/CustomToast';
 import { useEffect } from 'react';
+import { GiExitDoor } from 'react-icons/gi';
 
 export default function LogInPage() {
   const session = useSession();
@@ -79,8 +80,8 @@ export default function LogInPage() {
         <CustomToast
           t={t}
           message={' بهيجة اشرق لبن ترحب بكم أهلا وسهلا '}
-          emoji={'🧀'}
-          greenEmoji={'🧀'}
+          emoji={''}
+          greenEmoji={''}
         />
       ));
     } else {
@@ -97,16 +98,16 @@ export default function LogInPage() {
   }
 
   return (
-    <div className="flex justify-center items-center w-full h-screen text-white text-lg md:text-xl text-end">
+    <div className="flex justify-center items-center w-full h-96 text-white text-lg md:text-xl text-end">
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="w-full lg:w-1/2 bg-four p-8 rounded-lg border border-one"
       >
         <h1 className="w-full my-2 text-xl sm:text-2xl md:text-3xl xl:text-4xl  text-center select-none">
-          تسجيل الدخول 🧀
+          تسجيل الدخول <GiExitDoor />
         </h1>
 
-        <div className="relative flex flex-col items-start justify-center w-full">
+        {/* <div className="relative flex flex-col items-start justify-center w-full">
           <h1 className="w-full my-4 select-none text-start text-sm sm:text-lg">
             البريد الإلكتروني
           </h1>
@@ -140,7 +141,7 @@ export default function LogInPage() {
           <h1 className="text-one text-md my-2 select-none">
             {errors?.password?.message}
           </h1>
-        )}
+        )} */}
         <div
           className="flex justify-center w-full bg-white rounded-md px-4 py-2 items-center my-8 hover:shadow-md cursor-pointer"
           onClick={() => signIn('google')}
@@ -159,32 +160,32 @@ export default function LogInPage() {
           </h1>
         </div>
         <div className="flex flex-col sm:flex-row justify-between gap-8 items-center mt-4 w-full">
-          <button
+          {/* <button
             type="submit"
             className=" text-lg p-2  my-3 text-white text-nowrap bg-five hover:bg-one rounded-lg hover:scale-[101%] w-full "
           >
             تسجيل الدخول
-          </button>
+          </button> */}
 
           <div className="w-full">
             <Link href={'/'}>
               <button
                 type="submit"
-                className=" text-lg p-2  my-3 text-white text-nowrap bg-five hover:bg-one rounded-lg hover:scale-[101%] w-full "
+                className=" text-lg p-2  my-3 text-white text-nowrap bg-one hover:bg-five rounded-lg hover:scale-[101%] w-full "
               >
                 إغلاق{' '}
               </button>{' '}
             </Link>
           </div>
         </div>
-        <Link href={'/register'}>
-          <h1 className="mt-4 text-start text-sm sm:text-lg">
+        {/* <Link href={'/register'}>
+          <h1 className="mt-4 text-start text-sm sm:text-lg ml-2 text-nowrap">
             ليس لديك حساب؟ قم بالتسجيل
-            <span className="text-one text-lg sm:text-xl hover:scale-105">
-              🧀 هنا
+            <span className="text-one text-lg sm:text-xl hover:scale-105 mx-3">
+              هنا
             </span>
           </h1>
-        </Link>
+        </Link> */}
       </form>
     </div>
   );

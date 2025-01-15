@@ -96,27 +96,15 @@ export default function SearchBar() {
 
   return (
     <Suspense>
-      {/* <div className="flex justify-end w-full">
-        <div className="relative w-full xl:w-44 h-20 overflow-hidden rounded-xl">
-          <Image
-            priority
-            src="https://i.imgur.com/rXaNY0v.png"
-            layout="fill"
-            objectFit="contain"
-            alt="photo"
-          />
-        </div>
-      </div> */}
-
       <div
         className={
           (searchTriggered || searchedCategory
-            ? 'absolute z-50 top-4 left-0 h-screen overflow-scroll'
+            ? 'absolute z-50 h-screen overflow-scroll'
             : '') +
-          ' flex flex-col items-start justify-center w-full lg:mt-8 bg-four rounded-lg'
+          ' flex flex-col items-start justify-center w-full sm:w-1/2 lg:w-1/3 bg-four rounded-lg'
         }
       >
-        <div className="flex flex-col justify-center items-center sm:flex-row gap-4 w-full">
+        <div className="flex flex-col justify-center items-center sm:flex-row gap-4 w-full px-2 sm:px-4 my-4">
           <div className="relative w-full sm:px-4 bg-four">
             <input
               value={searchedWord}
@@ -127,7 +115,7 @@ export default function SearchBar() {
               id="search_meal"
               name="search_meal"
               placeholder="ابحث عن بيت أو أرض"
-              className=" w-full rounded-md border text-lg md:text-xl placeholder:text-sm sm:placeholder:text-lg py-2 pr-24 lg:pr-28 outline-2 placeholder:px-4 focus:outline-one text-right"
+              className=" w-full rounded-md border text-sm sm:text-xl placeholder:text-sm sm:placeholder:text-lg py-2 pr-24 lg:pr-28 outline-2 placeholder:px-4 focus:outline-one text-right"
             />
             <div className="absolute flex items-center top-0 md:top-0 md:right-4 md:w-24 w-[80px] right-0 h-full bg-one rounded-r-md ">
               <button
@@ -143,11 +131,11 @@ export default function SearchBar() {
               </button>
             </div>
           </div>
-          <div className="flex gap-4 justify-between w-full">
+          {/* <div className="flex gap-4 justify-between w-full">
             <select
               id="city"
               name="city"
-              className="w-full h-12 rounded-md p-2"
+              className="w-full sm:h-12 rounded-md p-2"
             >
               <option>اختر المحافظة</option>
               <option value="دمشق">دمشق</option>
@@ -165,10 +153,10 @@ export default function SearchBar() {
               <option value="دير الزور">دير الزور</option>
               <option value="الحسكة">الحسكة</option>
             </select>
-            <select
+           <select
               id="عدد الغرف"
               name="عدد الغرف"
-              className="w-full h-12 rounded-md p-2"
+              className="w-full sm:h-12 rounded-md p-2"
             >
               <option>عدد الغرف</option>
               <option value="1">1</option>
@@ -176,8 +164,8 @@ export default function SearchBar() {
               <option value="3">3</option>
               <option value="4">4</option>
               <option value="5+">5+ </option>
-            </select>
-          </div>
+            </select> 
+          </div> */}
         </div>
         {isVisible && (
           <div className="sticky top-0 flex flex-row-reverse justify-between items-center mt-1 w-full z-50 bg-four p-4">

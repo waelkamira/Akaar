@@ -18,7 +18,7 @@ export async function GET(req) {
       take: limit,
       orderBy: { createdAt: 'desc' },
     });
-    console.log('properties', properties);
+    // console.log('properties', properties);
 
     return new Response(JSON.stringify(properties), {
       headers: { 'Content-Type': 'application/json' },
@@ -35,7 +35,7 @@ export async function GET(req) {
 export async function POST(req) {
   try {
     const data = await req.json();
-    // console.log('data', data);
+    console.log('data', data);
 
     // إذا كان `link` فارغًا، اجعل قيمته `null` بدلاً من "" أو غيّر هذا وفقًا لاحتياجاتك
     const linkValue = data.link === '' ? null : data.link;
@@ -56,6 +56,8 @@ export async function POST(req) {
         propertyCity: data.propertyCity,
         contactPhoneNumber: data.contactPhoneNumber,
         description: data.description,
+        lng: data.lng,
+        lat: data.lat,
         link: linkValue, // التعامل مع الحقل `link` بشكل صحيح
         hearts: data.hearts,
         userName: data.userName,

@@ -8,7 +8,6 @@ import { signIn, useSession } from 'next-auth/react';
 import Button from '../../components/Button';
 import Link from 'next/link';
 import BackButton from '../../components/BackButton';
-import SideBarMenu from '../../components/SideBarMenu';
 import { TfiMenuAlt } from 'react-icons/tfi';
 import ImageUpload from '../../components/ImageUpload';
 import UploadingAndDisplayingImage from '../../components/UploadingAndDisplayingImage';

@@ -4,6 +4,7 @@ import { Rubik } from 'next/font/google';
 import { Toaster } from 'react-hot-toast';
 import { InputsContextProvider } from '../components/Context';
 import AuthContextProvider from '../components/authContext/AuthContext';
+import Navbar from '../components/navbar';
 
 const inter = Inter({ subsets: ['latin'] });
 const rubik = Rubik({
@@ -25,6 +26,7 @@ export default function RootLayout({ children }) {
       <body className={rubik.className}>
         <Toaster />
         <AuthContextProvider>
+          <Navbar />
           <InputsContextProvider>{children}</InputsContextProvider>
         </AuthContextProvider>
       </body>

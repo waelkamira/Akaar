@@ -16,7 +16,7 @@ import UploadingAndDisplayingImage from './UploadingAndDisplayingImage';
 import { inputsContext } from './Context';
 import { getYoutubeVideoId } from './youtubeUtils';
 
-export default function editPost() {
+export default function EditPost() {
   const [url, setUrl] = useState('');
   const [embedLink, setEmbedLink] = useState('');
 

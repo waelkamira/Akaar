@@ -5,7 +5,7 @@ export async function GET(req) {
   try {
     const { searchParams } = new URL(req.url, 'http://localhost');
     const page = parseInt(searchParams.get('page') || '1', 10);
-    const limit = parseInt(searchParams.get('limit') || '3', 10);
+    const limit = parseInt(searchParams.get('limit') || '5', 10);
     const mealName = searchParams.get('mealName') || '';
     const propertyType = searchParams.get('propertyType') || '';
 
