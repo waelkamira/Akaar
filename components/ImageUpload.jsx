@@ -51,7 +51,7 @@ export default function ImageUpload({ image, style }) {
             className={
               style
                 ? style
-                : ' w-64 h-44 border border-one cursor-pointer rounded-lg mt-4 overflow-hidden'
+                : ' w-64 h-44 border border-one cursor-pointer  mt-4 overflow-hidden'
             }
           >
             {/* //? نريد عرض الصورة التي رفعناها في قلب الديف الذي رفعناها

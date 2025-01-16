@@ -114,7 +114,7 @@ export default function EditPost() {
   return (
     <>
       {session?.status === 'unauthenticated' && (
-        <div className="p-4 bg-four rounded-lg m-2 md:m-8 border border-one text-center h-screen">
+        <div className="p-4 bg-four  m-2 md:m-8 border border-one text-center h-screen">
           <h1 className="text-lg md:text-2xl p-2 my-8 text-white">
             يجب عليك تسجيل الدخول أولا لرؤية هذه الوصفة
           </h1>
@@ -125,8 +125,8 @@ export default function EditPost() {
         </div>
       )}
       {session?.status === 'authenticated' && (
-        <div className="relative flex flex-col items-start w-full bg-four h-full p-2 lg:p-8 rounded-lg">
-          <div className="hidden xl:block relative w-full h-24 sm:h-[200px] rounded-lg overflow-hidden shadow-lg shadow-one">
+        <div className="relative flex flex-col items-start w-full bg-four h-full p-2 lg:p-8 ">
+          <div className="hidden xl:block relative w-full h-24 sm:h-[200px]  overflow-hidden shadow-lg shadow-one">
             <Image
               priority
               src={'/photo (20).png'}
@@ -138,7 +138,7 @@ export default function EditPost() {
           <BackButton />
           <div className="absolute flex flex-col items-start gap-2 z-50 top-2 right-2 sm:top-4 sm:right-4 xl:right-12 xl:top-12 ">
             <TfiMenuAlt
-              className=" p-1 rounded-lg text-4xl lg:text-5xl text-one cursor-pointer z-50  animate-pulse"
+              className=" p-1  text-4xl lg:text-5xl text-one cursor-pointer z-50  animate-pulse"
               onClick={() => {
                 setIsOpen(!isOpen);
               }}
@@ -160,7 +160,7 @@ export default function EditPost() {
             </h1>
           </div>
           <div className="flex justify-center w-full">
-            <div className="flex flex-col w-full 2xl:w-2/3 border  rounded-lg p-2 sm:p-8 mt-8 bg-white">
+            <div className="flex flex-col w-full 2xl:w-2/3 border   p-2 sm:p-8 mt-8 bg-white">
               <div className="flex justify-start items-center gap-2 w-full mb-4">
                 <div className="relative size-14 overflow-hidden rounded-xl">
                   <Image
@@ -185,7 +185,7 @@ export default function EditPost() {
 
               <div className=" flex flex-col sm:flex-row-reverse justify-between items-center gap-1 sm:gap-4">
                 <h1
-                  className="relative grow text-one my-4 sm:my-8 text-3xl sm:text-4xl lg:text-5xl text-center select-none  rounded-lg p-2 sm:p-4"
+                  className="relative grow text-one my-4 sm:my-8 text-3xl sm:text-4xl lg:text-5xl text-center select-none   p-2 sm:p-4"
                   autoFocus="true"
                   contentEditable="true"
                   onInput={(e) =>
@@ -213,7 +213,7 @@ export default function EditPost() {
 
                 <button
                   onClick={() => handleeditPost()}
-                  className="bg-five mb-2 w-full sm:w-fit hover:bg-one text-white hover:scale-105 border text-center select-none  rounded-lg p-2"
+                  className="bg-five mb-2 w-full sm:w-fit hover:bg-one text-white hover:scale-105 border text-center select-none   p-2"
                 >
                   حفظ التعديلات
                 </button>
@@ -221,20 +221,20 @@ export default function EditPost() {
               <UploadingAndDisplayingImage img={editedRecipe?.image} />
               <button
                 onClick={() => handleeditPost()}
-                className="bg-five mb-2 w-full sm:w-fit mt-4 hover:bg-one text-white hover:scale-105 border text-center select-none  rounded-lg p-2"
+                className="bg-five mb-2 w-full sm:w-fit mt-4 hover:bg-one text-white hover:scale-105 border text-center select-none   p-2"
               >
                 حفظ التعديلات
               </button>
 
-              <div className="bg-white rounded-lg mt-4 sm:mt-16">
-                <div className="flex justify-between items-center my-4 sm:my-8 lg:my-16 bg-four h-10 sm:h-16 rounded-lg w-full overflow-visible">
+              <div className="bg-white  mt-4 sm:mt-16">
+                <div className="flex justify-between items-center my-4 sm:my-8 lg:my-16 bg-four h-10 sm:h-16  w-full overflow-visible">
                   <h1 className="text-white  text-xl sm:text-3xl w-full my-2 select-none">
                     <span className="text-one  text-2xl mx-2 select-none">
                       #
                     </span>
                     المقادير
                   </h1>
-                  <div className="relative size-40 md:size-44 xl:size-48 overflow-hidden rounded-lg grow">
+                  <div className="relative size-40 md:size-44 xl:size-48 overflow-hidden  grow">
                     <Image
                       priority
                       src={'/photo (24).png'}
@@ -270,18 +270,18 @@ export default function EditPost() {
                 </pre>
                 <button
                   onClick={() => handleeditPost()}
-                  className="bg-five mb-2 w-full mt-4 sm:w-fit hover:bg-one text-white hover:scale-105 border text-center select-none  rounded-lg p-2"
+                  className="bg-five mb-2 w-full mt-4 sm:w-fit hover:bg-one text-white hover:scale-105 border text-center select-none   p-2"
                 >
                   حفظ التعديلات
                 </button>
-                <div className="flex justify-between items-center my-4 sm:my-8 lg:my-16 bg-four h-10 sm:h-16 rounded-lg w-full overflow-visible">
+                <div className="flex justify-between items-center my-4 sm:my-8 lg:my-16 bg-four h-10 sm:h-16  w-full overflow-visible">
                   <h1 className="text-white  text-xl sm:text-3xl w-full my-2 select-none">
                     <span className="text-one  text-2xl mx-2 select-none">
                       #
                     </span>
                     الطريقة
                   </h1>
-                  <div className="relative size-28 md:size-40 xl:size-48  overflow-hidden rounded-lg rotate-45">
+                  <div className="relative size-28 md:size-40 xl:size-48  overflow-hidden  rotate-45">
                     <Image
                       priority
                       src={'/photo (25).png'}
@@ -317,20 +317,20 @@ export default function EditPost() {
                 </pre>
                 <button
                   onClick={() => handleeditPost()}
-                  className="bg-five mb-2 w-full mt-4 sm:w-fit hover:bg-one text-white hover:scale-105 border text-center select-none  rounded-lg p-2"
+                  className="bg-five mb-2 w-full mt-4 sm:w-fit hover:bg-one text-white hover:scale-105 border text-center select-none   p-2"
                 >
                   حفظ التعديلات
                 </button>
                 {editedRecipe?.advise && (
                   <>
-                    <div className="flex justify-between items-center my-4 sm:my-8 lg:my-16 bg-four h-10 sm:h-16 rounded-lg w-full overflow-visible mb-16">
+                    <div className="flex justify-between items-center my-4 sm:my-8 lg:my-16 bg-four h-10 sm:h-16  w-full overflow-visible mb-16">
                       <h1 className="text-white  text-xl sm:text-3xl w-full my-2 select-none">
                         <span className="text-one  text-2xl mx-2 select-none">
                           #
                         </span>
                         نصائح
                       </h1>
-                      <div className="relative size-28 md:size-32 xl:size-44 overflow-hidden rounded-lg">
+                      <div className="relative size-28 md:size-32 xl:size-44 overflow-hidden ">
                         <Image
                           priority
                           src={'/photo (27).png'}
@@ -366,20 +366,20 @@ export default function EditPost() {
                     </pre>{' '}
                     <button
                       onClick={() => handleeditPost()}
-                      className="bg-five mb-2 w-full mt-4 sm:w-fit hover:bg-one text-white hover:scale-105 border text-center select-none  rounded-lg p-2"
+                      className="bg-five mb-2 w-full mt-4 sm:w-fit hover:bg-one text-white hover:scale-105 border text-center select-none   p-2"
                     >
                       حفظ التعديلات
                     </button>
                   </>
                 )}
-                <div className="flex justify-between items-center my-4 sm:my-8 lg:my-16 bg-four h-10 sm:h-16 rounded-lg w-full overflow-visible">
+                <div className="flex justify-between items-center my-4 sm:my-8 lg:my-16 bg-four h-10 sm:h-16  w-full overflow-visible">
                   <h1 className="text-white  text-2xl lg:text-3xl w-full my-2 select-none">
                     <span className="text-one  text-2xl mx-2 select-none">
                       #
                     </span>
                     فيديو
                   </h1>
-                  <div className="relative size-28 md:size-32 xl:size-44 overflow-hidden rounded-lg rotate-20">
+                  <div className="relative size-28 md:size-32 xl:size-44 overflow-hidden  rotate-20">
                     <Image
                       priority
                       src={'/photo (26).png'}
@@ -395,11 +395,11 @@ export default function EditPost() {
                   placeholder="الصق رابط الفيديو الجديد هنا ..."
                   value={url}
                   onChange={handleInputChange}
-                  className="text-right w-full p-2 rounded-lg text-lg outline-2 focus:outline-one h-10 border"
+                  className="text-right w-full p-2  text-lg outline-2 focus:outline-one h-10 border"
                 />
                 <button
                   onClick={() => handleeditPost()}
-                  className="bg-five mb-2 w-full mt-4 sm:w-fit hover:bg-one text-white hover:scale-105 border text-center select-none  rounded-lg p-2"
+                  className="bg-five mb-2 w-full mt-4 sm:w-fit hover:bg-one text-white hover:scale-105 border text-center select-none   p-2"
                 >
                   حفظ التعديلات
                 </button>
@@ -412,7 +412,7 @@ export default function EditPost() {
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                       referrerpolicy="strict-origin-when-cross-origin"
                       allowfullscreen
-                      className="rounded-lg w-full h-44 sm:h-96 lg:h-[470px] xl:h-[500px] 2xl:h-[560px]"
+                      className=" w-full h-44 sm:h-96 lg:h-[470px] xl:h-[500px] 2xl:h-[560px]"
                     />
                   )}
                   {inputs?.link && (
@@ -423,7 +423,7 @@ export default function EditPost() {
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                       referrerpolicy="strict-origin-when-cross-origin"
                       allowfullscreen
-                      className="rounded-lg w-full h-44 sm:h-96 lg:h-[470px] xl:h-[500px] 2xl:h-[560px]"
+                      className=" w-full h-44 sm:h-96 lg:h-[470px] xl:h-[500px] 2xl:h-[560px]"
                     />
                   )}
                 </div>

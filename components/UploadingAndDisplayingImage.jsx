@@ -76,14 +76,14 @@ export default function ImageUploader({ images = [] }) {
 
       <div className="flex flex-col mx-8">
         {filteredImages.length > 0 && (
-          <div className="col-span-1 md:col-span-3 relative h-72 sm:h-96 border border-one rounded-lg">
+          <div className="col-span-1 md:col-span-3 relative h-72 sm:h-96 border border-one ">
             <Image
               priority
               src={filteredImages[0]}
               alt="الصورة المرفوعة"
               layout="fill"
               objectFit="cover"
-              className="rounded-lg"
+              className=""
             />
           </div>
         )}
@@ -92,7 +92,7 @@ export default function ImageUploader({ images = [] }) {
           {filteredImages.slice(1, 5).map((image, index) => (
             <div
               key={index}
-              className="relative w-full h-48 border border-one rounded-lg"
+              className="relative w-full h-48 border border-one "
             >
               <Image
                 priority
@@ -100,7 +100,7 @@ export default function ImageUploader({ images = [] }) {
                 alt={`الصورة ${index + 2}`}
                 layout="fill"
                 objectFit="cover"
-                className="rounded-lg"
+                className=""
               />
             </div>
           ))}

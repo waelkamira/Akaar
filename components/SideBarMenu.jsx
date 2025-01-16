@@ -12,10 +12,10 @@ export default function SideBarMenu({ setIsOpen }) {
   const user = CurrentUser();
 
   return (
-    <div className="p-4 w-52 mx-2 h-fit border-[5px] border-one bg-four rounded-lg z-50">
+    <div className="p-4 w-52 mx-2 h-fit border-[5px] border-one bg-four  z-50">
       {session?.status === 'authenticated' && (
         <Link href={'/profile?username'}>
-          <div className="flex flex-col justify-between items-center rounded-lg w-full">
+          <div className="flex flex-col justify-between items-center  w-full">
             <div className="flex justify-start items-center w-full cursor-pointer line-clamp-1 mb-2">
               <div className="relative size-10 overflow-hidden rounded-xl">
                 {!user?.image && <LoadingPhoto />}

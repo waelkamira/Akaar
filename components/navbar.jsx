@@ -29,65 +29,67 @@ export default function Navbar() {
           </div>
         </div>
         <ul className="flex justify-evenly items-center w-full h-24">
-          <div className="flex items-center justify-center gap-2 hover:scale-105 hover:cursor-pointer hover:shadow-lg p-2 px-8 rounded-lg h-16">
-            <FaHome className="text-xl text-one" />
-            <li className="text-xl" onClick={() => router.push('/')}>
-              الرئيسية
-            </li>
+          <div
+            className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-lg p-2 px-8  h-16"
+            onClick={() => router.push('/')}
+          >
+            <FaHome className="text-xl text-one hover:text-five" />
+            <li className="text-xl">الرئيسية</li>
           </div>
-          <div className="flex items-center justify-center gap-2 h-16">
+          <div className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one h-16">
             {session?.status === 'unauthenticated' && (
-              <div className="flex items-center justify-center gap-2 hover:scale-105 hover:cursor-pointer hover:shadow-lg p-2 px-8 rounded-lg h-16">
-                <GiExitDoor className="text-xl text-one" />
-                <li className="text-xl" onClick={() => router.push('/login')}>
-                  تسجيل الدخول
-                </li>
+              <div
+                className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-lg p-2 px-8  h-16"
+                onClick={() => router.push('/login')}
+              >
+                <GiExitDoor className="text-xl text-one hover:text-five" />
+                <li className="text-xl">تسجيل الدخول</li>
               </div>
             )}
             {session?.status === 'authenticated' && (
-              <div className="flex items-center justify-center gap-2 hover:scale-105 hover:cursor-pointer hover:shadow-lg p-2 px-8 rounded-lg h-16">
-                <GiExitDoor className="text-xl text-one" />
-                <li className="text-xl" onClick={() => router.push('/profile')}>
-                  بروفايل{' '}
-                </li>
+              <div
+                className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-lg p-2 px-8  h-16"
+                onClick={() => router.push('/profile')}
+              >
+                <GiExitDoor className="text-xl text-one hover:text-five" />
+                <li className="text-xl">بروفايل </li>
               </div>
             )}
           </div>
-          <div className="flex items-center justify-center gap-2 hover:scale-105 hover:cursor-pointer hover:shadow-lg p-2 px-8 rounded-lg h-16">
-            <FcConferenceCall className="text-xl text-one" />
-            <li
-              className="text-xl text-nowrap"
-              onClick={() => router.push('/contactUs')}
-            >
-              اتصل بنا
-            </li>
+          <div
+            className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-lg p-2 px-8  h-16"
+            onClick={() => router.push('/contactUs')}
+          >
+            <FcConferenceCall className="text-xl text-one hover:text-five" />
+            <li className="text-xl text-nowrap">اتصل بنا</li>
           </div>
-          <div className="flex items-center justify-center gap-2 hover:scale-105 hover:cursor-pointer hover:shadow-lg p-2 px-8 rounded-lg h-16">
-            <FaCanadianMapleLeaf className="text-xl text-one" />
-            <li
-              className="text-xl text-nowrap"
-              onClick={() => router.push('/newPost')}
-            >
-              انشاء إعلان
-            </li>
+          <div
+            className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-lg p-2 px-8  h-16"
+            onClick={() => router.push('/newPost')}
+          >
+            <FaCanadianMapleLeaf className="text-xl text-one hover:text-five" />
+            <li className="text-xl text-nowrap">انشاء إعلان</li>
           </div>
-          <div className="flex items-center justify-center gap-2 hover:scale-105 hover:cursor-pointer hover:shadow-lg p-2 px-8 rounded-lg h-16">
-            <FaDollarSign className="text-xl text-one" />
-            <li className="text-xl" onClick={() => router.push('/sell')}>
-              بيع
-            </li>
+          <div
+            className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-lg p-2 px-8  h-16"
+            onClick={() => router.push('/sell')}
+          >
+            <FaDollarSign className="text-xl text-one hover:text-five" />
+            <li className="text-xl">بيع</li>
           </div>
-          <div className="flex items-center justify-center gap-2 hover:scale-105 hover:cursor-pointer hover:shadow-lg p-2 px-8 rounded-lg h-16">
-            <GiPayMoney className="text-xl text-one" />
-            <li className="text-xl" onClick={() => router.push('/buy')}>
-              شراء
-            </li>
+          <div
+            className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-lg p-2 px-8  h-16"
+            onClick={() => router.push('/buy')}
+          >
+            <GiPayMoney className="text-xl text-one hover:text-five" />
+            <li className="text-xl">شراء</li>
           </div>
-          <div className="flex items-center justify-center gap-2 hover:scale-105 hover:cursor-pointer hover:shadow-lg p-2 px-8 rounded-lg h-16">
-            <MdOutlineBedroomParent className="text-xl text-one" />
-            <li className="text-xl" onClick={() => router.push('/rent')}>
-              أجار
-            </li>
+          <div
+            className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-lg p-2 px-8  h-16"
+            onClick={() => router.push('/rent')}
+          >
+            <MdOutlineBedroomParent className="text-xl text-one hover:text-five" />
+            <li className="text-xl">أجار</li>
           </div>
         </ul>
       </div>

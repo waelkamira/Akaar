@@ -153,7 +153,7 @@ export default function SmallItem({ post, index, show = true, id = false }) {
       <div
         key={index}
         id="post1"
-        className="flex flex-col justify-center items-center shadow-md w-full p-2 sm:p-4 rounded-lg mb-4 bg-white border-t-[20px] border-twelve transition-all duration-300"
+        className="flex flex-col justify-center items-center shadow-md w-full p-2 sm:p-4  mb-4 bg-white border-t-[20px] border-twelve transition-all duration-300"
       >
         <div className="flex items-center justify-center w-full sm:p-2">
           <Link
@@ -186,7 +186,7 @@ export default function SmallItem({ post, index, show = true, id = false }) {
 
           {currentUser?.isAdmin === 1 && path === '/' && (
             <div
-              className="flex flex-col items-center justify-center cursor-pointer bg-four rounded-lg p-2 md:text-2xl text-white hover:bg-one"
+              className="flex flex-col items-center justify-center cursor-pointer bg-four  p-2 md:text-2xl text-white hover:bg-one"
               onClick={() => handleDeletePost(post)}
             >
               <IoMdClose className="" />
@@ -198,20 +198,20 @@ export default function SmallItem({ post, index, show = true, id = false }) {
           {post?.propertyName}
         </h1>
         <div
-          className={`relative w-full h-52 sm:h-72 lg:h-96 overflow-hidden rounded-lg bg-gray-100`}
+          className={`relative w-full h-52 sm:h-72 lg:h-96 overflow-hidden  bg-gray-100`}
         >
           {!post?.image && <LoadingPhoto />}
           <div className="flex flex-col">
             {/* الصورة الكبيرة */}
             {post?.image && (
-              <div className="col-span-1 md:col-span-3 relative h-72 sm:h-96 border border-one rounded-lg">
+              <div className="col-span-1 md:col-span-3 relative h-72 sm:h-96 border border-one ">
                 <Image
                   priority
                   src={post?.image}
                   alt="الصورة"
                   layout="fill"
                   objectFit="cover"
-                  className="rounded-lg"
+                  className=""
                 />
               </div>
             )}
@@ -221,7 +221,7 @@ export default function SmallItem({ post, index, show = true, id = false }) {
           <>
             <div className="flex justify-between items-center gap-2 w-full text-gray-400 my-2">
               <div
-                className="flex justify-center items-center gap-2 cursor-pointer hover:bg-seven p-1 lg:p-2 rounded-lg select-none"
+                className="flex justify-center items-center gap-2 cursor-pointer hover:bg-seven p-1 lg:p-2  select-none"
                 onClick={() => {
                   handleInteraction(post.id, 'hearts', heart, setHeart);
                   if (session?.status === 'unauthenticated') {
@@ -258,7 +258,7 @@ export default function SmallItem({ post, index, show = true, id = false }) {
             <hr className="w-full h-[1.5px] bg-gray-400 rounded-xl border-hidden select-none" />
           </>
         )}
-        <div className="bg-white rounded-lg p-4 w-full">
+        <div className="bg-white  p-4 w-full">
           <pre className="text-sm sm:text-lg text-start w-full line-clamp-3 select-none">
             {post?.description}
           </pre>

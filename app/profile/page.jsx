@@ -66,7 +66,7 @@ export default function Profile() {
   return (
     <>
       {session?.status === 'unauthenticated' && (
-        <div className="p-4 bg-four rounded-lg m-2 md:m-8 border border-one text-center h-screen">
+        <div className="p-4 bg-four  m-2 md:m-8 border border-one text-center h-screen">
           <h1 className="text-lg md:text-2xl p-2 my-8 text-white">
             يجب عليك تسجيل الدخول أولا لرؤية هذا البروفايل
           </h1>
@@ -78,20 +78,20 @@ export default function Profile() {
         </div>
       )}
       {session?.status === 'authenticated' && (
-        <div className="relative flex justify-center items-center w-full h-full bg-four  xl:p-8 rounded-lg text-md sm:text-lg lg:text-xl">
+        <div className="relative flex justify-center items-center w-full h-full bg-four  xl:p-8  text-md sm:text-lg lg:text-xl">
           <BackButton />
           <div className="absolute flex flex-col items-start gap-2 z-50 top-2 right-2 sm:top-4 sm:right-4 xl:right-12 xl:top-12 ">
             <TfiMenuAlt
-              className=" p-1 rounded-lg text-4xl lg:text-5xl text-one cursor-pointer z-50  animate-pulse"
+              className=" p-1  text-4xl lg:text-5xl text-one cursor-pointer z-50  animate-pulse"
               onClick={() => {
                 setIsOpen(!isOpen);
               }}
             />
             {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
           </div>
-          <div className="flex flex-col items-center gap-4  justify-center w-full 2xl:w-2/3 h-full rounded-lg overflow-hidden">
+          <div className="flex flex-col items-center gap-4  justify-center w-full 2xl:w-2/3 h-full  overflow-hidden">
             <div className="relative w-full ">
-              <div className="relative h-96 w-full  rounded-lg">
+              <div className="relative h-96 w-full  ">
                 <Image
                   priority
                   src={user?.image}
@@ -106,7 +106,7 @@ export default function Profile() {
                     priority
                     src={user?.image}
                     style={
-                      'peer/image rounded-lg w-20 h-20 cursor-pointer overflow-hidden'
+                      'peer/image  w-20 h-20 cursor-pointer overflow-hidden'
                     }
                   />
                 </div>
@@ -114,7 +114,7 @@ export default function Profile() {
             </div>
 
             <div className="flex flex-col justify-center items-center w-full text-start text-white">
-              <div className="flex flex-col items-start gap-2 justify-between rounded-lg px-8 py-2 w-full my-2">
+              <div className="flex flex-col items-start gap-2 justify-between  px-8 py-2 w-full my-2">
                 <div className="flex justify-between items-center">
                   {/* <h5 className="text-sm">تغيير الإسم: </h5> */}
                   <h1 className="text-nowrap text-start w-full select-none">
@@ -139,19 +139,19 @@ export default function Profile() {
                   />
                 </div>
                 <div className="flex items-center w-full">
-                  <hr className="w-full h-0.5 bg-gray-400 rounded-lg border-hidden" />
+                  <hr className="w-full h-0.5 bg-gray-400  border-hidden" />
                 </div>
               </div>
-              <div className="flex flex-col items-center gap-2 justify-between rounded-lg px-8 py-2 w-full my-2">
+              <div className="flex flex-col items-center gap-2 justify-between  px-8 py-2 w-full my-2">
                 <h1 className="text-nowrap text-start w-full select-none">
                   <span className="text-one  text-2xl ml-2">#</span>
                   {session?.data?.user?.email}
                 </h1>
                 <div className="flex items-center w-full">
-                  <hr className="w-full h-0.5 bg-gray-400 rounded-lg border-hidden" />
+                  <hr className="w-full h-0.5 bg-gray-400  border-hidden" />
                 </div>
               </div>
-              <div className="flex flex-col items-center gap-2 justify-between rounded-lg px-8 py-2 w-full my-2">
+              <div className="flex flex-col items-center gap-2 justify-between  px-8 py-2 w-full my-2">
                 <Link href={'/myPosts'} className="w-full">
                   <h1 className="text-nowrap text-start w-full select-none cursor-pointer ">
                     <span className="text-one  text-2xl ml-2 ">#</span>
@@ -159,10 +159,10 @@ export default function Profile() {
                   </h1>
                 </Link>
                 <div className="flex items-center w-full">
-                  <hr className="w-full h-0.5 bg-gray-400 rounded-lg border-hidden" />
+                  <hr className="w-full h-0.5 bg-gray-400  border-hidden" />
                 </div>
               </div>
-              <div className="flex flex-col items-center gap-2 justify-between rounded-lg px-8 py-2 w-full my-2">
+              <div className="flex flex-col items-center gap-2 justify-between  px-8 py-2 w-full my-2">
                 <Link href={'/favoritePosts'} className="w-full">
                   <h1 className="text-nowrap text-start w-full select-none cursor-pointer ">
                     <span className="text-one  text-2xl ml-2 ">#</span>
@@ -170,10 +170,10 @@ export default function Profile() {
                   </h1>
                 </Link>
                 <div className="flex items-center w-full">
-                  <hr className="w-full h-0.5 bg-gray-400 rounded-lg border-hidden" />
+                  <hr className="w-full h-0.5 bg-gray-400  border-hidden" />
                 </div>
               </div>
-              <div className="flex flex-col items-center gap-2 justify-between rounded-lg px-8 py-2 w-full my-2">
+              <div className="flex flex-col items-center gap-2 justify-between  px-8 py-2 w-full my-2">
                 <Link href={'/newPost'} className="w-full">
                   <h1 className="text-nowrap text-start w-full select-none cursor-pointer ">
                     <span className="text-one  text-2xl ml-2 ">#</span>
@@ -181,7 +181,7 @@ export default function Profile() {
                   </h1>
                 </Link>
                 <div className="flex items-center w-full">
-                  <hr className="w-full h-0.5 bg-gray-400 rounded-lg border-hidden" />
+                  <hr className="w-full h-0.5 bg-gray-400  border-hidden" />
                 </div>
               </div>
 

@@ -12,9 +12,9 @@ export default function Loading({ myMessage = 'لا يوجد نتائج لعرض
     }, 5000);
   }, []);
   return (
-    <div className="flex flex-col items-center justify-center animate-pulse h-[300px] rounded-lg w-full">
+    <div className="flex flex-col items-center justify-center animate-pulse h-[300px]  w-full">
       {isVisible && (
-        <div className="flex flex-col justify-start items-center bg-gray-300 rounded-lg w-full h-full p-8 transition duration-300">
+        <div className="flex flex-col justify-start items-center bg-gray-300  w-full h-full p-8 transition duration-300">
           <div className="flex flex-col justify-center items-center">
             <FaGear className="animate-spin text-5xl mt-8 transition duration-300" />
             <FaGear className="animate-spin text-2xl transition duration-300 mx-8 w-full" />
@@ -26,7 +26,7 @@ export default function Loading({ myMessage = 'لا يوجد نتائج لعرض
           </div>
         </div>
       )}
-      <h1 className="text-2xl mt-4 text-white bg-four rounded-lg p-2 text-center">
+      <h1 className="text-2xl mt-4 text-white bg-four  p-2 text-center">
         {message ? message : 'جاري التحميل'}
       </h1>
     </div>

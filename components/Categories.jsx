@@ -37,7 +37,7 @@ export default function CategoriesSlid() {
   const router = useRouter();
 
   return (
-    <div className="hidden xl:flex flex-col items-center justify-center px-2 w-full bg-four rounded-lg ">
+    <div className="hidden xl:flex flex-col items-center justify-center px-2 w-full bg-four  ">
       <h1 className="text-lg sm:text-xl text-center py-4 mt- text-white mx-4 font-semibold w-full select-none">
         ابحث حسب الصنف
       </h1>
@@ -47,7 +47,7 @@ export default function CategoriesSlid() {
           key={index}
         >
           <div
-            className="relative border border-one w-full h-[150px] rounded-lg overflow-hidden hover:scale-[101%] transition-all duration-300 shadow-lg"
+            className="relative border border-one w-full h-[150px]  overflow-hidden hover:scale-[101%] transition-all duration-300 shadow-lg"
             onClick={() => router.push(`?searchedCategory=${category?.name}`)}
           >
             <Image

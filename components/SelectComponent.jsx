@@ -17,7 +17,6 @@ export default function SelectComponent() {
   ];
 
   useEffect(() => {
-    //مختلفة لسرعة البحث والتصنيف models قمت بعمل جمل شرطية بغرض تصنيف الوجبات في
     if (propertyType?.value === 'أرض') {
       dispatch({
         type: 'PROPERTY_TYPE',

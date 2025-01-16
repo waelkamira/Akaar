@@ -101,7 +101,7 @@ export default function SearchBar() {
           (searchTriggered || searchedCategory
             ? 'absolute z-50 h-screen overflow-scroll'
             : '') +
-          ' flex flex-col items-start justify-center w-full sm:w-1/2 lg:w-1/3 bg-four rounded-lg'
+          ' flex flex-col items-start justify-center w-full sm:w-1/2 lg:w-1/3 bg-four '
         }
       >
         <div className="flex flex-col justify-center items-center sm:flex-row gap-4 w-full px-2 sm:px-4 my-4">
@@ -181,7 +181,7 @@ export default function SearchBar() {
           </div>
         )}
         {isVisible && (
-          <div className="relative w-full flex flex-col items-center justify-start p-2 overflow-y-auto h-screen bg-four rounded-lg content-center">
+          <div className="relative w-full flex flex-col items-center justify-start p-2 overflow-y-auto h-screen bg-four  content-center">
             {searchedWord &&
               searchedValues.length > 0 &&
               searchedValues.map((recipe, index) => (

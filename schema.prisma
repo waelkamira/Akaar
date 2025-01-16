@@ -13,11 +13,13 @@ model Property {
   image2               String?
   image3               String?
   image4               String?
+  propertyCategory     String
   propertyName         String
   propertyType         String
   propertyPrice        String
   propertyArea         String
   propertyCity         String
+  propertyTown         String
   contactPhoneNumber   String
   description          String
   lng                  Float?

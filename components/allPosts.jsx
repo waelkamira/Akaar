@@ -9,7 +9,7 @@ import {
 } from 'react-icons/md';
 import Link from 'next/link';
 
-export default function AllPosts() {
+export default function AllPosts({ selectedCity, selectedTown, category }) {
   const [pageNumber, setPageNumber] = useState(1);
   const [allPosts, setallPosts] = useState([]);
   const { dispatch, newPost, deletedPost } = useContext(inputsContext);
@@ -23,7 +23,9 @@ export default function AllPosts() {
     // console.log('تم ارسال طلب****************');
 
     try {
-      const response = await fetch(`/api/allPosts?page=${pageNumber}&limit=5`);
+      const response = await fetch(
+        `/api/search?page=${pageNumber}&limit=5&category=${category}&selectedCity=${selectedCity}&selectedTown=${selectedTown}`
+      );
       if (response.ok) {
         const json = await response.json();
         // console.log('json****************', json);
@@ -36,7 +38,7 @@ export default function AllPosts() {
   }
 
   return (
-    <div className="flex flex-col w-full xl:w-[90%] 2xl:w-[70%] h-[1370px] px-2 sm:px-16 pt-4 sm:py-8 rounded-lg bg-seven overflow-y-auto z-10 ">
+    <div className="flex flex-col w-full xl:w-[90%] 2xl:w-[70%] h-[1370px] px-2 sm:px-16 pt-4 sm:py-8  bg-seven overflow-y-auto z-10 ">
       {allPosts.length === 0 ? (
         <Loading />
       ) : (

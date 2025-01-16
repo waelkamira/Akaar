@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import SelectComponent from './SelectComponent';
 import { inputsContext } from './Context';
@@ -10,7 +10,6 @@ import CustomToast from './CustomToast';
 import { Confetti } from './SuccessComponent';
 import { getVideoIdAndPlatform } from './youtubeUtils';
 import { v4 as uuidv4 } from 'uuid';
-import SelectCitiesComponent from './selectCitiesComponent';
 import { FaHouseDamage } from 'react-icons/fa';
 import { RxSpaceEvenlyHorizontally } from 'react-icons/rx';
 import { VscUngroupByRefType } from 'react-icons/vsc';
@@ -22,8 +21,11 @@ import { RxVideo } from 'react-icons/rx';
 import SyriaMap from './map/SyriaMap';
 import OnClickMap from './map/onClickMap';
 import { useRouter } from 'next/navigation';
+import CategoryComponent from './CategoryComponent';
+import CitySelector from './map/CitySelector';
+import { MdOutlineCategory } from 'react-icons/md';
 
-export default function PostForm({ setIsVisible, isVisible, cancel = true }) {
+export default function PostForm({ setIsVisible, cancel = true }) {
   const [url, setUrl] = useState('');
   const [embedLink, setEmbedLink] = useState('');
   const session = useSession();
@@ -31,10 +33,51 @@ export default function PostForm({ setIsVisible, isVisible, cancel = true }) {
   const userName = CurrentUser()?.name;
   const userImage = CurrentUser()?.image || session?.data?.user?.image;
   const createdBy = CurrentUser()?.email;
-  const { data, dispatch, addImages, location } = useContext(inputsContext);
-  // console.log('addImages ************************', addImages);
 
+  const {
+    data,
+    dispatch,
+    addImages,
+    location,
+    category,
+    propertyCityLocation,
+    propertyTownLocation,
+  } = useContext(inputsContext);
+
+  console.log('category 111111111111111111', category);
+  useEffect(() => {
+    setInputs({
+      ...inputs,
+      propertyType: data?.propertyType?.label || '',
+      propertyCity: data?.propertyCity || '',
+      propertyTown: data?.propertyTown || '',
+      propertyCategory: category?.label || '',
+      image: addImages?.[0] || '',
+      image1: addImages?.[1] || '',
+      image2: addImages?.[2] || '',
+      image3: addImages?.[3] || '',
+      image4: addImages?.[4] || '',
+      lat: location?.[0] || '',
+      lng: location?.[1] || '',
+    });
+    handleGenerateEmbed();
+  }, [
+    url,
+    data?.propertyType,
+    data?.propertyCity,
+    data?.propertyTown,
+    addImages[0],
+    addImages[1],
+    addImages[2],
+    addImages[3],
+    addImages[4],
+    location,
+    category?.label,
+  ]);
   const [errors, setErrors] = useState({
+    propertyCategory: false,
+    propertyCategoryErrorMessage: 'هذا الحقل مطلوب',
+
     propertyName: false,
     propertyNameErrorMessage: 'هذا الحقل مطلوب',
 
@@ -50,6 +93,9 @@ export default function PostForm({ setIsVisible, isVisible, cancel = true }) {
     propertyCity: false,
     propertyCityErrorMessage: 'حقل المدينة مطلوب',
 
+    propertyTown: false,
+    propertyTownErrorMessage: 'حقل البلدة مطلوب',
+
     description: false,
     descriptionErrorMessage: 'حقل الوصف مطلوب',
 
@@ -59,16 +105,18 @@ export default function PostForm({ setIsVisible, isVisible, cancel = true }) {
 
   const [inputs, setInputs] = useState({
     id: uuidv4(),
-    image: addImages[0] || '',
-    image1: addImages[1] || '',
-    image2: addImages[2] || '',
-    image3: addImages[3] || '',
-    image4: addImages[4] || '',
+    image: '',
+    image1: '',
+    image2: '',
+    image3: '',
+    image4: '',
+    propertyCategory: '',
     propertyName: '',
     propertyType: '',
     propertyPrice: '',
     propertyArea: '',
     propertyCity: '',
+    propertyTown: '',
     contactPhoneNumber: '',
     description: '',
     lat: '',
@@ -78,51 +126,18 @@ export default function PostForm({ setIsVisible, isVisible, cancel = true }) {
   });
   console.log('inputs ************************', inputs);
 
-  useEffect(() => {
-    setInputs({
-      ...inputs,
-      propertyType: data?.propertyType?.label || '',
-      propertyCity: data?.propertyCity?.label || '',
-      image: addImages?.[0] || '',
-      image1: addImages?.[1] || '',
-      image2: addImages?.[2] || '',
-      image3: addImages?.[3] || '',
-      image4: addImages?.[4] || '',
-      lat: location?.[0] || '',
-      lng: location?.[1] || '',
-    });
-    handleGenerateEmbed();
-  }, [
-    url,
-    data?.propertyType,
-    data?.propertyCity,
-    addImages[0],
-    addImages[1],
-    addImages[2],
-    addImages[3],
-    addImages[4],
-    location,
-  ]);
-
   async function handleSubmit(e) {
     e.preventDefault();
-    setErrors({
-      propertyName: false,
-      propertyType: false,
-      propertyPrice: false,
-      propertyArea: false,
-      propertyCity: false,
-      contactPhoneNumber: false,
-      description: false,
-    });
 
     if (
       addImages?.length > 0 &&
+      inputs?.propertyCategory &&
       inputs?.propertyName &&
       inputs?.propertyType &&
       inputs?.propertyPrice &&
       inputs?.propertyArea &&
       inputs?.propertyCity &&
+      inputs?.propertyTown &&
       inputs?.contactPhoneNumber &&
       inputs?.description &&
       userImage &&
@@ -146,6 +161,7 @@ export default function PostForm({ setIsVisible, isVisible, cancel = true }) {
           dispatch({ type: 'ADD_IMAGE', payload: [] });
           dispatch({ type: 'PROPERTY_TYPE', payload: '' });
           dispatch({ type: 'PROPERTY_CITY', payload: '' });
+          dispatch({ type: 'PROPERTY_TOWN', payload: '' });
           dispatch({ type: 'LOCATION', payload: [] });
           setIsVisible(false);
           setInputs({
@@ -155,9 +171,11 @@ export default function PostForm({ setIsVisible, isVisible, cancel = true }) {
             image3: '',
             image4: '',
             propertyName: '',
+            propertyCategory: '',
             propertyType: '',
             propertyPrice: '',
             propertyCity: '',
+            propertyTown: '',
             propertyArea: '',
             contactPhoneNumber: '',
             lat: '',
@@ -177,10 +195,12 @@ export default function PostForm({ setIsVisible, isVisible, cancel = true }) {
           ));
           setErrors({
             propertyName: false,
+            propertyCategory: false,
             propertyType: false,
             propertyPrice: false,
             propertyArea: false,
             propertyCity: false,
+            propertyTown: false,
             contactPhoneNumber: false,
             description: false,
           });
@@ -193,10 +213,25 @@ export default function PostForm({ setIsVisible, isVisible, cancel = true }) {
         console.log(error);
       }
     } else {
-      console.log('inputs', inputs);
-      if (!inputs.image) {
-        setErrors({ ...errors, image: true });
+      // تعيين جميع الأخطاء إلى false
+      setErrors({
+        propertyCategory: false,
+        propertyName: false,
+        propertyType: false,
+        propertyPrice: false,
+        propertyArea: false,
+        propertyCity: false,
+        propertyTown: false,
+        contactPhoneNumber: false,
+        description: false,
+        image: false,
+      });
 
+      console.log('inputs', inputs);
+
+      // التحقق من الحقل المطلوب وضبط الخطأ المناسب
+      if (!inputs.image) {
+        setErrors((prevErrors) => ({ ...prevErrors, image: true }));
         toast.custom((t) => (
           <CustomToast t={t} message={'صورة العقار مطلوبة 😐'} />
         ));
@@ -204,41 +239,51 @@ export default function PostForm({ setIsVisible, isVisible, cancel = true }) {
           type: 'IMAGE_ERROR',
           payload: { imageError: true, message: 'صورة العقار مطلوبة' },
         });
-      } else if (!inputs.propertyName) {
-        setErrors({ ...errors, propertyName: true });
-
+      } else if (!inputs.propertyCategory) {
+        setErrors((prevErrors) => ({ ...prevErrors, propertyCategory: true }));
         toast.custom((t) => (
-          <CustomToast t={t} message={' عنوان الإعلان مطلوب 😐'} />
+          <CustomToast t={t} message={'تصنيف الإعلان مطلوب 😐'} />
+        ));
+      } else if (!inputs.propertyName) {
+        setErrors((prevErrors) => ({ ...prevErrors, propertyName: true }));
+        toast.custom((t) => (
+          <CustomToast t={t} message={'عنوان الإعلان مطلوب 😐'} />
         ));
       } else if (!inputs.propertyType) {
-        console.log('propertyType');
-        setErrors({ ...errors, propertyType: true });
+        setErrors((prevErrors) => ({ ...prevErrors, propertyType: true }));
         toast.custom((t) => (
           <CustomToast t={t} message={'اختيار نوع العقار مطلوب 😐'} />
         ));
       } else if (!inputs.propertyPrice) {
-        setErrors({ ...errors, propertyPrice: true });
-
+        setErrors((prevErrors) => ({ ...prevErrors, propertyPrice: true }));
         toast.custom((t) => (
           <CustomToast t={t} message={'سعر العقار مطلوب 😐'} />
         ));
       } else if (!inputs.propertyArea) {
-        setErrors({ ...errors, propertyArea: true });
+        setErrors((prevErrors) => ({ ...prevErrors, propertyArea: true }));
         toast.custom((t) => (
           <CustomToast t={t} message={'حقل مساحة العقار مطلوب 😐'} />
         ));
       } else if (!inputs.propertyCity) {
-        setErrors({ ...errors, propertyCity: true });
+        setErrors((prevErrors) => ({ ...prevErrors, propertyCity: true }));
         toast.custom((t) => (
           <CustomToast t={t} message={'حقل المدينة مطلوب 😐'} />
         ));
+      } else if (!inputs.propertyTown) {
+        setErrors((prevErrors) => ({ ...prevErrors, propertyTown: true }));
+        toast.custom((t) => (
+          <CustomToast t={t} message={'حقل البلدة مطلوب 😐'} />
+        ));
       } else if (!inputs.contactPhoneNumber) {
-        setErrors({ ...errors, contactPhoneNumber: true });
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          contactPhoneNumber: true,
+        }));
         toast.custom((t) => (
           <CustomToast t={t} message={'حقل رقم الهاتف مطلوب 😐'} />
         ));
       } else if (!inputs.description) {
-        setErrors({ ...errors, description: true });
+        setErrors((prevErrors) => ({ ...prevErrors, description: true }));
         toast.custom((t) => (
           <CustomToast t={t} message={'حقل الوصف مطلوب 😐'} />
         ));
@@ -315,34 +360,50 @@ export default function PostForm({ setIsVisible, isVisible, cancel = true }) {
             <div className="flex flex-col gap-8 md:flex-row w-full ">
               <div className="w-full">
                 <div className="flex flex-col items-center justify-center my-4 w-full">
-                  {errors.propertyName && (
+                  {errors.propertyCategory && (
                     <h1 className="text-one text-2xl text-start w-full animate-bounce">
-                      هذا الحقل مطلوب{' '}
+                      التصنيف مطلوبة
                     </h1>
                   )}
                   <div className="flex items-center gap-2 w-full justify-start my-2">
-                    <h1 className="flex text-right text-md sm:text-xl text-white">
+                    <h1 className="flex text-right text-md sm:text-xl text-white ">
                       <span className="text-one text-2xl ml-2">
-                        <FaHouseDamage />
+                        {' '}
+                        <MdOutlineCategory />
                       </span>
-                      اسم مناسب للإعلان: (إجباري)
+                      نوع الإعلان:
+                    </h1>
+                  </div>
+                  <CategoryComponent />
+                </div>
+                <div className="flex flex-col items-center justify-center my-4 w-full">
+                  {errors.propertyArea && (
+                    <h1 className="text-one text-2xl text-start w-full animate-bounce">
+                      مساحة العقار مطلوبة
+                    </h1>
+                  )}
+                  <div className="flex items-center gap-2 w-full justify-start my-2">
+                    <h1 className="flex text-right text-md sm:text-xl text-white ">
+                      <span className="text-one text-2xl ml-2">
+                        {' '}
+                        <RxSpaceEvenlyHorizontally />
+                      </span>
+                      مساحة العقار:
                     </h1>
                   </div>
 
                   <input
-                    value={inputs?.propertyName}
-                    autoFocus
+                    value={inputs?.propertyArea}
                     onChange={(e) =>
-                      setInputs({ ...inputs, propertyName: e.target.value })
+                      setInputs({ ...inputs, propertyArea: e.target.value })
                     }
-                    type="text"
-                    id="اسم العقار"
-                    name="اسم العقار"
-                    placeholder=" بيت بداريا _ أرض بدوما .."
-                    className="flex text-right w-full p-2 rounded-lg text-xl sm:text-2xl outline-2 focus:outline-one h-12 placeholder:text-md placeholder:sm:text-xl"
+                    type="number"
+                    id="مساحة العقار"
+                    name="مساحة العقار"
+                    placeholder="300 متر2"
+                    className="flex text-right w-full p-2  text-xl sm:text-2xl outline-2 focus:outline-one h-12 placeholder:text-md placeholder:sm:text-xl"
                   />
                 </div>
-
                 <div className="flex flex-col items-center justify-center my-4 w-full ">
                   {errors.propertyType && (
                     <h1 className="text-one text-2xl text-start w-full animate-bounce">
@@ -354,7 +415,7 @@ export default function PostForm({ setIsVisible, isVisible, cancel = true }) {
                       <span className="text-one text-2xl ml-2">
                         <VscUngroupByRefType />
                       </span>
-                      نوع العقار: (إجباري)
+                      نوع العقار:
                     </h1>
                   </div>
 
@@ -372,7 +433,7 @@ export default function PostForm({ setIsVisible, isVisible, cancel = true }) {
                       <span className="text-one text-2xl ml-2">
                         <MdOutlinePriceCheck />
                       </span>
-                      سعر العقار: (إجباري)
+                      سعر العقار:
                     </h1>
                   </div>
 
@@ -384,39 +445,39 @@ export default function PostForm({ setIsVisible, isVisible, cancel = true }) {
                     type="number"
                     id="سعر العقار"
                     name="سعر العقار"
-                    placeholder="000.0"
-                    className="flex text-right w-full p-2 rounded-lg text-xl sm:text-2xl outline-2 focus:outline-one h-12 placeholder:text-md placeholder:sm:text-xl"
+                    placeholder="$ 000.0"
+                    className="flex text-right w-full p-2  text-xl sm:text-2xl outline-2 focus:outline-one h-12 placeholder:text-md placeholder:sm:text-xl"
                   />
                 </div>
               </div>
 
               <div className="w-full">
                 <div className="flex flex-col items-center justify-center my-4 w-full">
-                  {errors.propertyArea && (
+                  {errors.propertyName && (
                     <h1 className="text-one text-2xl text-start w-full animate-bounce">
-                      مساحة العقار مطلوبة
+                      هذا الحقل مطلوب{' '}
                     </h1>
                   )}
                   <div className="flex items-center gap-2 w-full justify-start my-2">
-                    <h1 className="flex text-right text-md sm:text-xl text-white ">
+                    <h1 className="flex text-right text-md sm:text-xl text-white">
                       <span className="text-one text-2xl ml-2">
-                        {' '}
-                        <RxSpaceEvenlyHorizontally />
+                        <FaHouseDamage />
                       </span>
-                      مساحة العقار: (إجباري)
+                      اسم مناسب للإعلان:
                     </h1>
                   </div>
 
                   <input
-                    value={inputs?.propertyArea}
+                    value={inputs?.propertyName}
+                    autoFocus
                     onChange={(e) =>
-                      setInputs({ ...inputs, propertyArea: e.target.value })
+                      setInputs({ ...inputs, propertyName: e.target.value })
                     }
-                    type="number"
-                    id="مساحة العقار"
-                    name="مساحة العقار"
-                    placeholder="300 متر2"
-                    className="flex text-right w-full p-2 rounded-lg text-xl sm:text-2xl outline-2 focus:outline-one h-12 placeholder:text-md placeholder:sm:text-xl"
+                    type="text"
+                    id="اسم العقار"
+                    name="اسم العقار"
+                    placeholder=" بيت بداريا _ أرض بدوما .."
+                    className="flex text-right w-full p-2  text-xl sm:text-2xl outline-2 focus:outline-one h-12 placeholder:text-md placeholder:sm:text-xl"
                   />
                 </div>
 
@@ -426,16 +487,11 @@ export default function PostForm({ setIsVisible, isVisible, cancel = true }) {
                       حقل المدينة مطلوب
                     </h1>
                   )}
-                  <div className="flex items-center gap-2 w-full justify-start my-2">
-                    <h1 className="flex text-right text-md sm:text-xl text-white ">
-                      <span className="text-one text-2xl ml-2">
-                        <GiModernCity />
-                      </span>
-                      المدينة: (إجباري)
-                    </h1>
-                  </div>
 
-                  <SelectCitiesComponent />
+                  <CitySelector
+                  // setSelectCity={setSelectedCity}
+                  // setSelectTown={setSelectedTown}
+                  />
                 </div>
 
                 <div className="flex flex-col items-center justify-center my-4 w-full">
@@ -449,7 +505,7 @@ export default function PostForm({ setIsVisible, isVisible, cancel = true }) {
                       <span className="text-one text-2xl ml-2">
                         <GiRotaryPhone />
                       </span>
-                      رقم الهاتف: (إجباري)
+                      رقم الهاتف:
                     </h1>
                   </div>
 
@@ -464,8 +520,8 @@ export default function PostForm({ setIsVisible, isVisible, cancel = true }) {
                     type="number"
                     id="رقم الهاتف"
                     name="رقم الهاتف"
-                    placeholder="12323456789"
-                    className="flex text-right w-full p-2 rounded-lg text-xl sm:text-2xl outline-2 focus:outline-one h-12 placeholder:text-md placeholder:sm:text-xl"
+                    placeholder="+963 987 654 321"
+                    className="flex text-right w-full p-2  text-xl sm:text-2xl outline-2 focus:outline-one h-12 placeholder:text-md placeholder:sm:text-xl"
                   />
                 </div>
               </div>
@@ -484,7 +540,7 @@ export default function PostForm({ setIsVisible, isVisible, cancel = true }) {
                 <span className="text-one text-2xl ml-2">
                   <MdOutlineFeaturedPlayList />
                 </span>
-                الوصف: (إجباري)
+                الوصف:
               </h1>
             </div>
 
@@ -497,11 +553,16 @@ export default function PostForm({ setIsVisible, isVisible, cancel = true }) {
               rows={'6'}
               name="الوصف"
               id="الوصف"
-              className="scrollBar flex text-right w-full p-2 rounded-lg text-xl placeholder:text-md placeholder:sm:text-xl h-36 outline-2 focus:outline-one"
+              className="scrollBar flex text-right w-full p-2  text-xl placeholder:text-md placeholder:sm:text-xl h-36 outline-2 focus:outline-one"
             ></textarea>
           </div>
-          {/* <SyriaMap /> */}
-          <OnClickMap />
+          {/* FIXME */}
+          <OnClickMap
+            chosenCity={data?.propertyCity}
+            chosentown={data?.propertyTown}
+            propertyCityLocation={propertyCityLocation}
+            propertyTownLocation={propertyTownLocation}
+          />
           <div className="w-full">
             <div className="flex items-center gap-2 w-full justify-start my-2 ">
               {' '}
@@ -518,7 +579,7 @@ export default function PostForm({ setIsVisible, isVisible, cancel = true }) {
               placeholder="... ضع رابط الفيديو هنا"
               value={url}
               onChange={handleInputChange}
-              className="flex text-right mt-4 mb-8 w-full p-2 rounded-lg text-xl sm:text-2xl outline-2 focus:outline-one h-12 placeholder:text-md placeholder:sm:text-xl"
+              className="flex text-right mt-4 mb-8 w-full p-2  text-xl sm:text-2xl outline-2 focus:outline-one h-12 placeholder:text-md placeholder:sm:text-xl"
             />
             {inputs?.link && (
               <div>
@@ -529,7 +590,7 @@ export default function PostForm({ setIsVisible, isVisible, cancel = true }) {
                   frameBorder="0"
                   allowFullScreen
                   title="Embedded YouTube Video"
-                  className="rounded-lg w-full h-44 sm:h-96 lg:h-[470px] xl:h-[500px] 2xl:h-[560px]"
+                  className=" w-full h-44 sm:h-96 lg:h-[470px] xl:h-[500px] 2xl:h-[560px]"
                 />
               </div>
             )}
@@ -538,14 +599,14 @@ export default function PostForm({ setIsVisible, isVisible, cancel = true }) {
           <div className="flex flex-col sm:flex-row justify-around items-center gap-8 w-full my-12">
             <button
               type="submit"
-              className="btn bg-five rounded-lg text-white shadow-lg hover:outline outline-one text-xl hover py-2 px-16 w-full"
+              className="btn bg-five  text-white shadow-lg hover:outline outline-one text-xl hover py-2 px-16 w-full"
             >
               نشر
             </button>
             {cancel && (
               <button
                 type="text"
-                className="btn bg-five rounded-lg text-white shadow-lg hover:outline  outline-one text-xl hover py-2 px-16 w-full"
+                className="btn bg-five  text-white shadow-lg hover:outline  outline-one text-xl hover py-2 px-16 w-full"
                 onClick={() => {
                   setIsVisible(false);
                   setInputs({

@@ -27,8 +27,21 @@ function inputsReducer(currentState, action) {
         ...currentState,
         data: {
           ...currentState?.data,
-          propertyCity: action.payload.propertyCity,
-          modelName: action.payload.modelName,
+          propertyCity: action.payload?.propertyCity,
+          propertyCityLocation: action.payload.propertyCityLocation,
+
+          modelName: action.payload?.modelName,
+        },
+      };
+    case 'PROPERTY_TOWN':
+      return {
+        ...currentState,
+        data: {
+          ...currentState?.data,
+          propertyTown: action.payload?.propertyTown,
+          propertyCityLocation: action.payload.propertyTownLocation,
+
+          modelName: action.payload?.modelName,
         },
       };
     case 'DELETE_RECIPE':
@@ -72,6 +85,11 @@ function inputsReducer(currentState, action) {
         ...currentState,
         location: action?.payload,
       };
+    case 'CATEGORY':
+      return {
+        ...currentState,
+        category: action?.payload,
+      };
 
     default:
       return currentState;
@@ -92,8 +110,9 @@ export function InputsContextProvider({ children }) {
     action: {},
     myPosts: [],
     location: [],
+    category: '',
   });
-  // console.log('from Context', state);
+  console.log('from Context', state);
 
   return (
     <inputsContext.Provider value={{ ...state, dispatch }}>
