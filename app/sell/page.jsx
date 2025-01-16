@@ -44,7 +44,7 @@ export default function Sell() {
     <div className="flex flex-col justify-center items-center gap-4 overflow-auto w-full h-full border border-five bg-four">
       <div className="absolute flex flex-col items-start gap-2 z-40 top-2 right-2 sm:top-4 sm:right-4 xl:right-12 xl:top-12 ">
         <TfiMenuAlt
-          className="xl:hidden p-1 rounded-lg text-4xl lg:text-5xl text-one cursor-pointer z-50 animate-pulse"
+          className="xl:hidden p-1  text-4xl lg:text-5xl text-one cursor-pointer z-50 animate-pulse"
           onClick={() => setIsOpen(!isOpen)}
         />
         {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
@@ -64,7 +64,11 @@ export default function Sell() {
           onSelectTown={handleTownSelect}
         />
       </div>
-      <AllPosts />
+      <AllPosts
+        selectedCity={selectedCity}
+        selectedTown={selectedTown}
+        category={'sell'}
+      />
     </div>
   );
 }

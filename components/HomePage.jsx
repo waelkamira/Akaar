@@ -26,7 +26,7 @@ export default function HomePage() {
         <div className="w-full">
           <div className="xl:hidden absolute flex flex-col items-start gap-2 z-50 top-2 right-0 sm:top-4 sm:right-4  lg:right-12 w-full">
             <TfiMenuAlt
-              className=" p-2 rounded-lg text-5xl text-one animate-pulse"
+              className=" p-2  text-5xl text-one animate-pulse"
               onClick={() => setIsOpen(!isOpen)}
             />
             {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}

@@ -12,7 +12,7 @@ export default function NewPostButton() {
   const session = useSession();
 
   return (
-    <div className="w-full rounded-lg z-50 ">
+    <div className="w-full  z-50 ">
       <Button
         title={'إنشاء إعلان جديد'}
         style={' '}
@@ -21,11 +21,11 @@ export default function NewPostButton() {
 
       {isVisible && (
         <div
-          className="absolute flex justify-center items-start gap-4 overflow-auto w-full h-full border md:p-8 bg-four/95 border-five right-0 top-0 2xl:-top-8 rounded-lg z-50"
+          className="absolute flex justify-center items-start gap-4 overflow-auto w-full h-full border md:p-8 bg-four/95 border-five right-0 top-0 2xl:-top-8  z-50"
           onClick={() => setIsVisible(false)}
         >
           <div
-            className="absolute top-2 right-2 sm:top-16 sm:right-16 flex justify-center items-center z-50 bg-five hover:bg-one cursor-pointer h-fit px-4 py-1 text-white font-semibold rounded-lg hover:scale-105 shadow-lg "
+            className="absolute top-2 right-2 sm:top-16 sm:right-16 flex justify-center items-center z-50 bg-five hover:bg-one cursor-pointer h-fit px-4 py-1 text-white font-semibold  hover:scale-105 shadow-lg "
             onClick={() => setIsVisible(false)}
           >
             <h1 className="tex-sm">إغلاق</h1>
@@ -36,11 +36,11 @@ export default function NewPostButton() {
               (session?.status === 'unauthenticated'
                 ? 'h-[700px]'
                 : 'h-[1700px]') +
-              ' relative w-full 2xl:w-2/3 flex flex-col items-start justify-center sm:flex-row 2xl:my-8 top-0 z-40 overflow-hidden border border-one rounded-lg'
+              ' relative w-full 2xl:w-2/3 flex flex-col items-start justify-center sm:flex-row 2xl:my-8 top-0 z-40 overflow-hidden border border-one '
             }
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="absolute w-full h-full flex flex-col items-center justify-start rounded-lg grow z-50 bg-four ">
+            <div className="absolute w-full h-full flex flex-col items-center justify-start  grow z-50 bg-four ">
               <div className="relative h-24 sm:h-28 w-36 my-2 ">
                 <Image
                   priority
@@ -51,7 +51,7 @@ export default function NewPostButton() {
                 />
               </div>
               {session?.status === 'unauthenticated' && (
-                <div className="p-4 bg-four rounded-lg m-2 md:m-8 border border-one text-center">
+                <div className="p-4 bg-four  m-2 md:m-8 border border-one text-center">
                   <h1 className="text-lg md:text-2xl p-2  text-white">
                     يجب عليك تسجيل الدخول أولا لكي تتمكن من إنشاء إعلان جديد
                   </h1>{' '}

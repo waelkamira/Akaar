@@ -36,7 +36,7 @@ export default function SyriaMap({ lng = '', lat = '' }) {
   return (
     <div className="w-full">
       {/* الخريطة التفاعلية */}
-      <div className="w-full h-[500px] rounded-md overflow-hidden ">
+      <div className="w-full h-72 sm:h-[500px] rounded-md overflow-hidden ">
         <MapContainer
           center={[latitude, longitude]} // استخدام القيم المحوّلة
           zoom={13} // التكبير الافتراضي

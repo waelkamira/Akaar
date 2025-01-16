@@ -74,18 +74,18 @@ export default function Users() {
   };
 
   return (
-    <div className="relative flex flex-col justify-center items-center w-full bg-gray-800 rounded-lg text-lg text-white">
+    <div className="relative flex flex-col justify-center items-center w-full bg-gray-800  text-lg text-white">
       <BackButton />
       <div className="absolute flex flex-col items-start gap-2 z-50 top-2 right-2 sm:top-4 sm:right-4">
         <TfiMenuAlt
-          className="p-1 rounded-lg text-4xl lg:text-5xl text-one cursor-pointer z-50 animate-pulse"
+          className="p-1  text-4xl lg:text-5xl text-one cursor-pointer z-50 animate-pulse"
           onClick={() => {
             setIsOpen(!isOpen);
           }}
         />
         {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
       </div>
-      <div className="flex gap-4 justify-center items-center bg-gray-700 rounded-lg text-lg text-white w-full p-4 mt-16 xl:mt-24 shadow-lg">
+      <div className="flex gap-4 justify-center items-center bg-gray-700  text-lg text-white w-full p-4 mt-16 xl:mt-24 shadow-lg">
         <input
           value={findUser}
           onChange={(e) => setFindUser(e.target.value)}
@@ -95,11 +95,11 @@ export default function Users() {
           name="user"
           placeholder="ابحث عن اسم مستخدم ..."
           autoFocus
-          className="text-right w-full p-2 rounded-lg text-lg outline-none focus:outline-one h-10 text-black"
+          className="text-right w-full p-2  text-lg outline-none focus:outline-one h-10 text-black"
         />
         <button
           onClick={handleSearch}
-          className="flex items-center justify-center p-2 rounded-lg bg-one text-white"
+          className="flex items-center justify-center p-2  bg-one text-white"
         >
           <IoIosSearch className="text-2xl" />
         </button>
@@ -113,7 +113,7 @@ export default function Users() {
           {users.length > 0 ? (
             users.map((user, index) => (
               <div
-                className="flex justify-between items-center bg-gray-700 my-2 text-white w-full h-24 border-[3px] border-one p-2 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300"
+                className="flex justify-between items-center bg-gray-700 my-2 text-white w-full h-24 border-[3px] border-one p-2  shadow-md hover:shadow-xl transition-shadow duration-300"
                 key={index}
               >
                 <div>
@@ -128,7 +128,7 @@ export default function Users() {
                   'أدمن'
                 ) : (
                   <div
-                    className="flex flex-col items-center justify-center cursor-pointer bg-red-600 rounded-lg p-2 md:text-2xl text-white hover:bg-red-700"
+                    className="flex flex-col items-center justify-center cursor-pointer bg-red-600  p-2 md:text-2xl text-white hover:bg-red-700"
                     onClick={() => handleDeleteUser(user)}
                   >
                     <IoMdClose />

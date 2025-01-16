@@ -18,7 +18,7 @@ export default function ContactUs() {
   const session = useSession();
   return (
     <div
-      className="relative flex justify-center items-start gap-4 overflow-auto w-full h-full border border-five xl:p-8 bg-four  right-0 top-0 2xl:-top-8 rounded-lg z-50"
+      className="relative flex justify-center items-start gap-4 overflow-auto w-full h-full border border-five xl:p-8 bg-four  right-0 top-0 2xl:-top-8  z-50"
       onClick={() => setIsVisible(false)}
     >
       ContactUs

@@ -72,10 +72,10 @@ export default function MyPosts() {
   }
 
   return (
-    <div className="relative w-full bg-four h-full sm:p-4 lg:p-8 rounded-lg">
+    <div className="relative w-full bg-four h-full sm:p-4 lg:p-8 ">
       <div className="absolute flex flex-col items-start gap-2 z-40 top-2 right-2 sm:top-4 sm:right-4 xl:right-12 xl:top-12 ">
         <TfiMenuAlt
-          className=" p-1 rounded-lg text-4xl lg:text-5xl text-one cursor-pointer z-50  animate-pulse"
+          className=" p-1  text-4xl lg:text-5xl text-one cursor-pointer z-50  animate-pulse"
           onClick={() => {
             setIsOpen(!isOpen);
           }}
@@ -127,13 +127,13 @@ export default function MyPosts() {
           {myPosts?.length > 0 &&
             myPosts.map((post, index) => (
               <div
-                className="relative flex flex-col items-start justify-start gap-0 bg-twelve rounded-lg overflow-hidden"
+                className="relative flex flex-col items-start justify-start gap-0 bg-twelve  overflow-hidden"
                 key={index}
               >
                 {session?.status === 'authenticated' && (
                   <div className="flex justify-between items-center bg-twelve w-full pt-4 px-4">
                     <div
-                      className="flex flex-col items-center justify-center cursor-pointer bg-four rounded-lg p-2 md:text-2xl text-white hover:bg-one"
+                      className="flex flex-col items-center justify-center cursor-pointer bg-four  p-2 md:text-2xl text-white hover:bg-one"
                       onClick={() => router.push(`/editPost/${post?.id}`)}
                     >
                       <MdEdit className="" />
@@ -141,7 +141,7 @@ export default function MyPosts() {
                       <h6 className="text-sm select-none">تعديل</h6>
                     </div>
                     <div
-                      className="flex flex-col items-center justify-center cursor-pointer bg-four rounded-lg p-2 md:text-2xl text-white hover:bg-one"
+                      className="flex flex-col items-center justify-center cursor-pointer bg-four  p-2 md:text-2xl text-white hover:bg-one"
                       onClick={() => {
                         setIsVisible(true);
                         setpostId(post?.id);

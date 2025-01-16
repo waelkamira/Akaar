@@ -21,7 +21,7 @@ export default function TextArea({ errors, title }) {
         rows={'6'}
         name="المقادير"
         id="المقادير"
-        className="scrollBar text-right w-full p-2 rounded-lg text-xl h-36 outline-2 focus:outline-one"
+        className="scrollBar text-right w-full p-2  text-xl h-36 outline-2 focus:outline-one"
         placeholder={`١- خبز توست حسب الرغبة
 ٢- جبن شرائح
 ٣- ٥ بيضات مخفوقة

@@ -97,7 +97,7 @@ export default function SideBar() {
             )}
           </div>
 
-          <div className="relative w-full h-52 rounded-lg">
+          <div className="relative w-full h-52 ">
             <Image
               priority
               src={'https://i.imgur.com/hILi6c8.jpg'}

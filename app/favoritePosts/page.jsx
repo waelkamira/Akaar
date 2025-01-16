@@ -94,15 +94,15 @@ export default function Page() {
   }
 
   return (
-    <div className="relative w-full bg-four h-full p-4 lg:p-8 rounded-lg z-50">
+    <div className="relative w-full bg-four h-full p-4 lg:p-8  z-50">
       <div className="absolute flex flex-col items-start gap-2 z-40 top-2 right-2 sm:top-4 sm:right-4 xl:right-12 xl:top-12 ">
         <TfiMenuAlt
-          className="p-1 rounded-lg text-4xl lg:text-5xl text-one cursor-pointer z-50 animate-pulse"
+          className="p-1  text-4xl lg:text-5xl text-one cursor-pointer z-50 animate-pulse"
           onClick={() => setIsOpen(!isOpen)}
         />
         {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
       </div>
-      <div className="hidden xl:block relative w-full h-24 sm:h-[200px] rounded-lg overflow-hidden shadow-lg shadow-one">
+      <div className="hidden xl:block relative w-full h-24 sm:h-[200px]  overflow-hidden shadow-lg shadow-one">
         <Image
           priority
           src={'/photo (19).png'}
@@ -143,7 +143,7 @@ export default function Page() {
               <div className="relative " key={index}>
                 {session?.status === 'authenticated' && (
                   <div
-                    className="absolute top-12 left-4 flex flex-col items-center justify-center cursor-pointer bg-four rounded-lg p-2 md:text-2xl text-white hover:bg-one"
+                    className="absolute top-12 left-4 flex flex-col items-center justify-center cursor-pointer bg-four  p-2 md:text-2xl text-white hover:bg-one"
                     onClick={() => handleDeletePost(recipe)}
                   >
                     <IoMdClose className="" />

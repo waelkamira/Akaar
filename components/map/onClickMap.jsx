@@ -10,37 +10,7 @@ import 'leaflet/dist/leaflet.css';
 import { icon } from 'leaflet';
 import { useState, useRef, useEffect, useContext } from 'react';
 import { inputsContext } from '../Context';
-
-// قائمة المحافظات السورية والبلدات الرئيسية
-const cities = [
-  {
-    name: 'دمشق',
-    latlng: [33.5138, 36.2765],
-    zoom: 12, // مستوى التكبير عند اختيار المحافظة
-    towns: [
-      { name: 'المزة', latlng: [33.505, 36.2782], zoom: 14 },
-      { name: 'كفرسوسة', latlng: [33.493, 36.2743], zoom: 14 },
-    ],
-  },
-  {
-    name: 'حلب',
-    latlng: [36.2021, 37.1343],
-    zoom: 12,
-    towns: [
-      { name: 'منبج', latlng: [36.5287, 37.9561], zoom: 14 },
-      { name: 'عفرين', latlng: [36.5111, 36.8667], zoom: 14 },
-    ],
-  },
-  {
-    name: 'حمص',
-    latlng: [34.7324, 36.7139],
-    zoom: 12,
-    towns: [
-      { name: 'الرستن', latlng: [34.9212, 36.7321], zoom: 14 },
-      { name: 'تلبيسة', latlng: [34.8396, 36.7312], zoom: 14 },
-    ],
-  },
-];
+import { cities } from './Cities';
 
 // أيقونة مخصصة للدبابيس
 const customIcon = icon({
@@ -70,17 +40,30 @@ function AddMarker({ onLocationSelect }) {
   ) : null;
 }
 
-export default function OnClickMap() {
-  const [selectedLocation, setSelectedLocation] = useState(null);
-  const [selectedCity, setSelectedCity] = useState(null);
-  const [selectedTown, setSelectedTown] = useState(null);
+export default function OnClickMap({
+  chosenCity,
+  chosentown,
+  propertyCityLocation,
+  propertyTownLocation,
+}) {
+  const [selectedLocation, setSelectedLocation] = useState(
+    propertyTownLocation || propertyCityLocation || [34.8021, 38.9968]
+  );
+  const [selectedCity, setSelectedCity] = useState(chosenCity || null);
+  const [selectedTown, setSelectedTown] = useState(chosentown || null);
   const { dispatch } = useContext(inputsContext);
   const mapRef = useRef(); // مرجع للخريطة
-  console.log('selectedLocation', selectedLocation);
 
   useEffect(() => {
     dispatch({ type: 'LOCATION', payload: selectedLocation });
-  }, [selectedLocation]);
+
+    if (propertyCityLocation) {
+      setSelectedLocation(propertyCityLocation);
+    }
+    if (propertyTownLocation) {
+      setSelectedLocation(propertyTownLocation);
+    }
+  }, [propertyCityLocation, propertyTownLocation]);
 
   const handleLocationSelect = (location) => {
     setSelectedLocation(location);
@@ -130,7 +113,7 @@ export default function OnClickMap() {
         >
           <option value="">-- اختر المحافظة --</option>
           {cities.map((city) => (
-            <option key={city.name} value={city.name}>
+            <option key={city.name} value={city.name || chosenCity}>
               {city.name}
             </option>
           ))}
@@ -146,8 +129,8 @@ export default function OnClickMap() {
             value={selectedTown?.name || ''}
           >
             <option value="">-- اختر البلدة --</option>
-            {selectedCity.towns.map((town) => (
-              <option key={town.name} value={town.name}>
+            {selectedCity?.towns?.map((town) => (
+              <option key={town.name} value={town.name || chosentown}>
                 {town.name}
               </option>
             ))}
@@ -157,7 +140,7 @@ export default function OnClickMap() {
 
       <div className="w-full h-72 sm:h-[500px]  rounded-md overflow-hidden">
         <MapContainer
-          center={selectedLocation || [34.8021, 38.9968]} // مركز الخريطة الافتراضي على سوريا أو الموقع المحدد
+          center={selectedLocation} // مركز الخريطة الافتراضي
           zoom={7}
           className="w-full h-full"
           ref={mapRef} // مرجع للخريطة
