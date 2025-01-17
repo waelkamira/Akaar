@@ -1,83 +1,57 @@
 import { NextResponse } from 'next/server';
-import { supabase } from '../../../lib/supabaseClient';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
-// export async function GET(req) {
-//   try {
-//     const { searchParams } = new URL(req.url, 'http://localhost');
-//     const page = parseInt(searchParams.get('page') || '1', 10);
-//     const limit = parseInt(searchParams.get('limit') || '5', 10);
-//     const mealName = searchParams.get('mealName') || '';
-//     const propertyType = searchParams.get('propertyType') || '';
-
-//     const skip = (page - 1) * limit;
-
-//     // بناء شروط الاستعلام
-//     const whereConditions = {};
-//     if (mealName) {
-//       whereConditions['mealName'] = mealName;
-//     }
-//     if (propertyType) {
-//       whereConditions['propertyType'] = propertyType;
-//     }
-
-//     // تنفيذ الاستعلام في Supabase
-//     let { data: meals, error } = await supabase
-//       .from('Meal')
-//       .select('*')
-//       .ilike('mealName', `%${mealName}%`)
-//       .ilike('propertyType', `%${propertyType}%`)
-//       .range(skip, skip + limit - 1);
-
-//     if (error) {
-//       throw error;
-//     }
-
-//     return NextResponse.json(meals, { status: 200 });
-//   } catch (error) {
-//     console.error('Error fetching meals:', error);
-//     return NextResponse.json(
-//       { error: 'Internal Server Error' },
-//       { status: 500 }
-//     );
-//   }
-// }
 
 export async function GET(req) {
   const url = new URL(req.url);
   const searchParams = url.searchParams;
 
-  // الحصول على قيم الصفحة والحد الأقصى
-  const page = parseInt(searchParams.get('page')) || 1;
-  const limit = parseInt(searchParams.get('limit')) || 5;
+  const page = Math.max(1, parseInt(searchParams.get('page')) || 1);
+  const limit = Math.max(1, parseInt(searchParams.get('limit')) || 5);
   const skip = (page - 1) * limit;
-  const selectedCity = searchParams.get('selectedCity');
-  const selectedTown = searchParams.get('selectedTown');
-  const category = searchParams.get('category');
 
-  console.log('selectedCity', selectedCity);
-  console.log('selectedTown', selectedTown);
-  console.log('category', category);
+  const propertyCategory = searchParams.get('propertyCategory');
+  const propertyCity = searchParams.get('propertyCity');
+  const propertyTown = searchParams.get('propertyTown');
+
+  console.log('Filters:', { propertyCategory, propertyCity, propertyTown });
 
   try {
-    // قراءة البيانات من جدول Property
+    // إعداد شروط الفلترة
+    const filters = {};
+
+    // الفئة مطلوبة دائمًا
+    if (propertyCategory) {
+      filters.propertyCategory = propertyCategory;
+    }
+
+    // تحقق من وجود المدينة
+    if (propertyCity && propertyCity !== 'undefined') {
+      filters.propertyCity = propertyCity;
+
+      // إذا كانت البلدة موجودة أيضًا
+      if (propertyTown && propertyTown !== 'undefined') {
+        filters.propertyTown = propertyTown;
+      }
+    }
+
+    // استعلام قاعدة البيانات
     const properties = await prisma.property.findMany({
+      where: filters,
       skip,
       take: limit,
-      orderBy: { createdAt: 'desc' },
+      orderBy: { createdAt: 'desc' }, // ترتيب حسب تاريخ الإنشاء
     });
-    // console.log('properties', properties);
-    if (category) {
-    }
-    return new Response(JSON.stringify(properties), {
-      headers: { 'Content-Type': 'application/json' },
-    });
+
+    await prisma.$disconnect();
+    return NextResponse.json(properties);
   } catch (error) {
     console.error('Error fetching properties:', error);
-    return new Response(JSON.stringify({ error: 'Internal Server Error' }), {
-      headers: { 'Content-Type': 'application/json' },
-      status: 500,
-    });
+    await prisma.$disconnect();
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 }
+    );
   }
 }

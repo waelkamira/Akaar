@@ -34,7 +34,7 @@ export default function CitiesSelectComponent() {
   function customTheme(theme) {
     return {
       ...theme,
-      borderRadius: 8,
+      borderRadius: 0,
       colors: {
         ...theme.colors,
         primary: '#22C55E',

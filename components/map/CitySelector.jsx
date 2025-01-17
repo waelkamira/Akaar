@@ -1,5 +1,6 @@
 'use client';
-import { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import Select from 'react-select';
 import { cities } from '../../components/map/Cities';
 import { GiModernCity } from 'react-icons/gi';
 import { FaTreeCity } from 'react-icons/fa6';
@@ -11,42 +12,64 @@ export default function CitySelector() {
   const { dispatch } = useContext(inputsContext);
 
   useEffect(() => {
-    if (selectedCity) {
+    if (selectedCity?.value && selectedCity?.latlng) {
       dispatch({
         type: 'PROPERTY_CITY',
         payload: {
-          propertyCity: selectedCity.name,
-          propertyCityLocation: selectedCity.latlng,
+          propertyCity: selectedCity?.value,
         },
       });
     }
-    if (selectedTown) {
+
+    if (selectedTown?.value && selectedTown?.latlng) {
       dispatch({
         type: 'PROPERTY_TOWN',
         payload: {
-          propertyTown: selectedTown.name,
-          propertyTownLocation: selectedTown.latlng,
+          propertyTown: selectedTown.value,
         },
       });
     }
   }, [selectedCity, selectedTown]);
 
-  const handleCityChange = (e) => {
-    const city = cities.find((c) => c.name === e.target.value);
-    setSelectedCity(city);
+  const cityOptions = cities.map((city) => ({
+    value: city?.name,
+    label: city?.name,
+    latlng: city?.latlng || [0, 0], // Default to [0, 0] if missing
+    towns: (city?.towns || []).map((town) => ({
+      value: town?.name,
+      label: town?.name,
+      latlng: town?.latlng || [0, 0], // Default to [0, 0] if missing
+    })),
+  }));
+
+  const handleCityChange = (selectedOption) => {
+    console.log('selectedOption (City):', selectedOption);
+    setSelectedCity(selectedOption);
     setSelectedTown(null); // إعادة تعيين البلدة عند تغيير المدينة
   };
 
-  const handleTownChange = (e) => {
-    const town = selectedCity.towns.find((t) => t.name === e.target.value);
-    setSelectedTown(town);
+  const handleTownChange = (selectedOption) => {
+    console.log('selectedOption (Town):', selectedOption);
+    setSelectedTown(selectedOption);
   };
+
+  function customTheme(theme) {
+    return {
+      ...theme,
+      borderRadius: 0,
+      colors: {
+        ...theme.colors,
+        primary: '#22C55E',
+        primary25: '#00ff5e',
+      },
+    };
+  }
 
   return (
     <div className="flex flex-col w-full justify-start items-center">
       <div className="mb-2 w-full">
         <div className="flex items-center gap-2 w-full justify-start my-2">
-          <h1 className="flex text-right text-md sm:text-xl text-white ">
+          <h1 className="flex text-right text-md sm:text-xl text-white">
             <span className="text-one text-2xl ml-2">
               <GiModernCity />
             </span>
@@ -54,23 +77,21 @@ export default function CitySelector() {
           </h1>
         </div>
 
-        <select
-          className="flex text-right w-full p-2  text-xl sm:text-2xl outline-2 focus:outline-one placeholder:text-md placeholder:sm:text-xl"
+        <Select
+          value={selectedCity}
           onChange={handleCityChange}
-          value={selectedCity?.name || ''}
-        >
-          <option value="">-- اختر المحافظة --</option>
-          {cities.map((city) => (
-            <option key={city.name} value={city.name}>
-              {city.name}
-            </option>
-          ))}
-        </select>
+          options={cityOptions}
+          placeholder="-- اختر المحافظة --"
+          isClearable
+          isSearchable
+          theme={customTheme}
+          className="w-full text-xl sm:text-2xl text-start z-50"
+        />
       </div>
 
       <div className="mb-2 w-full">
         <div className="flex items-center gap-2 w-full justify-start my-2">
-          <h1 className="flex text-right text-md sm:text-xl text-white ">
+          <h1 className="flex text-right text-md sm:text-xl text-white">
             <span className="text-one text-2xl ml-2">
               <FaTreeCity />
             </span>
@@ -78,19 +99,17 @@ export default function CitySelector() {
           </h1>
         </div>
 
-        <select
-          disabled={!selectedCity}
-          className="flex text-right w-full p-2  text-xl sm:text-2xl outline-2 focus:outline-one placeholder:text-md placeholder:sm:text-xl"
+        <Select
+          value={selectedTown}
           onChange={handleTownChange}
-          value={selectedTown?.name || ''}
-        >
-          <option value="">-- اختر البلدة --</option>
-          {selectedCity?.towns.map((town) => (
-            <option key={town.name} value={town.name}>
-              {town.name}
-            </option>
-          ))}
-        </select>
+          options={selectedCity?.towns || []}
+          placeholder="-- اختر البلدة --"
+          isClearable
+          isSearchable
+          isDisabled={!selectedCity}
+          theme={customTheme}
+          className="w-full text-xl sm:text-2xl text-start z-40"
+        />
       </div>
     </div>
   );

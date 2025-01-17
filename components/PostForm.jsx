@@ -13,12 +13,10 @@ import { v4 as uuidv4 } from 'uuid';
 import { FaHouseDamage } from 'react-icons/fa';
 import { RxSpaceEvenlyHorizontally } from 'react-icons/rx';
 import { VscUngroupByRefType } from 'react-icons/vsc';
-import { GiModernCity } from 'react-icons/gi';
 import { MdOutlinePriceCheck } from 'react-icons/md';
 import { GiRotaryPhone } from 'react-icons/gi';
 import { MdOutlineFeaturedPlayList } from 'react-icons/md';
 import { RxVideo } from 'react-icons/rx';
-import SyriaMap from './map/SyriaMap';
 import OnClickMap from './map/onClickMap';
 import { useRouter } from 'next/navigation';
 import CategoryComponent from './CategoryComponent';
@@ -38,17 +36,15 @@ export default function PostForm({ setIsVisible, cancel = true }) {
     data,
     dispatch,
     addImages,
-    location,
+    location = [],
     category,
-    propertyCityLocation,
-    propertyTownLocation,
   } = useContext(inputsContext);
 
-  console.log('category 111111111111111111', category);
+  console.log('location 111111111111111111', location);
   useEffect(() => {
-    setInputs({
-      ...inputs,
-      propertyType: data?.propertyType?.label || '',
+    setInputs((prevInputs) => ({
+      ...prevInputs,
+      propertyType: data?.propertyType || '',
       propertyCity: data?.propertyCity || '',
       propertyTown: data?.propertyTown || '',
       propertyCategory: category?.label || '',
@@ -59,7 +55,8 @@ export default function PostForm({ setIsVisible, cancel = true }) {
       image4: addImages?.[4] || '',
       lat: location?.[0] || '',
       lng: location?.[1] || '',
-    });
+    }));
+
     handleGenerateEmbed();
   }, [
     url,
@@ -124,7 +121,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
     link: '',
     hearts: 0,
   });
-  console.log('inputs ************************', inputs);
+  // console.log('inputs ************************', inputs);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -227,7 +224,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
         image: false,
       });
 
-      console.log('inputs', inputs);
+      // console.log('inputs', inputs);
 
       // التحقق من الحقل المطلوب وضبط الخطأ المناسب
       if (!inputs.image) {
@@ -560,8 +557,8 @@ export default function PostForm({ setIsVisible, cancel = true }) {
           <OnClickMap
             chosenCity={data?.propertyCity}
             chosentown={data?.propertyTown}
-            propertyCityLocation={propertyCityLocation}
-            propertyTownLocation={propertyTownLocation}
+            // propertyCityLocation={propertyCityLocation}
+            // propertyTownLocation={propertyTownLocation}
           />
           <div className="w-full">
             <div className="flex items-center gap-2 w-full justify-start my-2 ">

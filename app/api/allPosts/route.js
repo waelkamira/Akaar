@@ -43,30 +43,30 @@ export async function POST(req) {
     // إنشاء سجل جديد باستخدام Prisma
     const newProperty = await prisma.property.create({
       data: {
-        id: data.id,
-        image: data.image,
-        image1: data.image1,
-        image2: data.image2,
-        image3: data.image3,
-        image4: data.image4,
-        propertyCategory: data.propertyCategory,
-        propertyName: data.propertyName,
-        propertyType: data.propertyType,
-        propertyPrice: data.propertyPrice,
-        propertyArea: data.propertyArea,
-        propertyCity: data.propertyCity,
-        propertyTown: data.propertyTown,
-        contactPhoneNumber: data.contactPhoneNumber,
-        description: data.description,
-        lng: data.lng,
-        lat: data.lat,
+        id: data?.id,
+        image: data?.image,
+        image1: data?.image1,
+        image2: data?.image2,
+        image3: data?.image3,
+        image4: data?.image4,
+        propertyCategory: data?.propertyCategory,
+        propertyName: data?.propertyName,
+        propertyType: data?.propertyType,
+        propertyPrice: data?.propertyPrice,
+        propertyArea: data?.propertyArea,
+        propertyCity: data?.propertyCity,
+        propertyTown: data?.propertyTown,
+        contactPhoneNumber: data?.contactPhoneNumber,
+        description: data?.description,
+        lng: data?.lng,
+        lat: data?.lat,
         link: linkValue, // التعامل مع الحقل `link` بشكل صحيح
-        hearts: data.hearts,
-        userName: data.userName,
-        userImage: data.userImage,
-        createdBy: data.createdBy,
-        createdAt: data.createdAt, // إرسال القيمة كـ نص
-        updatedAt: data.updatedAt, // إرسال القيمة كـ نص
+        hearts: data?.hearts,
+        userName: data?.userName,
+        userImage: data?.userImage,
+        createdBy: data?.createdBy,
+        createdAt: data?.createdAt, // إرسال القيمة كـ نص
+        updatedAt: data?.updatedAt, // إرسال القيمة كـ نص
       },
     });
 

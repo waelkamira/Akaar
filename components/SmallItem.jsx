@@ -19,7 +19,7 @@ export default function SmallItem({ post, index, show = true, id = false }) {
   const session = useSession();
   const router = useRouter();
   const path = usePathname();
-  console.log('post', post);
+  // console.log('post', post);
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const userData = localStorage.getItem('CurrentUser');

@@ -40,7 +40,7 @@ export default function SelectComponent() {
     } else if (propertyType?.value === 'فيلا') {
       dispatch({
         type: 'PROPERTY_TYPE',
-        payload: { propertyType: propertyType, modelName: 'createJuice' },
+        payload: propertyType,
       });
     } else if (propertyType?.value === 'معمل') {
       dispatch({
@@ -53,12 +53,12 @@ export default function SelectComponent() {
     } else if (propertyType?.value === 'محل') {
       dispatch({
         type: 'PROPERTY_TYPE',
-        payload: { propertyType: propertyType, modelName: 'createDessert' },
+        payload: propertyType,
       });
     } else if (propertyType?.value === 'شيء أخر') {
       dispatch({
         type: 'PROPERTY_TYPE',
-        payload: { propertyType: propertyType, modelName: 'createJuice' },
+        payload: propertyType,
       });
     }
   }, [propertyType]);
@@ -66,7 +66,7 @@ export default function SelectComponent() {
   function customTheme(theme) {
     return {
       ...theme,
-      borderRadius: 8,
+      borderRadius: 0,
       colors: {
         ...theme.colors,
         primary: '#22C55E',
@@ -89,7 +89,7 @@ export default function SelectComponent() {
       isSearchable
       options={options}
       theme={customTheme}
-      className="w-full text-xl sm:text-2xl text-start placeholder:text-sm placeholder:sm:text-lg"
+      className="w-full text-xl sm:text-2xl text-start placeholder:text-sm placeholder:sm:text-lg z-350"
     >
       Select
     </Select>

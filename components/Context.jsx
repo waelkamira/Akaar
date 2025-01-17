@@ -28,8 +28,6 @@ function inputsReducer(currentState, action) {
         data: {
           ...currentState?.data,
           propertyCity: action.payload?.propertyCity,
-          propertyCityLocation: action.payload.propertyCityLocation,
-
           modelName: action.payload?.modelName,
         },
       };
@@ -39,8 +37,6 @@ function inputsReducer(currentState, action) {
         data: {
           ...currentState?.data,
           propertyTown: action.payload?.propertyTown,
-          propertyCityLocation: action.payload.propertyTownLocation,
-
           modelName: action.payload?.modelName,
         },
       };
@@ -112,7 +108,7 @@ export function InputsContextProvider({ children }) {
     location: [],
     category: '',
   });
-  console.log('from Context', state);
+  // console.log('from Context', state);
 
   return (
     <inputsContext.Provider value={{ ...state, dispatch }}>
