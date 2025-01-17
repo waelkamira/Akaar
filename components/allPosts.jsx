@@ -9,26 +9,26 @@ import {
 } from 'react-icons/md';
 import Link from 'next/link';
 
-export default function AllPosts({ selectedCity, selectedTown, category }) {
+export default function AllPosts({ propertyCategory }) {
   const [pageNumber, setPageNumber] = useState(1);
   const [allPosts, setallPosts] = useState([]);
-  const { dispatch, newPost, deletedPost } = useContext(inputsContext);
-
+  const { dispatch, newPost, deletedPost, data } = useContext(inputsContext);
+  console.log('data from allPosts', data);
   useEffect(() => {
     fetchAllPosts();
     // console.log('rerendered');
-  }, [newPost, deletedPost, pageNumber]);
+  }, [newPost, deletedPost, pageNumber, data]);
 
   async function fetchAllPosts() {
     // console.log('تم ارسال طلب****************');
 
     try {
       const response = await fetch(
-        `/api/search?page=${pageNumber}&limit=5&category=${category}&selectedCity=${selectedCity}&selectedTown=${selectedTown}`
+        `/api/search?page=${pageNumber}&limit=5&propertyCategory=${propertyCategory}&propertyCity=${data?.propertyCity}&propertyTown=${data?.propertyTown}&propertyType=${data?.propertyType}`
       );
       if (response.ok) {
         const json = await response.json();
-        // console.log('json****************', json);
+        console.log('json****************', json);
         dispatch({ type: 'SET_POSTS', payload: json });
         setallPosts(json);
       }
