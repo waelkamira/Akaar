@@ -52,7 +52,7 @@ export default function CitiesSelectComponent() {
       isSearchable
       options={options}
       theme={customTheme}
-      className="w-full text-xl sm:text-2xl text-start"
+      className="w-full text-xl sm:text-2xl text-start z-40 h-12"
     >
       Select
     </Select>

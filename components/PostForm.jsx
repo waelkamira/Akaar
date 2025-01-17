@@ -2,7 +2,7 @@
 
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
-import SelectComponent from './SelectComponent';
+import PropertyTypeSelector from './PropertyTypeSelector';
 import { inputsContext } from './Context';
 import { useSession } from 'next-auth/react';
 import CurrentUser from './CurrentUser';
@@ -13,10 +13,12 @@ import { v4 as uuidv4 } from 'uuid';
 import { FaHouseDamage } from 'react-icons/fa';
 import { RxSpaceEvenlyHorizontally } from 'react-icons/rx';
 import { VscUngroupByRefType } from 'react-icons/vsc';
+import { GiModernCity } from 'react-icons/gi';
 import { MdOutlinePriceCheck } from 'react-icons/md';
 import { GiRotaryPhone } from 'react-icons/gi';
 import { MdOutlineFeaturedPlayList } from 'react-icons/md';
 import { RxVideo } from 'react-icons/rx';
+import SyriaMap from './map/SyriaMap';
 import OnClickMap from './map/onClickMap';
 import { useRouter } from 'next/navigation';
 import CategoryComponent from './CategoryComponent';
@@ -36,15 +38,17 @@ export default function PostForm({ setIsVisible, cancel = true }) {
     data,
     dispatch,
     addImages,
-    location = [],
+    location,
     category,
+    propertyCityLocation,
+    propertyTownLocation,
   } = useContext(inputsContext);
 
-  console.log('location 111111111111111111', location);
+  console.log('category 111111111111111111', category);
   useEffect(() => {
-    setInputs((prevInputs) => ({
-      ...prevInputs,
-      propertyType: data?.propertyType || '',
+    setInputs({
+      ...inputs,
+      propertyType: data?.propertyType?.label || '',
       propertyCity: data?.propertyCity || '',
       propertyTown: data?.propertyTown || '',
       propertyCategory: category?.label || '',
@@ -55,8 +59,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
       image4: addImages?.[4] || '',
       lat: location?.[0] || '',
       lng: location?.[1] || '',
-    }));
-
+    });
     handleGenerateEmbed();
   }, [
     url,
@@ -121,7 +124,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
     link: '',
     hearts: 0,
   });
-  // console.log('inputs ************************', inputs);
+  console.log('inputs ************************', inputs);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -185,7 +188,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
           toast.custom((t) => (
             <CustomToast
               t={t}
-              emoji={'🧀'}
+              // emoji={'🧀'}
               message={'تم إنشاء منشور جديد'}
               greenEmoji={'✔'}
             />
@@ -224,7 +227,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
         image: false,
       });
 
-      // console.log('inputs', inputs);
+      console.log('inputs', inputs);
 
       // التحقق من الحقل المطلوب وضبط الخطأ المناسب
       if (!inputs.image) {
@@ -407,16 +410,8 @@ export default function PostForm({ setIsVisible, cancel = true }) {
                       اختيار نوع العقار مطلوب
                     </h1>
                   )}
-                  <div className="flex items-center gap-2 w-full justify-start my-2">
-                    <h1 className="flex text-right text-md sm:text-xl text-white">
-                      <span className="text-one text-2xl ml-2">
-                        <VscUngroupByRefType />
-                      </span>
-                      نوع العقار:
-                    </h1>
-                  </div>
 
-                  <SelectComponent />
+                  <PropertyTypeSelector />
                 </div>
 
                 <div className="flex flex-col items-center justify-center my-4 w-full">
@@ -557,8 +552,8 @@ export default function PostForm({ setIsVisible, cancel = true }) {
           <OnClickMap
             chosenCity={data?.propertyCity}
             chosentown={data?.propertyTown}
-            // propertyCityLocation={propertyCityLocation}
-            // propertyTownLocation={propertyTownLocation}
+            propertyCityLocation={propertyCityLocation}
+            propertyTownLocation={propertyTownLocation}
           />
           <div className="w-full">
             <div className="flex items-center gap-2 w-full justify-start my-2 ">

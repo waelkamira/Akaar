@@ -66,10 +66,10 @@ export default function CitySelector() {
   }
 
   return (
-    <div className="flex flex-col w-full justify-start items-center">
+    <div className="flex flex-col md:flex-row gap-4 w-full justify-start items-center">
       <div className="mb-2 w-full">
         <div className="flex items-center gap-2 w-full justify-start my-2">
-          <h1 className="flex text-right text-md sm:text-xl text-white">
+          <h1 className="flex text-right text-md sm:text-xl ">
             <span className="text-one text-2xl ml-2">
               <GiModernCity />
             </span>
@@ -85,13 +85,13 @@ export default function CitySelector() {
           isClearable
           isSearchable
           theme={customTheme}
-          className="w-full text-xl sm:text-2xl text-start z-50"
+          className="w-full text-xl sm:text-2xl text-start z-50 h-12 text-nowrap"
         />
       </div>
 
       <div className="mb-2 w-full">
         <div className="flex items-center gap-2 w-full justify-start my-2">
-          <h1 className="flex text-right text-md sm:text-xl text-white">
+          <h1 className="flex text-right text-md sm:text-xl ">
             <span className="text-one text-2xl ml-2">
               <FaTreeCity />
             </span>
@@ -108,7 +108,7 @@ export default function CitySelector() {
           isSearchable
           isDisabled={!selectedCity}
           theme={customTheme}
-          className="w-full text-xl sm:text-2xl text-start z-40"
+          className="w-full text-xl sm:text-2xl text-start z-40 h-12 text-nowrap"
         />
       </div>
     </div>

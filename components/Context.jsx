@@ -28,6 +28,8 @@ function inputsReducer(currentState, action) {
         data: {
           ...currentState?.data,
           propertyCity: action.payload?.propertyCity,
+          propertyCityLocation: action.payload.propertyCityLocation,
+
           modelName: action.payload?.modelName,
         },
       };
@@ -37,6 +39,8 @@ function inputsReducer(currentState, action) {
         data: {
           ...currentState?.data,
           propertyTown: action.payload?.propertyTown,
+          propertyCityLocation: action.payload.propertyTownLocation,
+
           modelName: action.payload?.modelName,
         },
       };

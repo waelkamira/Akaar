@@ -23,13 +23,10 @@ function SetZoomAndCenter({ latitude, longitude }) {
   return null;
 }
 
-export default function SyriaMap({ lng, lat }) {
-  // التأكد من أن lng و lat يتم تعيينهما بشكل صحيح
-  const latitude = parseFloat(lat) || 33.5138; // القيمة الافتراضية لسوريا
-  const longitude = parseFloat(lng) || 36.2765; // القيمة الافتراضية لسوريا
-
-  // طباعة القيم للتأكد
-  console.log('Latitude:', latitude, 'Longitude:', longitude);
+export default function SyriaMap({ lng = '', lat = '' }) {
+  // التأكد من تحويل lng و lat إلى أرقام باستخدام parseFloat
+  const latitude = parseFloat(lat) || 33.5138; // القيمة الافتراضية لسوريا إذا كانت فارغة
+  const longitude = parseFloat(lng) || 36.2765; // القيمة الافتراضية لسوريا إذا كانت فارغة
 
   const tileLayers = {
     streets: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -39,7 +36,7 @@ export default function SyriaMap({ lng, lat }) {
   return (
     <div className="w-full">
       {/* الخريطة التفاعلية */}
-      <div className="w-full h-72 sm:h-[500px] rounded-md overflow-hidden">
+      <div className="w-full h-72 sm:h-[500px] rounded-md overflow-hidden ">
         <MapContainer
           center={[latitude, longitude]} // استخدام القيم المحوّلة
           zoom={13} // التكبير الافتراضي
@@ -51,7 +48,8 @@ export default function SyriaMap({ lng, lat }) {
           />
           {/* إضافة دبوس في الموقع المحدد */}
           <Marker position={[latitude, longitude]} icon={customIcon}>
-            <Popup closeButton={false}>موقع العقار هنا</Popup>
+            <Popup closeButton={false}>موقع العقار هنا</Popup>{' '}
+            {/* إغلاق البوب-أب يدويًا */}
           </Marker>
 
           {/* استخدام SetZoomAndCenter لضبط الزووم والانتقال */}
