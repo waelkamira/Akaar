@@ -45,17 +45,17 @@ export default function InteractiveMap() {
 
   const handleCitySelect = (city) => {
     setSelectedCity(city);
-    setSelectedLocation(city?.latlng || [34.8021, 38.9968]); // Default location
-    if (mapRef.current && city?.latlng) {
-      mapRef.current.setView(city.latlng, city.zoom || 7);
+    setSelectedLocation(city?.latlng || null);
+    if (mapRef.current && city) {
+      mapRef.current.setView(city.latlng, city.zoom);
     }
   };
 
   const handleTownSelect = (town) => {
     setSelectedTown(town);
-    setSelectedLocation(town?.latlng || [34.8021, 38.9968]); // Default location
-    if (mapRef.current && town?.latlng) {
-      mapRef.current.setView(town.latlng, town.zoom || 10);
+    setSelectedLocation(town?.latlng || null);
+    if (mapRef.current && town) {
+      mapRef.current.setView(town.latlng, town.zoom);
     }
   };
 
@@ -77,12 +77,12 @@ export default function InteractiveMap() {
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
           <AddMarker onLocationSelect={setSelectedLocation} />
-          {selectedCity?.latlng && (
+          {selectedCity && (
             <Marker position={selectedCity.latlng} icon={customIcon}>
               <Popup>موقع المحافظة: {selectedCity.name}</Popup>
             </Marker>
           )}
-          {selectedTown?.latlng && (
+          {selectedTown && (
             <Marker position={selectedTown.latlng} icon={customIcon}>
               <Popup>موقع البلدة: {selectedTown.name}</Popup>
             </Marker>

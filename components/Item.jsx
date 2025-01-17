@@ -171,7 +171,7 @@ export default function Item({
                         </span>
                         {propertyArea}
                       </h1>
-                      <h1 className="flex justify-start items-center bg-white shadow-lg text-lg sm:text-xl w-full min-h-20 my-2">
+                      <h1 className="flex justify-start items-center bg-white shadow-lg text-lg sm:text-xl w-full min-h-20 my-2 select-none">
                         <span className="flex gap-1 items-center text-one text-lg sm:text-xl mx-2 select-none">
                           <GiRotaryPhone className="text-black" />
                           رقم الهاتف :

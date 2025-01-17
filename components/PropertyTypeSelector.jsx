@@ -2,7 +2,8 @@
 import React, { useContext, useEffect, useState } from 'react';
 import Select from 'react-select';
 import { inputsContext } from './Context.jsx';
-export default function SelectComponent() {
+import { VscUngroupByRefType } from 'react-icons/vsc';
+export default function PropertyTypeSelector() {
   const { dispatch } = useContext(inputsContext);
   const [propertyType, setpropertyType] = useState('');
   const options = [
@@ -40,7 +41,7 @@ export default function SelectComponent() {
     } else if (propertyType?.value === 'فيلا') {
       dispatch({
         type: 'PROPERTY_TYPE',
-        payload: propertyType,
+        payload: { propertyType: propertyType, modelName: 'createJuice' },
       });
     } else if (propertyType?.value === 'معمل') {
       dispatch({
@@ -53,12 +54,12 @@ export default function SelectComponent() {
     } else if (propertyType?.value === 'محل') {
       dispatch({
         type: 'PROPERTY_TYPE',
-        payload: propertyType,
+        payload: { propertyType: propertyType, modelName: 'createDessert' },
       });
     } else if (propertyType?.value === 'شيء أخر') {
       dispatch({
         type: 'PROPERTY_TYPE',
-        payload: propertyType,
+        payload: { propertyType: propertyType, modelName: 'createJuice' },
       });
     }
   }, [propertyType]);
@@ -81,17 +82,29 @@ export default function SelectComponent() {
   // }
 
   return (
-    <Select
-      defaultValue={propertyType}
-      onChange={setpropertyType}
-      placeholder="بيت"
-      isClearable
-      isSearchable
-      options={options}
-      theme={customTheme}
-      className="w-full text-xl sm:text-2xl text-start placeholder:text-sm placeholder:sm:text-lg z-350"
-    >
-      Select
-    </Select>
+    <div className="flex flex-col w-full justify-start items-center">
+      <div className="w-full">
+        <div className="flex items-center gap-2 w-full justify-start my-2">
+          <h1 className="flex text-right text-md sm:text-xl ">
+            <span className="text-one text-2xl ml-2">
+              <VscUngroupByRefType />
+            </span>
+            نوع العقار:
+          </h1>
+        </div>
+        <Select
+          defaultValue={propertyType}
+          onChange={setpropertyType}
+          placeholder="بيت"
+          isClearable
+          isSearchable
+          options={options}
+          theme={customTheme}
+          className="w-full text-xl sm:text-2xl text-start z-30 h-12"
+        >
+          Select
+        </Select>
+      </div>
+    </div>
   );
 }

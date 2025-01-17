@@ -9,22 +9,39 @@ import {
 } from 'react-icons/md';
 import Link from 'next/link';
 
-export default function AllPosts({ propertyCategory }) {
+export default function AllPosts({
+  propertyCategory,
+  propertyCity,
+  propertyTown,
+  propertyType,
+  minPrice,
+  maxPrice,
+}) {
   const [pageNumber, setPageNumber] = useState(1);
   const [allPosts, setallPosts] = useState([]);
   const { dispatch, newPost, deletedPost, data } = useContext(inputsContext);
-  console.log('data from allPosts', data);
+  // console.log('data from allPosts', data);
   useEffect(() => {
     fetchAllPosts();
-    // console.log('rerendered');
-  }, [newPost, deletedPost, pageNumber, data]);
+  }, [
+    newPost,
+    deletedPost,
+    pageNumber,
+    data,
+    propertyCategory,
+    propertyCity,
+    propertyTown,
+    propertyType,
+    minPrice,
+    maxPrice,
+  ]);
 
   async function fetchAllPosts() {
     // console.log('تم ارسال طلب****************');
 
     try {
       const response = await fetch(
-        `/api/search?page=${pageNumber}&limit=5&propertyCategory=${propertyCategory}&propertyCity=${data?.propertyCity}&propertyTown=${data?.propertyTown}&propertyType=${data?.propertyType}`
+        `/api/search?page=${pageNumber}&limit=5&propertyCategory=${propertyCategory}&propertyCity=${propertyCity}&propertyTown=${propertyTown}&propertyType=${propertyType}&minPrice=${minPrice}&maxPrice=${maxPrice}`
       );
       if (response.ok) {
         const json = await response.json();

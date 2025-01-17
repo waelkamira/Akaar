@@ -160,8 +160,8 @@ export default function SmallItem({ post, index, show = true, id = false }) {
             href={'/profile'}
             className="cursor-pointer flex justify-start items-center gap-2 w-full h-fit "
           >
-            <div className="overflow-hidden rounded-xl">
-              <div className="relative size-8 sm:size-12  rounded-xl overflow-hidden">
+            <div className="overflow-hidden ">
+              <div className="relative size-8 sm:size-12   overflow-hidden">
                 {!post?.userImage && <LoadingPhoto />}
                 {post?.userImage && (
                   <Image
@@ -255,7 +255,7 @@ export default function SmallItem({ post, index, show = true, id = false }) {
                 </h1>
               </div>
             </div>
-            <hr className="w-full h-[1.5px] bg-gray-400 rounded-xl border-hidden select-none" />
+            <hr className="w-full h-[1.5px] bg-gray-400  border-hidden select-none" />
           </>
         )}
         <div className="bg-white  p-4 w-full">
@@ -276,7 +276,7 @@ export default function SmallItem({ post, index, show = true, id = false }) {
               ));
             }
           }}
-          className="sm:text-2xl p-2 my-2 bg-twelve text-white hover:scale-[102%] hover:text-white font-medium text-center select-none w-full rounded-xl shadow-lg transition-all duration-300 "
+          className="sm:text-2xl p-2 my-2 bg-twelve text-white hover:scale-[101%] hover:text-white font-medium text-center select-none w-full  shadow-lg transition-all duration-300 "
         >
           عرض الإعلان
         </button>

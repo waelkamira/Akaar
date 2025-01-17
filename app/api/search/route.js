@@ -14,9 +14,28 @@ export async function GET(req) {
   const propertyCategory = searchParams.get('propertyCategory');
   const propertyCity = searchParams.get('propertyCity');
   const propertyTown = searchParams.get('propertyTown');
+  const propertyType = searchParams.get('propertyType');
+  const minPrice = searchParams.get('minPrice')
+    ? parseInt(searchParams.get('minPrice'))
+    : null;
+  const maxPrice = searchParams.get('maxPrice')
+    ? parseInt(searchParams.get('maxPrice'))
+    : null;
+  console.log(
+    'propertyCategory',
+    propertyCategory,
 
-  console.log('Filters:', { propertyCategory, propertyCity, propertyTown });
-
+    'propertyType',
+    propertyType,
+    'propertyCity',
+    propertyCity,
+    'propertyTown',
+    propertyTown,
+    'minPrice',
+    minPrice,
+    'maxPrice',
+    maxPrice
+  );
   try {
     // إعداد شروط الفلترة
     const filters = {};
@@ -25,9 +44,11 @@ export async function GET(req) {
     if (propertyCategory) {
       filters.propertyCategory = propertyCategory;
     }
-
-    // تحقق من وجود المدينة
+    if (propertyType) {
+      filters.propertyType = propertyType;
+    }
     if (propertyCity && propertyCity !== 'undefined') {
+      // تحقق من وجود المدينة
       filters.propertyCity = propertyCity;
 
       // إذا كانت البلدة موجودة أيضًا
@@ -35,6 +56,14 @@ export async function GET(req) {
         filters.propertyTown = propertyTown;
       }
     }
+
+    // // تحقق من وجود نطاق السعر
+    // if (minPrice !== null && maxPrice !== null) {
+    //   filters.propertyPrice = {
+    //     gte: minPrice, // أكبر من أو يساوي الحد الأدنى
+    //     lte: maxPrice, // أقل من أو يساوي الحد الأقصى
+    //   };
+    // }
 
     // استعلام قاعدة البيانات
     const properties = await prisma.property.findMany({

@@ -46,7 +46,9 @@ export default function OnClickMap({
   propertyCityLocation,
   propertyTownLocation,
 }) {
-  const [selectedLocation, setSelectedLocation] = useState(null);
+  const [selectedLocation, setSelectedLocation] = useState(
+    propertyTownLocation || propertyCityLocation || [34.8021, 38.9968]
+  );
   const [selectedCity, setSelectedCity] = useState(chosenCity || null);
   const [selectedTown, setSelectedTown] = useState(chosentown || null);
   const { dispatch } = useContext(inputsContext);
@@ -54,13 +56,14 @@ export default function OnClickMap({
 
   useEffect(() => {
     dispatch({ type: 'LOCATION', payload: selectedLocation });
-    if (chosenCity) {
-      setSelectedCity(chosenCity);
+
+    if (propertyCityLocation) {
+      setSelectedLocation(propertyCityLocation);
     }
-    if (chosentown) {
-      setSelectedTown(chosentown);
+    if (propertyTownLocation) {
+      setSelectedLocation(propertyTownLocation);
     }
-  }, [selectedLocation, chosenCity, chosentown]);
+  }, [propertyCityLocation, propertyTownLocation]);
 
   const handleLocationSelect = (location) => {
     setSelectedLocation(location);
@@ -69,23 +72,23 @@ export default function OnClickMap({
 
   const handleCityChange = (e) => {
     const city = cities.find((c) => c.name === e.target.value);
-    setSelectedCity(city || null);
+    setSelectedCity(city);
     setSelectedTown(null);
 
-    if (city && city.latlng && mapRef.current) {
-      mapRef.current.setView(city.latlng, city.zoom);
+    if (city && mapRef.current) {
+      const map = mapRef.current;
+      map.setView(city.latlng, city.zoom); // تحريك الخريطة إلى المحافظة وتحديد التكبير
       setSelectedLocation(city.latlng);
     }
   };
 
   const handleTownChange = (e) => {
-    if (!selectedCity || !selectedCity.towns) return;
-
     const town = selectedCity.towns.find((t) => t.name === e.target.value);
-    setSelectedTown(town || null);
+    setSelectedTown(town);
 
-    if (town && town.latlng && mapRef.current) {
-      mapRef.current.setView(town.latlng, town.zoom);
+    if (town && mapRef.current) {
+      const map = mapRef.current;
+      map.setView(town.latlng, town.zoom); // تحريك الخريطة إلى البلدة وتحديد التكبير
       setSelectedLocation(town.latlng);
     }
   };
@@ -104,7 +107,7 @@ export default function OnClickMap({
       <div className="mb-4 ">
         <label className="block font-medium mb-2">اختر المحافظة:</label>
         <select
-          className="border p-2 h-12 w-full text-black"
+          className="border p-2 rounded w-full text-black"
           onChange={handleCityChange}
           value={selectedCity?.name || ''}
         >
@@ -121,7 +124,7 @@ export default function OnClickMap({
         <div className="mb-4 ">
           <label className="block font-medium mb-2">اختر البلدة:</label>
           <select
-            className="border p-2 h-12 w-full text-black"
+            className="border p-2 rounded w-full text-black"
             onChange={handleTownChange}
             value={selectedTown?.name || ''}
           >
@@ -135,9 +138,9 @@ export default function OnClickMap({
         </div>
       )}
 
-      <div className="w-full h-72 sm:h-[500px]  h-12-md overflow-hidden">
+      <div className="w-full h-72 sm:h-[500px]  rounded-md overflow-hidden">
         <MapContainer
-          center={selectedLocation || [34.8021, 38.9968]} // مركز الخريطة الافتراضي على سوريا أو الموقع المحدد
+          center={selectedLocation} // مركز الخريطة الافتراضي
           zoom={7}
           className="w-full h-full"
           ref={mapRef} // مرجع للخريطة
@@ -163,7 +166,7 @@ export default function OnClickMap({
       </div>
 
       {selectedLocation && (
-        <div className="mt-4 p-4 bg-gray-100 h-12 text-black">
+        <div className="mt-4 p-4 bg-gray-100 rounded text-black">
           <p>
             <strong>موقع العقار الذي قمت بتحديده:</strong>{' '}
             {selectedLocation[0].toFixed(5)}, {selectedLocation[1].toFixed(5)}
