@@ -31,22 +31,23 @@ export default function Card({ cardName, path, image, text, color }) {
         />
       </div>
       <h1 className="text-2xl my-4 font-bold text-center w-full">{cardName}</h1>
-      <p className="p-4 mb-4">{text}</p>
+      <p className="p-4 mb-4 select-none">{text}</p>
       <div className="px-4 mt-4">
-        <Button
-          title={cardName}
-          style={
-            color === 'red'
+        <button
+          onClick={() => router.push(path)}
+          className={
+            `w-full my-2 rounded-lg hover:scale-[101%] text-lg sm:text-xl p-2 transition-transform duration-200 ease-in-out ` +
+            (color === 'red'
               ? 'bg-two'
               : color === 'orange'
               ? 'bg-three'
               : color === 'green'
               ? 'bg-one'
-              : ''
+              : '')
           }
-          path={path}
-          className="bg-one"
-        />
+        >
+          {cardName}
+        </button>
       </div>{' '}
       <div
         className={

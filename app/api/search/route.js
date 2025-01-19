@@ -22,56 +22,45 @@ export async function GET(req) {
     ? parseInt(searchParams.get('maxPrice'))
     : null;
   console.log(
-    'propertyCategory',
-    propertyCategory,
+    // 'propertyCategory',
+    // propertyCategory,
 
     'propertyType',
-    propertyType,
-    'propertyCity',
-    propertyCity,
-    'propertyTown',
-    propertyTown,
-    'minPrice',
-    minPrice,
-    'maxPrice',
-    maxPrice
+    propertyType
+    // 'propertyCity',
+    // propertyCity,
+    // 'propertyTown',
+    // propertyTown,
+    // 'minPrice',
+    // minPrice,
+    // 'maxPrice',
+    // maxPrice
   );
   try {
-    // إعداد شروط الفلترة
     const filters = {};
-
-    // الفئة مطلوبة دائمًا
-    if (propertyCategory) {
-      filters.propertyCategory = propertyCategory;
-    }
-    if (propertyType) {
+    if (propertyCategory) filters.propertyCategory = propertyCategory;
+    if (propertyType && propertyType !== 'undefined')
       filters.propertyType = propertyType;
-    }
     if (propertyCity && propertyCity !== 'undefined') {
-      // تحقق من وجود المدينة
       filters.propertyCity = propertyCity;
-
-      // إذا كانت البلدة موجودة أيضًا
-      if (propertyTown && propertyTown !== 'undefined') {
+      if (propertyTown && propertyTown !== 'undefined')
         filters.propertyTown = propertyTown;
-      }
     }
-
-    // // تحقق من وجود نطاق السعر
-    // if (minPrice !== null && maxPrice !== null) {
+    // if (minPrice !== null || maxPrice !== null) {
     //   filters.propertyPrice = {
-    //     gte: minPrice, // أكبر من أو يساوي الحد الأدنى
-    //     lte: maxPrice, // أقل من أو يساوي الحد الأقصى
+    //     ...(minPrice !== null ? { gte: minPrice } : {}),
+    //     ...(maxPrice !== null ? { lte: maxPrice } : {}),
     //   };
     // }
 
     // استعلام قاعدة البيانات
     const properties = await prisma.property.findMany({
-      where: filters,
+      // where: filters,
       skip,
       take: limit,
       orderBy: { createdAt: 'desc' }, // ترتيب حسب تاريخ الإنشاء
     });
+    // console.log('properties', properties);
 
     await prisma.$disconnect();
     return NextResponse.json(properties);

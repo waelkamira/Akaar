@@ -40,21 +40,21 @@ export default function HomePage() {
               alt="home_photo"
               objectPosition="top"
             />
-            <div className="relative top-16 sm:right-12 px-2">
+            {/* <div className="relative top-16 sm:right-12 px-2">
               <SearchBar />
-            </div>
+            </div> */}
           </div>
           {/* <SyriaMap /> */}
 
-          <h1 className="text-3xl text-white my-4 font-bold text-center w-full mt-4">
+          <h1 className="text-3xl text-white my-4 font-bold text-center w-full mt-4 select-none">
             اختر القسم المناسب
           </h1>
-          <div className="flex flex-col sm:flex-row justify-center w-full gap-8 px-4 sm:px-8 mt-8">
+          <div className="flex flex-col sm:flex-row justify-center w-full gap-8 px-4 sm:px-8 my-8">
             <Card
               cardName={'بيع عقار'}
               path={'/sell'}
               text={
-                'بيع عقارك بغض النظر عن المسار الذي تتخذه لبيع عقارك، يمكننا مساعدتك في إتمام عملية بيع ناجحة وسريعة بأبسط جهد ممكن وأعلى كفاءة'
+                'بغض النظر عن المسار الذي تتخذه لبيع عقارك، يمكننا مساعدتك في إتمام عملية بيع ناجحة وسريعة بأبسط جهد ممكن وأعلى كفاءة'
               }
               color={'green'}
               image={'https://i.imgur.com/uGXmBJO.jpg'}
@@ -63,19 +63,19 @@ export default function HomePage() {
               cardName={'شراء عقار'}
               path={'/buy'}
               text={
-                'اشترِ عقارا اعثر على عقارك من خلال تجربة تصوير غامرة وأكبر عدد من الإعلانات، بما في ذلك أشياء لن تجدها في أي مكان آخر.'
+                ' اعثر على عقارك من خلال تجربة تصوير غامرة وأكبر عدد من الإعلانات، بما في ذلك أشياء لن تجدها في أي مكان آخر.'
               }
               color={'orange'}
-              image={'https://i.imgur.com/hILi6c8.jpg'}
+              image={'https://i.imgur.com/9gIMgUg.png'}
             />
             <Card
-              cardName={'استأجار عقار'}
+              cardName={'تأجير عقار'}
               path={'/rent'}
               text={
-                'استئجار عقار نعمل على إنشاء تجربة سلسة عبر الإنترنت - من التسوق على أكبر شبكة إيجار، إلى تقديم الطلبات، إلى دفع الإيجار.'
+                ' نعمل على إنشاء تجربة سلسة عبر الإنترنت - من التسوق على أكبر شبكة إيجار، إلى تقديم الطلبات، إلى دفع الإيجار.'
               }
               color={'red'}
-              image={'https://i.imgur.com/9gIMgUg.png'}
+              image={'https://i.imgur.com/hILi6c8.jpg'}
             />
           </div>
         </div>
