@@ -45,7 +45,7 @@ export default function CitySelector() {
   const handleCityChange = (selectedOption) => {
     console.log('selectedOption (City):', selectedOption);
     setSelectedCity(selectedOption);
-    setSelectedTown(null); // إعادة تعيين البلدة عند تغيير المدينة
+    setSelectedTown(null); // إعادة تعيين المنطقة عند تغيير المدينة
   };
 
   const handleTownChange = (selectedOption) => {
@@ -70,7 +70,7 @@ export default function CitySelector() {
       <div className="mb-2 w-full">
         <div className="flex items-center gap-2 w-full justify-start my-2">
           <h1 className="flex text-right text-md sm:text-xl ">
-            <span className="text-one text-2xl ml-2">
+            <span className="text-one text-lg sm:text-xl ml-2 text-nowrap">
               <GiModernCity />
             </span>
             المدينة:
@@ -81,21 +81,21 @@ export default function CitySelector() {
           value={selectedCity}
           onChange={handleCityChange}
           options={cityOptions}
-          placeholder="-- اختر المحافظة --"
+          placeholder="اختر المدينة"
           isClearable
           isSearchable
           theme={customTheme}
-          className="w-full text-xl sm:text-2xl text-start z-50 h-12 text-nowrap"
+          className="w-full text-lg sm:text-xl text-start z-50 h-12 text-nowrap"
         />
       </div>
 
       <div className="mb-2 w-full">
         <div className="flex items-center gap-2 w-full justify-start my-2">
           <h1 className="flex text-right text-md sm:text-xl ">
-            <span className="text-one text-2xl ml-2">
+            <span className="text-one text-lg sm:text-xl ml-2 text-nowrap">
               <FaTreeCity />
             </span>
-            البلدة أو الحي:
+            المنطقة :
           </h1>
         </div>
 
@@ -103,12 +103,12 @@ export default function CitySelector() {
           value={selectedTown}
           onChange={handleTownChange}
           options={selectedCity?.towns || []}
-          placeholder="-- اختر البلدة --"
+          placeholder="اختر المنطقة"
           isClearable
           isSearchable
           isDisabled={!selectedCity}
           theme={customTheme}
-          className="w-full text-xl sm:text-2xl text-start z-40 h-12 text-nowrap"
+          className="w-full text-lg sm:text-xl text-start z-40 h-12 text-nowrap"
         />
       </div>
     </div>

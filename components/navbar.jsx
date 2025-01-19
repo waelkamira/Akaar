@@ -15,7 +15,7 @@ export default function Navbar() {
   const router = useRouter();
   const session = useSession();
   return (
-    <div className="hidden xl:block ">
+    <div className="hidden xl:block border border-black">
       <div className="flex justify-center w-3/4">
         <div className="absolute top-2 left-0 z-50 flex justify-end">
           <div className="relative w-full xl:w-44 h-20 overflow-hidden rounded-xl">
@@ -33,8 +33,8 @@ export default function Navbar() {
             className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-lg p-2 px-8  h-16"
             onClick={() => router.push('/')}
           >
-            <FaHome className="text-xl text-one hover:text-five" />
-            <li className="text-xl">الرئيسية</li>
+            <FaHome className="text-xl select-none text-one hover:text-five" />
+            <li className="text-xl select-none">الرئيسية</li>
           </div>
           <div className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one h-16">
             {session?.status === 'unauthenticated' && (
@@ -42,8 +42,8 @@ export default function Navbar() {
                 className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-lg p-2 px-8  h-16"
                 onClick={() => router.push('/login')}
               >
-                <GiExitDoor className="text-xl text-one hover:text-five" />
-                <li className="text-xl">تسجيل الدخول</li>
+                <GiExitDoor className="text-xl select-none text-one hover:text-five" />
+                <li className="text-xl select-none">تسجيل الدخول</li>
               </div>
             )}
             {session?.status === 'authenticated' && (
@@ -51,8 +51,8 @@ export default function Navbar() {
                 className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-lg p-2 px-8  h-16"
                 onClick={() => router.push('/profile')}
               >
-                <GiExitDoor className="text-xl text-one hover:text-five" />
-                <li className="text-xl">بروفايل </li>
+                <GiExitDoor className="text-xl select-none text-one hover:text-five" />
+                <li className="text-xl select-none">بروفايل </li>
               </div>
             )}
           </div>
@@ -60,36 +60,36 @@ export default function Navbar() {
             className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-lg p-2 px-8  h-16"
             onClick={() => router.push('/contactUs')}
           >
-            <FcConferenceCall className="text-xl text-one hover:text-five" />
-            <li className="text-xl text-nowrap">اتصل بنا</li>
+            <FcConferenceCall className="text-xl select-none text-one hover:text-five" />
+            <li className="text-xl select-none text-nowrap">اتصل بنا</li>
           </div>
           <div
             className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-lg p-2 px-8  h-16"
             onClick={() => router.push('/newPost')}
           >
-            <FaCanadianMapleLeaf className="text-xl text-one hover:text-five" />
-            <li className="text-xl text-nowrap">انشاء إعلان</li>
+            <FaCanadianMapleLeaf className="text-xl select-none text-one hover:text-five" />
+            <li className="text-xl select-none text-nowrap">انشاء إعلان</li>
           </div>
           <div
             className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-lg p-2 px-8  h-16"
             onClick={() => router.push('/sell')}
           >
-            <FaDollarSign className="text-xl text-one hover:text-five" />
-            <li className="text-xl">بيع</li>
+            <FaDollarSign className="text-xl select-none text-one hover:text-five" />
+            <li className="text-xl select-none">بيع</li>
           </div>
           <div
             className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-lg p-2 px-8  h-16"
             onClick={() => router.push('/buy')}
           >
-            <GiPayMoney className="text-xl text-one hover:text-five" />
-            <li className="text-xl">شراء</li>
+            <GiPayMoney className="text-xl select-none text-one hover:text-five" />
+            <li className="text-xl select-none">شراء</li>
           </div>
           <div
             className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-lg p-2 px-8  h-16"
             onClick={() => router.push('/rent')}
           >
-            <MdOutlineBedroomParent className="text-xl text-one hover:text-five" />
-            <li className="text-xl">أجار</li>
+            <MdOutlineBedroomParent className="text-xl select-none text-one hover:text-five" />
+            <li className="text-xl select-none">أجار</li>
           </div>
         </ul>
       </div>

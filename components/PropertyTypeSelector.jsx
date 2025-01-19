@@ -85,8 +85,8 @@ export default function PropertyTypeSelector() {
     <div className="flex flex-col w-full justify-start items-center">
       <div className="w-full">
         <div className="flex items-center gap-2 w-full justify-start my-2">
-          <h1 className="flex text-right text-md sm:text-xl ">
-            <span className="text-one text-2xl ml-2">
+          <h1 className="flex text-right text-md sm:text-xl text-nowrap">
+            <span className="text-one sm:text-2xl ml-2">
               <VscUngroupByRefType />
             </span>
             نوع العقار:
@@ -100,10 +100,8 @@ export default function PropertyTypeSelector() {
           isSearchable
           options={options}
           theme={customTheme}
-          className="w-full text-xl sm:text-2xl text-start z-30 h-12"
-        >
-          Select
-        </Select>
+          className="w-full text-lg sm:text-xl text-start z-30 h-12"
+        ></Select>
       </div>
     </div>
   );

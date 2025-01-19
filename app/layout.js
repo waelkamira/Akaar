@@ -6,7 +6,6 @@ import { InputsContextProvider } from '../components/Context';
 import AuthContextProvider from '../components/authContext/AuthContext';
 import Navbar from '../components/navbar';
 
-const inter = Inter({ subsets: ['latin'] });
 const rubik = Rubik({
   subsets: ['latin'],
   weight: ['300', '400', '500', '700'],
