@@ -16,7 +16,7 @@ model Property {
   propertyCategory     String
   propertyName         String
   propertyType         String
-  propertyPrice        String
+  propertyPrice        Int
   propertyArea         String
   propertyCity         String
   propertyTown         String

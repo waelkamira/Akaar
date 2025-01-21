@@ -78,10 +78,8 @@ input[type='file'] {
   white-space: nowrap;
   font-weight: bold;
   display: inline-block;
-  /* background-color: aqua; */
-  /* padding: 100px; */
   cursor: pointer;
-  color: white; /* White text */
+  color: white;
   font-size: 14px;
   text-align: center;
   overflow: hidden;
@@ -137,19 +135,7 @@ body {
   font-size: 50px;
   color: #fff;
   font-weight: 500;
-
-  /* height: 500px;
-  max-height: 100vh; */
 }
-
-/* .number-slide1,
-.number-slide12,
-.number-slide3,
-.number-slide4,
-.number-slide5 {
-  background: rgb(255, 255, 255);
-
-} */
 
 .thumbnail .keen-slider__slide {
   font-size: 30px;
@@ -161,4 +147,39 @@ body {
 }
 .thumbnail .keen-slider__slide.active {
   border: 2px dashed black;
+}
+/* تعريف تأثير الكتابة */
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+/* تعريف وميض المؤشر */
+@keyframes blink-caret {
+  from,
+  to {
+    border-color: transparent;
+  }
+  50% {
+    border-color: #22c55e;
+  }
+}
+
+.akar {
+  overflow: hidden; /* إخفاء النص الزائد */
+  border-left: 0.05em solid #22c55e; /* محاكاة مؤشر الكتابة على اليسار */
+  white-space: nowrap; /* منع التفاف النص */
+  direction: rtl; /* ضبط اتجاه النص من اليمين إلى اليسار */
+  text-align: right;
+  animation: typing 6s steps(40, end) infinite reverse,
+    blink-caret 0.75s step-end infinite;
+}
+
+.akarStroke {
+  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: #000000;
 }

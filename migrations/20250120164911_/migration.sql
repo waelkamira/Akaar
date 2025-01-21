@@ -9,7 +9,7 @@ CREATE TABLE "Property" (
     "propertyCategory" TEXT NOT NULL,
     "propertyName" TEXT NOT NULL,
     "propertyType" TEXT NOT NULL,
-    "propertyPrice" TEXT NOT NULL,
+    "propertyPrice" INTEGER NOT NULL,
     "propertyArea" TEXT NOT NULL,
     "propertyCity" TEXT NOT NULL,
     "propertyTown" TEXT NOT NULL,

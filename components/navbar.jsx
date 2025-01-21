@@ -1,5 +1,6 @@
 'use client';
 import React from 'react';
+import { usePathname } from 'next/navigation';
 import { FaHome } from 'react-icons/fa';
 import { GiExitDoor } from 'react-icons/gi';
 import { FcConferenceCall } from 'react-icons/fc';
@@ -14,23 +15,18 @@ import { useSession } from 'next-auth/react';
 export default function Navbar() {
   const router = useRouter();
   const session = useSession();
+  const pathname = usePathname();
+
   return (
-    <div className="hidden xl:block border border-black">
-      <div className="flex justify-center w-3/4">
-        <div className="absolute top-2 left-0 z-50 flex justify-end">
-          <div className="relative w-full xl:w-44 h-20 overflow-hidden rounded-xl">
-            <Image
-              priority
-              src="https://i.imgur.com/rXaNY0v.png"
-              layout="fill"
-              objectFit="contain"
-              alt="logo"
-            />
-          </div>
-        </div>
-        <ul className="flex justify-evenly items-center w-full h-24">
+    <div
+      className={`hidden xl:flex xl:justify-between ${
+        pathname !== '/' ? 'border border-black' : ''
+      }`}
+    >
+      <div className="flex justify-start w-full">
+        <ul className="flex justify-evenly gap-4 mr-4 items-center h-20 w-3/4">
           <div
-            className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-lg p-2 px-8  h-16"
+            className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-lg  px-2 xl:px-8 h-16 transition-all duration-300"
             onClick={() => router.push('/')}
           >
             <FaHome className="text-xl select-none text-one hover:text-five" />
@@ -39,7 +35,7 @@ export default function Navbar() {
           <div className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one h-16">
             {session?.status === 'unauthenticated' && (
               <div
-                className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-lg p-2 px-8  h-16"
+                className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-lg p-2 px-8 h-16 transition-all duration-300"
                 onClick={() => router.push('/login')}
               >
                 <GiExitDoor className="text-xl select-none text-one hover:text-five" />
@@ -48,50 +44,74 @@ export default function Navbar() {
             )}
             {session?.status === 'authenticated' && (
               <div
-                className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-lg p-2 px-8  h-16"
+                className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-lg  px-2 xl:px-8 h-16 transition-all duration-300"
                 onClick={() => router.push('/profile')}
               >
                 <GiExitDoor className="text-xl select-none text-one hover:text-five" />
-                <li className="text-xl select-none">بروفايل </li>
+                <li className="text-xl select-none">بروفايل</li>
               </div>
             )}
           </div>
           <div
-            className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-lg p-2 px-8  h-16"
+            className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-lg  px-2 xl:px-8 h-16 transition-all duration-300"
             onClick={() => router.push('/contactUs')}
           >
             <FcConferenceCall className="text-xl select-none text-one hover:text-five" />
             <li className="text-xl select-none text-nowrap">اتصل بنا</li>
           </div>
           <div
-            className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-lg p-2 px-8  h-16"
+            className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-lg  px-2 xl:px-8 h-16 transition-all duration-300"
             onClick={() => router.push('/newPost')}
           >
             <FaCanadianMapleLeaf className="text-xl select-none text-one hover:text-five" />
-            <li className="text-xl select-none text-nowrap">انشاء إعلان</li>
+            <li className="text-xl select-none text-nowrap">إنشاء إعلان</li>
           </div>
           <div
-            className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-lg p-2 px-8  h-16"
+            className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-lg  px-2 xl:px-8 h-16 transition-all duration-300"
             onClick={() => router.push('/sell')}
           >
             <FaDollarSign className="text-xl select-none text-one hover:text-five" />
             <li className="text-xl select-none">بيع</li>
           </div>
           <div
-            className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-lg p-2 px-8  h-16"
+            className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-lg  px-2 xl:px-8 h-16 transition-all duration-300"
             onClick={() => router.push('/buy')}
           >
             <GiPayMoney className="text-xl select-none text-one hover:text-five" />
             <li className="text-xl select-none">شراء</li>
           </div>
           <div
-            className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-lg p-2 px-8  h-16"
+            className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-lg  px-2 xl:px-8 h-16 transition-all duration-300"
             onClick={() => router.push('/rent')}
           >
             <MdOutlineBedroomParent className="text-xl select-none text-one hover:text-five" />
-            <li className="text-xl select-none">أجار</li>
+            <li className="text-xl select-none">إيجار</li>
           </div>
         </ul>
+        <div
+          className="relative flex justify-end w-full cursor-pointer"
+          onClick={() => router.push('/')}
+        >
+          <div className="absolute top-5 left-24 z-50 flex justify-end">
+            <div className="absolute z-30">
+              <h1 className="akar akarStroke lg:text-4xl lg:font-extrabold text-lg text-nowrap">
+                AKAR
+              </h1>
+              <h1 className="absolute akarStroke lg:text-4xl lg:font-extrabold text-transparent text-lg text-nowrap top-0 left-0 z-0">
+                AKAR
+              </h1>
+            </div>
+          </div>
+          <div className="relative size-20 border-l-[18px] border-one">
+            <Image
+              src="https://i.imgur.com/OJBYeR1.jpg"
+              fill
+              objectFit="cover"
+              alt="home_photo"
+              objectPosition="top"
+            />
+          </div>
+        </div>
       </div>
     </div>
   );
