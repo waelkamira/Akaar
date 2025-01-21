@@ -22,6 +22,15 @@ function inputsReducer(currentState, action) {
           modelName: action.payload.modelName,
         },
       };
+    case 'PROPERTY_ROOMS_NUMBER':
+      return {
+        ...currentState,
+        data: {
+          ...currentState?.data,
+          propertyRoomsNumber: action.payload.propertyRoomsNumber,
+          modelName: action.payload.modelName,
+        },
+      };
     case 'PROPERTY_CITY':
       return {
         ...currentState,
@@ -112,7 +121,7 @@ export function InputsContextProvider({ children }) {
     location: [],
     category: '',
   });
-  // console.log('from Context', state);
+  console.log('from Context', state);
 
   return (
     <inputsContext.Provider value={{ ...state, dispatch }}>

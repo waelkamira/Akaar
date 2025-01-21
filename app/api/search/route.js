@@ -15,6 +15,7 @@ export async function GET(req) {
   const propertyCity = searchParams.get('propertyCity');
   const propertyTown = searchParams.get('propertyTown');
   const propertyType = searchParams.get('propertyType');
+  const propertyRoomsNumber = searchParams.get('propertyRoomsNumber');
   const minPrice = searchParams.get('minPrice')
     ? parseInt(searchParams.get('minPrice'))
     : null;
@@ -22,7 +23,7 @@ export async function GET(req) {
     ? parseInt(searchParams.get('maxPrice'))
     : null;
 
-  console.log('propertyCategory:', propertyCategory);
+  console.log('propertyRoomsNumber:', propertyRoomsNumber);
 
   try {
     if (
@@ -56,6 +57,17 @@ export async function GET(req) {
       filters.propertyType = propertyType;
     }
 
+    // تصفية بناءً على عدد الغرف
+    if (
+      propertyRoomsNumber &&
+      propertyRoomsNumber.trim() !== '' &&
+      propertyRoomsNumber !== 'undefined'
+    ) {
+      filters.propertyRoomsNumber = {
+        contains: propertyRoomsNumber[0],
+      };
+    }
+    console.log('propertyRoomsNumber[0]', propertyRoomsNumber[0]);
     // تصفية بناءً على المدينة والبلدة
     if (
       propertyCity &&
@@ -64,6 +76,7 @@ export async function GET(req) {
     ) {
       filters.propertyCity = propertyCity;
     }
+
     if (
       propertyTown &&
       propertyTown.trim() !== '' &&
@@ -72,7 +85,7 @@ export async function GET(req) {
       filters.propertyTown = propertyTown;
     }
 
-    // تصفية بناءً على السعر
+    // إضافة شرط لتصفية العقارات بناءً على نطاق السعر
     if (minPrice !== null || maxPrice !== null) {
       filters.propertyPrice = {
         ...(minPrice !== null ? { gte: minPrice } : {}),
@@ -97,6 +110,7 @@ export async function GET(req) {
     });
 
     console.log('Properties found:', properties.length);
+    console.log('Properties :', properties);
 
     await prisma.$disconnect();
     return NextResponse.json({

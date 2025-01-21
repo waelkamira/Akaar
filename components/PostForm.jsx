@@ -24,6 +24,7 @@ import { useRouter } from 'next/navigation';
 import CategoryComponent from './CategoryComponent';
 import CitySelector from './map/CitySelector';
 import { MdOutlineCategory } from 'react-icons/md';
+import RoomsNumberSelector from './roomsNumberSelector';
 
 export default function PostForm({ setIsVisible, cancel = true }) {
   const [url, setUrl] = useState('');
@@ -44,11 +45,12 @@ export default function PostForm({ setIsVisible, cancel = true }) {
     propertyTownLocation,
   } = useContext(inputsContext);
 
-  console.log('category 111111111111111111', category);
+  console.log('data 111111111111111111', data);
   useEffect(() => {
     setInputs({
       ...inputs,
       propertyType: data?.propertyType?.label || '',
+      propertyRoomsNumber: data?.propertyRoomsNumber?.label || '',
       propertyCity: data?.propertyCity || '',
       propertyTown: data?.propertyTown || '',
       propertyCategory: category?.label || '',
@@ -57,23 +59,11 @@ export default function PostForm({ setIsVisible, cancel = true }) {
       image2: addImages?.[2] || '',
       image3: addImages?.[3] || '',
       image4: addImages?.[4] || '',
-      lat: location?.[0] || '',
-      lng: location?.[1] || '',
+      lat: location?.[0] || 33.5138,
+      lng: location?.[1] || 36.2765,
     });
     handleGenerateEmbed();
-  }, [
-    url,
-    data?.propertyType,
-    data?.propertyCity,
-    data?.propertyTown,
-    addImages[0],
-    addImages[1],
-    addImages[2],
-    addImages[3],
-    addImages[4],
-    location,
-    category?.label,
-  ]);
+  }, [url, data, addImages, location, category]);
   const [errors, setErrors] = useState({
     propertyCategory: false,
     propertyCategoryErrorMessage: 'هذا الحقل مطلوب',
@@ -86,6 +76,9 @@ export default function PostForm({ setIsVisible, cancel = true }) {
 
     propertyType: false,
     propertyTypeErrorMessage: 'اختيار نوع العقار مطلوب',
+
+    propertyRoomsNumber: false,
+    propertyRoomsNumberErrorMessage: 'اختيار عدد الغرف مطلوب',
 
     propertyPrice: false,
     propertyPriceErrorMessage: 'حقل السعر مطلوب',
@@ -113,7 +106,8 @@ export default function PostForm({ setIsVisible, cancel = true }) {
     propertyCategory: '',
     propertyName: '',
     propertyType: '',
-    propertyPrice: 0,
+    propertyRoomsNumber: '',
+    propertyPrice: '',
     propertyArea: '',
     propertyCity: '',
     propertyTown: '',
@@ -134,6 +128,9 @@ export default function PostForm({ setIsVisible, cancel = true }) {
       inputs?.propertyCategory &&
       inputs?.propertyName &&
       inputs?.propertyType &&
+      (data?.propertyType?.label === 'بيت'
+        ? inputs?.propertyRoomsNumber
+        : '') &&
       inputs?.propertyPrice &&
       inputs?.propertyArea &&
       inputs?.propertyCity &&
@@ -160,6 +157,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
           dispatch({ type: 'New_RECIPE', payload: inputs });
           dispatch({ type: 'ADD_IMAGE', payload: [] });
           dispatch({ type: 'PROPERTY_TYPE', payload: '' });
+          dispatch({ type: 'PROPERTY_ROOMS_NUMBER', payload: '' });
           dispatch({ type: 'PROPERTY_CITY', payload: '' });
           dispatch({ type: 'PROPERTY_TOWN', payload: '' });
           dispatch({ type: 'LOCATION', payload: [] });
@@ -173,6 +171,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
             propertyName: '',
             propertyCategory: '',
             propertyType: '',
+            propertyRoomsNumber: '',
             propertyPrice: 0,
             propertyCity: '',
             propertyTown: '',
@@ -197,6 +196,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
             propertyName: false,
             propertyCategory: false,
             propertyType: false,
+            propertyRoomsNumber: false,
             propertyPrice: false,
             propertyArea: false,
             propertyCity: false,
@@ -218,6 +218,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
         propertyCategory: false,
         propertyName: false,
         propertyType: false,
+        propertyRoomsNumber: false,
         propertyPrice: false,
         propertyArea: false,
         propertyCity: false,
@@ -253,6 +254,14 @@ export default function PostForm({ setIsVisible, cancel = true }) {
         setErrors((prevErrors) => ({ ...prevErrors, propertyType: true }));
         toast.custom((t) => (
           <CustomToast t={t} message={'اختيار نوع العقار مطلوب 😐'} />
+        ));
+      } else if (!inputs.propertyRoomsNumber) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          propertyRoomsNumber: true,
+        }));
+        toast.custom((t) => (
+          <CustomToast t={t} message={'اختيار عدد الغرف مطلوب 😐'} />
         ));
       } else if (!inputs.propertyPrice) {
         setErrors((prevErrors) => ({ ...prevErrors, propertyPrice: true }));
@@ -413,6 +422,15 @@ export default function PostForm({ setIsVisible, cancel = true }) {
 
                   <PropertyTypeSelector />
                 </div>
+                <div className="flex flex-col items-center justify-center my-4 w-full ">
+                  {errors.propertyRoomsNumber && (
+                    <h1 className="text-one text-2xl text-start w-full animate-bounce">
+                      اختيار عدد الغرف مطلوب
+                    </h1>
+                  )}
+
+                  <RoomsNumberSelector />
+                </div>
 
                 <div className="flex flex-col items-center justify-center my-4 w-full">
                   {errors.propertyPrice && (
@@ -425,7 +443,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
                       <span className="text-one text-2xl ml-2">
                         <MdOutlinePriceCheck />
                       </span>
-                      سعر العقار:
+                      سعر العقار بالدولار:
                     </h1>
                   </div>
 
@@ -591,14 +609,14 @@ export default function PostForm({ setIsVisible, cancel = true }) {
           <div className="flex flex-col sm:flex-row justify-around items-center gap-8 w-full my-12">
             <button
               type="submit"
-              className="btn bg-five  text-white shadow-lg hover:outline outline-one text-xl hover py-2 px-16 w-full"
+              className="btn bg-five  text-white shadow-sm shadow-gray-300  hover:outline outline-one text-xl hover py-2 px-16 w-full"
             >
               نشر
             </button>
             {cancel && (
               <button
                 type="text"
-                className="btn bg-five  text-white shadow-lg hover:outline  outline-one text-xl hover py-2 px-16 w-full"
+                className="btn bg-five  text-white shadow-sm shadow-gray-300  hover:outline  outline-one text-xl hover py-2 px-16 w-full"
                 onClick={() => {
                   setIsVisible(false);
                   setInputs({
@@ -609,6 +627,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
                     image4: '',
                     propertyName: '',
                     propertyType: '',
+                    propertyRoomsNumber: '',
                     propertyPrice: 0,
                     propertyArea: '',
                     propertyCity: '',

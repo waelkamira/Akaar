@@ -153,12 +153,12 @@ export default function SmallItem({ post, index, show = true, id = false }) {
       <div
         key={index}
         id="post1"
-        className="flex flex-col justify-center items-center shadow-md w-full p-2 sm:p-4  mb-4 bg-white border-t-[20px] border-twelve transition-all duration-300"
+        className="flex flex-col justify-center items-center shadow-sm shadow-gray-300  w-full p-2 sm:p-4 rounded-lg mb-4 bg-white border-t-[20px] border-one transition-all duration-300"
       >
-        <div className="flex items-center justify-center w-full sm:p-2">
+        <div className="flex items-center justify-start sm:p-2 w-full">
           <Link
             href={'/profile'}
-            className="cursor-pointer flex justify-start items-center gap-2 w-full h-fit "
+            className="cursor-pointer flex justify-start items-center gap-2 w-fit h-fit "
           >
             <div className="overflow-hidden ">
               <div className="relative size-8 sm:size-12   overflow-hidden">
@@ -276,7 +276,7 @@ export default function SmallItem({ post, index, show = true, id = false }) {
               ));
             }
           }}
-          className="sm:text-2xl p-2 my-2 bg-twelve text-white hover:scale-[101%] hover:text-white font-medium text-center select-none w-full  shadow-lg transition-all duration-300 "
+          className="sm:text-2xl p-2 my-2 bg-one text-white hover:scale-[101%] hover:text-white font-medium text-center select-none w-full  shadow-sm shadow-gray-300  transition-all duration-300  rounded-[5px]"
         >
           عرض الإعلان
         </button>

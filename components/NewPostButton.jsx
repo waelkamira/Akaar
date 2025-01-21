@@ -25,7 +25,7 @@ export default function NewPostButton() {
           onClick={() => setIsVisible(false)}
         >
           <div
-            className="absolute top-2 right-2 sm:top-16 sm:right-16 flex justify-center items-center z-50 bg-five hover:bg-one cursor-pointer h-fit px-4 py-1 text-white font-semibold  hover:scale-105 shadow-lg "
+            className="absolute top-2 right-2 sm:top-16 sm:right-16 flex justify-center items-center z-50 bg-five hover:bg-one cursor-pointer h-fit px-4 py-1 text-white font-semibold  hover:scale-105 shadow-sm shadow-gray-300  "
             onClick={() => setIsVisible(false)}
           >
             <h1 className="tex-sm">إغلاق</h1>

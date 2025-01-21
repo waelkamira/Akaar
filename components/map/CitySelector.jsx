@@ -56,7 +56,7 @@ export default function CitySelector() {
   function customTheme(theme) {
     return {
       ...theme,
-      borderRadius: 0,
+      borderRadius: 5,
       colors: {
         ...theme.colors,
         primary: '#22C55E',
@@ -66,11 +66,11 @@ export default function CitySelector() {
   }
 
   return (
-    <div className="flex flex-col md:flex-row gap-4 w-full justify-start items-center">
+    <div className="flex flex-col xl:flex-row gap-4 w-full justify-start items-center">
       <div className="mb-2 w-full">
         <div className="flex items-center gap-2 w-full justify-start my-2">
-          <h1 className="flex text-right text-md sm:text-xl select-none">
-            <span className="text-one text-lg sm:text-xl ml-2 text-nowrap">
+          <h1 className="flex text-right text-md select-none">
+            <span className="text-one xl:text-xl ml-2">
               <GiModernCity />
             </span>
             المدينة:
@@ -85,14 +85,14 @@ export default function CitySelector() {
           isClearable
           isSearchable
           theme={customTheme}
-          className="w-full text-lg sm:text-xl text-start z-50 h-12 text-nowrap"
+          className="w-full text-lg  text-start z-50 h-12 text-nowrap"
         />
       </div>
 
       <div className="mb-2 w-full">
         <div className="flex items-center gap-2 w-full justify-start my-2">
-          <h1 className="flex text-right text-md sm:text-xl select-none">
-            <span className="text-one text-lg sm:text-xl ml-2 text-nowrap">
+          <h1 className="flex text-right text-md select-none">
+            <span className="text-one xl:text-xl ml-2">
               <FaTreeCity />
             </span>
             المنطقة :
@@ -108,7 +108,7 @@ export default function CitySelector() {
           isSearchable
           isDisabled={!selectedCity}
           theme={customTheme}
-          className="w-full text-lg sm:text-xl text-start z-40 h-12 text-nowrap"
+          className="w-full text-lg  text-start z-40 h-12 text-nowrap"
         />
       </div>
     </div>

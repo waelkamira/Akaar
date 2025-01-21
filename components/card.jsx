@@ -36,7 +36,7 @@ export default function Card({ cardName, path, image, text, color }) {
         <button
           onClick={() => router.push(path)}
           className={
-            `w-full my-2 rounded-lg hover:scale-[101%] text-lg sm:text-xl p-2 transition-transform duration-200 ease-in-out ` +
+            `w-full my-2 rounded-lg hover:scale-[101%] text-lg sm:text-xl hover:shadow-sm shadow-gray-300 p-2 transition-transform duration-200 ease-in-out ` +
             (color === 'red'
               ? 'bg-two'
               : color === 'orange'
