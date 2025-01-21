@@ -69,7 +69,7 @@ export default function CitySelector() {
     <div className="flex flex-col md:flex-row gap-4 w-full justify-start items-center">
       <div className="mb-2 w-full">
         <div className="flex items-center gap-2 w-full justify-start my-2">
-          <h1 className="flex text-right text-md sm:text-xl ">
+          <h1 className="flex text-right text-md sm:text-xl select-none">
             <span className="text-one text-lg sm:text-xl ml-2 text-nowrap">
               <GiModernCity />
             </span>
@@ -91,7 +91,7 @@ export default function CitySelector() {
 
       <div className="mb-2 w-full">
         <div className="flex items-center gap-2 w-full justify-start my-2">
-          <h1 className="flex text-right text-md sm:text-xl ">
+          <h1 className="flex text-right text-md sm:text-xl select-none">
             <span className="text-one text-lg sm:text-xl ml-2 text-nowrap">
               <FaTreeCity />
             </span>

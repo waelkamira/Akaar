@@ -1,9 +1,9 @@
 'use client';
-import AllPosts from '../../components/allPosts';
+import SearchBar from '../../components/SearchBar';
 export default function Sell() {
   return (
-    <div className="flex justify-center items-center w-full bg-four">
-      <AllPosts propertyCategory="أجار" />
+    <div className="flex flex-col items-center w-full">
+      <SearchBar propertyCategory="أجار" />
     </div>
   );
 }

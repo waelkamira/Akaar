@@ -37,8 +37,16 @@ export async function POST(req) {
     const data = await req.json();
     console.log('data', data);
 
-    // إذا كان `link` فارغًا، اجعل قيمته `null` بدلاً من "" أو غيّر هذا وفقًا لاحتياجاتك
-    const linkValue = data.link === '' ? null : data.link;
+    // تحويل propertyPrice إلى Int
+    const propertyPriceValue = parseInt(data.propertyPrice, 10);
+
+    // التحقق من أن التحويل تم بنجاح وأن القيمة صالحة
+    if (isNaN(propertyPriceValue)) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid propertyPrice value' }),
+        { status: 400 }
+      );
+    }
 
     // إنشاء سجل جديد باستخدام Prisma
     const newProperty = await prisma.property.create({
@@ -52,7 +60,7 @@ export async function POST(req) {
         propertyCategory: data?.propertyCategory,
         propertyName: data?.propertyName,
         propertyType: data?.propertyType,
-        propertyPrice: data?.propertyPrice,
+        propertyPrice: propertyPriceValue, // استخدام القيمة المحولة
         propertyArea: data?.propertyArea,
         propertyCity: data?.propertyCity,
         propertyTown: data?.propertyTown,
@@ -60,13 +68,13 @@ export async function POST(req) {
         description: data?.description,
         lng: data?.lng,
         lat: data?.lat,
-        link: linkValue, // التعامل مع الحقل `link` بشكل صحيح
+        link: data?.link || null, // التعامل مع الحقل `link` بشكل صحيح
         hearts: data?.hearts,
         userName: data?.userName,
         userImage: data?.userImage,
         createdBy: data?.createdBy,
-        createdAt: data?.createdAt, // إرسال القيمة كـ نص
-        updatedAt: data?.updatedAt, // إرسال القيمة كـ نص
+        createdAt: data?.createdAt ? new Date(data.createdAt) : undefined, // تحويل النص إلى كائن Date
+        updatedAt: data?.updatedAt ? new Date(data.updatedAt) : undefined, // تحويل النص إلى كائن Date
       },
     });
 
