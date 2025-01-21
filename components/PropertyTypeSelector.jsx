@@ -67,7 +67,7 @@ export default function PropertyTypeSelector() {
   function customTheme(theme) {
     return {
       ...theme,
-      borderRadius: 0,
+      borderRadius: 5,
       colors: {
         ...theme.colors,
         primary: '#22C55E',
@@ -85,8 +85,8 @@ export default function PropertyTypeSelector() {
     <div className="flex flex-col w-full justify-start items-center">
       <div className="w-full">
         <div className="flex items-center gap-2 w-full justify-start my-2">
-          <h1 className="flex text-right text-md sm:text-xl text-nowrap select-none">
-            <span className="text-one sm:text-2xl ml-2">
+          <h1 className="flex text-right text-md text-nowrap select-none">
+            <span className="text-one xl:text-xl ml-2">
               <VscUngroupByRefType />
             </span>
             نوع العقار:
@@ -100,7 +100,7 @@ export default function PropertyTypeSelector() {
           isSearchable
           options={options}
           theme={customTheme}
-          className="w-full text-lg sm:text-xl text-start z-30 h-12 select-none"
+          className="w-full text-lg  text-start z-30 h-12 select-none"
         ></Select>
       </div>
     </div>

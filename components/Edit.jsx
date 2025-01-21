@@ -126,7 +126,7 @@ export default function EditPost() {
       )}
       {session?.status === 'authenticated' && (
         <div className="relative flex flex-col items-start w-full bg-four h-full p-2 lg:p-8 ">
-          <div className="hidden xl:block relative w-full h-24 sm:h-[200px]  overflow-hidden shadow-lg shadow-one">
+          <div className="hidden xl:block relative w-full h-24 sm:h-[200px]  overflow-hidden shadow-sm shadow-gray-300  shadow-one">
             <Image
               priority
               src={'/photo (20).png'}

@@ -143,7 +143,7 @@ export default function LogInPage() {
           </h1>
         )} */}
         <div
-          className="flex justify-center w-full bg-white rounded-md px-4 py-2 items-center my-8 hover:shadow-md cursor-pointer"
+          className="flex justify-center w-full bg-white rounded-md px-4 py-2 items-center my-8 hover:shadow-sm shadow-gray-300 cursor-pointer"
           onClick={() => signIn('google')}
         >
           <div className="relative h-8 w-8 ">

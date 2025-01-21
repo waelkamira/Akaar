@@ -60,6 +60,7 @@ export async function POST(req) {
         propertyCategory: data?.propertyCategory,
         propertyName: data?.propertyName,
         propertyType: data?.propertyType,
+        propertyRoomsNumber: data?.propertyRoomsNumber,
         propertyPrice: propertyPriceValue, // استخدام القيمة المحولة
         propertyArea: data?.propertyArea,
         propertyCity: data?.propertyCity,

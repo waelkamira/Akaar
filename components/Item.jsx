@@ -20,6 +20,7 @@ import { MdOutlinePriceCheck } from 'react-icons/md';
 import { GiRotaryPhone } from 'react-icons/gi';
 import { MdOutlineFeaturedPlayList } from 'react-icons/md';
 import { RxVideo } from 'react-icons/rx';
+import { MdOutlineBedroomParent } from 'react-icons/md';
 
 export default function Item({
   contactPhoneNumber,
@@ -38,6 +39,7 @@ export default function Item({
   propertyName,
   propertyPrice,
   propertyType,
+  propertyRoomsNumber,
   userImage,
   userName,
 }) {
@@ -133,30 +135,40 @@ export default function Item({
                 <div className="flex flex-col text-black w-full">
                   <div className="flex flex-col sm:flex-row justify-center items-center gap-4 ">
                     <div className=" w-full">
-                      <h1 className="flex justify-start items-center bg-white shadow-lg text-lg sm:text-xl w-full min-h-20 my-2 select-none">
+                      <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300  text-lg sm:text-xl w-full min-h-20 my-2 select-none">
                         <span className="flex gap-1 items-center text-one text-lg sm:text-xl mx-2 select-none">
                           <FaHouseDamage className="text-black" />
                           اسم المعلن :
                         </span>
                         {userName}{' '}
                       </h1>
-                      <h1 className="flex justify-start items-center bg-white shadow-lg text-lg sm:text-xl w-full min-h-20 my-2 select-none">
+                      <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300  text-lg sm:text-xl w-full min-h-20 my-2 select-none">
                         <span className="flex gap-1 items-center text-one text-lg sm:text-xl mx-2 select-none">
                           <RxSpaceEvenlyHorizontally className="text-black" />
                           نوع العقار :
                         </span>
                         {propertyType}{' '}
                       </h1>
-                      <h1 className="flex justify-start items-center bg-white shadow-lg text-lg sm:text-xl w-full min-h-20 my-2 select-none">
+                      <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300  text-lg sm:text-xl w-full min-h-20 my-2 select-none">
+                        <span className="flex gap-1 items-center text-one text-lg sm:text-xl mx-2 select-none">
+                          <MdOutlineBedroomParent className="text-black" />
+                          عدد الغرف :
+                        </span>
+                        {propertyRoomsNumber}{' '}
+                      </h1>
+                      <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300  text-lg sm:text-xl w-full min-h-20 my-2 select-none">
                         <span className="flex gap-1 items-center text-one text-lg sm:text-xl mx-2 select-none">
                           <MdOutlinePriceCheck className="text-black" />
                           السعر :
                         </span>
-                        {propertyPrice}
+                        {propertyPrice}{' '}
+                        <span className="flex gap-1 items-center text-one text-lg sm:text-xl mx-2 select-none">
+                          $
+                        </span>{' '}
                       </h1>
                     </div>
                     <div className=" w-full">
-                      <h1 className="flex justify-start items-center bg-white shadow-lg text-lg sm:text-xl w-full min-h-20 my-2 select-none">
+                      <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300  text-lg sm:text-xl w-full min-h-20 my-2 select-none">
                         <span className="flex gap-1 items-center text-one text-lg sm:text-xl mx-2 select-none">
                           <GiModernCity className="text-black" />
                           المدينة :
@@ -164,19 +176,26 @@ export default function Item({
                         {propertyCity}{' '}
                       </h1>
 
-                      <h1 className="flex justify-start items-center bg-white shadow-lg text-lg sm:text-xl w-full min-h-20 my-2 select-none">
+                      <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300  text-lg sm:text-xl w-full min-h-20 my-2 select-none">
                         <span className="flex gap-1 items-center text-one text-lg sm:text-xl mx-2 select-none">
                           <VscUngroupByRefType className="text-black" />
                           المساحة :
                         </span>
                         {propertyArea}
                       </h1>
-                      <h1 className="flex justify-start items-center bg-white shadow-lg text-lg sm:text-xl w-full min-h-20 my-2 select-none">
+                      <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300  text-lg sm:text-xl w-full min-h-20 my-2 select-none">
                         <span className="flex gap-1 items-center text-one text-lg sm:text-xl mx-2 select-none">
                           <GiRotaryPhone className="text-black" />
                           رقم الهاتف :
                         </span>
                         {contactPhoneNumber}
+                      </h1>
+                      <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300  text-lg sm:text-xl w-full min-h-20 my-2 select-none">
+                        <span className="flex gap-1 items-center text-one text-lg sm:text-xl mx-2 select-none">
+                          {/* <GiRotaryPhone className="text-black" /> */}
+                          {/* رقم الهاتف : */}
+                        </span>
+                        {/* {contactPhoneNumber} */}
                       </h1>
                     </div>
                   </div>
@@ -188,7 +207,7 @@ export default function Item({
                       الوصف:
                     </h1>
                   </div>
-                  <div className="flex justify-start items-center p-2 overflow-y-auto h-44 bg-white shadow-lg text-lg sm:text-xl w-full min-h-20 my-2 select-none">
+                  <div className="flex justify-start items-center p-2 overflow-y-auto h-44 bg-white shadow-sm shadow-gray-300  text-lg sm:text-xl w-full min-h-20 my-2 select-none">
                     {description}
                   </div>
                 </div>

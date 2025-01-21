@@ -190,7 +190,7 @@ export default function RegisterPage() {
           </h1>
         )}
         <div
-          className="flex justify-between w-full bg-white rounded-md px-4 py-2 items-center my-8 hover:shadow-md cursor-pointer"
+          className="flex justify-between w-full bg-white rounded-md px-4 py-2 items-center my-8 hover:shadow-sm shadow-gray-300 cursor-pointer"
           onClick={() => signIn('google')}
         >
           <div className="relative h-8 w-8">

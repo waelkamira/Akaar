@@ -102,7 +102,7 @@ export default function Page() {
         />
         {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
       </div>
-      <div className="hidden xl:block relative w-full h-24 sm:h-[200px]  overflow-hidden shadow-lg shadow-one">
+      <div className="hidden xl:block relative w-full h-24 sm:h-[200px]  overflow-hidden shadow-sm shadow-gray-300  shadow-one">
         <Image
           priority
           src={'/photo (19).png'}

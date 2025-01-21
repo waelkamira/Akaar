@@ -19,14 +19,14 @@ export default function Navbar() {
 
   return (
     <div
-      className={`hidden xl:flex xl:justify-between ${
-        pathname !== '/' ? 'border border-black' : ''
+      className={`hidden xl:flex xl:justify-between bg-white ${
+        pathname !== '/' ? 'shadow-sm shadow-gray-300' : ''
       }`}
     >
       <div className="flex justify-start w-full">
         <ul className="flex justify-evenly gap-4 mr-4 items-center h-20 w-3/4">
           <div
-            className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-lg  px-2 xl:px-8 h-16 transition-all duration-300"
+            className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-sm shadow-gray-300   px-2 xl:px-8 h-16 transition-all duration-300"
             onClick={() => router.push('/')}
           >
             <FaHome className="text-xl select-none text-one hover:text-five" />
@@ -35,7 +35,7 @@ export default function Navbar() {
           <div className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one h-16">
             {session?.status === 'unauthenticated' && (
               <div
-                className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-lg p-2 px-8 h-16 transition-all duration-300"
+                className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-sm shadow-gray-300  p-2 px-8 h-16 transition-all duration-300"
                 onClick={() => router.push('/login')}
               >
                 <GiExitDoor className="text-xl select-none text-one hover:text-five" />
@@ -44,7 +44,7 @@ export default function Navbar() {
             )}
             {session?.status === 'authenticated' && (
               <div
-                className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-lg  px-2 xl:px-8 h-16 transition-all duration-300"
+                className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-sm shadow-gray-300   px-2 xl:px-8 h-16 transition-all duration-300"
                 onClick={() => router.push('/profile')}
               >
                 <GiExitDoor className="text-xl select-none text-one hover:text-five" />
@@ -53,35 +53,35 @@ export default function Navbar() {
             )}
           </div>
           <div
-            className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-lg  px-2 xl:px-8 h-16 transition-all duration-300"
+            className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-sm shadow-gray-300   px-2 xl:px-8 h-16 transition-all duration-300"
             onClick={() => router.push('/contactUs')}
           >
             <FcConferenceCall className="text-xl select-none text-one hover:text-five" />
             <li className="text-xl select-none text-nowrap">اتصل بنا</li>
           </div>
           <div
-            className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-lg  px-2 xl:px-8 h-16 transition-all duration-300"
+            className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-sm shadow-gray-300   px-2 xl:px-8 h-16 transition-all duration-300"
             onClick={() => router.push('/newPost')}
           >
             <FaCanadianMapleLeaf className="text-xl select-none text-one hover:text-five" />
             <li className="text-xl select-none text-nowrap">إنشاء إعلان</li>
           </div>
           <div
-            className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-lg  px-2 xl:px-8 h-16 transition-all duration-300"
+            className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-sm shadow-gray-300   px-2 xl:px-8 h-16 transition-all duration-300"
             onClick={() => router.push('/sell')}
           >
             <FaDollarSign className="text-xl select-none text-one hover:text-five" />
             <li className="text-xl select-none">بيع</li>
           </div>
           <div
-            className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-lg  px-2 xl:px-8 h-16 transition-all duration-300"
+            className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-sm shadow-gray-300   px-2 xl:px-8 h-16 transition-all duration-300"
             onClick={() => router.push('/buy')}
           >
             <GiPayMoney className="text-xl select-none text-one hover:text-five" />
             <li className="text-xl select-none">شراء</li>
           </div>
           <div
-            className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-lg  px-2 xl:px-8 h-16 transition-all duration-300"
+            className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-sm shadow-gray-300   px-2 xl:px-8 h-16 transition-all duration-300"
             onClick={() => router.push('/rent')}
           >
             <MdOutlineBedroomParent className="text-xl select-none text-one hover:text-five" />

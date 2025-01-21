@@ -35,7 +35,7 @@ export default function VideoPlayer() {
     <div className="relative max-w-lg mx-auto">
       <video
         ref={videoRef}
-        className=" shadow-lg w-full"
+        className=" shadow-sm shadow-gray-300  w-full"
         controls
         controlsList="nodownload"
         src="https://cdn.arteenz.com/75441e2b95254493ab02a4e94d7710e9:arteenz/001/a7lam_wa_fra7/a7lam_wa_fra7_01.mp4"
