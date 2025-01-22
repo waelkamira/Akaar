@@ -2,10 +2,14 @@
 import React, { useContext, useEffect, useState } from 'react';
 import Select from 'react-select';
 import { inputsContext } from './Context.jsx';
+import { usePathname } from 'next/navigation.js';
+import { MdOutlineBedroomParent } from 'react-icons/md';
 
 export default function CitiesSelectComponent() {
   const { dispatch } = useContext(inputsContext);
   const [category, setCategory] = useState('');
+  const path = usePathname();
+
   const options = [
     { value: 'بيع', label: 'بيع' },
     { value: 'شراء', label: 'شراء' },
@@ -34,7 +38,7 @@ export default function CitiesSelectComponent() {
   function customTheme(theme) {
     return {
       ...theme,
-      borderRadius: 0,
+      borderRadius: 5,
       colors: {
         ...theme.colors,
         primary: '#22C55E',
@@ -43,18 +47,51 @@ export default function CitiesSelectComponent() {
     };
   }
 
+  // أنماط مخصصة لتعديل ارتفاع المكون
+  const customStyles = {
+    control: (provided) => ({
+      ...provided,
+      minHeight: '3rem', // تعيين الارتفاع الأدنى إلى 4rem (يعادل h-16 في Tailwind CSS)
+    }),
+    valueContainer: (provided) => ({
+      ...provided,
+      height: '3rem', // تعيين ارتفاع الحاوية الداخلية
+      display: 'flex',
+      alignItems: 'center',
+      padding: '0 1rem',
+    }),
+    indicatorsContainer: (provided) => ({
+      ...provided,
+      height: '3rem', // تعيين ارتفاع حاوية المؤشرات
+    }),
+  };
+
   return (
-    <Select
-      defaultValue={category}
-      onChange={setCategory}
-      placeholder="نوع الإعلان"
-      isClearable
-      isSearchable
-      options={options}
-      theme={customTheme}
-      className="w-full text-xl sm:text-2xl text-start z-40 h-12"
-    >
-      Select
-    </Select>
+    <div className="flex flex-col w-full justify-start items-center ">
+      <div className="w-full">
+        <div className="flex items-center gap-2 w-full justify-start my-2">
+          <h1
+            className={`flex text-right text-md select-none text-nowrap '
+              ${path.includes('newPost') ? 'text-white' : ''}`}
+          >
+            <span className="text-one text-lg xl:text-2xl ml-2">
+              <MdOutlineBedroomParent />
+            </span>
+            نوع الإعلان :
+          </h1>
+        </div>
+        <Select
+          defaultValue={category}
+          onChange={setCategory}
+          placeholder="بيع"
+          isClearable
+          isSearchable
+          options={options}
+          theme={customTheme}
+          styles={customStyles} // تطبيق الأنماط المخصصة
+          className="w-full text-md  text-start z-40 "
+        />
+      </div>
+    </div>
   );
 }

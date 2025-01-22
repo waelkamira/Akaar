@@ -25,6 +25,7 @@ import CategoryComponent from './CategoryComponent';
 import CitySelector from './map/CitySelector';
 import { MdOutlineCategory } from 'react-icons/md';
 import RoomsNumberSelector from './roomsNumberSelector';
+import Button from './Button';
 
 export default function PostForm({ setIsVisible, cancel = true }) {
   const [url, setUrl] = useState('');
@@ -366,7 +367,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
           onSubmit={handleSubmit}
         >
           <div className="w-full">
-            <div className="flex flex-col gap-8 md:flex-row w-full ">
+            <div className="flex flex-col gap-2 xl:gap-8 md:flex-row w-full ">
               <div className="w-full">
                 <div className="flex flex-col items-center justify-center my-4 w-full">
                   {errors.propertyCategory && (
@@ -374,26 +375,27 @@ export default function PostForm({ setIsVisible, cancel = true }) {
                       التصنيف مطلوبة
                     </h1>
                   )}
-                  <div className="flex items-center gap-2 w-full justify-start my-2">
-                    <h1 className="flex text-right text-md sm:text-xl text-white ">
-                      <span className="text-one text-2xl ml-2">
-                        {' '}
-                        <MdOutlineCategory />
-                      </span>
-                      نوع الإعلان:
-                    </h1>
-                  </div>
+
                   <CategoryComponent />
                 </div>
-                <div className="flex flex-col items-center justify-center my-4 w-full">
+                <div className="flex flex-col items-center justify-center my-4 w-full ">
+                  {errors.propertyType && (
+                    <h1 className="text-one text-2xl text-start w-full animate-bounce">
+                      اختيار نوع العقار مطلوب
+                    </h1>
+                  )}
+
+                  <PropertyTypeSelector />
+                </div>
+                <div className="flex flex-col items-center justify-center my-4 w-full ">
                   {errors.propertyArea && (
                     <h1 className="text-one text-2xl text-start w-full animate-bounce">
                       مساحة العقار مطلوبة
                     </h1>
                   )}
                   <div className="flex items-center gap-2 w-full justify-start my-2">
-                    <h1 className="flex text-right text-md sm:text-xl text-white ">
-                      <span className="text-one text-2xl ml-2">
+                    <h1 className="flex text-right text-md select-none text-nowrap text-white">
+                      <span className="text-one text-lg xl:text-2xl ml-2">
                         {' '}
                         <RxSpaceEvenlyHorizontally />
                       </span>
@@ -409,19 +411,11 @@ export default function PostForm({ setIsVisible, cancel = true }) {
                     type="number"
                     id="مساحة العقار"
                     name="مساحة العقار"
-                    placeholder="300 متر2"
-                    className="flex text-right w-full p-2  text-xl sm:text-2xl outline-2 focus:outline-one h-12 placeholder:text-md placeholder:sm:text-xl"
+                    placeholder="300 م2"
+                    className="flex text-right w-full p-2 rounded-[5px] text-lg outline-2 focus:outline-one h-12 placeholder:text-lg"
                   />
                 </div>
-                <div className="flex flex-col items-center justify-center my-4 w-full ">
-                  {errors.propertyType && (
-                    <h1 className="text-one text-2xl text-start w-full animate-bounce">
-                      اختيار نوع العقار مطلوب
-                    </h1>
-                  )}
 
-                  <PropertyTypeSelector />
-                </div>
                 <div className="flex flex-col items-center justify-center my-4 w-full ">
                   {errors.propertyRoomsNumber && (
                     <h1 className="text-one text-2xl text-start w-full animate-bounce">
@@ -431,52 +425,25 @@ export default function PostForm({ setIsVisible, cancel = true }) {
 
                   <RoomsNumberSelector />
                 </div>
-
-                <div className="flex flex-col items-center justify-center my-4 w-full">
-                  {errors.propertyPrice && (
-                    <h1 className="text-one text-2xl text-start w-full animate-bounce">
-                      سعر العقار مطلوب
-                    </h1>
-                  )}
-                  <div className="flex items-center gap-2 w-full justify-start my-2">
-                    <h1 className="flex text-right text-md sm:text-xl text-white ">
-                      <span className="text-one text-2xl ml-2">
-                        <MdOutlinePriceCheck />
-                      </span>
-                      سعر العقار بالدولار:
-                    </h1>
-                  </div>
-
-                  <input
-                    value={inputs?.propertyPrice}
-                    onChange={(e) =>
-                      setInputs({ ...inputs, propertyPrice: e.target.value })
-                    }
-                    type="number"
-                    id="سعر العقار"
-                    name="سعر العقار"
-                    placeholder="$ 000.0"
-                    className="flex text-right w-full p-2  text-xl sm:text-2xl outline-2 focus:outline-one h-12 placeholder:text-md placeholder:sm:text-xl"
-                  />
-                </div>
               </div>
 
               <div className="w-full">
-                <div className="flex flex-col items-center justify-center my-4 w-full">
+                <div className="flex flex-col items-center justify-center my-4 w-full ">
                   {errors.propertyName && (
                     <h1 className="text-one text-2xl text-start w-full animate-bounce">
                       هذا الحقل مطلوب{' '}
                     </h1>
                   )}
+
                   <div className="flex items-center gap-2 w-full justify-start my-2">
-                    <h1 className="flex text-right text-md sm:text-xl text-white">
-                      <span className="text-one text-2xl ml-2">
+                    <h1 className="flex text-right text-md select-none text-nowrap text-white">
+                      <span className="text-one text-lg xl:text-2xl ml-2">
+                        {' '}
                         <FaHouseDamage />
                       </span>
                       اسم مناسب للإعلان:
                     </h1>
                   </div>
-
                   <input
                     value={inputs?.propertyName}
                     autoFocus
@@ -487,7 +454,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
                     id="اسم العقار"
                     name="اسم العقار"
                     placeholder=" بيت بداريا _ أرض بدوما .."
-                    className="flex text-right w-full p-2  text-xl sm:text-2xl outline-2 focus:outline-one h-12 placeholder:text-md placeholder:sm:text-xl"
+                    className="flex text-right w-full p-2 rounded-[5px] text-lg outline-2 focus:outline-one h-12 placeholder:text-lg"
                   />
                 </div>
 
@@ -498,21 +465,18 @@ export default function PostForm({ setIsVisible, cancel = true }) {
                     </h1>
                   )}
 
-                  <CitySelector
-                  // setSelectCity={setSelectedCity}
-                  // setSelectTown={setSelectedTown}
-                  />
+                  <CitySelector />
                 </div>
 
-                <div className="flex flex-col items-center justify-center my-4 w-full">
+                <div className="flex flex-col items-center justify-center my-4 w-full ">
                   {errors.contactPhoneNumber && (
                     <h1 className="text-one text-2xl text-start w-full animate-bounce">
                       رقم الهاتف مطلوب{' '}
                     </h1>
                   )}
                   <div className="flex items-center gap-2 w-full justify-start my-2">
-                    <h1 className="flex text-right text-md sm:text-xl text-white ">
-                      <span className="text-one text-2xl ml-2">
+                    <h1 className="flex text-right text-md select-none text-nowrap text-white">
+                      <span className="text-one text-lg xl:text-2xl ml-2">
                         <GiRotaryPhone />
                       </span>
                       رقم الهاتف:
@@ -530,8 +494,38 @@ export default function PostForm({ setIsVisible, cancel = true }) {
                     type="number"
                     id="رقم الهاتف"
                     name="رقم الهاتف"
-                    placeholder="+963 987 654 321"
-                    className="flex text-right w-full p-2  text-xl sm:text-2xl outline-2 focus:outline-one h-12 placeholder:text-md placeholder:sm:text-xl"
+                    placeholder="+963 11 3391 4444"
+                    className="flex text-right w-full p-2 rounded-[5px] text-lg outline-2 focus:outline-one h-12 placeholder:text-lg"
+                  />
+                </div>
+
+                <div className="flex flex-col items-center justify-center my-4 w-full ">
+                  {errors.propertyPrice && (
+                    <h1 className="text-one text-2xl text-start w-full animate-bounce">
+                      سعر العقار مطلوب
+                    </h1>
+                  )}
+                  <div className="flex items-center gap-2 w-full justify-start my-2">
+                    <h1
+                      className={`flex text-right text-md select-none text-nowrap text-white`}
+                    >
+                      <span className="text-one text-lg xl:text-2xl ml-2">
+                        <MdOutlinePriceCheck />
+                      </span>
+                      سعر العقار بالدولار:
+                    </h1>
+                  </div>
+
+                  <input
+                    value={inputs?.propertyPrice}
+                    onChange={(e) =>
+                      setInputs({ ...inputs, propertyPrice: e.target.value })
+                    }
+                    type="number"
+                    id="سعر العقار"
+                    name="سعر العقار"
+                    placeholder="$ 000.0"
+                    className="flex text-right w-full p-2 rounded-[5px] text-lg outline-2 focus:outline-one h-12 placeholder:text-lg"
                   />
                 </div>
               </div>
@@ -546,8 +540,8 @@ export default function PostForm({ setIsVisible, cancel = true }) {
             )}
             <div className="flex items-center gap-2 w-full justify-start my-2">
               {' '}
-              <h1 className="flex text-right text-md sm:text-xl text-white">
-                <span className="text-one text-2xl ml-2">
+              <h1 className="flex text-right text-lg text-white">
+                <span className="text-one text-lg xl:text-2xl ml-2">
                   <MdOutlineFeaturedPlayList />
                 </span>
                 الوصف:
@@ -563,10 +557,9 @@ export default function PostForm({ setIsVisible, cancel = true }) {
               rows={'6'}
               name="الوصف"
               id="الوصف"
-              className="scrollBar flex text-right w-full p-2  text-xl placeholder:text-md placeholder:sm:text-xl h-36 outline-2 focus:outline-one"
+              className="scrollBar flex text-right w-full p-2  text-xl placeholder:text-lg h-36 outline-2 focus:outline-one rounded-[5px]"
             ></textarea>
           </div>
-          {/* FIXME */}
           <OnClickMap
             chosenCity={data?.propertyCity}
             chosentown={data?.propertyTown}
@@ -576,8 +569,8 @@ export default function PostForm({ setIsVisible, cancel = true }) {
           <div className="w-full">
             <div className="flex items-center gap-2 w-full justify-start my-2 ">
               {' '}
-              <h1 className="flex text-right text-md sm:text-xl text-white">
-                <span className="text-one text-2xl ml-2">
+              <h1 className="flex text-right text-lg text-white">
+                <span className="text-one text-lg xl:text-2xl ml-2">
                   <RxVideo />
                 </span>
                 أضف رابط العقار من يوتيوب أو تيك توك
@@ -589,7 +582,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
               placeholder="... ضع رابط الفيديو هنا"
               value={url}
               onChange={handleInputChange}
-              className="flex text-right mt-4 mb-8 w-full p-2  text-xl sm:text-2xl outline-2 focus:outline-one h-12 placeholder:text-md placeholder:sm:text-xl"
+              className="flex text-right mt-4 mb-8 w-full p-2 rounded-[5px] text-lg outline-2 focus:outline-one h-12 placeholder:text-lg"
             />
             {inputs?.link && (
               <div>
@@ -607,12 +600,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
           </div>
 
           <div className="flex flex-col sm:flex-row justify-around items-center gap-8 w-full my-12">
-            <button
-              type="submit"
-              className="btn bg-five  text-white shadow-sm shadow-gray-300  hover:outline outline-one text-xl hover py-2 px-16 w-full"
-            >
-              نشر
-            </button>
+            <Button title={'نشر'} style={' '} />
             {cancel && (
               <button
                 type="text"
