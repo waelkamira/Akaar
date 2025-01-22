@@ -23,8 +23,8 @@ export default function Navbar() {
         pathname !== '/' ? 'shadow-sm shadow-gray-300' : ''
       }`}
     >
-      <div className="flex justify-start w-full">
-        <ul className="flex justify-evenly gap-4 mr-4 items-center h-20 w-3/4">
+      <div className="flex justify-between w-full gap-8">
+        <ul className="flex justify-evenly gap-4 mr-4 items-center h-20 w-4/6">
           <div
             className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-sm shadow-gray-300   px-2 xl:px-8 h-16 transition-all duration-300"
             onClick={() => router.push('/')}
@@ -89,10 +89,10 @@ export default function Navbar() {
           </div>
         </ul>
         <div
-          className="relative flex justify-end w-full cursor-pointer"
+          className=" flex justify-end w-fit min-w-56 bg-[#888888] cursor-pointer "
           onClick={() => router.push('/')}
         >
-          <div className="absolute top-5 left-24 z-50 flex justify-end">
+          <div className="absolute top-5 left-24 z-50 flex justify-end ">
             <div className="absolute z-30">
               <h1 className="akar akarStroke lg:text-4xl lg:font-extrabold text-lg text-nowrap">
                 AKAR

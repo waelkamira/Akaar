@@ -96,7 +96,7 @@ export default function OnClickMap({
   return (
     <div className="w-full text-white">
       <div className="my-4">
-        <h2 className="text-lg font-bold mb-4">
+        <h2 className="text-lg mb-4">
           حدد موقع العقار على الخريطة أو أقرب نقطة لموقع العقار, قم بعمل زووم
           على الخريطة بعد اختيار المحافظة ثم البلدة ثم اضغط على موقع العقار على
           الخريطة بدقة
@@ -107,7 +107,7 @@ export default function OnClickMap({
       <div className="mb-4 ">
         <label className="block font-medium mb-2">اختر المحافظة:</label>
         <select
-          className="border p-2 rounded w-full text-black"
+          className="w-full text-md text-start z-20 h-12 rounded-[5px] select-none text-black"
           onChange={handleCityChange}
           value={selectedCity?.name || ''}
         >

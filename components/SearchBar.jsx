@@ -81,7 +81,7 @@ export default function SearchBar({ propertyCategory }) {
   };
 
   return (
-    <div className="flex flex-col w-full xl:w-[90%] 2xl:w-[70%] h-[1370px] px-2 sm:px-16 pt-4 sm:py-8 overflow-y-auto z-10 ">
+    <div className="flex flex-col w-full xl:w-[90%] 2xl:w-[70%] h-[1370px] px-2 sm:px-16 pt-4 sm:py-2 overflow-y-auto z-10 ">
       <div className="absolute flex flex-col items-start gap-2 z-40 top-2 right-2 sm:top-4 sm:right-4 xl:right-12  xl:top-12">
         <TfiMenuAlt
           className="xl:hidden p-1 text-4xl lg:text-5xl text-one cursor-pointer z-50 animate-pulse"
@@ -93,7 +93,7 @@ export default function SearchBar({ propertyCategory }) {
         <div className="relative text-center w-full md:w-1/4 px-2">
           <Button style={' '} onClick={handleSearch} title={'بحث'} />
         </div>
-        <div className="flex flex-col xl:flex-row items-center justify-center gap-2 w-full px-2 text-black">
+        <div className="flex flex-col xl:flex-row items-center justify-center gap-2 mb-2 w-full px-2 text-black">
           <div className="flex flex-col-reverse xl:flex-row gap-2 w-full xl:w-4/6">
             <div className="flex flex-col xl:flex-row gap-2 w-full ">
               <PropertyTypeSelector />
@@ -103,7 +103,7 @@ export default function SearchBar({ propertyCategory }) {
           </div>
 
           <div className="flex flex-col-reverse xl:flex-row gap-2 w-full xl:w-2/6">
-            <div className=" w-full  mb-3">
+            <div className=" w-full">
               <div className="flex items-center gap-2 w-full justify-start my-2">
                 <h1 className="flex text-right text-md select-none text-nowrap">
                   <span className="text-one xl:text-xl ml-2">
@@ -118,10 +118,10 @@ export default function SearchBar({ propertyCategory }) {
                 placeholder="0"
                 value={minPrice}
                 onChange={(e) => setMinPrice(e.target.value)}
-                className="w-full text-lg rounded-[5px] text-start z-40 h-11 text-nowrap px-2 border border-slate-300 focus:outline-one"
+                className="w-full text-lg rounded-[5px] text-start z-40 h-12 text-nowrap px-2 border border-slate-300 focus:outline-one"
               />
             </div>
-            <div className=" w-full  mb-3">
+            <div className=" w-full">
               <div className="flex items-center gap-2 w-full justify-start my-2">
                 <h1 className="flex text-right text-md select-none text-nowrap">
                   <span className="text-one xl:text-xl ml-2">
@@ -133,10 +133,10 @@ export default function SearchBar({ propertyCategory }) {
               <input
                 type="number"
                 id="maxPrice"
-                placeholder="10000"
+                placeholder="0"
                 value={maxPrice}
                 onChange={(e) => setMaxPrice(e.target.value)}
-                className="w-full text-lg rounded-[5px] text-start z-40 h-11 text-nowrap px-2 border border-slate-300 focus:outline-one"
+                className="w-full text-lg rounded-[5px] text-start z-40 h-12 text-nowrap px-2 border border-slate-300 focus:outline-one"
               />
             </div>
           </div>
@@ -149,7 +149,7 @@ export default function SearchBar({ propertyCategory }) {
           {allPosts?.map((post, index) => (
             <SmallItem key={index} post={post} />
           ))}
-          <div className="flex items-center justify-around sm:my-4 sm:mt-8">
+          <div className="flex items-center justify-around sm:my-2">
             {allPosts?.length >= 5 && (
               <Link href={'#post1'}>
                 <div

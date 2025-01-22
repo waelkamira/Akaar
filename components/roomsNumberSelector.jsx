@@ -3,10 +3,13 @@ import Select from 'react-select';
 import { inputsContext } from './Context.jsx';
 import { VscUngroupByRefType } from 'react-icons/vsc';
 import { MdOutlineBedroomParent } from 'react-icons/md';
+import { usePathname } from 'next/navigation.js';
 
 export default function PropertyRoomsNumberSelector() {
   const { dispatch, data } = useContext(inputsContext);
   const [propertyRoomsNumber, setPropertyRoomsNumber] = useState('');
+  const path = usePathname();
+
   //   console.log('data?.propertyRoomsNumber', data?.propertyRoomsNumber);
   const options = [
     { value: '1 + 1', label: '1 + 1' },
@@ -43,13 +46,33 @@ export default function PropertyRoomsNumberSelector() {
       },
     };
   }
+  const customStyles = {
+    control: (provided) => ({
+      ...provided,
+      minHeight: '3rem', // تعيين الارتفاع الأدنى إلى 4rem (يعادل h-16 في Tailwind CSS)
+    }),
+    valueContainer: (provided) => ({
+      ...provided,
+      height: '3rem', // تعيين ارتفاع الحاوية الداخلية
+      display: 'flex',
+      alignItems: 'center',
+      padding: '0 1rem',
+    }),
+    indicatorsContainer: (provided) => ({
+      ...provided,
+      height: '3rem', // تعيين ارتفاع حاوية المؤشرات
+    }),
+  };
 
   return (
-    <div className="flex flex-col w-full justify-start items-center">
+    <div className="flex flex-col w-full justify-start items-center ">
       <div className="w-full">
         <div className="flex items-center gap-2 w-full justify-start my-2">
-          <h1 className="flex text-right text-md text-nowrap select-none">
-            <span className="text-one xl:text-xl ml-2">
+          <h1
+            className={`flex text-right text-md select-none text-nowrap '
+              ${path.includes('newPost') ? 'text-white' : ''}`}
+          >
+            <span className="text-one text-lg xl:text-2xl ml-2">
               <MdOutlineBedroomParent />
             </span>
             عدد الغرف:
@@ -66,7 +89,8 @@ export default function PropertyRoomsNumberSelector() {
           isSearchable
           options={options}
           theme={customTheme}
-          className="w-full text-lg  text-start z-20 h-12 select-none"
+          styles={customStyles}
+          className="w-full text-md text-start z-20 h-12 select-none"
         />
       </div>
     </div>
