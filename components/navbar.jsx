@@ -19,18 +19,18 @@ export default function Navbar() {
 
   return (
     <div
-      className={`hidden xl:flex xl:justify-between bg-white ${
-        pathname !== '/' ? 'shadow-sm shadow-gray-300' : ''
+      className={`hidden xl:flex xl:justify-between bg-[rgba(255,255,255,0.1)]${
+        pathname !== '/' ? ' border border-seven' : ''
       }`}
     >
       <div className="flex justify-between w-full gap-8">
         <ul className="flex justify-evenly gap-4 mr-4 items-center h-20 w-4/6">
           <div
-            className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-sm shadow-gray-300   px-2 xl:px-8 h-16 transition-all duration-300"
+            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-sm rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 xl:px-8 h-16 transition-all duration-300"
             onClick={() => router.push('/')}
           >
-            <FaHome className="text-xl select-none text-one hover:text-five" />
-            <li className="text-xl select-none">الرئيسية</li>
+            <FaHome className="text-xl select-none text-one hover:text-eight" />
+            <li className="text-white text-xl select-none">الرئيسية</li>
           </div>
           <div className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one h-16">
             {session?.status === 'unauthenticated' && (
@@ -38,54 +38,56 @@ export default function Navbar() {
                 className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-sm shadow-gray-300  p-2 px-8 h-16 transition-all duration-300"
                 onClick={() => router.push('/login')}
               >
-                <GiExitDoor className="text-xl select-none text-one hover:text-five" />
-                <li className="text-xl select-none">تسجيل الدخول</li>
+                <GiExitDoor className="text-xl select-none text-one hover:text-eight" />
+                <li className="text-white text-xl select-none">تسجيل الدخول</li>
               </div>
             )}
             {session?.status === 'authenticated' && (
               <div
-                className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-sm shadow-gray-300   px-2 xl:px-8 h-16 transition-all duration-300"
+                className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-sm rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 xl:px-8 h-16 transition-all duration-300"
                 onClick={() => router.push('/profile')}
               >
-                <GiExitDoor className="text-xl select-none text-one hover:text-five" />
-                <li className="text-xl select-none">بروفايل</li>
+                <GiExitDoor className="text-xl select-none text-one hover:text-eight" />
+                <li className="text-white text-xl select-none">بروفايل</li>
               </div>
             )}
           </div>
           <div
-            className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-sm shadow-gray-300   px-2 xl:px-8 h-16 transition-all duration-300"
+            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-sm rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 xl:px-8 h-16 transition-all duration-300"
             onClick={() => router.push('/contactUs')}
           >
-            <FcConferenceCall className="text-xl select-none text-one hover:text-five" />
-            <li className="text-xl select-none text-nowrap">اتصل بنا</li>
+            <FcConferenceCall className="text-xl select-none text-one hover:text-eight" />
+            <li className="text-white text-xl select-none text-nowrap">
+              اتصل بنا
+            </li>
           </div>
-          <div
-            className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-sm shadow-gray-300   px-2 xl:px-8 h-16 transition-all duration-300"
+          {/* <div
+            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-sm rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 xl:px-8 h-16 transition-all duration-300"
             onClick={() => router.push('/newPost')}
           >
-            <FaCanadianMapleLeaf className="text-xl select-none text-one hover:text-five" />
+            <FaCanadianMapleLeaf className="text-xl select-none text-one hover:text-eight" />
             <li className="text-xl select-none text-nowrap">إنشاء إعلان</li>
-          </div>
+          </div> */}
           <div
-            className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-sm shadow-gray-300   px-2 xl:px-8 h-16 transition-all duration-300"
-            onClick={() => router.push('/sell')}
+            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-sm rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 xl:px-8 h-16 transition-all duration-300"
+            onClick={() => router.push('/newPost')}
           >
-            <FaDollarSign className="text-xl select-none text-one hover:text-five" />
-            <li className="text-xl select-none">بيع</li>
+            <FaDollarSign className="text-xl select-none text-one hover:text-eight" />
+            <li className="text-white text-xl select-none">بيع</li>
           </div>
           <div
-            className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-sm shadow-gray-300   px-2 xl:px-8 h-16 transition-all duration-300"
+            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-sm rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 xl:px-8 h-16 transition-all duration-300"
             onClick={() => router.push('/buy')}
           >
-            <GiPayMoney className="text-xl select-none text-one hover:text-five" />
-            <li className="text-xl select-none">شراء</li>
+            <GiPayMoney className="text-xl select-none text-one hover:text-eight" />
+            <li className="text-white text-xl select-none">شراء</li>
           </div>
           <div
-            className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-sm shadow-gray-300   px-2 xl:px-8 h-16 transition-all duration-300"
+            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-sm rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 xl:px-8 h-16 transition-all duration-300"
             onClick={() => router.push('/rent')}
           >
-            <MdOutlineBedroomParent className="text-xl select-none text-one hover:text-five" />
-            <li className="text-xl select-none">إيجار</li>
+            <MdOutlineBedroomParent className="text-xl select-none text-one hover:text-eight" />
+            <li className="text-white text-xl select-none">إيجار</li>
           </div>
         </ul>
         <div
@@ -94,17 +96,17 @@ export default function Navbar() {
         >
           <div className="absolute top-5 left-24 z-50 flex justify-end ">
             <div className="absolute z-30">
-              <h1 className="akar akarStroke lg:text-4xl lg:font-extrabold text-lg text-nowrap">
+              <h1 className="akar akarStroke lg:text-4xl lg:font-extrabold text-lg text-nowrap select-none">
                 AKAR
               </h1>
-              <h1 className="absolute akarStroke lg:text-4xl lg:font-extrabold text-transparent text-lg text-nowrap top-0 left-0 z-0">
+              <h1 className="absolute akarStroke lg:text-4xl lg:font-extrabold text-transparent text-lg text-nowrap select-none top-0 left-0 z-0">
                 AKAR
               </h1>
             </div>
           </div>
           <div className="relative size-20 border-l-[18px] border-one">
             <Image
-              src="https://i.imgur.com/OJBYeR1.jpg"
+              src="https://i.imgur.com/teY3Ui4.jpg"
               fill
               objectFit="cover"
               alt="home_photo"

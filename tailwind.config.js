@@ -8,12 +8,14 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        one: '#22C55E',
+        one: '#FFA500',
         two: '#F83354',
-        three: '#FFA500',
+        three: '#22C55E',
         four: '#182120',
         five: '#00ff5e',
-        six: '#F2F4F7',
+        six: '#fffdf3',
+        seven: '#888888',
+        eight: '#FFB38A',
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',

@@ -12,7 +12,7 @@ export default function SideBarMenu({ setIsOpen }) {
   const user = CurrentUser();
 
   return (
-    <div className="p-4 w-52 mx-2 h-fit border-[5px] border-one bg-four  z-50">
+    <div className=" p-4 w-52 mx-2 h-fit border-[5px] border-one bg-four">
       {session?.status === 'authenticated' && (
         <Link href={'/profile?username'}>
           <div className="flex flex-col justify-between items-center  w-full">
@@ -45,15 +45,22 @@ export default function SideBarMenu({ setIsOpen }) {
       {session?.status === 'authenticated' && (
         <div>
           <Button title={'الرئيسية'} path="/" />
+          <Button title={'بيع'} path="/newPost" />
+          <Button title={'شراء'} path="/buy" />
           <Button title={'بروفايلي'} path="/profile" />
-          <Button title={'إنشاء إعلان'} path="/newPost" />
           <Button title={'إعلاناتي'} path="/myPosts" />
           <Button title={'إعلانات أعجبتني'} path={'/favoritePosts'} />
           <Button title={'اتصل بنا'} path={'/contactUs'} />
           <Button title={'تسجيل الخروج'} path={'/'} onClick={() => signOut()} />
         </div>
       )}
-      <Button title={'إغلاق'} onClick={() => setIsOpen(false)} />
+
+      <button
+        className="text-sm p-0.5 my-2 bg-red-600 text-white text-nowrap select-none rounded-lg w-full max-h-12 hover:text-white border hover:border-[#596067] hover:scale-[101%]"
+        onClick={() => setIsOpen(false)}
+      >
+        إغلاق
+      </button>
     </div>
   );
 }

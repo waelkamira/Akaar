@@ -75,7 +75,7 @@ export default function MyPosts() {
     <div className="relative w-full bg-four h-full sm:p-4 lg:p-8 ">
       <div className="absolute flex flex-col items-start gap-2 z-40 top-2 right-2 sm:top-4 sm:right-4 xl:right-12 xl:top-12 ">
         <TfiMenuAlt
-          className=" p-1  text-4xl lg:text-5xl text-one cursor-pointer z-50  animate-pulse"
+          className=" p-1  text-4xl lg:text-5xl text-one cursor-pointer z-50  "
           onClick={() => {
             setIsOpen(!isOpen);
           }}
@@ -83,9 +83,9 @@ export default function MyPosts() {
         {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
       </div>
       {isVisible && (
-        <div className="absolute flex flex-col items-center my-4 bg-four/95 z-50 inset-0 text-white">
-          <div className="sticky top-72 w-full ">
-            <h1 className="text-center text-lg sm:text-3xl">
+        <div className="absolute flex flex-col items-center p-4 bg-four/95 z-50 inset-0 text-white">
+          <div className="sticky top-72 w-full sm:w-1/2 border border-one rounded-[5px]">
+            <h1 className="text-center text-lg sm:text-xl mt-4">
               هل تريد حذف هذه الإعلان نهائيا؟
             </h1>
             <div className="flex justify-between items-center w-full h-24 sm:h-28 z-50 gap-8 p-8">
@@ -108,12 +108,12 @@ export default function MyPosts() {
 
       <div className="flex flex-col justify-start items-center w-full gap-4 my-8">
         <div className="w-full sm:w-1/3 gap-4 my-8">
-          <Button title={'إنشاء إعلان جديدة'} style={' '} path="/newPost" />
+          <Button title={'إنشاء إعلان جديد'} style={' '} path="/newPost" />
         </div>
         <BackButton />
         <h1 className="grow text-lg lg:text-2xl w-full text-white">
           <span className="text-one  text-2xl ml-2">#</span>
-          وصفاتي <span className="text-one"> {userPostsCount}</span>
+          إعلاناتي <span className="text-one"> {userPostsCount}</span>
         </h1>
       </div>
       <div className="my-8">
@@ -123,17 +123,17 @@ export default function MyPosts() {
           />
         )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 gap-8 justify-center items-center w-full ">
+        <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 px-2 gap-8 justify-center items-center w-full ">
           {myPosts?.length > 0 &&
             myPosts.map((post, index) => (
               <div
-                className="relative flex flex-col items-start justify-start gap-0 bg-twelve  overflow-hidden"
+                className="relative flex flex-col items-start justify-start gap-0 bg-one rounded-[5px] overflow-hidden"
                 key={index}
               >
                 {session?.status === 'authenticated' && (
                   <div className="flex justify-between items-center bg-twelve w-full pt-4 px-4">
                     <div
-                      className="flex flex-col items-center justify-center cursor-pointer bg-four  p-2 md:text-2xl text-white hover:bg-one"
+                      className="flex flex-col items-center justify-center cursor-pointer bg-four rounded-[5px] p-2 md:text-2xl text-white hover:bg-red-400"
                       onClick={() => router.push(`/editPost/${post?.id}`)}
                     >
                       <MdEdit className="" />
@@ -141,7 +141,7 @@ export default function MyPosts() {
                       <h6 className="text-sm select-none">تعديل</h6>
                     </div>
                     <div
-                      className="flex flex-col items-center justify-center cursor-pointer bg-four  p-2 md:text-2xl text-white hover:bg-one"
+                      className="flex flex-col items-center justify-center cursor-pointer bg-four rounded-[5px] p-2 md:text-2xl text-white hover:bg-red-400"
                       onClick={() => {
                         setIsVisible(true);
                         setpostId(post?.id);
@@ -164,7 +164,7 @@ export default function MyPosts() {
                 onClick={() => setPageNumber(pageNumber + 1)}
               >
                 <h1 className="text-white">الصفحة التالية</h1>
-                <MdKeyboardDoubleArrowRight className="text-2xl animate-pulse text-green-500 select-none" />
+                <MdKeyboardDoubleArrowRight className="text-2xl  text-green-500 select-none" />
               </div>
             </Link>
           )}
@@ -174,7 +174,7 @@ export default function MyPosts() {
                 className="flex items-center justify-around cursor-pointer"
                 onClick={() => setPageNumber(pageNumber - 1)}
               >
-                <MdKeyboardDoubleArrowLeft className="text-2xl animate-pulse text-green-500 select-none" />
+                <MdKeyboardDoubleArrowLeft className="text-2xl  text-green-500 select-none" />
                 <h1 className="text-white">الصفحة السابقة</h1>
               </div>
             </Link>

@@ -78,7 +78,7 @@ export default function Users() {
       <BackButton />
       <div className="absolute flex flex-col items-start gap-2 z-50 top-2 right-2 sm:top-4 sm:right-4">
         <TfiMenuAlt
-          className="p-1  text-4xl lg:text-5xl text-one cursor-pointer z-50 animate-pulse"
+          className="p-1  text-4xl lg:text-5xl text-one cursor-pointer z-50 "
           onClick={() => {
             setIsOpen(!isOpen);
           }}
@@ -149,7 +149,7 @@ export default function Users() {
                 onClick={() => setPageNumber(pageNumber + 1)}
               >
                 <h1 className="text-white ">الصفحة التالية</h1>
-                <MdKeyboardDoubleArrowRight className="text-2xl animate-pulse text-one select-none" />
+                <MdKeyboardDoubleArrowRight className="text-2xl  text-one select-none" />
               </div>
             </Link>
           )}
@@ -159,7 +159,7 @@ export default function Users() {
                 className="flex items-center justify-around cursor-pointer"
                 onClick={() => setPageNumber(pageNumber - 1)}
               >
-                <MdKeyboardDoubleArrowLeft className="text-2xl animate-pulse text-one select-none" />
+                <MdKeyboardDoubleArrowLeft className="text-2xl  text-one select-none" />
                 <h1 className="text-white ">الصفحة السابقة</h1>
               </div>
             </Link>

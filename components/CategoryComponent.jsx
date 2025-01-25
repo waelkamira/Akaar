@@ -12,14 +12,14 @@ export default function CitiesSelectComponent() {
 
   const options = [
     { value: 'بيع', label: 'بيع' },
-    { value: 'شراء', label: 'شراء' },
+    // { value: 'شراء', label: 'شراء' },
     { value: 'أجار', label: 'أجار' },
   ];
 
   // كائن يحتوي على القيم وأسماء النماذج المرتبطة بها
   const modelMapping = {
     بيع: 'بيع',
-    شراء: 'شراء',
+    // شراء: 'شراء',
     أجار: 'أجار',
   };
 

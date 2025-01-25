@@ -138,7 +138,7 @@ export default function EditPost() {
           <BackButton />
           <div className="absolute flex flex-col items-start gap-2 z-50 top-2 right-2 sm:top-4 sm:right-4 xl:right-12 xl:top-12 ">
             <TfiMenuAlt
-              className=" p-1  text-4xl lg:text-5xl text-one cursor-pointer z-50  animate-pulse"
+              className=" p-1  text-4xl lg:text-5xl text-one cursor-pointer z-50  "
               onClick={() => {
                 setIsOpen(!isOpen);
               }}
@@ -208,7 +208,7 @@ export default function EditPost() {
                     &#13;&#10;
                   </span>
 
-                  <MdEdit className="absolute top-0 right-0 animate-pulse text-2xl text-green-400" />
+                  <MdEdit className="absolute top-0 right-0  text-2xl text-green-400" />
                 </h1>
 
                 <button
@@ -266,7 +266,7 @@ export default function EditPost() {
                   >
                     &#13;&#10;
                   </span>
-                  <MdEdit className="absolute top-0 right-0 animate-pulse text-2xl text-green-400" />
+                  <MdEdit className="absolute top-0 right-0  text-2xl text-green-400" />
                 </pre>
                 <button
                   onClick={() => handleeditPost()}
@@ -313,7 +313,7 @@ export default function EditPost() {
                   >
                     &#13;&#10;
                   </span>
-                  <MdEdit className="absolute top-0 right-0 animate-pulse text-2xl text-green-400" />
+                  <MdEdit className="absolute top-0 right-0  text-2xl text-green-400" />
                 </pre>
                 <button
                   onClick={() => handleeditPost()}
@@ -362,7 +362,7 @@ export default function EditPost() {
                       >
                         &#13;&#10;
                       </span>
-                      <MdEdit className="absolute top-0 right-0 animate-pulse text-2xl text-green-400" />
+                      <MdEdit className="absolute top-0 right-0  text-2xl text-green-400" />
                     </pre>{' '}
                     <button
                       onClick={() => handleeditPost()}

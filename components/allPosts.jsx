@@ -70,8 +70,8 @@ export default function AllPosts({}) {
                   className="flex items-center justify-around cursor-pointer"
                   onClick={() => setPageNumber(pageNumber + 1)}
                 >
-                  <h1 className="text-gray-600 ">الصفحة التالية</h1>
-                  <MdKeyboardDoubleArrowRight className="text-2xl animate-pulse text-one" />
+                  <h1 className="text-white ">الصفحة التالية</h1>
+                  <MdKeyboardDoubleArrowRight className="text-2xl  text-one" />
                 </div>
               </Link>
             )}
@@ -81,8 +81,8 @@ export default function AllPosts({}) {
                   className="flex items-center justify-around cursor-pointer"
                   onClick={() => setPageNumber(pageNumber - 1)}
                 >
-                  <MdKeyboardDoubleArrowLeft className="text-2xl animate-pulse text-one" />
-                  <h1 className="text-gray-600 ">الصفحة السابقة</h1>
+                  <MdKeyboardDoubleArrowLeft className="text-2xl  text-one" />
+                  <h1 className="text-white ">الصفحة السابقة</h1>
                 </div>
               </Link>
             )}

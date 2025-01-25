@@ -11,11 +11,18 @@ export async function GET(req) {
   const limit = Math.max(1, parseInt(searchParams.get('limit')) || 5);
   const skip = (page - 1) * limit;
 
-  const propertyCategory = searchParams.get('propertyCategory');
-  const propertyCity = searchParams.get('propertyCity');
-  const propertyTown = searchParams.get('propertyTown');
-  const propertyType = searchParams.get('propertyType');
-  const propertyRoomsNumber = searchParams.get('propertyRoomsNumber');
+  const filters = {};
+
+  // تطبيق الفلاتر بناءً على المعلمات المقدمة
+  const propertyCategory = searchParams.get('propertyCategory')?.trim();
+  const propertyCity = searchParams.get('propertyCity')?.trim();
+  const propertyTown = searchParams.get('propertyTown')?.trim();
+  const propertyType = searchParams.get('propertyType')?.trim();
+  let propertyRoomsNumber = searchParams.get('propertyRoomsNumber')?.trim();
+  const propertyArea = searchParams.get('propertyArea')?.trim();
+  const contactPhoneNumber = searchParams.get('contactPhoneNumber')?.trim();
+  const userName = searchParams.get('userName')?.trim();
+
   const minPrice = searchParams.get('minPrice')
     ? parseInt(searchParams.get('minPrice'))
     : null;
@@ -23,79 +30,56 @@ export async function GET(req) {
     ? parseInt(searchParams.get('maxPrice'))
     : null;
 
-  console.log('propertyRoomsNumber:', propertyRoomsNumber);
+  // تطبيق الفلاتر
+  if (propertyCategory && propertyCategory !== 'undefined') {
+    filters.propertyCategory = propertyCategory;
+  }
+
+  if (propertyCity && propertyCity !== 'undefined') {
+    filters.propertyCity = propertyCity;
+  }
+
+  if (propertyTown && propertyTown !== 'undefined') {
+    filters.propertyTown = propertyTown;
+  }
+
+  if (propertyType && propertyType !== 'undefined') {
+    filters.propertyType = propertyType;
+  }
+
+  if (propertyRoomsNumber && propertyRoomsNumber !== 'undefined') {
+    // تنظيف القيمة: تحويل "4   1" إلى "4 + 1"
+    propertyRoomsNumber = propertyRoomsNumber
+      .replace(/\s+/g, ' ') // استبدال المسافات المتعددة بمسافة واحدة
+      .trim() // إزالة المسافات الزائدة من البداية والنهاية
+      .replace(/\s/g, ' + '); // استبدال المسافة الواحدة بعلامة "+" مع مسافات حولها
+
+    filters.propertyRoomsNumber = {
+      equals: propertyRoomsNumber, // مطابقة تامة لعدد الغرف
+    };
+  }
+
+  if (propertyArea && propertyArea !== 'undefined') {
+    filters.propertyArea = propertyArea;
+  }
+
+  if (contactPhoneNumber && contactPhoneNumber !== 'undefined') {
+    filters.contactPhoneNumber = contactPhoneNumber;
+  }
+
+  if (userName && userName !== 'undefined') {
+    filters.userName = userName;
+  }
+
+  // تصفية بناءً على نطاق السعر
+  if (minPrice !== null || maxPrice !== null) {
+    filters.propertyPrice = {
+      ...(minPrice !== null ? { gte: minPrice } : {}),
+      ...(maxPrice !== null ? { lte: maxPrice } : {}),
+    };
+  }
 
   try {
-    if (
-      !propertyCategory ||
-      propertyCategory.trim() === '' ||
-      propertyCategory === 'undefined'
-    ) {
-      return NextResponse.json(
-        { error: 'propertyCategory is required' },
-        { status: 400 }
-      );
-    }
-
-    const filters = {};
-
-    // تصفية بناءً على الفئة
-    if (
-      propertyCategory &&
-      propertyCategory.trim() !== '' &&
-      propertyCategory !== 'undefined'
-    ) {
-      filters.propertyCategory = propertyCategory;
-    }
-
-    // تصفية بناءً على النوع
-    if (
-      propertyType &&
-      propertyType.trim() !== '' &&
-      propertyType !== 'undefined'
-    ) {
-      filters.propertyType = propertyType;
-    }
-
-    // تصفية بناءً على عدد الغرف
-    if (
-      propertyRoomsNumber &&
-      propertyRoomsNumber.trim() !== '' &&
-      propertyRoomsNumber !== 'undefined'
-    ) {
-      filters.propertyRoomsNumber = {
-        contains: propertyRoomsNumber[0],
-      };
-    }
-    console.log('propertyRoomsNumber[0]', propertyRoomsNumber[0]);
-    // تصفية بناءً على المدينة والبلدة
-    if (
-      propertyCity &&
-      propertyCity.trim() !== '' &&
-      propertyCity !== 'undefined'
-    ) {
-      filters.propertyCity = propertyCity;
-    }
-
-    if (
-      propertyTown &&
-      propertyTown.trim() !== '' &&
-      propertyTown !== 'undefined'
-    ) {
-      filters.propertyTown = propertyTown;
-    }
-
-    // إضافة شرط لتصفية العقارات بناءً على نطاق السعر
-    if (minPrice !== null || maxPrice !== null) {
-      filters.propertyPrice = {
-        ...(minPrice !== null ? { gte: minPrice } : {}),
-        ...(maxPrice !== null ? { lte: maxPrice } : {}),
-      };
-    }
-
-    // طباعة الفلاتر للتأكد
-    console.log('Filters:', filters);
-
     // الحصول على العدد الإجمالي للنتائج
     const totalCount = await prisma.property.count({
       where: filters,
@@ -107,12 +91,38 @@ export async function GET(req) {
       skip,
       take: limit,
       orderBy: { createdAt: 'desc' },
+      select: {
+        id: true,
+        image: true,
+        image1: true,
+        image2: true,
+        image3: true,
+        image4: true,
+        propertyCategory: true,
+        propertyName: true,
+        propertyType: true,
+        propertyRoomsNumber: true,
+        propertyPrice: true,
+        propertyArea: true,
+        propertyCity: true,
+        propertyTown: true,
+        contactPhoneNumber: true,
+        description: true,
+        lng: true,
+        lat: true,
+        link: true,
+        hearts: true,
+        userName: true,
+        userImage: true,
+        createdBy: true,
+        createdAt: true,
+        updatedAt: true,
+      },
     });
 
-    console.log('Properties found:', properties.length);
-    console.log('Properties :', properties);
+    console.log('Applied Filters:', filters);
+    console.log('Properties found:', properties);
 
-    await prisma.$disconnect();
     return NextResponse.json({
       totalCount, // العدد الإجمالي للنتائج
       currentPage: page,
@@ -121,10 +131,11 @@ export async function GET(req) {
     });
   } catch (error) {
     console.error('Error fetching properties:', error);
-    await prisma.$disconnect();
     return NextResponse.json(
       { error: 'Internal Server Error' },
       { status: 500 }
     );
+  } finally {
+    await prisma.$disconnect();
   }
 }
