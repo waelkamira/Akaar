@@ -173,7 +173,7 @@ body {
 
 .akar {
   overflow: hidden; /* إخفاء النص الزائد */
-  border-left: 0.1em solid #ffa500; /* محاكاة مؤشر الكتابة على اليسار */
+  border-left: 0.05em solid #ffa500; /* محاكاة مؤشر الكتابة على اليسار */
   white-space: nowrap; /* منع التفاف النص */
   direction: rtl; /* ضبط اتجاه النص من اليمين إلى اليسار */
   text-align: right;

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import PropertyTypeSelector from './PropertyTypeSelector';
 import { inputsContext } from './Context';
@@ -12,20 +12,15 @@ import { getVideoIdAndPlatform } from './youtubeUtils';
 import { v4 as uuidv4 } from 'uuid';
 import { FaHouseDamage } from 'react-icons/fa';
 import { RxSpaceEvenlyHorizontally } from 'react-icons/rx';
-import { VscUngroupByRefType } from 'react-icons/vsc';
-import { GiModernCity } from 'react-icons/gi';
 import { MdOutlinePriceCheck } from 'react-icons/md';
 import { GiRotaryPhone } from 'react-icons/gi';
 import { MdOutlineFeaturedPlayList } from 'react-icons/md';
 import { RxVideo } from 'react-icons/rx';
-import SyriaMap from './map/SyriaMap';
 import OnClickMap from './map/onClickMap';
 import { useRouter } from 'next/navigation';
 import CategoryComponent from './CategoryComponent';
 import CitySelector from './map/CitySelector';
-import { MdOutlineCategory } from 'react-icons/md';
 import RoomsNumberSelector from './roomsNumberSelector';
-import Button from './Button';
 
 export default function PostForm({ setIsVisible, cancel = true }) {
   const [url, setUrl] = useState('');
@@ -49,6 +44,11 @@ export default function PostForm({ setIsVisible, cancel = true }) {
   // console.log('data 111111111111111111', data);
   console.log('category 111111111111111111', category);
   useEffect(() => {
+    if (!location) {
+      console.error('Location is undefined');
+      return;
+    }
+
     setInputs({
       ...inputs,
       propertyType: data?.propertyType?.label || '',
@@ -61,8 +61,8 @@ export default function PostForm({ setIsVisible, cancel = true }) {
       image2: addImages?.[2] || '',
       image3: addImages?.[3] || '',
       image4: addImages?.[4] || '',
-      lat: location?.[0] || 33.5138,
-      lng: location?.[1] || 36.2765,
+      lat: location[0] || 33.5138,
+      lng: location[1] || 36.2765,
     });
     handleGenerateEmbed();
   }, [
