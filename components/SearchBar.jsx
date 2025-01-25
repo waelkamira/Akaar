@@ -90,7 +90,7 @@ export default function SearchBar({ propertyCategory }) {
       <div className="relative flex justify-between items-center w-full gap-2 my-2 bg-one p-2 rounded-[5px]">
         <div>
           <TfiMenuAlt
-            className="xl:hidden text-[40px] lg:text-5xl text-white cursor-pointer"
+            className="text-[40px] lg:text-5xl text-white cursor-pointer"
             onClick={() => {
               setIsOpen(!isOpen);
             }}
