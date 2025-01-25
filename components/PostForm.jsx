@@ -46,7 +46,8 @@ export default function PostForm({ setIsVisible, cancel = true }) {
     propertyTownLocation,
   } = useContext(inputsContext);
 
-  console.log('data 111111111111111111', data);
+  // console.log('data 111111111111111111', data);
+  console.log('category 111111111111111111', category);
   useEffect(() => {
     setInputs({
       ...inputs,
@@ -64,7 +65,20 @@ export default function PostForm({ setIsVisible, cancel = true }) {
       lng: location?.[1] || 36.2765,
     });
     handleGenerateEmbed();
-  }, [url, data, addImages, location, category]);
+  }, [
+    url,
+    data?.propertyType,
+    data?.propertyCity,
+    data?.propertyTown,
+    data?.propertyRoomsNumber,
+    addImages[0],
+    addImages[1],
+    addImages[2],
+    addImages[3],
+    addImages[4],
+    location,
+    category?.label,
+  ]);
   const [errors, setErrors] = useState({
     propertyCategory: false,
     propertyCategoryErrorMessage: 'هذا الحقل مطلوب',
@@ -125,22 +139,21 @@ export default function PostForm({ setIsVisible, cancel = true }) {
     e.preventDefault();
 
     if (
-      addImages?.length > 0 &&
-      inputs?.propertyCategory &&
-      inputs?.propertyName &&
-      inputs?.propertyType &&
-      (data?.propertyType?.label === 'بيت'
-        ? inputs?.propertyRoomsNumber
-        : '') &&
-      inputs?.propertyPrice &&
-      inputs?.propertyArea &&
-      inputs?.propertyCity &&
-      inputs?.propertyTown &&
-      inputs?.contactPhoneNumber &&
-      inputs?.description &&
-      userImage &&
-      userName &&
-      createdBy
+      (addImages?.length > 0 &&
+        inputs?.propertyCategory &&
+        inputs?.propertyName &&
+        inputs?.propertyType &&
+        inputs?.propertyPrice &&
+        inputs?.propertyArea &&
+        inputs?.propertyCity &&
+        inputs?.propertyTown &&
+        inputs?.contactPhoneNumber &&
+        inputs?.description &&
+        userImage &&
+        userName &&
+        createdBy &&
+        !['بيت', 'شقة', 'فيلا'].includes(inputs?.propertyType)) || // إذا لم يكن النوع أحد هذه القيم، تجاوز الشرط
+      inputs?.propertyRoomsNumber // إذا كان النوع بيت أو شقة أو فيلا، تحقق من عدد الغرف
     ) {
       try {
         const response = await fetch('/api/allPosts', {
@@ -188,7 +201,6 @@ export default function PostForm({ setIsVisible, cancel = true }) {
           toast.custom((t) => (
             <CustomToast
               t={t}
-              // emoji={'🧀'}
               message={'تم إنشاء منشور جديد'}
               greenEmoji={'✔'}
             />
@@ -512,7 +524,9 @@ export default function PostForm({ setIsVisible, cancel = true }) {
                       <span className="text-one text-lg xl:text-2xl ml-2">
                         <MdOutlinePriceCheck />
                       </span>
-                      سعر العقار بالدولار:
+                      {category?.label === 'بيع'
+                        ? ' سعر العقار:'
+                        : 'أجرة العقار شهرياً:'}
                     </h1>
                   </div>
 
@@ -573,7 +587,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
                 <span className="text-one text-lg xl:text-2xl ml-2">
                   <RxVideo />
                 </span>
-                أضف رابط العقار من يوتيوب أو تيك توك
+                أضف رابط العقار من يوتيوب أو تيك توك:
               </h1>
             </div>
 
@@ -600,7 +614,12 @@ export default function PostForm({ setIsVisible, cancel = true }) {
           </div>
 
           <div className="flex flex-col sm:flex-row justify-around items-center gap-8 w-full my-12">
-            <Button title={'نشر'} style={' '} />
+            <button
+              type="submit"
+              className="btn bg-five rounded-[5px] text-white shadow-lg hover:outline outline-one text-xl hover py-2 px-16 w-full"
+            >
+              نشر
+            </button>
             {cancel && (
               <button
                 type="text"

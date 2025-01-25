@@ -1,26 +1,28 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import Image from 'next/image';
-import { MdOutlineAddPhotoAlternate } from 'react-icons/md';
+import { MdOutlineAddPhotoAlternate, MdClose } from 'react-icons/md'; // إضافة أيقونة الإغلاق
 import { inputsContext } from './Context';
+import LoadingPhoto from './LoadingPhoto'; // استيراد مكون LoadingPhoto
 
 export default function ImageUploader({ images = [] }) {
   const { dispatch, addImages } = useContext(inputsContext);
+  const [isLoading, setIsLoading] = useState(false); // حالة لتتبع حالة التحميل
 
+  // دالة لمعالجة تغيير الملفات
   const handleFileChange = async (event) => {
     const selectedFiles = event.target.files;
 
-    // منع رفع أكثر من 5 صور
     if (addImages.length + selectedFiles.length > 5) {
       alert('لا يمكن رفع أكثر من 5 صور للبوست الواحد');
       return;
     }
 
+    setIsLoading(true); // بدء التحميل
+
     const newImages = [];
 
     for (let i = 0; i < selectedFiles.length; i++) {
       const file = selectedFiles[i];
-
-      // رفع الصور إلى Imgur
       const formData = new FormData();
       formData.append('image', file);
 
@@ -33,7 +35,7 @@ export default function ImageUploader({ images = [] }) {
         const data = await response.json();
 
         if (data.success) {
-          newImages.push(data.data.link); // رابط الصورة على Imgur
+          newImages.push(data.data.link);
         } else {
           console.error('Error uploading image:', data.error);
         }
@@ -42,10 +44,21 @@ export default function ImageUploader({ images = [] }) {
       }
     }
 
-    // تحديث الصور في الـ Context
+    setIsLoading(false); // انتهاء التحميل
+
     dispatch({
       type: 'ADD_IMAGE',
       payload: [...addImages, ...newImages, ...images],
+    });
+  };
+
+  // دالة لإزالة صورة معينة
+  const handleRemoveImage = (index) => {
+    const updatedImages = [...addImages];
+    updatedImages.splice(index, 1); // إزالة الصورة من المصفوفة
+    dispatch({
+      type: 'ADD_IMAGE',
+      payload: updatedImages,
     });
   };
 
@@ -54,58 +67,105 @@ export default function ImageUploader({ images = [] }) {
   const filteredImages = allImages.filter((image) => image !== null);
 
   return (
-    <div className="flex-col justify-center items-center w-full">
-      <div className="flex justify-center items-center mb-4 mx-8 border rounded-md h-24">
-        <label
-          htmlFor="file-upload"
-          className="flex flex-col items-center cursor-pointer animate-pulse text-white"
-        >
-          <MdOutlineAddPhotoAlternate className="text-one text-3xl" />
-          <h1 className="text-white text-sm sm:text-lg">أضف صورة</h1>
-          تستطيع اضافة حتى خمسة صور
-        </label>
-        <input
-          type="file"
-          id="file-upload"
-          className="hidden"
-          onChange={handleFileChange}
-          multiple
-          accept="image/*"
-        />
-      </div>
-
-      <div className="flex flex-col mx-8">
-        {filteredImages.length > 0 && (
-          <div className="col-span-1 md:col-span-3 relative h-72 sm:h-96 border border-one ">
+    <div className="flex flex-col justify-center items-center w-full px-2 sm:px-8">
+      {/* الصورة الكبيرة في الأعلى */}
+      <div className="relative w-full h-72 sm:h-96 border border-one rounded-lg mb-4">
+        {isLoading ? ( // إذا كانت الصور قيد التحميل، عرض مؤشر التحميل
+          <LoadingPhoto />
+        ) : filteredImages[0] ? ( // إذا كانت هناك صورة متاحة
+          <>
             <Image
               priority
               src={filteredImages[0]}
-              alt="الصورة المرفوعة"
+              alt="الصورة الرئيسية"
               layout="fill"
               objectFit="cover"
-              className=""
+              className="rounded-lg"
             />
-          </div>
-        )}
-
-        <div className="flex w-full gap-4 my-4">
-          {filteredImages.slice(1, 5).map((image, index) => (
-            <div
-              key={index}
-              className="relative w-full h-48 border border-one "
+            {/* زر تغيير الصورة */}
+            <label
+              htmlFor="file-upload"
+              className="absolute bottom-2 right-2 bg-black bg-opacity-50 text-white p-2 rounded-full cursor-pointer"
             >
-              <Image
-                priority
-                src={image}
-                alt={`الصورة ${index + 2}`}
-                layout="fill"
-                objectFit="cover"
-                className=""
-              />
-            </div>
-          ))}
-        </div>
+              <MdOutlineAddPhotoAlternate className="text-xl" />
+            </label>
+            {/* زر إزالة الصورة */}
+            <button
+              onClick={() => handleRemoveImage(0)}
+              className="absolute top-2 right-2 bg-black bg-opacity-50 text-white p-2 rounded-full cursor-pointer"
+            >
+              <MdClose className="text-xl" />
+            </button>
+          </>
+        ) : (
+          // إذا لم تكن هناك صورة، عرض زر إضافة صورة
+          <label
+            htmlFor="file-upload"
+            className="flex flex-col items-center justify-center h-full cursor-pointer text-white"
+          >
+            <MdOutlineAddPhotoAlternate className="text-one text-3xl" />
+            <h1 className="text-white text-sm sm:text-lg">أضف صورة رئيسية</h1>
+          </label>
+        )}
       </div>
+
+      {/* الأربع صور الصغيرة في الأسفل */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full">
+        {Array.from({ length: 4 }).map((_, index) => (
+          <div
+            key={index}
+            className="relative w-full h-48 border border-one rounded-lg flex justify-center items-center"
+          >
+            {isLoading ? ( // إذا كانت الصور قيد التحميل، عرض مؤشر التحميل
+              <LoadingPhoto />
+            ) : filteredImages[index + 1] ? ( // إذا كانت هناك صورة متاحة
+              <>
+                <Image
+                  priority
+                  src={filteredImages[index + 1]}
+                  alt={`الصورة ${index + 2}`}
+                  layout="fill"
+                  objectFit="cover"
+                  className="rounded-lg"
+                />
+                {/* زر تغيير الصورة */}
+                <label
+                  htmlFor="file-upload"
+                  className="absolute bottom-2 right-2 bg-black bg-opacity-50 text-white p-2 rounded-full cursor-pointer"
+                >
+                  <MdOutlineAddPhotoAlternate className="text-xl" />
+                </label>
+                {/* زر إزالة الصورة */}
+                <button
+                  onClick={() => handleRemoveImage(index + 1)}
+                  className="absolute top-2 right-2 bg-black bg-opacity-50 text-white p-2 rounded-full cursor-pointer"
+                >
+                  <MdClose className="text-xl" />
+                </button>
+              </>
+            ) : (
+              // إذا لم تكن هناك صورة، عرض زر إضافة صورة
+              <label
+                htmlFor="file-upload"
+                className="flex flex-col items-center cursor-pointer text-white"
+              >
+                <MdOutlineAddPhotoAlternate className="text-one text-3xl" />
+                <h1 className="text-white text-sm sm:text-lg">أضف صورة</h1>
+              </label>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* Input لتحميل الصور */}
+      <input
+        type="file"
+        id="file-upload"
+        className="hidden"
+        onChange={handleFileChange}
+        multiple
+        accept="image/*"
+      />
     </div>
   );
 }

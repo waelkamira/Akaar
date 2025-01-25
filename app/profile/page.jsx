@@ -82,7 +82,7 @@ export default function Profile() {
           <BackButton />
           <div className="absolute flex flex-col items-start gap-2 z-50 top-2 right-2 sm:top-4 sm:right-4 xl:right-12 xl:top-12 ">
             <TfiMenuAlt
-              className=" p-1  text-4xl lg:text-5xl text-one cursor-pointer z-50  animate-pulse"
+              className=" p-1  text-4xl lg:text-5xl text-one cursor-pointer z-50  "
               onClick={() => {
                 setIsOpen(!isOpen);
               }}
@@ -173,7 +173,7 @@ export default function Profile() {
                   <hr className="w-full h-0.5 bg-gray-400  border-hidden" />
                 </div>
               </div>
-              <div className="flex flex-col items-center gap-2 justify-between  px-8 py-2 w-full my-2">
+              {/* <div className="flex flex-col items-center gap-2 justify-between  px-8 py-2 w-full my-2">
                 <Link href={'/newPost'} className="w-full">
                   <h1 className="text-nowrap text-start w-full select-none cursor-pointer ">
                     <span className="text-one  text-2xl ml-2 ">#</span>
@@ -183,7 +183,7 @@ export default function Profile() {
                 <div className="flex items-center w-full">
                   <hr className="w-full h-0.5 bg-gray-400  border-hidden" />
                 </div>
-              </div>
+              </div> */}
 
               <div className="w-full px-8">
                 <Button

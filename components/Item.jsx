@@ -21,6 +21,7 @@ import { GiRotaryPhone } from 'react-icons/gi';
 import { MdOutlineFeaturedPlayList } from 'react-icons/md';
 import { RxVideo } from 'react-icons/rx';
 import { MdOutlineBedroomParent } from 'react-icons/md';
+import { FaTreeCity } from 'react-icons/fa6';
 
 export default function Item({
   contactPhoneNumber,
@@ -36,6 +37,7 @@ export default function Item({
   link,
   propertyArea,
   propertyCity,
+  propertyTown,
   propertyName,
   propertyPrice,
   propertyType,
@@ -80,9 +82,9 @@ export default function Item({
       {session?.status === 'authenticated' && (
         <div className="relative flex flex-col items-start w-full bg-four h-full p-2 lg:p-4 ">
           <BackButton />
-          <div className="absolute flex flex-col items-start gap-2 z-50 top-2 right-2 sm:top-4 sm:right-4 xl:right-12 xl:top-12 ">
+          <div className="absolute flex flex-col  items-start gap-2 z-50 top-2 right-2 sm:top-4 sm:right-4 xl:right-12 xl:top-12 ">
             <TfiMenuAlt
-              className="xl:hidden p-1 items-center  text-4xl lg:text-5xl text-one cursor-pointer z-50  animate-pulse"
+              className="xl:hidden p-1 items-center  text-4xl lg:text-5xl text-one cursor-pointer z-50  "
               onClick={() => {
                 setIsOpen(!isOpen);
               }}
@@ -124,31 +126,49 @@ export default function Item({
               />
 
               <div className=" mt-4 sm:mt-16">
-                <div className="flex justify-between items-center my-4 sm:my-4 lg:my-16 bg-four h-10 sm:h-16  w-full overflow-visible">
-                  <h1 className="text-white  text-xl sm:text-3xl w-full my-2 select-none">
+                <div className="flex justify-between items-center my-4 lg:my-8 bg-four h-10 sm:h-16  w-full overflow-visible">
+                  <h1 className="text-white  text-xl sm:text-3xl w-full mb-2 select-none">
                     <span className="text-one text-2xl mx-2 select-none">
                       #
                     </span>
                     المميزات:
                   </h1>
                 </div>
+
                 <div className="flex flex-col text-black w-full">
-                  <div className="flex flex-col sm:flex-row justify-center items-center gap-4 ">
-                    <div className=" w-full">
-                      <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300  text-lg sm:text-xl w-full min-h-20 my-2 select-none">
-                        <span className="flex gap-1 items-center text-one text-lg sm:text-xl mx-2 select-none">
-                          <FaHouseDamage className="text-black" />
-                          اسم المعلن :
-                        </span>
-                        {userName}{' '}
-                      </h1>
-                      <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300  text-lg sm:text-xl w-full min-h-20 my-2 select-none">
-                        <span className="flex gap-1 items-center text-one text-lg sm:text-xl mx-2 select-none">
-                          <RxSpaceEvenlyHorizontally className="text-black" />
-                          نوع العقار :
-                        </span>
-                        {propertyType}{' '}
-                      </h1>
+                  <div className="flex flex-col sm:grid md:grid-cols-2 sm:gap-x-4 w-full">
+                    <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300  text-lg sm:text-xl w-full min-h-20 my-2 select-none">
+                      <span className="flex gap-1 items-center text-one text-lg sm:text-xl mx-2 select-none">
+                        <FaHouseDamage className="text-black" />
+                        اسم المعلن :
+                      </span>
+                      {userName}{' '}
+                    </h1>
+
+                    <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300  text-lg sm:text-xl w-full min-h-20 my-2 select-none">
+                      <span className="flex gap-1 items-center text-one text-lg sm:text-xl mx-2 select-none">
+                        <GiModernCity className="text-black" />
+                        المدينة :
+                      </span>
+                      {propertyCity}{' '}
+                    </h1>
+                    <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300  text-lg sm:text-xl w-full min-h-20 my-2 select-none">
+                      <span className="flex gap-1 items-center text-one text-lg sm:text-xl mx-2 select-none">
+                        <FaTreeCity className="text-black" />
+                        اسم المنطقة :
+                      </span>
+                      {propertyTown}
+                    </h1>
+                    <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300  text-lg sm:text-xl w-full min-h-20 my-2 select-none">
+                      <span className="flex gap-1 items-center text-one text-lg sm:text-xl mx-2 select-none">
+                        <RxSpaceEvenlyHorizontally className="text-black" />
+                        نوع العقار :
+                      </span>
+                      {propertyType}{' '}
+                    </h1>
+                    {(propertyType === 'بيت' ||
+                      propertyType === 'شقة' ||
+                      propertyType === 'فيلا') && (
                       <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300  text-lg sm:text-xl w-full min-h-20 my-2 select-none">
                         <span className="flex gap-1 items-center text-one text-lg sm:text-xl mx-2 select-none">
                           <MdOutlineBedroomParent className="text-black" />
@@ -156,64 +176,69 @@ export default function Item({
                         </span>
                         {propertyRoomsNumber}{' '}
                       </h1>
-                      <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300  text-lg sm:text-xl w-full min-h-20 my-2 select-none">
-                        <span className="flex gap-1 items-center text-one text-lg sm:text-xl mx-2 select-none">
-                          <MdOutlinePriceCheck className="text-black" />
-                          السعر :
-                        </span>
-                        {propertyPrice}{' '}
-                        <span className="flex gap-1 items-center text-one text-lg sm:text-xl mx-2 select-none">
-                          $
-                        </span>{' '}
-                      </h1>
-                    </div>
-                    <div className=" w-full">
-                      <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300  text-lg sm:text-xl w-full min-h-20 my-2 select-none">
-                        <span className="flex gap-1 items-center text-one text-lg sm:text-xl mx-2 select-none">
-                          <GiModernCity className="text-black" />
-                          المدينة :
-                        </span>
-                        {propertyCity}{' '}
-                      </h1>
+                    )}
+                    <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300  text-lg sm:text-xl w-full min-h-20 my-2 select-none">
+                      <span className="flex gap-1 items-center text-one text-lg sm:text-xl mx-2 select-none">
+                        <VscUngroupByRefType className="text-black" />
+                        المساحة :
+                      </span>
+                      {propertyArea}
+                    </h1>
+                    <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300  text-lg sm:text-xl w-full min-h-20 my-2 select-none">
+                      <span className="flex gap-1 items-center text-one text-lg sm:text-xl mx-2 select-none">
+                        <MdOutlinePriceCheck className="text-black" />
+                        السعر :
+                      </span>
+                      {propertyPrice}{' '}
+                      <span className="flex gap-1 items-center text-one text-lg sm:text-xl mx-2 select-none">
+                        $
+                      </span>{' '}
+                    </h1>
 
-                      <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300  text-lg sm:text-xl w-full min-h-20 my-2 select-none">
+                    <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300  text-lg sm:text-xl w-full min-h-20 my-2 select-none">
+                      <span className="flex gap-1 items-center text-one text-lg sm:text-xl mx-2 select-none">
+                        <GiRotaryPhone className="text-black" />
+                        رقم الهاتف :
+                      </span>
+                      {contactPhoneNumber}
+                    </h1>
+                    {/* <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300  text-lg sm:text-xl w-full min-h-20 my-2 select-none">
                         <span className="flex gap-1 items-center text-one text-lg sm:text-xl mx-2 select-none">
-                          <VscUngroupByRefType className="text-black" />
-                          المساحة :
+                  
                         </span>
-                        {propertyArea}
-                      </h1>
-                      <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300  text-lg sm:text-xl w-full min-h-20 my-2 select-none">
-                        <span className="flex gap-1 items-center text-one text-lg sm:text-xl mx-2 select-none">
-                          <GiRotaryPhone className="text-black" />
-                          رقم الهاتف :
-                        </span>
-                        {contactPhoneNumber}
-                      </h1>
-                      <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300  text-lg sm:text-xl w-full min-h-20 my-2 select-none">
-                        <span className="flex gap-1 items-center text-one text-lg sm:text-xl mx-2 select-none">
-                          {/* <GiRotaryPhone className="text-black" /> */}
-                          {/* رقم الهاتف : */}
-                        </span>
-                        {/* {contactPhoneNumber} */}
-                      </h1>
-                    </div>
+                      </h1> */}
                   </div>
-                  <div className="flex justify-between items-center my-4 sm:my-4 lg:my-16 bg-four h-10 sm:h-16  w-full overflow-visible">
-                    <h1 className="text-white  text-xl sm:text-3xl w-full my-2 select-none">
+
+                  <div className="flex justify-between items-center my-4 lg:my-8 bg-four h-10 sm:h-16  w-full overflow-visible">
+                    <h1 className="text-white  text-xl sm:text-3xl w-full mb-2 select-none">
                       <span className="text-one text-2xl mx-2 select-none">
                         #
                       </span>
                       الوصف:
                     </h1>
                   </div>
-                  <div className="flex justify-start items-center p-2 overflow-y-auto h-44 bg-white shadow-sm shadow-gray-300  text-lg sm:text-xl w-full min-h-20 my-2 select-none">
-                    {description}
+
+                  <div className="bg-white  p-4 w-full">
+                    <pre className="text-sm sm:text-lg text-start w-full select-none h-72 overflow-y-auto">
+                      {description}
+                    </pre>
                   </div>
                 </div>
-                <div className="border border-one">
-                  {lng !== '' && lat !== '' && <SyriaMap lng={lng} lat={lat} />}
-                </div>{' '}
+                {lng !== '' && lat !== '' && (
+                  <div>
+                    <div className="flex justify-between items-center my-4 lg:my-8 bg-four h-10 sm:h-16  w-full overflow-visible">
+                      <h1 className="text-white  text-xl sm:text-3xl w-full mb-2 select-none">
+                        <span className="text-one text-2xl mx-2 select-none">
+                          #
+                        </span>
+                        موقع العقار على الخريطة:
+                      </h1>
+                    </div>
+                    <div className="border border-one">
+                      <SyriaMap lng={lng} lat={lat} />
+                    </div>{' '}
+                  </div>
+                )}
                 {(link || iframeSrc) && (
                   <div className="flex justify-between items-center my-4 sm:my-4 lg:my-16 bg-four h-10 sm:h-16  w-full overflow-visible">
                     <h1 className="text-white  text-xl sm:text-3xl w-full my-2 select-none">

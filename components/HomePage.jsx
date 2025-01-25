@@ -1,17 +1,17 @@
 'use client';
 import React, { useState } from 'react';
-import SearchBar from './SearchBar';
-import NewPostButton from './NewPostButton';
-import AllPosts from './allPosts';
 import { useSession } from 'next-auth/react';
 import SideBarMenu from './SideBarMenu';
 import { TfiMenuAlt } from 'react-icons/tfi';
 import { Suspense } from 'react';
-import Button from './Button';
 import Image from 'next/image';
-import SideBar from './SideBar';
 import Card from './card';
-import SyriaMap from './map/SyriaMap';
+import { MdOutlineBedroomParent } from 'react-icons/md';
+import { MdOutlineAttachMoney } from 'react-icons/md';
+import { GiBuyCard } from 'react-icons/gi';
+import { GiCarKey } from 'react-icons/gi';
+import { FaHouseDamage } from 'react-icons/fa';
+
 export default function HomePage() {
   const [isOpen, setIsOpen] = useState(false);
   const session = useSession();
@@ -26,38 +26,38 @@ export default function HomePage() {
         <div className="w-full">
           <div className="xl:hidden absolute flex flex-col items-start gap-2 z-50 top-2 right-0 sm:top-4 sm:right-4  lg:right-12 w-full">
             <TfiMenuAlt
-              className=" p-2  text-5xl text-one animate-pulse"
+              className=" p-2  text-5xl text-one  cursor-pointer"
               onClick={() => setIsOpen(!isOpen)}
             />
             {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
           </div>
 
-          <div className="relative w-full h-[400px] border-l-[18px] border-one">
+          <div className="relative w-full h-[400px] border-l-[18px] border-one overflow-hidden">
             <Image
-              src="https://i.imgur.com/66tiYGd.jpg"
+              src="https://i.imgur.com/wZ0aruw.jpg"
               fill
-              objectFit="cover"
               alt="home_photo"
-              objectPosition="top"
+              className="object-cover object-center w-full h-auto"
+              objectPosition="center"
             />
-            {/* <div className="relative top-16 sm:right-12 px-2">
-              <SearchBar />
-            </div> */}
           </div>
-          {/* <SyriaMap /> */}
 
-          <h1 className="text-3xl text-white my-4 font-bold text-center w-full mt-4 select-none">
-            اختر القسم المناسب
-          </h1>
-          <div className="flex flex-col sm:flex-row justify-center w-full gap-8 px-4 sm:px-8 my-8">
+          <div className="flex justify-center w-full">
+            <h1 className=" text-3xl p-2 text-white my-4 font-medium text-center w-fit mt-4 select-none border-y-[3px] border-seven ">
+              {/* <hr className="w-full h-2" /> */}
+              اختر القسم المناسب
+            </h1>
+          </div>
+          <div className="flex flex-col sm:flex-row justify-center w-full gap-4 xl:gap-8 px-4 xl:px-8 my-8">
             <Card
               cardName={'بيع عقار'}
-              path={'/sell'}
+              path={'/newPost'}
               text={
-                'بغض النظر عن المسار الذي تتخذه لبيع عقارك، يمكننا مساعدتك في إتمام عملية بيع ناجحة وسريعة بأبسط جهد ممكن وأعلى كفاءة'
+                'بغض النظر عن المسار الذي تسلكه لبيع منزلك، يمكننا مساعدتك في إتمام عملية بيع ناجحة و بأسرع وقت ممكن.'
               }
-              color={'green'}
-              image={'https://i.imgur.com/uGXmBJO.jpg'}
+              color={'red'}
+              image={'https://i.imgur.com/85xCFcd.jpg'}
+              emoji={<FaHouseDamage className="text-two" />}
             />
             <Card
               cardName={'شراء عقار'}
@@ -65,17 +65,19 @@ export default function HomePage() {
               text={
                 ' اعثر على عقارك من خلال تجربة تصوير غامرة وأكبر عدد من الإعلانات، بما في ذلك أشياء لن تجدها في أي مكان آخر.'
               }
-              color={'orange'}
+              color={'green'}
               image={'https://i.imgur.com/9gIMgUg.png'}
+              emoji={<GiCarKey className="text-gray-700" />}
             />
             <Card
               cardName={'تأجير عقار'}
               path={'/rent'}
               text={
-                ' نعمل على إنشاء تجربة سلسة عبر الإنترنت - من التسوق على أكبر شبكة إيجار، إلى تقديم الطلبات، إلى دفع الإيجار.'
+                'نحن نعمل على إنشاء تجربة سلسة عبر الإنترنت, بدءاً من بناء أكبر شبكة تأجير، إلى تقديم الطلبات، إلى دفع الإيجار.'
               }
-              color={'red'}
-              image={'https://i.imgur.com/hILi6c8.jpg'}
+              color={'orange'}
+              image={'https://i.imgur.com/uGXmBJO.jpg'}
+              emoji={<MdOutlineBedroomParent className="text-one" />}
             />
           </div>
         </div>

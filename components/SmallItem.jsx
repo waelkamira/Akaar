@@ -11,7 +11,8 @@ import { useSession } from 'next-auth/react';
 import { IoMdClose } from 'react-icons/io';
 import { FaHeart } from 'react-icons/fa';
 import { inputsContext } from '../components/Context';
-import LoadingPhoto from './LoadingPhoto';
+import PostGallery from './PostGallery';
+
 export default function SmallItem({ post, index, show = true, id = false }) {
   const [currentUser, setCurrentUser] = useState('');
   const [heart, setHeart] = useState(false);
@@ -19,6 +20,7 @@ export default function SmallItem({ post, index, show = true, id = false }) {
   const session = useSession();
   const router = useRouter();
   const path = usePathname();
+
   // console.log('post', post);
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -147,6 +149,7 @@ export default function SmallItem({ post, index, show = true, id = false }) {
       ? 'Invalid date'
       : formatDistanceToNow(date, { addSuffix: true });
   };
+
   return (
     <>
       {!post && <Loading />}
@@ -175,7 +178,7 @@ export default function SmallItem({ post, index, show = true, id = false }) {
               </div>
             </div>
             <div className="flex flex-col justify-center items-start">
-              <h6 className="text-[14px] text-eight select-none">
+              <h6 className="text-[16px] text-one select-none">
                 {post?.userName}{' '}
               </h6>
               <h1 className="text-[10px] text-gray-400 select-none" dir="ltr">
@@ -197,12 +200,12 @@ export default function SmallItem({ post, index, show = true, id = false }) {
         <h1 className="text-one my-1 sm:my-4 text-xl sm:text-3xl font-medium bg-white select-none line-clamp-1">
           {post?.propertyName}
         </h1>
-        <div
+        <PostGallery post={post} />
+        {/* <div
           className={`relative w-full h-52 sm:h-72 lg:h-96 overflow-hidden  bg-gray-100`}
         >
           {!post?.image && <LoadingPhoto />}
           <div className="flex flex-col">
-            {/* الصورة الكبيرة */}
             {post?.image && (
               <div className="col-span-1 md:col-span-3 relative h-72 sm:h-96 border border-one ">
                 <Image
@@ -216,7 +219,7 @@ export default function SmallItem({ post, index, show = true, id = false }) {
               </div>
             )}
           </div>
-        </div>
+        </div> */}
         {show && (
           <>
             <div className="flex justify-between items-center gap-2 w-full text-gray-400 my-2">
@@ -259,14 +262,14 @@ export default function SmallItem({ post, index, show = true, id = false }) {
           </>
         )}
         <div className="bg-white  p-4 w-full">
-          <pre className="text-sm sm:text-lg text-start w-full line-clamp-3 select-none">
+          <pre className="text-sm sm:text-lg text-start w-full line-clamp-1 select-none">
             {post?.description}
           </pre>
         </div>
         <button
           onClick={() => {
             if (session?.status === 'authenticated') {
-              router.push(`/posts/${id ? post?.postId : post?.id}`);
+              router.push(`/post/${id ? post?.postId : post?.id}`);
             } else {
               toast.custom((t) => (
                 <CustomToast

@@ -121,7 +121,7 @@ export function InputsContextProvider({ children }) {
     location: [],
     category: '',
   });
-  console.log('from Context', state);
+  // console.log('from Context', state);
 
   return (
     <inputsContext.Provider value={{ ...state, dispatch }}>

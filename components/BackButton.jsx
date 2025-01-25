@@ -6,13 +6,13 @@ export default function BackButton() {
   return (
     <Link
       href={'/'}
-      className="absolute top-4 left-4 xl:top-4 xl:left-12 z-40 rounded-md overflow-hidden bg-white"
+      className=" top-3 left-2 sm:left-16 z-40 rounded-md overflow-hidden bg-white"
     >
-      <div className="flex items-center justify-center  overflow-hidden cursor-pointer xl:w-fit ">
-        <button className="flex items-center justify-center text-white text-sm sm:text-lg lg:text-xl hover:scale-105 bg-one p-1 pb-2 lg:p-2">
+      <div className="flex items-center justify-center  overflow-hidden cursor-pointer xl:w-fit border border-white">
+        <button className="flex items-center justify-center text-white text-sm lg:text-xl  bg-one p-1 pb-2 lg:p-2">
           رجوع
         </button>
-        <TbArrowBigLeftLinesFilled className=" text-one white text-3xl sm:text-4xl lg:text-[44px] animate-pulse transition-all duration-300  rounded-l-lg" />
+        <TbArrowBigLeftLinesFilled className=" text-one white text-3xl xl:text-[40px]   transition-all duration-300  rounded-l-lg" />
       </div>
     </Link>
   );

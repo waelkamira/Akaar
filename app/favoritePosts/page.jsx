@@ -97,7 +97,7 @@ export default function Page() {
     <div className="relative w-full bg-four h-full p-4 lg:p-8  z-50">
       <div className="absolute flex flex-col items-start gap-2 z-40 top-2 right-2 sm:top-4 sm:right-4 xl:right-12 xl:top-12 ">
         <TfiMenuAlt
-          className="p-1  text-4xl lg:text-5xl text-one cursor-pointer z-50 animate-pulse"
+          className="p-1  text-4xl lg:text-5xl text-one cursor-pointer z-50 "
           onClick={() => setIsOpen(!isOpen)}
         />
         {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
@@ -167,7 +167,7 @@ export default function Page() {
                 onClick={() => setPageNumber(pageNumber + 1)}
               >
                 <h1 className="">الصفحة التالية</h1>
-                <MdKeyboardDoubleArrowRight className="text-2xl animate-pulse" />
+                <MdKeyboardDoubleArrowRight className="text-2xl " />
               </div>
             </Link>
           )}
@@ -177,7 +177,7 @@ export default function Page() {
                 className="flex items-center justify-around cursor-pointer"
                 onClick={() => setPageNumber(pageNumber - 1)}
               >
-                <MdKeyboardDoubleArrowLeft className="text-2xl animate-pulse" />
+                <MdKeyboardDoubleArrowLeft className="text-2xl " />
                 <h1 className="">الصفحة السابقة</h1>
               </div>
             </Link>
