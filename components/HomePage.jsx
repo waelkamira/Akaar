@@ -11,7 +11,9 @@ import { MdOutlineAttachMoney } from 'react-icons/md';
 import { GiBuyCard } from 'react-icons/gi';
 import { GiCarKey } from 'react-icons/gi';
 import { FaHouseDamage } from 'react-icons/fa';
-
+import { FaCalendarDays } from 'react-icons/fa6';
+import { GiAnchor } from 'react-icons/gi';
+import Footer from './Footer';
 export default function HomePage() {
   const [isOpen, setIsOpen] = useState(false);
   const session = useSession();
@@ -82,6 +84,7 @@ export default function HomePage() {
           </div>
         </div>
       </div>
+      <Footer />
     </Suspense>
   );
 }
