@@ -12,6 +12,7 @@ import { IoMdClose } from 'react-icons/io';
 import { FaHeart } from 'react-icons/fa';
 import { inputsContext } from '../components/Context';
 import PostGallery from './PostGallery';
+import LoadingPhoto from './LoadingPhoto';
 
 export default function SmallItem({ post, index, show = true, id = false }) {
   const [currentUser, setCurrentUser] = useState('');
