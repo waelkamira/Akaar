@@ -116,7 +116,7 @@ export default function SearchBar({ propertyCategory }) {
       </div>{' '}
       <div className="flex flex-col w-full h-[1370px] overflow-y-auto z-10">
         {isShow && (
-          <div className="flex flex-col-reverse xl:flex-row justify-center items-center w-full bg-white shadow-sm shadow-gray-300  rounded-md text-black">
+          <div className="flex flex-col-reverse xl:flex-row justify-center items-center w-full bg-white shadow-sm shadow-gray-300 border-b-[20px] border-one rounded-md text-black">
             <div className="relative text-center w-full md:w-1/4 px-2">
               <Button
                 style={' '}
@@ -178,7 +178,7 @@ export default function SearchBar({ propertyCategory }) {
         {loading ? (
           <Loading />
         ) : allPosts?.length > 0 ? (
-          <div className="flex flex-col justify-start w-full overflow-y-auto z-10 my-4">
+          <div className="flex flex-col justify-start w-full overflow-y-auto z-10 my-2">
             {allPosts?.map((post, index) => (
               <SmallItem key={index} post={post} />
             ))}

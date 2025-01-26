@@ -13,6 +13,8 @@ import { inputsContext } from '../Context';
 import { cities } from './Cities';
 import { FaMapMarkedAlt } from 'react-icons/fa';
 import Select from 'react-select'; // استيراد Select من react-select
+import { GiModernCity } from 'react-icons/gi';
+import { FaTreeCity } from 'react-icons/fa6';
 
 // أيقونة مخصصة للدبوس الأحمر
 const redIcon = icon({
@@ -185,7 +187,14 @@ export default function OnClickMap({
 
       {/* قوائم المحافظات والبلدات */}
       <div className="mb-4 relative z-50">
-        <label className="block font-medium mb-2">اختر المحافظة:</label>
+        <label
+          className={`flex text-right mb-2 text-lg sm:text-md select-none text-nowrap`}
+        >
+          <span className="text-one text-lg xl:text-2xl ml-2">
+            <GiModernCity />
+          </span>
+          اختر المدينة:
+        </label>
         <Select
           options={cityOptions}
           onChange={handleCityChange}
@@ -203,7 +212,14 @@ export default function OnClickMap({
 
       {selectedCity && (
         <div className="mb-4 relative z-40">
-          <label className="block font-medium mb-2">اختر البلدة:</label>
+          <label
+            className={`flex text-right mb-2 text-lg sm:text-md select-none text-nowrap`}
+          >
+            <span className="text-one text-lg xl:text-2xl ml-2">
+              <FaTreeCity />
+            </span>
+            اختر البلدة:
+          </label>
           <Select
             options={townOptions}
             onChange={handleTownChange}

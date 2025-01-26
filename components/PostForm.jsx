@@ -583,11 +583,11 @@ export default function PostForm({ setIsVisible, cancel = true }) {
           <div className="w-full">
             <div className="flex items-center gap-2 w-full justify-start my-2 ">
               {' '}
-              <h1 className="flex text-right text-lg text-white">
+              <h1 className="flex text-right text-sm sm:text-lg select-none text-white">
                 <span className="text-one text-lg xl:text-2xl ml-2">
                   <RxVideo />
                 </span>
-                أضف رابط العقار من يوتيوب أو تيك توك:
+                أضف فيديو للعقار من يوتيوب أو تيك توك:
               </h1>
             </div>
 

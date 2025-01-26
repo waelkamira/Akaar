@@ -16,6 +16,7 @@ module.exports = {
         six: '#fffdf3',
         seven: '#888888',
         eight: '#FFB38A',
+        nine: '#1E2727',
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
