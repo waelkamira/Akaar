@@ -20,7 +20,7 @@ export default function Profile() {
   const user = CurrentUser();
   const { profile_image, dispatch } = useContext(inputsContext);
   const [newUserName, setNewUserName] = useState('');
-  console.log('user?.image', user?.image);
+  console.log('user', user);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -64,7 +64,7 @@ export default function Profile() {
   }
 
   return (
-    <>
+    <div className="flex justify-center w-full">
       {session?.status === 'unauthenticated' && (
         <div className="p-4 bg-four  m-2 md:m-8 border border-one text-center h-screen">
           <h1 className="text-lg md:text-2xl p-2 my-8 text-white">
@@ -78,29 +78,34 @@ export default function Profile() {
         </div>
       )}
       {session?.status === 'authenticated' && (
-        <div className="relative flex justify-center items-center w-full h-full bg-four  xl:p-8  text-md sm:text-lg lg:text-xl">
-          <BackButton />
-          <div className="absolute flex flex-col items-start gap-2 z-50 top-2 right-2 sm:top-4 sm:right-4 xl:right-12 xl:top-12 ">
-            <TfiMenuAlt
-              className=" p-1  text-4xl lg:text-5xl text-one cursor-pointer z-50  "
-              onClick={() => {
-                setIsOpen(!isOpen);
-              }}
-            />
-            {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
+        <div className="flex flex-col w-full xl:w-[90%] 2xl:w-[70%] h-full px-2 overflow-y-auto z-10 mb-16 sm:px-16 ">
+          <div className="relative flex justify-between items-center w-full gap-2 my-4 bg-one p-1 md:p-2 rounded-[5px]">
+            <div>
+              <TfiMenuAlt
+                className="text-[30px] lg:text-5xl text-white cursor-pointer"
+                onClick={() => {
+                  setIsOpen(!isOpen);
+                }}
+              />
+              <div className="absolute top-14 lg:top-20 right-0 z-50">
+                {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
+              </div>
+            </div>
+
+            <BackButton />
           </div>
-          <div className="flex flex-col items-center gap-4  justify-center w-full 2xl:w-2/3 h-full  overflow-hidden">
-            <div className="relative w-full ">
-              <div className="relative h-96 w-full  ">
+          <div className="flex flex-col items-start gap-4 justify-start w-full h-full overflow-hidden rounded-[5px] border border-one">
+            <div className="relative w-full my-2">
+              <div className="relative min-h-64 w-full">
                 <Image
                   priority
                   src={user?.image}
                   layout="fill"
-                  objectFit="cover"
+                  objectFit="contain"
                   alt={user?.name}
                 />
               </div>
-              <div className="relative">
+              {/* <div className="relative">
                 <div className="absolute right-1 -bottom-6 h-20 w-20  rounded-xl cursor-pointer overflow-hidden z-40">
                   <ImageUpload
                     priority
@@ -110,13 +115,13 @@ export default function Profile() {
                     }
                   />
                 </div>
-              </div>
+              </div> */}
             </div>
 
             <div className="flex flex-col justify-center items-center w-full text-start text-white">
-              <div className="flex flex-col items-start gap-2 justify-between  px-8 py-2 w-full my-2">
+              {/* <div className="flex flex-col items-start gap-2 justify-between  px-8 py-2 w-full my-2">
                 <div className="flex justify-between items-center">
-                  {/* <h5 className="text-sm">تغيير الإسم: </h5> */}
+                  <h5 className="text-sm">تغيير الإسم: </h5>
                   <h1 className="text-nowrap text-start w-full select-none">
                     <span className="text-one  text-xl ml-2">
                       {' '}
@@ -138,6 +143,15 @@ export default function Profile() {
                     onClick={() => editProfileImageAndUserName()}
                   />
                 </div>
+                <div className="flex items-center w-full">
+                  <hr className="w-full h-0.5 bg-gray-400  border-hidden" />
+                </div>
+              </div> */}
+              <div className="flex flex-col items-center gap-2 justify-between  px-8 py-2 w-full my-2">
+                <h1 className="text-nowrap text-start w-full select-none">
+                  <span className="text-one  text-2xl ml-2">#</span>
+                  {session?.data?.user?.name}
+                </h1>
                 <div className="flex items-center w-full">
                   <hr className="w-full h-0.5 bg-gray-400  border-hidden" />
                 </div>
@@ -173,17 +187,6 @@ export default function Profile() {
                   <hr className="w-full h-0.5 bg-gray-400  border-hidden" />
                 </div>
               </div>
-              {/* <div className="flex flex-col items-center gap-2 justify-between  px-8 py-2 w-full my-2">
-                <Link href={'/newPost'} className="w-full">
-                  <h1 className="text-nowrap text-start w-full select-none cursor-pointer ">
-                    <span className="text-one  text-2xl ml-2 ">#</span>
-                    إنشاء إعلان جديد
-                  </h1>
-                </Link>
-                <div className="flex items-center w-full">
-                  <hr className="w-full h-0.5 bg-gray-400  border-hidden" />
-                </div>
-              </div> */}
 
               <div className="w-full px-8">
                 <Button
@@ -196,6 +199,6 @@ export default function Profile() {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }

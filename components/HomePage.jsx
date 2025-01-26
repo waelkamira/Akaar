@@ -34,7 +34,7 @@ export default function HomePage() {
             {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
           </div>
 
-          <div className="relative w-full h-[400px] border-l-[18px] border-one overflow-hidden">
+          <div className="relative w-full h-[300px] lg:h-[400px] border-l-[18px] border-one overflow-hidden">
             <Image
               src="https://i.imgur.com/wZ0aruw.jpg"
               fill
@@ -45,8 +45,7 @@ export default function HomePage() {
           </div>
 
           <div className="flex justify-center w-full">
-            <h1 className=" text-3xl p-2 text-white my-4 font-medium text-center w-fit mt-4 select-none border-y-[3px] border-seven ">
-              {/* <hr className="w-full h-2" /> */}
+            <h1 className="text-md lg:text-3xl p-2 text-white my-4 font-medium text-center w-fit mt-4 select-none border-y-[3px] border-seven ">
               اختر القسم المناسب
             </h1>
           </div>

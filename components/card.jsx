@@ -44,26 +44,26 @@ export default function Card({ cardName, path, image, text, color, emoji }) {
       : '#aaaaaa';
 
   return (
-    <div className="w-full sm:w-96 h-[600px] bg-white rounded-3xl overflow-hidden hover:scale-[102%] transition-transform duration-300 ease-in-out cursor-pointer">
+    <div className="w-full sm:w-96 bg-white rounded-3xl overflow-hidden hover:scale-[102%] transition-transform duration-300 ease-in-out cursor-pointer">
       <div
         onClick={() => router.push(path)}
-        className={`relative w-full h-[300px] overflow-hidden border-l-[18px] ${borderColor}`}
+        className={`relative w-full h-[200px] lg:h-[300px] overflow-hidden border-l-[18px] ${borderColor}`}
       >
         <Image src={image} fill objectFit="cover" alt={cardName} />
       </div>
-      <h1 className="relative text-2xl my-4 font-bold text-center w-full">
+      <h1 className="relative text-lg lg:text-2xl my-2 lg:my-4 font-bold text-center w-full">
         {cardName}
-        <span
-          className={`absolute left-[65%] text-3xl top-0 bottom-0 mx-auto my-auto z-50`}
-        >
+        <span className="absolute left-[65%] top-1/4 mx-auto my-auto">
           {emoji}
         </span>
       </h1>
-      <p className="p-2 px-4 select-none xl:font-semibold">{text}</p>
+      <p className="p-2 px-4 text-sm lg:text-lg select-none xl:font-semibold">
+        {text}
+      </p>
       <div className="px-4 mt-2">
         <button
           onClick={() => router.push(path)}
-          className="btn relative w-full my-2  rounded-lg hover:scale-[101%] text-lg sm:text-xl hover:shadow-sm shadow-gray-300 p-2 transition-transform duration-200 ease-in-out"
+          className="btn relative w-full my-2 rounded-lg hover:scale-[101%] text-lg sm:text-xl hover:shadow-sm shadow-gray-300 p-1 lg:p-2 transition-transform duration-200 ease-in-out"
           style={{
             '--btn-background': btnBackground,
             '--btn-hover-background': btnHoverBackground,
@@ -73,7 +73,7 @@ export default function Card({ cardName, path, image, text, color, emoji }) {
         </button>
       </div>
       <div
-        className={`flex justify-around items-start py-2 h-20 w-full text-white ${bgColor}`}
+        className={`flex justify-around items-start py-2 h-10 lg:h-16 w-full text-white ${bgColor}`}
       >
         {/* <div className="flex flex-col justify-center items-center gap-1">
           <h1>Comments</h1>
