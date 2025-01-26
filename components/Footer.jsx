@@ -43,9 +43,9 @@ export default function Footer() {
       <footer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  xl:grid-cols-4 justify-between items-center gap-2  border-t-[18px] border-one w-full h-full text-gray-400 mt-8 p-4">
         <div className=" p-2 min-h-72 h-full rounded-[5px] my-2 bg-gray-600/10">
           <h1 className="text-center hover:text-white text-lg w-full select-none my-2">
-            موقع عقار للعقارات
+            موقع عقار
           </h1>
-          <p className="text-center w-full select-none my-2 text-sm xl:text-md leading-loose hover:text-white">
+          <p className="text-start w-full select-none my-2 text-sm xl:text-md leading-loose hover:text-white">
             بصفتنا موقعًا متخصصًا في مجال العقارات، نضع الدقة والأمانة على رأس
             أولوياتنا لضمان تقديم أفضل تجربة في قطاع العقارات. نحن ملتزمون
             بتلبية جميع توقعات عملائنا من خلال توفير حلول عقارية متكاملة
@@ -63,11 +63,11 @@ export default function Footer() {
           </h1>
           <ul className="flex flex-col justify-start gap-2 items-start h-20 w-full">
             <div
-              className="flex items-center justify-between gap-2 w-full text-seven hover:text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300"
+              className="flex items-center justify-start gap-2 w-full text-seven hover:text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300"
               onClick={() => router.push('/')}
             >
-              <li className=" text-md sm:text-lg select-none">الرئيسية</li>
               <FaHome className="text-lg select-none text-one" />
+              <li className=" text-md sm:text-lg select-none">الرئيسية</li>
             </div>
             <div className="flex items-center justify-between gap-2 w-full text-seven hover:text-white hover:border border-one rounded-lg h-6">
               {session?.status === 'unauthenticated' && (
@@ -75,52 +75,52 @@ export default function Footer() {
                   className="flex items-center justify-between gap-2 w-full text-seven hover:text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer hover:shadow-sm shadow-gray-300  p-2 px-8 h-6 transition-all duration-300"
                   onClick={() => router.push('/login')}
                 >
+                  <GiExitDoor className="text-lg select-none text-one" />
                   <li className=" text-md sm:text-lg select-none">
                     تسجيل الدخول
                   </li>
-                  <GiExitDoor className="text-lg select-none text-one" />
                 </div>
               )}
               {session?.status === 'authenticated' && (
                 <div
-                  className="flex items-center justify-between gap-2 w-full text-seven hover:text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300"
+                  className="flex items-center justify-start gap-2 w-full text-seven hover:text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300"
                   onClick={() => router.push('/profile')}
                 >
-                  <li className=" text-md sm:text-lg select-none">بروفايل</li>
                   <GiExitDoor className="text-lg select-none text-one" />
+                  <li className=" text-md sm:text-lg select-none">بروفايل</li>
                 </div>
               )}
             </div>
             <div
-              className="flex items-center justify-between gap-2 w-full text-seven hover:text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300"
+              className="flex items-center justify-start gap-2 w-full text-seven hover:text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300"
               onClick={() => router.push('/contactUs')}
             >
+              <FcConferenceCall className="text-lg select-none text-one" />
               <li className=" text-md sm:text-lg select-none text-nowrap">
                 اتصل بنا
               </li>
-              <FcConferenceCall className="text-lg select-none text-one" />
             </div>
 
             <div
-              className="flex items-center justify-between gap-2 w-full text-seven hover:text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300"
+              className="flex items-center justify-start gap-2 w-full text-seven hover:text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300"
               onClick={() => router.push('/newPost')}
             >
-              <li className=" text-md sm:text-lg select-none">بيع</li>
               <FaDollarSign className="text-lg select-none text-one" />
+              <li className=" text-md sm:text-lg select-none">بيع</li>
             </div>
             <div
-              className="flex items-center justify-between gap-2 w-full text-seven hover:text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300"
+              className="flex items-center justify-start gap-2 w-full text-seven hover:text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300"
               onClick={() => router.push('/buy')}
             >
-              <li className=" text-md sm:text-lg select-none">شراء</li>
               <GiPayMoney className="text-lg select-none text-one" />
+              <li className=" text-md sm:text-lg select-none">شراء</li>
             </div>
             <div
-              className="flex items-center justify-between gap-2 w-full text-seven hover:text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300"
+              className="flex items-center justify-start gap-2 w-full text-seven hover:text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300"
               onClick={() => router.push('/rent')}
             >
-              <li className=" text-md sm:text-lg select-none">إيجار</li>
               <MdOutlineBedroomParent className="text-lg select-none text-one" />
+              <li className=" text-md sm:text-lg select-none">إيجار</li>
             </div>
           </ul>
         </div>
@@ -174,19 +174,18 @@ export default function Footer() {
               <span className="text-nowrap">waelkamira@gmail.com</span>
             </div>
             <div
-              className="flex items-center justify-between gap-2 w-full text-seven hover:text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300"
+              className="flex flex-col sm:flex-row items-start justify-between gap-2 w-full text-seven hover:text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer px-2 xl:px-8 h-6 transition-all duration-300"
               onClick={() => handleCopy('ramond.shnaidr@hotmail.com')} // إضافة حدث النقر
             >
               <div className="flex gap-1 items-center">
                 <MdOutlineAlternateEmail className="text-lg select-none text-one" />
-                <li className=" text-md sm:text-lg select-none text-nowrap">
-                  hotmail{' '}
-                </li>
+                <li className="text-md sm:text-lg text-nowrap">hotmail</li>
               </div>
-              <span className="text-nowrap line-clamp-1">
-                ramond.shnaidr@hotmail.com
+              <span className="text-nowrap">
+                {' '}
+                <span className="text-nowrap">ramond.shnaidr@hotmail.com</span>
               </span>
-            </div>{' '}
+            </div>
             {/* <div className="flex items-center justify-between gap-2 w-full text-seven hover:text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300">
             <div className="flex gap-1 items-center">
               <FaCalendarDays className="text-lg select-none text-one" />

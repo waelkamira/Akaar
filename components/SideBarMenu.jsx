@@ -12,7 +12,7 @@ export default function SideBarMenu({ setIsOpen }) {
   const user = CurrentUser();
 
   return (
-    <div className=" p-4 w-52 mx-2 h-fit border-[5px] border-one bg-four">
+    <div className=" p-4 w-52 mx-2 h-fit rounded-[5px] border border-one bg-four">
       {session?.status === 'authenticated' && (
         <Link href={'/profile?username'}>
           <div className="flex flex-col justify-between items-center  w-full">

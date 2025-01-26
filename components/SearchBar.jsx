@@ -86,16 +86,16 @@ export default function SearchBar({ propertyCategory }) {
   };
 
   return (
-    <div className="flex flex-col w-full xl:w-[90%] 2xl:w-[70%] h-[1370px] px-2 sm:px-16 pt-4 overflow-y-auto z-10 ">
-      <div className="relative flex justify-between items-center w-full gap-2 my-2 bg-one p-2 rounded-[5px]">
+    <div className="flex flex-col w-full xl:w-[90%] 2xl:w-[70%] h-[1370px] px-2 sm:px-16 pt-2 overflow-y-auto z-10 ">
+      <div className="relative flex justify-between items-center w-full gap-2 my-2 bg-one p-1 md:p-2 rounded-[5px]">
         <div>
           <TfiMenuAlt
-            className="text-[40px] lg:text-5xl text-white cursor-pointer"
+            className="text-[30px] lg:text-5xl text-white cursor-pointer"
             onClick={() => {
               setIsOpen(!isOpen);
             }}
           />
-          <div className="absolute top-14 right-0 z-50">
+          <div className="absolute top-14 lg:top-20 right-0 z-50">
             {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
           </div>
         </div>
