@@ -68,7 +68,7 @@ export default function HomePage() {
               }
               color={'green'}
               image={'https://i.imgur.com/9gIMgUg.png'}
-              emoji={<GiCarKey className="text-gray-700" />}
+              emoji={<GiCarKey className="text-gray-200" />}
             />
             <Card
               cardName={'تأجير عقار'}

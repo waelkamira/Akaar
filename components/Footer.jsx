@@ -41,7 +41,7 @@ export default function Footer() {
     <>
       {' '}
       <footer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  xl:grid-cols-4 justify-between items-center gap-2  border-t-[18px] border-one w-full h-full text-gray-400 mt-8 p-4">
-        <div className=" p-2 min-h-72 h-full rounded-[5px] my-2 bg-gray-600/10">
+        <div className=" p-2 min-h-72 h-full rounded-[5px] my-2 bg-nine">
           <h1 className="text-center hover:text-white text-lg w-full select-none my-2">
             موقع عقار
           </h1>
@@ -57,7 +57,7 @@ export default function Footer() {
             أقصى درجات الرضا والثقة.
           </p>
         </div>
-        <div className=" p-2 min-h-72 h-full rounded-[5px] my-2 bg-gray-600/10">
+        <div className=" p-2 min-h-72 h-full rounded-[5px] my-2 bg-nine">
           <h1 className="text-center hover:text-white text-lg w-full select-none my-2">
             وصول سريع{' '}
           </h1>
@@ -125,7 +125,7 @@ export default function Footer() {
           </ul>
         </div>
 
-        <div className=" p-2 min-h-72 h-full rounded-[5px] my-2 bg-gray-600/10">
+        <div className=" p-2 min-h-72 h-full rounded-[5px] my-2 bg-nine">
           <h1 className="text-center hover:text-white text-lg w-full select-none my-2">
             معلومات الإتصال{' '}
           </h1>
@@ -206,7 +206,7 @@ export default function Footer() {
           </div> */}
           </ul>
         </div>
-        <div className=" p-2 min-h-72 h-full rounded-[5px] my-2 bg-gray-600/10">
+        <div className=" p-2 min-h-72 h-full rounded-[5px] my-2 bg-nine">
           <h1 className="text-center hover:text-white text-lg w-full select-none my-2">
             ساعات العمل{' '}
           </h1>

@@ -44,22 +44,30 @@ export default function Card({ cardName, path, image, text, color, emoji }) {
       : '#aaaaaa';
 
   return (
-    <div className="w-full sm:w-96 bg-white rounded-3xl overflow-hidden hover:scale-[102%] transition-transform duration-300 ease-in-out cursor-pointer">
+    <div
+      className={`w-full sm:w-96 bg-nine text-white rounded-3xl border ${
+        color === 'red'
+          ? 'border-[#F83354]'
+          : color === 'orange'
+          ? 'border-[#ffa500]'
+          : color === 'green'
+          ? 'border-[#5F5D59]'
+          : 'border-[#cccccc]'
+      }  overflow-hidden hover:scale-[102%] transition-transform duration-300 ease-in-out cursor-pointer`}
+    >
       <div
         onClick={() => router.push(path)}
         className={`relative w-full h-[200px] lg:h-[300px] overflow-hidden border-l-[18px] ${borderColor}`}
       >
         <Image src={image} fill objectFit="cover" alt={cardName} />
       </div>
-      <h1 className="relative text-lg lg:text-2xl my-2 lg:my-4 font-bold text-center w-full">
+      <h1 className="relative text-lg lg:text-2xl my-2 lg:my-4 font-medium text-center w-full">
         {cardName}
         <span className="absolute left-[65%] top-1/4 mx-auto my-auto">
           {emoji}
         </span>
       </h1>
-      <p className="p-2 px-4 text-sm lg:text-lg select-none xl:font-semibold">
-        {text}
-      </p>
+      <p className="p-2 px-4 text-sm lg:text-lg select-none">{text}</p>
       <div className="px-4 mt-2">
         <button
           onClick={() => router.push(path)}
@@ -73,7 +81,7 @@ export default function Card({ cardName, path, image, text, color, emoji }) {
         </button>
       </div>
       <div
-        className={`flex justify-around items-start py-2 h-10 lg:h-16 w-full text-white ${bgColor}`}
+        className={`flex justify-around items-start py-2 h-10 lg:h-12 w-full text-white ${bgColor}`}
       >
         {/* <div className="flex flex-col justify-center items-center gap-1">
           <h1>Comments</h1>

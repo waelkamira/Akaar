@@ -164,7 +164,7 @@ export default function SmallItem({ post, index, show = true, id = false }) {
             className="cursor-pointer flex justify-start items-center gap-2 w-fit h-fit "
           >
             <div className="overflow-hidden ">
-              <div className="relative size-8 sm:size-12   overflow-hidden">
+              <div className="relative size-8 sm:size-12 rounded-[5px] overflow-hidden">
                 {!post?.userImage && <LoadingPhoto />}
                 {post?.userImage && (
                   <Image
@@ -279,7 +279,7 @@ export default function SmallItem({ post, index, show = true, id = false }) {
               ));
             }
           }}
-          className="sm:text-2xl p-2 my-2 bg-one text-white hover:scale-[101%] hover:text-white font-medium text-center select-none w-full  shadow-sm shadow-gray-300  transition-all duration-300  rounded-[5px]"
+          className="sm:text-2xl p-2 my-2 bg-one text-white hover:scale-[101%] hover:text-white font-medium text-center select-none w-full hover:shadow-gray-400 shadow-lg  transition-all duration-300  rounded-[5px]"
         >
           عرض الإعلان
         </button>

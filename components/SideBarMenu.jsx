@@ -56,7 +56,7 @@ export default function SideBarMenu({ setIsOpen }) {
       )}
 
       <button
-        className="text-sm p-0.5 my-2 bg-red-600 text-white text-nowrap select-none rounded-lg w-full max-h-12 hover:text-white border hover:border-[#596067] hover:scale-[101%]"
+        className="text-sm p-0.5 my-2 bg-one text-white text-nowrap select-none rounded-lg w-full max-h-12 hover:text-white border hover:border-[#596067] hover:scale-[101%]"
         onClick={() => setIsOpen(false)}
       >
         إغلاق

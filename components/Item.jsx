@@ -80,20 +80,25 @@ export default function Item({
         </div>
       )}
       {session?.status === 'authenticated' && (
-        <div className="relative flex flex-col items-start w-full bg-four h-full p-2 lg:p-4 ">
-          <BackButton />
-          <div className="absolute flex flex-col  items-start gap-2 z-50 top-2 right-2 sm:top-4 sm:right-4 xl:right-12 xl:top-12 ">
-            <TfiMenuAlt
-              className="xl:hidden p-1 items-center  text-4xl lg:text-5xl text-one cursor-pointer z-50  "
-              onClick={() => {
-                setIsOpen(!isOpen);
-              }}
-            />
-            {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
+        <div className="flex flex-col justify-center items-center w-full xl:w-[90%] 2xl:w-[70%] h-full sm:px-16 pt-2 overflow-y-auto z-10 px-2">
+          <div className="relative flex justify-between items-center w-full gap-2 my-2 bg-one p-1 md:p-2 rounded-[5px]">
+            <div>
+              <TfiMenuAlt
+                className="text-[30px] lg:text-5xl text-white cursor-pointer"
+                onClick={() => {
+                  setIsOpen(!isOpen);
+                }}
+              />
+              <div className="absolute top-14 lg:top-20 right-0 z-50">
+                {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
+              </div>
+            </div>
+
+            <BackButton />
           </div>
 
           <div className="flex justify-center w-full ">
-            <div className="flex flex-col w-full 2xl:w-2/3  p-2 sm:p-8 mt-12 bg-six border-t-[20px] border-one rounded-t-lg">
+            <div className="flex flex-col w-full p-2 sm:p-8 my-2 bg-six border-t-[20px] border-one rounded-t-lg">
               <div className="flex justify-start items-center gap-2 w-full mb-4">
                 <div className="relative size-14 overflow-hidden rounded-xl">
                   {!userImage && <LoadingPhoto />}
