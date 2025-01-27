@@ -17,15 +17,20 @@ import { inputsContext } from '../../../components/Context';
 import { getVideoIdAndPlatform } from '../../../components/youtubeUtils';
 import LoadingPhoto from '../../../components/LoadingPhoto';
 import ImageSlider from '../../../components/imageSlider';
-
+import { property } from 'lodash';
+import PropertyRoomsNumberSelector from '../../../components/roomsNumberSelector';
+import EditItem from '../../../components/editItem';
+import OnClickMap from '../../../components/map/onClickMap';
 export default function EditPost() {
   const [url, setUrl] = useState('');
   const [embedLink, setEmbedLink] = useState('');
   const { data } = useContext(inputsContext);
   const [isOpen, setIsOpen] = useState(false);
   const session = useSession();
-  const [editedPost, setEditedPost] = useState([]);
+  const [editedPost, setEditedPost] = useState({});
   const { id } = useParams();
+  const { location } = useContext(inputsContext);
+  console.log('location', location);
   const [inputs, setInputs] = useState({
     image: editedPost?.image,
     image1: editedPost?.image1,
@@ -37,21 +42,30 @@ export default function EditPost() {
     propertyPrice: editedPost?.propertyPrice,
     propertyArea: editedPost?.propertyArea,
     propertyCity: editedPost?.propertyCity,
+    propertyTown: editedPost?.propertyTown,
+    propertyRoomsNumber: editedPost?.propertyRoomsNumber,
     contactPhoneNumber: editedPost?.contactPhoneNumber,
+    lat: location[0] || editedPost?.lat,
+    lng: location[1] || editedPost?.lng,
     description: editedPost?.description,
     link: editedPost?.linkValue, // التعامل مع الحقل `link` بشكل صحيح
     hearts: editedPost?.hearts,
     userName: editedPost?.userName,
     userImage: editedPost?.userImage,
   });
+  console.log('inputs', inputs);
 
   useEffect(() => {
-    setInputs({
-      ...inputs,
-      image: data?.image,
-    });
     fetchEditedPost();
   }, []);
+
+  useEffect(() => {
+    if (location) {
+      setEditedPost({ ...editedPost, lat: location[0], lng: location[1] });
+      setInputs({ ...inputs, lat: location[0], lng: location[1] });
+    }
+  }, [location]);
+
   let iframeSrc = null;
 
   if (typeof document !== 'undefined') {
@@ -79,6 +93,28 @@ export default function EditPost() {
     if (res.ok) {
       console.log('json from editedPost', json);
       setEditedPost(json);
+      setInputs({
+        image: json?.image,
+        image1: json?.image1,
+        image2: json?.image2,
+        image3: json?.image3,
+        image4: json?.image4,
+        propertyName: json?.propertyName,
+        propertyType: json?.propertyType,
+        propertyPrice: json?.propertyPrice,
+        propertyArea: json?.propertyArea,
+        propertyCity: json?.propertyCity,
+        propertyTown: json?.propertyTown,
+        lat: location[0] || json?.lat,
+        lng: location[1] || json?.lng,
+        propertyRoomsNumber: json?.propertyRoomsNumber,
+        contactPhoneNumber: json?.contactPhoneNumber,
+        description: json?.description,
+        link: json?.linkValue, // التعامل مع الحقل `link` بشكل صحيح
+        hearts: json?.hearts,
+        userName: json?.userName,
+        userImage: json?.userImage,
+      });
     }
   };
 
@@ -131,7 +167,7 @@ export default function EditPost() {
     }
   };
   return (
-    <>
+    <div className="flex flex-col justify-center items-center w-full">
       {session?.status === 'unauthenticated' && (
         <div className="p-4 bg-four  m-2 md:m-8 border rounded-md rounded-md-one text-center h-screen">
           <h1 className="text-lg md:text-2xl p-2 my-8 ">
@@ -144,28 +180,34 @@ export default function EditPost() {
         </div>
       )}
       {session?.status === 'authenticated' && (
-        <div className="relative flex flex-col items-start w-full bg-four h-full p-2 lg:p-8 ">
-          <BackButton />
-          <div className="absolute flex flex-col items-start gap-2 z-50 top-2 right-2 sm:top-4 sm:right-4 xl:right-12 xl:top-12 ">
-            <TfiMenuAlt
-              className=" p-1  text-4xl lg:text-5xl text-one cursor-pointer z-50  "
-              onClick={() => {
-                setIsOpen(!isOpen);
-              }}
-            />
-            {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
+        <div className="flex flex-col justify-center items-center w-full xl:w-[90%] 2xl:w-[70%] h-full sm:px-16 pt-2 overflow-y-auto z-10 px-2">
+          <div className="relative flex justify-between items-center w-full gap-2 my-2 bg-one p-1 md:p-2 rounded-[5px]">
+            <div>
+              <TfiMenuAlt
+                className="text-[30px] lg:text-5xl text-white cursor-pointer"
+                onClick={() => {
+                  setIsOpen(!isOpen);
+                }}
+              />
+              <div className="absolute top-14 lg:top-20 right-0 z-50">
+                {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
+              </div>
+            </div>
+
+            <BackButton />
           </div>
 
-          <div className="flex justify-between items-center w-full gap-4 sm:my-8">
-            <h1 className="grow text-lg lg:text-3xl w-full text-white select-none mt-16">
-              الإعلان:
+          <div className="flex flex-col justify-start items-center w-full gap-4 py-4">
+            <h1 className="grow text-lg lg:text-2xl w-full text-white">
+              <span className="text-one  text-2xl ml-2">#</span>
+              الإعلان
             </h1>
           </div>
           <div className="flex justify-center w-full">
-            <div className="flex flex-col w-full 2xl:w-2/3 border rounded-md p-2 sm:p-8 mt-8 bg-white">
+            <div className="flex flex-col w-full border rounded-md p-2 sm:p-8 mt-4 bg-white">
               <div className="flex justify-start items-center gap-2 w-full mb-4">
                 {/* صورة المستخدم */}
-                <div className="relative size-14 overflow-hidden rounded-xl">
+                <div className="relative size-8 sm:size-10 lg:size-14 overflow-hidden rounded-[5px]">
                   {!editedPost?.userImage && <LoadingPhoto />}
                   {editedPost?.userImage && (
                     <Image
@@ -193,55 +235,17 @@ export default function EditPost() {
               </div>
 
               {/* الاسم */}
-              <div className=" flex flex-col justify-start items-start gap-1 sm:gap-4">
-                <h1>اسم الاعلان</h1>
-                <h1
-                  className="relative grow text-one p-2 text-2xl text-center select-none h-12 border rounded-md w-full focus:outline-one"
-                  autoFocus="true"
-                  contentEditable="true"
-                  onInput={(e) =>
-                    setInputs({
-                      ...inputs,
-                      propertyName: e.currentTarget.textContent,
-                    })
-                  }
-                >
-                  {inputs?.propertyName || editedPost?.propertyName}
-                  {/* //? هذا السبان لابقاء الفوكس */}
-                  <span
-                    contentEditable="false"
-                    className={
-                      inputs?.propertyName && editedPost?.propertyName
-                        ? 'hidden'
-                        : ''
-                    }
-                  >
-                    &#13;&#10;
-                  </span>
-
-                  <MdEdit className="absolute top-0 -right-6  text-2xl text-one" />
-                </h1>
-
-                <button
-                  onClick={() => handleEditPost()}
-                  className="bg-five mb-2 w-full sm:w-fit hover:bg-five hover:scale-105 border rounded-md text-center select-none   p-2"
-                >
-                  حفظ التعديلات
-                </button>
-              </div>
+              <EditItem
+                inputs={inputs}
+                setInputs={setInputs}
+                title={'عنوان الإعلان :'}
+                property={'propertyName'}
+                handleEditPost={handleEditPost}
+                editedPost={editedPost}
+              />
 
               {/* الصورة */}
-              <div>
-                {/* <UploadingAndDisplayingImage
-                  height={'h-96'}
-                  images={[
-                    editedPost?.image,
-                    editedPost?.image1,
-                    editedPost?.image2,
-                    editedPost?.image3,
-                    editedPost?.image4,
-                  ]}
-                /> */}
+              <div className="w-full">
                 <ImageSlider
                   image={editedPost?.image}
                   image1={editedPost?.image1}
@@ -251,7 +255,7 @@ export default function EditPost() {
                 />{' '}
                 <button
                   onClick={() => handleEditPost()}
-                  className="bg-five mb-2 w-full sm:w-fit mt-4 hover:bg-five hover:scale-105 border rounded-md text-center select-none   p-2"
+                  className="bg-nine mb-2 w-full mt-4 sm:w-fit text-white duration-300 transition-colors ease-in-out hover:bg-one hover:scale-105 border rounded-md text-center select-none   p-2"
                 >
                   حفظ التعديلات
                 </button>
@@ -260,270 +264,100 @@ export default function EditPost() {
               {/* العناصر */}
               <div className=" mt-4">
                 {/* اسم المعلن */}
-                <div>
-                  <div className="flex justify-between items-center my-4 sm:my-8  w-full overflow-visible">
-                    <h1 className="  text-xl sm:text-2xl w-full my-2 select-none">
-                      <span className="text-one  text-2xl mx-2 select-none">
-                        #
-                      </span>
-                      اسم المعلن :
-                    </h1>
-                  </div>
-                  <pre
-                    className="relative grow p-2 text-2xl text-start select-none h-12 border rounded-md w-full focus:outline-one"
-                    contentEditable="true"
-                    onInput={(e) =>
-                      setInputs({
-                        ...inputs,
-                        propertyName: e.currentTarget.textContent,
-                      })
-                    }
-                  >
-                    {editedPost?.propertyName}
-                    {/* //? هذا السبان لابقاء الفوكس */}
-                    <span
-                      contentEditable="false"
-                      className={
-                        inputs?.propertyName && editedPost?.propertyName
-                          ? 'hidden'
-                          : ''
-                      }
-                    >
-                      &#13;&#10;
-                    </span>
-                    <MdEdit className="absolute top-0 -right-6  text-2xl text-one" />
-                  </pre>
-                  <button
-                    onClick={() => handleEditPost()}
-                    className="bg-five mb-2 w-full mt-4 sm:w-fit hover:bg-five hover:scale-105 border rounded-md text-center select-none   p-2"
-                  >
-                    حفظ التعديلات
-                  </button>
-                </div>
+
+                <EditItem
+                  inputs={inputs}
+                  setInputs={setInputs}
+                  title={'اسم المعلن :'}
+                  property={'userName'}
+                  handleEditPost={handleEditPost}
+                  editedPost={editedPost}
+                />
                 {/*  نوع العقار */}
+                <EditItem
+                  inputs={inputs}
+                  setInputs={setInputs}
+                  title={'نوع العقار :'}
+                  property={'propertyType'}
+                  handleEditPost={handleEditPost}
+                  editedPost={editedPost}
+                />
 
-                <div>
-                  <div className="flex justify-between items-center my-4 sm:my-8  w-full overflow-visible">
-                    <h1 className="  text-xl sm:text-2xl w-full my-2 select-none">
-                      <span className="text-one  text-2xl mx-2 select-none">
-                        #
-                      </span>
-                      نوع العقار :
-                    </h1>
-                  </div>
-                  <pre
-                    className="relative grow p-2 text-2xl text-start select-none h-12 border rounded-md w-full focus:outline-one"
-                    contentEditable="true"
-                    onInput={(e) =>
-                      setInputs({
-                        ...inputs,
-                        propertyType: e.currentTarget.textContent,
-                      })
-                    }
-                  >
-                    {editedPost?.propertyType}
-                    {/* //? هذا السبان لابقاء الفوكس */}
-                    <span
-                      contentEditable="false"
-                      className={
-                        inputs?.propertyType && editedPost?.propertyType
-                          ? 'hidden'
-                          : ''
-                      }
-                    >
-                      &#13;&#10;
-                    </span>
-                    <MdEdit className="absolute top-0 -right-6  text-2xl text-one" />
-                  </pre>
-                  <button
-                    onClick={() => handleEditPost()}
-                    className="bg-five mb-2 w-full mt-4 sm:w-fit hover:bg-five hover:scale-105 border rounded-md text-center select-none   p-2"
-                  >
-                    حفظ التعديلات
-                  </button>
-                </div>
+                {/*  عدد الغرف */}
+
+                {inputs?.propertyRoomsNumber !== '0' && (
+                  <EditItem
+                    inputs={inputs}
+                    setInputs={setInputs}
+                    title={'عدد الغرف :'}
+                    property={'propertyRoomsNumber'}
+                    handleEditPost={handleEditPost}
+                    editedPost={editedPost}
+                  />
+                )}
                 {/*  المدينة */}
+                <EditItem
+                  inputs={inputs}
+                  setInputs={setInputs}
+                  title={'المدينة :'}
+                  property={'propertyCity'}
+                  handleEditPost={handleEditPost}
+                  editedPost={editedPost}
+                />
 
-                <div>
-                  <div className="flex justify-between items-center my-4 sm:my-8  w-full overflow-visible">
-                    <h1 className="  text-xl sm:text-2xl w-full my-2 select-none">
-                      <span className="text-one  text-2xl mx-2 select-none">
-                        #
-                      </span>
-                      المدينة :
-                    </h1>
-                  </div>
-                  <pre
-                    className="relative grow p-2 text-2xl text-start select-none h-12 border rounded-md w-full focus:outline-one"
-                    contentEditable="true"
-                    onInput={(e) =>
-                      setInputs({
-                        ...inputs,
-                        propertyCity: e.currentTarget.textContent,
-                      })
-                    }
-                  >
-                    {editedPost?.propertyCity}
-                    {/* //? هذا السبان لابقاء الفوكس */}
-                    <span
-                      contentEditable="false"
-                      className={
-                        inputs?.propertyCity && editedPost?.propertyCity
-                          ? 'hidden'
-                          : ''
-                      }
-                    >
-                      &#13;&#10;
-                    </span>
-                    <MdEdit className="absolute top-0 -right-6  text-2xl text-one" />
-                  </pre>
-                  <button
-                    onClick={() => handleEditPost()}
-                    className="bg-five mb-2 w-full mt-4 sm:w-fit hover:bg-five hover:scale-105 border rounded-md text-center select-none   p-2"
-                  >
-                    حفظ التعديلات
-                  </button>
-                </div>
+                {/*  المنطقة */}
+                <EditItem
+                  inputs={inputs}
+                  setInputs={setInputs}
+                  title={'المنطقة :'}
+                  property={'propertyTown'}
+                  handleEditPost={handleEditPost}
+                  editedPost={editedPost}
+                />
+
                 {/*  المساحة */}
+                <EditItem
+                  inputs={inputs}
+                  setInputs={setInputs}
+                  title={'المساحة :'}
+                  property={'propertyArea'}
+                  handleEditPost={handleEditPost}
+                  editedPost={editedPost}
+                />
 
-                <div>
-                  <div className="flex justify-between items-center my-4 sm:my-8  w-full overflow-visible">
-                    <h1 className="  text-xl sm:text-2xl w-full my-2 select-none">
-                      <span className="text-one  text-2xl mx-2 select-none">
-                        #
-                      </span>
-                      المساحة :
-                    </h1>
-                  </div>
-                  <pre
-                    className="relative grow p-2 text-2xl text-start select-none h-12 border rounded-md w-full focus:outline-one"
-                    contentEditable="true"
-                    onInput={(e) =>
-                      setInputs({
-                        ...inputs,
-                        propertyArea: e.currentTarget.textContent,
-                      })
-                    }
-                  >
-                    {editedPost?.propertyArea}
-                    {/* //? هذا السبان لابقاء الفوكس */}
-                    <span
-                      contentEditable="false"
-                      className={
-                        inputs?.propertyArea && editedPost?.propertyArea
-                          ? 'hidden'
-                          : ''
-                      }
-                    >
-                      &#13;&#10;
-                    </span>
-                    <MdEdit className="absolute top-0 -right-6  text-2xl text-one" />
-                  </pre>
-                  <button
-                    onClick={() => handleEditPost()}
-                    className="bg-five mb-2 w-full mt-4 sm:w-fit hover:bg-five hover:scale-105 border rounded-md text-center select-none   p-2"
-                  >
-                    حفظ التعديلات
-                  </button>
-                </div>
                 {/*  السعر */}
+                <EditItem
+                  inputs={inputs}
+                  setInputs={setInputs}
+                  title={'السعر :'}
+                  property={'propertyPrice'}
+                  handleEditPost={handleEditPost}
+                  editedPost={editedPost}
+                />
 
-                <div>
-                  <div className="flex justify-between items-center my-4 sm:my-8  w-full overflow-visible">
-                    <h1 className="  text-xl sm:text-2xl w-full my-2 select-none">
-                      <span className="text-one  text-2xl mx-2 select-none">
-                        #
-                      </span>
-                      السعر :
-                    </h1>
-                  </div>
-                  <pre
-                    className="relative grow p-2 text-2xl text-start select-none h-12 border rounded-md w-full focus:outline-one"
-                    contentEditable="true"
-                    onInput={(e) =>
-                      setInputs({
-                        ...inputs,
-                        propertyPrice: e.currentTarget.textContent,
-                      })
-                    }
-                  >
-                    {editedPost?.propertyPrice}
-                    {/* //? هذا السبان لابقاء الفوكس */}
-                    <span
-                      contentEditable="false"
-                      className={
-                        inputs?.propertyPrice && editedPost?.propertyPrice
-                          ? 'hidden'
-                          : ''
-                      }
-                    >
-                      &#13;&#10;
-                    </span>
-                    <MdEdit className="absolute top-0 -right-6  text-2xl text-one" />
-                  </pre>
-                  <button
-                    onClick={() => handleEditPost()}
-                    className="bg-five mb-2 w-full mt-4 sm:w-fit hover:bg-five hover:scale-105 border rounded-md text-center select-none   p-2"
-                  >
-                    حفظ التعديلات
-                  </button>
-                </div>
                 {/*  رقم الهاتف */}
+                <EditItem
+                  inputs={inputs}
+                  setInputs={setInputs}
+                  title={'رقم الهاتف :'}
+                  property={'contactPhoneNumber'}
+                  handleEditPost={handleEditPost}
+                  editedPost={editedPost}
+                />
 
-                <div>
-                  <div className="flex justify-between items-center my-4 sm:my-8  w-full overflow-visible">
-                    <h1 className="  text-xl sm:text-2xl w-full my-2 select-none">
-                      <span className="text-one  text-2xl mx-2 select-none">
-                        #
-                      </span>
-                      رقم الهاتف :
-                    </h1>
-                  </div>
-                  <pre
-                    className="relative grow p-2 text-2xl text-start select-none h-12 border rounded-md w-full focus:outline-one"
-                    contentEditable="true"
-                    onInput={(e) =>
-                      setInputs({
-                        ...inputs,
-                        contactPhoneNumber: e.currentTarget.textContent,
-                      })
-                    }
-                  >
-                    {editedPost?.contactPhoneNumber}
-                    {/* //? هذا السبان لابقاء الفوكس */}
-                    <span
-                      contentEditable="false"
-                      className={
-                        inputs?.contactPhoneNumber &&
-                        editedPost?.contactPhoneNumber
-                          ? 'hidden'
-                          : ''
-                      }
-                    >
-                      &#13;&#10;
-                    </span>
-                    <MdEdit className="absolute top-0 -right-6  text-2xl text-one" />
-                  </pre>
-                  <button
-                    onClick={() => handleEditPost()}
-                    className="bg-five mb-2 w-full mt-4 sm:w-fit hover:bg-five hover:scale-105 border rounded-md text-center select-none   p-2"
-                  >
-                    حفظ التعديلات
-                  </button>
-                </div>
                 {/*  الوصف */}
 
                 <div>
                   <div className="flex justify-between items-center my-4 sm:my-8  w-full overflow-visible">
-                    <h1 className="text-xl sm:text-2xl w-full my-2 select-none">
-                      <span className="text-one  text-2xl mx-2 select-none">
+                    <h1 className="  text-lg lg:text-xl xl:text-2xl w-full my-2 select-none">
+                      <span className="text-one text-xl lg:text-2xl mx-2 select-none">
                         #
                       </span>
                       الوصف :
                     </h1>
                   </div>
                   <pre
-                    className="relative grow p-2 text-2xl text-start select-none h-44 border rounded-md w-full focus:outline-one overflow-y-auto"
+                    className="relative grow p-2 text-lg lg:text-xl xl:text-2xl text-start select-none h-44 border rounded-md w-full focus:outline-one overflow-y-auto placeholder:text-sm"
                     contentEditable="true"
                     onInput={(e) =>
                       setInputs({
@@ -533,7 +367,6 @@ export default function EditPost() {
                     }
                   >
                     {editedPost?.description}
-                    {/* //? هذا السبان لابقاء الفوكس */}
                     <span
                       contentEditable="false"
                       className={
@@ -544,39 +377,47 @@ export default function EditPost() {
                     >
                       &#13;&#10;
                     </span>
-                    <MdEdit className="absolute top-0 -right-6  text-2xl text-one" />
+                    <MdEdit className="absolute -top-4 right-0 text-2xl text-one z-50" />
                   </pre>
                   <button
                     onClick={() => handleEditPost()}
-                    className="bg-five mb-2 w-full mt-4 sm:w-fit hover:bg-five hover:scale-105 border rounded-md text-center select-none   p-2"
+                    className="bg-nine mb-2 w-full mt-4 sm:w-fit text-white  duration-300 transition-colors ease-in-out hover:bg-one hover:scale-105 border rounded-md text-center select-none   p-2"
                   >
                     حفظ التعديلات
                   </button>
                 </div>
 
                 {/* الفيديو */}
+                {/* الموقع على الخريطة */}
+                <div className="flex flex-col justify-start items-center w-full gap-4 py-4">
+                  <h1 className="grow text-lg lg:text-2xl w-full">
+                    <span className="text-one  text-2xl ml-2">#</span>
+                    الموقع:
+                  </h1>
+                </div>
+                <OnClickMap lat={editedPost?.lat} lng={editedPost?.lng} />
                 <div>
                   <div className=" flex justify-between items-center my-4 h-10 sm:h-16 w-full overflow-visible">
-                    <h1 className="  text-2xl lg:text-3xl w-full my-2 select-none">
-                      <span className="text-one  text-2xl mx-2 select-none">
+                    <h1 className="  text-lg lg:text-xl xl:text-2xl w-full my-2 select-none">
+                      <span className="text-one text-xl lg:text-2xl mx-2 select-none">
                         #
                       </span>
                       فيديو:
                     </h1>
                   </div>
                   <div className="relative">
-                    <MdEdit className="absolute top-0 -right-6  text-2xl text-one" />
+                    <MdEdit className="absolute -top-4 right-0 text-2xl text-one" />
                     <input
                       type="text"
                       placeholder="الصق رابط الفيديو الجديد هنا ..."
                       value={editedPost?.linkValue}
                       onChange={handleInputChange}
-                      className="text-right w-full p-2  text-lg outline-2 focus:outline-one h-12 border rounded-md "
+                      className="text-right w-full p-2  text-lg outline-2 focus:outline-one h-12 border rounded-md placeholder:text-sm"
                     />
                   </div>
                   <button
                     onClick={() => handleEditPost()}
-                    className="bg-five mb-2 w-full mt-4 sm:w-fit hover:bg-five hover:scale-105 border rounded-md text-center select-none   p-2"
+                    className="bg-nine mb-2 w-full mt-4 sm:w-fit text-white  duration-300 transition-colors ease-in-out hover:bg-one hover:scale-105 border rounded-md text-center select-none   p-2"
                   >
                     حفظ التعديلات
                   </button>
@@ -614,6 +455,6 @@ export default function EditPost() {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }

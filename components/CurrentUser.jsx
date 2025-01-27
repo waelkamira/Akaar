@@ -6,7 +6,7 @@ export default function CurrentUser() {
   const { profile_image } = useContext(inputsContext);
   const [user, setUser] = useState();
   const { data: session, status } = useSession();
-  // console.log('profile_image?.image', profile_image?.image);
+  console.log('user', user);
 
   useEffect(() => {
     if (status === 'authenticated') {
@@ -20,7 +20,7 @@ export default function CurrentUser() {
       // console.log('email', email);
       const response = await fetch(`/api/user?email=${email}`);
       const json = await response?.json();
-      // console.log('json', json);
+      console.log('json', json);
       if (response.ok) {
         if (typeof window !== 'undefined') {
           localStorage.setItem('CurrentUser', JSON.stringify(json[0]));

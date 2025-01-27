@@ -11,6 +11,9 @@ import { MdOutlineBedroomParent } from 'react-icons/md';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
+import { ImProfile } from 'react-icons/im';
+import { MdFavoriteBorder } from 'react-icons/md';
+import { TbTargetArrow } from 'react-icons/tb';
 
 export default function Navbar() {
   const router = useRouter();
@@ -26,7 +29,7 @@ export default function Navbar() {
       <div className="flex justify-between w-full gap-8">
         <ul className="flex justify-evenly gap-4 mr-4 items-center h-20 w-4/6">
           <div
-            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-sm rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 xl:px-8 h-16 transition-all duration-300"
+            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-sm rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-16 transition-all duration-300"
             onClick={() => router.push('/')}
           >
             <FaHome className="text-xl select-none text-one hover:text-eight" />
@@ -44,50 +47,62 @@ export default function Navbar() {
             )}
             {session?.status === 'authenticated' && (
               <div
-                className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-sm rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 xl:px-8 h-16 transition-all duration-300"
+                className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-sm rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-16 transition-all duration-300"
                 onClick={() => router.push('/profile')}
               >
-                <GiExitDoor className="text-xl select-none text-one hover:text-eight" />
+                <ImProfile className="text-xl select-none text-one hover:text-eight" />
                 <li className="text-white text-xl select-none">بروفايل</li>
               </div>
             )}
           </div>
+
           <div
-            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-sm rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 xl:px-8 h-16 transition-all duration-300"
-            onClick={() => router.push('/contactUs')}
-          >
-            <FcConferenceCall className="text-xl select-none text-one hover:text-eight" />
-            <li className="text-white text-xl select-none text-nowrap">
-              اتصل بنا
-            </li>
-          </div>
-          {/* <div
-            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-sm rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 xl:px-8 h-16 transition-all duration-300"
-            onClick={() => router.push('/newPost')}
+            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-sm rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-16 transition-all duration-300"
+            onClick={() => router.push('/myPosts')}
           >
             <FaCanadianMapleLeaf className="text-xl select-none text-one hover:text-eight" />
-            <li className="text-xl select-none text-nowrap">إنشاء إعلان</li>
-          </div> */}
+            <li className="text-white text-md xl:text-xl select-none text-nowrap">
+              إعلاناتي
+            </li>
+          </div>
           <div
-            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-sm rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 xl:px-8 h-16 transition-all duration-300"
+            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-sm rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-16 transition-all duration-300"
+            onClick={() => router.push('/favoritePosts')}
+          >
+            <TbTargetArrow className="text-xl select-none text-one hover:text-eight" />
+            <li className="text-white text-md xl:text-xl select-none text-nowrap">
+              المفضلة{' '}
+            </li>
+          </div>
+          <div
+            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-sm rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-16 transition-all duration-300"
             onClick={() => router.push('/newPost')}
           >
             <FaDollarSign className="text-xl select-none text-one hover:text-eight" />
             <li className="text-white text-xl select-none">بيع</li>
           </div>
           <div
-            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-sm rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 xl:px-8 h-16 transition-all duration-300"
+            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-sm rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-16 transition-all duration-300"
             onClick={() => router.push('/buy')}
           >
             <GiPayMoney className="text-xl select-none text-one hover:text-eight" />
             <li className="text-white text-xl select-none">شراء</li>
           </div>
           <div
-            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-sm rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 xl:px-8 h-16 transition-all duration-300"
+            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-sm rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-16 transition-all duration-300"
             onClick={() => router.push('/rent')}
           >
             <MdOutlineBedroomParent className="text-xl select-none text-one hover:text-eight" />
             <li className="text-white text-xl select-none">إيجار</li>
+          </div>
+          <div
+            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-sm rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-16 transition-all duration-300"
+            onClick={() => router.push('/contactUs')}
+          >
+            <FcConferenceCall className="text-xl select-none text-one hover:text-eight" />
+            <li className="text-white text-md xl:text-xl select-none text-nowrap">
+              اتصل بنا
+            </li>
           </div>
         </ul>
         <div

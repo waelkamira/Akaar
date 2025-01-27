@@ -27,10 +27,10 @@ export default function PostForm({ setIsVisible, cancel = true }) {
   const [embedLink, setEmbedLink] = useState('');
   const session = useSession();
   const router = useRouter();
-  const userName = CurrentUser()?.name;
+  const userName = CurrentUser()?.name || session?.data?.user?.name;
   const userImage = CurrentUser()?.image || session?.data?.user?.image;
   const createdBy = CurrentUser()?.email;
-
+  console.log('*********** userName', userName);
   const {
     data,
     dispatch,
@@ -52,7 +52,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
     setInputs({
       ...inputs,
       propertyType: data?.propertyType?.label || '',
-      propertyRoomsNumber: data?.propertyRoomsNumber?.label || '',
+      propertyRoomsNumber: data?.propertyRoomsNumber?.label || '0',
       propertyCity: data?.propertyCity || '',
       propertyTown: data?.propertyTown || '',
       propertyCategory: category?.label || '',
@@ -152,8 +152,8 @@ export default function PostForm({ setIsVisible, cancel = true }) {
         userImage &&
         userName &&
         createdBy &&
-        !['بيت', 'شقة', 'فيلا'].includes(inputs?.propertyType)) || // إذا لم يكن النوع أحد هذه القيم، تجاوز الشرط
-      inputs?.propertyRoomsNumber // إذا كان النوع بيت أو شقة أو فيلا، تحقق من عدد الغرف
+        !['بيت', 'شقة', 'فيلا'].includes(inputs?.propertyType)) ||
+      inputs?.propertyRoomsNumber
     ) {
       try {
         const response = await fetch('/api/allPosts', {
@@ -424,7 +424,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
                     id="مساحة العقار"
                     name="مساحة العقار"
                     placeholder="300 م2"
-                    className="flex text-right w-full p-2 rounded-[5px] text-lg outline-2 focus:outline-one h-12 placeholder:text-lg"
+                    className="flex text-right w-full p-2 rounded-[5px] text-lg outline-2 focus:outline-one h-12 placeholder:text-sm lg:placeholder:text-lg"
                   />
                 </div>
 
@@ -466,7 +466,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
                     id="اسم العقار"
                     name="اسم العقار"
                     placeholder=" بيت بداريا _ أرض بدوما .."
-                    className="flex text-right w-full p-2 rounded-[5px] text-lg outline-2 focus:outline-one h-12 placeholder:text-lg"
+                    className="flex text-right w-full p-2 rounded-[5px] text-lg outline-2 focus:outline-one h-12 placeholder:text-sm lg:placeholder:text-lg"
                   />
                 </div>
 
@@ -507,7 +507,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
                     id="رقم الهاتف"
                     name="رقم الهاتف"
                     placeholder="+963 11 3391 4444"
-                    className="flex text-right w-full p-2 rounded-[5px] text-lg outline-2 focus:outline-one h-12 placeholder:text-lg"
+                    className="flex text-right w-full p-2 rounded-[5px] text-lg outline-2 focus:outline-one h-12 placeholder:text-sm lg:placeholder:text-lg"
                   />
                 </div>
 
@@ -539,7 +539,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
                     id="سعر العقار"
                     name="سعر العقار"
                     placeholder="$ 000.0"
-                    className="flex text-right w-full p-2 rounded-[5px] text-lg outline-2 focus:outline-one h-12 placeholder:text-lg"
+                    className="flex text-right w-full p-2 rounded-[5px] text-lg outline-2 focus:outline-one h-12 placeholder:text-sm lg:placeholder:text-lg"
                   />
                 </div>
               </div>
@@ -571,7 +571,8 @@ export default function PostForm({ setIsVisible, cancel = true }) {
               rows={'6'}
               name="الوصف"
               id="الوصف"
-              className="scrollBar flex text-right w-full p-2  text-xl placeholder:text-lg h-36 outline-2 focus:outline-one rounded-[5px]"
+              placeholder="اكتب مواصفات عقارك هنا ..."
+              className="scrollBar flex text-right w-full p-2  text-xl placeholder:text-sm lg:placeholder:text-lg h-36 outline-2 focus:outline-one rounded-[5px]"
             ></textarea>
           </div>
           <OnClickMap
@@ -596,7 +597,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
               placeholder="... ضع رابط الفيديو هنا"
               value={url}
               onChange={handleInputChange}
-              className="flex text-right mt-4 mb-8 w-full p-2 rounded-[5px] text-lg outline-2 focus:outline-one h-12 placeholder:text-lg"
+              className="flex text-right mt-4 mb-8 w-full p-2 rounded-[5px] text-lg outline-2 focus:outline-one h-12 placeholder:text-sm lg:placeholder:text-lg"
             />
             {inputs?.link && (
               <div>

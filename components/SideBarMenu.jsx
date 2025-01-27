@@ -17,7 +17,7 @@ export default function SideBarMenu({ setIsOpen }) {
         <Link href={'/profile?username'}>
           <div className="flex flex-col justify-between items-center  w-full">
             <div className="flex justify-start items-center w-full cursor-pointer line-clamp-1 mb-2">
-              <div className="relative size-10 overflow-hidden rounded-xl">
+              <div className="relative size-10 overflow-hidden rounded-xl ">
                 {!user?.image && <LoadingPhoto />}
                 {user?.image && (
                   <Image
@@ -47,9 +47,10 @@ export default function SideBarMenu({ setIsOpen }) {
           <Button title={'الرئيسية'} path="/" />
           <Button title={'بيع'} path="/newPost" />
           <Button title={'شراء'} path="/buy" />
+          <Button title={'إيجار'} path="/rent" />
           <Button title={'بروفايلي'} path="/profile" />
           <Button title={'إعلاناتي'} path="/myPosts" />
-          <Button title={'إعلانات أعجبتني'} path={'/favoritePosts'} />
+          <Button title={'المفضلة'} path={'/favoritePosts'} />
           <Button title={'اتصل بنا'} path={'/contactUs'} />
           <Button title={'تسجيل الخروج'} path={'/'} onClick={() => signOut()} />
         </div>
