@@ -21,7 +21,7 @@ export default function CustomToast({
               <Image
                 priority
                 className="h-10 w-10 rounded-xl"
-                src="https://i.imgur.com/rXaNY0v.png"
+                src="https://i.imgur.com/teY3Ui4.jpg"
                 alt="photo"
                 fill
               />

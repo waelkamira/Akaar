@@ -1,3 +1,4 @@
+'use client';
 import React from 'react';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
@@ -5,6 +6,7 @@ import 'slick-carousel/slick/slick-theme.css';
 import Image from 'next/image';
 import LoadingPhoto from './LoadingPhoto'; // تأكد من استيراد مكون التحميل
 import { MdKeyboardArrowRight, MdKeyboardArrowLeft } from 'react-icons/md';
+import { usePathname } from 'next/navigation';
 
 const CustomPrevArrow = (props) => {
   const { onClick } = props;
@@ -59,6 +61,8 @@ const CustomNextArrow = (props) => {
 };
 
 const PostGallery = ({ post }) => {
+  const path = usePathname();
+
   // جمع الصور من الحقول المختلفة في مصفوفة واحدة
   const images = [
     post.image,
@@ -71,7 +75,12 @@ const PostGallery = ({ post }) => {
   if (images.length === 1) {
     // عرض الصورة الوحيدة مباشرةً دون استخدام السلايدر
     return (
-      <div className="relative h-64 sm:h-96 overflow-hidden border border-one w-full">
+      <div
+        className={`relative h-64 
+          ${
+            path.includes('myPosts') ? '' : 'sm:h-96'
+          }  overflow-hidden border border-one w-full`}
+      >
         <Image
           priority
           src={images[0]}
@@ -98,7 +107,12 @@ const PostGallery = ({ post }) => {
     <div className="overflow-hidden rounded-[5px] w-full relative">
       <Slider {...settings}>
         {images.map((image, index) => (
-          <div key={index} className="relative h-64 sm:h-96 overflow-hidden">
+          <div
+            key={index}
+            className="relative h-64   ${
+          path.includes('myPosts') ? '' : 'sm:h-96'
+        } overflow-hidden"
+          >
             <Image
               priority
               src={image}

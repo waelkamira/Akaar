@@ -157,9 +157,9 @@ export default function SmallItem({ post, index, show = true, id = false }) {
       <div
         key={index}
         id="post1"
-        className="flex flex-col justify-center items-center shadow-sm shadow-gray-300  w-full p-2 sm:p-4 rounded-lg mb-4 bg-white border-t-[20px] border-one transition-all duration-300"
+        className="flex flex-col justify-center items-center shadow-sm shadow-gray-300 w-full p-2 my-2 rounded-lg bg-white border-t-[20px] border-one transition-all duration-300"
       >
-        <div className="flex items-center justify-start sm:p-2 w-full">
+        <div className="flex items-center justify-start w-full">
           <Link
             href={'/profile'}
             className="cursor-pointer flex justify-start items-center gap-2 w-fit h-fit "
@@ -198,29 +198,16 @@ export default function SmallItem({ post, index, show = true, id = false }) {
             </div>
           )}
         </div>
-        <h1 className="text-one my-1 sm:my-4 text-xl sm:text-3xl font-medium bg-white select-none line-clamp-1">
+        <h1
+          className={`text-one ${
+            path.includes('myPosts')
+              ? 'sm:my-2 text-lg'
+              : 'sm:my-4 text-xl sm:text-3xl'
+          }  font-medium bg-white select-none line-clamp-1`}
+        >
           {post?.propertyName}
         </h1>
         <PostGallery post={post} />
-        {/* <div
-          className={`relative w-full h-52 sm:h-72 lg:h-96 overflow-hidden  bg-gray-100`}
-        >
-          {!post?.image && <LoadingPhoto />}
-          <div className="flex flex-col">
-            {post?.image && (
-              <div className="col-span-1 md:col-span-3 relative h-72 sm:h-96 border border-one ">
-                <Image
-                  priority
-                  src={post?.image}
-                  alt="الصورة"
-                  layout="fill"
-                  objectFit="cover"
-                  className=""
-                />
-              </div>
-            )}
-          </div>
-        </div> */}
         {show && (
           <>
             <div className="flex justify-between items-center gap-2 w-full text-gray-400 my-2">
@@ -262,7 +249,7 @@ export default function SmallItem({ post, index, show = true, id = false }) {
             <hr className="w-full h-[1.5px] bg-gray-400  border-hidden select-none" />
           </>
         )}
-        <div className="bg-white  p-4 w-full">
+        <div className="bg-white p-2 w-full">
           <pre className="text-sm sm:text-lg text-start w-full line-clamp-1 select-none">
             {post?.description}
           </pre>
@@ -280,7 +267,10 @@ export default function SmallItem({ post, index, show = true, id = false }) {
               ));
             }
           }}
-          className="sm:text-2xl p-2 my-2 bg-one text-white hover:scale-[101%] hover:text-white font-medium text-center select-none w-full hover:shadow-gray-400 shadow-lg  transition-all duration-300  rounded-[5px]"
+          className={`  
+            ${
+              path.includes('myPosts') ? 'text-md' : 'sm:text-2xl'
+            }  p-2 my-2 bg-one text-white hover:scale-[101%] hover:text-white font-medium text-center select-none w-full hover:shadow-gray-400 shadow-lg  transition-all duration-300  rounded-[5px]`}
         >
           عرض الإعلان
         </button>

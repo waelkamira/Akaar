@@ -16,6 +16,9 @@ import Button from '../../components/Button';
 import Loading from '../../components/Loading';
 import { useRouter } from 'next/navigation';
 import { MdEdit } from 'react-icons/md';
+import { LuArrowDownNarrowWide, LuArrowUpNarrowWide } from 'react-icons/lu';
+import { GiBuffaloHead } from 'react-icons/gi';
+import { FiActivity } from 'react-icons/fi';
 
 export default function MyPosts() {
   const [isOpen, setIsOpen] = useState(false);
@@ -36,7 +39,7 @@ export default function MyPosts() {
     const email = session?.data?.user?.email;
     // console.log('email ******', email);
 
-    await fetch(`/api/myPosts?page=${pageNumber}&email=${email}&limit=5`)
+    await fetch(`/api/myPosts?page=${pageNumber}&email=${email}&limit=8`)
       .then((res) => res?.json())
       .then((res) => {
         setmyPosts(res?.posts);
@@ -72,113 +75,126 @@ export default function MyPosts() {
   }
 
   return (
-    <div className="relative w-full bg-four h-full sm:p-4 lg:p-8 ">
-      <div className="absolute flex flex-col items-start gap-2 z-40 top-2 right-2 sm:top-4 sm:right-4 xl:right-12 xl:top-12 ">
-        <TfiMenuAlt
-          className=" p-1  text-4xl lg:text-5xl text-one cursor-pointer z-50  "
-          onClick={() => {
-            setIsOpen(!isOpen);
-          }}
-        />
-        {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
-      </div>
-      {isVisible && (
-        <div className="absolute flex flex-col items-center p-4 bg-four/95 z-50 inset-0 text-white">
-          <div className="sticky top-72 w-full sm:w-1/2 border border-one rounded-[5px]">
-            <h1 className="text-center text-lg sm:text-xl mt-4">
-              هل تريد حذف هذه الإعلان نهائيا؟
-            </h1>
-            <div className="flex justify-between items-center w-full h-24 sm:h-28 z-50 gap-8 p-8">
-              <button
-                onClick={() => handleDeletePost(postId)}
-                className="btn rounded-xl w-full h-full border border-white hover:border-0"
-              >
-                حذف
-              </button>
-              <button
-                onClick={() => setIsVisible(false)}
-                className="btn rounded-xl w-full h-full border border-white hover:border-0"
-              >
-                تراجع
-              </button>
+    <div className="flex justify-center items-center w-full">
+      {' '}
+      <div className="flex flex-col w-full xl:w-[90%] 2xl:w-[70%] h-fit px-2 sm:px-16 pt-2 overflow-y-auto z-10 ">
+        <div className="relative flex justify-between items-center w-full gap-2 my-2 bg-one p-1 md:p-2 rounded-[5px]">
+          <div>
+            <TfiMenuAlt
+              className="text-[30px] lg:text-5xl text-white cursor-pointer"
+              onClick={() => {
+                setIsOpen(!isOpen);
+              }}
+            />
+            <div className="absolute top-14 lg:top-20 right-0 z-50">
+              {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
             </div>
           </div>
+          <button
+            onClick={() => router.push('/newPost')}
+            className="relative text-sm lg:text-xl bg-white h-8 lg:h-11 w-3/4 border-r-[30%] shadow-lg border-one z-40 rounded-[5px] hover:scale-[101%]"
+          >
+            إعلان جديد{' '}
+            <span className="absolute left-3/4 top-1/4 mx-auto my-auto">
+              <FiActivity className="text-one sm:text-sm lg:text-xl" />
+            </span>
+          </button>
+          <BackButton />
         </div>
-      )}
-
-      <div className="flex flex-col justify-start items-center w-full gap-4 my-8">
-        <div className="w-full sm:w-1/3 gap-4 my-8">
-          <Button title={'إنشاء إعلان جديد'} style={' '} path="/newPost" />
-        </div>
-        <BackButton />
-        <h1 className="grow text-lg lg:text-2xl w-full text-white">
-          <span className="text-one  text-2xl ml-2">#</span>
-          إعلاناتي <span className="text-one"> {userPostsCount}</span>
-        </h1>
-      </div>
-      <div className="my-8">
-        {myPosts?.length === 0 && (
-          <Loading
-            myMessage={'😉 لا يوجد نتائج لعرضها ,لم تقم بإنشاء أي إعلان بعد'}
-          />
+        {isVisible && (
+          <div className="absolute flex flex-col items-center p-4 bg-four/95 z-50 inset-0 text-white">
+            <div className="sticky top-72 w-full sm:w-1/2 border border-one rounded-[5px]">
+              <h1 className="text-center text-lg sm:text-xl mt-4">
+                هل تريد حذف هذه الإعلان نهائيا؟
+              </h1>
+              <div className="flex justify-between items-center w-full h-24 sm:h-28 z-50 gap-8 p-8">
+                <button
+                  onClick={() => handleDeletePost(postId)}
+                  className="btn rounded-xl w-full h-full border border-white hover:border-0"
+                >
+                  حذف
+                </button>
+                <button
+                  onClick={() => setIsVisible(false)}
+                  className="btn rounded-xl w-full h-full border border-white hover:border-0"
+                >
+                  تراجع
+                </button>
+              </div>
+            </div>
+          </div>
         )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 px-2 gap-8 justify-center items-center w-full ">
-          {myPosts?.length > 0 &&
-            myPosts.map((post, index) => (
-              <div
-                className="relative flex flex-col items-start justify-start gap-0 bg-one rounded-[5px] overflow-hidden"
-                key={index}
-              >
-                {session?.status === 'authenticated' && (
-                  <div className="flex justify-between items-center bg-twelve w-full pt-4 px-4">
-                    <div
-                      className="flex flex-col items-center justify-center cursor-pointer bg-four rounded-[5px] p-2 md:text-2xl text-white hover:bg-red-400"
-                      onClick={() => router.push(`/editPost/${post?.id}`)}
-                    >
-                      <MdEdit className="" />
-
-                      <h6 className="text-sm select-none">تعديل</h6>
-                    </div>
-                    <div
-                      className="flex flex-col items-center justify-center cursor-pointer bg-four rounded-[5px] p-2 md:text-2xl text-white hover:bg-red-400"
-                      onClick={() => {
-                        setIsVisible(true);
-                        setpostId(post?.id);
-                      }}
-                    >
-                      <IoMdClose className="" />
-                      <h6 className="text-sm select-none">حذف</h6>
-                    </div>
-                  </div>
-                )}
-                <SmallItem post={post} index={index} show={false} />
-              </div>
-            ))}
+        <div className="flex flex-col justify-start items-center w-full gap-4 py-4">
+          <h1 className="grow text-lg lg:text-2xl w-full text-white">
+            <span className="text-one  text-2xl ml-2">#</span>
+            إعلاناتي <span className="text-one"> {userPostsCount}</span>
+          </h1>
         </div>
-        <div className="flex items-center justify-around text-white mt-4">
-          {myPosts?.length >= 5 && (
-            <Link href={'#post1'}>
-              <div
-                className="flex items-center justify-around cursor-pointer"
-                onClick={() => setPageNumber(pageNumber + 1)}
-              >
-                <h1 className="text-white">الصفحة التالية</h1>
-                <MdKeyboardDoubleArrowRight className="text-2xl  text-green-500 select-none" />
-              </div>
-            </Link>
+        <div className="">
+          {myPosts?.length === 0 && (
+            <Loading
+              myMessage={'😉 لا يوجد نتائج لعرضها ,لم تقم بإنشاء أي إعلان بعد'}
+            />
           )}
-          {pageNumber > 1 && (
-            <Link href={'#post1'}>
-              <div
-                className="flex items-center justify-around cursor-pointer"
-                onClick={() => setPageNumber(pageNumber - 1)}
-              >
-                <MdKeyboardDoubleArrowLeft className="text-2xl  text-green-500 select-none" />
-                <h1 className="text-white">الصفحة السابقة</h1>
-              </div>
-            </Link>
-          )}
+
+          <div className="grid grid-cols-1 lg:grid-cols-2  2xl:grid-cols-4 p-2 sm:p-4 gap-4 justify-start items-start w-full sm:border-2 border-seven rounded-[5px]">
+            {myPosts?.length > 0 &&
+              myPosts.map((post, index) => (
+                <div
+                  className="relative flex flex-col items-start justify-start hover:scale-[101%] transition-transform duration-300 ease-in-out cursor-pointer bg-one rounded-[5px] overflow-hidden"
+                  key={index}
+                >
+                  {session?.status === 'authenticated' && (
+                    <div className="flex justify-between items-center w-full p-2 pb-0">
+                      <div
+                        className="flex flex-col items-center justify-center cursor-pointer bg-four rounded-[5px] p-1 md:text-xl text-white hover:bg-red-500 hover:scale-[105%] transition-transform duration-150 ease-in-out"
+                        onClick={() => router.push(`/editPost/${post?.id}`)}
+                      >
+                        <MdEdit />
+
+                        <h6 className="text-sm select-none">تعديل</h6>
+                      </div>
+                      <div
+                        className="flex flex-col items-center justify-center cursor-pointer bg-four rounded-[5px] p-1 md:text-xl text-white hover:bg-red-500 hover:scale-[105%] transition-transform duration-150 ease-in-out"
+                        onClick={() => {
+                          setIsVisible(true);
+                          setpostId(post?.id);
+                        }}
+                      >
+                        <IoMdClose className="" />
+                        <h6 className="text-sm select-none">حذف</h6>
+                      </div>
+                    </div>
+                  )}
+                  <SmallItem post={post} index={index} show={false} />
+                </div>
+              ))}
+          </div>
+          <div className="flex items-center justify-around text-white mt-4">
+            {myPosts?.length >= 5 && (
+              <Link href={'#post1'}>
+                <div
+                  className="flex items-center justify-around cursor-pointer py-4"
+                  onClick={() => setPageNumber(pageNumber + 1)}
+                >
+                  <h1 className="text-white">الصفحة التالية</h1>
+                  <MdKeyboardDoubleArrowRight className="text-2xl  text-green-500 select-none" />
+                </div>
+              </Link>
+            )}
+            {pageNumber > 1 && (
+              <Link href={'#post1'}>
+                <div
+                  className="flex items-center justify-around cursor-pointer py-4"
+                  onClick={() => setPageNumber(pageNumber - 1)}
+                >
+                  <MdKeyboardDoubleArrowLeft className="text-2xl  text-green-500 select-none" />
+                  <h1 className="text-white">الصفحة السابقة</h1>
+                </div>
+              </Link>
+            )}
+          </div>
         </div>
       </div>
     </div>
