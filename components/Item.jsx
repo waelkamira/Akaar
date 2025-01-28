@@ -22,6 +22,7 @@ import { MdOutlineFeaturedPlayList } from 'react-icons/md';
 import { RxVideo } from 'react-icons/rx';
 import { MdOutlineBedroomParent } from 'react-icons/md';
 import { FaTreeCity } from 'react-icons/fa6';
+import UserNameAndPhoto from './userNameAndPhoto';
 
 export default function Item({
   contactPhoneNumber,
@@ -99,25 +100,12 @@ export default function Item({
 
           <div className="flex justify-center w-full ">
             <div className="flex flex-col w-full p-2 sm:p-8 my-2 bg-six border-t-[20px] border-one rounded-t-lg">
-              <div className="flex justify-start items-center gap-2 w-full mb-4">
-                <div className="relative size-14 overflow-hidden rounded-[5px]">
-                  {!userImage && <LoadingPhoto />}
-                  {userImage && (
-                    <Image priority src={userImage} fill alt={propertyName} />
-                  )}
-                </div>
-                <div className="flex flex-col justify-center">
-                  <h6 className="text-[13px] sm:text-[18px] text-eight select-none">
-                    {userName}
-                  </h6>
-                  <h1
-                    className="text-[8px] sm:text-[12px] text-gray-400 select-none text-end"
-                    dir="ltr"
-                  >
-                    {formatDate(createdAt)}
-                  </h1>
-                </div>
-              </div>
+              <UserNameAndPhoto
+                userImage={userImage}
+                userName={userName}
+                createdAt={createdAt}
+              />
+
               <h1 className="text-one my-4 sm:my-4 text-3xl sm:text-4xl lg:text-5xl text-center select-none   p-2 sm:p-4">
                 {propertyName}
               </h1>

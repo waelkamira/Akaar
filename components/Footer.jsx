@@ -41,7 +41,7 @@ export default function Footer() {
     <>
       {' '}
       <footer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  xl:grid-cols-4 justify-between items-center gap-2  border-t-[18px] border-one w-full h-full text-gray-400 mt-8 p-4">
-        <div className=" p-2 min-h-72 h-full rounded-[5px] my-2 bg-nine">
+        <div className=" p-2 min-h-72 h-full rounded-[5px] my-2 bg-nine cursor-pointer">
           <h1 className="text-center hover:text-white text-lg w-full select-none my-2">
             موقع عقار
           </h1>
