@@ -21,7 +21,7 @@ export default function Page() {
   }
 
   return (
-    <div className="flex flex-col justify-center items-center w-full">
+    <div className="flex flex-col justify-center items-center w-full bg-gradient-to-r from-[#494949] to-four">
       <Item {...onePost} />
     </div>
   );

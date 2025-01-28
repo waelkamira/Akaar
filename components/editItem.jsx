@@ -45,7 +45,7 @@ export default function EditItem({
 
       <button
         onClick={() => handleEditPost()}
-        className="bg-nine mb-2 w-full mt-4 sm:w-fit text-white duration-300 transition-colors ease-in-out hover:bg-one hover:scale-105 border rounded-md text-center select-none p-2"
+        className="bg-gray-600 mb-2 w-full mt-4 sm:w-fit text-white duration-300 transition-colors ease-in-out hover:bg-one hover:scale-105 border rounded-md text-center select-none p-2"
       >
         حفظ التعديلات
       </button>

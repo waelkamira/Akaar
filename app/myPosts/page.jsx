@@ -75,7 +75,7 @@ export default function MyPosts() {
   }
 
   return (
-    <div className="flex justify-center items-center w-full">
+    <div className="flex justify-center items-center w-full bg-gradient-to-tr from-[#494949] to-four rounded-b-[5px]">
       {' '}
       <div className="flex flex-col w-full xl:w-[90%] 2xl:w-[70%] h-fit px-2 sm:px-16 pt-2 overflow-y-auto z-10 ">
         <div className="relative flex justify-between items-center w-full gap-2 my-2 bg-one p-1 md:p-2 rounded-[5px]">

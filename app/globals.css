@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-  @apply bg-gradient-to-tr from-[#bb8a2f] to-four rubik xl:p-16;
+  @apply bg-gradient-to-tr from-[#bb8a2f] to-four rubik xl:p-20;
 }
 body {
   font-family: 'Rubik', sans-serif;
@@ -201,3 +201,40 @@ body {
   font-size: 14px;
   color: black;
 }
+
+/* ===== CUSTOM FONTS ====== */
+@font-face {
+  font-family: 'vanguardcf-heavy';
+  src: url('/fonts/vanguardcf-heavy.otf');
+  font-weight: bold;
+}
+@font-face {
+  font-family: 'vanguardcf-thin';
+  src: url('/fonts/vanguardcf-thin.otf');
+  font-weight: thin;
+}
+@font-face {
+  font-family: 'Raleway-light';
+  src: url('/fonts/Raleway-light.ttf');
+  font-weight: light;
+}
+
+/* @font-face {
+  font-family: stratosweb-bold;
+  src: url('../public/fonts/stratosweb-bold-Bold.ttf');
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: stratosweb-bold;
+  src: url('../public/fonts/stratosweb-bold-Black.ttf');
+  font-weight: 900;
+}
+
+@font-face {
+  font-family: stratosweb-bold;
+  src: url('../public/fonts/stratosweb-bold-Light.ttf');
+  font-weight: 200;
+} */
+
+/* =====// CUSTOM FONTS //====== */
