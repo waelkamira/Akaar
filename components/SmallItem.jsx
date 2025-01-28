@@ -13,6 +13,7 @@ import { FaHeart } from 'react-icons/fa';
 import { inputsContext } from '../components/Context';
 import PostGallery from './PostGallery';
 import LoadingPhoto from './LoadingPhoto';
+import UserNameAndPhoto from './userNameAndPhoto';
 
 export default function SmallItem({ post, index, show = true, id = false }) {
   const [currentUser, setCurrentUser] = useState('');
@@ -160,33 +161,11 @@ export default function SmallItem({ post, index, show = true, id = false }) {
         className="flex flex-col justify-center items-center shadow-sm shadow-gray-300 w-full p-2 my-2 rounded-lg bg-white border-t-[20px] border-one transition-all duration-300"
       >
         <div className="flex items-center justify-start w-full">
-          <Link
-            href={'/profile'}
-            className="cursor-pointer flex justify-start items-center gap-2 w-fit h-fit "
-          >
-            <div className="overflow-hidden ">
-              <div className="relative size-8 sm:size-12 rounded-[5px] overflow-hidden">
-                {!post?.userImage && <LoadingPhoto />}
-                {post?.userImage && (
-                  <Image
-                    priority
-                    src={post?.userImage}
-                    layout="fill"
-                    objectFit="cover"
-                    alt={post?.postName}
-                  />
-                )}
-              </div>
-            </div>
-            <div className="flex flex-col justify-center items-start">
-              <h6 className="text-[16px] text-one select-none">
-                {post?.userName}{' '}
-              </h6>
-              <h1 className="text-[10px] text-gray-400 select-none" dir="ltr">
-                {formatDate(post?.createdAt)}
-              </h1>
-            </div>
-          </Link>
+          <UserNameAndPhoto
+            userImage={post?.userImage}
+            userName={post?.userName}
+            createdAt={post?.createdAt}
+          />
 
           {currentUser?.isAdmin === 1 && path === '/' && (
             <div

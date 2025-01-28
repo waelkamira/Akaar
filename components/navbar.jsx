@@ -22,7 +22,7 @@ export default function Navbar() {
 
   return (
     <div
-      className={`hidden xl:flex xl:justify-between bg-[rgba(255,255,255,0.1)]${
+      className={`hidden xl:flex xl:justify-between rounded-t-[10px] overflow-hidden bg-[rgba(255,255,255,0.1)]${
         pathname !== '/' ? ' border border-seven' : ''
       }`}
     >
@@ -106,7 +106,7 @@ export default function Navbar() {
           </div>
         </ul>
         <div
-          className=" flex justify-end w-fit min-w-56 bg-[#888888] cursor-pointer "
+          className="relative flex justify-end w-fit min-w-56 bg-[#888888] cursor-pointer "
           onClick={() => router.push('/')}
         >
           <div className="absolute top-5 left-24 z-50 flex justify-end ">

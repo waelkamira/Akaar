@@ -24,7 +24,7 @@ export default function HomePage() {
 
   return (
     <Suspense>
-      <div className="relative flex flex-col justify-center items-center z-40 sm:my-0 w-full bg-four">
+      <div className="relative flex flex-col justify-center items-center z-40 sm:my-0 w-full">
         <div className="w-full">
           <div className="xl:hidden absolute flex flex-col items-start gap-2 z-50 top-2 right-0 sm:top-4 sm:right-4  lg:right-12 w-full">
             <TfiMenuAlt
@@ -48,7 +48,16 @@ export default function HomePage() {
             <h1 className="text-md lg:text-3xl p-2 text-white my-4 font-medium text-center w-fit mt-4 select-none border-y-[3px] border-seven ">
               اختر القسم المناسب
             </h1>
+            <div className="relative w-1/3 h-[200px]">
+              <Image
+                src="https://i.imgur.com/09AlNZ4.png"
+                fill
+                alt="home_photo"
+                className="object-contain object-center w-full h-full"
+              />
+            </div>
           </div>
+
           <div className="flex flex-col sm:flex-row justify-center w-full gap-4 xl:gap-8 px-4 xl:px-8 my-8">
             <Card
               cardName={'بيع عقار'}
@@ -83,7 +92,9 @@ export default function HomePage() {
           </div>
         </div>
       </div>
+
       <Footer />
+      {/* <div className="relative w-full h-[300px] lg:h-[700px] border-l-[18px] border-one "></div> */}
     </Suspense>
   );
 }

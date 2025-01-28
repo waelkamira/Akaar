@@ -58,7 +58,7 @@ export default function ContactUs() {
 
           <BackButton />
         </div>
-        <div className="flex flex-col justify-between items-center w-full h-full text-gray-400 mt-2">
+        <div className="flex flex-col justify-between items-center w-full h-full text-gray-400 mt-2 cursor-pointer">
           <div className="p-2 min-h-72 h-full rounded-[5px] bg-nine">
             <h1 className="text-center hover:text-white text-lg w-full select-none my-2">
               موقع عقار
