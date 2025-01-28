@@ -153,12 +153,12 @@ export default function SmallItem({ post, index, show = true, id = false }) {
   };
 
   return (
-    <>
+    <div className="rounded-lg border-t-[20px] border-one bg-white my-2 w-full">
       {!post && <Loading />}
       <div
         key={index}
         id="post1"
-        className="flex flex-col justify-center items-center shadow-sm shadow-gray-300 w-full p-2 my-2 rounded-lg bg-white border-t-[20px] border-one transition-all duration-300"
+        className="flex flex-col justify-center items-center w-full mt-0 p-2 my-2 rounded-lg rounded-t-none border-t-0  border border-white transition-all duration-300"
       >
         <div className="flex items-center justify-start w-full">
           <UserNameAndPhoto
@@ -182,7 +182,7 @@ export default function SmallItem({ post, index, show = true, id = false }) {
             path.includes('myPosts')
               ? 'sm:my-2 text-lg'
               : 'sm:my-4 text-xl sm:text-3xl'
-          }  font-medium bg-white select-none line-clamp-1`}
+          }  font-medium select-none line-clamp-1`}
         >
           {post?.propertyName}
         </h1>
@@ -228,7 +228,7 @@ export default function SmallItem({ post, index, show = true, id = false }) {
             <hr className="w-full h-[1.5px] bg-gray-400  border-hidden select-none" />
           </>
         )}
-        <div className="bg-white p-2 w-full">
+        <div className="text-nine p-2 w-full">
           <pre className="text-sm sm:text-lg text-start w-full line-clamp-1 select-none">
             {post?.description}
           </pre>
@@ -249,11 +249,11 @@ export default function SmallItem({ post, index, show = true, id = false }) {
           className={`  
             ${
               path.includes('myPosts') ? 'text-md' : 'sm:text-2xl'
-            }  p-2 my-2 bg-one text-white hover:scale-[101%] hover:text-white font-medium text-center select-none w-full hover:shadow-gray-400 shadow-lg  transition-all duration-300  rounded-[5px]`}
+            }  p-2 my-2 bg-one text-white hover:scale-[101%] hover:text-white font-medium text-center select-none w-full transition-all duration-300 rounded-[5px]`}
         >
           عرض الإعلان
         </button>
       </div>
-    </>
+    </div>
   );
 }

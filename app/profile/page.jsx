@@ -64,7 +64,7 @@ export default function Profile() {
   }
 
   return (
-    <div className="flex justify-center w-full">
+    <div className="flex justify-center w-full bg-gradient-to-r from-[#494949] to-four">
       {session?.status === 'unauthenticated' && (
         <div className="p-4 bg-four  m-2 md:m-8 border border-one text-center h-screen">
           <h1 className="text-lg md:text-2xl p-2 my-8 text-white">

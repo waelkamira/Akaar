@@ -167,7 +167,7 @@ export default function EditPost() {
     }
   };
   return (
-    <div className="flex flex-col justify-center items-center w-full">
+    <div className="flex flex-col justify-center items-center w-full bg-gradient-to-tr from-[#494949] to-four">
       {session?.status === 'unauthenticated' && (
         <div className="p-4 bg-four  m-2 md:m-8 border rounded-md rounded-md-one text-center h-screen">
           <h1 className="text-lg md:text-2xl p-2 my-8 ">
@@ -255,7 +255,7 @@ export default function EditPost() {
                 />{' '}
                 <button
                   onClick={() => handleEditPost()}
-                  className="bg-nine mb-2 w-full mt-4 sm:w-fit text-white duration-300 transition-colors ease-in-out hover:bg-one hover:scale-105 border rounded-md text-center select-none   p-2"
+                  className="bg-gray-600 mb-2 w-full mt-4 sm:w-fit text-white duration-300 transition-colors ease-in-out hover:bg-one hover:scale-105 border rounded-md text-center select-none p-2"
                 >
                   حفظ التعديلات
                 </button>
@@ -381,7 +381,7 @@ export default function EditPost() {
                   </pre>
                   <button
                     onClick={() => handleEditPost()}
-                    className="bg-nine mb-2 w-full mt-4 sm:w-fit text-white  duration-300 transition-colors ease-in-out hover:bg-one hover:scale-105 border rounded-md text-center select-none   p-2"
+                    className="bg-gray-600 mb-2 w-full mt-4 sm:w-fit text-white  duration-300 transition-colors ease-in-out hover:bg-one hover:scale-105 border rounded-md text-center select-none   p-2"
                   >
                     حفظ التعديلات
                   </button>
@@ -417,7 +417,7 @@ export default function EditPost() {
                   </div>
                   <button
                     onClick={() => handleEditPost()}
-                    className="bg-nine mb-2 w-full mt-4 sm:w-fit text-white  duration-300 transition-colors ease-in-out hover:bg-one hover:scale-105 border rounded-md text-center select-none   p-2"
+                    className="bg-gray-600 mb-2 w-full mt-4 sm:w-fit text-white  duration-300 transition-colors ease-in-out hover:bg-one hover:scale-105 border rounded-md text-center select-none   p-2"
                   >
                     حفظ التعديلات
                   </button>

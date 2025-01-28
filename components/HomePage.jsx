@@ -14,6 +14,7 @@ import { FaHouseDamage } from 'react-icons/fa';
 import { FaCalendarDays } from 'react-icons/fa6';
 import { GiAnchor } from 'react-icons/gi';
 import Footer from './Footer';
+
 export default function HomePage() {
   const [isOpen, setIsOpen] = useState(false);
   const session = useSession();
@@ -34,7 +35,7 @@ export default function HomePage() {
             {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
           </div>
 
-          <div className="relative w-full h-[300px] lg:h-[400px] border-l-[18px] border-one overflow-hidden">
+          <div className="relative w-full h-[300px] lg:h-[400px] border-b-[18px] border-l-[18px] border-one overflow-hidden">
             <Image
               src="https://i.imgur.com/wZ0aruw.jpg"
               fill
@@ -44,57 +45,92 @@ export default function HomePage() {
             />
           </div>
 
-          <div className="flex justify-center w-full">
-            <h1 className="text-md lg:text-3xl p-2 text-white my-4 font-medium text-center w-fit mt-4 select-none border-y-[3px] border-seven ">
-              اختر القسم المناسب
-            </h1>
-            <div className="relative w-1/3 h-[200px]">
-              <Image
-                src="https://i.imgur.com/09AlNZ4.png"
-                fill
-                alt="home_photo"
-                className="object-contain object-center w-full h-full"
+          <div className="w-full border-r-[18px] border-one ">
+            <div className="flex justify-center items-center gap-2 w-full text-nowrap py-8 ">
+              <div className="flex flex-col justify-end items-end text-six ">
+                <h1
+                  className="px-1 tracking-widest uppercase font-thin text-[8px] sm:text-[10px] lg:text-[11px] xl:text-[12px] select-none border-l border-white"
+                  style={{ fontFamily: 'Raleway-light' }}
+                >
+                  business
+                </h1>
+                <h1
+                  className="px-1 tracking-widest uppercase font-thin text-[8px] sm:text-[10px] lg:text-[11px] xl:text-[12px] select-none border-l border-white"
+                  style={{ fontFamily: 'Raleway-light' }}
+                >
+                  illustration
+                </h1>
+                <h1
+                  className="px-1 tracking-widest uppercase font-thin text-[8px] sm:text-[10px] lg:text-[11px] xl:text-[12px] select-none border-l border-white"
+                  style={{ fontFamily: 'Raleway-light' }}
+                >
+                  eps10
+                </h1>
+              </div>
+              <div className="">
+                <h1
+                  className="text-[30px] sm:text-[50px] xl:text-[70px] tracking-[1px] pb-2 xl:tracking-[3px] text-one font-medium text-center select-none uppercase"
+                  style={{ fontFamily: 'vanguardcf-heavy' }}
+                >
+                  {/* اختر القسم المناسب */}
+                  categories
+                </h1>
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row justify-center w-full gap-4 xl:gap-8 px-4 xl:px-8 py-8 ">
+              <Card
+                cardName={'بيع عقار'}
+                path={'/newPost'}
+                text={
+                  'بغض النظر عن المسار الذي تسلكه لبيع منزلك، يمكننا مساعدتك في إتمام عملية بيع ناجحة و بأسرع وقت ممكن.'
+                }
+                color={'red'}
+                image={'https://i.imgur.com/85xCFcd.jpg'}
+                emoji={<FaHouseDamage className="text-two" />}
+              />
+              <Card
+                cardName={'شراء عقار'}
+                path={'/buy'}
+                text={
+                  ' اعثر على عقارك من خلال تجربة تصوير غامرة وأكبر عدد من الإعلانات، بما في ذلك أشياء لن تجدها في أي مكان آخر.'
+                }
+                color={'green'}
+                image={'https://i.imgur.com/9gIMgUg.png'}
+                emoji={<GiCarKey className="text-gray-200" />}
+              />
+              <Card
+                cardName={'تأجير عقار'}
+                path={'/rent'}
+                text={
+                  'نحن نعمل على إنشاء تجربة سلسة عبر الإنترنت, بدءاً من بناء أكبر شبكة تأجير، إلى تقديم الطلبات، إلى دفع الإيجار.'
+                }
+                color={'orange'}
+                image={'https://i.imgur.com/uGXmBJO.jpg'}
+                emoji={<MdOutlineBedroomParent className="text-one" />}
               />
             </div>
-          </div>
-
-          <div className="flex flex-col sm:flex-row justify-center w-full gap-4 xl:gap-8 px-4 xl:px-8 my-8">
-            <Card
-              cardName={'بيع عقار'}
-              path={'/newPost'}
-              text={
-                'بغض النظر عن المسار الذي تسلكه لبيع منزلك، يمكننا مساعدتك في إتمام عملية بيع ناجحة و بأسرع وقت ممكن.'
-              }
-              color={'red'}
-              image={'https://i.imgur.com/85xCFcd.jpg'}
-              emoji={<FaHouseDamage className="text-two" />}
-            />
-            <Card
-              cardName={'شراء عقار'}
-              path={'/buy'}
-              text={
-                ' اعثر على عقارك من خلال تجربة تصوير غامرة وأكبر عدد من الإعلانات، بما في ذلك أشياء لن تجدها في أي مكان آخر.'
-              }
-              color={'green'}
-              image={'https://i.imgur.com/9gIMgUg.png'}
-              emoji={<GiCarKey className="text-gray-200" />}
-            />
-            <Card
-              cardName={'تأجير عقار'}
-              path={'/rent'}
-              text={
-                'نحن نعمل على إنشاء تجربة سلسة عبر الإنترنت, بدءاً من بناء أكبر شبكة تأجير، إلى تقديم الطلبات، إلى دفع الإيجار.'
-              }
-              color={'orange'}
-              image={'https://i.imgur.com/uGXmBJO.jpg'}
-              emoji={<MdOutlineBedroomParent className="text-one" />}
-            />
           </div>
         </div>
       </div>
 
       <Footer />
-      {/* <div className="relative w-full h-[300px] lg:h-[700px] border-l-[18px] border-one "></div> */}
+
+      <div className="hidden md:block relative w-full h-[300px] lg:h-[400px] border-l-[18px] border-one overflow-hidden">
+        <Image
+          src="https://i.imgur.com/puRR9Cm.png"
+          fill
+          alt="home_photo"
+          className="object-contain object-center w-1/3 h-auto px-14"
+          objectPosition="center"
+        />
+      </div>
+      <h1
+        className="text-one font-bold font-stratos w-full tracking-wider select-none text-center pt-8 pb-4 border-l-[18px] border-one uppercase"
+        style={{ fontFamily: 'vanguardcf-heavy' }}
+      >
+        Copyright © 2025 Akar Real Estate. All Rights Reserved
+      </h1>
     </Suspense>
   );
 }
