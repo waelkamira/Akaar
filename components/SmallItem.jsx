@@ -249,7 +249,7 @@ export default function SmallItem({ post, index, show = true, id = false }) {
           className={`  
             ${
               path.includes('myPosts') ? 'text-md' : 'sm:text-2xl'
-            }  p-2 my-2 bg-one text-white hover:scale-[101%] hover:text-white font-medium text-center select-none w-full transition-all duration-300 rounded-[5px]`}
+            }  p-2 my-2 bg-seven text-white hover:scale-[101%] hover:text-white font-medium text-center select-none w-full transition-all duration-300 rounded-[5px]`}
         >
           عرض الإعلان
         </button>
