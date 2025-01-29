@@ -18,7 +18,7 @@ export default function NewRecipe() {
   const [isVisible, setIsVisible] = useState(false);
   const session = useSession();
   return (
-    <div className="flex flex-col justify-center items-center w-full bg-gradient-to-r from-[#494949] to-four">
+    <div className="flex flex-col justify-center items-center w-full bg-gradient-to-r from-[#494949] to-four pb-16">
       <div className="flex flex-col justify-center items-center w-full xl:w-[90%] 2xl:w-[70%] h-full sm:px-16 pt-2 overflow-y-auto z-10 px-2">
         <div className="relative flex justify-between items-center w-full gap-2 my-2 bg-one p-1 md:p-2 rounded-[5px]">
           <div>
