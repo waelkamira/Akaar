@@ -186,24 +186,6 @@ export default function Footer() {
                 <span className="text-nowrap">ramond.shnaidr@hotmail.com</span>
               </span>
             </div>
-            {/* <div className="flex items-center justify-between gap-2 w-full text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300">
-            <div className="flex gap-1 items-center">
-              <FaCalendarDays className="text-lg select-none text-one" />
-              <li className=" text-md sm:text-lg select-none text-nowrap">
-                السبت{' '}
-              </li>
-            </div>
-            <span className="text-nowrap"> 09:00 - 18:00</span>
-          </div>{' '}
-          <div className="flex items-center justify-between gap-2 w-full text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300">
-            <div className="flex gap-1 items-center">
-              <FaCalendarDays className="text-lg select-none text-one" />
-              <li className=" text-md sm:text-lg select-none text-nowrap">
-                الأحد{' '}
-              </li>
-            </div>
-            <span className="text-nowrap"> 09:00 - 18:00</span>
-          </div> */}
           </ul>
         </div>
         <div className=" p-2 min-h-72 h-full rounded-[5px] my-2 bg-gray-400/5 xl:bg-transparent xl:border border-gray-400/10  ">

@@ -12,6 +12,7 @@ import SideBarMenu from '../../components/SideBarMenu';
 import { TfiMenuAlt } from 'react-icons/tfi';
 import ImageUpload from '../../components/ImageUpload';
 import UploadingAndDisplayingImage from '../../components/UploadingAndDisplayingImage';
+import MiddleBarAndPhoto from '../../components/MiddleBarAndPhoto';
 
 export default function NewRecipe() {
   const [isOpen, setIsOpen] = useState(false);
@@ -20,21 +21,12 @@ export default function NewRecipe() {
   return (
     <div className="flex flex-col justify-center items-center w-full bg-gradient-to-r from-[#494949] to-four pb-16">
       <div className="flex flex-col justify-center items-center w-full xl:w-[90%] 2xl:w-[70%] h-full sm:px-16 pt-2 overflow-y-auto z-10 px-2">
-        <div className="relative flex justify-between items-center w-full gap-2 my-2 bg-one p-1 md:p-2 rounded-[5px]">
-          <div>
-            <TfiMenuAlt
-              className="text-[30px] lg:text-5xl text-white cursor-pointer"
-              onClick={() => {
-                setIsOpen(!isOpen);
-              }}
-            />
-            <div className="absolute top-14 lg:top-20 right-0 z-50">
-              {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
-            </div>
-          </div>
+        <MiddleBarAndPhoto
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          noButton={false}
+        />
 
-          <BackButton />
-        </div>
         <div
           className={
             (session?.status === 'unauthenticated' ? 'h-fit ' : 'h-fit ') +
@@ -53,9 +45,6 @@ export default function NewRecipe() {
                   className="m-0"
                 />
               </div>
-              {/* <h1 className="text-white w-full text-2xl text-center m-0">
-                عقار
-              </h1> */}
             </div>
 
             {session?.status === 'unauthenticated' && (

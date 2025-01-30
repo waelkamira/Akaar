@@ -17,7 +17,7 @@ import UserNameAndPhoto from './userNameAndPhoto';
 
 export default function SmallItem({ post, index, show = true, id = false }) {
   const [currentUser, setCurrentUser] = useState('');
-  const [heart, setHeart] = useState(false);
+  const [heart, setHeart] = useState(post?.hearts);
   const { dispatch } = useContext(inputsContext);
   const session = useSession();
   const router = useRouter();
@@ -34,73 +34,47 @@ export default function SmallItem({ post, index, show = true, id = false }) {
     }
 
     checkPostActionsStatus(post);
-  }, [post?.id]);
+  }, [post]);
 
   async function checkPostActionsStatus(post) {
     try {
-      const response = await fetch(`/api/actions?postId=${post?.id}`);
+      const response = await fetch(`/api/favoritePosts?postId=${post?.id}`);
       const json = await response?.json();
       if (response.ok) {
-        // console.log('json', json);
-
-        setHeart(json[0]?.hearts === 1);
+        console.log('hearts', json);
+        setHeart(json[0]?.hearts); // تحديث حالة القلب بناءً على القيمة من الخادم
       }
     } catch (error) {
       console.error('Error in updatePostActionNumbers:', error);
     }
   }
 
-  async function updatePostActionNumbers(postId, actionType, newActionValue) {
-    try {
-      const response = await fetch(`/api/allPosts?id=${postId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          actionType,
-          newActionValue,
-        }),
-      });
-
-      if (!response.ok) {
-        console.error(`Failed to update ${actionType} for post ${postId}`);
-      }
-    } catch (error) {
-      console.error('Error in updatePostActionNumbers:', error);
-    }
-  }
-
-  async function handleInteraction(postId, action, currentState, setState) {
-    setState(!action);
+  async function handleInteraction(postId) {
+    console.log('postId', postId, 'heart', heart);
+    setHeart(!heart); // تحديث حالة القلب المحلية
     try {
       const email = session?.data?.user?.email;
       console.log(email);
-      const response = await fetch(`/api/actions?email=${email}`, {
+      const response = await fetch(`/api/favoritePosts`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           postId,
-          actionType: action,
-          actionValue: currentState ? 0 : 1,
+          email,
         }),
       });
 
       if (response.ok) {
         const result = await response.json();
-        const newActionValue = result.newActionValue;
-        setState(true);
-        // قم بتحديث العدد في قاعدة البيانات
-        await updatePostActionNumbers(postId, action, newActionValue);
 
         toast.custom((t) => (
           <CustomToast
             t={t}
-            message={result.message}
+            message={'تمت إضافة هذا الإعلان إلى المفضلة'}
             greenEmoji={'✔'}
-            emoji={'😋'}
+            emoji={''}
           />
         ));
       } else {
@@ -144,16 +118,8 @@ export default function SmallItem({ post, index, show = true, id = false }) {
     }
   }
 
-  //? هذه الدالة للتأكد إذا كان التاريخ المدخل صحيحا أو لا
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return isNaN(date)
-      ? 'Invalid date'
-      : formatDistanceToNow(date, { addSuffix: true });
-  };
-
   return (
-    <div className="rounded-lg border-t-[20px] border-one bg-white my-2 w-full">
+    <div className="rounded-lg border-t-[20px] border-one bg-white mb-4 w-full">
       {!post && <Loading />}
       <div
         key={index}
@@ -165,6 +131,7 @@ export default function SmallItem({ post, index, show = true, id = false }) {
             userImage={post?.userImage}
             userName={post?.userName}
             createdAt={post?.createdAt}
+            post={post}
           />
 
           {currentUser?.isAdmin === 1 && path === '/' && (
@@ -179,7 +146,7 @@ export default function SmallItem({ post, index, show = true, id = false }) {
         </div>
         <h1
           className={`text-one ${
-            path.includes('myPosts')
+            path.includes('myPosts') || path.includes('favoritePosts')
               ? 'sm:my-2 text-lg'
               : 'sm:my-4 text-xl sm:text-3xl'
           }  font-medium select-none line-clamp-1`}
@@ -189,11 +156,11 @@ export default function SmallItem({ post, index, show = true, id = false }) {
         <PostGallery post={post} />
         {show && (
           <>
-            <div className="flex justify-between items-center gap-2 w-full text-gray-400 my-2">
+            <div className=" w-full my-2 ">
               <div
-                className="flex justify-center items-center gap-2 cursor-pointer hover:bg-seven p-1 lg:p-2  select-none"
+                className="btn flex justify-center items-center gap-2 w-fit cursor-pointer p-1 lg:p-2  border border-gray-500 select-none text-gray-200 hover:text-white rounded-md"
                 onClick={() => {
-                  handleInteraction(post.id, 'hearts', heart, setHeart);
+                  handleInteraction(post?.id, 'hearts', heart, setHeart);
                   if (session?.status === 'unauthenticated') {
                     toast.custom((t) => (
                       <CustomToast
@@ -209,22 +176,23 @@ export default function SmallItem({ post, index, show = true, id = false }) {
                 <div className="hover:scale-105">
                   <FaHeart
                     className={
-                      (heart ? 'text-one' : 'text-gray-400') +
-                      ' text-[10px] md:text-[13px] lg:text-[15px] select-none'
+                      (heart ? 'text-one' : '') +
+                      ' text-[10px] md:text-[13px] lg:text-[16px] select-none'
                     }
                   />
                 </div>
 
                 <h1
                   className={
-                    (heart ? 'text-one' : 'text-gray-400') +
-                    '  text-[10px] md:text-[13px] lg:text-[15px] select-none'
+                    (heart ? 'text-one' : '') +
+                    '  text-[10px] md:text-[13px] lg:text-[16px] select-none'
                   }
                 >
                   حفظ
                 </h1>
               </div>
             </div>
+
             <hr className="w-full h-[1.5px] bg-gray-400  border-hidden select-none" />
           </>
         )}
@@ -248,7 +216,9 @@ export default function SmallItem({ post, index, show = true, id = false }) {
           }}
           className={`  
             ${
-              path.includes('myPosts') ? 'text-md' : 'sm:text-2xl'
+              path.includes('myPosts') || path.includes('favoritePosts')
+                ? 'text-md'
+                : 'sm:text-2xl'
             }  p-2 my-2 bg-seven text-white hover:scale-[101%] hover:text-white font-medium text-center select-none w-full transition-all duration-300 rounded-[5px]`}
         >
           عرض الإعلان

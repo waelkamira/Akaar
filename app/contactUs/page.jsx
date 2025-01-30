@@ -20,6 +20,8 @@ import { TbBrandGmail } from 'react-icons/tb';
 import { TfiMenuAlt } from 'react-icons/tfi';
 import SideBarMenu from '../../components/SideBarMenu';
 import BackButton from '../../components/BackButton';
+import MiddleBarAndPhoto from '../../components/MiddleBarAndPhoto';
+import Image from 'next/image';
 
 export default function ContactUs() {
   const [isOpen, setIsOpen] = useState(false);
@@ -41,25 +43,24 @@ export default function ContactUs() {
   };
 
   return (
-    <main className="flex flex-col justify-center items-center w-full bg-gradient-to-tr from-[#494949] to-four rounded-b-[5px]">
+    <main className="flex flex-col justify-center items-center pb-16 w-full bg-gradient-to-tr from-[#494949] to-four rounded-b-[5px]">
       <div className="flex flex-col justify-center items-center w-full xl:w-[90%] 2xl:w-[70%] h-full sm:px-16 pt-2 overflow-y-auto z-10 px-2">
-        <div className="relative flex justify-between items-center w-full gap-2 my-2 bg-one p-1 md:p-2 rounded-[5px]">
-          <div>
-            <TfiMenuAlt
-              className="text-[30px] lg:text-5xl text-white cursor-pointer"
-              onClick={() => {
-                setIsOpen(!isOpen);
-              }}
-            />
-            <div className="absolute top-14 lg:top-20 right-0 z-50">
-              {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
-            </div>
-          </div>
-
-          <BackButton />
+        <MiddleBarAndPhoto
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          noButton={true}
+        />
+        <div className="relative w-full h-[300px] lg:h-[400px] border-l-[18px] border-one overflow-hidden rounded-[5px]">
+          <Image
+            src="https://i.imgur.com/wZ0aruw.jpg"
+            fill
+            alt="home_photo"
+            className="object-cover object-center w-full h-auto"
+            objectPosition="center"
+          />
         </div>
         <div className="flex flex-col justify-between items-center w-full h-full text-gray-400 mt-2 cursor-pointer">
-          <div className="p-2 min-h-72 h-full rounded-[5px] bg-ten ">
+          <div className="p-2 min-h-72 h-full rounded-[5px] bg-gray-400/5 xl:bg-transparent xl:border border-gray-400/10 ">
             <h1 className="text-center text-white text-lg w-full select-none my-2">
               موقع عقار
             </h1>
@@ -74,12 +75,12 @@ export default function ContactUs() {
             </p>
           </div>
           <div className="w-full">
-            <div className=" p-2 min-h-72 h-full rounded-[5px] my-2 bg-ten ">
+            <div className=" p-2 min-h-72 h-full rounded-[5px] my-2 bg-gray-400/5 xl:bg-transparent xl:border border-gray-400/10 ">
               <h1 className="text-center text-white text-lg w-full select-none my-2">
                 معلومات الإتصال{' '}
               </h1>
               <ul className="flex flex-col justify-start gap-2 items-start h-20 w-full">
-                <div className="flex items-center justify-between gap-2 w-full text-seven text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300">
+                <div className="flex items-center justify-between gap-2 w-full text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300">
                   <div className="flex gap-1 items-center">
                     <MdOutlineAddLocationAlt className="text-lg select-none text-one" />
                     <li className=" text-md sm:text-lg select-none text-nowrap">
@@ -88,7 +89,7 @@ export default function ContactUs() {
                   </div>
                   <span className="text-nowrap"> </span>
                 </div>{' '}
-                <div className="flex items-center justify-between gap-2 w-full text-seven text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300">
+                <div className="flex items-center justify-between gap-2 w-full text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300">
                   <Link
                     href={'https://www.facebook.com/WaelKhamira/'}
                     target="_blank"
@@ -103,7 +104,7 @@ export default function ContactUs() {
                     <span className="text-nowrap"> </span>
                   </Link>
                 </div>{' '}
-                <div className="flex items-center justify-between gap-2 w-full text-seven text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300">
+                <div className="flex items-center justify-between gap-2 w-full text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300">
                   <div className="flex gap-1 items-center">
                     <FiLinkedin className="text-lg select-none text-one" />
                     <li className=" text-md sm:text-lg select-none text-nowrap">
@@ -113,7 +114,7 @@ export default function ContactUs() {
                   <span className="text-nowrap"></span>
                 </div>{' '}
                 <div
-                  className="flex items-center justify-between gap-2 w-full text-seven text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer px-2 xl:px-8 h-6 transition-all duration-300"
+                  className="flex items-center justify-between gap-2 w-full text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer px-2 xl:px-8 h-6 transition-all duration-300"
                   onClick={() => handleCopy('waelkamira@gmail.com')} // إضافة حدث النقر
                 >
                   <div className="flex gap-1 items-center">
@@ -123,7 +124,7 @@ export default function ContactUs() {
                   <span className="text-nowrap">waelkamira@gmail.com</span>
                 </div>
                 <div
-                  className="flex flex-col sm:flex-row items-start justify-between gap-2 w-full text-seven text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer px-2 xl:px-8 h-6 transition-all duration-300"
+                  className="flex flex-col sm:flex-row items-start justify-between gap-2 w-full text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer px-2 xl:px-8 h-6 transition-all duration-300"
                   onClick={() => handleCopy('ramond.shnaidr@hotmail.com')} // إضافة حدث النقر
                 >
                   <div className="flex gap-1 items-center">
@@ -139,12 +140,12 @@ export default function ContactUs() {
                 </div>
               </ul>
             </div>
-            <div className=" p-2 min-h-72 h-full rounded-[5px] my-2 bg-ten ">
+            <div className=" p-2 min-h-72 h-full rounded-[5px] my-2 bg-gray-400/5 xl:bg-transparent xl:border border-gray-400/10 ">
               <h1 className="text-center text-white text-lg w-full select-none my-2">
                 ساعات العمل{' '}
               </h1>
               <ul className="flex flex-col justify-start gap-2 items-start h-20 w-full">
-                <div className="flex items-center justify-between gap-2 w-full text-seven text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300">
+                <div className="flex items-center justify-between gap-2 w-full text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300">
                   <div className="flex gap-1 items-center">
                     <FaCalendarDays className="text-lg select-none text-one" />
                     <li className=" text-md sm:text-lg select-none text-nowrap">
@@ -153,7 +154,7 @@ export default function ContactUs() {
                   </div>
                   <span className="text-nowrap"> 09:00 - 18:00</span>
                 </div>{' '}
-                <div className="flex items-center justify-between gap-2 w-full text-seven text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300">
+                <div className="flex items-center justify-between gap-2 w-full text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300">
                   <div className="flex gap-1 items-center">
                     <FaCalendarDays className="text-lg select-none text-one" />
                     <li className=" text-md sm:text-lg select-none text-nowrap">
@@ -162,7 +163,7 @@ export default function ContactUs() {
                   </div>
                   <span className="text-nowrap"> 09:00 - 18:00</span>
                 </div>{' '}
-                <div className="flex items-center justify-between gap-2 w-full text-seven text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300">
+                <div className="flex items-center justify-between gap-2 w-full text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300">
                   <div className="flex gap-1 items-center">
                     <FaCalendarDays className="text-lg select-none text-one" />
                     <li className=" text-md sm:text-lg select-none text-nowrap">
@@ -171,7 +172,7 @@ export default function ContactUs() {
                   </div>
                   <span className="text-nowrap"> 09:00 - 18:00</span>
                 </div>{' '}
-                <div className="flex items-center justify-between gap-2 w-full text-seven text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300">
+                <div className="flex items-center justify-between gap-2 w-full text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300">
                   <div className="flex gap-1 items-center">
                     <FaCalendarDays className="text-lg select-none text-one" />
                     <li className=" text-md sm:text-lg select-none text-nowrap">
@@ -180,7 +181,7 @@ export default function ContactUs() {
                   </div>
                   <span className="text-nowrap"> 09:00 - 18:00</span>
                 </div>{' '}
-                <div className="flex items-center justify-between gap-2 w-full text-seven text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300">
+                <div className="flex items-center justify-between gap-2 w-full text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300">
                   <div className="flex gap-1 items-center">
                     <FaCalendarDays className="text-lg select-none text-one" />
                     <li className=" text-md sm:text-lg select-none text-nowrap">
@@ -189,7 +190,7 @@ export default function ContactUs() {
                   </div>
                   <span className="text-nowrap"> 09:00 - 18:00</span>
                 </div>{' '}
-                <div className="flex items-center justify-between gap-2 w-full text-seven text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300">
+                <div className="flex items-center justify-between gap-2 w-full text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300">
                   <div className="flex gap-1 items-center">
                     <FaCalendarDays className="text-lg select-none text-one" />
                     <li className=" text-md sm:text-lg select-none text-nowrap">
@@ -198,7 +199,7 @@ export default function ContactUs() {
                   </div>
                   <span className="text-nowrap"> 09:00 - 18:00</span>
                 </div>{' '}
-                <div className="flex items-center justify-between gap-2 w-full text-seven text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300">
+                <div className="flex items-center justify-between gap-2 w-full text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300">
                   <div className="flex gap-1 items-center">
                     <FaCalendarDays className="text-lg select-none text-one" />
                     <li className=" text-md sm:text-lg select-none text-nowrap">
