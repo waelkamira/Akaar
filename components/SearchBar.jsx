@@ -23,6 +23,8 @@ import BackButton from './BackButton';
 import { ImSearch } from 'react-icons/im';
 import { LuArrowDownNarrowWide } from 'react-icons/lu';
 import { LuArrowUpNarrowWide } from 'react-icons/lu';
+import Image from 'next/image';
+import MiddleBarAndPhoto from './MiddleBarAndPhoto';
 
 export default function SearchBar({ propertyCategory }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -87,7 +89,39 @@ export default function SearchBar({ propertyCategory }) {
 
   return (
     <div className="flex flex-col w-full xl:w-[90%] 2xl:w-[70%] h-[1370px] px-2 sm:px-16 pt-2 overflow-y-auto z-10 rounded-b-[5px]">
-      <div className="relative flex justify-between items-center w-full gap-2 my-2 bg-one p-1 md:p-2 rounded-[5px]">
+      <MiddleBarAndPhoto
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        isShow={isShow}
+        setIsShow={setIsShow}
+        noButton={true}
+      />
+      <div className="relative hidden xl:block w-full h-[300px] lg:h-[400px] border-l-[18px] border-one overflow-hidden rounded-[5px]">
+        <Image
+          src="https://i.imgur.com/wZ0aruw.jpg"
+          fill
+          alt="home_photo"
+          className="object-cover object-center w-full h-auto"
+          objectPosition="center"
+        />
+      </div>
+      <div className="flex justify-center items-center w-full bg-gray-700/50 border xl:bg-one rounded-[5px] p-2 my-2">
+        {' '}
+        <button
+          onClick={() => setIsShow(!isShow)}
+          className="relative text-sm lg:text-xl bg-white h-8 lg:h-11 w-3/4 border-r-[30%] shadow-lg border-one z-40 rounded-[5px] hover:scale-[101%]"
+        >
+          فلاتر البحث{' '}
+          <span className="absolute left-3/4 top-1/4 mx-auto my-auto">
+            {isShow ? (
+              <LuArrowDownNarrowWide className="text-one sm:text-sm lg:text-xl" />
+            ) : (
+              <LuArrowUpNarrowWide className="text-one sm:text-sm lg:text-xl" />
+            )}
+          </span>
+        </button>
+      </div>
+      {/* <div className="relative flex justify-between items-center w-full gap-2 my-2 bg-one p-1 md:p-2 rounded-[5px]">
         <div>
           <TfiMenuAlt
             className="text-[30px] lg:text-5xl text-white cursor-pointer"
@@ -113,7 +147,7 @@ export default function SearchBar({ propertyCategory }) {
           </span>
         </button>
         <BackButton />
-      </div>{' '}
+      </div>{' '} */}
       <div className="flex flex-col w-full h-[1370px] overflow-y-auto z-10">
         {isShow && (
           <div className="flex flex-col-reverse xl:flex-row justify-center items-center w-full bg-white shadow-sm shadow-gray-300 border-b-[20px] border-one rounded-md text-black">

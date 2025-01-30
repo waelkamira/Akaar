@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { MdOutlineAddPhotoAlternate, MdClose } from 'react-icons/md'; // إضافة أيقونة الإغلاق
 import { inputsContext } from './Context';
 import LoadingPhoto from './LoadingPhoto'; // استيراد مكون LoadingPhoto
+import Link from 'next/link';
 
 export default function ImageUploader({ images = [] }) {
   const { dispatch, addImages } = useContext(inputsContext);
@@ -74,14 +75,16 @@ export default function ImageUploader({ images = [] }) {
           <LoadingPhoto />
         ) : filteredImages[0] ? ( // إذا كانت هناك صورة متاحة
           <>
-            <Image
-              priority
-              src={filteredImages[0]}
-              alt="الصورة الرئيسية"
-              layout="fill"
-              objectFit="cover"
-              className="rounded-lg"
-            />
+            <Link href={'#post1'}>
+              <Image
+                priority
+                src={filteredImages[0]}
+                alt="الصورة الرئيسية"
+                layout="fill"
+                objectFit="cover"
+                className="rounded-lg"
+              />
+            </Link>
             {/* زر تغيير الصورة */}
             <label
               htmlFor="file-upload"

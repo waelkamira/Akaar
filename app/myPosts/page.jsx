@@ -19,6 +19,7 @@ import { MdEdit } from 'react-icons/md';
 import { LuArrowDownNarrowWide, LuArrowUpNarrowWide } from 'react-icons/lu';
 import { GiBuffaloHead } from 'react-icons/gi';
 import { FiActivity } from 'react-icons/fi';
+import MiddleBarAndPhoto from '../../components/MiddleBarAndPhoto';
 
 export default function MyPosts() {
   const [isOpen, setIsOpen] = useState(false);
@@ -77,30 +78,13 @@ export default function MyPosts() {
   return (
     <div className="flex justify-center items-center w-full bg-gradient-to-tr from-[#494949] to-four rounded-b-[5px]">
       {' '}
-      <div className="flex flex-col w-full xl:w-[90%] 2xl:w-[70%] h-fit px-2 sm:px-16 pt-2 overflow-y-auto z-10 ">
-        <div className="relative flex justify-between items-center w-full gap-2 my-2 bg-one p-1 md:p-2 rounded-[5px]">
-          <div>
-            <TfiMenuAlt
-              className="text-[30px] lg:text-5xl text-white cursor-pointer"
-              onClick={() => {
-                setIsOpen(!isOpen);
-              }}
-            />
-            <div className="absolute top-14 lg:top-20 right-0 z-50">
-              {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
-            </div>
-          </div>
-          <button
-            onClick={() => router.push('/newPost')}
-            className="relative text-sm lg:text-xl bg-white h-8 lg:h-11 w-3/4 border-r-[30%] shadow-lg border-one z-40 rounded-[5px] hover:scale-[101%]"
-          >
-            إعلان جديد{' '}
-            <span className="absolute left-3/4 top-1/4 mx-auto my-auto">
-              <FiActivity className="text-one sm:text-sm lg:text-xl" />
-            </span>
-          </button>
-          <BackButton />
-        </div>
+      <div className="flex flex-col w-full xl:w-[90%]  h-fit px-2 sm:px-16 pt-2 overflow-y-auto z-10 ">
+        <MiddleBarAndPhoto
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          noButton={true}
+        />
+
         {isVisible && (
           <div className="absolute flex flex-col items-center p-4 bg-four/95 z-50 inset-0 text-white">
             <div className="sticky top-72 w-full sm:w-1/2 border border-one rounded-[5px]">
@@ -138,7 +122,7 @@ export default function MyPosts() {
             />
           )}
 
-          <div className="grid grid-cols-1 lg:grid-cols-2  2xl:grid-cols-4 p-2 sm:p-4 gap-4 justify-start items-start w-full sm:border-2 border-seven rounded-[5px]">
+          <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 p-2 sm:p-4 gap-4 justify-start items-start w-full sm:border-2 border-seven rounded-[5px]">
             {myPosts?.length > 0 &&
               myPosts.map((post, index) => (
                 <div

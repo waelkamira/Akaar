@@ -16,6 +16,8 @@ import SideBarMenu from '../../components/SideBarMenu';
 import { TfiMenuAlt } from 'react-icons/tfi';
 import Loading from '../../components/Loading';
 import Button from '../../components/Button';
+import MiddleBarAndPhoto from '../../components/MiddleBarAndPhoto';
+import { usePathname } from 'next/navigation';
 
 export default function Page() {
   const [isOpen, setIsOpen] = useState(false);
@@ -31,28 +33,16 @@ export default function Page() {
 
   const fetchUserFavorites = async () => {
     const email = session?.data?.user?.email;
+    console.log('email', email);
     if (email) {
       try {
         const res = await fetch(
-          `/api/actions?page=${pageNumber}&email=${email}&limit=5`
+          `/api/favoritePosts?page=${pageNumber}&email=${email}&limit=8`
         );
         const data = await res.json();
-        // console.log('data', data);
+        console.log('data', data);
         if (res.ok) {
-          // Collect the promises from the fetch operations
-          const promises = data.map(async (item) => {
-            const response = await fetch(`/api/editPost?id=${item?.mealId}`);
-            if (response.ok) {
-              const json = await response.json();
-              return json;
-            } else {
-              throw new Error('Failed to fetch cooking recipe');
-            }
-          });
-
-          // Wait for all promises to resolve
-          const arr = await Promise.all(promises);
-          setUserFavorites(arr);
+          setUserFavorites(data);
         }
       } catch (error) {
         console.error('Error fetching user favorites:', error);
@@ -60,7 +50,7 @@ export default function Page() {
     }
   };
 
-  async function handleDeletePost(recipe) {
+  async function handleDeletePost(post) {
     const email = session?.data?.user?.email;
 
     if (email) {
@@ -69,7 +59,7 @@ export default function Page() {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            mealId: recipe?.id,
+            mealId: post?.id,
             actionType: 'hearts',
             newActionValue: 0,
           }),
@@ -94,94 +84,68 @@ export default function Page() {
   }
 
   return (
-    <div className="relative w-full bg-four h-full p-4 lg:p-8  z-50">
-      <div className="absolute flex flex-col items-start gap-2 z-40 top-2 right-2 sm:top-4 sm:right-4 xl:right-12 xl:top-12 ">
-        <TfiMenuAlt
-          className="p-1  text-4xl lg:text-5xl text-one cursor-pointer z-50 "
-          onClick={() => setIsOpen(!isOpen)}
+    <div className="flex justify-center items-start w-full bg-gradient-to-tr from-[#494949] to-four rounded-b-[5px]">
+      <div className="relative w-full xl:w-[90%] 2xl:w-[70%] px-2 sm:pt-4 rounded-b-[5px] z-50">
+        <MiddleBarAndPhoto
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          noButton={true}
         />
-        {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
-      </div>
-      <div className="hidden xl:block relative w-full h-24 sm:h-[200px]  overflow-hidden shadow-sm shadow-gray-300  shadow-one">
-        <Image
-          priority
-          src={'/photo (19).png'}
-          layout="fill"
-          objectFit="cover"
-          alt="photo"
-        />
-      </div>
-
-      <div className="relative w-full h-52 overflow-hidden xl:mt-8">
-        <Image
-          priority
-          src={'/photo (28).png'}
-          layout="fill"
-          objectFit="contain"
-          alt="photo"
-        />
-      </div>
-      <div className="flex justify-between items-center w-full gap-4 my-8">
-        <h1 className="text-right text-xl text-white  my-2 ">
-          <span className="text-one  text-2xl ml-2">#</span>
-          وصفاتي المفضلة
-        </h1>
-        <BackButton />
-      </div>
-      <div className="w-full sm:w-1/3 gap-4 my-8">
-        <Button title={'إنشاء وصفة جديدة'} style={' '} path="/newPost" />
-      </div>
-      <div className="my-8">
-        {userFavorites?.length === 0 && (
-          <Loading
-            myMessage={'لا يوجد نتائج لعرضها 😉 لم تقم بحفظ أي وصفة بعد'}
+        <div className="relative w-full h-[300px] lg:h-[400px] border-l-[18px] border-one overflow-hidden rounded-[5px]">
+          <Image
+            src="https://i.imgur.com/wZ0aruw.jpg"
+            fill
+            alt="home_photo"
+            className="object-cover object-center w-full h-auto"
+            objectPosition="center"
           />
-        )}
-        <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 gap-4 justify-center items-center w-full ">
-          {userFavorites?.length > 0 &&
-            userFavorites.map((recipe, index) => (
-              <div className="relative " key={index}>
-                {session?.status === 'authenticated' && (
-                  <div
-                    className="absolute top-12 left-4 flex flex-col items-center justify-center cursor-pointer bg-four  p-2 md:text-2xl text-white hover:bg-one"
-                    onClick={() => handleDeletePost(recipe)}
-                  >
-                    <IoMdClose className="" />
-                    <h6 className="text-sm select-none">حذف</h6>
-                  </div>
-                )}
-                <SmallItem
-                  recipe={recipe}
-                  index={index}
-                  show={false}
-                  id={true}
-                />
-              </div>
-            ))}
         </div>
-        <div className="flex items-center justify-around my-4 mt-8 text-white">
-          {userFavorites?.length >= 5 && (
-            <Link href={'#post1'}>
-              <div
-                className="flex items-center justify-around cursor-pointer"
-                onClick={() => setPageNumber(pageNumber + 1)}
-              >
-                <h1 className="">الصفحة التالية</h1>
-                <MdKeyboardDoubleArrowRight className="text-2xl " />
-              </div>
-            </Link>
+
+        <div className="flex justify-between items-center w-full gap-2 mt-2 sm:my-8">
+          <h1 className="text-right text-xl text-white">
+            <span className="text-one text-2xl ml-2">#</span>
+            وصفاتي المفضلة
+          </h1>
+        </div>
+
+        <div className=" my-4 sm:my-8">
+          {userFavorites?.length === 0 && (
+            <Loading
+              myMessage={'لا يوجد نتائج لعرضها 😉 لم تقم بحفظ أي وصفة بعد'}
+            />
           )}
-          {pageNumber > 1 && (
-            <Link href={'#post1'}>
-              <div
-                className="flex items-center justify-around cursor-pointer"
-                onClick={() => setPageNumber(pageNumber - 1)}
-              >
-                <MdKeyboardDoubleArrowLeft className="text-2xl " />
-                <h1 className="">الصفحة السابقة</h1>
-              </div>
-            </Link>
-          )}
+          <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 mb-2 sm:p-0 gap-x-2 justify-start items-start w-full sm:border-2 border-seven rounded-[5px]">
+            {userFavorites?.length > 0 &&
+              userFavorites.map((post, index) => (
+                <div className="relative " key={index}>
+                  <SmallItem post={post} index={index} show={false} id={true} />
+                </div>
+              ))}
+          </div>
+          <div className="flex items-center justify-around my-4 mt-8 text-white">
+            {userFavorites?.length >= 5 && (
+              <Link href={'#post1'}>
+                <div
+                  className="flex items-center justify-around cursor-pointer"
+                  onClick={() => setPageNumber(pageNumber + 1)}
+                >
+                  <h1 className="">الصفحة التالية</h1>
+                  <MdKeyboardDoubleArrowRight className="text-2xl  text-one" />
+                </div>
+              </Link>
+            )}
+            {pageNumber > 1 && (
+              <Link href={'#post1'}>
+                <div
+                  className="flex items-center justify-around cursor-pointer"
+                  onClick={() => setPageNumber(pageNumber - 1)}
+                >
+                  <MdKeyboardDoubleArrowLeft className="text-2xl  text-one" />
+                  <h1 className="">الصفحة السابقة</h1>
+                </div>
+              </Link>
+            )}
+          </div>
         </div>
       </div>
     </div>
