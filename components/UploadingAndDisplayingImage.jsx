@@ -70,7 +70,7 @@ export default function ImageUploader({ images = [] }) {
   return (
     <div className="flex flex-col justify-center items-center w-full px-2 sm:px-8">
       {/* الصورة الكبيرة في الأعلى */}
-      <div className="relative w-full h-72 sm:h-96 border border-one rounded-lg mb-4">
+      <div className="relative w-full h-72 sm:h-96 border border-gray-500 rounded-lg mb-4">
         {isLoading ? ( // إذا كانت الصور قيد التحميل، عرض مؤشر التحميل
           <LoadingPhoto />
         ) : filteredImages[0] ? ( // إذا كانت هناك صورة متاحة
@@ -117,7 +117,7 @@ export default function ImageUploader({ images = [] }) {
         {Array.from({ length: 4 }).map((_, index) => (
           <div
             key={index}
-            className="relative w-full h-48 border border-one rounded-lg flex justify-center items-center"
+            className="relative w-full h-48 border border-gray-500 rounded-lg flex justify-center items-center"
           >
             {isLoading ? ( // إذا كانت الصور قيد التحميل، عرض مؤشر التحميل
               <LoadingPhoto />

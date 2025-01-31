@@ -30,7 +30,7 @@ export default function NewRecipe() {
         <div
           className={
             (session?.status === 'unauthenticated' ? 'h-fit ' : 'h-fit ') +
-            ' relative border border-one rounded-[5px] w-full flex flex-col items-start justify-center sm:flex-row top-0 overflow-hidden'
+            ' relative border border-gray-500 rounded-[5px] w-full flex flex-col items-start justify-center sm:flex-row top-0 overflow-hidden'
           }
           onClick={(e) => e.stopPropagation()}
         >
@@ -48,7 +48,7 @@ export default function NewRecipe() {
             </div>
 
             {session?.status === 'unauthenticated' && (
-              <div className="p-4 bg-four  m-2 md:m-8 border border-one text-center">
+              <div className="p-4 bg-four  m-2 md:m-8 border border-gray-500 text-center">
                 <h1 className="text-lg md:text-2xl p-2  text-white">
                   يجب عليك تسجيل الدخول أولا لكي تتمكن من إنشاء إعلان جديد
                 </h1>

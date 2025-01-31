@@ -114,7 +114,7 @@ export default function Page() {
               myMessage={'لا يوجد نتائج لعرضها 😉 لم تقم بحفظ أي وصفة بعد'}
             />
           )}
-          <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 mb-2 sm:p-0 gap-x-2 justify-start items-start w-full sm:border-2 border-seven rounded-[5px]">
+          <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 mb-2 sm:p-0 gap-x-2 justify-start items-start w-full sm:border border-gray-500 rounded-[5px]">
             {userFavorites?.length > 0 &&
               userFavorites.map((post, index) => (
                 <div className="relative " key={index}>
