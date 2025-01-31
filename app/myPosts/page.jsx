@@ -87,7 +87,7 @@ export default function MyPosts() {
 
         {isVisible && (
           <div className="absolute flex flex-col items-center p-4 bg-four/95 z-50 inset-0 text-white">
-            <div className="sticky top-72 w-full sm:w-1/2 border border-one rounded-[5px]">
+            <div className="sticky top-72 w-full sm:w-1/2 border border-white rounded-[5px]">
               <h1 className="text-center text-lg sm:text-xl mt-4">
                 هل تريد حذف هذه الإعلان نهائيا؟
               </h1>
@@ -122,7 +122,7 @@ export default function MyPosts() {
             />
           )}
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 p-2 sm:p-4 gap-4 justify-start items-start w-full sm:border-2 border-seven rounded-[5px]">
+          <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 p-2 sm:p-4 gap-4 justify-start items-start w-full sm:border border-seven rounded-[5px]">
             {myPosts?.length > 0 &&
               myPosts.map((post, index) => (
                 <div
