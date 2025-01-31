@@ -154,7 +154,7 @@ export default function SmallItem({ post, index, show = true, id = false }) {
           {post?.propertyName}
         </h1>
         <PostGallery post={post} />
-        {show && (
+        {/* {show && (
           <>
             <div className=" w-full my-2 ">
               <div
@@ -195,7 +195,7 @@ export default function SmallItem({ post, index, show = true, id = false }) {
 
             <hr className="w-full h-[1.5px] bg-gray-400  border-hidden select-none" />
           </>
-        )}
+        )} */}
         <div className="text-nine p-2 w-full">
           <pre className="text-sm sm:text-lg text-start w-full line-clamp-1 select-none">
             {post?.description}

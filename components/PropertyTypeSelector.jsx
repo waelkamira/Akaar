@@ -4,6 +4,7 @@ import Select from 'react-select';
 import { inputsContext } from './Context.jsx';
 import { VscUngroupByRefType } from 'react-icons/vsc';
 import { usePathname } from 'next/navigation.js';
+
 export default function PropertyTypeSelector() {
   const { dispatch } = useContext(inputsContext);
   const [propertyType, setpropertyType] = useState('');
@@ -40,32 +41,15 @@ export default function PropertyTypeSelector() {
       },
     };
   }
-  // أنماط مخصصة لتعديل ارتفاع المكون
-  const customStyles = {
-    control: (provided) => ({
-      ...provided,
-      minHeight: '3rem', // تعيين الارتفاع الأدنى إلى 4rem (يعادل h-16 في Tailwind CSS)
-    }),
-    valueContainer: (provided) => ({
-      ...provided,
-      height: '3rem', // تعيين ارتفاع الحاوية الداخلية
-      display: 'flex',
-      alignItems: 'center',
-      padding: '0 1rem',
-    }),
-    indicatorsContainer: (provided) => ({
-      ...provided,
-      height: '3rem', // تعيين ارتفاع حاوية المؤشرات
-    }),
-  };
 
   return (
     <div className="flex flex-col w-full justify-start items-center ">
       <div className="w-full">
         <div className="flex items-center gap-2 w-full justify-start my-2">
           <h1
-            className={`flex text-right text-md select-none text-nowrap '
-              ${path.includes('newPost') ? 'text-white' : ''}`}
+            className={`flex text-right text-md select-none text-nowrap ${
+              path.includes('newPost') ? 'text-white' : ''
+            }`}
           >
             <span className="text-one text-lg xl:text-2xl ml-2">
               <VscUngroupByRefType />
@@ -81,8 +65,14 @@ export default function PropertyTypeSelector() {
           isSearchable
           options={options}
           theme={customTheme}
-          styles={customStyles}
-          className="w-full text-md  rounded-[5px] text-start z-30 h-12 select-none"
+          className="w-full text-md rounded-[5px] text-start z-30 select-none"
+          classNamePrefix="select"
+          classNames={{
+            control: (state) =>
+              `${
+                state.isFocused ? 'border-orange-500' : 'border-gray-300'
+              } sm:h-12 h-8`, // ارتفاع مختلف بناءً على عرض النافذة
+          }}
         ></Select>
       </div>
     </div>

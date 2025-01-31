@@ -1,7 +1,5 @@
 'use client';
 import React, { useContext, useEffect, useState } from 'react';
-import { TfiMenuAlt } from 'react-icons/tfi';
-import SideBarMenu from './SideBarMenu';
 import CitySelector from './map/CitySelector';
 import PropertyTypeSelector from './PropertyTypeSelector';
 import SmallItem from './SmallItem';
@@ -12,14 +10,11 @@ import {
 } from 'react-icons/md';
 import Link from 'next/link';
 import { MdOutlinePriceCheck } from 'react-icons/md';
-import { TbHomeSearch } from 'react-icons/tb';
 import Button from './Button';
 import { inputsContext } from './Context';
 import CustomToast from './CustomToast';
 import toast from 'react-hot-toast';
-import Posts from './allPosts';
 import RoomsNumberSelector from './roomsNumberSelector';
-import BackButton from './BackButton';
 import { ImSearch } from 'react-icons/im';
 import { LuArrowDownNarrowWide } from 'react-icons/lu';
 import { LuArrowUpNarrowWide } from 'react-icons/lu';
@@ -88,7 +83,7 @@ export default function SearchBar({ propertyCategory }) {
   };
 
   return (
-    <div className="flex flex-col w-full xl:w-[90%] 2xl:w-[70%] h-[1370px] px-2 sm:px-16 pt-2 overflow-y-auto z-10 rounded-b-[5px]">
+    <div className="flex flex-col w-full xl:w-[90%] 2xl:w-[80%] h-[1370px] px-2 xl:px-8 2xl:px-16 pt-2 overflow-y-auto z-10 rounded-b-[5px]">
       <MiddleBarAndPhoto
         isOpen={isOpen}
         setIsOpen={setIsOpen}
@@ -121,37 +116,11 @@ export default function SearchBar({ propertyCategory }) {
           </span>
         </button>
       </div>
-      {/* <div className="relative flex justify-between items-center w-full gap-2 my-2 bg-one p-1 md:p-2 rounded-[5px]">
-        <div>
-          <TfiMenuAlt
-            className="text-[30px] lg:text-5xl text-white cursor-pointer"
-            onClick={() => {
-              setIsOpen(!isOpen);
-            }}
-          />
-          <div className="absolute top-14 lg:top-20 right-0 z-50">
-            {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
-          </div>
-        </div>
-        <button
-          onClick={() => setIsShow(!isShow)}
-          className="relative text-sm lg:text-xl bg-white h-8 lg:h-11 w-3/4 border-r-[30%] shadow-lg border-one z-40 rounded-[5px] hover:scale-[101%]"
-        >
-          فلاتر البحث{' '}
-          <span className="absolute left-3/4 top-1/4 mx-auto my-auto">
-            {isShow ? (
-              <LuArrowDownNarrowWide className="text-one sm:text-sm lg:text-xl" />
-            ) : (
-              <LuArrowUpNarrowWide className="text-one sm:text-sm lg:text-xl" />
-            )}
-          </span>
-        </button>
-        <BackButton />
-      </div>{' '} */}
-      <div className="flex flex-col w-full h-[1370px] overflow-y-auto z-10">
+
+      <div className="flex flex-col w-full h-[1370px] overflow-y-auto z-10 ">
         {isShow && (
-          <div className="flex flex-col-reverse xl:flex-row justify-center items-center w-full bg-white shadow-sm shadow-gray-300 border-b-[20px] border-one rounded-md text-black">
-            <div className="relative text-center w-full md:w-1/4 px-2">
+          <div className="flex flex-col-reverse sm:flex-row justify-center items-center w-full bg-white shadow-sm shadow-gray-300 border-b-[8px] sm:border-b-[20px] border-one rounded-md text-black">
+            <div className="relative text-center w-full md:w-1/4 px-2 xl:mb-4">
               <Button
                 style={' '}
                 onClick={handleSearch}
@@ -160,15 +129,18 @@ export default function SearchBar({ propertyCategory }) {
               />
             </div>
             <div className="flex flex-col xl:flex-row items-center justify-center gap-2 mb-2 w-full px-2 text-black">
-              <div className="flex flex-col-reverse xl:flex-row gap-2 w-full xl:w-4/6">
-                <div className="flex flex-col xl:flex-row gap-2 w-full ">
+              <div className="flex flex-col-reverse sm:flex-row gap-2 w-full xl:w-1/2">
+                <div className="w-full sm:w-1/3">
                   <PropertyTypeSelector />
-                  <RoomsNumberSelector />
                 </div>
-                <CitySelector />
+                <div className="w-full">
+                  <CitySelector />
+                </div>
               </div>
 
-              <div className="flex flex-col-reverse xl:flex-row gap-2 w-full xl:w-2/6">
+              <div className="flex flex-col-reverse sm:flex-row gap-2 w-full xl:w-1/2">
+                <RoomsNumberSelector />
+
                 <div className=" w-full">
                   <div className="flex items-center gap-2 w-full justify-start my-2">
                     <h1 className="flex text-right text-md select-none text-nowrap">
@@ -184,7 +156,7 @@ export default function SearchBar({ propertyCategory }) {
                     placeholder="0"
                     value={minPrice}
                     onChange={(e) => setMinPrice(e.target.value)}
-                    className="w-full text-lg rounded-[5px] text-start z-40 h-12 text-nowrap px-2 border border-slate-300 focus:outline-one"
+                    className="w-full text-sm sm:text-lg rounded-[5px] text-start z-40 h-9 sm:h-12 text-nowrap px-2 border border-slate-300 focus:outline-one"
                   />
                 </div>
                 <div className=" w-full">
@@ -202,7 +174,7 @@ export default function SearchBar({ propertyCategory }) {
                     placeholder="0"
                     value={maxPrice}
                     onChange={(e) => setMaxPrice(e.target.value)}
-                    className="w-full text-lg rounded-[5px] text-start z-40 h-12 text-nowrap px-2 border border-slate-300 focus:outline-one"
+                    className="w-full text-sm sm:text-lg rounded-[5px] text-start z-40 h-9 sm:h-12 text-nowrap px-2 border border-slate-300 focus:outline-one"
                   />
                 </div>
               </div>

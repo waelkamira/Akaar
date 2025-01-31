@@ -84,7 +84,7 @@ export default function Profile() {
             setIsOpen={setIsOpen}
             noButton={true}
           />
-          <div className="flex flex-col items-start gap-4 justify-start w-full h-full overflow-hidden rounded-[5px] border border-one">
+          <div className="flex flex-col items-start gap-4 justify-start w-full h-full overflow-hidden rounded-[5px] border border-one xl:mt-4">
             <div className="relative w-full my-2">
               <div className="relative min-h-64 w-full">
                 <Image
