@@ -133,7 +133,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
     link: '',
     hearts: 0,
   });
-  console.log('inputs ************************', inputs);
+  // console.log('inputs ************************', inputs);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -241,7 +241,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
         image: false,
       });
 
-      console.log('inputs', inputs);
+      // console.log('inputs', inputs);
 
       // التحقق من الحقل المطلوب وضبط الخطأ المناسب
       if (!inputs.image) {
@@ -424,7 +424,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
                     id="مساحة العقار"
                     name="مساحة العقار"
                     placeholder="300 م2"
-                    className="flex text-right w-full p-2 rounded-[5px] text-lg outline-2 focus:outline-one h-12 placeholder:text-sm lg:placeholder:text-lg"
+                    className="w-full text-sm sm:text-lg rounded-[5px] text-start  h-9 sm:h-12 text-nowrap px-2 border border-slate-300 focus:outline-one"
                   />
                 </div>
 
@@ -466,7 +466,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
                     id="اسم العقار"
                     name="اسم العقار"
                     placeholder=" بيت بداريا _ أرض بدوما .."
-                    className="flex text-right w-full p-2 rounded-[5px] text-lg outline-2 focus:outline-one h-12 placeholder:text-sm lg:placeholder:text-lg"
+                    className="w-full text-sm sm:text-lg rounded-[5px] text-start  h-9 sm:h-12 text-nowrap px-2 border border-slate-300 focus:outline-one"
                   />
                 </div>
 
@@ -507,7 +507,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
                     id="رقم الهاتف"
                     name="رقم الهاتف"
                     placeholder="+963 11 3391 4444"
-                    className="flex text-right w-full p-2 rounded-[5px] text-lg outline-2 focus:outline-one h-12 placeholder:text-sm lg:placeholder:text-lg"
+                    className="w-full text-sm sm:text-lg rounded-[5px] text-start  h-9 sm:h-12 text-nowrap px-2 border border-slate-300 focus:outline-one"
                   />
                 </div>
 
@@ -539,7 +539,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
                     id="سعر العقار"
                     name="سعر العقار"
                     placeholder="$ 000.0"
-                    className="flex text-right w-full p-2 rounded-[5px] text-lg outline-2 focus:outline-one h-12 placeholder:text-sm lg:placeholder:text-lg"
+                    className="w-full text-sm sm:text-lg rounded-[5px] text-start  h-9 sm:h-12 text-nowrap px-2 border border-slate-300 focus:outline-one"
                   />
                 </div>
               </div>
