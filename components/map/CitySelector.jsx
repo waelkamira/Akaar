@@ -12,6 +12,7 @@ export default function CitySelector() {
   const [selectedTown, setSelectedTown] = useState(null);
   const { dispatch } = useContext(inputsContext);
   const path = usePathname();
+
   useEffect(() => {
     if (selectedCity?.value && selectedCity?.latlng) {
       dispatch({
@@ -35,18 +36,18 @@ export default function CitySelector() {
   const cityOptions = cities.map((city) => ({
     value: city?.name,
     label: city?.name,
-    latlng: city?.latlng || [0, 0], // Default to [0, 0] if missing
+    latlng: city?.latlng || [0, 0],
     towns: (city?.towns || []).map((town) => ({
       value: town?.name,
       label: town?.name,
-      latlng: town?.latlng || [0, 0], // Default to [0, 0] if missing
+      latlng: town?.latlng || [0, 0],
     })),
   }));
 
   const handleCityChange = (selectedOption) => {
     console.log('selectedOption (City):', selectedOption);
     setSelectedCity(selectedOption);
-    setSelectedTown(null); // إعادة تعيين المنطقة عند تغيير المدينة
+    setSelectedTown(null);
   };
 
   const handleTownChange = (selectedOption) => {
@@ -66,30 +67,14 @@ export default function CitySelector() {
     };
   }
 
-  const customStyles = {
-    control: (provided) => ({
-      ...provided,
-      minHeight: '3rem', // تعيين الارتفاع الأدنى إلى 4rem (يعادل h-16 في Tailwind CSS)
-    }),
-    valueContainer: (provided) => ({
-      ...provided,
-      height: '3rem', // تعيين ارتفاع الحاوية الداخلية
-      display: 'flex',
-      alignItems: 'center',
-      padding: '0 1rem',
-    }),
-    indicatorsContainer: (provided) => ({
-      ...provided,
-      height: '3rem', // تعيين ارتفاع حاوية المؤشرات
-    }),
-  };
   return (
-    <div className="flex flex-col xl:flex-row gap-4 w-full justify-start items-center">
-      <div className=" w-full ">
+    <div className="flex flex-col sm:flex-row gap-2 w-full justify-start items-center">
+      <div className="w-full">
         <div className="flex items-center gap-2 w-full justify-start my-2">
           <h1
-            className={`flex text-right text-md select-none text-nowrap '
-              ${path.includes('newPost') ? 'text-white' : ''}`}
+            className={`flex text-right text-md select-none text-nowrap ${
+              path.includes('newPost') ? 'text-white' : ''
+            }`}
           >
             <span className="text-one text-lg xl:text-2xl ml-2">
               <GiModernCity />
@@ -106,16 +91,23 @@ export default function CitySelector() {
           isClearable
           isSearchable
           theme={customTheme}
-          styles={customStyles}
-          className="w-full text-md  text-start z-50 text-nowrap"
+          className="w-full text-sm sm:text-md text-start z-50 text-nowrap"
+          classNamePrefix="select"
+          classNames={{
+            control: (state) =>
+              `${
+                state.isFocused ? 'border-orange-500' : 'border-gray-300'
+              } sm:h-12 h-8 w-full`, // ارتفاع مختلف بناءً على عرض النافذة
+          }}
         />
       </div>
 
-      <div className=" w-full">
+      <div className="w-full">
         <div className="flex items-center gap-2 w-full justify-start my-2">
           <h1
-            className={`flex text-right text-md select-none text-nowrap '
-              ${path.includes('newPost') ? 'text-white' : ''}`}
+            className={`flex text-right text-md select-none text-nowrap ${
+              path.includes('newPost') ? 'text-white' : ''
+            }`}
           >
             <span className="text-one text-lg xl:text-2xl ml-2">
               <FaTreeCity />
@@ -133,8 +125,14 @@ export default function CitySelector() {
           isSearchable
           isDisabled={!selectedCity}
           theme={customTheme}
-          styles={customStyles}
-          className="w-full text-md  text-start z-40 text-nowrap"
+          className="w-full text-sm sm:text-md text-start z-40 text-nowrap"
+          classNamePrefix="select"
+          classNames={{
+            control: (state) =>
+              `${
+                state.isFocused ? 'border-orange-500' : 'border-gray-300'
+              } sm:h-12 h-8 w-full `, // ارتفاع مختلف بناءً على عرض النافذة
+          }}
         />
       </div>
     </div>

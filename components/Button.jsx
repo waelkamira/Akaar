@@ -13,7 +13,7 @@ export default function Button({ style, title, onClick, path = '', emoji }) {
         }
       >
         {title}
-        <span className="absolute left-[60%] top-1/4 mx-auto my-auto z-50 text-one hover:text-white">
+        <span className="absolute right-[65%] top-1/4 mx-auto my-auto z-50 text-one hover:text-white">
           {emoji}
         </span>
       </button>

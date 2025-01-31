@@ -1,12 +1,11 @@
 datasource db {
   provider = "sqlite"
-  url      = "file:../propertiesDatabase.sqlite"
+  url      = "file:../propertiesDatabase.db" // المسار إلى ملف قاعدة البيانات
 }
 
 generator client {
   provider = "prisma-client-js"
 }
-
 model Property {
   id                   String   @id @default(uuid())
   image                String
@@ -26,7 +25,7 @@ model Property {
   description          String
   lng                  Float?
   lat                  Float?
-  link                 String?   @default("")
+  link                 String?   @default("") // الحقل المفقود
   hearts               Int      @default(0)
   userName             String
   userImage            String
@@ -34,3 +33,4 @@ model Property {
   createdAt            DateTime @default(now())
   updatedAt            DateTime @default(now())
 }
+
