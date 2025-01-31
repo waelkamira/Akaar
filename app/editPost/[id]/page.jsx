@@ -53,7 +53,7 @@ export default function EditPost() {
     userName: editedPost?.userName,
     userImage: editedPost?.userImage,
   });
-  console.log('inputs', inputs);
+  // console.log('inputs', inputs);
 
   useEffect(() => {
     fetchEditedPost();

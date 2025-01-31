@@ -6,7 +6,7 @@ export default function CurrentUser() {
   const { profile_image } = useContext(inputsContext);
   const [user, setUser] = useState();
   const { data: session, status } = useSession();
-  console.log('user', user);
+  // console.log('user', user);
 
   useEffect(() => {
     if (status === 'authenticated') {

@@ -20,7 +20,7 @@ export default function Profile() {
   const user = CurrentUser();
   const { profile_image, dispatch } = useContext(inputsContext);
   const [newUserName, setNewUserName] = useState('');
-  console.log('user', user);
+  // console.log('user', user);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {

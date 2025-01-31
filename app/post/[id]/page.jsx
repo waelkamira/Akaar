@@ -11,7 +11,7 @@ export default function Page() {
     fetchOnePost();
   }, []);
   async function fetchOnePost() {
-    console.log('id', id);
+    // console.log('id', id);
     const response = await fetch(`/api/showPostById?id=${id}`);
     const json = await response?.json();
     if (response.ok) {
@@ -22,7 +22,7 @@ export default function Page() {
 
   return (
     <div className="flex flex-col justify-center items-center w-full bg-gradient-to-r from-[#494949] to-four">
-      <Item {...onePost} />
+      {onePost && <Item {...onePost} />}
     </div>
   );
 }

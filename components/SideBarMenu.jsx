@@ -50,7 +50,7 @@ export default function SideBarMenu({ setIsOpen }) {
           <Button title={'إيجار'} path="/rent" />
           <Button title={'بروفايلي'} path="/profile" />
           <Button title={'إعلاناتي'} path="/myPosts" />
-          <Button title={'المفضلة'} path={'/favoritePosts'} />
+          {/* <Button title={'المفضلة'} path={'/favoritePosts'} /> */}
           <Button title={'اتصل بنا'} path={'/contactUs'} />
           <Button title={'تسجيل الخروج'} path={'/'} onClick={() => signOut()} />
         </div>

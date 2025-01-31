@@ -13,7 +13,7 @@ import toast from 'react-hot-toast';
 export default function UserNameAndPhoto({ post }) {
   const path = usePathname();
   const session = useSession();
-
+  console.log('post', post);
   //? هذه الدالة للتأكد إذا كان التاريخ المدخل صحيحا أو لا
   const formatDate = (dateString) => {
     const date = new Date(dateString);

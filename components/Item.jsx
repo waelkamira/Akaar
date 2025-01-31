@@ -49,7 +49,7 @@ export default function Item({
   const [isOpen, setIsOpen] = useState(false);
   const session = useSession();
   const videoRef = useRef(null); // Add a ref to the iframe element
-  // console.log('userName', userName);
+  console.log('userName', userName);
   //? src نريد ان نستخرج منه قيمة ال string لكنه نص  ifram html الذي هو عبارة عن عنصر  link انشأنا ديف مؤقت لوضع ال
   let tempDiv = document.createElement('div');
   tempDiv.innerHTML = link;
@@ -101,9 +101,11 @@ export default function Item({
           <div className="flex justify-center w-full ">
             <div className="flex flex-col w-full p-2 sm:p-8 my-2 bg-six border-t-[20px] border-one rounded-t-lg">
               <UserNameAndPhoto
-                userImage={userImage}
-                userName={userName}
-                createdAt={createdAt}
+                post={{
+                  userImage: userImage,
+                  userName: userName,
+                  createdAt: createdAt,
+                }}
               />
 
               <h1 className="text-one my-4 sm:my-4 text-3xl sm:text-4xl lg:text-5xl text-center select-none   p-2 sm:p-4">
