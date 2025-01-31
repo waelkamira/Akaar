@@ -31,7 +31,7 @@ export default function MiddleBarAndPhoto({
       {noButton && (
         <button
           onClick={() => router.push('/newPost')}
-          className="relative text-sm lg:text-xl bg-white h-8 lg:h-11 w-3/4 border-r-[30%] shadow-lg border-one z-40 rounded-[5px] hover:scale-[101%]"
+          className="relative text-sm lg:text-xl bg-white h-8 lg:h-11 w-3/4 border-r-[30%] shadow-lg border-one rounded-[5px] hover:scale-[101%]"
         >
           إعلان جديد{' '}
           <span className="absolute left-3/4 top-1/4 mx-auto my-auto">
