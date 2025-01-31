@@ -46,10 +46,8 @@ export default function Item({
   userImage,
   userName,
 }) {
-  const [isOpen, setIsOpen] = useState(false);
   const session = useSession();
-  const videoRef = useRef(null); // Add a ref to the iframe element
-  console.log('userName', userName);
+  console.log('images', image, image1, image2, image3, image4);
   //? src نريد ان نستخرج منه قيمة ال string لكنه نص  ifram html الذي هو عبارة عن عنصر  link انشأنا ديف مؤقت لوضع ال
   let tempDiv = document.createElement('div');
   tempDiv.innerHTML = link;
@@ -69,7 +67,7 @@ export default function Item({
   };
 
   return (
-    <>
+    <div className="w-full overflow-y-auto h-screen mt-20 bg-gray-400/10 z-50">
       {session?.status === 'unauthenticated' && (
         <div className="p-4 bg-four  m-2 md:m-8 border border-one text-center h-screen">
           <h1 className="text-lg md:text-2xl p-2 my-8 text-white">
@@ -81,25 +79,9 @@ export default function Item({
         </div>
       )}
       {session?.status === 'authenticated' && (
-        <div className="flex flex-col justify-center items-center w-full xl:w-[90%] 2xl:w-[70%] h-full sm:px-16 pt-2 overflow-y-auto z-10 px-2">
-          {/* <div className="relative flex justify-between items-center w-full gap-2 my-2 bg-one p-1 md:p-2 rounded-[5px]">
-            <div>
-              <TfiMenuAlt
-                className="text-[30px] lg:text-5xl text-white cursor-pointer"
-                onClick={() => {
-                  setIsOpen(!isOpen);
-                }}
-              />
-              <div className="absolute top-14 lg:top-20 right-0 z-50">
-                {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
-              </div>
-            </div>
-
-            <BackButton />
-          </div> */}
-
-          <div className="flex justify-center w-full ">
-            <div className="flex flex-col w-full p-2 sm:p-8 my-2 bg-six border-t-[20px] border-one rounded-t-lg">
+        <div className="flex flex-col justify-center items-center w-full h-full pt-2 overflow-y-auto z-10">
+          <div className="flex justify-center w-full overflow-y-auto h-screen">
+            <div className="flex flex-col w-full p-2 sm:p-8 my-2 border-t-[20px] border-one rounded-t-lg">
               <UserNameAndPhoto
                 post={{
                   userImage: userImage,
@@ -121,7 +103,7 @@ export default function Item({
               />
 
               <div className=" mt-4 sm:mt-16">
-                <div className="flex justify-between items-center my-4 lg:my-8 bg-four h-10 sm:h-16  w-full overflow-visible">
+                <div className="flex justify-between items-center my-4 lg:my-8 rounded-[5px] bg-four h-10 sm:h-16  w-full overflow-visible">
                   <h1 className="text-white text-lg sm:text-xl w-full mb-2 select-none">
                     <span className="text-one text-2xl mx-2 select-none">
                       #
@@ -132,7 +114,7 @@ export default function Item({
 
                 <div className="flex flex-col text-black w-full">
                   <div className="flex flex-col sm:grid md:grid-cols-2 sm:gap-x-4 w-full">
-                    <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300  text-md sm:text-xl w-full min-h-20 my-2 select-none">
+                    <h1 className="flex justify-start items-center bg-white shadow-sm rounded-[5px] shadow-gray-300  text-md sm:text-xl w-full min-h-20 my-2 select-none">
                       <span className="flex gap-1 items-center text-one text-md sm:text-xl mx-2 select-none">
                         <FaHouseDamage className="text-gray-500" />
                         اسم المعلن :
@@ -140,21 +122,21 @@ export default function Item({
                       {userName}{' '}
                     </h1>
 
-                    <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300  text-md sm:text-xl w-full min-h-20 my-2 select-none">
+                    <h1 className="flex justify-start items-center bg-white shadow-sm rounded-[5px] shadow-gray-300  text-md sm:text-xl w-full min-h-20 my-2 select-none">
                       <span className="flex gap-1 items-center text-one text-md sm:text-xl mx-2 select-none">
                         <GiModernCity className="text-gray-500" />
                         المدينة :
                       </span>
                       {propertyCity}{' '}
                     </h1>
-                    <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300  text-md sm:text-xl w-full min-h-20 my-2 select-none">
+                    <h1 className="flex justify-start items-center bg-white shadow-sm rounded-[5px] shadow-gray-300  text-md sm:text-xl w-full min-h-20 my-2 select-none">
                       <span className="flex gap-1 items-center text-one text-md sm:text-xl mx-2 select-none">
                         <FaTreeCity className="text-gray-500" />
                         اسم المنطقة :
                       </span>
                       {propertyTown}
                     </h1>
-                    <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300  text-md sm:text-xl w-full min-h-20 my-2 select-none">
+                    <h1 className="flex justify-start items-center bg-white shadow-sm rounded-[5px] shadow-gray-300  text-md sm:text-xl w-full min-h-20 my-2 select-none">
                       <span className="flex gap-1 items-center text-one text-md sm:text-xl mx-2 select-none">
                         <RxSpaceEvenlyHorizontally className="text-gray-500" />
                         نوع العقار :
@@ -164,7 +146,7 @@ export default function Item({
                     {(propertyType === 'بيت' ||
                       propertyType === 'شقة' ||
                       propertyType === 'فيلا') && (
-                      <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300  text-md sm:text-xl w-full min-h-20 my-2 select-none">
+                      <h1 className="flex justify-start items-center bg-white shadow-sm rounded-[5px] shadow-gray-300  text-md sm:text-xl w-full min-h-20 my-2 select-none">
                         <span className="flex gap-1 items-center text-one text-md sm:text-xl mx-2 select-none">
                           <MdOutlineBedroomParent className="text-gray-500" />
                           عدد الغرف :
@@ -172,14 +154,14 @@ export default function Item({
                         {propertyRoomsNumber}{' '}
                       </h1>
                     )}
-                    <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300  text-md sm:text-xl w-full min-h-20 my-2 select-none">
+                    <h1 className="flex justify-start items-center bg-white shadow-sm rounded-[5px] shadow-gray-300  text-md sm:text-xl w-full min-h-20 my-2 select-none">
                       <span className="flex gap-1 items-center text-one text-md sm:text-xl mx-2 select-none">
                         <VscUngroupByRefType className="text-gray-500" />
                         المساحة :
                       </span>
                       {propertyArea}
                     </h1>
-                    <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300  text-md sm:text-xl w-full min-h-20 my-2 select-none">
+                    <h1 className="flex justify-start items-center bg-white shadow-sm rounded-[5px] shadow-gray-300  text-md sm:text-xl w-full min-h-20 my-2 select-none">
                       <span className="flex gap-1 items-center text-one text-md sm:text-xl mx-2 select-none">
                         <MdOutlinePriceCheck className="text-gray-500" />
                         السعر :
@@ -190,21 +172,21 @@ export default function Item({
                       </span>{' '}
                     </h1>
 
-                    <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300  text-md sm:text-xl w-full min-h-20 my-2 select-none">
+                    <h1 className="flex justify-start items-center bg-white shadow-sm rounded-[5px] shadow-gray-300  text-md sm:text-xl w-full min-h-20 my-2 select-none">
                       <span className="flex gap-1 items-center text-one text-md sm:text-xl mx-2 select-none">
                         <GiRotaryPhone className="text-gray-500" />
                         رقم الهاتف :
                       </span>
                       {contactPhoneNumber}
                     </h1>
-                    {/* <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300  text-md sm:text-xl w-full min-h-20 my-2 select-none">
+                    {/* <h1 className="flex justify-start items-center bg-white shadow-sm rounded-[5px] shadow-gray-300  text-md sm:text-xl w-full min-h-20 my-2 select-none">
                         <span className="flex gap-1 items-center text-one text-md sm:text-xl mx-2 select-none">
                   
                         </span>
                       </h1> */}
                   </div>
 
-                  <div className="flex justify-between items-center my-4 lg:my-8 bg-four h-10 sm:h-16  w-full overflow-visible">
+                  <div className="flex justify-between items-center my-4 lg:my-8 rounded-[5px] bg-four h-10 sm:h-16  w-full overflow-visible">
                     <h1 className="text-white text-lg sm:text-xl w-full mb-2 select-none">
                       <span className="text-one text-2xl mx-2 select-none">
                         #
@@ -213,7 +195,7 @@ export default function Item({
                     </h1>
                   </div>
 
-                  <div className="bg-white  p-4 w-full">
+                  <div className="bg-white  p-4 w-full rounded-[5px]">
                     <pre className="text-sm sm:text-lg text-start w-full select-none h-72 overflow-y-auto">
                       {description}
                     </pre>
@@ -221,7 +203,7 @@ export default function Item({
                 </div>
                 {lng !== '' && lat !== '' && (
                   <div>
-                    <div className="flex justify-between items-center my-4 lg:my-8 bg-four h-10 sm:h-16  w-full overflow-visible">
+                    <div className="flex justify-between items-center my-4 lg:my-8 rounded-[5px] bg-four h-10 sm:h-16  w-full overflow-visible">
                       <h1 className="text-white text-lg sm:text-xl w-full mb-2 select-none">
                         <span className="text-one text-2xl mx-2 select-none">
                           #
@@ -229,7 +211,7 @@ export default function Item({
                         موقع العقار على الخريطة:
                       </h1>
                     </div>
-                    <div className="border border-one">
+                    <div className="border border-one z-40">
                       <SyriaMap lng={lng} lat={lat} />
                     </div>{' '}
                   </div>
@@ -282,6 +264,6 @@ export default function Item({
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }

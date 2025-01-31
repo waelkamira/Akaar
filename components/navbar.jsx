@@ -109,7 +109,7 @@ export default function Navbar() {
           className="relative flex justify-end w-fit min-w-[218px] bg-[#8A8D8C] cursor-pointer "
           onClick={() => router.push('/')}
         >
-          <div className="absolute top-5 left-24 z-50 flex justify-end ">
+          <div className="absolute top-5 left-24 z-10 flex justify-end ">
             <div className="absolute z-30">
               <h1 className="akar akarStroke lg:text-4xl lg:font-extrabold text-lg text-nowrap select-none">
                 AKAR

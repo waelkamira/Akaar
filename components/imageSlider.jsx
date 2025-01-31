@@ -52,17 +52,17 @@ export default function ImageSlider({ image, image1, image2, image3, image4 }) {
   );
 
   return (
-    <>
-      <div ref={sliderRef} className="keen-slider w-full">
-        <div className="keen-slider__slide number-slide1">
+    <div className="">
+      <div ref={sliderRef} className="keen-slider w-full h-96 ">
+        <div className="keen-slider__slide number-slide1 ">
           {' '}
           {image && (
-            <div className="relative w-full h-44 sm:h-[500px] overflow-hidden rounded-[5px]  border border-one">
+            <div className="relative w-full aspect-[4/3] overflow-hidden rounded-[5px] border border-one">
               <Image
                 priority
                 src={image}
                 layout="fill"
-                objectFit="cover"
+                objectFit="contain"
                 alt={'photo'}
               />
             </div>
@@ -71,12 +71,12 @@ export default function ImageSlider({ image, image1, image2, image3, image4 }) {
         <div className="keen-slider__slide number-slide2">
           {' '}
           {image1 && (
-            <div className="relative w-full h-44 sm:h-[500px] overflow-hidden rounded-[5px]  border border-one">
+            <div className="relative w-full aspect-[4/3] overflow-hidden rounded-[5px]  border border-one">
               <Image
                 priority
                 src={image1}
                 layout="fill"
-                objectFit="cover"
+                objectFit="contain"
                 alt={'photo'}
               />
             </div>
@@ -85,12 +85,12 @@ export default function ImageSlider({ image, image1, image2, image3, image4 }) {
         <div className="keen-slider__slide number-slide3">
           {' '}
           {image2 && (
-            <div className="relative w-full h-44 sm:h-[500px] overflow-hidden rounded-[5px]  border border-one">
+            <div className="relative w-full aspect-[4/3] overflow-hidden rounded-[5px]  border border-one">
               <Image
                 priority
                 src={image2}
                 layout="fill"
-                objectFit="cover"
+                objectFit="contain"
                 alt={'photo'}
               />
             </div>
@@ -99,12 +99,12 @@ export default function ImageSlider({ image, image1, image2, image3, image4 }) {
         <div className="keen-slider__slide number-slide4">
           {' '}
           {image3 && (
-            <div className="relative w-full h-44 sm:h-[500px] overflow-hidden rounded-[5px]  border border-one">
+            <div className="relative w-full aspect-[4/3] overflow-hidden rounded-[5px]  border border-one">
               <Image
                 priority
                 src={image3}
                 layout="fill"
-                objectFit="cover"
+                objectFit="contain"
                 alt={'photo'}
               />
             </div>
@@ -113,12 +113,12 @@ export default function ImageSlider({ image, image1, image2, image3, image4 }) {
         <div className="keen-slider__slide number-slide5">
           {' '}
           {image4 && (
-            <div className="relative w-full h-44 sm:h-[500px] overflow-hidden rounded-[5px]  border border-one">
+            <div className="relative w-full aspect-[4/3] overflow-hidden rounded-[5px]  border border-one">
               <Image
                 priority
                 src={image4}
                 layout="fill"
-                objectFit="cover"
+                objectFit="contain"
                 alt={'photo'}
               />
             </div>
@@ -130,12 +130,12 @@ export default function ImageSlider({ image, image1, image2, image3, image4 }) {
         <div className="keen-slider__slide number-slide1">
           {' '}
           {image && (
-            <div className="relative w-full h-44 sm:h-[700px] overflow-hidden rounded-[5px] border border-one">
+            <div className="relative w-full aspect-[4/3] overflow-hidden rounded-[5px] border border-one">
               <Image
                 priority
                 src={image}
                 layout="fill"
-                objectFit="cover"
+                objectFit="contain"
                 alt={'photo'}
               />
             </div>
@@ -144,12 +144,12 @@ export default function ImageSlider({ image, image1, image2, image3, image4 }) {
         <div className="keen-slider__slide number-slide2">
           {' '}
           {image1 && (
-            <div className="relative w-full h-44 sm:h-[500px] overflow-hidden rounded-[5px]  border border-one">
+            <div className="relative w-full aspect-[4/3] overflow-hidden rounded-[5px]  border border-one">
               <Image
                 priority
                 src={image1}
                 layout="fill"
-                objectFit="cover"
+                objectFit="contain"
                 alt={'photo'}
               />
             </div>
@@ -158,12 +158,12 @@ export default function ImageSlider({ image, image1, image2, image3, image4 }) {
         <div className="keen-slider__slide number-slide3">
           {' '}
           {image2 && (
-            <div className="relative w-full h-44 sm:h-[500px] overflow-hidden rounded-[5px]  border border-one">
+            <div className="relative w-full aspect-[4/3] overflow-hidden rounded-[5px]  border border-one">
               <Image
                 priority
                 src={image2}
                 layout="fill"
-                objectFit="cover"
+                objectFit="contain"
                 alt={'photo'}
               />
             </div>
@@ -172,12 +172,12 @@ export default function ImageSlider({ image, image1, image2, image3, image4 }) {
         <div className="keen-slider__slide number-slide4">
           {' '}
           {image3 && (
-            <div className="relative w-full h-44 sm:h-[500px] overflow-hidden rounded-[5px]  border border-one">
+            <div className="relative w-full aspect-[4/3] overflow-hidden rounded-[5px]  border border-one">
               <Image
                 priority
                 src={image3}
                 layout="fill"
-                objectFit="cover"
+                objectFit="contain"
                 alt={'photo'}
               />
             </div>
@@ -186,18 +186,18 @@ export default function ImageSlider({ image, image1, image2, image3, image4 }) {
         <div className="keen-slider__slide number-slide5">
           {' '}
           {image4 && (
-            <div className="relative w-full h-44 sm:h-[500px] overflow-hidden rounded-[5px]  border border-one">
+            <div className="relative w-full aspect-[4/3] overflow-hidden rounded-[5px]  border border-one">
               <Image
                 priority
                 src={image4}
                 layout="fill"
-                objectFit="cover"
+                objectFit="contain"
                 alt={'photo'}
               />
             </div>
           )}
         </div>
       </div>
-    </>
+    </div>
   );
 }

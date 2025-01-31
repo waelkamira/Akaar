@@ -83,14 +83,16 @@ export default function SearchBar({ propertyCategory }) {
   };
 
   return (
-    <div className="flex flex-col w-full xl:w-[90%] 2xl:w-[80%] h-[1370px] px-2 xl:px-8 2xl:px-16 pt-2 overflow-y-auto z-10 rounded-b-[5px]">
-      <MiddleBarAndPhoto
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-        isShow={isShow}
-        setIsShow={setIsShow}
-        noButton={true}
-      />
+    <div className="flex flex-col w-full xl:w-[90%] 2xl:w-[70%] h-[1370px] px-2 xl:px-8 2xl:px-16 pt-2 overflow-y-auto z-10 rounded-b-[5px]">
+      <div className="z-10">
+        <MiddleBarAndPhoto
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          isShow={isShow}
+          setIsShow={setIsShow}
+          noButton={true}
+        />
+      </div>
       <div className="relative hidden xl:block w-full h-[300px] lg:h-[400px] border-l-[18px] border-one overflow-hidden rounded-[5px]">
         <Image
           src="https://i.imgur.com/wZ0aruw.jpg"
@@ -104,7 +106,7 @@ export default function SearchBar({ propertyCategory }) {
         {' '}
         <button
           onClick={() => setIsShow(!isShow)}
-          className="relative text-sm lg:text-xl bg-white h-8 lg:h-11 w-3/4 border-r-[30%] shadow-lg border-one z-40 rounded-[5px] hover:scale-[101%]"
+          className="relative text-sm lg:text-xl bg-white h-8 lg:h-11 w-3/4 border-r-[30%] shadow-lg border-one rounded-[5px] hover:scale-[101%]"
         >
           فلاتر البحث{' '}
           <span className="absolute left-3/4 top-1/4 mx-auto my-auto">

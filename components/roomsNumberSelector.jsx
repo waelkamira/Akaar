@@ -72,7 +72,7 @@ export default function PropertyRoomsNumberSelector() {
           isSearchable
           options={options}
           theme={customTheme}
-          className="w-full text-md text-start z-20 select-none"
+          className="w-full text-md text-start z-50 select-none"
           classNamePrefix="select"
           classNames={{
             control: (state) =>
