@@ -288,14 +288,14 @@ export default function OnClickMap({
         </MapContainer>
       </div>
 
-      {selectedLocation && (
+      {/* {selectedLocation && (
         <div className="mt-4 p-4 bg-gray-100 rounded text-black shadow-sm">
           <p>
             <h1 className="sm:font-bold">موقع العقار الذي قمت بتحديده:</h1>{' '}
             {selectedLocation[0].toFixed(5)}, {selectedLocation[1].toFixed(5)}{' '}
           </p>
         </div>
-      )}
+      )} */}
     </div>
   );
 }

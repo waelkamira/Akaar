@@ -346,7 +346,7 @@ export default function SmallItem({ post, index, show = true, id = false }) {
   }
 
   return (
-    <div className="rounded-lg border-t-[20px] border-one bg-white mb-4 w-full">
+    <div className="rounded-lg border-t-[20px] border-one bg-white mb-4 w-full z-[5]">
       {!post && <Loading />}
       <div
         key={index}
@@ -373,7 +373,7 @@ export default function SmallItem({ post, index, show = true, id = false }) {
         </div>
         <div className="w-full sm:px-6">
           <h1
-            className={`text-one ${
+            className={`text-one text-center ${
               path.includes('myPosts') || path.includes('favoritePosts')
                 ? 'sm:my-2 text-lg'
                 : 'sm:my-4 text-xl sm:text-3xl'

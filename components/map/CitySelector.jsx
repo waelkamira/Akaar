@@ -91,7 +91,7 @@ export default function CitySelector() {
           isClearable
           isSearchable
           theme={customTheme}
-          className="w-full text-sm sm:text-md text-start z-50 text-nowrap"
+          className="w-full text-sm sm:text-md text-start z-[7] text-nowrap"
           classNamePrefix="select"
           classNames={{
             control: (state) =>
@@ -125,7 +125,7 @@ export default function CitySelector() {
           isSearchable
           isDisabled={!selectedCity}
           theme={customTheme}
-          className="w-full text-sm sm:text-md text-start z-40 text-nowrap"
+          className="w-full text-sm sm:text-md text-start z-[6] text-nowrap"
           classNamePrefix="select"
           classNames={{
             control: (state) =>
