@@ -2,7 +2,7 @@
 import SearchBar from '../../components/SearchBar';
 export default function Sell() {
   return (
-    <div className="flex flex-col items-center w-full bg-gradient-to-r from-[#494949] to-four rounded-b-[5px] ">
+    <div className="flex flex-col items-center w-full bg-gradient-to-r from-[#494949] to-four rounded-b-[5px] z-0">
       <SearchBar propertyCategory="بيع" />
     </div>
   );

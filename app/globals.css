@@ -39,9 +39,7 @@ pre {
   font-family: 'Rubik', sans-serif;
   font-size: 12px;
 }
-.keen-slider__slide {
-  border-radius: 0px;
-}
+
 :root {
   --btn-background: rgb(78, 78, 78); /* لون افتراضي */
   --btn-hover-background: #ffa500; /* لون افتراضي عند hover */
@@ -128,27 +126,35 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.keen-slider__slide {
+  border-radius: 0px;
+}
+
 [class^='number-slide'],
 [class*=' number-slide'] {
-  background: rgba(128, 128, 128, 0.116);
+  /* background: rgba(128, 128, 128, 0.116); */
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 50px;
   color: #fff;
   font-weight: 500;
+  border-radius: 5px;
+  /* background: rgb(224, 41, 41); */
 }
 
 .thumbnail .keen-slider__slide {
   font-size: 30px;
-  margin-top: 10px;
-  height: 100px;
+
+  /* height: 100px; */
 }
 .thumbnail .keen-slider__slide {
   cursor: pointer;
+  /* background: rgb(224, 41, 41); */
 }
 .thumbnail .keen-slider__slide.active {
   border: 2px dashed black;
+  /* background: rgb(10, 158, 5); */
 }
 /* تعريف تأثير الكتابة */
 @keyframes typing {

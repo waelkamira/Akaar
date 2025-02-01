@@ -66,8 +66,8 @@ export default function Profile() {
   return (
     <div className="flex justify-center w-full bg-gradient-to-r  from-[#494949] to-four">
       {session?.status === 'unauthenticated' && (
-        <div className="p-4 bg-four  m-2 md:m-8 border border-one text-center h-screen">
-          <h1 className="text-lg md:text-2xl p-2 my-8 text-white">
+        <div className="p-4 bg-fm text-sm  md:text-lgdlg:text-xl our  m-2 md:m-8 border border-one text-center h-screen">
+          <h1 className="text-lg m text-md xl:text-xldlg:text-2xl p-2 my-8 text-white">
             يجب عليك تسجيل الدخول أولا لرؤية هذا البروفايل
           </h1>
           <div className="flex flex-col justify-between items-center gap-4 w-full">
@@ -127,8 +127,10 @@ export default function Profile() {
                 </div>
               </div> */}
               <div className="flex flex-col items-center gap-2 justify-between  px-8 py-2 w-full my-2">
-                <h1 className="text-nowrap text-start w-full select-none">
-                  <span className="text-one  text-2xl ml-2">#</span>
+                <h1 className="text-nowrap text-sm  md:text-lg lg:text-xl text-start w-full select-none">
+                  <span className="text-one text-md xl:text-xl lg:text-2xl ml-2">
+                    #
+                  </span>
                   {session?.data?.user?.name}
                 </h1>
                 <div className="flex items-center w-full">
@@ -136,8 +138,10 @@ export default function Profile() {
                 </div>
               </div>
               <div className="flex flex-col items-center gap-2 justify-between  px-8 py-2 w-full my-2">
-                <h1 className="text-nowrap text-start w-full select-none">
-                  <span className="text-one  text-2xl ml-2">#</span>
+                <h1 className="text-nowrap text-sm  md:text-lg lg:text-xl text-start w-full select-none">
+                  <span className="text-one text-md xl:text-xl lg:text-2xl ml-2">
+                    #
+                  </span>
                   {session?.data?.user?.email}
                 </h1>
                 <div className="flex items-center w-full">
@@ -146,8 +150,10 @@ export default function Profile() {
               </div>
               <div className="flex flex-col items-center gap-2 justify-between  px-8 py-2 w-full my-2">
                 <Link href={'/myPosts'} className="w-full">
-                  <h1 className="text-nowrap text-start w-full select-none cursor-pointer ">
-                    <span className="text-one  text-2xl ml-2 ">#</span>
+                  <h1 className="text-nowrap text-sm  md:text-lg lg:text-xl text-start w-full select-none cursor-pointer ">
+                    <span className="text-one text-md xl:text-xl lg:text-2xl ml-2 ">
+                      #
+                    </span>
                     إعلاناتي{' '}
                   </h1>
                 </Link>
@@ -157,8 +163,10 @@ export default function Profile() {
               </div>
               <div className="flex flex-col items-center gap-2 justify-between  px-8 py-2 w-full my-2">
                 <Link href={'/favoritePosts'} className="w-full">
-                  <h1 className="text-nowrap text-start w-full select-none cursor-pointer ">
-                    <span className="text-one  text-2xl ml-2 ">#</span>
+                  <h1 className="text-nowrap text-sm  md:text-lg lg:text-xl text-start w-full select-none cursor-pointer ">
+                    <span className="text-one text-md xl:text-xl lg:text-2xl ml-2 ">
+                      #
+                    </span>
                     إعلانات أعجبتني{' '}
                   </h1>
                 </Link>

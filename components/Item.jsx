@@ -67,7 +67,7 @@ export default function Item({
   };
 
   return (
-    <div className="w-full overflow-y-auto h-screen mt-20 bg-gray-400/10 z-50">
+    <div className="w-full overflow-y-auto h-screen bg-gray-400/10 z-[100] pb-28">
       {session?.status === 'unauthenticated' && (
         <div className="p-4 bg-four  m-2 md:m-8 border border-one text-center h-screen">
           <h1 className="text-lg md:text-2xl p-2 my-8 text-white">
@@ -79,7 +79,7 @@ export default function Item({
         </div>
       )}
       {session?.status === 'authenticated' && (
-        <div className="flex flex-col justify-center items-center w-full h-full pt-2 overflow-y-auto z-10">
+        <div className="flex flex-col justify-center items-center w-full h-full overflow-y-auto z-10">
           <div className="flex justify-center w-full overflow-y-auto h-screen">
             <div className="flex flex-col w-full p-2 sm:p-8 my-2 border-t-[20px] border-one rounded-t-lg">
               <UserNameAndPhoto
@@ -90,7 +90,7 @@ export default function Item({
                 }}
               />
 
-              <h1 className="text-one my-4 sm:my-4 text-3xl sm:text-4xl lg:text-5xl text-center select-none   p-2 sm:p-4">
+              <h1 className="text-one my-2 sm:my-4 text-xl sm:text-2xl lg:text-3xl text-center select-none   p-2 sm:p-4">
                 {propertyName}
               </h1>
               {!image && <Loading myMessage={'جاري تحميل الصورة'} />}

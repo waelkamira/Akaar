@@ -83,7 +83,7 @@ export default function SearchBar({ propertyCategory }) {
   };
 
   return (
-    <div className="flex flex-col w-full xl:w-[90%] 2xl:w-[70%] h-[1370px] px-2 xl:px-8 2xl:px-16 pt-2 overflow-y-auto rounded-b-[5px]">
+    <div className="flex flex-col w-full xl:w-[90%] 2xl:w-[70%] h-[1370px] px-2 xl:px-8 2xl:px-16 pt-2 overflow-y-auto rounded-b-[5px] z-[0]">
       <MiddleBarAndPhoto
         isOpen={isOpen}
         setIsOpen={setIsOpen}
@@ -184,7 +184,7 @@ export default function SearchBar({ propertyCategory }) {
         {loading ? (
           <Loading />
         ) : allPosts?.length > 0 ? (
-          <div className="flex flex-col justify-start w-full overflow-y-auto my-2">
+          <div className="flex flex-col justify-start w-full overflow-y-auto my-2 z-[0]">
             {allPosts?.map((post, index) => (
               <SmallItem key={index} post={post} />
             ))}
