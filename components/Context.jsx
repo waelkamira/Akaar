@@ -118,7 +118,7 @@ export function InputsContextProvider({ children }) {
     deleteFavoritePost: {},
     action: {},
     myPosts: [],
-    location: [],
+    location: [33.5138, 36.2765],
     category: '',
   });
   // console.log('from Context', state);

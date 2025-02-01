@@ -68,7 +68,7 @@ export default function Card({ cardName, path, image, text, color, emoji }) {
         {' '}
         <h1 className="relative text-lg lg:text-2xl my-2 lg:my-4 font-medium text-center w-full">
           {cardName}
-          <span className="absolute left-[65%] top-1/4 mx-auto my-auto">
+          <span className="absolute left-[65%] sm:left-[70%] xl:left-[65%] top-1/4 mx-auto my-auto">
             {emoji}
           </span>
         </h1>

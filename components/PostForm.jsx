@@ -30,7 +30,6 @@ export default function PostForm({ setIsVisible, cancel = true }) {
   const userName = CurrentUser()?.name || session?.data?.user?.name;
   const userImage = CurrentUser()?.image || session?.data?.user?.image;
   const createdBy = CurrentUser()?.email;
-  console.log('*********** userName', userName);
   const {
     data,
     dispatch,
@@ -41,44 +40,8 @@ export default function PostForm({ setIsVisible, cancel = true }) {
     propertyTownLocation,
   } = useContext(inputsContext);
 
-  // console.log('data 111111111111111111', data);
-  console.log('category 111111111111111111', category);
-  useEffect(() => {
-    if (!location) {
-      console.error('Location is undefined');
-      return;
-    }
+  console.log('location 111111111111111111', location);
 
-    setInputs({
-      ...inputs,
-      propertyType: data?.propertyType?.label || '',
-      propertyRoomsNumber: data?.propertyRoomsNumber?.label || '0',
-      propertyCity: data?.propertyCity || '',
-      propertyTown: data?.propertyTown || '',
-      propertyCategory: category?.label || '',
-      image: addImages?.[0] || '',
-      image1: addImages?.[1] || '',
-      image2: addImages?.[2] || '',
-      image3: addImages?.[3] || '',
-      image4: addImages?.[4] || '',
-      lat: location[0] || 33.5138,
-      lng: location[1] || 36.2765,
-    });
-    handleGenerateEmbed();
-  }, [
-    url,
-    data?.propertyType,
-    data?.propertyCity,
-    data?.propertyTown,
-    data?.propertyRoomsNumber,
-    addImages[0],
-    addImages[1],
-    addImages[2],
-    addImages[3],
-    addImages[4],
-    location,
-    category?.label,
-  ]);
   const [errors, setErrors] = useState({
     propertyCategory: false,
     propertyCategoryErrorMessage: 'هذا الحقل مطلوب',
@@ -133,7 +96,43 @@ export default function PostForm({ setIsVisible, cancel = true }) {
     link: '',
     hearts: 0,
   });
-  // console.log('inputs ************************', inputs);
+
+  useEffect(() => {
+    if (!location) {
+      console.error('Location is undefined');
+      return;
+    }
+
+    setInputs({
+      ...inputs,
+      propertyType: data?.propertyType?.label || '',
+      propertyRoomsNumber: data?.propertyRoomsNumber?.label || '0',
+      propertyCity: data?.propertyCity || '',
+      propertyTown: data?.propertyTown || '',
+      propertyCategory: category?.label || '',
+      image: addImages?.[0] || '',
+      image1: addImages?.[1] || '',
+      image2: addImages?.[2] || '',
+      image3: addImages?.[3] || '',
+      image4: addImages?.[4] || '',
+      lat: location[0] || 33.5138,
+      lng: location[1] || 36.2765,
+    });
+    handleGenerateEmbed();
+  }, [
+    url,
+    data?.propertyType,
+    data?.propertyCity,
+    data?.propertyTown,
+    data?.propertyRoomsNumber,
+    addImages[0],
+    addImages[1],
+    addImages[2],
+    addImages[3],
+    addImages[4],
+    location,
+    category?.label,
+  ]);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -597,7 +596,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
               placeholder="... ضع رابط الفيديو هنا"
               value={url}
               onChange={handleInputChange}
-              className="flex text-right mt-4 mb-8 w-full p-2 rounded-[5px] text-lg outline-2 focus:outline-one h-12 placeholder:text-sm lg:placeholder:text-lg"
+              className="w-full text-sm sm:text-lg rounded-[5px] text-start  h-9 sm:h-12 text-nowrap px-2 border border-slate-300 focus:outline-one"
             />
             {inputs?.link && (
               <div>

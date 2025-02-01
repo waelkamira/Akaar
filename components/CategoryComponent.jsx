@@ -5,7 +5,7 @@ import { inputsContext } from './Context.jsx';
 import { usePathname } from 'next/navigation.js';
 import { MdOutlineBedroomParent } from 'react-icons/md';
 
-export default function CitiesSelectComponent() {
+export default function CategoryComponent() {
   const { dispatch } = useContext(inputsContext);
   const [category, setCategory] = useState('');
   const path = usePathname();
@@ -70,7 +70,7 @@ export default function CitiesSelectComponent() {
           isSearchable
           options={options}
           theme={customTheme}
-          className="w-full text-md text-start z-40"
+          className="w-full text-md text-start z-[10]"
           classNamePrefix="select"
           classNames={{
             control: (state) =>

@@ -83,16 +83,15 @@ export default function SearchBar({ propertyCategory }) {
   };
 
   return (
-    <div className="flex flex-col w-full xl:w-[90%] 2xl:w-[70%] h-[1370px] px-2 xl:px-8 2xl:px-16 pt-2 overflow-y-auto z-10 rounded-b-[5px]">
-      <div className="z-10">
-        <MiddleBarAndPhoto
-          isOpen={isOpen}
-          setIsOpen={setIsOpen}
-          isShow={isShow}
-          setIsShow={setIsShow}
-          noButton={true}
-        />
-      </div>
+    <div className="flex flex-col w-full xl:w-[90%] 2xl:w-[70%] h-[1370px] px-2 xl:px-8 2xl:px-16 pt-2 overflow-y-auto rounded-b-[5px]">
+      <MiddleBarAndPhoto
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        isShow={isShow}
+        setIsShow={setIsShow}
+        noButton={true}
+      />
+
       <div className="relative hidden xl:block w-full h-[300px] lg:h-[400px] border-l-[18px] border-one overflow-hidden rounded-[5px]">
         <Image
           src="https://i.imgur.com/wZ0aruw.jpg"
@@ -119,7 +118,7 @@ export default function SearchBar({ propertyCategory }) {
         </button>
       </div>
 
-      <div className="flex flex-col w-full h-[1370px] overflow-y-auto z-10 ">
+      <div className="flex flex-col w-full h-[1370px] overflow-y-auto">
         {isShow && (
           <div className="flex flex-col-reverse sm:flex-row justify-center items-center w-full bg-white shadow-sm shadow-gray-300 border-b-[8px] sm:border-b-[20px] border-one rounded-md text-black">
             <div className="relative text-center w-full md:w-1/4 px-2 xl:mb-4">
@@ -131,18 +130,17 @@ export default function SearchBar({ propertyCategory }) {
               />
             </div>
             <div className="flex flex-col xl:flex-row items-center justify-center gap-2 mb-2 w-full px-2 text-black">
-              <div className="flex flex-col-reverse sm:flex-row gap-2 w-full xl:w-1/2">
-                <div className="w-full sm:w-1/3">
+              <div className="flex flex-col sm:flex-row gap-2 w-full">
+                <div className="w-full">
                   <PropertyTypeSelector />
                 </div>
                 <div className="w-full">
-                  <CitySelector />
+                  <RoomsNumberSelector />
                 </div>
               </div>
+              <CitySelector />
 
-              <div className="flex flex-col-reverse sm:flex-row gap-2 w-full xl:w-1/2">
-                <RoomsNumberSelector />
-
+              <div className="flex flex-col-reverse sm:flex-row gap-2 w-full">
                 <div className=" w-full">
                   <div className="flex items-center gap-2 w-full justify-start my-2">
                     <h1 className="flex text-right text-md select-none text-nowrap">
@@ -186,7 +184,7 @@ export default function SearchBar({ propertyCategory }) {
         {loading ? (
           <Loading />
         ) : allPosts?.length > 0 ? (
-          <div className="flex flex-col justify-start w-full overflow-y-auto z-10 my-2">
+          <div className="flex flex-col justify-start w-full overflow-y-auto my-2">
             {allPosts?.map((post, index) => (
               <SmallItem key={index} post={post} />
             ))}
