@@ -22,12 +22,12 @@ export default function Navbar() {
 
   return (
     <div
-      className={`hidden xl:flex xl:justify-between rounded-t-[10px] overflow-hidden ${
+      className={`hidden xl:flex xl:justify-between rounded-t-[10px] overflow-hidden  ${
         pathname !== '/' ? ' pb-[5px] bg-gradient-to-r from-one to-four' : ''
       }`}
     >
       <div className="flex justify-between w-full gap-8 bg-gradient-to-r from-[#494949] to-four">
-        <ul className="flex justify-evenly gap-4 mr-4 items-center h-20 w-4/6">
+        <ul className="flex justify-evenly gap-4 mr-4 items-center h-24 w-4/6">
           <div
             className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-sm rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-16 transition-all duration-300"
             onClick={() => router.push('/')}
