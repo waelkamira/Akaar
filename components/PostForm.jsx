@@ -1,14 +1,10 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import React, { useContext, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import PropertyTypeSelector from './PropertyTypeSelector';
 import { inputsContext } from './Context';
 import { useSession } from 'next-auth/react';
-import CurrentUser from './CurrentUser';
-import CustomToast from './CustomToast';
-import { Confetti } from './SuccessComponent';
-import { getVideoIdAndPlatform } from './youtubeUtils';
 import { v4 as uuidv4 } from 'uuid';
 import { FaHouseDamage } from 'react-icons/fa';
 import { RxSpaceEvenlyHorizontally } from 'react-icons/rx';
@@ -16,11 +12,20 @@ import { MdOutlinePriceCheck } from 'react-icons/md';
 import { GiRotaryPhone } from 'react-icons/gi';
 import { MdOutlineFeaturedPlayList } from 'react-icons/md';
 import { RxVideo } from 'react-icons/rx';
-import OnClickMap from './map/onClickMap';
 import { useRouter } from 'next/navigation';
-import CategoryComponent from './CategoryComponent';
-import CitySelector from './map/CitySelector';
-import RoomsNumberSelector from './roomsNumberSelector';
+
+const PropertyTypeSelector = dynamic(() => import('./PropertyTypeSelector'));
+const CurrentUser = dynamic(() => import('./CurrentUser'));
+const CustomToast = dynamic(() => import('./CustomToast'));
+const Confetti = dynamic(() =>
+  import('./SuccessComponent').then((mod) => mod.Confetti)
+);
+const OnClickMap = dynamic(() => import('./map/onClickMap'));
+const CategoryComponent = dynamic(() => import('./CategoryComponent'));
+const CitySelector = dynamic(() => import('./map/CitySelector'));
+const RoomsNumberSelector = dynamic(() => import('./roomsNumberSelector'));
+
+import { getVideoIdAndPlatform } from './youtubeUtils';
 
 export default function PostForm({ setIsVisible, cancel = true }) {
   const [url, setUrl] = useState('');
@@ -98,7 +103,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
   });
 
   useEffect(() => {
-    if (!location) {
+    if (!location && typeof window !== 'undefined') {
       console.error('Location is undefined');
       return;
     }

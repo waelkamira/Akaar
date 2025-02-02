@@ -4,20 +4,22 @@ import Image from 'next/image';
 import React, { useContext, useEffect, useState } from 'react';
 import Link from 'next/link';
 import Button from '../../components/Button';
-import BackButton from '../../components/BackButton';
-import SideBarMenu from '../../components/SideBarMenu';
-import { TfiMenuAlt } from 'react-icons/tfi';
 import { formatDistanceToNow } from 'date-fns/formatDistanceToNow';
-import CustomToast from '../../components/CustomToast';
 import toast from 'react-hot-toast';
 import { MdEdit } from 'react-icons/md';
 import { inputsContext } from '../../components/Context';
 import { getVideoIdAndPlatform } from '../../components/youtubeUtils';
-import LoadingPhoto from '../../components/LoadingPhoto';
-import ImageSlider from '../../components/imageSlider';
-import EditItem from '../../components/editItem';
-import OnClickMap from '../../components/map/onClickMap';
-import MiddleBarAndPhoto from '../../components/middleBarAndPhoto';
+import dynamic from 'next/dynamic';
+
+// تحميل المكونات ديناميكيًا
+const CustomToast = dynamic(() => import('../../components/CustomToast'));
+const LoadingPhoto = dynamic(() => import('../../components/LoadingPhoto'));
+const ImageSlider = dynamic(() => import('../../components/imageSlider'));
+const EditItem = dynamic(() => import('../../components/editItem'));
+const OnClickMap = dynamic(() => import('../../components/map/onClickMap'));
+const MiddleBarAndPhoto = dynamic(() =>
+  import('../../components/middleBarAndPhoto')
+);
 
 export default function EditPost() {
   const [url, setUrl] = useState('');
@@ -57,7 +59,7 @@ export default function EditPost() {
   }, []);
 
   useEffect(() => {
-    if (location) {
+    if (location && typeof window !== 'undefined') {
       setEditedPost({ ...editedPost, lat: location[0], lng: location[1] });
       setInputs({ ...inputs, lat: location[0], lng: location[1] });
     }
