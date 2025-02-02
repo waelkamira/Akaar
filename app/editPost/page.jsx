@@ -8,7 +8,6 @@ import BackButton from '../../components/BackButton';
 import SideBarMenu from '../../components/SideBarMenu';
 import { TfiMenuAlt } from 'react-icons/tfi';
 import { formatDistanceToNow } from 'date-fns/formatDistanceToNow';
-import { useParams } from 'next/navigation';
 import CustomToast from '../../components/CustomToast';
 import toast from 'react-hot-toast';
 import { MdEdit } from 'react-icons/md';
@@ -18,6 +17,7 @@ import LoadingPhoto from '../../components/LoadingPhoto';
 import ImageSlider from '../../components/imageSlider';
 import EditItem from '../../components/editItem';
 import OnClickMap from '../../components/map/onClickMap';
+import MiddleBarAndPhoto from '../../components/middleBarAndPhoto';
 
 export default function EditPost() {
   const [url, setUrl] = useState('');
@@ -185,21 +185,11 @@ export default function EditPost() {
       )}
       {session?.status === 'authenticated' && (
         <div className="flex flex-col justify-center items-center w-full xl:w-[90%] 2xl:w-[70%] h-full sm:px-16 pt-2 overflow-y-auto z-10 px-2">
-          <div className="relative flex justify-between items-center w-full gap-2 my-2 bg-one p-1 md:p-2 rounded-[5px]">
-            <div>
-              <TfiMenuAlt
-                className="text-[30px] lg:text-5xl text-white cursor-pointer"
-                onClick={() => {
-                  setIsOpen(!isOpen);
-                }}
-              />
-              <div className="absolute top-14 lg:top-20 right-0 z-50">
-                {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
-              </div>
-            </div>
-
-            <BackButton />
-          </div>
+          <MiddleBarAndPhoto
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            noButton={false}
+          />
 
           <div className="flex flex-col justify-start items-center w-full gap-4 py-4">
             <h1 className="grow text-lg lg:text-2xl w-full text-white">

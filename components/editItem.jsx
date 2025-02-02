@@ -1,3 +1,4 @@
+'use client';
 import React from 'react';
 import { MdEdit } from 'react-icons/md';
 
