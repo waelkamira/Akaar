@@ -5,21 +5,14 @@ import React, { useContext, useEffect, useState } from 'react';
 import { IoMdClose } from 'react-icons/io';
 import toast from 'react-hot-toast';
 import CustomToast from '../../components/CustomToast';
-import BackButton from '../../components/BackButton';
 import { MdKeyboardDoubleArrowRight } from 'react-icons/md';
 import { MdKeyboardDoubleArrowLeft } from 'react-icons/md';
 import Link from 'next/link';
 import { inputsContext } from '../../components/Context';
-import { TfiMenuAlt } from 'react-icons/tfi';
-import SideBarMenu from '../../components/SideBarMenu';
-import Button from '../../components/Button';
 import Loading from '../../components/Loading';
 import { useRouter } from 'next/navigation';
 import { MdEdit } from 'react-icons/md';
-import { LuArrowDownNarrowWide, LuArrowUpNarrowWide } from 'react-icons/lu';
-import { GiBuffaloHead } from 'react-icons/gi';
-import { FiActivity } from 'react-icons/fi';
-import MiddleBarAndPhoto from '../../components/MiddleBarAndPhoto';
+import MiddleBarAndPhoto from '../../components/middleBarAndPhoto';
 import Image from 'next/image';
 
 export default function MyPosts() {

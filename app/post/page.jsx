@@ -12,10 +12,17 @@ export default function Page() {
   useEffect(() => {
     console.log('postId', postId);
     fetchOnePost(postId);
-  }, []);
+  }, [postId]);
+
   async function fetchOnePost(postId) {
-    // console.log('id', id);
-    const response = await fetch(`/api/showPostById?id=${postId}`);
+    // إرسال الطلب باستخدام POST
+    const response = await fetch(`/api/showPostById`, {
+      method: 'POST', // استخدم POST بدلاً من GET
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id: postId,
+      }),
+    });
     const json = await response?.json();
     if (response.ok) {
       console.log('json', json);

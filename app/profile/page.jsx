@@ -1,6 +1,5 @@
 'use client';
 import CurrentUser from '../../components/CurrentUser';
-import ImageUpload from '../../components/ImageUpload';
 import Button from '../../components/Button';
 import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
@@ -10,10 +9,7 @@ import toast from 'react-hot-toast';
 import Link from 'next/link';
 import CustomToast from '../../components/CustomToast';
 import BackButton from '../../components/BackButton';
-import SideBarMenu from '../../components/SideBarMenu';
-import { TfiMenuAlt } from 'react-icons/tfi';
-import { MdEdit } from 'react-icons/md';
-import MiddleBarAndPhoto from '../../components/MiddleBarAndPhoto';
+import MiddleBarAndPhoto from '../../components/middleBarAndPhoto';
 export default function Profile() {
   const session = useSession();
   const [isOpen, setIsOpen] = useState(false);

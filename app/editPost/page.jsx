@@ -85,7 +85,13 @@ export default function EditPost() {
   };
 
   const fetchEditedPost = async (postId) => {
-    const res = await fetch(`/api/editPost?id=${postId}`);
+    const res = await fetch(`/api/editPost`, {
+      method: 'POST', // استخدم POST بدلاً من GET
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id: postId,
+      }),
+    });
     const json = await res?.json();
     if (res.ok) {
       console.log('json from editedPost', json);
@@ -117,12 +123,13 @@ export default function EditPost() {
 
   async function handleEditPost(postId) {
     // console.log('success');
-    const response = await fetch(`/api/editPost?id=${postId}`, {
+    const response = await fetch(`/api/editPost`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         ...inputs,
         image: data?.image,
+        id: postId,
       }),
     });
     if (response.ok) {

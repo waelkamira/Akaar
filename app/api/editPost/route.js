@@ -2,10 +2,8 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export async function GET(req) {
-  const url = new URL(req.url);
-  const searchParams = url.searchParams;
-  const id = searchParams.get('id');
+export async function POST(req) {
+  const { id } = await req.json();
   console.log('id', id);
 
   try {
@@ -40,10 +38,7 @@ export async function GET(req) {
   }
 }
 export async function PUT(req) {
-  const url = new URL(req.url);
-  const searchParams = url.searchParams;
-  const id = searchParams.get('id');
-  const data = await req.json();
+  const { id, ...data } = await req.json();
 
   try {
     if (!id) {
