@@ -1,16 +1,9 @@
 'use client';
 import Image from 'next/image';
 import React, { useState } from 'react';
-import { RxCross2 } from 'react-icons/rx';
 import PostForm from '../../components/PostForm';
-import { TbArrowBigLeftLinesFilled } from 'react-icons/tb';
-import { signIn, useSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import Button from '../../components/Button';
-import Link from 'next/link';
-import BackButton from '../../components/BackButton';
-import SideBarMenu from '../../components/SideBarMenu';
-import { TfiMenuAlt } from 'react-icons/tfi';
-import ImageUpload from '../../components/ImageUpload';
 import UploadingAndDisplayingImage from '../../components/UploadingAndDisplayingImage';
 import MiddleBarAndPhoto from '../../components/middleBarAndPhoto';
 
