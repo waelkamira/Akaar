@@ -1,13 +1,10 @@
 'use client';
 import { useSession } from 'next-auth/react';
-import Image from 'next/image';
 import React, { useRef, useState } from 'react';
 import Link from 'next/link';
 import Button from './Button';
 import { formatDistanceToNow } from 'date-fns/formatDistanceToNow';
 import Loading from './Loading';
-import ImageSlider from './imageSlider';
-import SyriaMap from './map/SyriaMap';
 import { FaHouseDamage } from 'react-icons/fa';
 import { RxSpaceEvenlyHorizontally } from 'react-icons/rx';
 import { VscUngroupByRefType } from 'react-icons/vsc';
@@ -16,7 +13,19 @@ import { MdOutlinePriceCheck } from 'react-icons/md';
 import { GiRotaryPhone } from 'react-icons/gi';
 import { MdOutlineBedroomParent } from 'react-icons/md';
 import { FaTreeCity } from 'react-icons/fa6';
-import UserNameAndPhoto from './userNameAndPhoto';
+
+// استخدام dynamic لتحميل المكونات بشكل ديناميكي
+const ImageSlider = dynamic(() => import('./imageSlider'), {
+  loading: () => <Loading />, // عرض تحميل مؤقت أثناء التحميل
+});
+
+const SyriaMap = dynamic(() => import('./map/SyriaMap'), {
+  loading: () => <Loading />, // عرض تحميل مؤقت أثناء التحميل
+});
+
+const UserNameAndPhoto = dynamic(() => import('./userNameAndPhoto'), {
+  loading: () => <Loading />, // عرض تحميل مؤقت أثناء التحميل
+});
 
 export default function Item({
   contactPhoneNumber,

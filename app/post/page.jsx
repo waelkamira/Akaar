@@ -1,7 +1,12 @@
 'use client';
-import Item from '../../components/Item';
+import dynamic from 'next/dynamic';
 import React, { useContext, useEffect, useState } from 'react';
 import { inputsContext } from '../../components/Context';
+
+// تحميل مكون Item بشكل ديناميكي
+const Item = dynamic(() => import('../../components/Item'), {
+  loading: () => <div>Loading...</div>, // عرض رسالة تحميل أثناء تحميل المكون
+});
 
 export default function Page() {
   const [onePost, setOnePost] = useState({});
