@@ -19,7 +19,7 @@ import { ImSearch } from 'react-icons/im';
 import { LuArrowDownNarrowWide } from 'react-icons/lu';
 import { LuArrowUpNarrowWide } from 'react-icons/lu';
 import Image from 'next/image';
-import MiddleBarAndPhoto from './MiddleBarAndPhoto';
+import MiddleBarAndPhoto from './middleBarAndPhoto';
 
 export default function SearchBar({ propertyCategory }) {
   const [isOpen, setIsOpen] = useState(false);
