@@ -1,7 +1,7 @@
+'use client';
 import React, { useContext, useEffect, useState } from 'react';
 import Select from 'react-select';
 import { inputsContext } from './Context.jsx';
-import { VscUngroupByRefType } from 'react-icons/vsc';
 import { MdOutlineBedroomParent } from 'react-icons/md';
 import { usePathname } from 'next/navigation.js';
 

@@ -1,6 +1,6 @@
 'use client';
 import { useSession } from 'next-auth/react';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Button from './Button';
 import { formatDistanceToNow } from 'date-fns/formatDistanceToNow';
@@ -13,6 +13,7 @@ import { MdOutlinePriceCheck } from 'react-icons/md';
 import { GiRotaryPhone } from 'react-icons/gi';
 import { MdOutlineBedroomParent } from 'react-icons/md';
 import { FaTreeCity } from 'react-icons/fa6';
+import dynamic from 'next/dynamic';
 
 // استخدام dynamic لتحميل المكونات بشكل ديناميكي
 const ImageSlider = dynamic(() => import('./imageSlider'), {
@@ -49,9 +50,7 @@ export default function Item({
   userImage,
   userName,
 }) {
-  const [isOpen, setIsOpen] = useState(false);
   const session = useSession();
-  const videoRef = useRef(null); // Add a ref to the iframe element
   const [iframeSrc, setIframeSrc] = useState(null);
 
   console.log('userName', userName);
