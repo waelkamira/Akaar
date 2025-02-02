@@ -1,18 +1,21 @@
 'use client';
-import Item from '../../../components/Item';
+import Item from '../../components/Item';
 import { useParams } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { inputsContext } from '../../components/Context';
 
 export default function Page() {
   const [onePost, setOnePost] = useState({});
   const { id } = useParams();
+  const { postId } = useContext(inputsContext);
 
   useEffect(() => {
-    fetchOnePost();
+    console.log('postId', postId);
+    fetchOnePost(postId);
   }, []);
-  async function fetchOnePost() {
+  async function fetchOnePost(postId) {
     // console.log('id', id);
-    const response = await fetch(`/api/showPostById?id=${id}`);
+    const response = await fetch(`/api/showPostById?id=${postId}`);
     const json = await response?.json();
     if (response.ok) {
       console.log('json', json);

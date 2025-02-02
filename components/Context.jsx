@@ -99,6 +99,11 @@ function inputsReducer(currentState, action) {
         ...currentState,
         category: action?.payload,
       };
+    case 'POST_ID':
+      return {
+        ...currentState,
+        postId: action?.payload,
+      };
 
     default:
       return currentState;
@@ -120,6 +125,7 @@ export function InputsContextProvider({ children }) {
     myPosts: [],
     location: [33.5138, 36.2765],
     category: '',
+    postId: '',
   });
   // console.log('from Context', state);
 

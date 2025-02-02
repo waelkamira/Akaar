@@ -20,6 +20,7 @@ import { LuArrowDownNarrowWide, LuArrowUpNarrowWide } from 'react-icons/lu';
 import { GiBuffaloHead } from 'react-icons/gi';
 import { FiActivity } from 'react-icons/fi';
 import MiddleBarAndPhoto from '../../components/MiddleBarAndPhoto';
+import Image from 'next/image';
 
 export default function MyPosts() {
   const [isOpen, setIsOpen] = useState(false);
@@ -108,7 +109,15 @@ export default function MyPosts() {
             </div>
           </div>
         )}
-
+        <div className="relative w-full h-[300px] lg:h-[400px] border-l-[18px] border-one overflow-hidden rounded-[5px]">
+          <Image
+            src="https://i.imgur.com/wZ0aruw.jpg"
+            fill
+            alt="home_photo"
+            className="object-cover object-center w-full h-auto"
+            objectPosition="center"
+          />
+        </div>
         <div className="flex flex-col justify-start items-center w-full gap-4 py-4">
           <h1 className="grow text-lg lg:text-2xl w-full text-white">
             <span className="text-one  text-2xl ml-2">#</span>
@@ -133,7 +142,14 @@ export default function MyPosts() {
                     <div className="flex justify-between items-center w-full p-2 pb-0">
                       <div
                         className="flex flex-col items-center justify-center cursor-pointer bg-four rounded-[5px] p-1 md:text-xl text-white hover:bg-red-500 hover:scale-[105%] transition-transform duration-150 ease-in-out"
-                        onClick={() => router.push(`/editPost/${post?.id}`)}
+                        onClick={() => {
+                          dispatch({
+                            type: 'POST_ID',
+                            payload: post?.id,
+                          });
+
+                          router.push(`/editPost`);
+                        }}
                       >
                         <MdEdit />
 

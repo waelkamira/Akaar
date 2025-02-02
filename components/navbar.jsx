@@ -27,7 +27,7 @@ export default function Navbar() {
       }`}
     >
       <div className="flex justify-between w-full gap-8 bg-gradient-to-r from-[#494949] to-four">
-        <ul className="flex justify-evenly gap-4 mr-4 items-center h-24 w-4/6">
+        <ul className="flex justify-evenly gap-4 mr-4 items-center h-20 pt-4 w-4/6">
           <div
             className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-sm rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-16 transition-all duration-300"
             onClick={() => router.push('/')}
@@ -109,8 +109,8 @@ export default function Navbar() {
           className="relative flex justify-end w-fit min-w-[218px] bg-[#8A8D8C] cursor-pointer "
           onClick={() => router.push('/')}
         >
-          <div className="absolute top-5 left-24 z-10 flex justify-end ">
-            <div className="absolute z-30">
+          <div className="absolute top-5 left-24 flex justify-end ">
+            <div className="absolute">
               <h1 className="akar akarStroke lg:text-4xl lg:font-extrabold text-lg text-nowrap select-none">
                 AKAR
               </h1>
