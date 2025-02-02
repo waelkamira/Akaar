@@ -8,6 +8,7 @@ export default function EditItem({
   property, // القيمة المتغيرة للخاصية
   handleEditPost,
   editedPost,
+  postId,
 }) {
   return (
     <div className="flex flex-col justify-start items-start gap-1 sm:gap-4 text-black">
@@ -44,7 +45,7 @@ export default function EditItem({
       </h1>
 
       <button
-        onClick={() => handleEditPost()}
+        onClick={() => handleEditPost(postId)}
         className="bg-gray-600 mb-2 w-full mt-4 sm:w-fit text-white duration-300 transition-colors ease-in-out hover:bg-one hover:scale-105 border rounded-md text-center select-none p-2"
       >
         حفظ التعديلات

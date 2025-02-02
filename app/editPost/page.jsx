@@ -3,24 +3,22 @@ import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import React, { useContext, useEffect, useState } from 'react';
 import Link from 'next/link';
-import Button from '../../../components/Button';
-import BackButton from '../../../components/BackButton';
-import SideBarMenu from '../../../components/SideBarMenu';
+import Button from '../../components/Button';
+import BackButton from '../../components/BackButton';
+import SideBarMenu from '../../components/SideBarMenu';
 import { TfiMenuAlt } from 'react-icons/tfi';
 import { formatDistanceToNow } from 'date-fns/formatDistanceToNow';
 import { useParams } from 'next/navigation';
-import CustomToast from '../../../components/CustomToast';
+import CustomToast from '../../components/CustomToast';
 import toast from 'react-hot-toast';
 import { MdEdit } from 'react-icons/md';
-import UploadingAndDisplayingImage from '../../../components/UploadingAndDisplayingImage';
-import { inputsContext } from '../../../components/Context';
-import { getVideoIdAndPlatform } from '../../../components/youtubeUtils';
-import LoadingPhoto from '../../../components/LoadingPhoto';
-import ImageSlider from '../../../components/imageSlider';
-import { property } from 'lodash';
-import PropertyRoomsNumberSelector from '../../../components/roomsNumberSelector';
-import EditItem from '../../../components/editItem';
-import OnClickMap from '../../../components/map/onClickMap';
+import { inputsContext } from '../../components/Context';
+import { getVideoIdAndPlatform } from '../../components/youtubeUtils';
+import LoadingPhoto from '../../components/LoadingPhoto';
+import ImageSlider from '../../components/imageSlider';
+import EditItem from '../../components/editItem';
+import OnClickMap from '../../components/map/onClickMap';
+
 export default function EditPost() {
   const [url, setUrl] = useState('');
   const [embedLink, setEmbedLink] = useState('');
@@ -28,8 +26,7 @@ export default function EditPost() {
   const [isOpen, setIsOpen] = useState(false);
   const session = useSession();
   const [editedPost, setEditedPost] = useState({});
-  const { id } = useParams();
-  const { location } = useContext(inputsContext);
+  const { location, postId } = useContext(inputsContext);
   console.log('location', location);
   const [inputs, setInputs] = useState({
     image: editedPost?.image,
@@ -56,7 +53,7 @@ export default function EditPost() {
   // console.log('inputs', inputs);
 
   useEffect(() => {
-    fetchEditedPost();
+    fetchEditedPost(postId);
   }, []);
 
   useEffect(() => {
@@ -87,8 +84,8 @@ export default function EditPost() {
       : formatDistanceToNow(date, { addSuffix: true });
   };
 
-  const fetchEditedPost = async () => {
-    const res = await fetch(`/api/editPost?id=${id}`);
+  const fetchEditedPost = async (postId) => {
+    const res = await fetch(`/api/editPost?id=${postId}`);
     const json = await res?.json();
     if (res.ok) {
       console.log('json from editedPost', json);
@@ -118,9 +115,9 @@ export default function EditPost() {
     }
   };
 
-  async function handleEditPost() {
+  async function handleEditPost(postId) {
     // console.log('success');
-    const response = await fetch(`/api/editPost?id=${id}`, {
+    const response = await fetch(`/api/editPost?id=${postId}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -242,6 +239,7 @@ export default function EditPost() {
                 property={'propertyName'}
                 handleEditPost={handleEditPost}
                 editedPost={editedPost}
+                postId={postId}
               />
 
               {/* الصورة */}
@@ -254,7 +252,7 @@ export default function EditPost() {
                   image4={editedPost?.image4}
                 />{' '}
                 <button
-                  onClick={() => handleEditPost()}
+                  onClick={() => handleEditPost(postId)}
                   className="bg-gray-600 mb-2 w-full mt-4 sm:w-fit text-white duration-300 transition-colors ease-in-out hover:bg-one hover:scale-105 border rounded-md text-center select-none p-2"
                 >
                   حفظ التعديلات
@@ -272,6 +270,7 @@ export default function EditPost() {
                   property={'userName'}
                   handleEditPost={handleEditPost}
                   editedPost={editedPost}
+                  postId={postId}
                 />
                 {/*  نوع العقار */}
                 <EditItem
@@ -281,6 +280,7 @@ export default function EditPost() {
                   property={'propertyType'}
                   handleEditPost={handleEditPost}
                   editedPost={editedPost}
+                  postId={postId}
                 />
 
                 {/*  عدد الغرف */}
@@ -293,6 +293,7 @@ export default function EditPost() {
                     property={'propertyRoomsNumber'}
                     handleEditPost={handleEditPost}
                     editedPost={editedPost}
+                    postId={postId}
                   />
                 )}
                 {/*  المدينة */}
@@ -303,6 +304,7 @@ export default function EditPost() {
                   property={'propertyCity'}
                   handleEditPost={handleEditPost}
                   editedPost={editedPost}
+                  postId={postId}
                 />
 
                 {/*  المنطقة */}
@@ -313,6 +315,7 @@ export default function EditPost() {
                   property={'propertyTown'}
                   handleEditPost={handleEditPost}
                   editedPost={editedPost}
+                  postId={postId}
                 />
 
                 {/*  المساحة */}
@@ -323,6 +326,7 @@ export default function EditPost() {
                   property={'propertyArea'}
                   handleEditPost={handleEditPost}
                   editedPost={editedPost}
+                  postId={postId}
                 />
 
                 {/*  السعر */}
@@ -333,6 +337,7 @@ export default function EditPost() {
                   property={'propertyPrice'}
                   handleEditPost={handleEditPost}
                   editedPost={editedPost}
+                  postId={postId}
                 />
 
                 {/*  رقم الهاتف */}
@@ -343,6 +348,7 @@ export default function EditPost() {
                   property={'contactPhoneNumber'}
                   handleEditPost={handleEditPost}
                   editedPost={editedPost}
+                  postId={postId}
                 />
 
                 {/*  الوصف */}
@@ -380,7 +386,7 @@ export default function EditPost() {
                     <MdEdit className="absolute -top-4 right-0 text-2xl text-one z-50" />
                   </pre>
                   <button
-                    onClick={() => handleEditPost()}
+                    onClick={() => handleEditPost(postId)}
                     className="bg-gray-600 mb-2 w-full mt-4 sm:w-fit text-white  duration-300 transition-colors ease-in-out hover:bg-one hover:scale-105 border rounded-md text-center select-none   p-2"
                   >
                     حفظ التعديلات
@@ -416,7 +422,7 @@ export default function EditPost() {
                     />
                   </div>
                   <button
-                    onClick={() => handleEditPost()}
+                    onClick={() => handleEditPost(postId)}
                     className="bg-gray-600 mb-2 w-full mt-4 sm:w-fit text-white  duration-300 transition-colors ease-in-out hover:bg-one hover:scale-105 border rounded-md text-center select-none   p-2"
                   >
                     حفظ التعديلات
