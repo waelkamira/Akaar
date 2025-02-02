@@ -2,12 +2,10 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export async function GET(req) {
+export async function POST(req) {
+  const { id } = await req.json();
+  console.log('id', id);
   try {
-    const url = new URL(req.url);
-    const searchParams = url.searchParams;
-    const id = searchParams.get('id'); // استخراج id من المعلمات
-
     if (!id) {
       return new Response(
         JSON.stringify({ error: 'ID parameter is required' }),

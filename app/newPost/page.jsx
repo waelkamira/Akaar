@@ -12,7 +12,7 @@ import SideBarMenu from '../../components/SideBarMenu';
 import { TfiMenuAlt } from 'react-icons/tfi';
 import ImageUpload from '../../components/ImageUpload';
 import UploadingAndDisplayingImage from '../../components/UploadingAndDisplayingImage';
-import MiddleBarAndPhoto from '../../components/MiddleBarAndPhoto';
+import MiddleBarAndPhoto from '../../components/middleBarAndPhoto';
 
 export default function NewRecipe() {
   const [isOpen, setIsOpen] = useState(false);

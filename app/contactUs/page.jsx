@@ -1,15 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import { MdOutlineBedroomParent } from 'react-icons/md';
-import { MdOutlineAttachMoney } from 'react-icons/md';
-import { GiBuyCard, GiExitDoor, GiPayMoney } from 'react-icons/gi';
-import { GiCarKey } from 'react-icons/gi';
-import { FaDollarSign, FaHome, FaHouseDamage } from 'react-icons/fa';
 import { FaCalendarDays } from 'react-icons/fa6';
-import { GiAnchor } from 'react-icons/gi';
-import { FcConferenceCall } from 'react-icons/fc';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
 import { MdOutlineAddLocationAlt } from 'react-icons/md';
 import { FaFacebookF } from 'react-icons/fa';
 import Link from 'next/link';
@@ -17,16 +8,11 @@ import { MdOutlineAlternateEmail } from 'react-icons/md';
 import toast from 'react-hot-toast'; // استيراد toast من react-hot-toast
 import { FiLinkedin } from 'react-icons/fi';
 import { TbBrandGmail } from 'react-icons/tb';
-import { TfiMenuAlt } from 'react-icons/tfi';
-import SideBarMenu from '../../components/SideBarMenu';
-import BackButton from '../../components/BackButton';
-import MiddleBarAndPhoto from '../../components/MiddleBarAndPhoto';
+import MiddleBarAndPhoto from '../../components/middleBarAndPhoto';
 import Image from 'next/image';
 
 export default function ContactUs() {
   const [isOpen, setIsOpen] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
-  const session = useSession();
   const handleCopy = (email) => {
     navigator.clipboard
       .writeText(email)

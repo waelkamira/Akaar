@@ -16,7 +16,7 @@ import SideBarMenu from '../../components/SideBarMenu';
 import { TfiMenuAlt } from 'react-icons/tfi';
 import Loading from '../../components/Loading';
 import Button from '../../components/Button';
-import MiddleBarAndPhoto from '../../components/MiddleBarAndPhoto';
+import MiddleBarAndPhoto from '../../components/middleBarAndPhoto';
 import { usePathname } from 'next/navigation';
 
 export default function Page() {
