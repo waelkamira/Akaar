@@ -38,7 +38,7 @@ export default function Navbar() {
           <div className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one h-16">
             {session?.status === 'unauthenticated' && (
               <div
-                className="flex items-center justify-center gap-2 hover:border-t-4 rounded-lg border-one hover:scale-105 hover:cursor-pointer hover:shadow-sm shadow-gray-300  p-2 px-8 h-16 transition-all duration-300"
+                className="flex items-center justify-center gap-2 hover:scale-105 hover:cursor-pointer hover:shadow-sm shadow-gray-300  p-2 px-8 h-16 transition-all duration-300"
                 onClick={() => router.push('/login')}
               >
                 <GiExitDoor className="text-xl select-none text-one hover:text-eight" />
@@ -47,7 +47,7 @@ export default function Navbar() {
             )}
             {session?.status === 'authenticated' && (
               <div
-                className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-sm rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-16 transition-all duration-300"
+                className="flex items-center justify-center gap-2 shadow-one hover:shadow-sm border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-16 transition-all duration-300"
                 onClick={() => router.push('/profile')}
               >
                 <ImProfile className="text-xl select-none text-one hover:text-eight" />

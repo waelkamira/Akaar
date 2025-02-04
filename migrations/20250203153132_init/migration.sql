@@ -24,5 +24,23 @@ CREATE TABLE "Property" (
     "userImage" TEXT NOT NULL,
     "createdBy" TEXT NOT NULL,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+    "updatedAt" DATETIME NOT NULL
 );
+
+-- CreateIndex
+CREATE INDEX "Property_propertyCategory_idx" ON "Property"("propertyCategory");
+
+-- CreateIndex
+CREATE INDEX "Property_propertyType_idx" ON "Property"("propertyType");
+
+-- CreateIndex
+CREATE INDEX "Property_propertyRoomsNumber_idx" ON "Property"("propertyRoomsNumber");
+
+-- CreateIndex
+CREATE INDEX "Property_propertyPrice_idx" ON "Property"("propertyPrice");
+
+-- CreateIndex
+CREATE INDEX "Property_propertyCity_idx" ON "Property"("propertyCity");
+
+-- CreateIndex
+CREATE INDEX "Property_propertyTown_idx" ON "Property"("propertyTown");

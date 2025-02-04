@@ -70,8 +70,16 @@ export default function MyPosts() {
   }
 
   return (
-    <div className="flex justify-center items-center w-full bg-gradient-to-tr from-[#494949] to-four rounded-b-[5px]">
-      {' '}
+    <div className="flex flex-col justify-center items-center w-full bg-gradient-to-tr from-[#494949] to-four rounded-b-[5px]">
+      <div className="relative w-full h-[300px] lg:h-[400px] border-l-[18px] border-one overflow-hidden">
+        <Image
+          src="https://i.imgur.com/wZ0aruw.jpg"
+          fill
+          alt="home_photo"
+          className="object-cover object-center w-full h-auto"
+          objectPosition="center"
+        />
+      </div>
       <div className="flex flex-col w-full xl:w-[90%]  h-fit px-2 sm:px-16 pt-2 overflow-y-auto z-10 ">
         <MiddleBarAndPhoto
           isOpen={isOpen}
@@ -102,15 +110,7 @@ export default function MyPosts() {
             </div>
           </div>
         )}
-        <div className="relative w-full h-[300px] lg:h-[400px] border-l-[18px] border-one overflow-hidden rounded-[5px]">
-          <Image
-            src="https://i.imgur.com/wZ0aruw.jpg"
-            fill
-            alt="home_photo"
-            className="object-cover object-center w-full h-auto"
-            objectPosition="center"
-          />
-        </div>
+
         <div className="flex flex-col justify-start items-center w-full gap-4 py-4">
           <h1 className="grow text-lg lg:text-2xl w-full text-white">
             <span className="text-one  text-2xl ml-2">#</span>

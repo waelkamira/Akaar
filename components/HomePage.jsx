@@ -116,9 +116,9 @@ export default function HomePage() {
 
       <Footer />
 
-      <div className="hidden md:block relative w-full h-[300px] lg:h-[400px] border-l-[18px] border-one overflow-hidden">
+      <div className="hidden lg:block relative w-full h-[300px] lg:h-[400px] border-l-[18px] border-one overflow-hidden">
         <Image
-          src="https://i.imgur.com/puRR9Cm.png"
+          src="https://i.imgur.com/1fGMLUK.png"
           fill
           alt="home_photo"
           className="object-contain object-center w-1/3 h-auto px-14"

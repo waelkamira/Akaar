@@ -110,9 +110,11 @@ export default function Item({
                 }}
               />
 
-              <h1 className="text-one my-4 sm:my-4 text-3xl sm:text-4xl lg:text-5xl text-center select-none   p-2 sm:p-4">
-                {propertyName}
-              </h1>
+              <div className="flex justify-center w-full">
+                <h1 className="sm:my-4 text-xl sm:text-3xl text-one font-medium select-none text-wrap line-clamp-1 max-w-[20ch] lg:max-w-[40ch] text-center">
+                  {propertyName}
+                </h1>
+              </div>
               {!image && <Loading myMessage={'جاري تحميل الصورة'} />}
               <ImageSlider
                 image={image}
