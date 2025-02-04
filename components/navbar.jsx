@@ -14,7 +14,7 @@ import { useSession } from 'next-auth/react';
 import { ImProfile } from 'react-icons/im';
 import { MdFavoriteBorder } from 'react-icons/md';
 import { TbTargetArrow } from 'react-icons/tb';
-
+import ClockWidget from './ClockWidget';
 export default function Navbar() {
   const router = useRouter();
   const session = useSession();
@@ -26,7 +26,7 @@ export default function Navbar() {
         pathname !== '/' ? ' pb-[5px] bg-gradient-to-r from-one to-four' : ''
       }`}
     >
-      <div className="flex justify-between w-full gap-8 bg-gradient-to-r from-[#494949] to-four">
+      <div className="flex justify-between w-full bg-gradient-to-r from-[#494949] to-four">
         <ul className="flex justify-evenly gap-4 mr-4 items-center h-20 pt-4 w-4/6">
           <div
             className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-sm rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-16 transition-all duration-300"
@@ -105,6 +105,7 @@ export default function Navbar() {
             </li>
           </div>
         </ul>
+        <ClockWidget />
         <div
           className="relative flex justify-end w-fit min-w-[218px] bg-[#8A8D8C] cursor-pointer "
           onClick={() => router.push('/')}

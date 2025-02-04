@@ -20,6 +20,7 @@ import { LuArrowDownNarrowWide } from 'react-icons/lu';
 import { LuArrowUpNarrowWide } from 'react-icons/lu';
 import Image from 'next/image';
 import MiddleBarAndPhoto from './middleBarAndPhoto';
+import NavegationPages from './NavegationPages';
 
 export default function SearchBar({ propertyCategory }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -106,7 +107,7 @@ export default function SearchBar({ propertyCategory }) {
           {' '}
           <button
             onClick={() => setIsShow(!isShow)}
-            className="relative text-sm lg:text-xl bg-white h-8 lg:h-11 w-3/4 border-r-[30%] shadow-lg border-one rounded-[5px] hover:scale-[101%]"
+            className="relative text-sm lg:text-xl text-one bg-white h-8 lg:h-11 w-3/4 border-r-[30%] shadow-lg border-one rounded-[5px] hover:scale-[101%] transition-transform duration-200 ease-in-out"
           >
             فلاتر البحث{' '}
             <span className="absolute left-3/4 top-1/4 mx-auto my-auto">
@@ -189,7 +190,7 @@ export default function SearchBar({ propertyCategory }) {
               {allPosts?.map((post, index) => (
                 <SmallItem key={index} post={post} />
               ))}
-              <div className="flex items-center justify-around sm:my-2">
+              {/* <div className="flex items-center justify-around sm:my-2">
                 {allPosts?.length >= 5 && (
                   <Link href={'#post1'}>
                     <div
@@ -212,7 +213,12 @@ export default function SearchBar({ propertyCategory }) {
                     </div>
                   </Link>
                 )}
-              </div>
+              </div> */}
+              <NavegationPages
+                array={allPosts}
+                setPageNumber={setPageNumber}
+                pageNumber={pageNumber}
+              />{' '}
             </div>
           ) : (
             <div>

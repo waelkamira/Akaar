@@ -14,6 +14,7 @@ import Link from 'next/link';
 import SideBarMenu from '../../components/SideBarMenu';
 import { TfiMenuAlt } from 'react-icons/tfi';
 import Loading from '../../components/Loading';
+import NavegationPages from '../../components/NavegationPages';
 
 export default function Users() {
   const [isOpen, setIsOpen] = useState(false);
@@ -141,7 +142,7 @@ export default function Users() {
             <div className="text-white">لا توجد نتائج مطابقة للبحث.</div>
           )}
         </div>
-        <div className="flex items-center justify-around my-4 mt-8 text-white">
+        {/* <div className="flex items-center justify-around my-4 mt-8 text-white">
           {users.length >= 5 && (
             <Link href="#post1">
               <div
@@ -164,7 +165,12 @@ export default function Users() {
               </div>
             </Link>
           )}
-        </div>
+        </div> */}
+        <NavegationPages
+          array={users}
+          setPageNumber={setPageNumber}
+          pageNumber={pageNumber}
+        />{' '}
       </div>
     </div>
   );

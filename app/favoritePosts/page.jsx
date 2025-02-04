@@ -18,6 +18,7 @@ import Loading from '../../components/Loading';
 import Button from '../../components/Button';
 import MiddleBarAndPhoto from '../../components/middleBarAndPhoto';
 import { usePathname } from 'next/navigation';
+import NavegationPages from '@/components/NavegationPages';
 
 export default function Page() {
   const [isOpen, setIsOpen] = useState(false);
@@ -122,7 +123,7 @@ export default function Page() {
                 </div>
               ))}
           </div>
-          <div className="flex items-center justify-around my-4 mt-8 text-white">
+          {/* <div className="flex items-center justify-around my-4 mt-8 text-white">
             {userFavorites?.length >= 5 && (
               <Link href={'#post1'}>
                 <div
@@ -145,7 +146,12 @@ export default function Page() {
                 </div>
               </Link>
             )}
-          </div>
+          </div> */}
+          <NavegationPages
+            array={userFavorites}
+            setPageNumber={setPageNumber}
+            pageNumber={pageNumber}
+          />{' '}
         </div>
       </div>
     </div>
