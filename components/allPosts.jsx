@@ -9,6 +9,7 @@ import {
 import Link from 'next/link';
 import CustomToast from './CustomToast';
 import toast from 'react-hot-toast';
+import NavegationPages from './NavegationPages';
 
 export default function AllPosts({}) {
   const [pageNumber, setPageNumber] = useState(1);
@@ -63,7 +64,7 @@ export default function AllPosts({}) {
               </div>
             ))
           )}
-          <div className="flex items-center justify-around sm:my-4 sm:mt-8">
+          {/* <div className="flex items-center justify-around sm:my-4 sm:mt-8">
             {allPosts?.length >= 5 && (
               <Link href={'#post1'}>
                 <div
@@ -86,7 +87,12 @@ export default function AllPosts({}) {
                 </div>
               </Link>
             )}
-          </div>
+          </div> */}
+          <NavegationPages
+            array={allPosts}
+            setPageNumber={setPageNumber}
+            pageNumber={pageNumber}
+          />{' '}
         </div>
       </div>
     </div>
