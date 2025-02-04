@@ -34,7 +34,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
   const router = useRouter();
   const userName = CurrentUser()?.name || session?.data?.user?.name;
   const userImage = CurrentUser()?.image || session?.data?.user?.image;
-  const createdBy = CurrentUser()?.email;
+  const createdBy = CurrentUser()?.email || session?.data?.user?.email;
   const {
     data,
     dispatch,

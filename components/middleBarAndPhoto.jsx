@@ -5,18 +5,11 @@ import SideBarMenu from './SideBarMenu';
 import { TfiMenuAlt } from 'react-icons/tfi';
 import { FiActivity } from 'react-icons/fi';
 import { useRouter } from 'next/navigation';
-import { LuArrowDownNarrowWide, LuArrowUpNarrowWide } from 'react-icons/lu';
 
-export default function MiddleBarAndPhoto({
-  isOpen,
-  setIsOpen,
-  noButton,
-  isShow,
-  setIsShow,
-}) {
+export default function MiddleBarAndPhoto({ isOpen, setIsOpen, noButton }) {
   const router = useRouter();
   return (
-    <div className="relative xl:hidden flex justify-between items-center w-full gap-2 my-2 bg-one p-1 md:p-2 rounded-[5px]">
+    <div className="relative xl:hidden flex justify-between items-center w-full gap-2 my-2 bg-one p-2 rounded-[5px]">
       <div>
         <TfiMenuAlt
           className="text-[30px] lg:text-5xl text-white cursor-pointer"
