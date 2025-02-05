@@ -18,7 +18,7 @@ import Loading from '../../components/Loading';
 import Button from '../../components/Button';
 import MiddleBarAndPhoto from '../../components/middleBarAndPhoto';
 import { usePathname } from 'next/navigation';
-import NavegationPages from '@/components/NavegationPages';
+import NavegationPages from '../../components/NavegationPages';
 
 export default function Page() {
   const [isOpen, setIsOpen] = useState(false);
