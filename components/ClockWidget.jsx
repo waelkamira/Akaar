@@ -27,9 +27,9 @@ const FlipClock = () => {
   return (
     <div className="flex justify-center items-center mx-4">
       <TimeUnit value={time.seconds} />
-      <span className="text-5xl font-bold text-white px-1">:</span>
+      <span className="text-5xl font-bold text-white select-none px-1">:</span>
       <TimeUnit value={time.minutes} />
-      <span className="text-5xl font-bold text-white px-1">:</span>
+      <span className="text-5xl font-bold text-white select-none px-1">:</span>
       <TimeUnit value={time.hours} />
     </div>
   );
@@ -37,7 +37,7 @@ const FlipClock = () => {
 
 const TimeUnit = ({ value }) => {
   return (
-    <div className="bg-[#494949] text-white w-16 h-full flex justify-center items-center rounded-lg text-4xl font-bold shadow-lg">
+    <div className="bg-[#494949] text-white select-none w-16 h-full flex justify-center items-center rounded-lg text-4xl font-bold shadow-lg">
       {value}
     </div>
   );
@@ -45,7 +45,7 @@ const TimeUnit = ({ value }) => {
 
 export default function Page() {
   return (
-    <div className=" text-white flex flex-col items-center justify-center h-full bg-one">
+    <div className="hidden 2xl:flex text-white select-none  flex-col items-center justify-center h-full bg-one">
       <FlipClock />
     </div>
   );

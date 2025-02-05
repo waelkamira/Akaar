@@ -105,29 +105,31 @@ export default function Navbar() {
             </li>
           </div>
         </ul>
-        <ClockWidget />
-        <div
-          className="relative flex justify-end w-fit min-w-[218px] bg-[#8A8D8C] cursor-pointer "
-          onClick={() => router.push('/')}
-        >
-          <div className="absolute top-5 left-24 flex justify-end ">
-            <div className="absolute">
-              <h1 className="akar akarStroke lg:text-4xl lg:font-extrabold text-lg text-nowrap select-none">
-                AKAR
-              </h1>
-              <h1 className="absolute akarStroke lg:text-4xl lg:font-extrabold text-transparent text-lg text-nowrap select-none top-0 left-0 z-0">
-                AKAR
-              </h1>
+        <div className="flex">
+          <ClockWidget />
+          <div
+            className="relative flex justify-end w-fit min-w-[218px] bg-[#8A8D8C] cursor-pointer "
+            onClick={() => router.push('/')}
+          >
+            <div className="absolute top-5 left-24 flex justify-end ">
+              <div className="absolute">
+                <h1 className="akar akarStroke lg:text-4xl lg:font-extrabold text-lg text-nowrap select-none">
+                  AKAR
+                </h1>
+                <h1 className="absolute akarStroke lg:text-4xl lg:font-extrabold text-transparent text-lg text-nowrap select-none top-0 left-0 z-0">
+                  AKAR
+                </h1>
+              </div>
             </div>
-          </div>
-          <div className="relative size-20 border-l-[18px] border-one">
-            <Image
-              src="https://i.imgur.com/teY3Ui4.jpg"
-              fill
-              objectFit="cover"
-              alt="home_photo"
-              objectPosition="top"
-            />
+            <div className="relative size-20 border-l-[18px] border-one">
+              <Image
+                src="https://i.imgur.com/teY3Ui4.jpg"
+                fill
+                objectFit="cover"
+                alt="home_photo"
+                objectPosition="top"
+              />
+            </div>
           </div>
         </div>
       </div>
