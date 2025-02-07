@@ -103,21 +103,21 @@ export default function Footer() {
 
             <div
               className="flex items-center justify-start gap-2 w-full  hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300"
-              onClick={() => router.push('/newPost')}
+              onClick={() => router.push('/RealEstate/newPost')}
             >
               <FaDollarSign className="text-lg select-none text-one" />
               <li className=" text-md sm:text-lg select-none">بيع</li>
             </div>
             <div
               className="flex items-center justify-start gap-2 w-full  hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300"
-              onClick={() => router.push('/buy')}
+              onClick={() => router.push('/RealEstate/buy')}
             >
               <GiPayMoney className="text-lg select-none text-one" />
               <li className=" text-md sm:text-lg select-none">شراء</li>
             </div>
             <div
               className="flex items-center justify-start gap-2 w-full  hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300"
-              onClick={() => router.push('/rent')}
+              onClick={() => router.push('/RealEstate/rent')}
             >
               <MdOutlineBedroomParent className="text-lg select-none text-one" />
               <li className=" text-md sm:text-lg select-none">إيجار</li>

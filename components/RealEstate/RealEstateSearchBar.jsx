@@ -1,28 +1,29 @@
 'use client';
 import React, { useContext, useEffect, useState } from 'react';
-import CitySelector from './map/CitySelector';
-import PropertyTypeSelector from './PropertyTypeSelector';
-import SmallItem from './SmallItem';
-import Loading from './Loading';
+import CitySelector from '../map/CitySelector';
+import PropertyTypeSelector from '../PropertyTypeSelector';
+import SmallItem from '../SmallItem';
+import Loading from '../Loading';
 import {
   MdKeyboardDoubleArrowRight,
   MdKeyboardDoubleArrowLeft,
 } from 'react-icons/md';
 import Link from 'next/link';
 import { MdOutlinePriceCheck } from 'react-icons/md';
-import Button from './Button';
-import { inputsContext } from './Context';
-import CustomToast from './CustomToast';
+import Button from '../Button';
+import { inputsContext } from '../Context';
+import CustomToast from '../CustomToast';
 import toast from 'react-hot-toast';
-import RoomsNumberSelector from './roomsNumberSelector';
+import RoomsNumberSelector from '../roomsNumberSelector';
 import { ImSearch } from 'react-icons/im';
 import { LuArrowDownNarrowWide } from 'react-icons/lu';
 import { LuArrowUpNarrowWide } from 'react-icons/lu';
 import Image from 'next/image';
-import MiddleBarAndPhoto from './middleBarAndPhoto';
-import NavegationPages from './NavegationPages';
-import CarsBrandSelector from './cars/CarsBrandSelector';
-import CategoryComponent from './CategoryComponent';
+import MiddleBarAndPhoto from '../middleBarAndPhoto';
+import NavegationPages from '../NavegationPages';
+import CarsBrandSelector from '../Cars/CarsBrandSelector';
+import CategoryComponent from '../CategoryComponent';
+import RealEstateNavbar from '../navbars/RealEstarteNavbar';
 
 export default function SearchBar({ propertyCategory }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -87,6 +88,7 @@ export default function SearchBar({ propertyCategory }) {
 
   return (
     <div className="flex flex-col justify-center items-center w-full rounded-b">
+      <RealEstateNavbar />
       <div className="relative w-full h-[300px] lg:h-[600px] border overflow-hidden">
         <Image
           src="https://i.imgur.com/wZ0aruw.jpg"
@@ -96,7 +98,7 @@ export default function SearchBar({ propertyCategory }) {
           objectPosition="top"
         />
       </div>
-      <div className="flex flex-col w-full flex-grow xl:w-[90%] 2xl:w-[70%] h-[1370px] px-2 pt-2 overflow-y-auto border rounded-b z-[0]">
+      <div className="flex flex-col w-full mt-4 rounded-[5px] flex-grow xl:w-[90%] 2xl:w-[70%] h-[1370px] px-2 pt-2 overflow-y-auto border rounded-b z-[0]">
         <MiddleBarAndPhoto
           isOpen={isOpen}
           setIsOpen={setIsOpen}
@@ -130,7 +132,7 @@ export default function SearchBar({ propertyCategory }) {
                   style={' '}
                   onClick={handleSearch}
                   title={'بحث'}
-                  emoji={<ImSearch className="text-one hover:" />}
+                  emoji={<ImSearch />}
                 />
               </div>
               <div className="flex flex-col xl:flex-row items-center justify-center gap-2 mb-2 w-full px-2 ">

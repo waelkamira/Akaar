@@ -13,7 +13,7 @@ module.exports = {
         // one: '#FE881A',
         two: '#F83354',
         three: '#22C55E',
-        four: '#1A1A1A',
+        four: '#333333',
         five: '#00ff5e',
         six: '#fffdf3',
         seven: '#575757',

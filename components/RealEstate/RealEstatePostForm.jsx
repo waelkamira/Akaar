@@ -3,7 +3,7 @@
 import dynamic from 'next/dynamic';
 import React, { useContext, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { inputsContext } from './Context';
+import { inputsContext } from '../Context';
 import { useSession } from 'next-auth/react';
 import { v4 as uuidv4 } from 'uuid';
 import { FaHouseDamage } from 'react-icons/fa';
@@ -14,18 +14,18 @@ import { MdOutlineFeaturedPlayList } from 'react-icons/md';
 import { RxVideo } from 'react-icons/rx';
 import { useRouter } from 'next/navigation';
 
-const PropertyTypeSelector = dynamic(() => import('./PropertyTypeSelector'));
-const CurrentUser = dynamic(() => import('./CurrentUser'));
-const CustomToast = dynamic(() => import('./CustomToast'));
+const PropertyTypeSelector = dynamic(() => import('../PropertyTypeSelector'));
+const CurrentUser = dynamic(() => import('../CurrentUser'));
+const CustomToast = dynamic(() => import('../CustomToast'));
 const Confetti = dynamic(() =>
-  import('./SuccessComponent').then((mod) => mod.Confetti)
+  import('../SuccessComponent').then((mod) => mod.Confetti)
 );
-const OnClickMap = dynamic(() => import('./map/onClickMap'));
-const CategoryComponent = dynamic(() => import('./CategoryComponent'));
-const CitySelector = dynamic(() => import('./map/CitySelector'));
-const RoomsNumberSelector = dynamic(() => import('./roomsNumberSelector'));
+const OnClickMap = dynamic(() => import('../map/onClickMap'));
+const CategoryComponent = dynamic(() => import('../CategoryComponent'));
+const CitySelector = dynamic(() => import('../map/CitySelector'));
+const RoomsNumberSelector = dynamic(() => import('../roomsNumberSelector'));
 
-import { getVideoIdAndPlatform } from './youtubeUtils';
+import { getVideoIdAndPlatform } from '../youtubeUtils';
 
 export default function PostForm({ setIsVisible, cancel = true }) {
   const [url, setUrl] = useState('');
@@ -576,7 +576,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
               name="الوصف"
               id="الوصف"
               placeholder="اكتب مواصفات عقارك هنا ..."
-              className="scrollBar flex text-right w-full p-2  text-xl placeholder:text-sm lg:placeholder:text-lg h-36 outline-2 focus:outline-one rounded"
+              className="scrollBar flex text-right w-full p-2 border border-seven/30 text-xl placeholder:text-sm lg:placeholder:text-lg h-36 outline-2 focus:outline-one rounded"
             ></textarea>
           </div>
           <OnClickMap

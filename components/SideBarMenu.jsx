@@ -45,9 +45,9 @@ export default function SideBarMenu({ setIsOpen }) {
       {session?.status === 'authenticated' && (
         <div>
           <Button title={'الرئيسية'} path="/" />
-          <Button title={'بيع'} path="/newPost" />
-          <Button title={'شراء'} path="/buy" />
-          <Button title={'إيجار'} path="/rent" />
+          <Button title={'بيع'} path="/RealEstate/newPost" />
+          <Button title={'شراء'} path="/RealEstate/buy" />
+          <Button title={'إيجار'} path="/RealEstate/rent" />
           <Button title={'بروفايلي'} path="/profile" />
           <Button title={'إعلاناتي'} path="/myPosts" />
           {/* <Button title={'المفضلة'} path={'/favoritePosts'} /> */}

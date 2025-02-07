@@ -1,11 +1,11 @@
 'use client';
 import React, { useState } from 'react';
 import { useSession } from 'next-auth/react';
-import SideBarMenu from './SideBarMenu';
+import SideBarMenu from '../SideBarMenu';
 import { TfiMenuAlt } from 'react-icons/tfi';
 import { Suspense } from 'react';
 import Image from 'next/image';
-import Card from './card';
+import Card from '../card';
 import { MdOutlineBedroomParent } from 'react-icons/md';
 import { MdOutlineAttachMoney } from 'react-icons/md';
 import { GiBuyCard } from 'react-icons/gi';
@@ -13,9 +13,10 @@ import { GiCarKey } from 'react-icons/gi';
 import { FaHouseDamage } from 'react-icons/fa';
 import { FaCalendarDays } from 'react-icons/fa6';
 import { GiAnchor } from 'react-icons/gi';
-import Footer from './Footer';
+import Footer from '../Footer';
+import Navbar from '../navbars/RealEstarteNavbar';
 
-export default function HomePage() {
+export default function RealEstate() {
   const [isOpen, setIsOpen] = useState(false);
   const session = useSession();
 
@@ -25,6 +26,7 @@ export default function HomePage() {
 
   return (
     <Suspense>
+      <Navbar />
       <div className="relative flex flex-col justify-center items-center z-40 sm:my-0 w-full">
         <div className="w-full">
           <div className="xl:hidden absolute flex flex-col items-start gap-2 z-50 top-2 right-0 sm:top-4 sm:right-4  lg:right-12 w-full">
@@ -85,7 +87,7 @@ export default function HomePage() {
             <div className="flex flex-col sm:flex-row justify-center w-full gap-4 xl:gap-16 px-4 xl:px-8 py-8 ">
               <Card
                 cardName={'بيع عقار'}
-                path={'/newPost'}
+                path={'/RealEstate/newPost'}
                 text={
                   'بغض النظر عن المسار الذي تسلكه لبيع منزلك، يمكننا مساعدتك في إتمام عملية بيع ناجحة و بأسرع وقت ممكن.'
                 }
@@ -95,7 +97,7 @@ export default function HomePage() {
               />
               <Card
                 cardName={'شراء عقار'}
-                path={'/buy'}
+                path={'/RealEstate/buy'}
                 text={
                   ' اعثر على عقارك من خلال تجربة تصوير غامرة وأكبر عدد من الإعلانات، بما في ذلك أشياء لن تجدها في أي مكان آخر.'
                 }
@@ -105,7 +107,7 @@ export default function HomePage() {
               />
               <Card
                 cardName={'تأجير عقار'}
-                path={'/rent'}
+                path={'/RealEstate/rent'}
                 text={
                   'نحن نعمل على إنشاء تجربة سلسة عبر الإنترنت, بدءاً من بناء أكبر شبكة تأجير، إلى تقديم الطلبات، إلى دفع الإيجار.'
                 }

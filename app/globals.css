@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-  @apply bg-white  text-four rubik;
+  @apply bg-white text-four rubik;
 }
 body {
   font-family: 'Rubik', sans-serif;
@@ -41,7 +41,7 @@ pre {
 }
 
 :root {
-  --btn-background: rgb(87, 87, 87); /* لون افتراضي */
+  --btn-background: #333333; /* لون افتراضي */
   --btn-hover-background: #ffa500; /* لون افتراضي عند hover */
 }
 
