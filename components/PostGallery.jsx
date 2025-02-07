@@ -81,7 +81,7 @@ const PostGallery = ({ post }) => {
             path.includes('myPosts') || path.includes('favoritePosts')
               ? ''
               : 'sm:h-96'
-          }  overflow-hidden ronded-[5px] w-full`}
+          }  overflow-hidden ronded w-full`}
       >
         <Image
           priority
@@ -106,7 +106,7 @@ const PostGallery = ({ post }) => {
   };
 
   return (
-    <div className="overflow-hidden rounded-[5px] w-full relative">
+    <div className="overflow-hidden rounded w-full relative">
       <Slider {...settings}>
         {images.map((image, index) => (
           <div

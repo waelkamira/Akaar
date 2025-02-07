@@ -25,7 +25,9 @@ export default function RootLayout({ children }) {
       <body className={rubik.className}>
         <Toaster />
         <AuthContextProvider>
-          <Navbar />
+          <div className="absolute top-0 right-0 z-[1000] w-full">
+            <Navbar />
+          </div>
           <InputsContextProvider>{children}</InputsContextProvider>
         </AuthContextProvider>
       </body>

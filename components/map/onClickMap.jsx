@@ -173,7 +173,7 @@ export default function OnClickMap({
   };
 
   return (
-    <div className="w-full text-white">
+    <div className="w-full ">
       {!lat && !lng && (
         <>
           <div className="flex flex-col justify-start items-start gap-2 w-full my-3">
@@ -181,11 +181,11 @@ export default function OnClickMap({
               <span className="flex text-one text-lg xl:text-2xl ml-2">
                 <FaMapMarkedAlt />
               </span>
-              <span className="flex text-sm sm:text-lg select-none text-nowrap text-white">
+              <span className="flex text-sm sm:text-lg select-none text-nowrap ">
                 حدد موقع عقارك على الخريطة :
               </span>
             </div>
-            <h1 className="text-right text-sm sm:text-lg select-none text-white">
+            <h1 className="text-right text-sm sm:text-lg select-none ">
               اختر المدينة من القائمة ثم اختر المنطقة من القائمة الثانية او اقرب
               منطقة الى مكان عقارك ثم قم بعمل زووم على الخريطة واضغط على مكان
               عقارك بدقة
@@ -209,7 +209,7 @@ export default function OnClickMap({
               isSearchable
               theme={customTheme}
               styles={customStyles}
-              className="w-full text-md text-start rounded-[5px] select-none text-black"
+              className="w-full text-md text-start rounded select-none "
               classNamePrefix="select"
               classNames={{
                 control: (state) =>
@@ -238,7 +238,7 @@ export default function OnClickMap({
                 isSearchable
                 theme={customTheme}
                 styles={customStyles}
-                className="w-full text-md text-start rounded-[5px] select-none text-black"
+                className="w-full text-md text-start rounded select-none "
                 classNamePrefix="select"
                 classNames={{
                   control: (state) =>
@@ -289,7 +289,7 @@ export default function OnClickMap({
       </div>
 
       {/* {selectedLocation && (
-        <div className="mt-4 p-4 bg-gray-100 rounded text-black shadow-sm">
+        <div className="mt-4 p-4 bg-gray-100 rounded  shadow-sm">
           <p>
             <h1 className="sm:font-bold">موقع العقار الذي قمت بتحديده:</h1>{' '}
             {selectedLocation[0].toFixed(5)}, {selectedLocation[1].toFixed(5)}{' '}

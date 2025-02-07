@@ -130,10 +130,10 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="flex justify-center items-center w-full h-screen text-white text-lg md:text-xl text-end">
+    <div className="flex justify-center items-center w-full h-screen  text-lg md:text-xl text-end">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="w-full lg:w-1/2 bg-four p-8  border border-one"
+        className="w-full lg:w-1/2  p-8  border border-one"
       >
         <h1 className="w-full my-2 text-xl sm:text-2xl md:text-3xl xl:text-4xl  text-center select-none">
           التسجيل 🧀
@@ -147,7 +147,7 @@ export default function RegisterPage() {
             name={'name'}
             placeholder="الإسم"
             {...register('name')}
-            className=" placeholder-gray-400 transition-all duration-300 placeholder:text-sm placeholder:sm:text-lg grow py-2 border border-gray-300 border-solid focus:border focus:outline-one outline-none rounded-md px-2 w-full caret-one text-black text-start"
+            className=" placeholder-gray-400 transition-all duration-300 placeholder:text-sm placeholder:sm:text-lg grow py-2 border border-gray-300 border-solid focus:border focus:outline-one outline-none rounded-md px-2 w-full caret-one  text-start"
           />
         </div>
         {errors?.name && (
@@ -164,7 +164,7 @@ export default function RegisterPage() {
             name={'email'}
             placeholder="الإيميل"
             {...register('email')}
-            className=" placeholder-gray-400 transition-all duration-300 placeholder:text-sm placeholder:sm:text-lg grow py-2 border border-gray-300 border-solid focus:border focus:outline-one outline-none rounded-md px-2 w-full caret-one text-black text-start"
+            className=" placeholder-gray-400 transition-all duration-300 placeholder:text-sm placeholder:sm:text-lg grow py-2 border border-gray-300 border-solid focus:border focus:outline-one outline-none rounded-md px-2 w-full caret-one  text-start"
           />
         </div>
         {errors?.email && (
@@ -181,7 +181,7 @@ export default function RegisterPage() {
             name={'password'}
             placeholder="كلمة السر"
             {...register('password')}
-            className=" placeholder-gray-400 transition-all duration-300 placeholder:text-sm placeholder:sm:text-lg grow py-2 border border-gray-300 border-solid focus:border focus:outline-one outline-none rounded-md px-2 w-full caret-one text-black text-start"
+            className=" placeholder-gray-400 transition-all duration-300 placeholder:text-sm placeholder:sm:text-lg grow py-2 border border-gray-300 border-solid focus:border focus:outline-one outline-none rounded-md px-2 w-full caret-one  text-start"
           />
         </div>
         {errors?.password && (
@@ -209,7 +209,7 @@ export default function RegisterPage() {
         <div className="flex flex-col sm:flex-row justify-between gap-8 items-center mt-4 w-full">
           <button
             type="submit"
-            className=" text-lg p-2  my-3 text-white text-nowrap bg-five hover:bg-one  hover:scale-[101%] w-full "
+            className=" text-lg p-2  my-3  text-nowrap bg-five hover:bg-one  hover:scale-[101%] w-full "
           >
             تسجيل
           </button>
@@ -218,7 +218,7 @@ export default function RegisterPage() {
             <Link href={'/'}>
               <button
                 type="submit"
-                className=" text-lg p-2  my-3 text-white text-nowrap bg-five hover:bg-one  hover:scale-[101%] w-full "
+                className=" text-lg p-2  my-3  text-nowrap bg-five hover:bg-one  hover:scale-[101%] w-full "
               >
                 إغلاق{' '}
               </button>{' '}

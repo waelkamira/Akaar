@@ -60,10 +60,10 @@ export default function Profile() {
   }
 
   return (
-    <div className="flex justify-center w-full bg-gradient-to-r  from-[#494949] to-four">
+    <div className="flex justify-center w-full mt-24">
       {session?.status === 'unauthenticated' && (
         <div className="p-4 bg-fm text-sm  md:text-lgdlg:text-xl our  m-2 md:m-8 border border-one text-center h-screen">
-          <h1 className="text-lg m text-md xl:text-xldlg:text-2xl p-2 my-8 text-white">
+          <h1 className="text-lg m text-md xl:text-xldlg:text-2xl p-2 my-8 ">
             يجب عليك تسجيل الدخول أولا لرؤية هذا البروفايل
           </h1>
           <div className="flex flex-col justify-between items-center gap-4 w-full">
@@ -80,7 +80,7 @@ export default function Profile() {
             setIsOpen={setIsOpen}
             noButton={true}
           />
-          <div className="flex flex-col items-start gap-4 justify-start w-full h-full overflow-hidden rounded-[5px] border border-one xl:mt-4">
+          <div className="flex flex-col items-start gap-4 justify-start w-full h-full overflow-hidden rounded border border-one xl:mt-4">
             <div className="relative w-full my-2">
               <div className="relative min-h-64 w-full">
                 <Image
@@ -93,7 +93,7 @@ export default function Profile() {
               </div>
             </div>
 
-            <div className="flex flex-col justify-center items-center w-full text-start text-white">
+            <div className="flex flex-col justify-center items-center w-full text-start ">
               {/* <div className="flex flex-col items-start gap-2 justify-between  px-8 py-2 w-full my-2">
                 <div className="flex justify-between items-center">
                   <h5 className="text-sm">تغيير الإسم: </h5>

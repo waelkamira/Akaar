@@ -37,8 +37,8 @@ export default function CategoriesSlid() {
   const router = useRouter();
 
   return (
-    <div className="hidden xl:flex flex-col items-center justify-center px-2 w-full bg-four  ">
-      <h1 className="text-lg sm:text-xl text-center py-4 mt- text-white mx-4 font-semibold w-full select-none">
+    <div className="hidden xl:flex flex-col items-center justify-center px-2 w-full   ">
+      <h1 className="text-lg sm:text-xl text-center py-4 mt-  mx-4 font-semibold w-full select-none">
         ابحث حسب الصنف
       </h1>
       {smallSize.map((category, index) => (
@@ -58,7 +58,7 @@ export default function CategoriesSlid() {
               alt="photo"
             />
           </div>
-          <h1 className="text-lg sm:text-xl text-center p-2 text-white mx-4 font-ةي w-full select-none">
+          <h1 className="text-lg sm:text-xl text-center p-2  mx-4 font-ةي w-full select-none">
             {category.name}
           </h1>
         </div>

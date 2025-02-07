@@ -10,7 +10,7 @@ export default function TextArea({ errors, title }) {
       )}
       <div className="flex items-center gap-2 w-full justify-end">
         {' '}
-        <h1 className="text-right text-xl text-white  my-2">{title} </h1>
+        <h1 className="text-right text-xl   my-2">{title} </h1>
         <h1 className="text-one  text-2xl">#</h1>
       </div>
 

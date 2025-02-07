@@ -12,7 +12,7 @@ export default function CustomToast({
     <div
       className={`${
         t.visible ? 'animate-enter' : 'animate-leave'
-      } max-w-md w-full bg-white text-four shadow-sm shadow-gray-300 rounded-[5px] pointer-events-auto flex-2 items-center justify-center p-4 mx-2 border-t-[10px] border-one`}
+      } max-w-md w-full bg-white text-four shadow-sm shadow-gray-300 rounded pointer-events-auto flex-2 items-center justify-center p-4 mx-2 border-t-[10px] border-one`}
     >
       <div className="flex justify-between items-center my-1">
         <div className="flex-1 w-full">
@@ -32,7 +32,7 @@ export default function CustomToast({
           </div>
         </div>
       </div>
-      {/* <hr className="w-full h-[1px] bg-four rounded-xl border-hidden select-none my-1" /> */}
+      {/* <hr className="w-full h-[1px]  rounded-xl border-hidden select-none my-1" /> */}
 
       <div>
         <div>

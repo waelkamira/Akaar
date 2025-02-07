@@ -75,7 +75,7 @@ export default function Users() {
   };
 
   return (
-    <div className="relative flex flex-col justify-center items-center w-full bg-gray-800  text-lg text-white">
+    <div className="relative flex flex-col justify-center items-center w-full bg-gray-800  text-lg ">
       <BackButton />
       <div className="absolute flex flex-col items-start gap-2 z-50 top-2 right-2 sm:top-4 sm:right-4">
         <TfiMenuAlt
@@ -86,7 +86,7 @@ export default function Users() {
         />
         {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
       </div>
-      <div className="flex gap-4 justify-center items-center bg-gray-700  text-lg text-white w-full p-4 mt-16 xl:mt-24 shadow-sm shadow-gray-300 ">
+      <div className="flex gap-4 justify-center items-center bg-gray-700  text-lg  w-full p-4 mt-16 xl:mt-24 shadow-sm shadow-gray-300 ">
         <input
           value={findUser}
           onChange={(e) => setFindUser(e.target.value)}
@@ -96,11 +96,11 @@ export default function Users() {
           name="user"
           placeholder="ابحث عن اسم مستخدم ..."
           autoFocus
-          className="text-right w-full p-2  text-lg outline-none focus:outline-one h-10 text-black"
+          className="text-right w-full p-2  text-lg outline-none focus:outline-one h-10 "
         />
         <button
           onClick={handleSearch}
-          className="flex items-center justify-center p-2  bg-one text-white"
+          className="flex items-center justify-center p-2  bg-one "
         >
           <IoIosSearch className="text-2xl" />
         </button>
@@ -114,7 +114,7 @@ export default function Users() {
           {users.length > 0 ? (
             users.map((user, index) => (
               <div
-                className="flex justify-between items-center bg-gray-700 my-2 text-white w-full h-24 border-[3px] border-one p-2  shadow-sm shadow-gray-300 hover:shadow-sm shadow-gray-300  transition-shadow duration-300"
+                className="flex justify-between items-center bg-gray-700 my-2  w-full h-24 border-[3px] border-one p-2  shadow-sm shadow-gray-300 hover:shadow-sm shadow-gray-300  transition-shadow duration-300"
                 key={index}
               >
                 <div>
@@ -129,7 +129,7 @@ export default function Users() {
                   'أدمن'
                 ) : (
                   <div
-                    className="flex flex-col items-center justify-center cursor-pointer bg-red-600  p-2 md:text-2xl text-white hover:bg-red-700"
+                    className="flex flex-col items-center justify-center cursor-pointer bg-red-600  p-2 md:text-2xl  hover:bg-red-700"
                     onClick={() => handleDeleteUser(user)}
                   >
                     <IoMdClose />
@@ -139,17 +139,17 @@ export default function Users() {
               </div>
             ))
           ) : (
-            <div className="text-white">لا توجد نتائج مطابقة للبحث.</div>
+            <div className="">لا توجد نتائج مطابقة للبحث.</div>
           )}
         </div>
-        {/* <div className="flex items-center justify-around my-4 mt-8 text-white">
+        {/* <div className="flex items-center justify-around my-4 mt-8 ">
           {users.length >= 5 && (
             <Link href="#post1">
               <div
                 className="flex items-center justify-around cursor-pointer"
                 onClick={() => setPageNumber(pageNumber + 1)}
               >
-                <h1 className="text-white ">الصفحة التالية</h1>
+                <h1 className=" ">الصفحة التالية</h1>
                 <MdKeyboardDoubleArrowRight className="text-2xl  text-one select-none" />
               </div>
             </Link>
@@ -161,7 +161,7 @@ export default function Users() {
                 onClick={() => setPageNumber(pageNumber - 1)}
               >
                 <MdKeyboardDoubleArrowLeft className="text-2xl  text-one select-none" />
-                <h1 className="text-white ">الصفحة السابقة</h1>
+                <h1 className=" ">الصفحة السابقة</h1>
               </div>
             </Link>
           )}

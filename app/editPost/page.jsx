@@ -173,9 +173,9 @@ export default function EditPost() {
     }
   };
   return (
-    <div className="flex flex-col justify-center items-center w-full bg-gradient-to-tr from-[#494949] to-four">
+    <div className="flex flex-col justify-center items-center w-full ">
       {session?.status === 'unauthenticated' && (
-        <div className="p-4 bg-four  m-2 md:m-8 border rounded-md rounded-md-one text-center h-screen">
+        <div className="p-4   m-2 md:m-8 border rounded-md rounded-md-one text-center h-screen">
           <h1 className="text-lg md:text-2xl p-2 my-8 ">
             يجب عليك تسجيل الدخول أولا لرؤية هذه الإعلان
           </h1>
@@ -194,7 +194,7 @@ export default function EditPost() {
           />
 
           <div className="flex flex-col justify-start items-center w-full gap-4 py-4">
-            <h1 className="grow text-lg lg:text-2xl w-full text-white">
+            <h1 className="grow text-lg lg:text-2xl w-full ">
               <span className="text-one  text-2xl ml-2">#</span>
               الإعلان
             </h1>
@@ -203,7 +203,7 @@ export default function EditPost() {
             <div className="flex flex-col w-full border rounded-md p-2 sm:p-8 mt-4 bg-white">
               <div className="flex justify-start items-center gap-2 w-full mb-4">
                 {/* صورة المستخدم */}
-                <div className="relative size-8 sm:size-10 lg:size-14 overflow-hidden rounded-[5px]">
+                <div className="relative size-8 sm:size-10 lg:size-14 overflow-hidden rounded">
                   {!editedPost?.userImage && <LoadingPhoto />}
                   {editedPost?.userImage && (
                     <Image
@@ -252,7 +252,7 @@ export default function EditPost() {
                 />{' '}
                 <button
                   onClick={() => handleEditPost(postId)}
-                  className="bg-gray-600 mb-2 w-full mt-4 sm:w-fit text-white duration-300 transition-colors ease-in-out hover:bg-one hover:scale-105 border rounded-md text-center select-none p-2"
+                  className="bg-gray-600 mb-2 w-full mt-4 sm:w-fit  duration-300 transition-colors ease-in-out hover:bg-one hover:scale-105 border rounded-md text-center select-none p-2"
                 >
                   حفظ التعديلات
                 </button>
@@ -386,7 +386,7 @@ export default function EditPost() {
                   </pre>
                   <button
                     onClick={() => handleEditPost(postId)}
-                    className="bg-gray-600 mb-2 w-full mt-4 sm:w-fit text-white  duration-300 transition-colors ease-in-out hover:bg-one hover:scale-105 border rounded-md text-center select-none   p-2"
+                    className="bg-gray-600 mb-2 w-full mt-4 sm:w-fit   duration-300 transition-colors ease-in-out hover:bg-one hover:scale-105 border rounded-md text-center select-none   p-2"
                   >
                     حفظ التعديلات
                   </button>
@@ -422,7 +422,7 @@ export default function EditPost() {
                   </div>
                   <button
                     onClick={() => handleEditPost(postId)}
-                    className="bg-gray-600 mb-2 w-full mt-4 sm:w-fit text-white  duration-300 transition-colors ease-in-out hover:bg-one hover:scale-105 border rounded-md text-center select-none   p-2"
+                    className="bg-gray-600 mb-2 w-full mt-4 sm:w-fit   duration-300 transition-colors ease-in-out hover:bg-one hover:scale-105 border rounded-md text-center select-none   p-2"
                   >
                     حفظ التعديلات
                   </button>

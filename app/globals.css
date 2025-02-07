@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-  @apply bg-gradient-to-tr from-four to-[#bb8a2f] rubik xl:p-20;
+  @apply bg-white  text-four rubik;
 }
 body {
   font-family: 'Rubik', sans-serif;
@@ -41,7 +41,7 @@ pre {
 }
 
 :root {
-  --btn-background: rgb(78, 78, 78); /* لون افتراضي */
+  --btn-background: rgb(87, 87, 87); /* لون افتراضي */
   --btn-hover-background: #ffa500; /* لون افتراضي عند hover */
 }
 
@@ -226,5 +226,3 @@ body {
 }
 
 /* =====// CUSTOM FONTS //====== */
-
-/* =====// ClockWidget //====== */

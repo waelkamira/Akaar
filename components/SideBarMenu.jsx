@@ -12,7 +12,7 @@ export default function SideBarMenu({ setIsOpen }) {
   const user = CurrentUser();
 
   return (
-    <div className=" p-4 w-52 mx-2 h-fit rounded-[5px] border border-one bg-four">
+    <div className=" p-4 w-52 mx-2 h-fit rounded border border-one bg-white">
       {session?.status === 'authenticated' && (
         <Link href={'/profile?username'}>
           <div className="flex flex-col justify-between items-center  w-full">
@@ -28,7 +28,7 @@ export default function SideBarMenu({ setIsOpen }) {
                   />
                 )}
               </div>
-              <h1 className=" text-white text-nowrap text-start mx-3 text-sm line-clamp-1 select-none">
+              <h1 className="  text-nowrap text-start mx-3 text-sm line-clamp-1 select-none">
                 {session?.data?.user?.name}
               </h1>
             </div>
@@ -57,7 +57,7 @@ export default function SideBarMenu({ setIsOpen }) {
       )}
 
       <button
-        className="text-sm p-0.5 my-2 bg-one text-white text-nowrap select-none rounded-lg w-full max-h-12 hover:text-white border hover:border-[#596067] hover:scale-[101%]"
+        className="text-sm p-0.5 my-2 bg-one  text-nowrap select-none rounded-lg w-full max-h-12 hover: border hover:border-[#596067] hover:scale-[101%]"
         onClick={() => setIsOpen(false)}
       >
         إغلاق
