@@ -57,7 +57,7 @@ export default function UserNameAndPhoto({ post }) {
               path.includes('myPosts') || path.includes('favoritePosts')
                 ? 'size-8'
                 : 'size-8 sm:size-12 lg:size-14'
-            } overflow-hidden rounded-[5px]`}
+            } overflow-hidden rounded`}
           >
             {![post?.userImage] && <LoadingPhoto />}
             {[post?.userImage] && (
@@ -91,7 +91,7 @@ export default function UserNameAndPhoto({ post }) {
         {session?.status === 'authenticated' &&
           path.includes('favoritePosts') && (
             <div
-              className={`px-1 py-[1px] flex flex-col items-center justify-center cursor-pointer bg-four overflow-hidden rounded-[5px] text-white hover:bg-one`}
+              className={`px-1 py-[1px] flex flex-col items-center justify-center cursor-pointer  overflow-hidden rounded  hover:bg-one`}
               onClick={() => handleDeletePost(post)}
             >
               <IoMdClose className="" />

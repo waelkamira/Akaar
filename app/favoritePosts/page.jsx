@@ -85,14 +85,14 @@ export default function Page() {
   }
 
   return (
-    <div className="flex justify-center items-start w-full bg-gradient-to-tr from-[#494949] to-four rounded-b-[5px]">
-      <div className="relative w-full xl:w-[90%] 2xl:w-[70%] px-2 sm:pt-4 rounded-b-[5px] z-50">
+    <div className="flex justify-center items-start w-full  rounded-b">
+      <div className="relative w-full xl:w-[90%] 2xl:w-[70%] px-2 sm:pt-4 rounded-b z-50">
         <MiddleBarAndPhoto
           isOpen={isOpen}
           setIsOpen={setIsOpen}
           noButton={true}
         />
-        <div className="relative w-full h-[300px] lg:h-[400px] border-l-[18px] border-one overflow-hidden rounded-[5px]">
+        <div className="relative w-full h-[300px] lg:h-[400px] border overflow-hidden rounded">
           <Image
             src="https://i.imgur.com/wZ0aruw.jpg"
             fill
@@ -103,7 +103,7 @@ export default function Page() {
         </div>
 
         <div className="flex justify-between items-center w-full gap-2 mt-2 sm:my-8">
-          <h1 className="text-right text-xl text-white">
+          <h1 className="text-right text-xl ">
             <span className="text-one text-2xl ml-2">#</span>
             وصفاتي المفضلة
           </h1>
@@ -115,7 +115,7 @@ export default function Page() {
               myMessage={'لا يوجد نتائج لعرضها 😉 لم تقم بحفظ أي وصفة بعد'}
             />
           )}
-          <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 mb-2 sm:p-0 gap-x-2 justify-start items-start w-full sm:border border-gray-500 rounded-[5px]">
+          <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 mb-2 sm:p-0 gap-x-2 justify-start items-start w-full sm:border border-gray-500 rounded">
             {userFavorites?.length > 0 &&
               userFavorites.map((post, index) => (
                 <div className="relative " key={index}>
@@ -123,7 +123,7 @@ export default function Page() {
                 </div>
               ))}
           </div>
-          {/* <div className="flex items-center justify-around my-4 mt-8 text-white">
+          {/* <div className="flex items-center justify-around my-4 mt-8 ">
             {userFavorites?.length >= 5 && (
               <Link href={'#post1'}>
                 <div

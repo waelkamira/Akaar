@@ -131,7 +131,7 @@ export default function SmallItem({ post, index, show = true, id = false }) {
 
           {currentUser?.isAdmin === 1 && path === '/' && (
             <div
-              className="flex flex-col items-center justify-center cursor-pointer bg-four  p-2 md:text-2xl text-white hover:bg-one"
+              className="flex flex-col items-center justify-center cursor-pointer   p-2 md:text-2xl  hover:bg-one"
               onClick={() => handleDeletePost(post)}
             >
               <IoMdClose className="" />
@@ -153,7 +153,7 @@ export default function SmallItem({ post, index, show = true, id = false }) {
           <>
             <div className=" w-full my-2 ">
               <div
-                className="btn flex justify-center items-center gap-2 w-fit cursor-pointer p-1 lg:p-2  border border-gray-500 select-none text-gray-200 hover:text-white rounded-md"
+                className="btn flex justify-center items-center gap-2 w-fit cursor-pointer p-1 lg:p-2  border border-gray-500 select-none text-gray-200 hover: rounded-md"
                 onClick={() => {
                   handleInteraction(post?.id, 'hearts', heart, setHeart);
                   if (session?.status === 'unauthenticated') {
@@ -215,7 +215,7 @@ export default function SmallItem({ post, index, show = true, id = false }) {
               path.includes('myPosts') || path.includes('favoritePosts')
                 ? 'text-md'
                 : 'sm:text-2xl'
-            } btn p-2 my-2 bg-seven text-white hover:scale-[101%] hover:text-white font-medium text-center select-none w-full transition-all duration-300 rounded-[5px]`}
+            } btn p-2 my-2 bg-seven  hover:scale-[101%] hover: font-medium text-center select-none w-full transition-all duration-300 rounded`}
         >
           عرض الإعلان
         </button>

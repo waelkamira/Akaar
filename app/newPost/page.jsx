@@ -12,7 +12,16 @@ export default function NewRecipe() {
   const [isVisible, setIsVisible] = useState(false);
   const session = useSession();
   return (
-    <div className="flex flex-col justify-center items-center w-full bg-gradient-to-r from-[#494949] to-four pb-16">
+    <div className="flex flex-col justify-center items-center w-full py-16">
+      {/* <div className="relative w-full h-[300px] lg:h-[600px] border overflow-hidden">
+        <Image
+          src="https://i.imgur.com/wZ0aruw.jpg"
+          fill
+          alt="home_photo"
+          className="object-cover object-center w-full h-auto"
+          objectPosition="top"
+        />
+      </div> */}
       <div className="flex flex-col justify-center items-center w-full xl:w-[90%] 2xl:w-[70%] h-full sm:px-16 pt-2 overflow-y-auto z-10 px-2">
         <MiddleBarAndPhoto
           isOpen={isOpen}
@@ -23,11 +32,11 @@ export default function NewRecipe() {
         <div
           className={
             (session?.status === 'unauthenticated' ? 'h-fit ' : 'h-fit ') +
-            ' relative border border-gray-500 rounded-[5px] w-full flex flex-col items-start justify-center sm:flex-row top-0 overflow-hidden'
+            ' relative border border-gray-500 rounded w-full flex flex-col items-start mt-16 justify-center sm:flex-row top-0 overflow-hidden'
           }
           onClick={(e) => e.stopPropagation()}
         >
-          <div className=" w-full h-full flex flex-col items-center justify-start  grow z-40 mt-16">
+          <div className=" w-full h-full flex flex-col items-center justify-start grow z-40 mt-16">
             <div className="flex flex-col w-full justify-center items-center">
               <div className="relative size-20 xl:h-44 xl:w-44 mt-2 ">
                 <Image
@@ -41,8 +50,8 @@ export default function NewRecipe() {
             </div>
 
             {session?.status === 'unauthenticated' && (
-              <div className="p-4 bg-four  m-2 md:m-8 border border-gray-500 text-center">
-                <h1 className="text-lg md:text-2xl p-2  text-white">
+              <div className="p-4   m-2 md:m-8 border border-gray-500 text-center">
+                <h1 className="text-lg md:text-2xl p-2  ">
                   يجب عليك تسجيل الدخول أولا لكي تتمكن من إنشاء إعلان جديد
                 </h1>
 
@@ -51,7 +60,7 @@ export default function NewRecipe() {
             )}
             {session?.status === 'authenticated' && (
               <div className="w-full p-2">
-                <h1 className="w-full text-center text-white text-sm md:text-lg my-4">
+                <h1 className="w-full text-center  text-sm md:text-lg my-4">
                   أدخل بيانات العقار الذي تريد بيعه أو تأجيره
                 </h1>
                 <UploadingAndDisplayingImage height={'h-96'} />

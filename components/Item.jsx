@@ -73,8 +73,8 @@ export default function Item({
   return (
     <>
       {session?.status === 'unauthenticated' && (
-        <div className="p-4 bg-four  m-2 md:m-8 border border-one text-center h-screen">
-          <h1 className="text-lg md:text-2xl p-2 my-8 text-white">
+        <div className="p-4   m-2 md:m-8 border border-one text-center h-screen">
+          <h1 className="text-lg md:text-2xl p-2 my-8 ">
             يجب عليك تسجيل الدخول أولا لرؤية هذا الإعلان
           </h1>
           <Link href={'/login'}>
@@ -84,10 +84,10 @@ export default function Item({
       )}
       {session?.status === 'authenticated' && (
         <div className="flex flex-col justify-center items-center w-full xl:w-[90%] 2xl:w-[70%] h-full sm:px-16 pt-2 overflow-y-auto z-10 px-2">
-          {/* <div className="relative flex justify-between items-center w-full gap-2 my-2 bg-one p-1 md:p-2 rounded-[5px]">
+          {/* <div className="relative flex justify-between items-center w-full gap-2 my-2 bg-one p-1 md:p-2 rounded">
             <div>
               <TfiMenuAlt
-                className="text-[30px] lg:text-5xl text-white cursor-pointer"
+                className="text-[30px] lg:text-5xl  cursor-pointer"
                 onClick={() => {
                   setIsOpen(!isOpen);
                 }}
@@ -101,7 +101,7 @@ export default function Item({
           </div> */}
 
           <div className="flex justify-center w-full ">
-            <div className="flex flex-col w-full p-2 sm:p-8 my-2 bg-six border-t-[20px] border-one rounded-t-lg">
+            <div className="flex flex-col w-full p-2 sm:p-8 my-2 bg-gray-100 border-t-[20px] border-one rounded-t-lg">
               <UserNameAndPhoto
                 post={{
                   userImage: userImage,
@@ -125,8 +125,8 @@ export default function Item({
               />
 
               <div className=" mt-4 sm:mt-16">
-                <div className="flex justify-between items-center my-4 lg:my-8 bg-four h-10 sm:h-16  w-full overflow-visible">
-                  <h1 className="text-white text-lg sm:text-xl w-full mb-2 select-none">
+                <div className="flex justify-between items-center my-4 lg:my-8  h-10 sm:h-16  w-full overflow-visible">
+                  <h1 className=" text-lg sm:text-xl w-full mb-2 select-none">
                     <span className="text-one text-2xl mx-2 select-none">
                       #
                     </span>
@@ -134,7 +134,7 @@ export default function Item({
                   </h1>
                 </div>
 
-                <div className="flex flex-col text-black w-full">
+                <div className="flex flex-col  w-full">
                   <div className="flex flex-col sm:grid md:grid-cols-2 sm:gap-x-4 w-full">
                     <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300  text-md sm:text-xl w-full min-h-20 my-2 select-none">
                       <span className="flex gap-1 items-center text-one text-md sm:text-xl mx-2 select-none">
@@ -208,8 +208,8 @@ export default function Item({
                       </h1> */}
                   </div>
 
-                  <div className="flex justify-between items-center my-4 lg:my-8 bg-four h-10 sm:h-16  w-full overflow-visible">
-                    <h1 className="text-white text-lg sm:text-xl w-full mb-2 select-none">
+                  <div className="flex justify-between items-center my-4 lg:my-8  h-10 sm:h-16  w-full overflow-visible">
+                    <h1 className=" text-lg sm:text-xl w-full mb-2 select-none">
                       <span className="text-one text-2xl mx-2 select-none">
                         #
                       </span>
@@ -225,8 +225,8 @@ export default function Item({
                 </div>
                 {lng !== '' && lat !== '' && (
                   <div>
-                    <div className="flex justify-between items-center my-4 lg:my-8 bg-four h-10 sm:h-16  w-full overflow-visible">
-                      <h1 className="text-white text-lg sm:text-xl w-full mb-2 select-none">
+                    <div className="flex justify-between items-center my-4 lg:my-8  h-10 sm:h-16  w-full overflow-visible">
+                      <h1 className=" text-lg sm:text-xl w-full mb-2 select-none">
                         <span className="text-one text-2xl mx-2 select-none">
                           #
                         </span>
@@ -239,8 +239,8 @@ export default function Item({
                   </div>
                 )}
                 {(link || iframeSrc) && (
-                  <div className="flex justify-between items-center my-4 sm:my-4 lg:my-16 bg-four h-10 sm:h-16  w-full overflow-visible">
-                    <h1 className="text-white text-lg sm:text-xl w-full mb-2 select-none">
+                  <div className="flex justify-between items-center my-4 sm:my-4 lg:my-16  h-10 sm:h-16  w-full overflow-visible">
+                    <h1 className=" text-lg sm:text-xl w-full mb-2 select-none">
                       <span className="text-one text-2xl mx-2 select-none">
                         #
                       </span>
@@ -249,7 +249,7 @@ export default function Item({
                   </div>
                 )}
                 <div className="flex justify-center items-center w-full mt-16">
-                  <div className="flex flex-col text-black w-full">
+                  <div className="flex flex-col  w-full">
                     {/* Content rendering logic */}
                     {iframeSrc && (
                       <div className="mt-4">

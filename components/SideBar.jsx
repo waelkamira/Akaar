@@ -41,7 +41,7 @@ export default function SideBar() {
       <div
         className={
           (session?.status === 'unauthenticated' ? 'min-h-screen' : '') +
-          ` w-full bg-four rounded-r-lg  h-full `
+          ` w-full  rounded-r-lg  h-full `
         }
       >
         {session?.status === 'authenticated' && (
@@ -57,7 +57,7 @@ export default function SideBar() {
                   <Image priority src={user?.image} fill alt={user?.name} />
                 )}
               </div>
-              <h1 className=" text-white text-nowrap">{user?.name} </h1>
+              <h1 className="  text-nowrap">{user?.name} </h1>
             </div>
           </div>
         )}
@@ -70,7 +70,7 @@ export default function SideBar() {
       </div>
       {session?.status === 'authenticated' && (
         <div className="w-full rounded-r-lg my-4">
-          <div className="p-4 rounded-r-lg bg-four overflow-hidden my-4">
+          <div className="p-4 rounded-r-lg  overflow-hidden my-4">
             <div className=" relative w-full h-32">
               <Image
                 priority

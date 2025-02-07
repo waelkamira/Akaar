@@ -44,19 +44,19 @@ export default function VideoPlayer() {
       <div className="absolute bottom-4 left-0 right-0 flex justify-center space-x-4 p-2 bg-gray-800 bg-opacity-70 rounded-b-lg">
         <button
           onClick={togglePlayPause}
-          className="text-white p-2 rounded-xl bg-blue-600 hover:bg-blue-500 focus:outline-none"
+          className=" p-2 rounded-xl bg-blue-600 hover:bg-blue-500 focus:outline-none"
         >
           ⏯️
         </button>
         <button
           onClick={toggleMute}
-          className="text-white p-2 rounded-xl bg-yellow-600 hover:bg-yellow-500 focus:outline-none"
+          className=" p-2 rounded-xl bg-yellow-600 hover:bg-yellow-500 focus:outline-none"
         >
           🔇
         </button>
         <button
           onClick={toggleFullscreen}
-          className="text-white p-2 rounded-xl bg-green-600 hover:bg-green-500 focus:outline-none"
+          className=" p-2 rounded-xl bg-green-600 hover:bg-green-500 focus:outline-none"
         >
           ⛶
         </button>

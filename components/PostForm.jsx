@@ -410,7 +410,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
                     </h1>
                   )}
                   <div className="flex items-center gap-2 w-full justify-start my-2">
-                    <h1 className="flex text-right text-md select-none text-nowrap text-white">
+                    <h1 className="flex text-right text-md select-none text-nowrap ">
                       <span className="text-one text-lg xl:text-2xl ml-2">
                         {' '}
                         <RxSpaceEvenlyHorizontally />
@@ -428,7 +428,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
                     id="مساحة العقار"
                     name="مساحة العقار"
                     placeholder="300 م2"
-                    className="w-full text-sm sm:text-lg rounded-[5px] text-start  h-9 sm:h-12 text-nowrap px-2 border border-slate-300 focus:outline-one"
+                    className="w-full text-sm sm:text-lg rounded text-start  h-9 sm:h-12 text-nowrap px-2 border border-slate-300 focus:outline-one"
                   />
                 </div>
 
@@ -452,7 +452,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
                   )}
 
                   <div className="flex items-center gap-2 w-full justify-start my-2">
-                    <h1 className="flex text-right text-md select-none text-nowrap text-white">
+                    <h1 className="flex text-right text-md select-none text-nowrap ">
                       <span className="text-one text-lg xl:text-2xl ml-2">
                         {' '}
                         <FaHouseDamage />
@@ -470,7 +470,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
                     id="اسم العقار"
                     name="اسم العقار"
                     placeholder=" بيت بداريا _ أرض بدوما .."
-                    className="w-full text-sm sm:text-lg rounded-[5px] text-start  h-9 sm:h-12 text-nowrap px-2 border border-slate-300 focus:outline-one"
+                    className="w-full text-sm sm:text-lg rounded text-start  h-9 sm:h-12 text-nowrap px-2 border border-slate-300 focus:outline-one"
                   />
                 </div>
 
@@ -491,7 +491,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
                     </h1>
                   )}
                   <div className="flex items-center gap-2 w-full justify-start my-2">
-                    <h1 className="flex text-right text-md select-none text-nowrap text-white">
+                    <h1 className="flex text-right text-md select-none text-nowrap ">
                       <span className="text-one text-lg xl:text-2xl ml-2">
                         <GiRotaryPhone />
                       </span>
@@ -511,7 +511,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
                     id="رقم الهاتف"
                     name="رقم الهاتف"
                     placeholder="+963 11 3391 4444"
-                    className="w-full text-sm sm:text-lg rounded-[5px] text-start  h-9 sm:h-12 text-nowrap px-2 border border-slate-300 focus:outline-one"
+                    className="w-full text-sm sm:text-lg rounded text-start  h-9 sm:h-12 text-nowrap px-2 border border-slate-300 focus:outline-one"
                   />
                 </div>
 
@@ -523,7 +523,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
                   )}
                   <div className="flex items-center gap-2 w-full justify-start my-2">
                     <h1
-                      className={`flex text-right text-md select-none text-nowrap text-white`}
+                      className={`flex text-right text-md select-none text-nowrap `}
                     >
                       <span className="text-one text-lg xl:text-2xl ml-2">
                         <MdOutlinePriceCheck />
@@ -543,7 +543,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
                     id="سعر العقار"
                     name="سعر العقار"
                     placeholder="$ 000.0"
-                    className="w-full text-sm sm:text-lg rounded-[5px] text-start  h-9 sm:h-12 text-nowrap px-2 border border-slate-300 focus:outline-one"
+                    className="w-full text-sm sm:text-lg rounded text-start  h-9 sm:h-12 text-nowrap px-2 border border-slate-300 focus:outline-one"
                   />
                 </div>
               </div>
@@ -558,7 +558,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
             )}
             <div className="flex items-center gap-2 w-full justify-start my-2">
               {' '}
-              <h1 className="flex text-right text-lg text-white">
+              <h1 className="flex text-right text-lg ">
                 <span className="text-one text-lg xl:text-2xl ml-2">
                   <MdOutlineFeaturedPlayList />
                 </span>
@@ -576,7 +576,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
               name="الوصف"
               id="الوصف"
               placeholder="اكتب مواصفات عقارك هنا ..."
-              className="scrollBar flex text-right w-full p-2  text-xl placeholder:text-sm lg:placeholder:text-lg h-36 outline-2 focus:outline-one rounded-[5px]"
+              className="scrollBar flex text-right w-full p-2  text-xl placeholder:text-sm lg:placeholder:text-lg h-36 outline-2 focus:outline-one rounded"
             ></textarea>
           </div>
           <OnClickMap
@@ -588,7 +588,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
           <div className="w-full">
             <div className="flex items-center gap-2 w-full justify-start my-2 ">
               {' '}
-              <h1 className="flex text-right text-sm sm:text-lg select-none text-white">
+              <h1 className="flex text-right text-sm sm:text-lg select-none ">
                 <span className="text-one text-lg xl:text-2xl ml-2">
                   <RxVideo />
                 </span>
@@ -601,7 +601,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
               placeholder="... ضع رابط الفيديو هنا"
               value={url}
               onChange={handleInputChange}
-              className="w-full text-sm sm:text-lg rounded-[5px] text-start  h-9 sm:h-12 text-nowrap px-2 border border-slate-300 focus:outline-one"
+              className="w-full text-sm sm:text-lg rounded text-start  h-9 sm:h-12 text-nowrap px-2 border border-slate-300 focus:outline-one"
             />
             {inputs?.link && (
               <div>
@@ -621,14 +621,14 @@ export default function PostForm({ setIsVisible, cancel = true }) {
           <div className="flex flex-col sm:flex-row justify-around items-center gap-8 w-full my-12">
             <button
               type="submit"
-              className="btn bg-five rounded-[5px] text-white shadow-lg hover:outline outline-one text-xl hover py-2 px-16 w-full"
+              className="btn bg-five rounded text-white hover:text-four shadow-lg hover:outline outline-one text-xl hover py-2 px-16 w-full"
             >
               نشر
             </button>
             {cancel && (
               <button
                 type="text"
-                className="btn bg-five  text-white shadow-sm shadow-gray-300  hover:outline  outline-one text-xl hover py-2 px-16 w-full"
+                className="btn bg-five   shadow-sm shadow-gray-300 text-white hover:outline  outline-one text-xl hover py-2 px-16 w-full"
                 onClick={() => {
                   setIsVisible(false);
                   setInputs({

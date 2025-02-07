@@ -62,7 +62,7 @@ export default function ImageSlider({ image, image1, image2, image3, image4 }) {
         <div className="keen-slider__slide number-slide1 ">
           {' '}
           {image && (
-            <div className="relative w-full aspect-[4/3] overflow-hidden rounded-[5px] border">
+            <div className="relative w-full aspect-[4/3] overflow-hidden rounded border">
               <Image
                 priority
                 src={image}
@@ -76,7 +76,7 @@ export default function ImageSlider({ image, image1, image2, image3, image4 }) {
         <div className="keen-slider__slide number-slide2">
           {' '}
           {image1 && (
-            <div className="relative w-full aspect-[4/3] overflow-hidden rounded-[5px]">
+            <div className="relative w-full aspect-[4/3] overflow-hidden rounded">
               <Image
                 priority
                 src={image1}
@@ -90,7 +90,7 @@ export default function ImageSlider({ image, image1, image2, image3, image4 }) {
         <div className="keen-slider__slide number-slide3">
           {' '}
           {image2 && (
-            <div className="relative w-full aspect-[4/3] overflow-hidden rounded-[5px]">
+            <div className="relative w-full aspect-[4/3] overflow-hidden rounded">
               <Image
                 priority
                 src={image2}
@@ -104,7 +104,7 @@ export default function ImageSlider({ image, image1, image2, image3, image4 }) {
         <div className="keen-slider__slide number-slide4">
           {' '}
           {image3 && (
-            <div className="relative w-full aspect-[4/3] overflow-hidden rounded-[5px]">
+            <div className="relative w-full aspect-[4/3] overflow-hidden rounded">
               <Image
                 priority
                 src={image3}
@@ -118,7 +118,7 @@ export default function ImageSlider({ image, image1, image2, image3, image4 }) {
         <div className="keen-slider__slide number-slide5">
           {' '}
           {image4 && (
-            <div className="relative w-full aspect-[4/3] overflow-hidden rounded-[5px]">
+            <div className="relative w-full aspect-[4/3] overflow-hidden rounded">
               <Image
                 priority
                 src={image4}

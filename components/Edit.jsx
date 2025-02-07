@@ -114,8 +114,8 @@ export default function EditPost() {
   return (
     <>
       {session?.status === 'unauthenticated' && (
-        <div className="p-4 bg-four  m-2 md:m-8 border border-one text-center h-screen">
-          <h1 className="text-lg md:text-2xl p-2 my-8 text-white">
+        <div className="p-4   m-2 md:m-8 border border-one text-center h-screen">
+          <h1 className="text-lg md:text-2xl p-2 my-8 ">
             يجب عليك تسجيل الدخول أولا لرؤية هذه الوصفة
           </h1>
           <Link href={'/login'}>
@@ -125,7 +125,7 @@ export default function EditPost() {
         </div>
       )}
       {session?.status === 'authenticated' && (
-        <div className="relative flex flex-col items-start w-full bg-four h-full p-2 lg:p-8 ">
+        <div className="relative flex flex-col items-start w-full  h-full p-2 lg:p-8 ">
           <div className="hidden xl:block relative w-full h-24 sm:h-[200px]  overflow-hidden shadow-sm shadow-gray-300  shadow-one">
             <Image
               priority
@@ -155,7 +155,7 @@ export default function EditPost() {
             />
           </div>
           <div className="flex justify-between items-center w-full gap-4 sm:my-8">
-            <h1 className="grow text-lg lg:text-3xl w-full text-white select-none">
+            <h1 className="grow text-lg lg:text-3xl w-full  select-none">
               الوصفة:
             </h1>
           </div>
@@ -200,9 +200,7 @@ export default function EditPost() {
                   <span
                     contentEditable="false"
                     className={
-                      inputs?.mealName && editedRecipe?.mealName
-                        ? 'hidden'
-                        : 'text-white'
+                      inputs?.mealName && editedRecipe?.mealName ? 'hidden' : ''
                     }
                   >
                     &#13;&#10;
@@ -213,7 +211,7 @@ export default function EditPost() {
 
                 <button
                   onClick={() => handleeditPost()}
-                  className="bg-five mb-2 w-full sm:w-fit hover:bg-one text-white hover:scale-105 border text-center select-none   p-2"
+                  className="bg-five mb-2 w-full sm:w-fit hover:bg-one  hover:scale-105 border text-center select-none   p-2"
                 >
                   حفظ التعديلات
                 </button>
@@ -221,14 +219,14 @@ export default function EditPost() {
               <UploadingAndDisplayingImage img={editedRecipe?.image} />
               <button
                 onClick={() => handleeditPost()}
-                className="bg-five mb-2 w-full sm:w-fit mt-4 hover:bg-one text-white hover:scale-105 border text-center select-none   p-2"
+                className="bg-five mb-2 w-full sm:w-fit mt-4 hover:bg-one  hover:scale-105 border text-center select-none   p-2"
               >
                 حفظ التعديلات
               </button>
 
               <div className="bg-white  mt-4 sm:mt-16">
-                <div className="flex justify-between items-center my-4 sm:my-8 lg:my-16 bg-four h-10 sm:h-16  w-full overflow-visible">
-                  <h1 className="text-white  text-xl sm:text-3xl w-full my-2 select-none">
+                <div className="flex justify-between items-center my-4 sm:my-8 lg:my-16  h-10 sm:h-16  w-full overflow-visible">
+                  <h1 className="  text-xl sm:text-3xl w-full my-2 select-none">
                     <span className="text-one  text-2xl mx-2 select-none">
                       #
                     </span>
@@ -259,9 +257,7 @@ export default function EditPost() {
                   <span
                     contentEditable="false"
                     className={
-                      inputs?.mealName && editedRecipe?.mealName
-                        ? 'hidden'
-                        : 'text-white'
+                      inputs?.mealName && editedRecipe?.mealName ? 'hidden' : ''
                     }
                   >
                     &#13;&#10;
@@ -270,12 +266,12 @@ export default function EditPost() {
                 </pre>
                 <button
                   onClick={() => handleeditPost()}
-                  className="bg-five mb-2 w-full mt-4 sm:w-fit hover:bg-one text-white hover:scale-105 border text-center select-none   p-2"
+                  className="bg-five mb-2 w-full mt-4 sm:w-fit hover:bg-one  hover:scale-105 border text-center select-none   p-2"
                 >
                   حفظ التعديلات
                 </button>
-                <div className="flex justify-between items-center my-4 sm:my-8 lg:my-16 bg-four h-10 sm:h-16  w-full overflow-visible">
-                  <h1 className="text-white  text-xl sm:text-3xl w-full my-2 select-none">
+                <div className="flex justify-between items-center my-4 sm:my-8 lg:my-16  h-10 sm:h-16  w-full overflow-visible">
+                  <h1 className="  text-xl sm:text-3xl w-full my-2 select-none">
                     <span className="text-one  text-2xl mx-2 select-none">
                       #
                     </span>
@@ -306,9 +302,7 @@ export default function EditPost() {
                   <span
                     contentEditable="false"
                     className={
-                      inputs?.mealName && editedRecipe?.mealName
-                        ? 'hidden'
-                        : 'text-white'
+                      inputs?.mealName && editedRecipe?.mealName ? 'hidden' : ''
                     }
                   >
                     &#13;&#10;
@@ -317,14 +311,14 @@ export default function EditPost() {
                 </pre>
                 <button
                   onClick={() => handleeditPost()}
-                  className="bg-five mb-2 w-full mt-4 sm:w-fit hover:bg-one text-white hover:scale-105 border text-center select-none   p-2"
+                  className="bg-five mb-2 w-full mt-4 sm:w-fit hover:bg-one  hover:scale-105 border text-center select-none   p-2"
                 >
                   حفظ التعديلات
                 </button>
                 {editedRecipe?.advise && (
                   <>
-                    <div className="flex justify-between items-center my-4 sm:my-8 lg:my-16 bg-four h-10 sm:h-16  w-full overflow-visible mb-16">
-                      <h1 className="text-white  text-xl sm:text-3xl w-full my-2 select-none">
+                    <div className="flex justify-between items-center my-4 sm:my-8 lg:my-16  h-10 sm:h-16  w-full overflow-visible mb-16">
+                      <h1 className="  text-xl sm:text-3xl w-full my-2 select-none">
                         <span className="text-one  text-2xl mx-2 select-none">
                           #
                         </span>
@@ -357,7 +351,7 @@ export default function EditPost() {
                         className={
                           inputs?.mealName && editedRecipe?.mealName
                             ? 'hidden'
-                            : 'text-white'
+                            : ''
                         }
                       >
                         &#13;&#10;
@@ -366,14 +360,14 @@ export default function EditPost() {
                     </pre>{' '}
                     <button
                       onClick={() => handleeditPost()}
-                      className="bg-five mb-2 w-full mt-4 sm:w-fit hover:bg-one text-white hover:scale-105 border text-center select-none   p-2"
+                      className="bg-five mb-2 w-full mt-4 sm:w-fit hover:bg-one  hover:scale-105 border text-center select-none   p-2"
                     >
                       حفظ التعديلات
                     </button>
                   </>
                 )}
-                <div className="flex justify-between items-center my-4 sm:my-8 lg:my-16 bg-four h-10 sm:h-16  w-full overflow-visible">
-                  <h1 className="text-white  text-2xl lg:text-3xl w-full my-2 select-none">
+                <div className="flex justify-between items-center my-4 sm:my-8 lg:my-16  h-10 sm:h-16  w-full overflow-visible">
+                  <h1 className="  text-2xl lg:text-3xl w-full my-2 select-none">
                     <span className="text-one  text-2xl mx-2 select-none">
                       #
                     </span>
@@ -399,7 +393,7 @@ export default function EditPost() {
                 />
                 <button
                   onClick={() => handleeditPost()}
-                  className="bg-five mb-2 w-full mt-4 sm:w-fit hover:bg-one text-white hover:scale-105 border text-center select-none   p-2"
+                  className="bg-five mb-2 w-full mt-4 sm:w-fit hover:bg-one  hover:scale-105 border text-center select-none   p-2"
                 >
                   حفظ التعديلات
                 </button>

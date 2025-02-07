@@ -29,13 +29,14 @@ export default function HomePage() {
         <div className="w-full">
           <div className="xl:hidden absolute flex flex-col items-start gap-2 z-50 top-2 right-0 sm:top-4 sm:right-4  lg:right-12 w-full">
             <TfiMenuAlt
-              className=" p-2  text-5xl text-one  cursor-pointer"
+              className="p-2 text-5xl text-one cursor-pointer"
               onClick={() => setIsOpen(!isOpen)}
             />
             {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
           </div>
 
-          <div className="relative w-full h-[300px] lg:h-[400px] border-b-[18px] border-l-[18px] border-one overflow-hidden">
+          <div className="relative w-full h-[300px] lg:h-[900px] overflow-hidden">
+            {/* صورة الخلفية */}
             <Image
               src="https://i.imgur.com/wZ0aruw.jpg"
               fill
@@ -43,9 +44,12 @@ export default function HomePage() {
               className="object-cover object-center w-full h-auto"
               objectPosition="center"
             />
+
+            {/* التعتيم عبر طبقة فوق الصورة */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
           </div>
 
-          <div className="w-full border-r-[18px] border-one ">
+          <div className="w-full">
             <div className="flex justify-center items-center gap-2 w-full text-nowrap py-8 ">
               <div className="flex flex-col justify-end items-end text-six ">
                 <h1
@@ -78,16 +82,16 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="flex flex-col sm:flex-row justify-center w-full gap-4 xl:gap-8 px-4 xl:px-8 py-8 ">
+            <div className="flex flex-col sm:flex-row justify-center w-full gap-4 xl:gap-16 px-4 xl:px-8 py-8 ">
               <Card
                 cardName={'بيع عقار'}
                 path={'/newPost'}
                 text={
                   'بغض النظر عن المسار الذي تسلكه لبيع منزلك، يمكننا مساعدتك في إتمام عملية بيع ناجحة و بأسرع وقت ممكن.'
                 }
-                color={'red'}
+                color={'gray'}
                 image={'https://i.imgur.com/85xCFcd.jpg'}
-                emoji={<FaHouseDamage className="text-two" />}
+                emoji={<FaHouseDamage className="text-one" />}
               />
               <Card
                 cardName={'شراء عقار'}
@@ -95,9 +99,9 @@ export default function HomePage() {
                 text={
                   ' اعثر على عقارك من خلال تجربة تصوير غامرة وأكبر عدد من الإعلانات، بما في ذلك أشياء لن تجدها في أي مكان آخر.'
                 }
-                color={'green'}
+                color={'gray'}
                 image={'https://i.imgur.com/9gIMgUg.png'}
-                emoji={<GiCarKey className="text-gray-200" />}
+                emoji={<GiCarKey className="text-one" />}
               />
               <Card
                 cardName={'تأجير عقار'}
@@ -105,7 +109,7 @@ export default function HomePage() {
                 text={
                   'نحن نعمل على إنشاء تجربة سلسة عبر الإنترنت, بدءاً من بناء أكبر شبكة تأجير، إلى تقديم الطلبات، إلى دفع الإيجار.'
                 }
-                color={'orange'}
+                color={'gray'}
                 image={'https://i.imgur.com/uGXmBJO.jpg'}
                 emoji={<MdOutlineBedroomParent className="text-one" />}
               />
@@ -116,7 +120,7 @@ export default function HomePage() {
 
       <Footer />
 
-      <div className="hidden lg:block relative w-full h-[300px] lg:h-[400px] border-l-[18px] border-one overflow-hidden">
+      {/* <div className="hidden lg:block relative w-full h-[300px] lg:h-[400px] border overflow-hidden">
         <Image
           src="https://i.imgur.com/1fGMLUK.png"
           fill
@@ -124,9 +128,9 @@ export default function HomePage() {
           className="object-contain object-center w-1/3 h-auto px-14"
           objectPosition="center"
         />
-      </div>
+      </div> */}
       <h1
-        className="text-one font-bold font-stratos w-full tracking-wider select-none text-center pt-8 pb-4 border-l-[18px] border-one uppercase"
+        className="text-one font-bold font-stratos w-full tracking-wider select-none text-center pt-8 pb-4 border uppercase"
         style={{ fontFamily: 'vanguardcf-heavy' }}
       >
         Copyright © 2025 Akar Real Estate. All Rights Reserved

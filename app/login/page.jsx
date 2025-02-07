@@ -98,10 +98,10 @@ export default function LogInPage() {
   }
 
   return (
-    <div className="flex justify-center items-center w-full h-96 text-white text-lg md:text-xl text-end">
+    <div className="flex justify-center items-center w-full h-96  text-lg md:text-xl text-end">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="w-full lg:w-1/2 bg-four p-8  border border-one"
+        className="w-full lg:w-1/2  p-8  border border-one"
       >
         <h1 className="w-full my-2 text-xl sm:text-2xl md:text-3xl xl:text-4xl  text-center select-none">
           تسجيل الدخول <GiExitDoor />
@@ -116,7 +116,7 @@ export default function LogInPage() {
             name={'email'}
             placeholder="الإيميل"
             {...register('email')}
-            className=" placeholder-gray-400 transition-all placeholder:text-sm placeholder:sm:text-lg duration-300 grow py-2 border border-gray-300 border-solid focus:border focus:outline-one outline-none rounded-md px-2 w-full caret-one text-black text-start"
+            className=" placeholder-gray-400 transition-all placeholder:text-sm placeholder:sm:text-lg duration-300 grow py-2 border border-gray-300 border-solid focus:border focus:outline-one outline-none rounded-md px-2 w-full caret-one  text-start"
           />
         </div>
         {errors?.email && (
@@ -134,7 +134,7 @@ export default function LogInPage() {
             name={'password'}
             placeholder="كلمة السر"
             {...register('password')}
-            className=" placeholder-gray-400 placeholder:text-sm placeholder:sm:text-lg transition-all duration-300 grow py-2 border border-gray-300 border-solid focus:border focus:outline-one outline-none rounded-md px-2 w-full caret-one text-black text-start"
+            className=" placeholder-gray-400 placeholder:text-sm placeholder:sm:text-lg transition-all duration-300 grow py-2 border border-gray-300 border-solid focus:border focus:outline-one outline-none rounded-md px-2 w-full caret-one  text-start"
           />
         </div>
         {errors?.password && (
@@ -162,7 +162,7 @@ export default function LogInPage() {
         <div className="flex flex-col sm:flex-row justify-between gap-8 items-center mt-4 w-full">
           {/* <button
             type="submit"
-            className=" text-lg p-2  my-3 text-white text-nowrap bg-five hover:bg-one  hover:scale-[101%] w-full "
+            className=" text-lg p-2  my-3  text-nowrap bg-five hover:bg-one  hover:scale-[101%] w-full "
           >
             تسجيل الدخول
           </button> */}
@@ -171,7 +171,7 @@ export default function LogInPage() {
             <Link href={'/'}>
               <button
                 type="submit"
-                className=" text-lg p-2  my-3 text-white text-nowrap bg-one hover:bg-five  hover:scale-[101%] w-full "
+                className=" text-lg p-2  my-3  text-nowrap bg-one hover:bg-five  hover:scale-[101%] w-full "
               >
                 إغلاق{' '}
               </button>{' '}

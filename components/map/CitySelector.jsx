@@ -73,7 +73,7 @@ export default function CitySelector() {
         <div className="flex items-center gap-2 w-full justify-start my-2">
           <h1
             className={`flex text-right text-md select-none text-nowrap ${
-              path.includes('newPost') ? 'text-white' : ''
+              path.includes('newPost') ? '' : ''
             }`}
           >
             <span className="text-one text-lg xl:text-2xl ml-2">
@@ -106,7 +106,7 @@ export default function CitySelector() {
         <div className="flex items-center gap-2 w-full justify-start my-2">
           <h1
             className={`flex text-right text-md select-none text-nowrap ${
-              path.includes('newPost') ? 'text-white' : ''
+              path.includes('newPost') ? '' : ''
             }`}
           >
             <span className="text-one text-lg xl:text-2xl ml-2">

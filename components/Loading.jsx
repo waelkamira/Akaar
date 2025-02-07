@@ -26,7 +26,7 @@ export default function Loading({ myMessage = 'لا يوجد نتائج لعرض
           </div>
         </div>
       )}
-      <h1 className="text-2xl mt-4 text-white bg-four  p-2 text-center">
+      <h1 className="text-2xl mt-4    p-2 text-center">
         {message ? message : 'جاري التحميل'}
       </h1>
     </div>

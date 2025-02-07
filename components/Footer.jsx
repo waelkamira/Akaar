@@ -40,12 +40,12 @@ export default function Footer() {
   return (
     <>
       {' '}
-      <footer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 border-l-[18px] xl:grid-cols-4 justify-between items-center gap-2  border-t-[18px] border-one w-full h-full text-gray-400 pt-8 p-4">
-        <div className=" p-2 min-h-72 h-full rounded-[5px] my-2 bg-gray-400/5 xl:bg-transparent xl:border border-gray-400/10   cursor-pointer">
-          <h1 className="text-center text-white text-lg w-full select-none my-2">
+      <footer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-between items-center gap-2 mt-16 border-t w-full h-full text-seven pt-8 p-4">
+        <div className=" p-2 min-h-72 h-full rounded my-2 bg-gray-400/5 xl:bg-transparent xl:border border-gray-400/10   cursor-pointer">
+          <h1 className="text-center  text-lg w-full select-none my-2  font-medium text-four">
             موقع عقار
           </h1>
-          <p className="text-start w-full select-none my-2 text-sm xl:text-md leading-loose text-white">
+          <p className="text-start w-full select-none my-2 text-sm xl:text-md leading-loose ">
             بصفتنا موقعًا متخصصًا في مجال العقارات، نضع الدقة والأمانة على رأس
             أولوياتنا لضمان تقديم أفضل تجربة في قطاع العقارات. نحن ملتزمون
             بتلبية جميع توقعات عملائنا من خلال توفير حلول عقارية متكاملة
@@ -57,22 +57,22 @@ export default function Footer() {
             أقصى درجات الرضا والثقة.
           </p>
         </div>
-        <div className=" p-2 min-h-72 h-full rounded-[5px] my-2 bg-gray-400/5 xl:bg-transparent xl:border border-gray-400/10  ">
-          <h1 className="text-center text-white text-lg w-full select-none my-2">
+        <div className=" p-2 min-h-72 h-full rounded my-2 bg-gray-400/5 xl:bg-transparent xl:border border-gray-400/10  ">
+          <h1 className="text-center  text-lg w-full select-none my-2  font-medium text-four">
             وصول سريع{' '}
           </h1>
           <ul className="flex flex-col justify-start gap-2 items-start h-20 w-full">
             <div
-              className="flex items-center justify-start gap-2 w-full text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300"
+              className="flex items-center justify-start gap-2 w-full  hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300"
               onClick={() => router.push('/')}
             >
               <FaHome className="text-lg select-none text-one" />
               <li className=" text-md sm:text-lg select-none">الرئيسية</li>
             </div>
-            <div className="flex items-center justify-between gap-2 w-full text-white hover:border border-one rounded-lg h-6">
+            <div className="flex items-center justify-between gap-2 w-full  hover:border border-one rounded-lg h-6">
               {session?.status === 'unauthenticated' && (
                 <div
-                  className="flex items-center justify-between gap-2 w-full text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer hover:shadow-sm shadow-gray-300  p-2 px-8 h-6 transition-all duration-300"
+                  className="flex items-center justify-between gap-2 w-full  hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer hover:shadow-sm shadow-gray-300  p-2 px-8 h-6 transition-all duration-300"
                   onClick={() => router.push('/login')}
                 >
                   <GiExitDoor className="text-lg select-none text-one" />
@@ -83,7 +83,7 @@ export default function Footer() {
               )}
               {session?.status === 'authenticated' && (
                 <div
-                  className="flex items-center justify-start gap-2 w-full text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300"
+                  className="flex items-center justify-start gap-2 w-full  hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300"
                   onClick={() => router.push('/profile')}
                 >
                   <GiExitDoor className="text-lg select-none text-one" />
@@ -92,7 +92,7 @@ export default function Footer() {
               )}
             </div>
             <div
-              className="flex items-center justify-start gap-2 w-full text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300"
+              className="flex items-center justify-start gap-2 w-full  hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300"
               onClick={() => router.push('/contactUs')}
             >
               <FcConferenceCall className="text-lg select-none text-one" />
@@ -102,21 +102,21 @@ export default function Footer() {
             </div>
 
             <div
-              className="flex items-center justify-start gap-2 w-full text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300"
+              className="flex items-center justify-start gap-2 w-full  hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300"
               onClick={() => router.push('/newPost')}
             >
               <FaDollarSign className="text-lg select-none text-one" />
               <li className=" text-md sm:text-lg select-none">بيع</li>
             </div>
             <div
-              className="flex items-center justify-start gap-2 w-full text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300"
+              className="flex items-center justify-start gap-2 w-full  hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300"
               onClick={() => router.push('/buy')}
             >
               <GiPayMoney className="text-lg select-none text-one" />
               <li className=" text-md sm:text-lg select-none">شراء</li>
             </div>
             <div
-              className="flex items-center justify-start gap-2 w-full text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300"
+              className="flex items-center justify-start gap-2 w-full  hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300"
               onClick={() => router.push('/rent')}
             >
               <MdOutlineBedroomParent className="text-lg select-none text-one" />
@@ -124,12 +124,12 @@ export default function Footer() {
             </div>
           </ul>
         </div>
-        <div className=" p-2 min-h-72 h-full rounded-[5px] my-2 bg-gray-400/5 xl:bg-transparent xl:border border-gray-400/10  ">
-          <h1 className="text-center text-white text-lg w-full select-none my-2">
+        <div className=" p-2 min-h-72 h-full rounded my-2 bg-gray-400/5 xl:bg-transparent xl:border border-gray-400/10  ">
+          <h1 className="text-center  text-lg w-full select-none my-2  font-medium text-four">
             ساعات العمل{' '}
           </h1>
           <ul className="flex flex-col justify-start gap-2 items-start h-20 w-full">
-            <div className="flex items-center justify-between gap-2 w-full text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300">
+            <div className="flex items-center justify-between gap-2 w-full  hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300">
               <div className="flex gap-1 items-center">
                 <FaCalendarDays className="text-lg select-none text-one" />
                 <li className=" text-md sm:text-lg select-none text-nowrap">
@@ -138,7 +138,7 @@ export default function Footer() {
               </div>
               <span className="text-nowrap"> 09:00 - 18:00</span>
             </div>{' '}
-            <div className="flex items-center justify-between gap-2 w-full text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300">
+            <div className="flex items-center justify-between gap-2 w-full  hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300">
               <div className="flex gap-1 items-center">
                 <FaCalendarDays className="text-lg select-none text-one" />
                 <li className=" text-md sm:text-lg select-none text-nowrap">
@@ -147,7 +147,7 @@ export default function Footer() {
               </div>
               <span className="text-nowrap"> 09:00 - 18:00</span>
             </div>{' '}
-            <div className="flex items-center justify-between gap-2 w-full text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300">
+            <div className="flex items-center justify-between gap-2 w-full  hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300">
               <div className="flex gap-1 items-center">
                 <FaCalendarDays className="text-lg select-none text-one" />
                 <li className=" text-md sm:text-lg select-none text-nowrap">
@@ -156,7 +156,7 @@ export default function Footer() {
               </div>
               <span className="text-nowrap"> 09:00 - 18:00</span>
             </div>{' '}
-            <div className="flex items-center justify-between gap-2 w-full text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300">
+            <div className="flex items-center justify-between gap-2 w-full  hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300">
               <div className="flex gap-1 items-center">
                 <FaCalendarDays className="text-lg select-none text-one" />
                 <li className=" text-md sm:text-lg select-none text-nowrap">
@@ -165,7 +165,7 @@ export default function Footer() {
               </div>
               <span className="text-nowrap"> 09:00 - 18:00</span>
             </div>{' '}
-            <div className="flex items-center justify-between gap-2 w-full text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300">
+            <div className="flex items-center justify-between gap-2 w-full  hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300">
               <div className="flex gap-1 items-center">
                 <FaCalendarDays className="text-lg select-none text-one" />
                 <li className=" text-md sm:text-lg select-none text-nowrap">
@@ -174,7 +174,7 @@ export default function Footer() {
               </div>
               <span className="text-nowrap"> 09:00 - 18:00</span>
             </div>{' '}
-            <div className="flex items-center justify-between gap-2 w-full text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300">
+            <div className="flex items-center justify-between gap-2 w-full  hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300">
               <div className="flex gap-1 items-center">
                 <FaCalendarDays className="text-lg select-none text-one" />
                 <li className=" text-md sm:text-lg select-none text-nowrap">
@@ -183,7 +183,7 @@ export default function Footer() {
               </div>
               <span className="text-nowrap"> 09:00 - 18:00</span>
             </div>{' '}
-            <div className="flex items-center justify-between gap-2 w-full text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300">
+            <div className="flex items-center justify-between gap-2 w-full  hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300">
               <div className="flex gap-1 items-center">
                 <FaCalendarDays className="text-lg select-none text-one" />
                 <li className=" text-md sm:text-lg select-none text-nowrap">
@@ -194,12 +194,12 @@ export default function Footer() {
             </div>
           </ul>
         </div>
-        <div className=" p-2 min-h-72 h-full rounded-[5px] my-2 bg-gray-400/5 xl:bg-transparent xl:border border-gray-400/10  ">
-          <h1 className="text-center text-white text-lg w-full select-none my-2">
+        <div className=" p-2 min-h-72 h-full rounded my-2 bg-gray-400/5 xl:bg-transparent xl:border border-gray-400/10  ">
+          <h1 className="text-center  text-lg w-full select-none my-2  font-medium text-four">
             معلومات الإتصال{' '}
           </h1>
           <ul className="flex flex-col justify-start gap-2 items-start h-20 w-full">
-            <div className="flex items-center justify-between gap-2 w-full text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300">
+            <div className="flex items-center justify-between gap-2 w-full  hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300">
               <div className="flex gap-1 items-center">
                 <MdOutlineAddLocationAlt className="text-lg select-none text-one" />
                 <li className=" text-md sm:text-lg select-none text-nowrap">
@@ -208,7 +208,7 @@ export default function Footer() {
               </div>
               <span className="text-nowrap"> </span>
             </div>{' '}
-            <div className="flex items-center justify-between gap-2 w-full text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300">
+            <div className="flex items-center justify-between gap-2 w-full  hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300">
               <Link
                 href={'https://www.facebook.com/WaelKhamira/'}
                 target="_blank"
@@ -223,7 +223,7 @@ export default function Footer() {
                 <span className="text-nowrap"> </span>
               </Link>
             </div>{' '}
-            <div className="flex items-center justify-between gap-2 w-full text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300">
+            <div className="flex items-center justify-between gap-2 w-full  hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300">
               <div className="flex gap-1 items-center">
                 <FiLinkedin className="text-lg select-none text-one" />
                 <li className=" text-md sm:text-lg select-none text-nowrap">
@@ -233,7 +233,7 @@ export default function Footer() {
               <span className="text-nowrap"></span>
             </div>{' '}
             <div
-              className="flex items-center justify-between gap-2 w-full text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer px-2 xl:px-8 h-6 transition-all duration-300"
+              className="flex items-center justify-between gap-2 w-full  hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer px-2 xl:px-8 h-6 transition-all duration-300"
               onClick={() => handleCopy('waelkamira@gmail.com')} // إضافة حدث النقر
             >
               <div className="flex gap-1 items-center">
@@ -243,7 +243,7 @@ export default function Footer() {
               <span className="text-nowrap">waelkamira@gmail.com</span>
             </div>
             <div
-              className="flex flex-col sm:flex-row items-start justify-between gap-2 w-full text-white hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer px-2 xl:px-8 h-6 transition-all duration-300"
+              className="flex flex-col sm:flex-row items-start justify-between gap-2 w-full  hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer px-2 xl:px-8 h-6 transition-all duration-300"
               onClick={() => handleCopy('ramond.shnaidr@hotmail.com')} // إضافة حدث النقر
             >
               <div className="flex gap-1 items-center">

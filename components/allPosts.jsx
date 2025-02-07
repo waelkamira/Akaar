@@ -71,7 +71,7 @@ export default function AllPosts({}) {
                   className="flex items-center justify-around cursor-pointer"
                   onClick={() => setPageNumber(pageNumber + 1)}
                 >
-                  <h1 className="text-white ">الصفحة التالية</h1>
+                  <h1 className=" ">الصفحة التالية</h1>
                   <MdKeyboardDoubleArrowRight className="text-2xl  text-one" />
                 </div>
               </Link>
@@ -83,7 +83,7 @@ export default function AllPosts({}) {
                   onClick={() => setPageNumber(pageNumber - 1)}
                 >
                   <MdKeyboardDoubleArrowLeft className="text-2xl  text-one" />
-                  <h1 className="text-white ">الصفحة السابقة</h1>
+                  <h1 className=" ">الصفحة السابقة</h1>
                 </div>
               </Link>
             )}

@@ -12,7 +12,7 @@ export default function EditItem({
   postId,
 }) {
   return (
-    <div className="flex flex-col justify-start items-start gap-1 sm:gap-4 text-black">
+    <div className="flex flex-col justify-start items-start gap-1 sm:gap-4 ">
       <div className=" flex justify-between items-center my-2 lg:my-4 h-10 sm:h-16 w-full overflow-visible">
         <h1 className="  text-lg lg:text-xl xl:text-2xl w-full my-2 select-none">
           <span className="text-one text-xl lg:text-2xl mx-2 select-none">
@@ -47,7 +47,7 @@ export default function EditItem({
 
       <button
         onClick={() => handleEditPost(postId)}
-        className="bg-gray-600 mb-2 w-full mt-4 sm:w-fit text-white duration-300 transition-colors ease-in-out hover:bg-one hover:scale-105 border rounded-md text-center select-none p-2"
+        className="bg-gray-600 mb-2 w-full mt-4 sm:w-fit  duration-300 transition-colors ease-in-out hover:bg-one hover:scale-105 border rounded-md text-center select-none p-2"
       >
         حفظ التعديلات
       </button>

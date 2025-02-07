@@ -1,38 +1,26 @@
 'use client';
 import React, { useContext, useEffect, useState } from 'react';
 import Select from 'react-select';
-import { inputsContext } from './Context.jsx';
-import { MdOutlineBedroomParent } from 'react-icons/md';
+import { inputsContext } from '../Context';
+import { VscUngroupByRefType } from 'react-icons/vsc';
 import { usePathname } from 'next/navigation.js';
+import { carBrands } from './carBrands.jsx';
 
-export default function PropertyRoomsNumberSelector() {
-  const { dispatch, data } = useContext(inputsContext);
-  const [propertyRoomsNumber, setPropertyRoomsNumber] = useState('');
+export default function CarsBrandSelector() {
+  const { dispatch } = useContext(inputsContext);
+  const [propertyType, setpropertyType] = useState('');
   const path = usePathname();
 
-  const options = [
-    { value: '1 + 1', label: '1 + 1' },
-    { value: '2 + 1', label: '2 + 1' },
-    { value: '3 + 1', label: '3 + 1' },
-    { value: '4 + 1', label: '4 + 1' },
-    { value: '5 + 1', label: '5 + 1' },
-    { value: 'شيء أخر', label: 'شيء أخر' },
-  ];
+  const options = carBrands;
 
   useEffect(() => {
-    if (
-      propertyRoomsNumber?.value !== '' ||
-      propertyRoomsNumber?.value !== 'undefined'
-    ) {
+    if (propertyType?.value !== '' || propertyType?.value !== 'undefined') {
       dispatch({
-        type: 'PROPERTY_ROOMS_NUMBER',
-        payload: {
-          propertyRoomsNumber: propertyRoomsNumber,
-          modelName: '',
-        },
+        type: 'PROPERTY_TYPE',
+        payload: { propertyType: propertyType, modelName: 'createSoup' },
       });
     }
-  }, [propertyRoomsNumber]);
+  }, [propertyType]);
 
   function customTheme(theme) {
     return {
@@ -56,23 +44,20 @@ export default function PropertyRoomsNumberSelector() {
             }`}
           >
             <span className="text-one text-lg xl:text-2xl ml-2">
-              <MdOutlineBedroomParent />
+              <VscUngroupByRefType />
             </span>
-            عدد الغرف:
+            نوع السيارة:
           </h1>
         </div>
         <Select
-          isDisabled={
-            !['بيت', 'شقة', 'فيلا'].includes(data?.propertyType?.value)
-          }
-          defaultValue={propertyRoomsNumber}
-          onChange={setPropertyRoomsNumber}
-          placeholder="1 + 1"
+          defaultValue={propertyType}
+          onChange={setpropertyType}
+          placeholder="تويوتا"
           isClearable
           isSearchable
           options={options}
           theme={customTheme}
-          className="w-full text-md text-start z-[8] select-none"
+          className="w-full text-md rounded text-start z-[9] select-none"
           classNamePrefix="select"
           classNames={{
             control: (state) =>
@@ -80,7 +65,7 @@ export default function PropertyRoomsNumberSelector() {
                 state.isFocused ? 'border-orange-500' : 'border-gray-300'
               } sm:h-12 h-8`, // ارتفاع مختلف بناءً على عرض النافذة
           }}
-        />
+        ></Select>
       </div>
     </div>
   );

@@ -89,14 +89,14 @@ export default function ImageUploader({ images = [] }) {
             {/* زر تغيير الصورة */}
             <label
               htmlFor="file-upload"
-              className="absolute bottom-2 right-2 bg-black bg-opacity-50 text-white p-2 rounded-full cursor-pointer"
+              className="absolute bottom-2 right-2 bg-black bg-opacity-50  p-2 rounded-full cursor-pointer"
             >
               <MdOutlineAddPhotoAlternate className="text-xl" />
             </label>
             {/* زر إزالة الصورة */}
             <button
               onClick={() => handleRemoveImage(0)}
-              className="absolute top-2 right-2 bg-black bg-opacity-50 text-white p-2 rounded-full cursor-pointer"
+              className="absolute top-2 right-2 bg-black bg-opacity-50  p-2 rounded-full cursor-pointer"
             >
               <MdClose className="text-xl" />
             </button>
@@ -105,10 +105,10 @@ export default function ImageUploader({ images = [] }) {
           // إذا لم تكن هناك صورة، عرض زر إضافة صورة
           <label
             htmlFor="file-upload"
-            className="flex flex-col items-center justify-center h-full cursor-pointer text-white"
+            className="flex flex-col items-center justify-center h-full cursor-pointer "
           >
             <MdOutlineAddPhotoAlternate className="text-one text-3xl" />
-            <h1 className="text-white text-sm sm:text-lg">أضف صورة رئيسية</h1>
+            <h1 className=" text-sm sm:text-lg">أضف صورة رئيسية</h1>
           </label>
         )}
       </div>
@@ -135,14 +135,14 @@ export default function ImageUploader({ images = [] }) {
                 {/* زر تغيير الصورة */}
                 <label
                   htmlFor="file-upload"
-                  className="absolute bottom-2 right-2 bg-black bg-opacity-50 text-white p-2 rounded-full cursor-pointer"
+                  className="absolute bottom-2 right-2 bg-black bg-opacity-50  p-2 rounded-full cursor-pointer"
                 >
                   <MdOutlineAddPhotoAlternate className="text-xl" />
                 </label>
                 {/* زر إزالة الصورة */}
                 <button
                   onClick={() => handleRemoveImage(index + 1)}
-                  className="absolute top-2 right-2 bg-black bg-opacity-50 text-white p-2 rounded-full cursor-pointer"
+                  className="absolute top-2 right-2 bg-black bg-opacity-50  p-2 rounded-full cursor-pointer"
                 >
                   <MdClose className="text-xl" />
                 </button>
@@ -151,10 +151,10 @@ export default function ImageUploader({ images = [] }) {
               // إذا لم تكن هناك صورة، عرض زر إضافة صورة
               <label
                 htmlFor="file-upload"
-                className="flex flex-col items-center cursor-pointer text-white"
+                className="flex flex-col items-center cursor-pointer "
               >
                 <MdOutlineAddPhotoAlternate className="text-one text-3xl" />
-                <h1 className="text-white text-sm sm:text-lg">أضف صورة</h1>
+                <h1 className=" text-sm sm:text-lg">أضف صورة</h1>
               </label>
             )}
           </div>
