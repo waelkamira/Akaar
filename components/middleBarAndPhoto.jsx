@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 export default function MiddleBarAndPhoto({ isOpen, setIsOpen, noButton }) {
   const router = useRouter();
   return (
-    <div className="relative xl:hidden flex justify-between items-center w-full gap-2 my-2 bg-one p-2 rounded">
+    <div className="relative xl:hidden flex justify-between items-center w-full gap-2 mb-2 bg-one p-2 rounded">
       <div>
         <TfiMenuAlt
           className="text-[30px] lg:text-5xl  cursor-pointer"
@@ -23,7 +23,7 @@ export default function MiddleBarAndPhoto({ isOpen, setIsOpen, noButton }) {
       </div>
       {noButton && (
         <button
-          onClick={() => router.push('/newPost')}
+          onClick={() => router.push('/RealEstate/newPost')}
           className="relative text-sm lg:text-xl bg-white h-8 lg:h-11 w-3/4 border-r-[30%] shadow-lg border-one rounded hover:scale-[101%]"
         >
           إعلان جديد{' '}

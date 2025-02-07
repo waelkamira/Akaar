@@ -1,27 +1,20 @@
 'use client';
 import Image from 'next/image';
 import React, { useState } from 'react';
-import PostForm from '../../components/PostForm';
+import RealEstatePostForm from '../../../components/RealEstate/RealEstatePostForm';
 import { useSession } from 'next-auth/react';
-import Button from '../../components/Button';
-import UploadingAndDisplayingImage from '../../components/UploadingAndDisplayingImage';
-import MiddleBarAndPhoto from '../../components/middleBarAndPhoto';
+import Button from '../../../components/Button';
+import UploadingAndDisplayingImage from '../../../components/UploadingAndDisplayingImage';
+import MiddleBarAndPhoto from '../../../components/middleBarAndPhoto';
+import RealEstateNavbar from '../../../components/navbars/RealEstarteNavbar';
 
-export default function NewRecipe() {
+export default function NewRealEstatePost() {
   const [isOpen, setIsOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const session = useSession();
   return (
-    <div className="flex flex-col justify-center items-center w-full py-16">
-      {/* <div className="relative w-full h-[300px] lg:h-[600px] border overflow-hidden">
-        <Image
-          src="https://i.imgur.com/wZ0aruw.jpg"
-          fill
-          alt="home_photo"
-          className="object-cover object-center w-full h-auto"
-          objectPosition="top"
-        />
-      </div> */}
+    <div className="flex flex-col justify-center items-center w-full">
+      <RealEstateNavbar />
       <div className="flex flex-col justify-center items-center w-full xl:w-[90%] 2xl:w-[70%] h-full sm:px-16 pt-2 overflow-y-auto z-10 px-2">
         <MiddleBarAndPhoto
           isOpen={isOpen}
@@ -65,7 +58,7 @@ export default function NewRecipe() {
                 </h1>
                 <UploadingAndDisplayingImage height={'h-96'} />
 
-                <PostForm
+                <RealEstatePostForm
                   setIsVisible={setIsVisible}
                   isVisible={isVisible}
                   cancel={false}

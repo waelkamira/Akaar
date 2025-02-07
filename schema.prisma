@@ -1,12 +1,28 @@
+// تحديد مصدر البيانات
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
+// تحديد مولد الكود
 generator client {
   provider = "prisma-client-js"
 }
 
+// 🟢 جدول المستخدمين
+model User {
+  id         String    @id @default(uuid())
+  name       String
+  email      String    @unique
+  image      String?
+  
+  // لا توجد علاقة مع العقارات أو السيارات
+
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+}
+
+// 🟢 جدول العقارات
 model Property {
   id                   String   @id @default(uuid())
   image                String
@@ -41,4 +57,47 @@ model Property {
   @@index([propertyPrice])
   @@index([propertyCity])
   @@index([propertyTown])
+}
+
+
+// 🟢 جدول السيارات
+model Car {
+  id                 String   @id @default(uuid()) 
+  userId             String
+
+  brand             String?  
+  model             String?  
+  year              Int?    
+  price             Float?   
+
+  image1            String?  
+  image2            String?  
+  image3            String?  
+  image4            String?  
+  image5            String?  
+
+  forSell           Boolean   @default(false)
+  forRent           Boolean   @default(false)
+  forRentDaily      Boolean   @default(false)
+  forRentMonthly    Boolean   @default(false)
+
+  city              String?  
+  town              String?  
+  licensePlateNumber String? 
+
+  new               Boolean   @default(false) 
+  used              Boolean   @default(false) 
+  distance          Float?    
+  phoneNumber       String?   
+
+  createdAt         DateTime  @default(now()) 
+  updatedAt         DateTime  @updatedAt 
+
+  // الفهارس لتحسين البحث
+  @@index([brand])
+  @@index([model])
+  @@index([year])
+  @@index([price])
+  @@index([city])
+  @@index([town])
 }

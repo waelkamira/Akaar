@@ -7,29 +7,34 @@ import { FcConferenceCall } from 'react-icons/fc';
 import { FaCanadianMapleLeaf } from 'react-icons/fa';
 import { FaDollarSign } from 'react-icons/fa';
 import { GiPayMoney } from 'react-icons/gi';
-import { MdOutlineBedroomParent } from 'react-icons/md';
+import { MdOutlineBedroomParent, MdOutlinePriceCheck } from 'react-icons/md';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
 import { ImProfile } from 'react-icons/im';
 import { MdFavoriteBorder } from 'react-icons/md';
 import { TbTargetArrow } from 'react-icons/tb';
-import ClockWidget from './ClockWidget';
-export default function Navbar() {
+import ClockWidget from '../ClockWidget';
+import { IoCarSport } from 'react-icons/io5';
+import { GiCarWheel } from 'react-icons/gi';
+import { ImSearch } from 'react-icons/im';
+import Button from '../Button';
+
+export default function MainNavbar() {
   const router = useRouter();
   const session = useSession();
   const pathname = usePathname();
 
   return (
     <div
-      className={`hidden xl:flex xl:justify-between overflow-hidden bg-[#ffff]/30 text-four border-seven ${
+      className={`hidden xl:flex xl:flex-col xl:justify-between w-full overflow-hidden bg-[#ffff]/30 text-four border-seven px-4 ${
         pathname !== '/' ? ' pb' : ''
       }`}
     >
-      <div className="flex justify-between w-full">
-        <ul className="flex justify-evenly gap-4 mr-4 items-center h-20 py-4 w-4/6">
+      <div className="flex justify-between items-center w-full">
+        <ul className="flex justify-between gap-4 items-center h-20 py-4">
           <div
-            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-16 transition-all duration-300"
+            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-16 transition-all duration-300"
             onClick={() => router.push('/')}
           >
             <FaHome className="text-xl select-none text-one" />
@@ -38,7 +43,7 @@ export default function Navbar() {
           <div className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-16 transition-all duration-300">
             {session?.status === 'unauthenticated' && (
               <div
-                className="flex items-center justify-center gap-2 hover:scale-105 hover:cursor-pointer hover:shadow-lg shadow-gray-300  p-2 px-8 h-16 transition-all duration-300"
+                className="flex items-center justify-center gap-2 hover:cursor-pointer h-16 transition-all duration-300"
                 onClick={() => router.push('/login')}
               >
                 <GiExitDoor className="text-xl select-none text-one" />
@@ -57,16 +62,16 @@ export default function Navbar() {
           </div>
 
           <div
-            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-16 transition-all duration-300"
+            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-16 transition-all duration-300"
             onClick={() => router.push('/myPosts')}
           >
             <FaCanadianMapleLeaf className="text-xl select-none text-one" />
             <li className=" text-md xl:text-xl select-none text-nowrap">
-              إعلاناتي
+              متجري
             </li>
           </div>
           {/* <div
-            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-16 transition-all duration-300"
+            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-16 transition-all duration-300"
             onClick={() => router.push('/favoritePosts')}
           >
             <TbTargetArrow className="text-xl select-none text-one" />
@@ -75,35 +80,22 @@ export default function Navbar() {
             </li>
           </div> */}
           <div
-            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-16 transition-all duration-300"
-            onClick={() => router.push('/newPost')}
+            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-16 transition-all duration-300"
+            onClick={() => router.push('/RealEstate')}
           >
             <FaDollarSign className="text-xl select-none text-one" />
-            <li className=" text-xl select-none">بيع</li>
+            <li className=" text-xl select-none">عقارات</li>
           </div>
           <div
-            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-16 transition-all duration-300"
-            onClick={() => router.push('/buy')}
+            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-16 transition-all duration-300"
+            onClick={() => router.push('/Cars')}
           >
-            <GiPayMoney className="text-xl select-none text-one" />
-            <li className=" text-xl select-none">شراء</li>
-          </div>
-          <div
-            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-16 transition-all duration-300"
-            onClick={() => router.push('/rent')}
-          >
-            <MdOutlineBedroomParent className="text-xl select-none text-one" />
-            <li className=" text-xl select-none">إيجار</li>
-          </div>
-          <div
-            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-16 transition-all duration-300"
-            onClick={() => router.push('/cars')}
-          >
-            <MdOutlineBedroomParent className="text-xl select-none text-one" />
+            <GiCarWheel className="text-xl select-none text-one" />
             <li className=" text-xl select-none">سيارات</li>
           </div>
+
           <div
-            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-16 transition-all duration-300"
+            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-16 transition-all duration-300"
             onClick={() => router.push('/contactUs')}
           >
             <FcConferenceCall className="text-xl select-none text-one" />
@@ -128,7 +120,7 @@ export default function Navbar() {
                 </h1>
               </div>
             </div> */}
-            <div className="relative h-20 w-56 py-2 bg-[#232323]">
+            <div className="relative h-16 w-36 py-2">
               <Image
                 src="https://i.imgur.com/bhzNopE.png"
                 fill
@@ -139,6 +131,25 @@ export default function Navbar() {
             </div>
           </div>
         </div>
+      </div>
+      <div className="flex justify-between items-center w-full">
+        <div className="relative text-center w-full md:w-1/4 pl-2">
+          <Button
+            style={' p-6'}
+            onClick={'handleSearch'}
+            title={'بحث'}
+            emoji={<ImSearch />}
+          />
+        </div>
+        <input
+          type="number"
+          id="maxPrice"
+          autoFocus
+          placeholder="ابحث عن عقار .. سيارة ..."
+          value={''}
+          // onChange={(e) => setMaxPrice(e.target.value)}
+          className="w-full text-sm sm:text-lg rounded text-start z-40 h-9 sm:h-12 text-nowrap px-2 border border-slate-300 focus:outline-one"
+        />
       </div>
     </div>
   );

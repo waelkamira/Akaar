@@ -1,15 +1,15 @@
 'use client';
 import React, { useContext, useEffect, useState } from 'react';
-import SmallItem from './SmallItem';
-import Loading from './Loading';
+import SmallItem from '../SmallItem';
+import Loading from '../Loading';
 import {
   MdKeyboardDoubleArrowRight,
   MdKeyboardDoubleArrowLeft,
 } from 'react-icons/md';
 import Link from 'next/link';
-import CustomToast from './CustomToast';
+import CustomToast from '../CustomToast';
 import toast from 'react-hot-toast';
-import NavegationPages from './NavegationPages';
+import NavegationPages from '../NavegationPages';
 
 export default function AllPosts({}) {
   const [pageNumber, setPageNumber] = useState(1);

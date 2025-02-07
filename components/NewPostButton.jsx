@@ -2,7 +2,7 @@
 import Image from 'next/image';
 import React, { useState } from 'react';
 import { RxCross2 } from 'react-icons/rx';
-import PostForm from './PostForm';
+import PostForm from './RealEstate/RealEstatePostForm';
 import { useSession } from 'next-auth/react';
 import Button from './Button';
 import UploadingAndDisplayingImage from './UploadingAndDisplayingImage';
