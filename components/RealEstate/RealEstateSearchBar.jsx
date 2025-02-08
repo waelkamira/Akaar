@@ -21,8 +21,6 @@ import { LuArrowUpNarrowWide } from 'react-icons/lu';
 import Image from 'next/image';
 import MiddleBarAndPhoto from '../middleBarAndPhoto';
 import NavegationPages from '../NavegationPages';
-import CarsBrandSelector from '../Cars/CarsBrandSelector';
-import CategoryComponent from '../CategoryComponent';
 import RealEstateNavbar from '../navbars/RealEstarteNavbar';
 
 export default function SearchBar({ propertyCategory }) {
@@ -137,22 +135,12 @@ export default function SearchBar({ propertyCategory }) {
               </div>
               <div className="flex flex-col xl:flex-row items-center justify-center gap-2 mb-2 w-full px-2 ">
                 <div className="flex flex-col sm:flex-row gap-2 w-full">
-                  {propertyCategory === 'سيارات' ? (
-                    <>
-                      <CarsBrandSelector />
-                      <CategoryComponent />
-                    </>
-                  ) : (
-                    <>
-                      {' '}
-                      <div className="w-full">
-                        <PropertyTypeSelector />
-                      </div>
-                      <div className="w-full">
-                        <RoomsNumberSelector />
-                      </div>
-                    </>
-                  )}
+                  <div className="w-full">
+                    <PropertyTypeSelector />
+                  </div>
+                  <div className="w-full">
+                    <RoomsNumberSelector />
+                  </div>
                 </div>
                 <CitySelector />
 

@@ -542,7 +542,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
                     type="number"
                     id="سعر العقار"
                     name="سعر العقار"
-                    placeholder="$ 000.0"
+                    placeholder="$ 00.0"
                     className="w-full text-sm sm:text-lg rounded text-start  h-9 sm:h-12 text-nowrap px-2 border border-slate-300 focus:outline-one"
                   />
                 </div>

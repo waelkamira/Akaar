@@ -104,6 +104,16 @@ function inputsReducer(currentState, action) {
         ...currentState,
         postId: action?.payload,
       };
+    case 'USED_NEW':
+      return {
+        ...currentState,
+        usedNew: action?.payload,
+      };
+    case 'BRAND':
+      return {
+        ...currentState,
+        brand: action?.payload,
+      };
 
     default:
       return currentState;
@@ -126,6 +136,8 @@ export function InputsContextProvider({ children }) {
     location: [33.5138, 36.2765],
     category: '',
     postId: '',
+    usedNew: '',
+    brand: '',
   });
   // console.log('from Context', state);
 

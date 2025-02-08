@@ -14,7 +14,7 @@ import { MdOutlineFeaturedPlayList } from 'react-icons/md';
 import { RxVideo } from 'react-icons/rx';
 import { useRouter } from 'next/navigation';
 
-const PropertyTypeSelector = dynamic(() => import('../PropertyTypeSelector'));
+const CarsBrandSelector = dynamic(() => import('./CarsBrandSelector'));
 const CurrentUser = dynamic(() => import('../CurrentUser'));
 const CustomToast = dynamic(() => import('../CustomToast'));
 const Confetti = dynamic(() =>
@@ -23,11 +23,11 @@ const Confetti = dynamic(() =>
 const OnClickMap = dynamic(() => import('../map/onClickMap'));
 const CategoryComponent = dynamic(() => import('../CategoryComponent'));
 const CitySelector = dynamic(() => import('../map/CitySelector'));
-const RoomsNumberSelector = dynamic(() => import('../roomsNumberSelector'));
+const CarsUsedNewSelector = dynamic(() => import('./CarsUsedNewSelector'));
 
 import { getVideoIdAndPlatform } from '../youtubeUtils';
 
-export default function PostForm({ setIsVisible, cancel = true }) {
+export default function CarsPostForm({ setIsVisible, cancel = true }) {
   const [url, setUrl] = useState('');
   const [embedLink, setEmbedLink] = useState('');
   const session = useSession();
@@ -41,33 +41,35 @@ export default function PostForm({ setIsVisible, cancel = true }) {
     addImages,
     location,
     category,
-    propertyCityLocation,
+    cityLocation,
     propertyTownLocation,
+    usedNew,
+    brand,
   } = useContext(inputsContext);
 
   // console.log('location 111111111111111111', location);
 
   const [errors, setErrors] = useState({
-    propertyCategory: false,
-    propertyCategoryErrorMessage: 'هذا الحقل مطلوب',
+    adType: false,
+    adTypeErrorMessage: 'هذا الحقل مطلوب',
 
     propertyName: false,
     propertyNameErrorMessage: 'هذا الحقل مطلوب',
 
     propertyArea: false,
-    propertyAreaErrorMessage: 'حقل المساحة مطلوب',
+    propertyAreaErrorMessage: 'حقل الموديل مطلوب',
 
-    propertyType: false,
-    propertyTypeErrorMessage: 'اختيار نوع السيارة مطلوب',
+    usedNew: false,
+    usedNewErrorMessage: 'اختيار نوع الإعلان مطلوب',
 
-    propertyRoomsNumber: false,
-    propertyRoomsNumberErrorMessage: 'اختيار عدد الغرف مطلوب',
+    brand: false,
+    brandErrorMessage: 'الماركة مطلوبة',
 
-    propertyPrice: false,
-    propertyPriceErrorMessage: 'حقل السعر مطلوب',
+    price: false,
+    priceErrorMessage: 'حقل السعر مطلوب',
 
-    propertyCity: false,
-    propertyCityErrorMessage: 'حقل المدينة مطلوب',
+    city: false,
+    cityErrorMessage: 'حقل المدينة مطلوب',
 
     propertyTown: false,
     propertyTownErrorMessage: 'حقل البلدة مطلوب',
@@ -86,13 +88,13 @@ export default function PostForm({ setIsVisible, cancel = true }) {
     image2: '',
     image3: '',
     image4: '',
-    propertyCategory: '',
+    adType: '',
     propertyName: '',
-    propertyType: '',
-    propertyRoomsNumber: '',
-    propertyPrice: '',
+    usedNew: '',
+    brand: '',
+    price: '',
     propertyArea: '',
-    propertyCity: '',
+    city: '',
     propertyTown: '',
     contactPhoneNumber: '',
     description: '',
@@ -110,11 +112,11 @@ export default function PostForm({ setIsVisible, cancel = true }) {
 
     setInputs({
       ...inputs,
-      propertyType: data?.propertyType?.label || '',
-      propertyRoomsNumber: data?.propertyRoomsNumber?.label || '0',
-      propertyCity: data?.propertyCity || '',
+      usedNew: usedNew?.label || '',
+      brand: brand?.label || '',
+      city: data?.city || '',
       propertyTown: data?.propertyTown || '',
-      propertyCategory: category?.label || '',
+      adType: category?.label || '',
       image: addImages?.[0] || '',
       image1: addImages?.[1] || '',
       image2: addImages?.[2] || '',
@@ -126,10 +128,10 @@ export default function PostForm({ setIsVisible, cancel = true }) {
     handleGenerateEmbed();
   }, [
     url,
-    data?.propertyType,
-    data?.propertyCity,
+    usedNew,
+    brand,
+    data?.city,
     data?.propertyTown,
-    data?.propertyRoomsNumber,
     addImages[0],
     addImages[1],
     addImages[2],
@@ -143,21 +145,19 @@ export default function PostForm({ setIsVisible, cancel = true }) {
     e.preventDefault();
 
     if (
-      (addImages?.length > 0 &&
-        inputs?.propertyCategory &&
-        inputs?.propertyName &&
-        inputs?.propertyType &&
-        inputs?.propertyPrice &&
-        inputs?.propertyArea &&
-        inputs?.propertyCity &&
-        inputs?.propertyTown &&
-        inputs?.contactPhoneNumber &&
-        inputs?.description &&
-        userImage &&
-        userName &&
-        createdBy &&
-        !['بيت', 'شقة', 'فيلا'].includes(inputs?.propertyType)) ||
-      inputs?.propertyRoomsNumber
+      addImages?.length > 0 &&
+      inputs?.adType &&
+      inputs?.propertyName &&
+      inputs?.usedNew &&
+      inputs?.price &&
+      inputs?.propertyArea &&
+      inputs?.city &&
+      inputs?.propertyTown &&
+      inputs?.contactPhoneNumber &&
+      inputs?.description &&
+      userImage &&
+      userName &&
+      createdBy
     ) {
       try {
         const response = await fetch('/api/allPosts', {
@@ -187,11 +187,11 @@ export default function PostForm({ setIsVisible, cancel = true }) {
             image3: '',
             image4: '',
             propertyName: '',
-            propertyCategory: '',
-            propertyType: '',
-            propertyRoomsNumber: '',
-            propertyPrice: 0,
-            propertyCity: '',
+            adType: '',
+            usedNew: '',
+            brand: '',
+            price: 0,
+            city: '',
             propertyTown: '',
             propertyArea: '',
             contactPhoneNumber: '',
@@ -211,12 +211,12 @@ export default function PostForm({ setIsVisible, cancel = true }) {
           ));
           setErrors({
             propertyName: false,
-            propertyCategory: false,
-            propertyType: false,
-            propertyRoomsNumber: false,
-            propertyPrice: false,
+            adType: false,
+            usedNew: false,
+            brand: false,
+            price: false,
             propertyArea: false,
-            propertyCity: false,
+            city: false,
             propertyTown: false,
             contactPhoneNumber: false,
             description: false,
@@ -232,13 +232,13 @@ export default function PostForm({ setIsVisible, cancel = true }) {
     } else {
       // تعيين جميع الأخطاء إلى false
       setErrors({
-        propertyCategory: false,
+        adType: false,
         propertyName: false,
-        propertyType: false,
-        propertyRoomsNumber: false,
-        propertyPrice: false,
+        usedNew: false,
+        brand: false,
+        price: false,
         propertyArea: false,
-        propertyCity: false,
+        city: false,
         propertyTown: false,
         contactPhoneNumber: false,
         description: false,
@@ -257,8 +257,8 @@ export default function PostForm({ setIsVisible, cancel = true }) {
           type: 'IMAGE_ERROR',
           payload: { imageError: true, message: 'صورة السيارة مطلوبة' },
         });
-      } else if (!inputs.propertyCategory) {
-        setErrors((prevErrors) => ({ ...prevErrors, propertyCategory: true }));
+      } else if (!inputs.adType) {
+        setErrors((prevErrors) => ({ ...prevErrors, adType: true }));
         toast.custom((t) => (
           <CustomToast t={t} message={'تصنيف الإعلان مطلوب 😐'} />
         ));
@@ -267,31 +267,31 @@ export default function PostForm({ setIsVisible, cancel = true }) {
         toast.custom((t) => (
           <CustomToast t={t} message={'عنوان الإعلان مطلوب 😐'} />
         ));
-      } else if (!inputs.propertyType) {
-        setErrors((prevErrors) => ({ ...prevErrors, propertyType: true }));
+      } else if (!inputs.usedNew) {
+        setErrors((prevErrors) => ({ ...prevErrors, usedNew: true }));
         toast.custom((t) => (
           <CustomToast t={t} message={'اختيار نوع السيارة مطلوب 😐'} />
         ));
-      } else if (!inputs.propertyRoomsNumber) {
+      } else if (!inputs.brand) {
         setErrors((prevErrors) => ({
           ...prevErrors,
-          propertyRoomsNumber: true,
+          brand: true,
         }));
         toast.custom((t) => (
           <CustomToast t={t} message={'اختيار عدد الغرف مطلوب 😐'} />
         ));
-      } else if (!inputs.propertyPrice) {
-        setErrors((prevErrors) => ({ ...prevErrors, propertyPrice: true }));
+      } else if (!inputs.price) {
+        setErrors((prevErrors) => ({ ...prevErrors, price: true }));
         toast.custom((t) => (
           <CustomToast t={t} message={'سعر السيارة مطلوب 😐'} />
         ));
       } else if (!inputs.propertyArea) {
         setErrors((prevErrors) => ({ ...prevErrors, propertyArea: true }));
         toast.custom((t) => (
-          <CustomToast t={t} message={'حقل مساحة السيارة مطلوب 😐'} />
+          <CustomToast t={t} message={'حقل موديل السيارة مطلوب 😐'} />
         ));
-      } else if (!inputs.propertyCity) {
-        setErrors((prevErrors) => ({ ...prevErrors, propertyCity: true }));
+      } else if (!inputs.city) {
+        setErrors((prevErrors) => ({ ...prevErrors, city: true }));
         toast.custom((t) => (
           <CustomToast t={t} message={'حقل المدينة مطلوب 😐'} />
         ));
@@ -386,27 +386,30 @@ export default function PostForm({ setIsVisible, cancel = true }) {
             <div className="flex flex-col gap-2 xl:gap-8 md:flex-row w-full ">
               <div className="w-full">
                 <div className="flex flex-col items-center justify-center my-4 w-full">
-                  {errors.propertyCategory && (
+                  {errors.adType && (
                     <h1 className="text-one text-2xl text-start w-full animate-bounce">
                       التصنيف مطلوبة
                     </h1>
                   )}
 
-                  <CategoryComponent />
+                  <div className="flex flex-col sm:flex-row justify-center items-center gap-4 w-full">
+                    <CategoryComponent />
+                    <CarsUsedNewSelector />
+                  </div>
                 </div>
                 <div className="flex flex-col items-center justify-center my-4 w-full ">
-                  {errors.propertyType && (
+                  {errors.brand && (
                     <h1 className="text-one text-2xl text-start w-full animate-bounce">
-                      اختيار نوع السيارة مطلوب
+                      اختيار ماركة السيارة مطلوب
                     </h1>
                   )}
 
-                  <PropertyTypeSelector />
+                  <CarsBrandSelector />
                 </div>
                 <div className="flex flex-col items-center justify-center my-4 w-full ">
                   {errors.propertyArea && (
                     <h1 className="text-one text-2xl text-start w-full animate-bounce">
-                      مساحة السيارة مطلوبة
+                      موديل السيارة مطلوب
                     </h1>
                   )}
                   <div className="flex items-center gap-2 w-full justify-start my-2">
@@ -415,7 +418,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
                         {' '}
                         <RxSpaceEvenlyHorizontally />
                       </span>
-                      مساحة السيارة:
+                      السنة:
                     </h1>
                   </div>
 
@@ -425,21 +428,41 @@ export default function PostForm({ setIsVisible, cancel = true }) {
                       setInputs({ ...inputs, propertyArea: e.target.value })
                     }
                     type="number"
-                    id="مساحة السيارة"
-                    name="مساحة السيارة"
-                    placeholder="300 م2"
+                    id="السنة"
+                    name="السنة"
+                    placeholder="2021"
                     className="w-full text-sm sm:text-lg rounded text-start  h-9 sm:h-12 text-nowrap px-2 border border-slate-300 focus:outline-one"
                   />
                 </div>
 
                 <div className="flex flex-col items-center justify-center my-4 w-full ">
-                  {errors.propertyRoomsNumber && (
+                  {errors.brand && (
                     <h1 className="text-one text-2xl text-start w-full animate-bounce">
-                      اختيار عدد الغرف مطلوب
+                      موديل السيارة{' '}
                     </h1>
                   )}
-
-                  <RoomsNumberSelector />
+                  <div className="flex items-center gap-2 w-full justify-start my-2">
+                    <h1 className="flex text-right text-md select-none text-nowrap ">
+                      <span className="text-one text-lg xl:text-2xl ml-2">
+                        {' '}
+                        <FaHouseDamage />
+                      </span>
+                      موديل السيارة:
+                    </h1>
+                  </div>
+                  {/* <RoomsNumberSelector /> */}
+                  <input
+                    value={inputs?.propertyName}
+                    autoFocus
+                    onChange={(e) =>
+                      setInputs({ ...inputs, propertyName: e.target.value })
+                    }
+                    type="text"
+                    id="موديل السيارة"
+                    name="موديل السيارة"
+                    placeholder="land cruiser"
+                    className="w-full text-sm sm:text-lg rounded text-start  h-9 sm:h-12 text-nowrap px-2 border border-slate-300 focus:outline-one"
+                  />
                 </div>
               </div>
 
@@ -469,13 +492,13 @@ export default function PostForm({ setIsVisible, cancel = true }) {
                     type="text"
                     id="اسم السيارة"
                     name="اسم السيارة"
-                    placeholder="تويوتا كورولا ..."
+                    placeholder="تويوتا كورولا موديل 2021"
                     className="w-full text-sm sm:text-lg rounded text-start  h-9 sm:h-12 text-nowrap px-2 border border-slate-300 focus:outline-one"
                   />
                 </div>
 
                 <div className="flex flex-col items-center justify-center my-4 w-full">
-                  {errors.propertyCity && (
+                  {errors.city && (
                     <h1 className="text-one text-2xl text-start w-full animate-bounce">
                       حقل المدينة مطلوب
                     </h1>
@@ -516,7 +539,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
                 </div>
 
                 <div className="flex flex-col items-center justify-center my-4 w-full ">
-                  {errors.propertyPrice && (
+                  {errors.price && (
                     <h1 className="text-one text-2xl text-start w-full animate-bounce">
                       سعر السيارة مطلوب
                     </h1>
@@ -535,14 +558,14 @@ export default function PostForm({ setIsVisible, cancel = true }) {
                   </div>
 
                   <input
-                    value={inputs?.propertyPrice}
+                    value={inputs?.price}
                     onChange={(e) =>
-                      setInputs({ ...inputs, propertyPrice: e.target.value })
+                      setInputs({ ...inputs, price: e.target.value })
                     }
                     type="number"
                     id="سعر السيارة"
                     name="سعر السيارة"
-                    placeholder="$ 000.0"
+                    placeholder="$ 00.0"
                     className="w-full text-sm sm:text-lg rounded text-start  h-9 sm:h-12 text-nowrap px-2 border border-slate-300 focus:outline-one"
                   />
                 </div>
@@ -575,14 +598,14 @@ export default function PostForm({ setIsVisible, cancel = true }) {
               rows={'6'}
               name="الوصف"
               id="الوصف"
-              placeholder="اكتب مواصفات عقارك هنا ..."
-              className="scrollBar flex text-right w-full p-2  text-xl placeholder:text-sm lg:placeholder:text-lg h-36 outline-2 focus:outline-one rounded"
+              placeholder="اكتب مواصفات سيارتك هنا ..."
+              className="scrollBar flex text-right w-full p-2 border border-gray-300 text-xl placeholder:text-sm lg:placeholder:text-lg h-36 outline-2 focus:outline-one rounded"
             ></textarea>
           </div>
           <OnClickMap
-            chosenCity={data?.propertyCity}
+            chosenCity={data?.city}
             chosentown={data?.propertyTown}
-            propertyCityLocation={propertyCityLocation}
+            cityLocation={cityLocation}
             propertyTownLocation={propertyTownLocation}
           />
           <div className="w-full">
@@ -592,7 +615,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
                 <span className="text-one text-lg xl:text-2xl ml-2">
                   <RxVideo />
                 </span>
-                أضف فيديو للعقار من يوتيوب أو تيك توك:
+                أضف فيديو للسيارة من يوتيوب أو تيك توك:
               </h1>
             </div>
 
@@ -638,11 +661,11 @@ export default function PostForm({ setIsVisible, cancel = true }) {
                     image3: '',
                     image4: '',
                     propertyName: '',
-                    propertyType: '',
-                    propertyRoomsNumber: '',
-                    propertyPrice: 0,
+                    usedNew: '',
+                    brand: '',
+                    price: 0,
                     propertyArea: '',
-                    propertyCity: '',
+                    city: '',
                     contactPhoneNumber: '',
                     description: '',
                     lng: '',
