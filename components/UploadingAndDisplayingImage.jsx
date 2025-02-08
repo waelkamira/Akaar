@@ -27,7 +27,7 @@ export default function ImageUploader({ images = [] }) {
       const file = selectedFiles[i];
       const formData = new FormData();
       formData.append('image', file);
-
+      // console.log('formData', formData);
       try {
         const response = await fetch('/api/uploadImageToImgur', {
           method: 'POST',

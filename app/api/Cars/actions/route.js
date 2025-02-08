@@ -2,7 +2,7 @@ import NodeCache from 'node-cache';
 import { handleHeartsAction } from './hearts';
 import { handleLikesAction } from './likes';
 import { handleEmojisAction } from './emojis';
-import { supabase } from '../../../lib/supabaseClient';
+import { supabase } from '../../../../lib/supabaseClient';
 
 // إنشاء كائن للتخزين المؤقت
 const cache = new NodeCache({ stdTTL: 60 * 10 }); // التخزين لمدة 10 دقائق

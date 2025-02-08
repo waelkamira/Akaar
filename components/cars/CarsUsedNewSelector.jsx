@@ -1,26 +1,39 @@
 'use client';
 import React, { useContext, useEffect, useState } from 'react';
 import Select from 'react-select';
-import { inputsContext } from '../Context';
-import { VscUngroupByRefType } from 'react-icons/vsc';
+import { inputsContext } from '../Context.jsx';
 import { usePathname } from 'next/navigation.js';
-import { carBrands } from './carBrands.jsx';
+import { MdOutlineBedroomParent } from 'react-icons/md';
 
-export default function CarsBrandSelector() {
+export default function CarsUsedNewSelector() {
   const { dispatch } = useContext(inputsContext);
-  const [brand, setbrand] = useState('');
+  const [category, setCategory] = useState('');
   const path = usePathname();
 
-  const options = carBrands;
+  const options = [
+    { value: 'جديد', label: 'جديد' },
+    // { value: 'شراء', label: 'شراء' },
+    { value: 'مستعمل', label: 'مستعمل' },
+  ];
+
+  // كائن يحتوي على القيم وأسماء النماذج المرتبطة بها
+  const modelMapping = {
+    جديد: 'جديد',
+    // شراء: 'شراء',
+    مستعمل: 'مستعمل',
+  };
 
   useEffect(() => {
-    if (brand?.value !== '' || brand?.value !== 'undefined') {
-      dispatch({
-        type: 'BRAND',
-        payload: brand,
-      });
+    if (category?.value) {
+      const modelName = modelMapping[category.value]; // جلب اسم النموذج من الكائن
+      if (modelName) {
+        dispatch({
+          type: 'USED_NEW',
+          payload: category,
+        });
+      }
     }
-  }, [brand]);
+  }, [category, dispatch]);
 
   function customTheme(theme) {
     return {
@@ -44,28 +57,28 @@ export default function CarsBrandSelector() {
             }`}
           >
             <span className="text-one text-lg xl:text-2xl ml-2">
-              <VscUngroupByRefType />
+              <MdOutlineBedroomParent />
             </span>
-            الماركة :
+            جديد/مستعمل:
           </h1>
         </div>
         <Select
-          defaultValue={brand}
-          onChange={setbrand}
-          placeholder="ابحث عن اسم الماركة تويوتا ..."
+          defaultValue={category}
+          onChange={setCategory}
+          placeholder="جديد"
           isClearable
           isSearchable
           options={options}
           theme={customTheme}
-          className="w-full text-md rounded text-start z-[9] select-none"
+          className="w-full text-md text-start z-[10]"
           classNamePrefix="select"
           classNames={{
             control: (state) =>
               `${
                 state.isFocused ? 'border-orange-500' : 'border-gray-300'
-              } sm:h-12 h-8`, // ارتفاع مختلف بناءً على عرض النافذة
+              } sm:h-12 h-8 w-full`, // ارتفاع مختلف بناءً على عرض النافذة
           }}
-        ></Select>
+        />
       </div>
     </div>
   );

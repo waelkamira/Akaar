@@ -13,14 +13,14 @@ export default function CategoryComponent() {
   const options = [
     { value: 'بيع', label: 'بيع' },
     // { value: 'شراء', label: 'شراء' },
-    { value: 'أجار', label: 'أجار' },
+    { value: 'تأجير', label: 'تأجير' },
   ];
 
   // كائن يحتوي على القيم وأسماء النماذج المرتبطة بها
   const modelMapping = {
     بيع: 'بيع',
     // شراء: 'شراء',
-    أجار: 'أجار',
+    تأجير: 'تأجير',
   };
 
   useEffect(() => {
