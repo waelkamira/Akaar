@@ -92,7 +92,7 @@ export default function AllPosts({}) {
             array={allPosts}
             setPageNumber={setPageNumber}
             pageNumber={pageNumber}
-          />{' '}
+          />
         </div>
       </div>
     </div>

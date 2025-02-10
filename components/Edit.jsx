@@ -119,9 +119,8 @@ export default function EditPost() {
             يجب عليك تسجيل الدخول أولا لرؤية هذه الوصفة
           </h1>
           <Link href={'/login'}>
-            {' '}
             <Button title={'تسجيل الدخول'} />
-          </Link>{' '}
+          </Link>
         </div>
       )}
       {session?.status === 'authenticated' && (
@@ -357,7 +356,7 @@ export default function EditPost() {
                         &#13;&#10;
                       </span>
                       <MdEdit className="absolute top-0 right-0  text-2xl text-green-400" />
-                    </pre>{' '}
+                    </pre>
                     <button
                       onClick={() => handleeditPost()}
                       className="bg-five mb-2 w-full mt-4 sm:w-fit hover:bg-one  hover:scale-105 border text-center select-none   p-2"

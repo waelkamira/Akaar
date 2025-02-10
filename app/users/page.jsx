@@ -170,7 +170,7 @@ export default function Users() {
           array={users}
           setPageNumber={setPageNumber}
           pageNumber={pageNumber}
-        />{' '}
+        />
       </div>
     </div>
   );

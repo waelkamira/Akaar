@@ -46,7 +46,7 @@ export default function Card({ cardName, path, image, text, color, emoji }) {
 
   return (
     <div
-      className={`w-full sm:w-96 rounded-t-3xl bg-white rounded-b-3xl overflow-hidden hover:scale-[102%] transition-transform duration-300 ease-in-out cursor-pointer`}
+      className={`w-full sm:w-96 rounded-[15px] sm:rounded-3xl bg-white overflow-hidden hover:scale-[102%] transition-transform duration-300 ease-in-out cursor-pointer`}
     >
       <div
         onClick={() => router.push(path)}
@@ -57,9 +57,8 @@ export default function Card({ cardName, path, image, text, color, emoji }) {
       </div>
 
       <div
-        className={` w-full border border-four overflow-hidden rounded-b-3xl`}
+        className={` w-full border border-four overflow-hidden rounded-b-[15px] sm:rounded-b-3xl`}
       >
-        {' '}
         <div className="flex justify-center items-center gap-2 my-2">
           <h1 className="text-md sm:text-xl">{emoji}</h1>
           <h1 className="text-md sm:text-2xl">{cardName}</h1>

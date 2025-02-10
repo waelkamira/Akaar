@@ -46,7 +46,6 @@ export default function UserNameAndPhoto({ post }) {
   }
   return (
     <>
-      {' '}
       <div className="flex justify-start items-center gap-2 w-full mb-4">
         <Link
           href={'/profile'}

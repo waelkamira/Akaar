@@ -168,14 +168,14 @@ export default function LogInPage() {
           </button> */}
 
           <div className="w-full">
-            <Button path={'/'} style={' '} title={'إغلاق'} />
+            <Button path={'/'} style= title={'إغلاق'} />
             {/* <Link href={'/'}>
               <button
                 type="submit"
                 className="text-lg p-2 my-3 rounded-[5px] text-nowrap bg-two hover:bg-one hover:scale-[101%] w-full "
               >
-                إغلاق{' '}
-              </button>{' '}
+                إغلاق
+              </button>
             </Link> */}
           </div>
         </div>

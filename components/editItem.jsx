@@ -32,7 +32,7 @@ export default function EditItem({
           })
         }
       >
-        {inputs?.[property] || editedPost?.[property]}{' '}
+        {inputs?.[property] || editedPost?.[property]}
         {/* //? هذا السبان لابقاء الفوكس */}
         <span
           contentEditable="false"
