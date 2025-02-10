@@ -31,13 +31,13 @@ export default function NewCarPost() {
         >
           <div className=" w-full h-full flex flex-col items-center justify-start grow z-40">
             <div className="flex flex-col w-full justify-center items-center bg-[#FF7C34]">
-              <div className="relative h-[300px] w-[500px] ">
+              <div className="relative h-[350px] w-full ">
                 <Image
                   priority
-                  src={'https://i.imgur.com/CvQzE4G.jpg'}
-                  fill
+                  src={'https://i.imgur.com/yH5NGMz.jpg'}
                   alt="decoration"
-                  className="m-0"
+                  layout="fill"
+                  objectFit="cover"
                 />
               </div>
             </div>

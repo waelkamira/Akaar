@@ -23,23 +23,23 @@ export default function RealEstateNavbar() {
 
   return (
     <div
-      className={`hidden xl:flex xl:justify-between overflow-hidden text-four border border-seven w-full ${
+      className={`hidden xl:flex xl:flex-col xl:justify-between w-full overflow-hidden bg-two text-white px-4 border-b-[10px] border-one ${
         pathname !== '/' ? ' pb' : ''
       }`}
     >
       <div className="flex justify-between w-full">
         <ul className="flex justify-evenly gap-4 mr-4 items-center h-20 py-4 w-4/6">
           <div
-            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-16 transition-all duration-300"
+            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-14 transition-all duration-300"
             onClick={() => router.push('/')}
           >
             <FaHome className="text-xl select-none text-one" />
             <li className=" text-xl select-none">الرئيسية</li>
           </div>
-          <div className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-16 transition-all duration-300">
+          <div className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-14 transition-all duration-300">
             {session?.status === 'unauthenticated' && (
               <div
-                className="flex items-center justify-center gap-2 hover:scale-105 hover:cursor-pointer hover:shadow-lg shadow-gray-300  p-2 px-8 h-16 transition-all duration-300"
+                className="flex items-center justify-center gap-2 hover:scale-105 hover:cursor-pointer hover:shadow-lg shadow-gray-300  p-2 px-8 h-14 transition-all duration-300"
                 onClick={() => router.push('/login')}
               >
                 <GiExitDoor className="text-xl select-none text-one" />
@@ -48,7 +48,7 @@ export default function RealEstateNavbar() {
             )}
             {session?.status === 'authenticated' && (
               <div
-                className="flex items-center justify-center gap-2 border-one px-2 h-16 transition-all duration-300"
+                className="flex items-center justify-center gap-2 border-one px-2 h-14 transition-all duration-300"
                 onClick={() => router.push('/profile')}
               >
                 <ImProfile className="text-xl select-none text-one" />
@@ -58,7 +58,7 @@ export default function RealEstateNavbar() {
           </div>
 
           <div
-            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-16 transition-all duration-300"
+            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-14 transition-all duration-300"
             onClick={() => router.push('/myPosts')}
           >
             <FaCanadianMapleLeaf className="text-xl select-none text-one" />
@@ -67,7 +67,7 @@ export default function RealEstateNavbar() {
             </li>
           </div>
           {/* <div
-            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-16 transition-all duration-300"
+            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-14 transition-all duration-300"
             onClick={() => router.push('/favoritePosts')}
           >
             <TbTargetArrow className="text-xl select-none text-one" />
@@ -76,38 +76,28 @@ export default function RealEstateNavbar() {
             </li>
           </div> */}
           <div
-            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-16 transition-all duration-300"
+            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-14 transition-all duration-300"
             onClick={() => router.push('/RealEstate/newPost')}
           >
             <FaDollarSign className="text-xl select-none text-one" />
             <li className=" text-xl select-none">بيع</li>
           </div>
           <div
-            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-16 transition-all duration-300"
+            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-14 transition-all duration-300"
             onClick={() => router.push('/RealEstate/buy')}
           >
             <GiPayMoney className="text-xl select-none text-one" />
             <li className=" text-xl select-none">شراء</li>
           </div>
           <div
-            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-16 transition-all duration-300"
+            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-14 transition-all duration-300"
             onClick={() => router.push('/RealEstate/rent')}
           >
             <MdOutlineBedroomParent className="text-xl select-none text-one" />
             <li className=" text-xl select-none">إيجار</li>
           </div>
-
-          <div
-            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-16 transition-all duration-300"
-            onClick={() => router.push('/contactUs')}
-          >
-            <FcConferenceCall className="text-xl select-none text-one" />
-            <li className=" text-md xl:text-xl select-none text-nowrap">
-              اتصل بنا
-            </li>
-          </div>
         </ul>
-        <div className="flex">
+        <div className="flex items-center justify-center">
           {/* <ClockWidget /> */}
           <div
             className="relative flex justify-end w-fit min-w-[218px] cursor-pointer "
@@ -123,7 +113,7 @@ export default function RealEstateNavbar() {
                 </h1>
               </div>
             </div> */}
-            <div className="relative h-20 w-56 py-2">
+            <div className="relative h-16 w-44 py-2">
               <Image
                 src="https://i.imgur.com/bhzNopE.png"
                 fill

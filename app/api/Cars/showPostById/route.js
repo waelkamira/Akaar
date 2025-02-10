@@ -17,23 +17,23 @@ export async function POST(req) {
     }
 
     // استخدام Prisma لجلب البيانات
-    const property = await prisma.property.findUnique({
+    const car = await prisma.car.findUnique({
       where: { id },
     });
 
-    if (!property) {
-      return new Response(JSON.stringify({ error: 'Property not found' }), {
+    if (!car) {
+      return new Response(JSON.stringify({ error: 'Car not found' }), {
         headers: { 'Content-Type': 'application/json' },
         status: 404,
       });
     }
 
-    return new Response(JSON.stringify(property), {
+    return new Response(JSON.stringify(car), {
       headers: { 'Content-Type': 'application/json' },
       status: 200,
     });
   } catch (error) {
-    console.error('Error fetching property:', error);
+    console.error('Error fetching car:', error);
     return new Response(JSON.stringify({ error: 'Internal Server Error' }), {
       headers: { 'Content-Type': 'application/json' },
       status: 500,

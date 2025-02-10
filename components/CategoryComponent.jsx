@@ -4,6 +4,7 @@ import Select from 'react-select';
 import { inputsContext } from './Context.jsx';
 import { usePathname } from 'next/navigation.js';
 import { MdOutlineBedroomParent } from 'react-icons/md';
+import { FaDharmachakra } from 'react-icons/fa6';
 
 export default function CategoryComponent() {
   const { dispatch } = useContext(inputsContext);
@@ -13,14 +14,14 @@ export default function CategoryComponent() {
   const options = [
     { value: 'بيع', label: 'بيع' },
     // { value: 'شراء', label: 'شراء' },
-    { value: 'تأجير', label: 'تأجير' },
+    { value: 'أجار', label: 'أجار' },
   ];
 
   // كائن يحتوي على القيم وأسماء النماذج المرتبطة بها
   const modelMapping = {
     بيع: 'بيع',
     // شراء: 'شراء',
-    تأجير: 'تأجير',
+    أجار: 'أجار',
   };
 
   useEffect(() => {
@@ -57,7 +58,7 @@ export default function CategoryComponent() {
             }`}
           >
             <span className="text-one text-lg xl:text-2xl ml-2">
-              <MdOutlineBedroomParent />
+              <FaDharmachakra />
             </span>
             نوع الإعلان :
           </h1>

@@ -2,9 +2,9 @@
 import { useSession } from 'next-auth/react';
 import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import Button from './Button';
+import Button from '../Button';
 import { formatDistanceToNow } from 'date-fns/formatDistanceToNow';
-import Loading from './Loading';
+import Loading from '../Loading';
 import { FaHouseDamage } from 'react-icons/fa';
 import { RxSpaceEvenlyHorizontally } from 'react-icons/rx';
 import { VscUngroupByRefType } from 'react-icons/vsc';
@@ -16,20 +16,20 @@ import { FaTreeCity } from 'react-icons/fa6';
 import dynamic from 'next/dynamic';
 
 // استخدام dynamic لتحميل المكونات بشكل ديناميكي
-const ImageSlider = dynamic(() => import('./imageSlider'), {
+const ImageSlider = dynamic(() => import('../imageSlider'), {
   loading: () => <Loading />, // عرض تحميل مؤقت أثناء التحميل
 });
 
-const SyriaMap = dynamic(() => import('./map/SyriaMap'), {
+const SyriaMap = dynamic(() => import('../map/SyriaMap'), {
   loading: () => <Loading />, // عرض تحميل مؤقت أثناء التحميل
 });
 
-const UserNameAndPhoto = dynamic(() => import('./userNameAndPhoto'), {
+const UserNameAndPhoto = dynamic(() => import('../userNameAndPhoto'), {
   loading: () => <Loading />, // عرض تحميل مؤقت أثناء التحميل
 });
 
 export default function Item({
-  contactPhoneNumber,
+  phoneNumber,
   createdAt,
   description,
   image,
@@ -199,7 +199,7 @@ export default function Item({
                         <GiRotaryPhone className="text-gray-500" />
                         رقم الهاتف :
                       </span>
-                      {contactPhoneNumber}
+                      {phoneNumber}
                     </h1>
                     {/* <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300  text-md sm:text-xl w-full min-h-20 my-2 select-none">
                         <span className="flex gap-1 items-center text-one text-md sm:text-xl mx-2 select-none">

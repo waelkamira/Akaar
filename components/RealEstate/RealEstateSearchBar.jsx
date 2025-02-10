@@ -21,7 +21,7 @@ import { LuArrowUpNarrowWide } from 'react-icons/lu';
 import Image from 'next/image';
 import MiddleBarAndPhoto from '../middleBarAndPhoto';
 import NavegationPages from '../NavegationPages';
-import RealEstateNavbar from '../navbars/RealEstarteNavbar';
+import CarsNavbar from '../Cars/CarsNavbar';
 
 export default function SearchBar({ propertyCategory }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -86,7 +86,7 @@ export default function SearchBar({ propertyCategory }) {
 
   return (
     <div className="flex flex-col justify-center items-center w-full rounded-b">
-      <RealEstateNavbar />
+      <CarsNavbar />
       <div className="relative w-full h-[300px] lg:h-[600px] border overflow-hidden">
         <Image
           src="https://i.imgur.com/wZ0aruw.jpg"

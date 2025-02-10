@@ -8,7 +8,7 @@ function inputsReducer(currentState, action) {
         ...currentState, // الاحتفاظ بالحالة الحالية
         allPosts: action?.payload,
       };
-    case 'New_RECIPE':
+    case 'New_POST':
       return {
         ...currentState,
         newPost: action?.payload,

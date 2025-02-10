@@ -1,9 +1,9 @@
 'use client';
-import CarsSearchBar from '../../components/Cars/CarsSearchBar';
-export default function Cars() {
+import Cars from '../../components/Cars/Cars';
+export default function CarsComponent() {
   return (
     <div className="flex flex-col items-center w-full">
-      <CarsSearchBar propertyCategory="سيارات" />
+      <Cars />
     </div>
   );
 }

@@ -40,9 +40,9 @@ export default function Footer() {
   return (
     <>
       {' '}
-      <footer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-between items-center gap-2 mt-16 border-t w-full h-full text-seven pt-8 p-4">
-        <div className=" p-2 min-h-72 h-full rounded my-2 bg-gray-400/5 xl:bg-transparent xl:border border-gray-400/10   cursor-pointer">
-          <h1 className="text-center  text-lg w-full select-none my-2  font-medium text-four">
+      <footer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-between items-center bg-five gap-2 mt-16 border-t w-full h-full pt-8 p-4">
+        <div className=" p-2 min-h-72 h-full rounded my-2 bg-white xl:border border-gray-400/10   cursor-pointer">
+          <h1 className="text-center  text-lg w-full select-none my-2  font-medium">
             موقع عقار
           </h1>
           <p className="text-start w-full select-none my-2 text-sm xl:text-md leading-loose ">
@@ -57,8 +57,8 @@ export default function Footer() {
             أقصى درجات الرضا والثقة.
           </p>
         </div>
-        <div className=" p-2 min-h-72 h-full rounded my-2 bg-gray-400/5 xl:bg-transparent xl:border border-gray-400/10  ">
-          <h1 className="text-center  text-lg w-full select-none my-2  font-medium text-four">
+        <div className=" p-2 min-h-72 h-full rounded my-2 bg-white xl:border border-gray-400/10  ">
+          <h1 className="text-center  text-lg w-full select-none my-2  font-medium">
             وصول سريع{' '}
           </h1>
           <ul className="flex flex-col justify-start gap-2 items-start h-20 w-full">
@@ -124,8 +124,8 @@ export default function Footer() {
             </div>
           </ul>
         </div>
-        <div className=" p-2 min-h-72 h-full rounded my-2 bg-gray-400/5 xl:bg-transparent xl:border border-gray-400/10  ">
-          <h1 className="text-center  text-lg w-full select-none my-2  font-medium text-four">
+        <div className=" p-2 min-h-72 h-full rounded my-2 bg-white xl:border border-gray-400/10  ">
+          <h1 className="text-center  text-lg w-full select-none my-2  font-medium">
             ساعات العمل{' '}
           </h1>
           <ul className="flex flex-col justify-start gap-2 items-start h-20 w-full">
@@ -194,8 +194,8 @@ export default function Footer() {
             </div>
           </ul>
         </div>
-        <div className=" p-2 min-h-72 h-full rounded my-2 bg-gray-400/5 xl:bg-transparent xl:border border-gray-400/10  ">
-          <h1 className="text-center  text-lg w-full select-none my-2  font-medium text-four">
+        <div className=" p-2 min-h-72 h-full rounded my-2 bg-white xl:border border-gray-400/10  ">
+          <h1 className="text-center  text-lg w-full select-none my-2  font-medium">
             معلومات الإتصال{' '}
           </h1>
           <ul className="flex flex-col justify-start gap-2 items-start h-20 w-full">

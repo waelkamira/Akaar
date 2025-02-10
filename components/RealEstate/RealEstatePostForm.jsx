@@ -75,7 +75,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
     description: false,
     descriptionErrorMessage: 'حقل الوصف مطلوب',
 
-    contactPhoneNumber: false,
+    phoneNumber: false,
     contactPhoneNumberErrorMessage: 'حقل السعر مطلوب',
   });
 
@@ -94,7 +94,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
     propertyArea: '',
     propertyCity: '',
     propertyTown: '',
-    contactPhoneNumber: '',
+    phoneNumber: '',
     description: '',
     lat: '',
     lng: '',
@@ -151,7 +151,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
         inputs?.propertyArea &&
         inputs?.propertyCity &&
         inputs?.propertyTown &&
-        inputs?.contactPhoneNumber &&
+        inputs?.phoneNumber &&
         inputs?.description &&
         userImage &&
         userName &&
@@ -160,7 +160,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
       inputs?.propertyRoomsNumber
     ) {
       try {
-        const response = await fetch('/api/allPosts', {
+        const response = await fetch('/api/RealEstate/allPosts', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -172,7 +172,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
         });
 
         if (response.ok) {
-          dispatch({ type: 'New_RECIPE', payload: inputs });
+          dispatch({ type: 'New_POST', payload: inputs });
           dispatch({ type: 'ADD_IMAGE', payload: [] });
           dispatch({ type: 'PROPERTY_TYPE', payload: '' });
           dispatch({ type: 'PROPERTY_ROOMS_NUMBER', payload: '' });
@@ -194,7 +194,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
             propertyCity: '',
             propertyTown: '',
             propertyArea: '',
-            contactPhoneNumber: '',
+            phoneNumber: '',
             lat: '',
             lng: '',
             link: '',
@@ -218,10 +218,10 @@ export default function PostForm({ setIsVisible, cancel = true }) {
             propertyArea: false,
             propertyCity: false,
             propertyTown: false,
-            contactPhoneNumber: false,
+            phoneNumber: false,
             description: false,
           });
-          router.push('/');
+          router.push('/myPosts');
           handleClick();
         } else {
           console.log('something went wrong!');
@@ -240,7 +240,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
         propertyArea: false,
         propertyCity: false,
         propertyTown: false,
-        contactPhoneNumber: false,
+        phoneNumber: false,
         description: false,
         image: false,
       });
@@ -300,10 +300,10 @@ export default function PostForm({ setIsVisible, cancel = true }) {
         toast.custom((t) => (
           <CustomToast t={t} message={'حقل البلدة مطلوب 😐'} />
         ));
-      } else if (!inputs.contactPhoneNumber) {
+      } else if (!inputs.phoneNumber) {
         setErrors((prevErrors) => ({
           ...prevErrors,
-          contactPhoneNumber: true,
+          phoneNumber: true,
         }));
         toast.custom((t) => (
           <CustomToast t={t} message={'حقل رقم الهاتف مطلوب 😐'} />
@@ -485,7 +485,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
                 </div>
 
                 <div className="flex flex-col items-center justify-center my-4 w-full ">
-                  {errors.contactPhoneNumber && (
+                  {errors.phoneNumber && (
                     <h1 className="text-one text-2xl text-start w-full animate-bounce">
                       رقم الهاتف مطلوب{' '}
                     </h1>
@@ -500,11 +500,11 @@ export default function PostForm({ setIsVisible, cancel = true }) {
                   </div>
 
                   <input
-                    value={inputs?.contactPhoneNumber}
+                    value={inputs?.phoneNumber}
                     onChange={(e) =>
                       setInputs({
                         ...inputs,
-                        contactPhoneNumber: e.target.value,
+                        phoneNumber: e.target.value,
                       })
                     }
                     type="number"
@@ -576,7 +576,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
               name="الوصف"
               id="الوصف"
               placeholder="اكتب مواصفات عقارك هنا ..."
-              className="scrollBar flex text-right w-full p-2 border border-seven/30 text-xl placeholder:text-sm lg:placeholder:text-lg h-36 outline-2 focus:outline-one rounded"
+              className="scrollBar flex text-right w-full p-2 border border-three/30 text-xl placeholder:text-sm lg:placeholder:text-lg h-36 outline-2 focus:outline-one rounded"
             ></textarea>
           </div>
           <OnClickMap
@@ -621,7 +621,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
           <div className="flex flex-col sm:flex-row justify-around items-center gap-8 w-full my-12">
             <button
               type="submit"
-              className="btn bg-five rounded text-white hover:text-four shadow-lg hover:outline outline-one text-xl hover py-2 px-16 w-full"
+              className="btn bg-five rounded text-white hover:text-two shadow-lg hover:outline outline-one text-xl hover py-2 px-16 w-full"
             >
               نشر
             </button>
@@ -643,7 +643,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
                     propertyPrice: 0,
                     propertyArea: '',
                     propertyCity: '',
-                    contactPhoneNumber: '',
+                    phoneNumber: '',
                     description: '',
                     lng: '',
                     lat: '',

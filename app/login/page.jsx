@@ -172,7 +172,7 @@ export default function LogInPage() {
             {/* <Link href={'/'}>
               <button
                 type="submit"
-                className="text-lg p-2 my-3 rounded-[5px] text-nowrap bg-four hover:bg-one hover:scale-[101%] w-full "
+                className="text-lg p-2 my-3 rounded-[5px] text-nowrap bg-two hover:bg-one hover:scale-[101%] w-full "
               >
                 إغلاق{' '}
               </button>{' '}

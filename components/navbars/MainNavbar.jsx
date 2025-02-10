@@ -26,52 +26,52 @@ export default function MainNavbar() {
   const pathname = usePathname();
 
   return (
-    <div
-      className={`hidden xl:flex xl:flex-col xl:justify-between w-full overflow-hidden bg-[#ffff]/30 text-four border-seven px-4 ${
-        pathname !== '/' ? ' pb' : ''
-      }`}
-    >
-      <div className="flex justify-between items-center w-full">
-        <ul className="flex justify-between gap-4 items-center h-20 py-4">
-          <div
-            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-16 transition-all duration-300"
-            onClick={() => router.push('/')}
-          >
-            <FaHome className="text-xl select-none text-one" />
-            <li className=" text-xl select-none">الرئيسية</li>
-          </div>
-          <div className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-16 transition-all duration-300">
-            {session?.status === 'unauthenticated' && (
-              <div
-                className="flex items-center justify-center gap-2 hover:cursor-pointer h-16 transition-all duration-300"
-                onClick={() => router.push('/login')}
-              >
-                <GiExitDoor className="text-xl select-none text-one" />
-                <li className=" text-xl select-none">تسجيل الدخول</li>
-              </div>
-            )}
-            {session?.status === 'authenticated' && (
-              <div
-                className="flex items-center justify-center gap-2 border-one px-2 h-16 transition-all duration-300"
-                onClick={() => router.push('/profile')}
-              >
-                <ImProfile className="text-xl select-none text-one" />
-                <li className=" text-xl select-none">بروفايل</li>
-              </div>
-            )}
-          </div>
+    <>
+      {' '}
+      <div
+        className={`hidden xl:flex xl:flex-col xl:justify-between w-full overflow-hidden bg-two text-white border-three px-4`}
+      >
+        <div className="flex justify-between items-center w-full">
+          <ul className="flex justify-between gap-4 items-center h-20 py-4">
+            <div
+              className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-14 transition-all duration-300"
+              onClick={() => router.push('/')}
+            >
+              <FaHome className="text-xl select-none text-one" />
+              <li className=" text-xl select-none">الرئيسية</li>
+            </div>
+            <div className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-14 transition-all duration-300">
+              {session?.status === 'unauthenticated' && (
+                <div
+                  className="flex items-center justify-center gap-2 hover:cursor-pointer h-14 transition-all duration-300"
+                  onClick={() => router.push('/login')}
+                >
+                  <GiExitDoor className="text-xl select-none text-one" />
+                  <li className=" text-xl select-none">تسجيل الدخول</li>
+                </div>
+              )}
+              {session?.status === 'authenticated' && (
+                <div
+                  className="flex items-center justify-center gap-2 border-one px-2 h-14 transition-all duration-300"
+                  onClick={() => router.push('/profile')}
+                >
+                  <ImProfile className="text-xl select-none text-one" />
+                  <li className=" text-xl select-none">بروفايل</li>
+                </div>
+              )}
+            </div>
 
-          <div
-            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-16 transition-all duration-300"
-            onClick={() => router.push('/myPosts')}
-          >
-            <FaCanadianMapleLeaf className="text-xl select-none text-one" />
-            <li className=" text-md xl:text-xl select-none text-nowrap">
-              متجري
-            </li>
-          </div>
-          {/* <div
-            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-16 transition-all duration-300"
+            <div
+              className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-14 transition-all duration-300"
+              onClick={() => router.push('/myPosts')}
+            >
+              <FaCanadianMapleLeaf className="text-xl select-none text-one" />
+              <li className=" text-md xl:text-xl select-none text-nowrap">
+                متجري
+              </li>
+            </div>
+            {/* <div
+            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-14 transition-all duration-300"
             onClick={() => router.push('/favoritePosts')}
           >
             <TbTargetArrow className="text-xl select-none text-one" />
@@ -79,38 +79,38 @@ export default function MainNavbar() {
               المفضلة{' '}
             </li>
           </div> */}
-          <div
-            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-16 transition-all duration-300"
-            onClick={() => router.push('/RealEstate')}
-          >
-            <FaDollarSign className="text-xl select-none text-one" />
-            <li className=" text-xl select-none">عقارات</li>
-          </div>
-          <div
-            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-16 transition-all duration-300"
-            onClick={() => router.push('/Cars')}
-          >
-            <GiCarWheel className="text-xl select-none text-one" />
-            <li className=" text-xl select-none">سيارات</li>
-          </div>
+            <div
+              className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-14 transition-all duration-300"
+              onClick={() => router.push('/RealEstate')}
+            >
+              <FaDollarSign className="text-xl select-none text-one" />
+              <li className=" text-xl select-none">عقارات</li>
+            </div>
+            <div
+              className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-14 transition-all duration-300"
+              onClick={() => router.push('/Cars')}
+            >
+              <GiCarWheel className="text-xl select-none text-one" />
+              <li className=" text-xl select-none">سيارات</li>
+            </div>
 
-          <div
-            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-16 transition-all duration-300"
-            onClick={() => router.push('/contactUs')}
-          >
-            <FcConferenceCall className="text-xl select-none text-one" />
-            <li className=" text-md xl:text-xl select-none text-nowrap">
-              اتصل بنا
-            </li>
-          </div>
-        </ul>
-        <div className="flex">
-          {/* <ClockWidget /> */}
-          <div
-            className="relative flex justify-end w-fit min-w-[218px] cursor-pointer "
-            onClick={() => router.push('/')}
-          >
-            {/* <div className="absolute top-5 left-24 flex justify-end ">
+            <div
+              className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-14 transition-all duration-300"
+              onClick={() => router.push('/contactUs')}
+            >
+              <FcConferenceCall className="text-xl select-none text-one" />
+              <li className=" text-md xl:text-xl select-none text-nowrap">
+                اتصل بنا
+              </li>
+            </div>
+          </ul>
+          <div className="flex items-center justify-center">
+            {/* <ClockWidget /> */}
+            <div
+              className="relative flex justify-end w-fit min-w-[218px] cursor-pointer "
+              onClick={() => router.push('/')}
+            >
+              {/* <div className="absolute top-5 left-24 flex justify-end ">
               <div className="absolute">
                 <h1 className="akar akarStroke lg:text-4xl lg:font-extrabold text-lg text-nowrap select-none">
                   تؤبرني
@@ -120,20 +120,21 @@ export default function MainNavbar() {
                 </h1>
               </div>
             </div> */}
-            <div className="relative h-16 w-36 py-2">
-              <Image
-                src="https://i.imgur.com/bhzNopE.png"
-                fill
-                objectFit="contain"
-                alt="home_photo"
-                objectPosition="top"
-              />
+              <div className="relative h-16 w-44 py-2">
+                <Image
+                  src="https://i.imgur.com/bhzNopE.png"
+                  fill
+                  objectFit="contain"
+                  alt="home_photo"
+                  objectPosition="top"
+                />
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div className="flex justify-between items-center w-full">
-        <div className="relative text-center w-full md:w-1/4 pl-2">
+      <div className="flex justify-start items-center w-full bg-three px-4 border-b-[10px] border-one">
+        <div className="relative text-center w-full md:w-1/12 pl-2">
           <Button
             style={' p-6'}
             onClick={'handleSearch'}
@@ -148,9 +149,9 @@ export default function MainNavbar() {
           placeholder="ابحث عن عقار .. سيارة ..."
           value={''}
           // onChange={(e) => setMaxPrice(e.target.value)}
-          className="w-full text-sm sm:text-lg rounded text-start z-40 h-9 sm:h-12 text-nowrap px-2 border border-slate-300 focus:outline-one"
+          className="w-full md:w-1/2 lg:w-1/4 text-sm sm:text-lg rounded text-start z-40 h-9 sm:h-12 text-nowrap px-2 border border-slate-300 focus:outline-one"
         />
       </div>
-    </div>
+    </>
   );
 }
