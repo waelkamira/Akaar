@@ -6,7 +6,7 @@ import { useSession } from 'next-auth/react';
 import Button from '../../../components/Button';
 import UploadingAndDisplayingImage from '../../../components/UploadingAndDisplayingImage';
 import MiddleBarAndPhoto from '../../../components/middleBarAndPhoto';
-import RealEstateNavbar from '../../../components/navbars/RealEstarteNavbar';
+import RealEstateNavbar from '../../../components/RealEstate/RealEstarteNavbar';
 
 export default function NewRealEstatePost() {
   const [isOpen, setIsOpen] = useState(false);

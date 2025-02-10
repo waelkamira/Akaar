@@ -71,7 +71,7 @@ export default function MyPosts() {
   }
 
   return (
-    <div className="flex flex-col justify-center items-center w-full  rounded-b border">
+    <div className="flex flex-col justify-center items-center w-full">
       <MainNavbar />
       {/* <div className="relative w-full h-[300px] lg:h-[400px] border overflow-hidden">
         <Image
@@ -126,17 +126,17 @@ export default function MyPosts() {
             />
           )}
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 p-2 sm:p-4 gap-4 justify-start items-start w-full border border-greay-300 rounded">
+          <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 p-2 sm:p-4 gap-4 justify-start items-start w-full border border-five">
             {myPosts?.length > 0 &&
               myPosts.map((post, index) => (
                 <div
-                  className="relative flex flex-col border-2 items-start justify-start hover:scale-[101%] transition-transform duration-300 ease-in-out cursor-pointer bg-one rounded-[10px] overflow-hidden"
+                  className="relative flex flex-col border-2 items-start h-full justify-start bg-one hover:scale-[101%] transition-transform duration-300 ease-in-out cursor-pointer rounded-[10px] overflow-hidden"
                   key={index}
                 >
                   {session?.status === 'authenticated' && (
-                    <div className="flex justify-between items-center w-full p-2 pb-0">
+                    <div className="flex justify-between items-center w-full p-2 bg-one h-24 text-white ">
                       <div
-                        className="flex flex-col items-center justify-center cursor-pointer  rounded p-1 md:text-xl  hover:bg-[#ff2020] hover:scale-[105%] transition-transform duration-150 ease-in-out"
+                        className="flex flex-col items-center justify-center cursor-pointer  rounded p-1 md:text-xl  hover:bg-three hover:scale-[105%] transition-transform duration-150 ease-in-out"
                         onClick={() => {
                           dispatch({
                             type: 'POST_ID',
@@ -151,13 +151,13 @@ export default function MyPosts() {
                         <h6 className="text-sm select-none">تعديل</h6>
                       </div>
                       <div
-                        className="flex flex-col items-center justify-center cursor-pointer  rounded p-1 md:text-xl  hover:bg-[#ff2020] hover:scale-[105%] transition-transform duration-150 ease-in-out"
+                        className="flex flex-col items-center justify-center cursor-pointer  rounded p-1 md:text-xl  hover:bg-three hover:scale-[105%] transition-transform duration-150 ease-in-out"
                         onClick={() => {
                           setIsVisible(true);
                           setpostId(post?.id);
                         }}
                       >
-                        <IoMdClose className="" />
+                        <IoMdClose />
                         <h6 className="text-sm select-none">حذف</h6>
                       </div>
                     </div>
@@ -173,7 +173,7 @@ export default function MyPosts() {
                   className="flex items-center justify-around cursor-pointer py-4"
                   onClick={() => setPageNumber(pageNumber + 1)}
                 >
-                  <h1 className="">الصفحة التالية</h1>
+                  <h1>الصفحة التالية</h1>
                   <MdKeyboardDoubleArrowRight className="text-2xl  text-green-500 select-none" />
                 </div>
               </Link>
@@ -185,7 +185,7 @@ export default function MyPosts() {
                   onClick={() => setPageNumber(pageNumber - 1)}
                 >
                   <MdKeyboardDoubleArrowLeft className="text-2xl  text-green-500 select-none" />
-                  <h1 className="">الصفحة السابقة</h1>
+                  <h1>الصفحة السابقة</h1>
                 </div>
               </Link>
             )}

@@ -85,9 +85,9 @@ export default function CarsItem({
         </div>
       )}
       {session?.status === 'authenticated' && (
-        <div className="flex flex-col justify-center items-center w-full xl:w-[90%] 2xl:w-[70%] h-full sm:px-16 pt-2 overflow-y-auto z-10 px-2">
+        <div className="flex flex-col justify-center items-center w-full xl:w-[90%] 2xl:w-[80%] h-full sm:px-16 pt-2 overflow-y-auto z-10 px-2">
           <div className="flex justify-center w-full ">
-            <div className="flex flex-col w-full p-2 sm:p-8 my-2 bg-three border-t-[20px] border-one rounded-t-lg">
+            <div className="flex flex-col w-full p-2 sm:p-8 my-2 bg-three border-t-[10px] border-one rounded-t-lg">
               <UserNameAndPhoto
                 post={{
                   userImage: userImage,
@@ -112,7 +112,7 @@ export default function CarsItem({
 
               <div className=" mt-4 sm:mt-16">
                 <div className="flex justify-between items-center my-4 lg:my-8  h-10 sm:h-16  w-full overflow-visible">
-                  <h1 className=" text-lg sm:text-xl w-full mb-2 select-none">
+                  <h1 className="text-one font-bold text-lg sm:text-xl w-full mb-2 select-none">
                     <span className="text-one text-2xl mx-2 select-none">
                       #
                     </span>
@@ -200,7 +200,7 @@ export default function CarsItem({
                   </div>
 
                   <div className="flex justify-between items-center my-4 lg:my-8  h-10 sm:h-16  w-full overflow-visible">
-                    <h1 className=" text-lg sm:text-xl w-full mb-2 select-none">
+                    <h1 className="text-one font-bold text-lg sm:text-xl w-full mb-2 select-none">
                       <span className="text-one text-2xl mx-2 select-none">
                         #
                       </span>
@@ -217,7 +217,7 @@ export default function CarsItem({
                 {lng !== '' && lat !== '' && (
                   <div>
                     <div className="flex justify-between items-center my-4 lg:my-8  h-10 sm:h-16  w-full overflow-visible">
-                      <h1 className=" text-lg sm:text-xl w-full mb-2 select-none">
+                      <h1 className="text-one font-bold text-lg sm:text-xl w-full mb-2 select-none">
                         <span className="text-one text-2xl mx-2 select-none">
                           #
                         </span>
@@ -231,7 +231,7 @@ export default function CarsItem({
                 )}
                 {(link || iframeSrc) && (
                   <div className="flex justify-between items-center my-4 sm:my-4 h-10 sm:h-16  w-full overflow-visible">
-                    <h1 className=" text-lg sm:text-xl w-full mb-2 select-none">
+                    <h1 className="text-one font-bold text-lg sm:text-xl w-full mb-2 select-none">
                       <span className="text-one text-2xl mx-2 select-none">
                         #
                       </span>

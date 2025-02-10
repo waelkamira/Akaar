@@ -43,18 +43,18 @@ export default function Footer() {
       <footer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-between items-center bg-five gap-2 mt-16 border-t w-full h-full pt-8 p-4">
         <div className=" p-2 min-h-72 h-full rounded my-2 bg-white xl:border border-gray-400/10   cursor-pointer">
           <h1 className="text-center  text-lg w-full select-none my-2  font-medium">
-            موقع عقار
+            موقع تؤبرني
           </h1>
           <p className="text-start w-full select-none my-2 text-sm xl:text-md leading-loose ">
-            بصفتنا موقعًا متخصصًا في مجال العقارات، نضع الدقة والأمانة على رأس
-            أولوياتنا لضمان تقديم أفضل تجربة في قطاع العقارات. نحن ملتزمون
-            بتلبية جميع توقعات عملائنا من خلال توفير حلول عقارية متكاملة
-            وموثوقة، سواء قبل أو بعد عمليات البيع أو التأجير. نسعى دائمًا لفهم
-            احتياجات عملائنا وتحليلها بدقة، مع الأخذ بعين الاعتبار إمكانياتهم
-            وتطلعاتهم، مما يمكننا من تقديم الخدمة الأسرع والأكثر كفاءة في السوق.
-            كما نعمل بجد لبناء علاقات طويلة الأمد مع عملائنا من خلال تقديم الدعم
-            الكامل في جميع مراحل عملية البيع أو الشراء أو الإيجار، وضمان تحقيق
-            أقصى درجات الرضا والثقة.
+            بصفتنا موقعًا متخصصًا في مجال العقارات والسيارات، نضع الدقة والأمانة
+            على رأس أولوياتنا لضمان تقديم أفضل تجربة ممكنة. نحن ملتزمون بتلبية
+            جميع توقعات عملائنا من خلال توفير حلول متكاملة وموثوقة، سواء قبل أو
+            بعد عمليات البيع أو التأجير. نسعى دائمًا لفهم احتياجات عملائنا
+            وتحليلها بدقة، مع الأخذ بعين الاعتبار إمكانياتهم وتطلعاتهم، مما
+            يمكننا من تقديم الخدمة الأسرع والأكثر كفاءة في السوق. كما نعمل بجد
+            لبناء علاقات طويلة الأمد مع عملائنا من خلال تقديم الدعم الكامل في
+            جميع مراحل عملية البيع أو الشراء أو الإيجار، وضمان تحقيق أقصى درجات
+            الرضا والثقة.
           </p>
         </div>
         <div className=" p-2 min-h-72 h-full rounded my-2 bg-white xl:border border-gray-400/10  ">
@@ -93,34 +93,35 @@ export default function Footer() {
             </div>
             <div
               className="flex items-center justify-start gap-2 w-full  hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300"
+              onClick={() => router.push('/myPosts')}
+            >
+              <FcConferenceCall className="text-lg select-none text-one" />
+              <li className=" text-md sm:text-lg select-none text-nowrap">
+                متجري{' '}
+              </li>
+            </div>
+            <div
+              className="flex items-center justify-start gap-2 w-full  hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300"
+              onClick={() => router.push('/RealEstate')}
+            >
+              <FaDollarSign className="text-lg select-none text-one" />
+              <li className=" text-md sm:text-lg select-none">عقارات</li>
+            </div>
+            <div
+              className="flex items-center justify-start gap-2 w-full  hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300"
+              onClick={() => router.push('/Cars')}
+            >
+              <GiPayMoney className="text-lg select-none text-one" />
+              <li className=" text-md sm:text-lg select-none">سيارات</li>
+            </div>
+            <div
+              className="flex items-center justify-start gap-2 w-full  hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300"
               onClick={() => router.push('/contactUs')}
             >
               <FcConferenceCall className="text-lg select-none text-one" />
               <li className=" text-md sm:text-lg select-none text-nowrap">
                 اتصل بنا
               </li>
-            </div>
-
-            <div
-              className="flex items-center justify-start gap-2 w-full  hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300"
-              onClick={() => router.push('/RealEstate/newPost')}
-            >
-              <FaDollarSign className="text-lg select-none text-one" />
-              <li className=" text-md sm:text-lg select-none">بيع</li>
-            </div>
-            <div
-              className="flex items-center justify-start gap-2 w-full  hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300"
-              onClick={() => router.push('/RealEstate/buy')}
-            >
-              <GiPayMoney className="text-lg select-none text-one" />
-              <li className=" text-md sm:text-lg select-none">شراء</li>
-            </div>
-            <div
-              className="flex items-center justify-start gap-2 w-full  hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300"
-              onClick={() => router.push('/RealEstate/rent')}
-            >
-              <MdOutlineBedroomParent className="text-lg select-none text-one" />
-              <li className=" text-md sm:text-lg select-none">إيجار</li>
             </div>
           </ul>
         </div>

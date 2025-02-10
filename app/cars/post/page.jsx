@@ -5,7 +5,7 @@ import { inputsContext } from '../../../components/Context';
 import CarsNavbar from '../../../components/Cars/CarsNavbar';
 
 // تحميل مكون Item بشكل ديناميكي
-const Item = dynamic(() => import('../../../components/Cars/CarsItem'), {
+const CarsItem = dynamic(() => import('../../../components/Cars/CarsItem'), {
   loading: () => <div>Loading...</div>, // عرض رسالة تحميل أثناء تحميل المكون
 });
 
@@ -40,7 +40,7 @@ export default function Page() {
   return (
     <div className="flex flex-col justify-center items-center w-full">
       <CarsNavbar />
-      {post && <Item {...post} />}
+      {post && <CarsItem {...post} />}
     </div>
   );
 }

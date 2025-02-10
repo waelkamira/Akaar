@@ -4,7 +4,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { inputsContext } from '../../../components/Context';
 
 // تحميل مكون Item بشكل ديناميكي
-const Item = dynamic(
+const RealEstateItem = dynamic(
   () => import('../../../components/RealEstate/RealEstateItem'),
   {
     loading: () => <div>Loading...</div>, // عرض رسالة تحميل أثناء تحميل المكون
@@ -12,32 +12,36 @@ const Item = dynamic(
 );
 
 export default function Page() {
-  const [onePost, setOnePost] = useState({});
+  const [post, setPost] = useState({});
   const { postId } = useContext(inputsContext);
 
   useEffect(() => {
+    if (typeof window !== 'undefined' && postId) {
+      localStorage.setItem('postId', JSON.stringify(postId));
+    }
     if (typeof window !== 'undefined') {
-      // Run only in the client environment
-      console.log('postId', postId);
-      if (postId) fetchOnePost(postId);
+      const id = JSON.parse(localStorage.getItem('postId'));
+      console.log('id', id);
+      if (id) fetchPost(id);
     }
   }, [postId]);
+  console.log('post', post);
 
-  async function fetchOnePost(postId) {
+  async function fetchPost(id) {
     const response = await fetch(`/api/RealEstate/showPostById`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: postId }),
+      body: JSON.stringify({ id: id }),
     });
     const json = await response?.json();
     if (response.ok) {
-      setOnePost(json);
+      setPost(json);
     }
   }
 
   return (
     <div className="flex flex-col justify-center items-center w-full">
-      {onePost && <Item {...onePost} />}
+      {post && <RealEstateItem {...post} />}
     </div>
   );
 }

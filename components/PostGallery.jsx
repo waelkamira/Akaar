@@ -65,11 +65,11 @@ const PostGallery = ({ post }) => {
 
   // جمع الصور من الحقول المختلفة في مصفوفة واحدة
   const images = [
-    post.image,
     post.image1,
     post.image2,
     post.image3,
     post.image4,
+    post.image5,
   ].filter((img) => img); // تصفية الحقول الفارغة
 
   if (images.length === 1) {
@@ -111,10 +111,12 @@ const PostGallery = ({ post }) => {
         {images.map((image, index) => (
           <div
             key={index}
-            className="relative h-64   ${
-                        path.includes('myPosts') || path.includes('favoritePosts')
- ? '' : 'sm:h-96'
-        } overflow-hidden"
+            className={`relative h-64 
+          ${
+            path.includes('myPosts') || path.includes('favoritePosts')
+              ? ''
+              : 'sm:h-96'
+          }  overflow-hidden ronded w-full`}
           >
             <Image
               priority

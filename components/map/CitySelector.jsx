@@ -12,6 +12,18 @@ export default function CitySelector() {
   const [selectedTown, setSelectedTown] = useState(null);
   const { dispatch } = useContext(inputsContext);
   const path = usePathname();
+  const [minHeight, setMinHeight] = useState('20px');
+
+  useEffect(() => {
+    const updateSize = () => {
+      setMinHeight(window.innerWidth >= 640 ? '48px' : '20px'); // sm: 640px
+    };
+
+    updateSize(); // استدعاء أولي عند التحميل
+    window.addEventListener('resize', updateSize);
+
+    return () => window.removeEventListener('resize', updateSize);
+  }, []);
 
   useEffect(() => {
     if (selectedCity?.value && selectedCity?.latlng) {
@@ -61,12 +73,35 @@ export default function CitySelector() {
       borderRadius: 5,
       colors: {
         ...theme.colors,
-        primary: '#ffa500',
+        primary: '#FF7C34',
         primary25: '#fadfae',
       },
     };
   }
 
+  const customStyles = {
+    control: (provided, state) => ({
+      ...provided,
+      minHeight: minHeight,
+      height: 'auto',
+      backgroundColor: 'white',
+      borderColor: state.isFocused ? '#FF7C34' : '#A7A8AA',
+      '&:hover': {
+        borderColor: '#FF7C34',
+      },
+    }),
+    valueContainer: (provided) => ({
+      ...provided,
+      minHeight: minHeight,
+      padding: '0 1rem',
+      display: 'flex',
+      alignItems: 'center',
+    }),
+    indicatorsContainer: (provided) => ({
+      ...provided,
+      minHeight: minHeight,
+    }),
+  };
   return (
     <div className="flex flex-col sm:flex-row gap-2 w-full justify-start items-center">
       <div className="w-full">
@@ -91,12 +126,13 @@ export default function CitySelector() {
           isClearable
           isSearchable
           theme={customTheme}
-          className="w-full text-sm sm:text-md text-start z-[7] text-nowrap"
+          styles={customStyles}
+          className="w-full text-md text-start rounded select-none "
           classNamePrefix="select"
           classNames={{
             control: (state) =>
               `${
-                state.isFocused ? 'border-orange-500' : 'border-gray-300'
+                state.isFocused ? 'border border-one' : 'border border-four'
               } sm:h-12 h-8 w-full`, // ارتفاع مختلف بناءً على عرض النافذة
           }}
         />
@@ -125,13 +161,14 @@ export default function CitySelector() {
           isSearchable
           isDisabled={!selectedCity}
           theme={customTheme}
-          className="w-full text-sm sm:text-md text-start z-[6] text-nowrap"
+          styles={customStyles}
+          className="w-full text-md text-start rounded select-none "
           classNamePrefix="select"
           classNames={{
             control: (state) =>
               `${
-                state.isFocused ? 'border-orange-500' : 'border-gray-300'
-              } sm:h-12 h-8 w-full `, // ارتفاع مختلف بناءً على عرض النافذة
+                state.isFocused ? 'border-orange-500' : 'border-four'
+              } sm:h-12 h-8 w-full`,
           }}
         />
       </div>

@@ -11,7 +11,7 @@ export default function Card({ cardName, path, image, text, color, emoji }) {
     color === 'red'
       ? 'border-[#F83354]'
       : color === 'orange'
-      ? 'border-[#ffa500]'
+      ? 'border-[#FF7C34]'
       : color === 'gray'
       ? 'border-three'
       : 'border-[#666666]';
@@ -20,7 +20,7 @@ export default function Card({ cardName, path, image, text, color, emoji }) {
     color === 'red'
       ? 'bg-[#F83354]'
       : color === 'orange'
-      ? 'bg-[#ffa500]'
+      ? 'bg-[#FF7C34]'
       : color === 'gray'
       ? 'bg-three'
       : 'bg-[#666666]';
@@ -29,7 +29,7 @@ export default function Card({ cardName, path, image, text, color, emoji }) {
     color === 'red'
       ? '#F83354'
       : color === 'orange'
-      ? '#ffa500'
+      ? '#FF7C34'
       : color === 'gray'
       ? '#5F5D59'
       : '#666666';
@@ -59,7 +59,7 @@ export default function Card({ cardName, path, image, text, color, emoji }) {
           color === 'red'
             ? 'border-[#F83354]'
             : color === 'orange'
-            ? 'border-[#ffa500]'
+            ? 'border-[#FF7C34]'
             : color === 'gray'
             ? 'border-three'
             : 'border-[#666666]'

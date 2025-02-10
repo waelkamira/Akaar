@@ -147,7 +147,7 @@ export default function RegisterPage() {
             name={'name'}
             placeholder="الإسم"
             {...register('name')}
-            className=" placeholder-gray-400 transition-all duration-300 placeholder:text-sm placeholder:sm:text-lg grow py-2 border border-gray-300 border-solid focus:border focus:outline-one outline-none rounded-md px-2 w-full caret-one  text-start"
+            className=" placeholder-gray-400 transition-all duration-300 placeholder:text-sm placeholder:sm:text-lg grow py-2 border border-four border-solid focus:border focus:outline-one outline-none rounded-md px-2 w-full caret-one  text-start"
           />
         </div>
         {errors?.name && (
@@ -164,7 +164,7 @@ export default function RegisterPage() {
             name={'email'}
             placeholder="الإيميل"
             {...register('email')}
-            className=" placeholder-gray-400 transition-all duration-300 placeholder:text-sm placeholder:sm:text-lg grow py-2 border border-gray-300 border-solid focus:border focus:outline-one outline-none rounded-md px-2 w-full caret-one  text-start"
+            className=" placeholder-gray-400 transition-all duration-300 placeholder:text-sm placeholder:sm:text-lg grow py-2 border border-four border-solid focus:border focus:outline-one outline-none rounded-md px-2 w-full caret-one  text-start"
           />
         </div>
         {errors?.email && (
@@ -181,7 +181,7 @@ export default function RegisterPage() {
             name={'password'}
             placeholder="كلمة السر"
             {...register('password')}
-            className=" placeholder-gray-400 transition-all duration-300 placeholder:text-sm placeholder:sm:text-lg grow py-2 border border-gray-300 border-solid focus:border focus:outline-one outline-none rounded-md px-2 w-full caret-one  text-start"
+            className=" placeholder-gray-400 transition-all duration-300 placeholder:text-sm placeholder:sm:text-lg grow py-2 border border-four border-solid focus:border focus:outline-one outline-none rounded-md px-2 w-full caret-one  text-start"
           />
         </div>
         {errors?.password && (

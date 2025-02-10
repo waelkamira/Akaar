@@ -10,8 +10,19 @@ export default function CarsBrandSelector() {
   const { dispatch } = useContext(inputsContext);
   const [brand, setbrand] = useState('');
   const path = usePathname();
-
   const options = carBrands;
+  const [minHeight, setMinHeight] = useState('20px');
+
+  useEffect(() => {
+    const updateSize = () => {
+      setMinHeight(window.innerWidth >= 640 ? '48px' : '20px'); // sm: 640px
+    };
+
+    updateSize(); // استدعاء أولي عند التحميل
+    window.addEventListener('resize', updateSize);
+
+    return () => window.removeEventListener('resize', updateSize);
+  }, []);
 
   useEffect(() => {
     if (brand?.value !== '' || brand?.value !== 'undefined') {
@@ -28,12 +39,34 @@ export default function CarsBrandSelector() {
       borderRadius: 5,
       colors: {
         ...theme.colors,
-        primary: '#ffa500',
+        primary: '#FF7C34',
         primary25: '#fadfae',
       },
     };
   }
-
+  const customStyles = {
+    control: (provided, state) => ({
+      ...provided,
+      minHeight: minHeight,
+      height: 'auto',
+      backgroundColor: 'white',
+      borderColor: state.isFocused ? '#FF7C34' : '#A7A8AA',
+      '&:hover': {
+        borderColor: '#FF7C34',
+      },
+    }),
+    valueContainer: (provided) => ({
+      ...provided,
+      minHeight: minHeight,
+      padding: '0 1rem',
+      display: 'flex',
+      alignItems: 'center',
+    }),
+    indicatorsContainer: (provided) => ({
+      ...provided,
+      minHeight: minHeight,
+    }),
+  };
   return (
     <div className="flex flex-col w-full justify-start items-center ">
       <div className="w-full">
@@ -57,12 +90,13 @@ export default function CarsBrandSelector() {
           isSearchable
           options={options}
           theme={customTheme}
+          styles={customStyles}
           className="w-full text-md rounded text-start z-[9] select-none"
           classNamePrefix="select"
           classNames={{
             control: (state) =>
               `${
-                state.isFocused ? 'border-orange-500' : 'border-gray-300'
+                state.isFocused ? 'border-orange-500' : 'border-four'
               } sm:h-12 h-8`, // ارتفاع مختلف بناءً على عرض النافذة
           }}
         ></Select>
