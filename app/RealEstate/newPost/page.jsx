@@ -48,7 +48,7 @@ export default function NewRealEstatePost() {
                   يجب عليك تسجيل الدخول أولا لكي تتمكن من إنشاء إعلان جديد
                 </h1>
 
-                <Button title={'تسجيل الدخول'} path="/login" style={' '} />
+                <Button title={'تسجيل الدخول'} path="/login" style= />
               </div>
             )}
             {session?.status === 'authenticated' && (

@@ -220,15 +220,14 @@ export default function RegisterPage() {
                 type="submit"
                 className=" text-lg p-2  my-3  text-nowrap bg-five hover:bg-one  hover:scale-[101%] w-full "
               >
-                إغلاق{' '}
-              </button>{' '}
+                إغلاق
+              </button>
             </Link>
           </div>
         </div>
         <Link href={'/login'}>
-          {' '}
           <h1 className="mt-4 text-start text-sm sm:text-lg">
-            هل لديك حساب بالفعل ؟ قم بتسجيل الدخول{' '}
+            هل لديك حساب بالفعل ؟ قم بتسجيل الدخول
             <span className="text-one text-lg sm:text-xl hover:scale-105">
               🧀 هنا
             </span>

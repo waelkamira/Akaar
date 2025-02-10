@@ -72,7 +72,7 @@ export default function RealEstateNavbar() {
           >
             <TbTargetArrow className="text-xl select-none text-one" />
             <li className=" text-md xl:text-xl select-none text-nowrap">
-              المفضلة{' '}
+              المفضلة
             </li>
           </div> */}
           <div

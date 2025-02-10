@@ -39,7 +39,6 @@ export default function Footer() {
 
   return (
     <>
-      {' '}
       <footer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-between items-center bg-five gap-2 mt-16 border-t w-full h-full pt-8 p-4">
         <div className=" p-2 min-h-72 h-full rounded my-2 bg-white xl:border border-gray-400/10   cursor-pointer">
           <h1 className="text-center  text-lg w-full select-none my-2  font-medium">
@@ -59,7 +58,7 @@ export default function Footer() {
         </div>
         <div className=" p-2 min-h-72 h-full rounded my-2 bg-white xl:border border-gray-400/10  ">
           <h1 className="text-center  text-lg w-full select-none my-2  font-medium">
-            وصول سريع{' '}
+            وصول سريع
           </h1>
           <ul className="flex flex-col justify-start gap-2 items-start h-20 w-full">
             <div
@@ -97,7 +96,7 @@ export default function Footer() {
             >
               <FcConferenceCall className="text-lg select-none text-one" />
               <li className=" text-md sm:text-lg select-none text-nowrap">
-                متجري{' '}
+                متجري
               </li>
             </div>
             <div
@@ -127,68 +126,68 @@ export default function Footer() {
         </div>
         <div className=" p-2 min-h-72 h-full rounded my-2 bg-white xl:border border-gray-400/10  ">
           <h1 className="text-center  text-lg w-full select-none my-2  font-medium">
-            ساعات العمل{' '}
+            ساعات العمل
           </h1>
           <ul className="flex flex-col justify-start gap-2 items-start h-20 w-full">
             <div className="flex items-center justify-between gap-2 w-full  hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300">
               <div className="flex gap-1 items-center">
                 <FaCalendarDays className="text-lg select-none text-one" />
                 <li className=" text-md sm:text-lg select-none text-nowrap">
-                  الإثنين{' '}
+                  الإثنين
                 </li>
               </div>
               <span className="text-nowrap"> 09:00 - 18:00</span>
-            </div>{' '}
+            </div>
             <div className="flex items-center justify-between gap-2 w-full  hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300">
               <div className="flex gap-1 items-center">
                 <FaCalendarDays className="text-lg select-none text-one" />
                 <li className=" text-md sm:text-lg select-none text-nowrap">
-                  الثلاثاء{' '}
+                  الثلاثاء
                 </li>
               </div>
               <span className="text-nowrap"> 09:00 - 18:00</span>
-            </div>{' '}
+            </div>
             <div className="flex items-center justify-between gap-2 w-full  hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300">
               <div className="flex gap-1 items-center">
                 <FaCalendarDays className="text-lg select-none text-one" />
                 <li className=" text-md sm:text-lg select-none text-nowrap">
-                  الأربعاء{' '}
+                  الأربعاء
                 </li>
               </div>
               <span className="text-nowrap"> 09:00 - 18:00</span>
-            </div>{' '}
+            </div>
             <div className="flex items-center justify-between gap-2 w-full  hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300">
               <div className="flex gap-1 items-center">
                 <FaCalendarDays className="text-lg select-none text-one" />
                 <li className=" text-md sm:text-lg select-none text-nowrap">
-                  الخميس{' '}
+                  الخميس
                 </li>
               </div>
               <span className="text-nowrap"> 09:00 - 18:00</span>
-            </div>{' '}
+            </div>
             <div className="flex items-center justify-between gap-2 w-full  hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300">
               <div className="flex gap-1 items-center">
                 <FaCalendarDays className="text-lg select-none text-one" />
                 <li className=" text-md sm:text-lg select-none text-nowrap">
-                  الجمعة{' '}
+                  الجمعة
                 </li>
               </div>
               <span className="text-nowrap"> 09:00 - 18:00</span>
-            </div>{' '}
+            </div>
             <div className="flex items-center justify-between gap-2 w-full  hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300">
               <div className="flex gap-1 items-center">
                 <FaCalendarDays className="text-lg select-none text-one" />
                 <li className=" text-md sm:text-lg select-none text-nowrap">
-                  السبت{' '}
+                  السبت
                 </li>
               </div>
               <span className="text-nowrap"> 09:00 - 18:00</span>
-            </div>{' '}
+            </div>
             <div className="flex items-center justify-between gap-2 w-full  hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300">
               <div className="flex gap-1 items-center">
                 <FaCalendarDays className="text-lg select-none text-one" />
                 <li className=" text-md sm:text-lg select-none text-nowrap">
-                  الأحد{' '}
+                  الأحد
                 </li>
               </div>
               <span className="text-nowrap"> 09:00 - 18:00</span>
@@ -197,33 +196,32 @@ export default function Footer() {
         </div>
         <div className=" p-2 min-h-72 h-full rounded my-2 bg-white xl:border border-gray-400/10  ">
           <h1 className="text-center  text-lg w-full select-none my-2  font-medium">
-            معلومات الإتصال{' '}
+            معلومات الإتصال
           </h1>
           <ul className="flex flex-col justify-start gap-2 items-start h-20 w-full">
             <div className="flex items-center justify-between gap-2 w-full  hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300">
               <div className="flex gap-1 items-center">
                 <MdOutlineAddLocationAlt className="text-lg select-none text-one" />
                 <li className=" text-md sm:text-lg select-none text-nowrap">
-                  سوريا - دمشق{' '}
+                  سوريا - دمشق
                 </li>
               </div>
               <span className="text-nowrap"> </span>
-            </div>{' '}
+            </div>
             <div className="flex items-center justify-between gap-2 w-full  hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300">
               <Link
                 href={'https://www.facebook.com/WaelKhamira/'}
                 target="_blank"
               >
-                {' '}
                 <div className="flex gap-1 items-center">
                   <FaFacebookF className="text-lg select-none text-one" />
                   <li className=" text-md sm:text-lg select-none text-nowrap">
-                    facebook{' '}
+                    facebook
                   </li>
                 </div>
                 <span className="text-nowrap"> </span>
               </Link>
-            </div>{' '}
+            </div>
             <div className="flex items-center justify-between gap-2 w-full  hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer  px-2 xl:px-8 h-6 transition-all duration-300">
               <div className="flex gap-1 items-center">
                 <FiLinkedin className="text-lg select-none text-one" />
@@ -232,7 +230,7 @@ export default function Footer() {
                 </li>
               </div>
               <span className="text-nowrap"></span>
-            </div>{' '}
+            </div>
             <div
               className="flex items-center justify-between gap-2 w-full  hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer px-2 xl:px-8 h-6 transition-all duration-300"
               onClick={() => handleCopy('waelkamira@gmail.com')} // إضافة حدث النقر
@@ -252,7 +250,6 @@ export default function Footer() {
                 <li className="text-md sm:text-lg text-nowrap">hotmail</li>
               </div>
               <span className="text-nowrap">
-                {' '}
                 <span className="text-nowrap">ramond.shnaidr@hotmail.com</span>
               </span>
             </div>

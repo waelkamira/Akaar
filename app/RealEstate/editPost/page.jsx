@@ -180,9 +180,8 @@ export default function EditPost() {
             يجب عليك تسجيل الدخول أولا لرؤية هذه الإعلان
           </h1>
           <Link href={'/login'}>
-            {' '}
             <Button title={'تسجيل الدخول'} />
-          </Link>{' '}
+          </Link>
         </div>
       )}
       {session?.status === 'authenticated' && (
@@ -249,7 +248,7 @@ export default function EditPost() {
                   image2={editedPost?.image2}
                   image3={editedPost?.image3}
                   image4={editedPost?.image4}
-                />{' '}
+                />
                 <button
                   onClick={() => handleEditPost(postId)}
                   className="bg-gray-600 mb-2 w-full mt-4 sm:w-fit  duration-300 transition-colors ease-in-out hover:bg-one hover:scale-105 border rounded-md text-center select-none p-2"

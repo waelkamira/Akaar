@@ -67,7 +67,7 @@ export default function Profile() {
             يجب عليك تسجيل الدخول أولا لرؤية هذا البروفايل
           </h1>
           <div className="flex flex-col justify-between items-center gap-4 w-full">
-            <Button title={'تسجيل الدخول'} style={' '} path="/login" />
+            <Button title={'تسجيل الدخول'} style= path="/login" />
 
             <BackButton />
           </div>
@@ -99,7 +99,7 @@ export default function Profile() {
                   <h5 className="text-sm">تغيير الإسم: </h5>
                   <h1 className="text-nowrap text-start w-full select-none">
                     <span className="text-one  text-xl ml-2">
-                      {' '}
+                      
                       <MdEdit />
                     </span>
                     <span
@@ -150,7 +150,7 @@ export default function Profile() {
                     <span className="text-one text-md xl:text-xl lg:text-2xl ml-2 ">
                       #
                     </span>
-                    إعلاناتي{' '}
+                    إعلاناتي
                   </h1>
                 </Link>
                 <div className="flex items-center w-full">
@@ -163,7 +163,7 @@ export default function Profile() {
                     <span className="text-one text-md xl:text-xl lg:text-2xl ml-2 ">
                       #
                     </span>
-                    إعلانات أعجبتني{' '}
+                    إعلانات أعجبتني
                   </h1>
                 </Link>
                 <div className="flex items-center w-full">
@@ -174,7 +174,7 @@ export default function Profile() {
               <div className="w-full px-8 pb-8">
                 <Button
                   title={'تسجيل الخروج'}
-                  style={' '}
+                  style=
                   onClick={() => signOut()}
                 />
               </div>

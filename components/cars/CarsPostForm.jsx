@@ -408,14 +408,13 @@ export default function CarsPostForm({ setIsVisible, cancel = true }) {
                 <div className="relative flex flex-col my-2 sm:my-4 items-center justify-center w-full ">
                   {errors.title && (
                     <h1 className="absolute -top-8 right-0 z-50 text-white bg-one rounded-[5px] p-2 text-lg text-start w-full animate-bounce">
-                      عنوان الإعلان مطلوب{' '}
+                      عنوان الإعلان مطلوب
                     </h1>
                   )}
 
                   <div className="flex items-center gap-2 w-full justify-start my-2">
                     <h1 className="flex text-right text-md select-none text-nowrap ">
                       <span className="text-one text-lg xl:text-2xl ml-2">
-                        {' '}
                         <MdOutlineSubtitles />
                       </span>
                       عنوان مناسب للإعلان:
@@ -449,11 +448,11 @@ export default function CarsPostForm({ setIsVisible, cancel = true }) {
                     <div className="w-full">
                       {errors?.usedNew && (
                         <h1 className="absolute -top-8 right-0 z-50 text-white bg-one rounded-[5px] p-2 text-lg text-start w-full animate-bounce">
-                          حالة السيارة مطلوبة{' '}
+                          حالة السيارة مطلوبة
                         </h1>
                       )}
                       <CarsUsedNewSelector />
-                    </div>{' '}
+                    </div>
                   </div>
                 </div>
                 {/* الماركة والموديل */}
@@ -461,7 +460,7 @@ export default function CarsPostForm({ setIsVisible, cancel = true }) {
                   <div className="w-full">
                     {errors.brand && (
                       <h1 className="absolute -top-8 right-0 z-50 text-white bg-one rounded-[5px] p-2 text-lg text-start w-full animate-bounce">
-                        ماركة السيارة مطلوبة{' '}
+                        ماركة السيارة مطلوبة
                       </h1>
                     )}
 
@@ -469,7 +468,6 @@ export default function CarsPostForm({ setIsVisible, cancel = true }) {
                   </div>
                   {/* الموديل */}
                   <div className="w-full">
-                    {' '}
                     {errors.model && (
                       <h1 className="absolute -top-8 right-0 z-50 text-white bg-one rounded-[5px] p-2 text-lg text-start w-full animate-bounce">
                         موديل السيارة مطلوب
@@ -478,7 +476,6 @@ export default function CarsPostForm({ setIsVisible, cancel = true }) {
                     <div className="flex items-center gap-2 w-full justify-start my-2">
                       <h1 className="flex text-right text-md select-none text-nowrap ">
                         <span className="text-one text-lg xl:text-2xl ml-2">
-                          {' '}
                           <FaCarrot />
                         </span>
                         موديل السيارة:
@@ -504,12 +501,12 @@ export default function CarsPostForm({ setIsVisible, cancel = true }) {
                 <div className="relative flex flex-col my-2 sm:my-4 items-center justify-center w-full">
                   {errors.city && (
                     <h1 className="absolute -top-8 right-0 z-50 text-white bg-one rounded-[5px] p-2 text-lg text-start w-full animate-bounce">
-                      المدينة مطلوبة{' '}
+                      المدينة مطلوبة
                     </h1>
                   )}
                   {errors.town && (
                     <h1 className="absolute -top-8 right-0 z-50 text-white bg-one rounded-[5px] p-2 text-lg text-start w-full animate-bounce">
-                      المنطقة مطلوبة{' '}
+                      المنطقة مطلوبة
                     </h1>
                   )}
 
@@ -518,16 +515,14 @@ export default function CarsPostForm({ setIsVisible, cancel = true }) {
                 {/* السنة */}
                 <div className="relative flex flex-col my-2 sm:my-4 sm:flex-row gap-4 items-center justify-center w-full ">
                   <div className="w-full">
-                    {' '}
                     {errors.year && (
                       <h1 className="absolute -top-8 right-0 z-50 text-white bg-one rounded-[5px] p-2 text-lg text-start w-full animate-bounce">
-                        السنة مطلوبة{' '}
+                        السنة مطلوبة
                       </h1>
                     )}
                     <div className="flex items-center gap-2 w-full justify-start my-2">
                       <h1 className="flex text-right text-md select-none text-nowrap ">
                         <span className="text-one text-lg xl:text-2xl ml-2">
-                          {' '}
                           <IoCalendarNumber />
                         </span>
                         السنة:
@@ -549,7 +544,6 @@ export default function CarsPostForm({ setIsVisible, cancel = true }) {
                     <div className="flex items-center gap-2 w-full justify-start my-2">
                       <h1 className="flex text-right text-md select-none text-nowrap ">
                         <span className="text-one text-lg xl:text-2xl ml-2">
-                          {' '}
                           <GiPathDistance />
                         </span>
                         المسافة:
@@ -574,7 +568,7 @@ export default function CarsPostForm({ setIsVisible, cancel = true }) {
                   <div className="w-full">
                     {errors.phoneNumber && (
                       <h1 className="absolute -top-8 right-0 z-50 text-white bg-one rounded-[5px] p-2 text-lg text-start w-full animate-bounce">
-                        رقم الهاتف مطلوب{' '}
+                        رقم الهاتف مطلوب
                       </h1>
                     )}
                     <div className="flex items-center gap-2 w-full justify-start my-2">
@@ -602,10 +596,9 @@ export default function CarsPostForm({ setIsVisible, cancel = true }) {
                     />
                   </div>
                   <div className="w-full">
-                    {' '}
                     {errors.price && (
                       <h1 className="absolute -top-8 right-0 z-50 text-white bg-one rounded-[5px] p-2 text-lg text-start w-full animate-bounce">
-                        السعر مطلوب{' '}
+                        السعر مطلوب
                       </h1>
                     )}
                     <div className="flex items-center gap-2 w-full justify-start my-2">
@@ -640,11 +633,10 @@ export default function CarsPostForm({ setIsVisible, cancel = true }) {
           <div className="w-full">
             {errors.description && (
               <h1 className="absolute -top-8 right-0 z-50 text-white bg-one rounded-[5px] p-2 text-lg text-start w-full animate-bounce">
-                الوصف مطلوب{' '}
+                الوصف مطلوب
               </h1>
             )}
             <div className="flex items-center gap-2 w-full justify-start my-2">
-              {' '}
               <h1 className="flex text-right text-lg ">
                 <span className="text-one text-lg xl:text-2xl ml-2">
                   <MdOutlineFeaturedPlayList />
@@ -674,7 +666,6 @@ export default function CarsPostForm({ setIsVisible, cancel = true }) {
           />
           <div className="w-full">
             <div className="flex items-center gap-2 w-full justify-start my-2 ">
-              {' '}
               <h1 className="flex text-right text-sm sm:text-lg select-none ">
                 <span className="text-one text-lg xl:text-2xl ml-2">
                   <RxVideo />

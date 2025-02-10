@@ -13,6 +13,8 @@ import { MdOutlineSell } from 'react-icons/md';
 import LoadingPhoto from '../../components/LoadingPhoto';
 import { useRouter } from 'next/navigation';
 import { inputsContext } from '../../components/Context';
+import Button from '../../components/Button';
+import { MdKeyboardDoubleArrowDown } from 'react-icons/md';
 
 export default function CarsHomePage() {
   const [isOpen, setIsOpen] = useState(false);
@@ -39,9 +41,9 @@ export default function CarsHomePage() {
   return (
     <Suspense>
       <CarsNavbar />
-      <div className="relative flex flex-col justify-center items-center z-40 sm:my-0 w-full bg-five">
+      <div className="relative flex flex-col justify-center items-center z-40 w-full bg-five">
         <div className="w-full">
-          <div className="xl:hidden absolute flex flex-col items-start gap-2 z-50 top-2 right-0 sm:top-4 sm:right-4  lg:right-12 w-full">
+          <div className="xl:hidden absolute flex flex-col items-start gap-2 z-50 top-2 right-0 sm:top-4 sm:right-4 lg:right-12 w-fit">
             <TfiMenuAlt
               className="p-2 text-5xl text-one cursor-pointer"
               onClick={() => setIsOpen(!isOpen)}
@@ -49,8 +51,8 @@ export default function CarsHomePage() {
             {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
           </div>
 
+          {/* صورة الخلفية */}
           <div className="relative w-full h-[300px] lg:h-[900px] overflow-hidden">
-            {/* صورة الخلفية */}
             <Image
               src="https://i.imgur.com/ZAC6X1M.jpg"
               fill
@@ -60,10 +62,10 @@ export default function CarsHomePage() {
             />
 
             {/* التعتيم عبر طبقة فوق الصورة */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+            {/* <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div> */}
           </div>
 
-          <div className="w-full">
+          <div className="flex flex-col justify-center items-center w-full ">
             <div className="flex justify-center items-center gap-2 w-full text-nowrap py-8 ">
               <div className="flex flex-col justify-end items-end text-two ">
                 <h1
@@ -95,7 +97,6 @@ export default function CarsHomePage() {
                 </h1>
               </div>
             </div>
-
             <div className="flex flex-col sm:flex-row justify-center w-full gap-4 xl:gap-16 px-4 xl:px-8 py-8 ">
               <CarsCard
                 cardName={'بيع/تأجير سيارة'}
@@ -128,31 +129,48 @@ export default function CarsHomePage() {
                 emoji={<MdCarRental className="text-one" />}
               />
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 lg:px-16 justify-center items-center gap-4 w-full h-full p-8">
+            <h1 className="w-full text-center sm:text-lg my-4">
+              أحدث الإعلانات
+            </h1>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-center items-center gap-4 w-full 2xl:w-[80%] h-full p-4 mb-4">
               {cars?.length > 0 &&
                 cars.map((car) => (
                   <div
-                    className="flex flex-col justify-center items-center w-full border rounded-[5px] cursor-pointer bg-white"
-                    key={car?.adType}
+                    className="flex flex-col justify-center items-center w-full border cursor-pointer bg-white hover:scale-[103%] transition-transform duration-300 ease-in-out rounded-[15px] overflow-hidden"
+                    key={car?.id}
                     onClick={() => {
                       dispatch({ type: 'POST_ID', payload: car?.id });
                       router.push('/Cars/post');
                     }}
                   >
-                    <div className="relative w-full size-44 rounded-[5px] overflow-hidden">
+                    <div className="relative w-full h-44">
                       {!car?.image1 && <LoadingPhoto />}
                       {car?.image1 && (
                         <Image src={car?.image1} fill alt="car_photo" />
-                      )}{' '}
+                      )}
                     </div>
-                    <div className="flex justify-around gap-2 items-center w-full my-2">
-                      {' '}
+                    <div className="flex justify-evenly gap-2 items-center w-full my-2 text-sm sm:text-md">
                       <h1>{car?.brand}</h1>
-                      <h1>{car?.price}</h1>
+                      <h1 className="flex justify-center items-center">
+                        {car?.price}
+                        <span className="text-one mx-1 select-none">$</span>
+                      </h1>
+                      <h1 className="flex justify-center items-center">
+                        {car?.city}
+                      </h1>
                     </div>
                   </div>
                 ))}
             </div>
+            <h1
+              onClick={() => router.push('/Cars/buy')}
+              className="flex items-center justify-center w-full text-one hover:scale-105 cursor-pointer mb-16 sm:text-xl"
+            >
+              المزيد من السيارات{' '}
+              <span>
+                <MdKeyboardDoubleArrowDown />
+              </span>
+            </h1>{' '}
           </div>
         </div>
       </div>

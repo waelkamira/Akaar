@@ -26,7 +26,7 @@ export default function MiddleBarAndPhoto({ isOpen, setIsOpen, noButton }) {
           onClick={() => router.push('/RealEstate/newPost')}
           className="relative text-sm lg:text-xl bg-white h-8 lg:h-11 w-3/4 border-r-[30%] shadow-lg border-one rounded hover:scale-[101%]"
         >
-          إعلان جديد{' '}
+          إعلان جديد
           <span className="absolute left-3/4 top-1/4 mx-auto my-auto">
             <FiActivity className="text-one sm:text-sm lg:text-xl" />
           </span>

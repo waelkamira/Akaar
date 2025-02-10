@@ -127,7 +127,7 @@ export default function CarsItem({
                         <FaHouseDamage className="text-gray-500" />
                         اسم المعلن :
                       </span>
-                      {userName}{' '}
+                      {userName}
                     </h1>
 
                     <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300 rounded-[5px] text-sm sm:text-lg lg:text-xl w-full h-10 sm:h-16 lg:h-20 my-1 sm:my-2 select-none">
@@ -142,35 +142,35 @@ export default function CarsItem({
                         <MdOutlineBedroomParent className="text-gray-500" />
                         موديل السيارة :
                       </span>
-                      {model}{' '}
+                      {model}
                     </h1>
                     <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300 rounded-[5px] text-sm sm:text-lg lg:text-xl w-full h-10 sm:h-16 lg:h-20 my-1 sm:my-2 select-none">
                       <span className="flex gap-1 items-center text-one text-md sm:text-xl mx-2 select-none">
                         <MdOutlineBedroomParent className="text-gray-500" />
                         الحالة :
                       </span>
-                      {usedNew}{' '}
+                      {usedNew}
                     </h1>
                     <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300 rounded-[5px] text-sm sm:text-lg lg:text-xl w-full h-10 sm:h-16 lg:h-20 my-1 sm:my-2 select-none">
                       <span className="flex gap-1 items-center text-one text-md sm:text-xl mx-2 select-none">
                         <RxSpaceEvenlyHorizontally className="text-gray-500" />
                         نوع الإعلان :
                       </span>
-                      {adType}{' '}
+                      {adType}
                     </h1>
                     <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300 rounded-[5px] text-sm sm:text-lg lg:text-xl w-full h-10 sm:h-16 lg:h-20 my-1 sm:my-2 select-none">
                       <span className="flex gap-1 items-center text-one text-md sm:text-xl mx-2 select-none">
                         <FaHouseDamage className="text-gray-500" />
                         المسافة :
                       </span>
-                      {distance}{' '}
+                      {distance}
                     </h1>
                     <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300 rounded-[5px] text-sm sm:text-lg lg:text-xl w-full h-10 sm:h-16 lg:h-20 my-1 sm:my-2 select-none">
                       <span className="flex gap-1 items-center text-one text-md sm:text-xl mx-2 select-none">
                         <GiModernCity className="text-gray-500" />
                         المدينة :
                       </span>
-                      {city}{' '}
+                      {city}
                     </h1>
                     <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300 rounded-[5px] text-sm sm:text-lg lg:text-xl w-full h-10 sm:h-16 lg:h-20 my-1 sm:my-2 select-none">
                       <span className="flex gap-1 items-center text-one text-md sm:text-xl mx-2 select-none">
@@ -192,10 +192,10 @@ export default function CarsItem({
                         <MdOutlinePriceCheck className="text-gray-500" />
                         السعر :
                       </span>
-                      {price}{' '}
+                      {price}
                       <span className="flex gap-1 items-center text-one text-md sm:text-xl mx-2 select-none">
                         $
-                      </span>{' '}
+                      </span>
                     </h1>
                   </div>
 
@@ -226,7 +226,7 @@ export default function CarsItem({
                     </div>
                     <div className="border border-one">
                       <SyriaMap lng={lng} lat={lat} />
-                    </div>{' '}
+                    </div>
                   </div>
                 )}
                 {(link || iframeSrc) && (

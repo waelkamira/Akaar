@@ -15,7 +15,7 @@ export default function NewPostButton() {
     <div className="w-full  z-50 ">
       <Button
         title={'إنشاء إعلان جديد'}
-        style={' '}
+        style=
         onClick={() => setIsVisible(true)}
       />
 
@@ -54,8 +54,8 @@ export default function NewPostButton() {
                 <div className="p-4   m-2 md:m-8 border border-one text-center">
                   <h1 className="text-lg md:text-2xl p-2  ">
                     يجب عليك تسجيل الدخول أولا لكي تتمكن من إنشاء إعلان جديد
-                  </h1>{' '}
-                  <Button title={'تسجيل الدخول'} path={'/login'} style={' '} />
+                  </h1>
+                  <Button title={'تسجيل الدخول'} path={'/login'} style= />
                 </div>
               )}
               {session?.status === 'authenticated' && (

@@ -412,7 +412,6 @@ export default function PostForm({ setIsVisible, cancel = true }) {
                   <div className="flex items-center gap-2 w-full justify-start my-2">
                     <h1 className="flex text-right text-md select-none text-nowrap ">
                       <span className="text-one text-lg xl:text-2xl ml-2">
-                        {' '}
                         <RxSpaceEvenlyHorizontally />
                       </span>
                       مساحة العقار:
@@ -447,14 +446,13 @@ export default function PostForm({ setIsVisible, cancel = true }) {
                 <div className="flex flex-col items-center justify-center my-4 w-full ">
                   {errors.propertyName && (
                     <h1 className="text-one text-2xl text-start w-full animate-bounce">
-                      هذا الحقل مطلوب{' '}
+                      هذا الحقل مطلوب
                     </h1>
                   )}
 
                   <div className="flex items-center gap-2 w-full justify-start my-2">
                     <h1 className="flex text-right text-md select-none text-nowrap ">
                       <span className="text-one text-lg xl:text-2xl ml-2">
-                        {' '}
                         <FaHouseDamage />
                       </span>
                       اسم مناسب للإعلان:
@@ -487,7 +485,7 @@ export default function PostForm({ setIsVisible, cancel = true }) {
                 <div className="flex flex-col items-center justify-center my-4 w-full ">
                   {errors.phoneNumber && (
                     <h1 className="text-one text-2xl text-start w-full animate-bounce">
-                      رقم الهاتف مطلوب{' '}
+                      رقم الهاتف مطلوب
                     </h1>
                   )}
                   <div className="flex items-center gap-2 w-full justify-start my-2">
@@ -557,7 +555,6 @@ export default function PostForm({ setIsVisible, cancel = true }) {
               </h1>
             )}
             <div className="flex items-center gap-2 w-full justify-start my-2">
-              {' '}
               <h1 className="flex text-right text-lg ">
                 <span className="text-one text-lg xl:text-2xl ml-2">
                   <MdOutlineFeaturedPlayList />
@@ -587,7 +584,6 @@ export default function PostForm({ setIsVisible, cancel = true }) {
           />
           <div className="w-full">
             <div className="flex items-center gap-2 w-full justify-start my-2 ">
-              {' '}
               <h1 className="flex text-right text-sm sm:text-lg select-none ">
                 <span className="text-one text-lg xl:text-2xl ml-2">
                   <RxVideo />

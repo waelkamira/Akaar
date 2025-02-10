@@ -110,12 +110,11 @@ export default function CarsSearchBar({ category, imgLink }) {
         />
 
         <div className="flex justify-center items-center w-full bg-gray-700/50 xl:bg-one rounded p-2 my-2">
-          {' '}
           <button
             onClick={() => setIsShow(!isShow)}
             className="relative text-sm lg:text-xl text-one bg-white h-8 lg:h-11 w-3/4 border-r-[30%] shadow-lg border-one rounded hover:scale-[101%] transition-transform duration-200 ease-in-out"
           >
-            فلاتر البحث{' '}
+            فلاتر البحث
             <span className="absolute left-3/4 top-1/4 mx-auto my-auto">
               {isShow ? (
                 <LuArrowDownNarrowWide className="text-one sm:text-sm lg:text-xl" />
@@ -148,7 +147,6 @@ export default function CarsSearchBar({ category, imgLink }) {
                       </>
                     ) : (
                       <>
-                        {' '}
                         <div className="w-full">
                           <PropertyTypeSelector />
                         </div>
@@ -237,11 +235,10 @@ export default function CarsSearchBar({ category, imgLink }) {
                 array={allPosts}
                 setPageNumber={setPageNumber}
                 pageNumber={pageNumber}
-              />{' '}
+              />
             </div>
           ) : (
             <div>
-              {' '}
               <div className="flex flex-col justify-center items-center w-full h-full">
                 <h1 className="">لا توجد بيانات لعرضها</h1>
               </div>

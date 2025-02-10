@@ -141,7 +141,7 @@ export default function Item({
                         <FaHouseDamage className="text-gray-500" />
                         اسم المعلن :
                       </span>
-                      {userName}{' '}
+                      {userName}
                     </h1>
 
                     <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300  text-md sm:text-xl w-full min-h-20 my-2 select-none">
@@ -149,7 +149,7 @@ export default function Item({
                         <GiModernCity className="text-gray-500" />
                         المدينة :
                       </span>
-                      {propertyCity}{' '}
+                      {propertyCity}
                     </h1>
                     <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300  text-md sm:text-xl w-full min-h-20 my-2 select-none">
                       <span className="flex gap-1 items-center text-one text-md sm:text-xl mx-2 select-none">
@@ -163,7 +163,7 @@ export default function Item({
                         <RxSpaceEvenlyHorizontally className="text-gray-500" />
                         نوع العقار :
                       </span>
-                      {propertyType}{' '}
+                      {propertyType}
                     </h1>
                     {(propertyType === 'بيت' ||
                       propertyType === 'شقة' ||
@@ -173,7 +173,7 @@ export default function Item({
                           <MdOutlineBedroomParent className="text-gray-500" />
                           عدد الغرف :
                         </span>
-                        {propertyRoomsNumber}{' '}
+                        {propertyRoomsNumber}
                       </h1>
                     )}
                     <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300  text-md sm:text-xl w-full min-h-20 my-2 select-none">
@@ -188,10 +188,10 @@ export default function Item({
                         <MdOutlinePriceCheck className="text-gray-500" />
                         السعر :
                       </span>
-                      {propertyPrice}{' '}
+                      {propertyPrice}
                       <span className="flex gap-1 items-center text-one text-md sm:text-xl mx-2 select-none">
                         $
-                      </span>{' '}
+                      </span>
                     </h1>
 
                     <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300  text-md sm:text-xl w-full min-h-20 my-2 select-none">
@@ -235,7 +235,7 @@ export default function Item({
                     </div>
                     <div className="border border-one">
                       <SyriaMap lng={lng} lat={lat} />
-                    </div>{' '}
+                    </div>
                   </div>
                 )}
                 {(link || iframeSrc) && (

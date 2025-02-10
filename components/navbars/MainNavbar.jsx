@@ -23,7 +23,6 @@ export default function MainNavbar() {
 
   return (
     <>
-      {' '}
       <div
         className={`hidden xl:flex xl:flex-col xl:justify-between w-full overflow-hidden bg-two text-white border-three px-4`}
       >
@@ -72,7 +71,7 @@ export default function MainNavbar() {
           >
             <TbTargetArrow className="text-xl select-none text-one" />
             <li className=" text-md xl:text-xl select-none text-nowrap">
-              المفضلة{' '}
+              المفضلة
             </li>
           </div> */}
             <div

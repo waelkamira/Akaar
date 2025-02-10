@@ -151,7 +151,7 @@ export default function Page() {
             array={userFavorites}
             setPageNumber={setPageNumber}
             pageNumber={pageNumber}
-          />{' '}
+          />
         </div>
       </div>
     </div>
