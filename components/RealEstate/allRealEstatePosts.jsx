@@ -53,7 +53,7 @@ export default function AllPosts({}) {
 
   return (
     <div className="flex flex-col items-center w-full">
-      <div className="flex flex-col w-full xl:w-[90%] 2xl:w-[70%] h-[1370px] px-2 sm:px-16 pt-4 sm:py-8  bg-seven overflow-y-auto z-10 ">
+      <div className="flex flex-col w-full xl:w-[90%] 2xl:w-[70%] h-[1370px] px-2 sm:px-16 pt-4 sm:py-8  bg-three overflow-y-auto z-10 ">
         <div className="flex flex-col justify-start w-full h-[1500px] overflow-y-auto z-10 my-4">
           {allPosts?.length === 0 ? (
             <Loading />

@@ -4,6 +4,7 @@ import Select from 'react-select';
 import { inputsContext } from '../Context.jsx';
 import { usePathname } from 'next/navigation.js';
 import { MdOutlineBedroomParent } from 'react-icons/md';
+import { HiMiniNewspaper } from 'react-icons/hi2';
 
 export default function CarsUsedNewSelector() {
   const { dispatch } = useContext(inputsContext);
@@ -11,16 +12,16 @@ export default function CarsUsedNewSelector() {
   const path = usePathname();
 
   const options = [
-    { value: 'جديد', label: 'جديد' },
+    { value: 'جديدة', label: 'جديدة' },
     // { value: 'شراء', label: 'شراء' },
-    { value: 'مستعمل', label: 'مستعمل' },
+    { value: 'مستعملة', label: 'مستعملة' },
   ];
 
   // كائن يحتوي على القيم وأسماء النماذج المرتبطة بها
   const modelMapping = {
-    جديد: 'جديد',
+    جديدة: 'جديدة',
     // شراء: 'شراء',
-    مستعمل: 'مستعمل',
+    مستعملة: 'مستعملة',
   };
 
   useEffect(() => {
@@ -57,15 +58,15 @@ export default function CarsUsedNewSelector() {
             }`}
           >
             <span className="text-one text-lg xl:text-2xl ml-2">
-              <MdOutlineBedroomParent />
+              <HiMiniNewspaper />
             </span>
-            جديد/مستعمل:
+            الحالة جديدة/مستعملة:
           </h1>
         </div>
         <Select
           defaultValue={category}
           onChange={setCategory}
-          placeholder="جديد"
+          placeholder="جديدة"
           isClearable
           isSearchable
           options={options}

@@ -52,7 +52,7 @@ export default function CarsBrandSelector() {
         <Select
           defaultValue={brand}
           onChange={setbrand}
-          placeholder="ابحث عن اسم الماركة تويوتا ..."
+          placeholder="تويوتا"
           isClearable
           isSearchable
           options={options}

@@ -191,7 +191,7 @@ export default function SmallItem({ post, index, show = true, id = false }) {
             <hr className="w-full h-[1.5px] bg-gray-400  border-hidden select-none" />
           </>
         )} */}
-        <div className="text-nine p-2 w-full">
+        <div className="text-four p-2 w-full">
           <pre className="text-sm sm:text-lg text-start w-full line-clamp-1 select-none">
             {post?.description}
           </pre>
@@ -200,7 +200,11 @@ export default function SmallItem({ post, index, show = true, id = false }) {
           onClick={() => {
             if (session?.status === 'authenticated') {
               dispatch({ type: 'POST_ID', payload: post?.postId || post?.id });
-              router.push(`/post`);
+              if (post.adType) {
+                router.push(`/Cars/post`);
+              } else {
+                router.push(`/RealEstate/post`);
+              }
             } else {
               toast.custom((t) => (
                 <CustomToast
@@ -215,7 +219,7 @@ export default function SmallItem({ post, index, show = true, id = false }) {
               path.includes('myPosts') || path.includes('favoritePosts')
                 ? 'text-md'
                 : 'sm:text-2xl'
-            } btn p-2 my-2 bg-seven  hover:scale-[101%] hover: font-medium text-center select-none w-full transition-all duration-300 rounded`}
+            } btn p-2 my-2 bg-three text-white hover:scale-[101%] hover: font-medium text-center select-none w-full transition-all duration-300 rounded`}
         >
           عرض الإعلان
         </button>

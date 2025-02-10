@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-  @apply bg-white text-four rubik;
+  @apply bg-white text-two rubik;
 }
 body {
   font-family: 'Rubik', sans-serif;
@@ -21,7 +21,7 @@ html {
   width: 5px;
 }
 ::-webkit-scrollbar-track {
-  background-color: '#C99944';
+  background-color: '#FF7C34';
 }
 
 ::-webkit-scrollbar-thumb {
@@ -41,8 +41,8 @@ pre {
 }
 
 :root {
-  --btn-background: #333333; /* لون افتراضي */
-  --btn-hover-background: #ffa500; /* لون افتراضي عند hover */
+  --btn-background: #7e7f81; /* لون افتراضي */
+  --btn-hover-background: #ff7c34; /* لون افتراضي عند hover */
 }
 
 .btn {
@@ -173,13 +173,13 @@ body {
     border-color: transparent;
   }
   50% {
-    border-color: #ffa500;
+    border-color: #ff7c34;
   }
 }
 
 .akar {
   overflow: hidden; /* إخفاء النص الزائد */
-  border-left: 0.05em solid #ffa500; /* محاكاة مؤشر الكتابة على اليسار */
+  border-left: 0.05em solid #ff7c34; /* محاكاة مؤشر الكتابة على اليسار */
   white-space: nowrap; /* منع التفاف النص */
   direction: rtl; /* ضبط اتجاه النص من اليمين إلى اليسار */
   text-align: right;

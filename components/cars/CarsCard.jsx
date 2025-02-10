@@ -2,6 +2,7 @@
 import Image from 'next/image';
 import React from 'react';
 import { useRouter } from 'next/navigation';
+import LoadingPhoto from '../LoadingPhoto';
 
 export default function Card({ cardName, path, image, text, color, emoji }) {
   const router = useRouter();
@@ -11,25 +12,25 @@ export default function Card({ cardName, path, image, text, color, emoji }) {
     color === 'red'
       ? 'border-[#F83354]'
       : color === 'orange'
-      ? 'border-[#ffa500]'
+      ? 'border-[#FF7C34]'
       : color === 'gray'
-      ? 'border-seven'
+      ? 'border-three'
       : 'border-[#666666]';
 
   const bgColor =
     color === 'red'
       ? 'bg-[#F83354]'
       : color === 'orange'
-      ? 'bg-[#ffa500]'
+      ? 'bg-[#FF7C34]'
       : color === 'gray'
-      ? 'bg-seven'
+      ? 'bg-three'
       : 'bg-[#666666]';
 
   const btnBackground =
     color === 'red'
       ? '#F83354'
       : color === 'orange'
-      ? '#ffa500'
+      ? '#FF7C34'
       : color === 'gray'
       ? '#5F5D59'
       : '#666666';
@@ -38,32 +39,25 @@ export default function Card({ cardName, path, image, text, color, emoji }) {
     color === 'red'
       ? '#fa6880'
       : color === 'orange'
-      ? '#fdb734'
+      ? '#ff6715'
       : color === 'gray'
       ? '#666666'
       : '#666666';
 
   return (
     <div
-      className={`w-full sm:w-96 bg-nine  rounded-t-3xl   overflow-hidden hover:scale-[102%] transition-transform duration-300 ease-in-out cursor-pointer`}
+      className={`w-full sm:w-96 rounded-t-3xl overflow-hidden hover:scale-[102%] transition-transform duration-300 ease-in-out cursor-pointer`}
     >
       <div
         onClick={() => router.push(path)}
-        className={`relative w-full h-[200px] lg:h-[300px] border-l-[10px] overflow-visible ${borderColor} overflow-visible`}
+        className={`relative w-full h-[200px] lg:h-[300px] overflow-visible`}
       >
-        <Image src={image} fill objectFit="cover" alt={cardName} />
+        {!image && <LoadingPhoto />}
+        {image && <Image src={image} fill objectFit="cover" alt={cardName} />}
       </div>
 
       <div
-        className={` w-full border overflow-hidden rounded-b-3xl ${
-          color === 'red'
-            ? 'border-[#F83354]'
-            : color === 'orange'
-            ? 'border-[#ffa500]'
-            : color === 'gray'
-            ? 'border-seven'
-            : 'border-[#666666]'
-        }`}
+        className={` w-full border border-four overflow-hidden rounded-b-3xl`}
       >
         {' '}
         <h1 className="relative text-lg lg:text-2xl my-2 lg:my-4 font-medium text-center w-full">
@@ -72,9 +66,7 @@ export default function Card({ cardName, path, image, text, color, emoji }) {
             {emoji}
           </span>
         </h1>
-        <p className="p-2 px-4 text-sm lg:text-lg select-none text-seven">
-          {text}
-        </p>
+        <p className="p-2 px-4 text-sm lg:text-lg select-none">{text}</p>
         <div className="px-4 mt-2">
           <button
             onClick={() => router.push(path)}

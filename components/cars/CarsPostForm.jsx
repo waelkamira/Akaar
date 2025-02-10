@@ -6,13 +6,16 @@ import toast from 'react-hot-toast';
 import { inputsContext } from '../Context';
 import { useSession } from 'next-auth/react';
 import { v4 as uuidv4 } from 'uuid';
-import { FaHouseDamage } from 'react-icons/fa';
+import { FaCarrot, FaHouseDamage } from 'react-icons/fa';
 import { RxSpaceEvenlyHorizontally } from 'react-icons/rx';
 import { MdOutlinePriceCheck } from 'react-icons/md';
-import { GiRotaryPhone } from 'react-icons/gi';
+import { GiPathDistance, GiRotaryPhone } from 'react-icons/gi';
 import { MdOutlineFeaturedPlayList } from 'react-icons/md';
 import { RxVideo } from 'react-icons/rx';
 import { useRouter } from 'next/navigation';
+import { MdOutlineSubtitles } from 'react-icons/md';
+import { HiMiniNewspaper } from 'react-icons/hi2';
+import { IoCalendarNumber } from 'react-icons/io5';
 
 const CarsBrandSelector = dynamic(() => import('./CarsBrandSelector'));
 const CurrentUser = dynamic(() => import('../CurrentUser'));
@@ -32,9 +35,9 @@ export default function CarsPostForm({ setIsVisible, cancel = true }) {
   const [embedLink, setEmbedLink] = useState('');
   const session = useSession();
   const router = useRouter();
-  const userName = CurrentUser()?.name || session?.data?.user?.name;
-  const userImage = CurrentUser()?.image || session?.data?.user?.image;
-  const createdBy = CurrentUser()?.email || session?.data?.user?.email;
+  const userName = session?.data?.user?.name;
+  const userImage = session?.data?.user?.image;
+  const createdBy = session?.data?.user?.email;
   const {
     data,
     dispatch,
@@ -42,7 +45,7 @@ export default function CarsPostForm({ setIsVisible, cancel = true }) {
     location,
     category,
     cityLocation,
-    propertyTownLocation,
+    townLocation,
     usedNew,
     brand,
   } = useContext(inputsContext);
@@ -53,32 +56,32 @@ export default function CarsPostForm({ setIsVisible, cancel = true }) {
     adType: false,
     adTypeErrorMessage: 'هذا الحقل مطلوب',
 
-    propertyName: false,
-    propertyNameErrorMessage: 'هذا الحقل مطلوب',
+    title: false,
+    titleErrorMessage: 'هذا الحقل مطلوب',
 
-    propertyArea: false,
-    propertyAreaErrorMessage: 'حقل الموديل مطلوب',
+    year: false,
+    yearErrorMessage: 'هذا الحقل مطلوب',
 
     usedNew: false,
-    usedNewErrorMessage: 'اختيار نوع الإعلان مطلوب',
+    usedNewErrorMessage: 'هذا الحقل مطلوب',
 
     brand: false,
-    brandErrorMessage: 'الماركة مطلوبة',
+    brandErrorMessage: 'هذا الحقل مطلوب',
 
     price: false,
-    priceErrorMessage: 'حقل السعر مطلوب',
+    priceErrorMessage: 'هذا الحقل مطلوب',
 
     city: false,
-    cityErrorMessage: 'حقل المدينة مطلوب',
+    cityErrorMessage: 'هذا الحقل مطلوب',
 
-    propertyTown: false,
-    propertyTownErrorMessage: 'حقل البلدة مطلوب',
+    town: false,
+    townErrorMessage: 'هذا الحقل مطلوب',
 
     description: false,
-    descriptionErrorMessage: 'حقل الوصف مطلوب',
+    descriptionErrorMessage: 'هذا الحقل مطلوب',
 
-    contactPhoneNumber: false,
-    contactPhoneNumberErrorMessage: 'حقل السعر مطلوب',
+    phoneNumber: false,
+    contactPhoneNumberErrorMessage: 'هذا الحقل مطلوب',
   });
 
   const [inputs, setInputs] = useState({
@@ -89,14 +92,16 @@ export default function CarsPostForm({ setIsVisible, cancel = true }) {
     image3: '',
     image4: '',
     adType: '',
-    propertyName: '',
+    title: '',
     usedNew: '',
     brand: '',
+    model: '',
     price: '',
-    propertyArea: '',
+    year: '',
+    distance: '',
     city: '',
-    propertyTown: '',
-    contactPhoneNumber: '',
+    town: '',
+    phoneNumber: '',
     description: '',
     lat: '',
     lng: '',
@@ -114,14 +119,15 @@ export default function CarsPostForm({ setIsVisible, cancel = true }) {
       ...inputs,
       usedNew: usedNew?.label || '',
       brand: brand?.label || '',
-      city: data?.city || '',
-      propertyTown: data?.propertyTown || '',
+      city: data?.propertyCity || '',
+      town: data?.propertyTown || '',
       adType: category?.label || '',
       image: addImages?.[0] || '',
       image1: addImages?.[1] || '',
       image2: addImages?.[2] || '',
       image3: addImages?.[3] || '',
       image4: addImages?.[4] || '',
+
       lat: location[0] || 33.5138,
       lng: location[1] || 36.2765,
     });
@@ -130,7 +136,7 @@ export default function CarsPostForm({ setIsVisible, cancel = true }) {
     url,
     usedNew,
     brand,
-    data?.city,
+    data?.propertyCity,
     data?.propertyTown,
     addImages[0],
     addImages[1],
@@ -147,20 +153,22 @@ export default function CarsPostForm({ setIsVisible, cancel = true }) {
     if (
       addImages?.length > 0 &&
       inputs?.adType &&
-      inputs?.propertyName &&
+      inputs?.title &&
       inputs?.usedNew &&
       inputs?.price &&
-      inputs?.propertyArea &&
+      inputs?.year &&
+      inputs?.brand &&
+      inputs?.model &&
       inputs?.city &&
-      inputs?.propertyTown &&
-      inputs?.contactPhoneNumber &&
+      inputs?.town &&
+      inputs?.phoneNumber &&
       inputs?.description &&
       userImage &&
       userName &&
       createdBy
     ) {
       try {
-        const response = await fetch('/api/allPosts', {
+        const response = await fetch('/api/Cars/allPosts', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -172,7 +180,7 @@ export default function CarsPostForm({ setIsVisible, cancel = true }) {
         });
 
         if (response.ok) {
-          dispatch({ type: 'New_RECIPE', payload: inputs });
+          dispatch({ type: 'New_POST', payload: inputs });
           dispatch({ type: 'ADD_IMAGE', payload: [] });
           dispatch({ type: 'PROPERTY_TYPE', payload: '' });
           dispatch({ type: 'PROPERTY_ROOMS_NUMBER', payload: '' });
@@ -186,15 +194,17 @@ export default function CarsPostForm({ setIsVisible, cancel = true }) {
             image2: '',
             image3: '',
             image4: '',
-            propertyName: '',
+            title: '',
             adType: '',
             usedNew: '',
             brand: '',
+            model: '',
             price: 0,
             city: '',
-            propertyTown: '',
-            propertyArea: '',
-            contactPhoneNumber: '',
+            town: '',
+            year: '',
+            distance: '',
+            phoneNumber: '',
             lat: '',
             lng: '',
             link: '',
@@ -210,18 +220,20 @@ export default function CarsPostForm({ setIsVisible, cancel = true }) {
             />
           ));
           setErrors({
-            propertyName: false,
+            title: false,
             adType: false,
             usedNew: false,
             brand: false,
+            model: false,
             price: false,
-            propertyArea: false,
+            year: false,
+            distance: false,
             city: false,
-            propertyTown: false,
-            contactPhoneNumber: false,
+            town: false,
+            phoneNumber: false,
             description: false,
           });
-          router.push('/');
+          router.push('/myPosts');
           handleClick();
         } else {
           console.log('something went wrong!');
@@ -233,14 +245,16 @@ export default function CarsPostForm({ setIsVisible, cancel = true }) {
       // تعيين جميع الأخطاء إلى false
       setErrors({
         adType: false,
-        propertyName: false,
+        title: false,
         usedNew: false,
         brand: false,
+        model: false,
         price: false,
-        propertyArea: false,
+        year: false,
+        distance: false,
         city: false,
-        propertyTown: false,
-        contactPhoneNumber: false,
+        town: false,
+        phoneNumber: false,
         description: false,
         image: false,
       });
@@ -260,17 +274,17 @@ export default function CarsPostForm({ setIsVisible, cancel = true }) {
       } else if (!inputs.adType) {
         setErrors((prevErrors) => ({ ...prevErrors, adType: true }));
         toast.custom((t) => (
-          <CustomToast t={t} message={'تصنيف الإعلان مطلوب 😐'} />
+          <CustomToast t={t} message={'نوع الإعلان مطلوب 😐'} />
         ));
-      } else if (!inputs.propertyName) {
-        setErrors((prevErrors) => ({ ...prevErrors, propertyName: true }));
+      } else if (!inputs.title) {
+        setErrors((prevErrors) => ({ ...prevErrors, title: true }));
         toast.custom((t) => (
-          <CustomToast t={t} message={'عنوان الإعلان مطلوب 😐'} />
+          <CustomToast t={t} message={'اسم الإعلان مطلوب 😐'} />
         ));
       } else if (!inputs.usedNew) {
         setErrors((prevErrors) => ({ ...prevErrors, usedNew: true }));
         toast.custom((t) => (
-          <CustomToast t={t} message={'اختيار نوع السيارة مطلوب 😐'} />
+          <CustomToast t={t} message={'اختيار حالة السيارة مطلوبة 😐'} />
         ));
       } else if (!inputs.brand) {
         setErrors((prevErrors) => ({
@@ -278,32 +292,37 @@ export default function CarsPostForm({ setIsVisible, cancel = true }) {
           brand: true,
         }));
         toast.custom((t) => (
-          <CustomToast t={t} message={'اختيار عدد الغرف مطلوب 😐'} />
+          <CustomToast t={t} message={'ماركة السيارة مطلوبة 😐'} />
+        ));
+      } else if (!inputs.model) {
+        setErrors((prevErrors) => ({ ...prevErrors, model: true }));
+        toast.custom((t) => (
+          <CustomToast t={t} message={'موديل السيارة مطلوب 😐'} />
         ));
       } else if (!inputs.price) {
         setErrors((prevErrors) => ({ ...prevErrors, price: true }));
         toast.custom((t) => (
           <CustomToast t={t} message={'سعر السيارة مطلوب 😐'} />
         ));
-      } else if (!inputs.propertyArea) {
-        setErrors((prevErrors) => ({ ...prevErrors, propertyArea: true }));
+      } else if (!inputs.year) {
+        setErrors((prevErrors) => ({ ...prevErrors, year: true }));
         toast.custom((t) => (
-          <CustomToast t={t} message={'حقل موديل السيارة مطلوب 😐'} />
+          <CustomToast t={t} message={'حقل السنة مطلوب 😐'} />
         ));
       } else if (!inputs.city) {
         setErrors((prevErrors) => ({ ...prevErrors, city: true }));
         toast.custom((t) => (
           <CustomToast t={t} message={'حقل المدينة مطلوب 😐'} />
         ));
-      } else if (!inputs.propertyTown) {
-        setErrors((prevErrors) => ({ ...prevErrors, propertyTown: true }));
+      } else if (!inputs.town) {
+        setErrors((prevErrors) => ({ ...prevErrors, town: true }));
         toast.custom((t) => (
-          <CustomToast t={t} message={'حقل البلدة مطلوب 😐'} />
+          <CustomToast t={t} message={'حقل المنطقة مطلوب 😐'} />
         ));
-      } else if (!inputs.contactPhoneNumber) {
+      } else if (!inputs.phoneNumber) {
         setErrors((prevErrors) => ({
           ...prevErrors,
-          contactPhoneNumber: true,
+          phoneNumber: true,
         }));
         toast.custom((t) => (
           <CustomToast t={t} message={'حقل رقم الهاتف مطلوب 😐'} />
@@ -384,110 +403,29 @@ export default function CarsPostForm({ setIsVisible, cancel = true }) {
         >
           <div className="w-full">
             <div className="flex flex-col gap-2 xl:gap-8 md:flex-row w-full ">
-              <div className="w-full">
-                <div className="flex flex-col items-center justify-center my-4 w-full">
-                  {errors.adType && (
-                    <h1 className="text-one text-2xl text-start w-full animate-bounce">
-                      التصنيف مطلوبة
+              <div className="w-full border p-2 rounded-[5px]">
+                {/* عنوان الإعلان */}
+                <div className="relative flex flex-col my-2 sm:my-4 items-center justify-center w-full ">
+                  {errors.title && (
+                    <h1 className="absolute -top-8 right-0 z-50 text-white bg-one rounded-[5px] p-2 text-lg text-start w-full animate-bounce">
+                      عنوان الإعلان مطلوب{' '}
                     </h1>
                   )}
 
-                  <div className="flex flex-col sm:flex-row justify-center items-center gap-4 w-full">
-                    <CategoryComponent />
-                    <CarsUsedNewSelector />
-                  </div>
-                </div>
-                <div className="flex flex-col items-center justify-center my-4 w-full ">
-                  {errors.brand && (
-                    <h1 className="text-one text-2xl text-start w-full animate-bounce">
-                      اختيار ماركة السيارة مطلوب
-                    </h1>
-                  )}
-
-                  <CarsBrandSelector />
-                </div>
-                <div className="flex flex-col items-center justify-center my-4 w-full ">
-                  {errors.propertyArea && (
-                    <h1 className="text-one text-2xl text-start w-full animate-bounce">
-                      موديل السيارة مطلوب
-                    </h1>
-                  )}
                   <div className="flex items-center gap-2 w-full justify-start my-2">
                     <h1 className="flex text-right text-md select-none text-nowrap ">
                       <span className="text-one text-lg xl:text-2xl ml-2">
                         {' '}
-                        <RxSpaceEvenlyHorizontally />
+                        <MdOutlineSubtitles />
                       </span>
-                      السنة:
+                      عنوان مناسب للإعلان:
                     </h1>
                   </div>
-
                   <input
-                    value={inputs?.propertyArea}
-                    onChange={(e) =>
-                      setInputs({ ...inputs, propertyArea: e.target.value })
-                    }
-                    type="number"
-                    id="السنة"
-                    name="السنة"
-                    placeholder="2021"
-                    className="w-full text-sm sm:text-lg rounded text-start  h-9 sm:h-12 text-nowrap px-2 border border-slate-300 focus:outline-one"
-                  />
-                </div>
-
-                <div className="flex flex-col items-center justify-center my-4 w-full ">
-                  {errors.brand && (
-                    <h1 className="text-one text-2xl text-start w-full animate-bounce">
-                      موديل السيارة{' '}
-                    </h1>
-                  )}
-                  <div className="flex items-center gap-2 w-full justify-start my-2">
-                    <h1 className="flex text-right text-md select-none text-nowrap ">
-                      <span className="text-one text-lg xl:text-2xl ml-2">
-                        {' '}
-                        <FaHouseDamage />
-                      </span>
-                      موديل السيارة:
-                    </h1>
-                  </div>
-                  {/* <RoomsNumberSelector /> */}
-                  <input
-                    value={inputs?.propertyName}
                     autoFocus
+                    value={inputs?.title}
                     onChange={(e) =>
-                      setInputs({ ...inputs, propertyName: e.target.value })
-                    }
-                    type="text"
-                    id="موديل السيارة"
-                    name="موديل السيارة"
-                    placeholder="land cruiser"
-                    className="w-full text-sm sm:text-lg rounded text-start  h-9 sm:h-12 text-nowrap px-2 border border-slate-300 focus:outline-one"
-                  />
-                </div>
-              </div>
-
-              <div className="w-full">
-                <div className="flex flex-col items-center justify-center my-4 w-full ">
-                  {errors.propertyName && (
-                    <h1 className="text-one text-2xl text-start w-full animate-bounce">
-                      هذا الحقل مطلوب{' '}
-                    </h1>
-                  )}
-
-                  <div className="flex items-center gap-2 w-full justify-start my-2">
-                    <h1 className="flex text-right text-md select-none text-nowrap ">
-                      <span className="text-one text-lg xl:text-2xl ml-2">
-                        {' '}
-                        <FaHouseDamage />
-                      </span>
-                      اسم مناسب للإعلان:
-                    </h1>
-                  </div>
-                  <input
-                    value={inputs?.propertyName}
-                    autoFocus
-                    onChange={(e) =>
-                      setInputs({ ...inputs, propertyName: e.target.value })
+                      setInputs({ ...inputs, title: e.target.value })
                     }
                     type="text"
                     id="اسم السيارة"
@@ -496,87 +434,213 @@ export default function CarsPostForm({ setIsVisible, cancel = true }) {
                     className="w-full text-sm sm:text-lg rounded text-start  h-9 sm:h-12 text-nowrap px-2 border border-slate-300 focus:outline-one"
                   />
                 </div>
+                {/* نوع الإعلان */}
+                <div className="relative flex flex-col my-2 sm:my-4 items-center justify-center w-full">
+                  <div className="flex flex-col sm:flex-row justify-center items-center gap-4 w-full">
+                    <div className="w-full">
+                      {errors?.adType && (
+                        <h1 className="absolute -top-8 right-0 z-50 text-white bg-one rounded-[5px] p-2 text-lg text-start w-full animate-bounce">
+                          نوع الإعلان مطلوب
+                        </h1>
+                      )}
 
-                <div className="flex flex-col items-center justify-center my-4 w-full">
+                      <CategoryComponent />
+                    </div>
+                    <div className="w-full">
+                      {errors?.usedNew && (
+                        <h1 className="absolute -top-8 right-0 z-50 text-white bg-one rounded-[5px] p-2 text-lg text-start w-full animate-bounce">
+                          حالة السيارة مطلوبة{' '}
+                        </h1>
+                      )}
+                      <CarsUsedNewSelector />
+                    </div>{' '}
+                  </div>
+                </div>
+                {/* الماركة والموديل */}
+                <div className="relative flex flex-col my-2 sm:my-4 sm:flex-row gap-4 items-center justify-center w-full ">
+                  <div className="w-full">
+                    {errors.brand && (
+                      <h1 className="absolute -top-8 right-0 z-50 text-white bg-one rounded-[5px] p-2 text-lg text-start w-full animate-bounce">
+                        ماركة السيارة مطلوبة{' '}
+                      </h1>
+                    )}
+
+                    <CarsBrandSelector />
+                  </div>
+                  {/* الموديل */}
+                  <div className="w-full">
+                    {' '}
+                    {errors.model && (
+                      <h1 className="absolute -top-8 right-0 z-50 text-white bg-one rounded-[5px] p-2 text-lg text-start w-full animate-bounce">
+                        موديل السيارة مطلوب
+                      </h1>
+                    )}
+                    <div className="flex items-center gap-2 w-full justify-start my-2">
+                      <h1 className="flex text-right text-md select-none text-nowrap ">
+                        <span className="text-one text-lg xl:text-2xl ml-2">
+                          {' '}
+                          <FaCarrot />
+                        </span>
+                        موديل السيارة:
+                      </h1>
+                    </div>
+                    <input
+                      value={inputs?.model}
+                      onChange={(e) =>
+                        setInputs({ ...inputs, model: e.target.value })
+                      }
+                      type="text"
+                      id="موديل السيارة"
+                      name="موديل السيارة"
+                      placeholder="land cruiser"
+                      className="w-full text-sm sm:text-lg rounded text-start  h-9 sm:h-12 text-nowrap px-2 border border-slate-300 focus:outline-one"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="w-full border p-2 rounded-[5px]">
+                {/* المدينة والمنطقة*/}
+                <div className="relative flex flex-col my-2 sm:my-4 items-center justify-center w-full">
                   {errors.city && (
-                    <h1 className="text-one text-2xl text-start w-full animate-bounce">
-                      حقل المدينة مطلوب
+                    <h1 className="absolute -top-8 right-0 z-50 text-white bg-one rounded-[5px] p-2 text-lg text-start w-full animate-bounce">
+                      المدينة مطلوبة{' '}
+                    </h1>
+                  )}
+                  {errors.town && (
+                    <h1 className="absolute -top-8 right-0 z-50 text-white bg-one rounded-[5px] p-2 text-lg text-start w-full animate-bounce">
+                      المنطقة مطلوبة{' '}
                     </h1>
                   )}
 
                   <CitySelector />
                 </div>
-
-                <div className="flex flex-col items-center justify-center my-4 w-full ">
-                  {errors.contactPhoneNumber && (
-                    <h1 className="text-one text-2xl text-start w-full animate-bounce">
-                      رقم الهاتف مطلوب{' '}
-                    </h1>
-                  )}
-                  <div className="flex items-center gap-2 w-full justify-start my-2">
-                    <h1 className="flex text-right text-md select-none text-nowrap ">
-                      <span className="text-one text-lg xl:text-2xl ml-2">
-                        <GiRotaryPhone />
-                      </span>
-                      رقم الهاتف:
-                    </h1>
+                {/* السنة */}
+                <div className="relative flex flex-col my-2 sm:my-4 sm:flex-row gap-4 items-center justify-center w-full ">
+                  <div className="w-full">
+                    {' '}
+                    {errors.year && (
+                      <h1 className="absolute -top-8 right-0 z-50 text-white bg-one rounded-[5px] p-2 text-lg text-start w-full animate-bounce">
+                        السنة مطلوبة{' '}
+                      </h1>
+                    )}
+                    <div className="flex items-center gap-2 w-full justify-start my-2">
+                      <h1 className="flex text-right text-md select-none text-nowrap ">
+                        <span className="text-one text-lg xl:text-2xl ml-2">
+                          {' '}
+                          <IoCalendarNumber />
+                        </span>
+                        السنة:
+                      </h1>
+                    </div>
+                    <input
+                      value={inputs?.year}
+                      onChange={(e) =>
+                        setInputs({ ...inputs, year: e.target.value })
+                      }
+                      type="number"
+                      id="السنة"
+                      name="السنة"
+                      placeholder="2021"
+                      className="w-full text-sm sm:text-lg rounded text-start  h-9 sm:h-12 text-nowrap px-2 border border-slate-300 focus:outline-one"
+                    />
                   </div>
+                  <div className="w-full">
+                    <div className="flex items-center gap-2 w-full justify-start my-2">
+                      <h1 className="flex text-right text-md select-none text-nowrap ">
+                        <span className="text-one text-lg xl:text-2xl ml-2">
+                          {' '}
+                          <GiPathDistance />
+                        </span>
+                        المسافة:
+                      </h1>
+                    </div>
 
-                  <input
-                    value={inputs?.contactPhoneNumber}
-                    onChange={(e) =>
-                      setInputs({
-                        ...inputs,
-                        contactPhoneNumber: e.target.value,
-                      })
-                    }
-                    type="number"
-                    id="رقم الهاتف"
-                    name="رقم الهاتف"
-                    placeholder="+963 11 3391 4444"
-                    className="w-full text-sm sm:text-lg rounded text-start  h-9 sm:h-12 text-nowrap px-2 border border-slate-300 focus:outline-one"
-                  />
+                    <input
+                      value={inputs?.distance}
+                      onChange={(e) =>
+                        setInputs({ ...inputs, distance: e.target.value })
+                      }
+                      type="number"
+                      id="المسافة"
+                      name="المسافة"
+                      placeholder="50,000 كم"
+                      className="w-full text-sm sm:text-lg rounded text-start  h-9 sm:h-12 text-nowrap px-2 border border-slate-300 focus:outline-one"
+                    />
+                  </div>
                 </div>
+                {/* رقم الهاتف */}
+                <div className="relative flex flex-col my-2 sm:my-4 sm:flex-row gap-4 items-center justify-center w-full ">
+                  <div className="w-full">
+                    {errors.phoneNumber && (
+                      <h1 className="absolute -top-8 right-0 z-50 text-white bg-one rounded-[5px] p-2 text-lg text-start w-full animate-bounce">
+                        رقم الهاتف مطلوب{' '}
+                      </h1>
+                    )}
+                    <div className="flex items-center gap-2 w-full justify-start my-2">
+                      <h1 className="flex text-right text-md select-none text-nowrap ">
+                        <span className="text-one text-lg xl:text-2xl ml-2">
+                          <GiRotaryPhone />
+                        </span>
+                        رقم الهاتف:
+                      </h1>
+                    </div>
 
-                <div className="flex flex-col items-center justify-center my-4 w-full ">
-                  {errors.price && (
-                    <h1 className="text-one text-2xl text-start w-full animate-bounce">
-                      سعر السيارة مطلوب
-                    </h1>
-                  )}
-                  <div className="flex items-center gap-2 w-full justify-start my-2">
-                    <h1
-                      className={`flex text-right text-md select-none text-nowrap `}
-                    >
-                      <span className="text-one text-lg xl:text-2xl ml-2">
-                        <MdOutlinePriceCheck />
-                      </span>
-                      {category?.label === 'بيع'
-                        ? ' سعر السيارة:'
-                        : 'أجرة السيارة شهرياً:'}
-                    </h1>
+                    <input
+                      value={inputs?.phoneNumber}
+                      onChange={(e) =>
+                        setInputs({
+                          ...inputs,
+                          phoneNumber: e.target.value,
+                        })
+                      }
+                      type="number"
+                      id="رقم الهاتف"
+                      name="رقم الهاتف"
+                      placeholder="+963 11 3391 4444"
+                      className="w-full text-sm sm:text-lg rounded text-start  h-9 sm:h-12 text-nowrap px-2 border border-slate-300 focus:outline-one"
+                    />
                   </div>
-
-                  <input
-                    value={inputs?.price}
-                    onChange={(e) =>
-                      setInputs({ ...inputs, price: e.target.value })
-                    }
-                    type="number"
-                    id="سعر السيارة"
-                    name="سعر السيارة"
-                    placeholder="$ 00.0"
-                    className="w-full text-sm sm:text-lg rounded text-start  h-9 sm:h-12 text-nowrap px-2 border border-slate-300 focus:outline-one"
-                  />
+                  <div className="w-full">
+                    {' '}
+                    {errors.price && (
+                      <h1 className="absolute -top-8 right-0 z-50 text-white bg-one rounded-[5px] p-2 text-lg text-start w-full animate-bounce">
+                        السعر مطلوب{' '}
+                      </h1>
+                    )}
+                    <div className="flex items-center gap-2 w-full justify-start my-2">
+                      <h1
+                        className={`flex text-right text-md select-none text-nowrap `}
+                      >
+                        <span className="text-one text-lg xl:text-2xl ml-2">
+                          <MdOutlinePriceCheck />
+                        </span>
+                        {category?.label === 'بيع'
+                          ? ' سعر السيارة:'
+                          : 'أجرة السيارة شهرياً:'}
+                      </h1>
+                    </div>
+                    <input
+                      value={inputs?.price}
+                      onChange={(e) =>
+                        setInputs({ ...inputs, price: e.target.value })
+                      }
+                      type="number"
+                      id="سعر السيارة"
+                      name="سعر السيارة"
+                      placeholder="$ 00.0"
+                      className="w-full text-sm sm:text-lg rounded text-start  h-9 sm:h-12 text-nowrap px-2 border border-slate-300 focus:outline-one"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-
+          {/* الوصف */}
           <div className="w-full">
             {errors.description && (
-              <h1 className="text-one text-2xl text-start w-full animate-bounce">
-                حقل الوصف مطلوب
+              <h1 className="absolute -top-8 right-0 z-50 text-white bg-one rounded-[5px] p-2 text-lg text-start w-full animate-bounce">
+                الوصف مطلوب{' '}
               </h1>
             )}
             <div className="flex items-center gap-2 w-full justify-start my-2">
@@ -604,9 +668,9 @@ export default function CarsPostForm({ setIsVisible, cancel = true }) {
           </div>
           <OnClickMap
             chosenCity={data?.city}
-            chosentown={data?.propertyTown}
+            chosentown={data?.town}
             cityLocation={cityLocation}
-            propertyTownLocation={propertyTownLocation}
+            townLocation={townLocation}
           />
           <div className="w-full">
             <div className="flex items-center gap-2 w-full justify-start my-2 ">
@@ -644,7 +708,7 @@ export default function CarsPostForm({ setIsVisible, cancel = true }) {
           <div className="flex flex-col sm:flex-row justify-around items-center gap-8 w-full my-12">
             <button
               type="submit"
-              className="btn bg-five rounded text-white hover:text-four shadow-lg hover:outline outline-one text-xl hover py-2 px-16 w-full"
+              className="btn bg-five rounded text-white hover:text-two shadow-lg hover:outline outline-one text-xl hover py-2 px-16 w-full"
             >
               نشر
             </button>
@@ -660,13 +724,14 @@ export default function CarsPostForm({ setIsVisible, cancel = true }) {
                     image2: '',
                     image3: '',
                     image4: '',
-                    propertyName: '',
+                    title: '',
                     usedNew: '',
                     brand: '',
+                    model: '',
                     price: 0,
-                    propertyArea: '',
+                    year: '',
                     city: '',
-                    contactPhoneNumber: '',
+                    phoneNumber: '',
                     description: '',
                     lng: '',
                     lat: '',

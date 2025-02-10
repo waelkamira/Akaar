@@ -25,30 +25,34 @@ model User {
 // 🟢 جدول العقارات
 model Property {
   id                   String   @id @default(uuid())
-  image                String
   image1               String?
   image2               String?
   image3               String?
   image4               String?
-  propertyCategory     String
-  propertyName         String
-  propertyType         String
+  image5               String?
+
+  propertyCategory     String?
+  propertyName         String?
+  propertyType         String?
   propertyRoomsNumber  String?
-  propertyPrice        Int
-  propertyArea         String
-  propertyCity         String
-  propertyTown         String
-  contactPhoneNumber   String
-  description          String
+  propertyPrice        Int?
+  propertyArea         String?
+  propertyCity         String?
+  propertyTown         String?
+  phoneNumber          String?
+  description          String?
+
   lng                  Float?
   lat                  Float?
   link                 String?   @default("")
-  hearts               Int       @default(0)
-  userName             String
-  userImage            String
-  createdBy            String
-  createdAt            DateTime @default(now())
-  updatedAt            DateTime @updatedAt
+  hearts               Int?       @default(0)
+
+  userName             String?
+  userImage            String?
+  createdBy            String?
+  
+  createdAt            DateTime? @default(now())
+  updatedAt            DateTime? @updatedAt
 
   // إضافة الفهارس لتحسين البحث
   @@index([propertyCategory])
@@ -62,34 +66,37 @@ model Property {
 
 // 🟢 جدول السيارات
 model Car {
-  id                 String   @id @default(uuid()) 
-  userId             String
+  id                String   @id @default(uuid()) 
+  userName          String?   
+  userImage         String?   
+  adType            String?
+  title             String?
 
   brand             String?  
-  model             String?  
+  model             String?
+  usedNew           String?  
   year              Int?    
-  price             Float?   
+  price             Int?   
 
-  image1            String?  
-  image2            String?  
-  image3            String?  
-  image4            String?  
-  image5            String?  
+  image1               String?
+  image2               String?
+  image3               String?
+  image4               String?
+  image5               String?  
 
-  forSell           Boolean   @default(false)
-  forRent           Boolean   @default(false)
-  forRentDaily      Boolean   @default(false)
-  forRentMonthly    Boolean   @default(false)
 
   city              String?  
   town              String?  
-  licensePlateNumber String? 
 
-  new               Boolean   @default(false) 
-  used              Boolean   @default(false) 
-  distance          Float?    
+  description       String?
+  distance          Int?    
   phoneNumber       String?   
 
+  lng               Float?
+  lat               Float? 
+  link              String?
+
+  createdBy         String?
   createdAt         DateTime  @default(now()) 
   updatedAt         DateTime  @updatedAt 
 

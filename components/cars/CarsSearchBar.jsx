@@ -91,11 +91,11 @@ export default function CarsSearchBar({ propertyCategory }) {
       <CarsNavbar />
       <div className="relative w-full h-[300px] lg:h-[600px] border overflow-hidden">
         <Image
-          src="https://i.imgur.com/wZ0aruw.jpg"
+          src="https://i.imgur.com/ZAC6X1M.jpg"
           fill
           alt="home_photo"
           className="object-cover object-center w-full h-auto"
-          objectPosition="top"
+          objectPosition="center"
         />
       </div>
       <div className="flex flex-col w-full mt-4 rounded-[5px] flex-grow xl:w-[90%] 2xl:w-[70%] h-[1370px] px-2 pt-2 overflow-y-auto border rounded-b z-[0]">

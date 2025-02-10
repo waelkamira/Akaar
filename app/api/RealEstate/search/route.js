@@ -20,7 +20,7 @@ export async function GET(req) {
   const propertyType = searchParams.get('propertyType')?.trim();
   let propertyRoomsNumber = searchParams.get('propertyRoomsNumber')?.trim();
   const propertyArea = searchParams.get('propertyArea')?.trim();
-  const contactPhoneNumber = searchParams.get('contactPhoneNumber')?.trim();
+  const phoneNumber = searchParams.get('phoneNumber')?.trim();
   const userName = searchParams.get('userName')?.trim();
 
   const minPrice = searchParams.get('minPrice')
@@ -63,8 +63,8 @@ export async function GET(req) {
     filters.propertyArea = propertyArea;
   }
 
-  if (contactPhoneNumber && contactPhoneNumber !== 'undefined') {
-    filters.contactPhoneNumber = contactPhoneNumber;
+  if (phoneNumber && phoneNumber !== 'undefined') {
+    filters.phoneNumber = phoneNumber;
   }
 
   if (userName && userName !== 'undefined') {
@@ -106,7 +106,7 @@ export async function GET(req) {
         propertyArea: true,
         propertyCity: true,
         propertyTown: true,
-        contactPhoneNumber: true,
+        phoneNumber: true,
         description: true,
         lng: true,
         lat: true,

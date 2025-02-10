@@ -12,7 +12,7 @@ export default function MiddleBarAndPhoto({ isOpen, setIsOpen, noButton }) {
     <div className="relative xl:hidden flex justify-between items-center w-full gap-2 mb-2 bg-one p-2 rounded">
       <div>
         <TfiMenuAlt
-          className="text-[30px] lg:text-5xl  cursor-pointer"
+          className="text-[30px] lg:text-5xl text-white cursor-pointer"
           onClick={() => {
             setIsOpen(!isOpen);
           }}

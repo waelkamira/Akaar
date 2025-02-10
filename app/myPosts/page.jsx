@@ -15,6 +15,7 @@ import { MdEdit } from 'react-icons/md';
 import MiddleBarAndPhoto from '../../components/middleBarAndPhoto';
 import Image from 'next/image';
 import NavegationPages from '../../components/NavegationPages';
+import MainNavbar from '../../components/navbars/MainNavbar';
 export default function MyPosts() {
   const [isOpen, setIsOpen] = useState(false);
   const [postId, setpostId] = useState('');
@@ -70,8 +71,9 @@ export default function MyPosts() {
   }
 
   return (
-    <div className="flex flex-col justify-center items-center w-full  rounded-b">
-      <div className="relative w-full h-[300px] lg:h-[400px] border overflow-hidden">
+    <div className="flex flex-col justify-center items-center w-full  rounded-b border">
+      <MainNavbar />
+      {/* <div className="relative w-full h-[300px] lg:h-[400px] border overflow-hidden">
         <Image
           src="https://i.imgur.com/wZ0aruw.jpg"
           fill
@@ -79,7 +81,7 @@ export default function MyPosts() {
           className="object-cover object-center w-full h-auto"
           objectPosition="center"
         />
-      </div>
+      </div> */}
       <div className="flex flex-col w-full xl:w-[90%]  h-fit px-2 sm:px-16 pt-2 overflow-y-auto z-10 ">
         <MiddleBarAndPhoto
           isOpen={isOpen}
@@ -117,18 +119,18 @@ export default function MyPosts() {
             إعلاناتي <span className="text-one"> {userPostsCount}</span>
           </h1>
         </div>
-        <div className="">
+        <div>
           {myPosts?.length === 0 && (
             <Loading
               myMessage={'😉 لا يوجد نتائج لعرضها ,لم تقم بإنشاء أي إعلان بعد'}
             />
           )}
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 p-2 sm:p-4 gap-4 justify-start items-start w-full sm:border border-seven rounded">
+          <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 p-2 sm:p-4 gap-4 justify-start items-start w-full border border-greay-300 rounded">
             {myPosts?.length > 0 &&
               myPosts.map((post, index) => (
                 <div
-                  className="relative flex flex-col items-start justify-start hover:scale-[101%] transition-transform duration-300 ease-in-out cursor-pointer bg-one rounded overflow-hidden"
+                  className="relative flex flex-col border-2 items-start justify-start hover:scale-[101%] transition-transform duration-300 ease-in-out cursor-pointer bg-one rounded-[10px] overflow-hidden"
                   key={index}
                 >
                   {session?.status === 'authenticated' && (

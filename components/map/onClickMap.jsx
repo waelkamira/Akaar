@@ -182,13 +182,12 @@ export default function OnClickMap({
                 <FaMapMarkedAlt />
               </span>
               <span className="flex text-sm sm:text-lg select-none text-nowrap ">
-                حدد موقع عقارك على الخريطة :
+                حدد الموقع على الخريطة :
               </span>
             </div>
             <h1 className="text-right text-sm sm:text-lg select-none ">
-              اختر المدينة من القائمة ثم اختر المنطقة من القائمة الثانية او اقرب
-              منطقة الى مكان عقارك ثم قم بعمل زووم على الخريطة واضغط على مكان
-              عقارك بدقة
+              اختر المدينة من القائمة ثم اختر المنطقة من القائمة الثانية ثم قم
+              بعمل زووم على الخريطة واضغط على الموقع بدقة
             </h1>
           </div>
           <div className="mb-4 relative z-50">
@@ -254,6 +253,7 @@ export default function OnClickMap({
 
       <div className="w-full h-72 sm:h-[500px] rounded-md overflow-hidden shadow-lg relative z-30">
         <MapContainer
+          key={`${selectedLocation[0]}-${selectedLocation[1]}`}
           center={selectedLocation}
           zoom={7}
           className="w-full h-full"
@@ -288,14 +288,14 @@ export default function OnClickMap({
         </MapContainer>
       </div>
 
-      {/* {selectedLocation && (
+      {selectedLocation && (
         <div className="mt-4 p-4 bg-gray-100 rounded  shadow-sm">
           <p>
             <h1 className="sm:font-bold">موقع العقار الذي قمت بتحديده:</h1>{' '}
             {selectedLocation[0].toFixed(5)}, {selectedLocation[1].toFixed(5)}{' '}
           </p>
         </div>
-      )} */}
+      )}
     </div>
   );
 }

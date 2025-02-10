@@ -52,11 +52,13 @@ export async function POST(req) {
     const newProperty = await prisma.property.create({
       data: {
         id: data?.id,
-        image: data?.image,
+
         image1: data?.image1,
         image2: data?.image2,
         image3: data?.image3,
         image4: data?.image4,
+        image5: data?.image,
+
         propertyCategory: data?.propertyCategory,
         propertyName: data?.propertyName,
         propertyType: data?.propertyType,
@@ -65,7 +67,7 @@ export async function POST(req) {
         propertyArea: data?.propertyArea,
         propertyCity: data?.propertyCity,
         propertyTown: data?.propertyTown,
-        contactPhoneNumber: data?.contactPhoneNumber,
+        phoneNumber: data?.phoneNumber,
         description: data?.description,
         lng: data?.lng,
         lat: data?.lat,

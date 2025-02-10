@@ -5,7 +5,7 @@ import SideBarMenu from '../SideBarMenu';
 import { TfiMenuAlt } from 'react-icons/tfi';
 import { Suspense } from 'react';
 import Image from 'next/image';
-import Card from './RealEstateCard';
+import CarsCard from '../Cars/CarsCard';
 import { MdOutlineBedroomParent } from 'react-icons/md';
 import { MdOutlineAttachMoney } from 'react-icons/md';
 import { GiBuyCard } from 'react-icons/gi';
@@ -14,9 +14,9 @@ import { FaHouseDamage } from 'react-icons/fa';
 import { FaCalendarDays } from 'react-icons/fa6';
 import { GiAnchor } from 'react-icons/gi';
 import Footer from '../Footer';
-import RealEstateNavbar from '../navbars/RealEstarteNavbar';
+import CarsNavbar from './CarsNavbar';
 
-export default function RealEstate() {
+export default function Cars() {
   const [isOpen, setIsOpen] = useState(false);
   const session = useSession();
 
@@ -26,7 +26,7 @@ export default function RealEstate() {
 
   return (
     <Suspense>
-      <RealEstateNavbar />
+      <CarsNavbar />
       <div className="relative flex flex-col justify-center items-center z-40 sm:my-0 w-full">
         <div className="w-full">
           <div className="xl:hidden absolute flex flex-col items-start gap-2 z-50 top-2 right-0 sm:top-4 sm:right-4  lg:right-12 w-full">
@@ -40,7 +40,7 @@ export default function RealEstate() {
           <div className="relative w-full h-[300px] lg:h-[900px] overflow-hidden">
             {/* صورة الخلفية */}
             <Image
-              src="https://i.imgur.com/wZ0aruw.jpg"
+              src="https://i.imgur.com/ZAC6X1M.jpg"
               fill
               alt="home_photo"
               className="object-cover object-center w-full h-auto"
@@ -85,34 +85,34 @@ export default function RealEstate() {
             </div>
 
             <div className="flex flex-col sm:flex-row justify-center w-full gap-4 xl:gap-16 px-4 xl:px-8 py-8 ">
-              <Card
+              <CarsCard
                 cardName={'بيع عقار'}
-                path={'/RealEstate/newPost'}
+                path={'/Cars/newPost'}
                 text={
                   'بغض النظر عن المسار الذي تسلكه لبيع منزلك، يمكننا مساعدتك في إتمام عملية بيع ناجحة و بأسرع وقت ممكن.'
                 }
-                color={'gray'}
-                image={'https://i.imgur.com/85xCFcd.jpg'}
+                color={'orange'}
+                image={'https://i.imgur.com/ZAC6X1M.jpg'}
                 emoji={<FaHouseDamage className="text-one" />}
               />
-              <Card
+              <CarsCard
                 cardName={'شراء عقار'}
-                path={'/RealEstate/buy'}
+                path={'/Cars/buy'}
                 text={
                   ' اعثر على عقارك من خلال تجربة تصوير غامرة وأكبر عدد من الإعلانات، بما في ذلك أشياء لن تجدها في أي مكان آخر.'
                 }
-                color={'gray'}
-                image={'https://i.imgur.com/9gIMgUg.png'}
+                color={'orange'}
+                image={'https://i.imgur.com/ARNWG2B.jpg'}
                 emoji={<GiCarKey className="text-one" />}
               />
-              <Card
+              <CarsCard
                 cardName={'تأجير عقار'}
-                path={'/RealEstate/rent'}
+                path={'/Cars/rent'}
                 text={
                   'نحن نعمل على إنشاء تجربة سلسة عبر الإنترنت, بدءاً من بناء أكبر شبكة تأجير، إلى تقديم الطلبات، إلى دفع الإيجار.'
                 }
-                color={'gray'}
-                image={'https://i.imgur.com/uGXmBJO.jpg'}
+                color={'orange'}
+                image={'https://i.imgur.com/yH5NGMz.jpg'}
                 emoji={<MdOutlineBedroomParent className="text-one" />}
               />
             </div>

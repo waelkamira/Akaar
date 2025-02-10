@@ -1,12 +1,15 @@
 'use client';
 import dynamic from 'next/dynamic';
 import React, { useContext, useEffect, useState } from 'react';
-import { inputsContext } from '../../components/Context';
+import { inputsContext } from '../../../components/Context';
 
 // تحميل مكون Item بشكل ديناميكي
-const Item = dynamic(() => import('../../components/Item'), {
-  loading: () => <div>Loading...</div>, // عرض رسالة تحميل أثناء تحميل المكون
-});
+const Item = dynamic(
+  () => import('../../../components/RealEstate/RealEstateItem'),
+  {
+    loading: () => <div>Loading...</div>, // عرض رسالة تحميل أثناء تحميل المكون
+  }
+);
 
 export default function Page() {
   const [onePost, setOnePost] = useState({});
@@ -21,7 +24,7 @@ export default function Page() {
   }, [postId]);
 
   async function fetchOnePost(postId) {
-    const response = await fetch(`/api/showPostById`, {
+    const response = await fetch(`/api/RealEstate/showPostById`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ id: postId }),
