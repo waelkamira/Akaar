@@ -46,7 +46,7 @@ export default function Card({ cardName, path, image, text, color, emoji }) {
 
   return (
     <div
-      className={`w-full sm:w-96 rounded-t-3xl overflow-hidden hover:scale-[102%] transition-transform duration-300 ease-in-out cursor-pointer`}
+      className={`w-full sm:w-96 rounded-t-3xl bg-white rounded-b-3xl overflow-hidden hover:scale-[102%] transition-transform duration-300 ease-in-out cursor-pointer`}
     >
       <div
         onClick={() => router.push(path)}
@@ -60,17 +60,15 @@ export default function Card({ cardName, path, image, text, color, emoji }) {
         className={` w-full border border-four overflow-hidden rounded-b-3xl`}
       >
         {' '}
-        <h1 className="relative text-lg lg:text-2xl my-2 lg:my-4 font-medium text-center w-full">
-          {cardName}
-          <span className="absolute left-[65%] sm:left-[70%] xl:left-[65%] top-1/4 mx-auto my-auto">
-            {emoji}
-          </span>
-        </h1>
+        <div className="flex justify-center items-center gap-2 my-2">
+          <h1 className="text-md sm:text-xl">{emoji}</h1>
+          <h1 className="text-md sm:text-2xl">{cardName}</h1>
+        </div>
         <p className="p-2 px-4 text-sm lg:text-lg select-none">{text}</p>
         <div className="px-4 mt-2">
           <button
             onClick={() => router.push(path)}
-            className="btn relative w-full my-2 text-white rounded-lg hover:scale-[101%] text-lg sm:text-xl hover:shadow-sm shadow-gray-300 p-1 lg:p-2 transition-transform duration-200 ease-in-out"
+            className="btn relative w-full my-2 text-white rounded-lg hover:scale-[101%] text-md sm:text-lg hover:shadow-sm shadow-gray-300 p-1 lg:p-2 transition-transform duration-200 ease-in-out"
             style={{
               '--btn-background': btnBackground,
               '--btn-hover-background': btnHoverBackground,

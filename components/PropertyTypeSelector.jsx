@@ -36,7 +36,7 @@ export default function PropertyTypeSelector() {
       borderRadius: 5,
       colors: {
         ...theme.colors,
-        primary: '#ffa500',
+        primary: '#FF7C34',
         primary25: '#fadfae',
       },
     };
@@ -70,7 +70,7 @@ export default function PropertyTypeSelector() {
           classNames={{
             control: (state) =>
               `${
-                state.isFocused ? 'border-orange-500' : 'border-gray-300'
+                state.isFocused ? 'border-orange-500' : 'border-four'
               } sm:h-12 h-8`, // ارتفاع مختلف بناءً على عرض النافذة
           }}
         ></Select>

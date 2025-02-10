@@ -1,9 +1,12 @@
 'use client';
-import SearchBar from '../../../components/RealEstate/RealEstateSearchBar';
-export default function Sell() {
+import CarsSearchBar from '../../../components/Cars/CarsSearchBar';
+export default function Buy() {
   return (
-    <div className="flex flex-col items-center w-full">
-      <SearchBar propertyCategory="أجار" />
+    <div className="flex flex-col items-center w-full rounded-b z-0">
+      <CarsSearchBar
+        category="أجار"
+        imgLink={'https://i.imgur.com/yH5NGMz.jpg'}
+      />
     </div>
   );
 }

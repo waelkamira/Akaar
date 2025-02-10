@@ -32,11 +32,11 @@ export default function Item({
   phoneNumber,
   createdAt,
   description,
-  image,
   image1,
   image2,
   image3,
   image4,
+  image5,
   lng,
   lat,
   link,
@@ -115,13 +115,13 @@ export default function Item({
                   {propertyName}
                 </h1>
               </div>
-              {!image && <Loading myMessage={'جاري تحميل الصورة'} />}
+              {!image1 && <Loading myMessage={'جاري تحميل الصورة'} />}
               <ImageSlider
-                image={image}
                 image1={image1}
                 image2={image2}
                 image3={image3}
                 image4={image4}
+                image={image5}
               />
 
               <div className=" mt-4 sm:mt-16">

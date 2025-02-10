@@ -66,13 +66,13 @@ export default function ImageSlider({
         className="keen-slider w-full max-w-[1000px] h-auto max-h-[500px] aspect-[4/3]"
       >
         <div className="keen-slider__slide number-slide1 ">
-          <div className="relative w-full aspect-[4/3] rounded-[5px] overflow-hidden border">
+          <div className="relative w-full aspect-[4/3] rounded-[5px] overflow-hidden">
             {image1 && (
               <Image
                 priority
                 src={image1}
                 layout="fill"
-                objectFit="contain"
+                objectFit="cover"
                 alt={'photo'}
               />
             )}

@@ -71,7 +71,7 @@ export default function ImageUploader({ images = [] }) {
   return (
     <div className="flex flex-col justify-center items-center w-full px-2 sm:px-8">
       {/* الصورة الكبيرة في الأعلى */}
-      <div className="relative w-full h-72 sm:h-96 border border-gray-500 rounded-lg mb-4">
+      <div className="relative w-full h-72 sm:h-96 border border-four rounded-lg mb-4 bg-white">
         {isLoading ? ( // إذا كانت الصور قيد التحميل، عرض مؤشر التحميل
           <LoadingPhoto />
         ) : filteredImages[0] ? ( // إذا كانت هناك صورة متاحة
@@ -89,14 +89,14 @@ export default function ImageUploader({ images = [] }) {
             {/* زر تغيير الصورة */}
             <label
               htmlFor="file-upload"
-              className="absolute bottom-2 right-2 bg-black bg-opacity-50  p-2 rounded-full cursor-pointer"
+              className="absolute bottom-2 right-2 bg-black text-white bg-opacity-50  p-2 rounded-full cursor-pointer"
             >
               <MdOutlineAddPhotoAlternate className="text-xl" />
             </label>
             {/* زر إزالة الصورة */}
             <button
               onClick={() => handleRemoveImage(0)}
-              className="absolute top-2 right-2 bg-black bg-opacity-50  p-2 rounded-full cursor-pointer"
+              className="absolute top-2 right-2 bg-black text-white bg-opacity-50  p-2 rounded-full cursor-pointer"
             >
               <MdClose className="text-xl" />
             </button>
@@ -105,7 +105,7 @@ export default function ImageUploader({ images = [] }) {
           // إذا لم تكن هناك صورة، عرض زر إضافة صورة
           <label
             htmlFor="file-upload"
-            className="flex flex-col items-center justify-center h-full cursor-pointer "
+            className="flex flex-col items-center justify-center h-full cursor-pointer bg-white"
           >
             <MdOutlineAddPhotoAlternate className="text-one text-3xl" />
             <h1 className=" text-sm sm:text-lg">أضف صورة رئيسية</h1>
@@ -118,7 +118,7 @@ export default function ImageUploader({ images = [] }) {
         {Array.from({ length: 4 }).map((_, index) => (
           <div
             key={index}
-            className="relative w-full h-48 border border-gray-500 rounded-lg flex justify-center items-center"
+            className="relative w-full h-48 border border-four rounded-lg flex justify-center items-center bg-white"
           >
             {isLoading ? ( // إذا كانت الصور قيد التحميل، عرض مؤشر التحميل
               <LoadingPhoto />
@@ -135,14 +135,14 @@ export default function ImageUploader({ images = [] }) {
                 {/* زر تغيير الصورة */}
                 <label
                   htmlFor="file-upload"
-                  className="absolute bottom-2 right-2 bg-black bg-opacity-50  p-2 rounded-full cursor-pointer"
+                  className="absolute bottom-2 right-2 bg-black text-white bg-opacity-50  p-2 rounded-full cursor-pointer "
                 >
                   <MdOutlineAddPhotoAlternate className="text-xl" />
                 </label>
                 {/* زر إزالة الصورة */}
                 <button
                   onClick={() => handleRemoveImage(index + 1)}
-                  className="absolute top-2 right-2 bg-black bg-opacity-50  p-2 rounded-full cursor-pointer"
+                  className="absolute top-2 right-2 bg-black text-white bg-opacity-50  p-2 rounded-full cursor-pointer"
                 >
                   <MdClose className="text-xl" />
                 </button>
@@ -151,7 +151,7 @@ export default function ImageUploader({ images = [] }) {
               // إذا لم تكن هناك صورة، عرض زر إضافة صورة
               <label
                 htmlFor="file-upload"
-                className="flex flex-col items-center cursor-pointer "
+                className="flex flex-col items-center cursor-pointer"
               >
                 <MdOutlineAddPhotoAlternate className="text-one text-3xl" />
                 <h1 className=" text-sm sm:text-lg">أضف صورة</h1>

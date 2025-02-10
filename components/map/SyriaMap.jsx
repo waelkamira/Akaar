@@ -37,7 +37,6 @@ export default function SyriaMap({ lng = '', lat = '' }) {
     <div className="w-full z-40">
       <div className="w-full h-72 sm:h-[500px] rounded-md overflow-hidden">
         <MapContainer
-          key={`${latitude}-${longitude}`} // 🔹 هذا يحل المشكلة
           center={[latitude, longitude]}
           zoom={13}
           className="w-full h-full"

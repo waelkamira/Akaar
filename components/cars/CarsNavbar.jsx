@@ -7,7 +7,7 @@ import { FcConferenceCall } from 'react-icons/fc';
 import { FaCanadianMapleLeaf } from 'react-icons/fa';
 import { FaDollarSign } from 'react-icons/fa';
 import { GiPayMoney } from 'react-icons/gi';
-import { MdOutlineBedroomParent } from 'react-icons/md';
+import { MdCarRental, MdOutlineBedroomParent } from 'react-icons/md';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
@@ -15,6 +15,7 @@ import { ImProfile } from 'react-icons/im';
 import { MdFavoriteBorder } from 'react-icons/md';
 import { TbTargetArrow } from 'react-icons/tb';
 import ClockWidget from '../ClockWidget';
+
 export default function CarsNavbar() {
   const router = useRouter();
   const session = useSession();
@@ -27,13 +28,13 @@ export default function CarsNavbar() {
       }`}
     >
       <div className="flex justify-between w-full">
-        <ul className="flex justify-evenly gap-4 mr-4 items-center h-20 py-4 w-4/6">
+        <ul className="flex justify-evenly gap-4 mr-4 items-center h-20 py-4 w-5/6">
           <div
             className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-14 transition-all duration-300"
-            onClick={() => router.push('/')}
+            onClick={() => router.push('/Cars')}
           >
             <FaHome className="text-xl select-none text-one" />
-            <li className=" text-xl select-none">الرئيسية</li>
+            <li className=" text-xl select-none">سيارات</li>
           </div>
           <div className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-14 transition-all duration-300">
             {session?.status === 'unauthenticated' && (
@@ -79,21 +80,21 @@ export default function CarsNavbar() {
             onClick={() => router.push('/Cars/newPost')}
           >
             <FaDollarSign className="text-xl select-none text-one" />
-            <li className=" text-xl select-none">بيع</li>
+            <li className=" text-xl select-none">بيع/تأجير سيارة</li>
           </div>
           <div
             className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-14 transition-all duration-300"
             onClick={() => router.push('/Cars/buy')}
           >
             <GiPayMoney className="text-xl select-none text-one" />
-            <li className=" text-xl select-none">شراء</li>
+            <li className=" text-xl select-none">شراء سيارة</li>
           </div>
           <div
             className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-14 transition-all duration-300"
             onClick={() => router.push('/Cars/rent')}
           >
-            <MdOutlineBedroomParent className="text-xl select-none text-one" />
-            <li className=" text-xl select-none">إيجار</li>
+            <MdCarRental className="text-xl select-none text-one" />
+            <li className=" text-xl select-none">استأجار سيارة</li>
           </div>
         </ul>
         <div className="flex items-center justify-center">

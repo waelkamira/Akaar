@@ -13,8 +13,8 @@ export async function GET(req) {
   const skip = (page - 1) * limit;
   // console.log('properties');
   try {
-    // قراءة البيانات من جدول Cars
-    const properties = await prisma?.cars?.findMany({
+    // قراءة البيانات من جدول Car
+    const properties = await prisma?.car?.findMany({
       skip,
       take: limit,
       orderBy: { createdAt: 'desc' },
@@ -92,13 +92,13 @@ export async function PUT(req) {
     const data = await req.json();
 
     if (!id) {
-      return new Response(JSON.stringify({ error: 'Cars ID is required' }), {
+      return new Response(JSON.stringify({ error: 'Car ID is required' }), {
         status: 400,
       });
     }
 
     // تحديث البيانات باستخدام Prisma
-    await prisma?.cars?.update({
+    await prisma?.car?.update({
       where: { id: id },
       data: {
         ...data,
@@ -107,11 +107,11 @@ export async function PUT(req) {
     });
 
     return new Response(
-      JSON.stringify({ message: 'Cars updated successfully' }),
+      JSON.stringify({ message: 'Car updated successfully' }),
       { status: 200 }
     );
   } catch (error) {
-    console.error('Error updating cars:', error);
+    console.error('Error updating car:', error);
     return new Response(JSON.stringify({ error: 'Internal Server Error' }), {
       status: 500,
     });
@@ -124,22 +124,22 @@ export async function DELETE(req) {
     const id = url.searchParams.get('id');
 
     if (!id) {
-      return new Response(JSON.stringify({ error: 'Cars ID is required' }), {
+      return new Response(JSON.stringify({ error: 'Car ID is required' }), {
         status: 400,
       });
     }
 
     // حذف السجل باستخدام Prisma
-    await prisma?.cars?.delete({
+    await prisma?.car?.delete({
       where: { id: id },
     });
 
     return new Response(
-      JSON.stringify({ message: 'Cars deleted successfully' }),
+      JSON.stringify({ message: 'Car deleted successfully' }),
       { status: 200 }
     );
   } catch (error) {
-    console.error('Error deleting cars:', error);
+    console.error('Error deleting car:', error);
     return new Response(JSON.stringify({ error: 'Internal Server Error' }), {
       status: 500,
     });

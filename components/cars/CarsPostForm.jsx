@@ -402,8 +402,8 @@ export default function CarsPostForm({ setIsVisible, cancel = true }) {
           onSubmit={handleSubmit}
         >
           <div className="w-full">
-            <div className="flex flex-col gap-2 xl:gap-8 md:flex-row w-full ">
-              <div className="w-full border p-2 rounded-[5px]">
+            <div className="flex flex-col gap-2 xl:gap-4 md:flex-row w-full ">
+              <div className="w-full p-2 xl:p-4 border border-four rounded-[5px] bg-white">
                 {/* عنوان الإعلان */}
                 <div className="relative flex flex-col my-2 sm:my-4 items-center justify-center w-full ">
                   {errors.title && (
@@ -431,7 +431,7 @@ export default function CarsPostForm({ setIsVisible, cancel = true }) {
                     id="اسم السيارة"
                     name="اسم السيارة"
                     placeholder="تويوتا كورولا موديل 2021"
-                    className="w-full text-sm sm:text-lg rounded text-start  h-9 sm:h-12 text-nowrap px-2 border border-slate-300 focus:outline-one"
+                    className="w-full text-sm sm:text-lg rounded text-start  h-9 sm:h-12 text-nowrap px-2 border border-four focus:outline-one"
                   />
                 </div>
                 {/* نوع الإعلان */}
@@ -493,13 +493,13 @@ export default function CarsPostForm({ setIsVisible, cancel = true }) {
                       id="موديل السيارة"
                       name="موديل السيارة"
                       placeholder="land cruiser"
-                      className="w-full text-sm sm:text-lg rounded text-start  h-9 sm:h-12 text-nowrap px-2 border border-slate-300 focus:outline-one"
+                      className="w-full text-sm sm:text-lg rounded text-start  h-9 sm:h-12 text-nowrap px-2 border border-four focus:outline-one"
                     />
                   </div>
                 </div>
               </div>
 
-              <div className="w-full border p-2 rounded-[5px]">
+              <div className="w-full p-2 xl:p-4 border border-four rounded-[5px] bg-white">
                 {/* المدينة والمنطقة*/}
                 <div className="relative flex flex-col my-2 sm:my-4 items-center justify-center w-full">
                   {errors.city && (
@@ -542,7 +542,7 @@ export default function CarsPostForm({ setIsVisible, cancel = true }) {
                       id="السنة"
                       name="السنة"
                       placeholder="2021"
-                      className="w-full text-sm sm:text-lg rounded text-start  h-9 sm:h-12 text-nowrap px-2 border border-slate-300 focus:outline-one"
+                      className="w-full text-sm sm:text-lg rounded text-start  h-9 sm:h-12 text-nowrap px-2 border border-four focus:outline-one"
                     />
                   </div>
                   <div className="w-full">
@@ -565,7 +565,7 @@ export default function CarsPostForm({ setIsVisible, cancel = true }) {
                       id="المسافة"
                       name="المسافة"
                       placeholder="50,000 كم"
-                      className="w-full text-sm sm:text-lg rounded text-start  h-9 sm:h-12 text-nowrap px-2 border border-slate-300 focus:outline-one"
+                      className="w-full text-sm sm:text-lg rounded text-start  h-9 sm:h-12 text-nowrap px-2 border border-four focus:outline-one"
                     />
                   </div>
                 </div>
@@ -598,7 +598,7 @@ export default function CarsPostForm({ setIsVisible, cancel = true }) {
                       id="رقم الهاتف"
                       name="رقم الهاتف"
                       placeholder="+963 11 3391 4444"
-                      className="w-full text-sm sm:text-lg rounded text-start  h-9 sm:h-12 text-nowrap px-2 border border-slate-300 focus:outline-one"
+                      className="w-full text-sm sm:text-lg rounded text-start  h-9 sm:h-12 text-nowrap px-2 border border-four focus:outline-one"
                     />
                   </div>
                   <div className="w-full">
@@ -629,7 +629,7 @@ export default function CarsPostForm({ setIsVisible, cancel = true }) {
                       id="سعر السيارة"
                       name="سعر السيارة"
                       placeholder="$ 00.0"
-                      className="w-full text-sm sm:text-lg rounded text-start  h-9 sm:h-12 text-nowrap px-2 border border-slate-300 focus:outline-one"
+                      className="w-full text-sm sm:text-lg rounded text-start  h-9 sm:h-12 text-nowrap px-2 border border-four focus:outline-one"
                     />
                   </div>
                 </div>
@@ -663,7 +663,7 @@ export default function CarsPostForm({ setIsVisible, cancel = true }) {
               name="الوصف"
               id="الوصف"
               placeholder="اكتب مواصفات سيارتك هنا ..."
-              className="scrollBar flex text-right w-full p-2 border border-gray-300 text-xl placeholder:text-sm lg:placeholder:text-lg h-36 outline-2 focus:outline-one rounded"
+              className="scrollBar flex text-right w-full p-2 border border-four text-xl placeholder:text-sm lg:placeholder:text-lg h-36 outline-2 focus:outline-one rounded"
             ></textarea>
           </div>
           <OnClickMap
@@ -685,10 +685,10 @@ export default function CarsPostForm({ setIsVisible, cancel = true }) {
 
             <input
               type="text"
-              placeholder="... ضع رابط الفيديو هنا"
+              placeholder="ضع رابط الفيديو هنا"
               value={url}
               onChange={handleInputChange}
-              className="w-full text-sm sm:text-lg rounded text-start  h-9 sm:h-12 text-nowrap px-2 border border-slate-300 focus:outline-one"
+              className="w-full text-sm sm:text-lg rounded text-start  h-9 sm:h-12 text-nowrap px-2 border border-four focus:outline-one"
             />
             {inputs?.link && (
               <div>

@@ -114,12 +114,12 @@ export default function SmallItem({ post, index, show = true, id = false }) {
   }
 
   return (
-    <div className="rounded-lg border-t-[20px] border-one bg-white mb-4 w-full">
+    <div className="rounded-b-lg bg-white mb-4 w-full h-full">
       {!post && <Loading />}
       <div
         key={index}
         id="post1"
-        className="flex flex-col justify-center items-center w-full mt-0 p-2 my-2 rounded-lg rounded-t-none border-t-0  border border-white transition-all duration-300"
+        className="flex flex-col justify-center items-center w-full mt-0 p-2 my-2 transition-all duration-300"
       >
         <div className="flex items-center justify-start w-full">
           <UserNameAndPhoto
@@ -146,7 +146,7 @@ export default function SmallItem({ post, index, show = true, id = false }) {
               : 'sm:my-4 text-xl sm:text-3xl line-clamp-1 max-w-[20ch] lg:max-w-[40ch]'
           } font-medium select-none text-wrap `}
         >
-          {post?.propertyName}
+          {post?.propertyName || post?.title}
         </h1>
         <PostGallery post={post} />
         {/* {show && (
@@ -219,7 +219,7 @@ export default function SmallItem({ post, index, show = true, id = false }) {
               path.includes('myPosts') || path.includes('favoritePosts')
                 ? 'text-md'
                 : 'sm:text-2xl'
-            } btn p-2 my-2 bg-three text-white hover:scale-[101%] hover: font-medium text-center select-none w-full transition-all duration-300 rounded`}
+            } btn p-2 my-2 bg-three text-white hover:scale-[101%] hover:font-medium rounded-[5px] text-center select-none w-full transition-all duration-300`}
         >
           عرض الإعلان
         </button>

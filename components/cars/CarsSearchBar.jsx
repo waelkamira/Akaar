@@ -25,7 +25,7 @@ import CarsBrandSelector from './CarsBrandSelector';
 import CategoryComponent from '../CategoryComponent';
 import CarsNavbar from './CarsNavbar';
 
-export default function CarsSearchBar({ propertyCategory }) {
+export default function CarsSearchBar({ category, imgLink }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isShow, setIsShow] = useState(false);
   const [minPrice, setMinPrice] = useState('');
@@ -57,7 +57,9 @@ export default function CarsSearchBar({ propertyCategory }) {
     setLoading(true);
     try {
       const response = await fetch(
-        `/api/search?limit=5&page=${pageNumber}&propertyCategory=${propertyCategory}&propertyCity=${propertyCity}&propertyTown=${propertyTown}&propertyType=${propertyType}&propertyRoomsNumber=${propertyRoomsNumber}&minPrice=${minPrice}&maxPrice=${maxPrice}`
+        `/api/search?limit=5&page=${pageNumber}&category,img=${
+          (category, img)
+        }&propertyCity=${propertyCity}&propertyTown=${propertyTown}&propertyType=${propertyType}&propertyRoomsNumber=${propertyRoomsNumber}&minPrice=${minPrice}&maxPrice=${maxPrice}`
       );
       if (response.ok) {
         const json = await response.json();
@@ -89,9 +91,9 @@ export default function CarsSearchBar({ propertyCategory }) {
   return (
     <div className="flex flex-col justify-center items-center w-full rounded-b">
       <CarsNavbar />
-      <div className="relative w-full h-[300px] lg:h-[600px] border overflow-hidden">
+      <div className="relative w-full h-[300px] lg:h-[600px] overflow-hidden">
         <Image
-          src="https://i.imgur.com/ZAC6X1M.jpg"
+          src={imgLink}
           fill
           alt="home_photo"
           className="object-cover object-center w-full h-auto"
@@ -137,22 +139,25 @@ export default function CarsSearchBar({ propertyCategory }) {
               </div>
               <div className="flex flex-col xl:flex-row items-center justify-center gap-2 mb-2 w-full px-2 ">
                 <div className="flex flex-col sm:flex-row gap-2 w-full">
-                  {propertyCategory === 'سيارات' ? (
-                    <>
-                      <CarsBrandSelector />
-                      <CategoryComponent />
-                    </>
-                  ) : (
-                    <>
-                      {' '}
-                      <div className="w-full">
-                        <PropertyTypeSelector />
-                      </div>
-                      <div className="w-full">
-                        <RoomsNumberSelector />
-                      </div>
-                    </>
-                  )}
+                  {
+                    (category,
+                    img === 'سيارات' ? (
+                      <>
+                        <CarsBrandSelector />
+                        <CategoryComponent />
+                      </>
+                    ) : (
+                      <>
+                        {' '}
+                        <div className="w-full">
+                          <PropertyTypeSelector />
+                        </div>
+                        <div className="w-full">
+                          <RoomsNumberSelector />
+                        </div>
+                      </>
+                    ))
+                  }
                 </div>
                 <CitySelector />
 
@@ -172,7 +177,7 @@ export default function CarsSearchBar({ propertyCategory }) {
                       placeholder="0"
                       value={minPrice}
                       onChange={(e) => setMinPrice(e.target.value)}
-                      className="w-full text-sm sm:text-lg rounded text-start z-40 h-9 sm:h-12 text-nowrap px-2 border border-slate-300 focus:outline-one"
+                      className="w-full text-sm sm:text-lg rounded text-start z-40 h-9 sm:h-12 text-nowrap px-2 border border-four focus:outline-one"
                     />
                   </div>
                   <div className=" w-full">
@@ -190,7 +195,7 @@ export default function CarsSearchBar({ propertyCategory }) {
                       placeholder="0"
                       value={maxPrice}
                       onChange={(e) => setMaxPrice(e.target.value)}
-                      className="w-full text-sm sm:text-lg rounded text-start z-40 h-9 sm:h-12 text-nowrap px-2 border border-slate-300 focus:outline-one"
+                      className="w-full text-sm sm:text-lg rounded text-start z-40 h-9 sm:h-12 text-nowrap px-2 border border-four focus:outline-one"
                     />
                   </div>
                 </div>

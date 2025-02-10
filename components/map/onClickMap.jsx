@@ -143,7 +143,7 @@ export default function OnClickMap({
     borderRadius: 5,
     colors: {
       ...theme.colors,
-      primary: '#ffa500',
+      primary: '#FF7C34',
       primary25: '#fadfae',
     },
   });
@@ -154,9 +154,9 @@ export default function OnClickMap({
       minHeight: minHeight,
       height: 'auto',
       backgroundColor: 'white',
-      borderColor: state.isFocused ? '#ffa500' : '#d1d5db',
+      borderColor: state.isFocused ? '#FF7C34' : '#A7A8AA',
       '&:hover': {
-        borderColor: '#ffa500',
+        borderColor: '#FF7C34',
       },
     }),
     valueContainer: (provided) => ({
@@ -213,7 +213,7 @@ export default function OnClickMap({
               classNames={{
                 control: (state) =>
                   `${
-                    state.isFocused ? 'border-orange-500' : 'border-gray-300'
+                    state.isFocused ? 'border-orange-500' : 'border-four'
                   } sm:h-12 h-8 w-full`,
               }}
             />
@@ -242,7 +242,7 @@ export default function OnClickMap({
                 classNames={{
                   control: (state) =>
                     `${
-                      state.isFocused ? 'border-orange-500' : 'border-gray-300'
+                      state.isFocused ? 'border-orange-500' : 'border-four'
                     } sm:h-12 h-8 w-full`,
                 }}
               />
@@ -253,7 +253,6 @@ export default function OnClickMap({
 
       <div className="w-full h-72 sm:h-[500px] rounded-md overflow-hidden shadow-lg relative z-30">
         <MapContainer
-          key={`${selectedLocation[0]}-${selectedLocation[1]}`}
           center={selectedLocation}
           zoom={7}
           className="w-full h-full"
@@ -289,9 +288,9 @@ export default function OnClickMap({
       </div>
 
       {selectedLocation && (
-        <div className="mt-4 p-4 bg-gray-100 rounded  shadow-sm">
+        <div className="mt-4 p-4 bg-white rounded  shadow-sm border border-four">
           <p>
-            <h1 className="sm:font-bold">موقع العقار الذي قمت بتحديده:</h1>{' '}
+            <h1 className="sm:font-bold"> الموقع الذي قمت بتحديده:</h1>{' '}
             {selectedLocation[0].toFixed(5)}, {selectedLocation[1].toFixed(5)}{' '}
           </p>
         </div>
