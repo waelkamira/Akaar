@@ -1,98 +1,55 @@
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
+import { toInteger } from 'lodash';
 
 const prisma = new PrismaClient();
 
-export async function GET(req) {
-  const url = new URL(req.url);
-  const searchParams = url.searchParams;
-
-  const page = Math.max(1, parseInt(searchParams.get('page')) || 1);
-  const limit = Math.max(1, parseInt(searchParams.get('limit')) || 5);
-  const skip = (page - 1) * limit;
-
-  const filters = {};
-
-  // تطبيق الفلاتر بناءً على المعلمات المقدمة
-  const propertyCategory = searchParams.get('propertyCategory')?.trim();
-  const propertyCity = searchParams.get('propertyCity')?.trim();
-  const propertyTown = searchParams.get('propertyTown')?.trim();
-  const propertyType = searchParams.get('propertyType')?.trim();
-  let propertyRoomsNumber = searchParams.get('propertyRoomsNumber')?.trim();
-  const propertyArea = searchParams.get('propertyArea')?.trim();
-  const phoneNumber = searchParams.get('phoneNumber')?.trim();
-  const userName = searchParams.get('userName')?.trim();
-
-  const minPrice = searchParams.get('minPrice')
-    ? parseInt(searchParams.get('minPrice'))
-    : null;
-  const maxPrice = searchParams.get('maxPrice')
-    ? parseInt(searchParams.get('maxPrice'))
-    : null;
-
-  // تطبيق الفلاتر
-  if (propertyCategory && propertyCategory !== 'undefined') {
-    filters.propertyCategory = propertyCategory;
-  }
-
-  if (propertyCity && propertyCity !== 'undefined') {
-    filters.propertyCity = propertyCity;
-  }
-
-  if (propertyTown && propertyTown !== 'undefined') {
-    filters.propertyTown = propertyTown;
-  }
-
-  if (propertyType && propertyType !== 'undefined') {
-    filters.propertyType = propertyType;
-  }
-
-  if (propertyRoomsNumber && propertyRoomsNumber !== 'undefined') {
-    // تنظيف القيمة: تحويل "4   1" إلى "4 + 1"
-    propertyRoomsNumber = propertyRoomsNumber
-      .replace(/\s+/g, ' ') // استبدال المسافات المتعددة بمسافة واحدة
-      .trim() // إزالة المسافات الزائدة من البداية والنهاية
-      .replace(/\s/g, ' + '); // استبدال المسافة الواحدة بعلامة "+" مع مسافات حولها
-
-    filters.propertyRoomsNumber = {
-      equals: propertyRoomsNumber, // مطابقة تامة لعدد الغرف
-    };
-  }
-
-  if (propertyArea && propertyArea !== 'undefined') {
-    filters.propertyArea = propertyArea;
-  }
-
-  if (phoneNumber && phoneNumber !== 'undefined') {
-    filters.phoneNumber = phoneNumber;
-  }
-
-  if (userName && userName !== 'undefined') {
-    filters.userName = userName;
-  }
-
-  // تصفية بناءً على نطاق السعر
-  if (minPrice !== null || maxPrice !== null) {
-    filters.propertyPrice = {
-      ...(minPrice !== null ? { gte: minPrice } : {}),
-      ...(maxPrice !== null ? { lte: maxPrice } : {}),
-    };
-  }
-
+export async function POST(req) {
   try {
-    // الحصول على العدد الإجمالي للنتائج
-    const totalCount = await prisma.car.count({
-      where: filters,
-    });
+    const body = await req.json();
+    // تفكيك البيانات مع قيم افتراضية
+    const {
+      page = 1,
+      limit = 5,
+      city,
+      town,
+      adType,
+      brand,
+      minPrice,
+      maxPrice,
+    } = body;
 
-    // جلب النتائج من قاعدة البيانات
-    const properties = await prisma.car.findMany({
-      where: filters,
+    // حساب البيانات للصفحة الحالية
+    const skip = (page - 1) * limit;
+
+    // إعداد شروط الفلترة
+    const filters = {};
+
+    // تطبيق الفلاتر فقط إذا كانت القيم موجودة
+    if (brand) filters.brand = brand;
+    if (city) filters.city = city;
+    if (town) filters.town = town;
+    if (adType) filters.adType = adType;
+
+    // فلترة الأسعار إذا كانت محددة
+    if (minPrice || maxPrice) {
+      filters.price = {
+        ...(minPrice ? { gte: toInteger(minPrice) } : {}),
+        ...(maxPrice ? { lte: toInteger(maxPrice) } : {}),
+      };
+    }
+
+    console.log('Where Condition:', JSON.stringify(filters, null, 2));
+    console.log(city, town, 'adType', adType, brand, minPrice, maxPrice);
+
+    // جلب البيانات من قاعدة البيانات
+    const cars = await prisma.car.findMany({
+      where: Object.keys(filters).length > 0 ? filters : {}, // تطبيق الفلاتر إذا كانت موجودة
       skip,
       take: limit,
       orderBy: { createdAt: 'desc' },
       select: {
-        id: true, // إذا كان id غير موجود، سيتم إنشاؤه تلقائيًا بواسطة Prisma
+        id: true,
         userName: true,
         userImage: true,
         adType: true,
@@ -118,21 +75,14 @@ export async function GET(req) {
         createdBy: true,
         createdAt: true,
         updatedAt: true,
-        updatedAt: true,
       },
     });
 
-    console.log('Applied Filters:', filters);
-    console.log('Properties found:', properties);
+    // console.log('Cars:', cars);
 
-    return NextResponse.json({
-      totalCount, // العدد الإجمالي للنتائج
-      currentPage: page,
-      totalPages: Math.ceil(totalCount / limit),
-      properties,
-    });
+    return NextResponse.json(cars);
   } catch (error) {
-    console.error('Error fetching properties:', error);
+    console.error('Error fetching cars:', error);
     return NextResponse.json(
       { error: 'Internal Server Error' },
       { status: 500 }

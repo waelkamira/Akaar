@@ -28,7 +28,7 @@ export default function SmallItem({ post, index, show = true, id = false }) {
       }
     }
 
-    checkPostActionsStatus(post);
+    // checkPostActionsStatus(post);
   }, [post]);
 
   async function checkPostActionsStatus(post) {
@@ -44,47 +44,47 @@ export default function SmallItem({ post, index, show = true, id = false }) {
     }
   }
 
-  async function handleInteraction(postId) {
-    console.log('postId', postId, 'heart', heart);
-    setHeart(!heart); // تحديث حالة القلب المحلية
-    try {
-      const email = session?.data?.user?.email;
-      console.log(email);
-      const response = await fetch(`/api/favoritePosts`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          postId,
-          email,
-        }),
-      });
+  // async function handleInteraction(postId) {
+  //   console.log('postId', postId, 'heart', heart);
+  //   setHeart(!heart); // تحديث حالة القلب المحلية
+  //   try {
+  //     const email = session?.data?.user?.email;
+  //     console.log(email);
+  //     const response = await fetch(`/api/favoritePosts`, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({
+  //         postId,
+  //         email,
+  //       }),
+  //     });
 
-      if (response.ok) {
-        const result = await response.json();
+  //     if (response.ok) {
+  //       const result = await response.json();
 
-        toast.custom((t) => (
-          <CustomToast
-            t={t}
-            message={'تمت إضافة هذا الإعلان إلى المفضلة'}
-            greenEmoji={'✔'}
-            emoji={''}
-          />
-        ));
-      } else {
-        console.error(`Failed to toggle ${action}`);
-        toast.custom((t) => (
-          <CustomToast t={t} message={'حدث خطأ ما'} emoji={'😐'} />
-        ));
-      }
-    } catch (error) {
-      console.error('Error in handleInteraction:', error);
-      toast.custom((t) => (
-        <CustomToast t={t} message={'حدث خطأ ما'} emoji={'😐'} />
-      ));
-    }
-  }
+  //       toast.custom((t) => (
+  //         <CustomToast
+  //           t={t}
+  //           message={'تمت إضافة هذا الإعلان إلى المفضلة'}
+  //           greenEmoji={'✔'}
+  //           emoji={''}
+  //         />
+  //       ));
+  //     } else {
+  //       console.error(`Failed to toggle ${action}`);
+  //       toast.custom((t) => (
+  //         <CustomToast t={t} message={'حدث خطأ ما'} emoji={'😐'} />
+  //       ));
+  //     }
+  //   } catch (error) {
+  //     console.error('Error in handleInteraction:', error);
+  //     toast.custom((t) => (
+  //       <CustomToast t={t} message={'حدث خطأ ما'} emoji={'😐'} />
+  //     ));
+  //   }
+  // }
 
   //? لحذف أي بوست من أي مستخدم هذه الدالة خاصة بالأدمن فقط
   async function handleDeletePost(post) {
