@@ -10,7 +10,6 @@ export async function GET(req) {
   const page = Math.max(1, parseInt(searchParams.get('page')) || 1);
   const limit = Math.max(1, parseInt(searchParams.get('limit')) || 5);
   const skip = (page - 1) * limit;
-
   const filters = {};
 
   // تطبيق الفلاتر بناءً على المعلمات المقدمة
@@ -93,11 +92,11 @@ export async function GET(req) {
       orderBy: { createdAt: 'desc' },
       select: {
         id: true,
-        image: true,
         image1: true,
         image2: true,
         image3: true,
         image4: true,
+        image5: true,
         propertyCategory: true,
         propertyName: true,
         propertyType: true,

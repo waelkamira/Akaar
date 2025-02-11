@@ -81,41 +81,43 @@ export async function GET(req) {
 
   try {
     // الحصول على العدد الإجمالي للنتائج
-    const totalCount = await prisma.property.count({
+    const totalCount = await prisma.car.count({
       where: filters,
     });
 
     // جلب النتائج من قاعدة البيانات
-    const properties = await prisma.property.findMany({
+    const properties = await prisma.car.findMany({
       where: filters,
       skip,
       take: limit,
       orderBy: { createdAt: 'desc' },
       select: {
-        id: true,
-        image: true,
+        id: true, // إذا كان id غير موجود، سيتم إنشاؤه تلقائيًا بواسطة Prisma
+        userName: true,
+        userImage: true,
+        adType: true,
+        title: true,
+        brand: true,
+        model: true,
+        usedNew: true,
+        year: true,
+        price: true,
         image1: true,
         image2: true,
         image3: true,
         image4: true,
-        propertyCategory: true,
-        propertyName: true,
-        propertyType: true,
-        propertyRoomsNumber: true,
-        propertyPrice: true,
-        propertyArea: true,
-        propertyCity: true,
-        propertyTown: true,
-        phoneNumber: true,
+        image5: true,
+        city: true,
+        town: true,
         description: true,
-        lng: true,
+        distance: true,
+        phoneNumber: true,
         lat: true,
+        lng: true,
         link: true,
-        hearts: true,
-        userName: true,
-        userImage: true,
         createdBy: true,
         createdAt: true,
+        updatedAt: true,
         updatedAt: true,
       },
     });

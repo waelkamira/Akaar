@@ -21,7 +21,7 @@ import { LuArrowUpNarrowWide } from 'react-icons/lu';
 import Image from 'next/image';
 import MiddleBarAndPhoto from '../middleBarAndPhoto';
 import NavegationPages from '../NavegationPages';
-import CarsNavbar from '../Cars/CarsNavbar';
+import RealEstarteNavbar from '../RealEstate/RealEstarteNavbar';
 
 export default function SearchBar({ propertyCategory }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -51,11 +51,12 @@ export default function SearchBar({ propertyCategory }) {
   }, [data]);
 
   console.log('propertyRoomsNumber', propertyRoomsNumber);
+
   const fetchAllPosts = async () => {
     setLoading(true);
     try {
       const response = await fetch(
-        `/api/search?limit=5&page=${pageNumber}&propertyCategory=${propertyCategory}&propertyCity=${propertyCity}&propertyTown=${propertyTown}&propertyType=${propertyType}&propertyRoomsNumber=${propertyRoomsNumber}&minPrice=${minPrice}&maxPrice=${maxPrice}`
+        `/api/RealEstate/search?limit=5&page=${pageNumber}&propertyCategory=${propertyCategory}&propertyCity=${propertyCity}&propertyTown=${propertyTown}&propertyType=${propertyType}&propertyRoomsNumber=${propertyRoomsNumber}&minPrice=${minPrice}&maxPrice=${maxPrice}`
       );
       if (response.ok) {
         const json = await response.json();
@@ -85,9 +86,9 @@ export default function SearchBar({ propertyCategory }) {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center w-full rounded-b">
-      <CarsNavbar />
-      <div className="relative w-full h-[300px] lg:h-[600px] border overflow-hidden">
+    <div className="flex flex-col justify-center items-center w-full rounded-b bg-five">
+      <RealEstarteNavbar />
+      {/* <div className="relative w-full h-[300px] lg:h-[600px] border overflow-hidden">
         <Image
           src="https://i.imgur.com/wZ0aruw.jpg"
           fill
@@ -95,8 +96,8 @@ export default function SearchBar({ propertyCategory }) {
           className="object-cover object-center w-full h-auto"
           objectPosition="top"
         />
-      </div>
-      <div className="flex flex-col w-full mt-4 rounded-[5px] flex-grow xl:w-[90%] 2xl:w-[70%] h-[1370px] px-2 pt-2 overflow-y-auto border rounded-b z-[0]">
+      </div> */}
+      <div className="flex flex-col w-full mt-4 rounded-[5px] flex-grow xl:w-[90%] 2xl:w-[60%] h-[1370px] px-2 pt-2 overflow-y-auto border rounded-b z-[0]">
         <MiddleBarAndPhoto
           isOpen={isOpen}
           setIsOpen={setIsOpen}
@@ -192,30 +193,6 @@ export default function SearchBar({ propertyCategory }) {
               {allPosts?.map((post, index) => (
                 <SmallItem key={index} post={post} />
               ))}
-              {/* <div className="flex items-center justify-around sm:my-2">
-                {allPosts?.length >= 5 && (
-                  <Link href={'#post1'}>
-                    <div
-                      className="flex items-center cursor-pointer"
-                      onClick={() => setPageNumber(pageNumber + 1)}
-                    >
-                      <h1 className="">الصفحة التالية</h1>
-                      <MdKeyboardDoubleArrowRight className="text-2xl  text-one" />
-                    </div>
-                  </Link>
-                )}
-                {pageNumber > 1 && (
-                  <Link href={'#post1'}>
-                    <div
-                      className="flex items-center cursor-pointer"
-                      onClick={() => setPageNumber(pageNumber - 1)}
-                    >
-                      <MdKeyboardDoubleArrowLeft className="text-2xl  text-one" />
-                      <h1 className="">الصفحة السابقة</h1>
-                    </div>
-                  </Link>
-                )}
-              </div> */}
               <NavegationPages
                 array={allPosts}
                 setPageNumber={setPageNumber}

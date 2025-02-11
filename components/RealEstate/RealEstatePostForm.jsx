@@ -81,11 +81,11 @@ export default function PostForm({ setIsVisible, cancel = true }) {
 
   const [inputs, setInputs] = useState({
     id: uuidv4(),
-    image: '',
     image1: '',
     image2: '',
     image3: '',
     image4: '',
+    image5: '',
     propertyCategory: '',
     propertyName: '',
     propertyType: '',
@@ -115,11 +115,11 @@ export default function PostForm({ setIsVisible, cancel = true }) {
       propertyCity: data?.propertyCity || '',
       propertyTown: data?.propertyTown || '',
       propertyCategory: category?.label || '',
-      image: addImages?.[0] || '',
-      image1: addImages?.[1] || '',
-      image2: addImages?.[2] || '',
-      image3: addImages?.[3] || '',
-      image4: addImages?.[4] || '',
+      image1: addImages?.[0] || '',
+      image2: addImages?.[1] || '',
+      image3: addImages?.[2] || '',
+      image4: addImages?.[3] || '',
+      image5: addImages?.[4] || '',
       lat: location[0] || 33.5138,
       lng: location[1] || 36.2765,
     });
@@ -181,11 +181,11 @@ export default function PostForm({ setIsVisible, cancel = true }) {
           dispatch({ type: 'LOCATION', payload: [] });
           setIsVisible(false);
           setInputs({
-            image: '',
             image1: '',
             image2: '',
             image3: '',
             image4: '',
+            image5: '',
             propertyName: '',
             propertyCategory: '',
             propertyType: '',
@@ -628,11 +628,11 @@ export default function PostForm({ setIsVisible, cancel = true }) {
                 onClick={() => {
                   setIsVisible(false);
                   setInputs({
-                    image: '',
                     image1: '',
                     image2: '',
                     image3: '',
                     image4: '',
+                    image5: '',
                     propertyName: '',
                     propertyType: '',
                     propertyRoomsNumber: '',
