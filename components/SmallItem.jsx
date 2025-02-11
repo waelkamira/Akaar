@@ -114,7 +114,7 @@ export default function SmallItem({ post, index, show = true, id = false }) {
   }
 
   return (
-    <div className="rounded-b-lg bg-white mb-4 w-full h-full">
+    <div className="rounded-[5px] bg-white mb-4 w-full h-full border sm:px-16">
       {!post && <Loading />}
       <div
         key={index}

@@ -57,7 +57,7 @@ export default function CarsSearchBar({ category, imgLink }) {
     setLoading(true);
     try {
       const response = await fetch(
-        `/api/search?limit=5&page=${pageNumber}&category,img=${
+        `/api/Cars/search?limit=5&page=${pageNumber}&category,img=${
           (category, img)
         }&propertyCity=${propertyCity}&propertyTown=${propertyTown}&propertyType=${propertyType}&propertyRoomsNumber=${propertyRoomsNumber}&minPrice=${minPrice}&maxPrice=${maxPrice}`
       );

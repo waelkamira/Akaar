@@ -10,6 +10,8 @@ import Link from 'next/link';
 import CustomToast from '../../components/CustomToast';
 import BackButton from '../../components/BackButton';
 import MiddleBarAndPhoto from '../../components/middleBarAndPhoto';
+import Loading from '../../components/Loading';
+import LoadingPhoto from '../../components/LoadingPhoto';
 export default function Profile() {
   const session = useSession();
   const [isOpen, setIsOpen] = useState(false);
@@ -67,7 +69,7 @@ export default function Profile() {
             يجب عليك تسجيل الدخول أولا لرؤية هذا البروفايل
           </h1>
           <div className="flex flex-col justify-between items-center gap-4 w-full">
-            <Button title={'تسجيل الدخول'} style= path="/login" />
+            <Button title={'تسجيل الدخول'} style={' '} path="/login" />
 
             <BackButton />
           </div>
@@ -80,16 +82,21 @@ export default function Profile() {
             setIsOpen={setIsOpen}
             noButton={true}
           />
-          <div className="flex flex-col items-start gap-4 justify-start w-full h-full overflow-hidden rounded border border-one xl:mt-4">
-            <div className="relative w-full my-2">
-              <div className="relative min-h-64 w-full">
-                <Image
-                  priority
-                  src={user?.image}
-                  layout="fill"
-                  objectFit="contain"
-                  alt={user?.name}
-                />
+          <div className="flex flex-col items-start gap-4 justify-start w-full h-full overflow-hidden rounded-lg border border-one xl:mt-4">
+            <div className="flex justify-center items-center w-full bg-two py-2">
+              {' '}
+              <div className="relative min-h-64 w-64 rounded-full overflow-hidden bg-two">
+                {!user?.image && <LoadingPhoto />}
+                {user?.image && (
+                  <Image
+                    priority
+                    src={user?.image}
+                    layout="fill"
+                    objectFit="contain"
+                    alt={user?.name}
+                    className="rounded-full overflow-hidden"
+                  />
+                )}
               </div>
             </div>
 
@@ -146,7 +153,7 @@ export default function Profile() {
               </div>
               <div className="flex flex-col items-center gap-2 justify-between  px-8 py-2 w-full my-2">
                 <Link href={'/myPosts'} className="w-full">
-                  <h1 className="text-nowrap text-sm  md:text-lg lg:text-xl text-start w-full select-none cursor-pointer ">
+                  <h1 className="text-nowrap text-sm hover:text-one md:text-lg lg:text-xl text-start w-full select-none cursor-pointer ">
                     <span className="text-one text-md xl:text-xl lg:text-2xl ml-2 ">
                       #
                     </span>
@@ -157,7 +164,7 @@ export default function Profile() {
                   <hr className="w-full h-0.5 bg-gray-400  border-hidden" />
                 </div>
               </div>
-              <div className="flex flex-col items-center gap-2 justify-between  px-8 py-2 w-full my-2">
+              {/* <div className="flex flex-col items-center gap-2 justify-between  px-8 py-2 w-full my-2">
                 <Link href={'/favoritePosts'} className="w-full">
                   <h1 className="text-nowrap text-sm  md:text-lg lg:text-xl text-start w-full select-none cursor-pointer ">
                     <span className="text-one text-md xl:text-xl lg:text-2xl ml-2 ">
@@ -169,12 +176,12 @@ export default function Profile() {
                 <div className="flex items-center w-full">
                   <hr className="w-full h-0.5 bg-gray-400  border-hidden" />
                 </div>
-              </div>
+              </div> */}
 
               <div className="w-full px-8 pb-8">
                 <Button
                   title={'تسجيل الخروج'}
-                  style=
+                  style={' '}
                   onClick={() => signOut()}
                 />
               </div>

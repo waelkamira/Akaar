@@ -64,7 +64,7 @@ export default function SideBar() {
 
         {session?.status === 'unauthenticated' && (
           <div className="px-4 py-8">
-            <Button title={'تسجيل دخول'} style= path="/login" />
+            <Button title={'تسجيل دخول'} style={' '} path="/login" />
           </div>
         )}
       </div>
@@ -86,14 +86,14 @@ export default function SideBar() {
               <NewPostButton />
             </div>
 
-            <Button title={'إعلاناتي'} style= path="/myPosts" />
+            <Button title={'إعلاناتي'} style={' '} path="/myPosts" />
             <Button
               title={'إعلانات أعجبتني'}
-              style=
+              style={' '}
               path="/favoritePosts"
             />
             {session?.status === 'authenticated' && user?.isAdmin === 0 && (
-              <Button title={'المستخدمين'} style= path="/users" />
+              <Button title={'المستخدمين'} style={' '} path="/users" />
             )}
           </div>
 

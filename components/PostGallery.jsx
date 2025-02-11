@@ -81,7 +81,7 @@ const PostGallery = ({ post }) => {
             path.includes('myPosts') || path.includes('favoritePosts')
               ? ''
               : 'sm:h-96'
-          }  overflow-hidden ronded w-full`}
+          }  overflow-hidden ronded-[5px] w-full`}
       >
         <Image
           priority
@@ -116,7 +116,7 @@ const PostGallery = ({ post }) => {
             path.includes('myPosts') || path.includes('favoritePosts')
               ? ''
               : 'sm:h-96'
-          }  overflow-hidden ronded w-full`}
+          }  overflow-hidden ronded-[5px] w-full`}
           >
             <Image
               priority
