@@ -25,7 +25,7 @@ export default function Page() {
       if (id) fetchPost(id);
     }
   }, [postId]);
-  console.log('post', post);
+  // console.log('post', post);
 
   async function fetchPost(id) {
     const response = await fetch(`/api/RealEstate/showPostById`, {
