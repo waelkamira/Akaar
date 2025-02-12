@@ -7,17 +7,26 @@ const prisma = new PrismaClient();
 export async function POST(req) {
   try {
     const body = await req.json();
+
     // تفكيك البيانات مع قيم افتراضية
     const {
-      page = 1,
-      limit = 5,
-      city,
-      town,
-      adType,
-      brand,
-      minPrice,
-      maxPrice,
+      page = 1, // الصفحة الحالية (افتراضيًا 1)
+      limit = 5, // عدد العناصر في كل صفحة (افتراضيًا 5)
+      city, // المدينة (اختياري)
+      town, // المنطقة (اختياري)
+      adType, // نوع الإعلان (اختياري)
+      brand, // الماركة (اختياري)
+      minPrice, // الحد الأدنى للسعر (اختياري)
+      maxPrice, // الحد الأقصى للسعر (اختياري)
     } = body;
+    console.log(
+      city, // المدينة (اختياري)
+      town, // المنطقة (اختياري)
+      adType, // نوع الإعلان (اختياري)
+      brand, // الماركة (اختياري)
+      minPrice, // الحد الأدنى للسعر (اختياري)
+      maxPrice
+    );
 
     // حساب البيانات للصفحة الحالية
     const skip = (page - 1) * limit;
@@ -25,29 +34,30 @@ export async function POST(req) {
     // إعداد شروط الفلترة
     const filters = {};
 
-    // تطبيق الفلاتر فقط إذا كانت القيم موجودة
-    if (brand) filters.brand = brand;
-    if (city) filters.city = city;
-    if (town) filters.town = town;
-    if (adType) filters.adType = adType;
+    // 1. تطبيق الفلاتر فقط إذا كانت القيم موجودة
+    if (brand) filters.brand = brand; // فلتر الماركة
+    if (city) filters.city = city; // فلتر المدينة
+    if (town) filters.town = town; // فلتر المنطقة
+    if (adType) filters.adType = adType; // فلتر نوع الإعلان
 
-    // فلترة الأسعار إذا كانت محددة
+    // 2. فلترة الأسعار إذا كانت محددة
     if (minPrice || maxPrice) {
       filters.price = {
-        ...(minPrice ? { gte: toInteger(minPrice) } : {}),
-        ...(maxPrice ? { lte: toInteger(maxPrice) } : {}),
+        ...(minPrice ? { gte: toInteger(minPrice) } : {}), // الحد الأدنى للسعر
+        ...(maxPrice ? { lte: toInteger(maxPrice) } : {}), // الحد الأقصى للسعر
       };
     }
 
-    console.log('Where Condition:', JSON.stringify(filters, null, 2));
-    console.log(city, town, 'adType', adType, brand, minPrice, maxPrice);
+    // تسجيل شروط الفلترة للتتبع
+    // console.log('Where Condition:', JSON.stringify(filters, null, 2));
+    // console.log('Filters:', { city, town, adType, brand, minPrice, maxPrice });
 
     // جلب البيانات من قاعدة البيانات
     const cars = await prisma.car.findMany({
       where: Object.keys(filters).length > 0 ? filters : {}, // تطبيق الفلاتر إذا كانت موجودة
-      skip,
-      take: limit,
-      orderBy: { createdAt: 'desc' },
+      skip, // تخطي العناصر للصفحة الحالية
+      take: limit, // عدد العناصر المطلوبة
+      orderBy: { createdAt: 'desc' }, // ترتيب النتائج من الأحدث إلى الأقدم
       select: {
         id: true,
         userName: true,
@@ -78,16 +88,20 @@ export async function POST(req) {
       },
     });
 
+    // تسجيل النتائج للتتبع
     // console.log('Cars:', cars);
 
+    // إرجاع النتائج كـ JSON
     return NextResponse.json(cars);
   } catch (error) {
+    // تسجيل الأخطاء في حالة حدوثها
     console.error('Error fetching cars:', error);
     return NextResponse.json(
       { error: 'Internal Server Error' },
       { status: 500 }
     );
   } finally {
+    // إغلاق اتصال Prisma بعد الانتهاء
     await prisma.$disconnect();
   }
 }
