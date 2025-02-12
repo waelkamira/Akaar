@@ -15,6 +15,7 @@ import { ImProfile } from 'react-icons/im';
 import { MdFavoriteBorder } from 'react-icons/md';
 import { TbTargetArrow } from 'react-icons/tb';
 import ClockWidget from '../ClockWidget';
+import { FaCarSide } from 'react-icons/fa';
 
 export default function CarsNavbar() {
   const router = useRouter();
@@ -31,9 +32,16 @@ export default function CarsNavbar() {
         <ul className="flex justify-evenly gap-4 mr-4 items-center h-20 py-4 w-5/6">
           <div
             className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-14 transition-all duration-300"
-            onClick={() => router.push('/Cars')}
+            onClick={() => router.push('/')}
           >
             <FaHome className="text-xl select-none text-one" />
+            <li className=" text-xl select-none">الرئيسية</li>
+          </div>
+          <div
+            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-14 transition-all duration-300"
+            onClick={() => router.push('/Cars')}
+          >
+            <FaCarSide className="text-xl select-none text-one" />
             <li className=" text-xl select-none">سيارات</li>
           </div>
           <div className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-14 transition-all duration-300">

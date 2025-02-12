@@ -208,7 +208,7 @@ export default function OnClickMap({
               isSearchable
               theme={customTheme}
               styles={customStyles}
-              className="w-full text-md text-start rounded select-none "
+              className="w-full text-md text-start text-black rounded select-none "
               classNamePrefix="select"
               classNames={{
                 control: (state) =>
@@ -237,7 +237,7 @@ export default function OnClickMap({
                 isSearchable
                 theme={customTheme}
                 styles={customStyles}
-                className="w-full text-md text-start rounded select-none "
+                className="w-full text-md text-start text-black rounded select-none "
                 classNamePrefix="select"
                 classNames={{
                   control: (state) =>
