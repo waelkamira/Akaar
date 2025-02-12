@@ -42,10 +42,8 @@ export default function Home() {
   return (
     <main className="flex flex-col items-center justify-center overflow-hidden z-50 h-fit w-full bg-five rounded-b">
       <MainNavbar />
-      <div className="flex flex-col justify-center items-center w-full border ">
-        <h1 className="w-full text-center sm:text-lg my-4">
-          أحدث إعلانات العقارات
-        </h1>
+      <div className="flex flex-col justify-center items-center w-full border-b mt-20 xl:mt-40">
+        <h1 className="w-full text-center sm:text-lg my-4">عقارات</h1>
         {!realEstate && <Loading />}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-center items-center gap-4 w-full 2xl:w-[80%] h-full p-4 mb-4">
           {realEstate?.length > 0 &&
@@ -80,7 +78,7 @@ export default function Home() {
         </div>
         <h1
           onClick={() => router.push('/RealEstate/buy')}
-          className="flex items-center justify-center w-full text-one hover:scale-105 cursor-pointer mb-16 sm:text-xl"
+          className="flex items-center justify-center w-full text-one hover:scale-105 cursor-pointer mb-8 sm:text-xl"
         >
           المزيد من العقارات{' '}
           <span>
@@ -88,10 +86,8 @@ export default function Home() {
           </span>
         </h1>
       </div>
-      <div className="flex flex-col justify-center items-center w-full border ">
-        <h1 className="w-full text-center sm:text-lg my-4">
-          أحدث إعلانات السيارات
-        </h1>
+      <div className="flex flex-col justify-center items-center w-full ">
+        <h1 className="w-full text-center sm:text-lg my-4">سيارات</h1>
 
         {!cars && <Loading />}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-center items-center gap-4 w-full 2xl:w-[80%] h-full p-4 mb-4">
@@ -126,7 +122,7 @@ export default function Home() {
         </div>
         <h1
           onClick={() => router.push('/Cars/buy')}
-          className="flex items-center justify-center w-full text-one hover:scale-105 cursor-pointer mb-16 sm:text-xl"
+          className="flex items-center justify-center w-full text-one hover:scale-105 cursor-pointer mb-8 sm:text-xl"
         >
           المزيد من السيارات{' '}
           <span>
