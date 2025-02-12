@@ -22,20 +22,20 @@ export default function MainNavbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <>
+    <div className="flex-1 w-full fixed top-0 right-0 z-50">
       <div
         className={`hidden xl:flex xl:flex-col xl:justify-between w-full overflow-hidden bg-two text-white border-three px-4`}
       >
         <div className="flex justify-between items-center w-full">
           <ul className="flex justify-between gap-4 items-center h-20 py-4 w-5/6">
             <div
-              className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-14 transition-all duration-300"
+              className="flex items-center justify-center gap-2 border-one hover:border-t-4 shadow-one hover:shadow-lg rounded-lg  hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-14 transition-all duration-300"
               onClick={() => router.push('/')}
             >
               <FaHome className="text-xl select-none text-one" />
               <li className=" text-xl select-none">الرئيسية</li>
             </div>
-            <div className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-14 transition-all duration-300">
+            <div className="flex items-center justify-center gap-2 border-one hover:border-t-4 shadow-one hover:shadow-lg rounded-lg  hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-14 transition-all duration-300">
               {session?.status === 'unauthenticated' && (
                 <div
                   className="flex items-center justify-center gap-2 hover:cursor-pointer h-14 transition-all duration-300"
@@ -57,7 +57,7 @@ export default function MainNavbar() {
             </div>
 
             <div
-              className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-14 transition-all duration-300"
+              className="flex items-center justify-center gap-2 border-one hover:border-t-4 shadow-one hover:shadow-lg rounded-lg  hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-14 transition-all duration-300"
               onClick={() => router.push('/myPosts')}
             >
               <FaCanadianMapleLeaf className="text-xl select-none text-one" />
@@ -66,7 +66,7 @@ export default function MainNavbar() {
               </li>
             </div>
             {/* <div
-            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-14 transition-all duration-300"
+            className="flex items-center justify-center gap-2 border-one hover:border-t-4 shadow-one hover:shadow-lg rounded-lg  hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-14 transition-all duration-300"
             onClick={() => router.push('/favoritePosts')}
           >
             <TbTargetArrow className="text-xl select-none text-one" />
@@ -75,14 +75,14 @@ export default function MainNavbar() {
             </li>
           </div> */}
             <div
-              className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-14 transition-all duration-300"
+              className="flex items-center justify-center gap-2 border-one hover:border-t-4 shadow-one hover:shadow-lg rounded-lg  hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-14 transition-all duration-300"
               onClick={() => router.push('/RealEstate')}
             >
               <MdOutlineMapsHomeWork className="text-xl select-none text-one" />
               <li className=" text-xl select-none">عقارات</li>
             </div>
             <div
-              className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-14 transition-all duration-300"
+              className="flex items-center justify-center gap-2 border-one hover:border-t-4 shadow-one hover:shadow-lg rounded-lg  hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-14 transition-all duration-300"
               onClick={() => router.push('/Cars')}
             >
               <GiCarWheel className="text-xl select-none text-one" />
@@ -90,7 +90,7 @@ export default function MainNavbar() {
             </div>
 
             <div
-              className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-14 transition-all duration-300"
+              className="flex items-center justify-center gap-2 border-one hover:border-t-4 shadow-one hover:shadow-lg rounded-lg  hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-14 transition-all duration-300"
               onClick={() => router.push('/contactUs')}
             >
               <FcConferenceCall className="text-xl select-none text-one" />
@@ -149,15 +149,14 @@ export default function MainNavbar() {
           />
         </div>
         <input
-          type="number"
-          id="maxPrice"
+          type="text"
+          id="main_search"
           autoFocus
           placeholder="ابحث عن عقار .. سيارة ..."
-          value={''}
           // onChange={(e) => setMaxPrice(e.target.value)}
-          className="w-full xl:w-1/2 2xl:w-1/4 text-sm sm:text-lg rounded text-start z-40 h-9 sm:h-12 text-nowrap px-2 border border-four focus:outline-one"
+          className="w-full xl:w-1/2 2xl:w-2/5 my-2 text-sm sm:text-lg rounded text-start z-40 h-9 sm:h-11 text-nowrap px-2 border border-four focus:outline-one"
         />
       </div>
-    </>
+    </div>
   );
 }

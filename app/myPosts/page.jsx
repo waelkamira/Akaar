@@ -71,7 +71,7 @@ export default function MyPosts() {
   }
 
   return (
-    <div className="flex flex-col justify-center items-center w-full">
+    <div className="flex flex-col justify-center items-center w-full mt-20 xl:mt-44">
       <MainNavbar />
       {/* <div className="relative w-full h-[300px] lg:h-[400px] border overflow-hidden">
         <Image
@@ -82,7 +82,12 @@ export default function MyPosts() {
           objectPosition="center"
         />
       </div> */}
-      <div className="flex flex-col w-full xl:w-[90%]  h-fit px-2 sm:px-16 pt-2 overflow-y-auto z-10 ">
+      {myPosts?.length === 0 && (
+        <Loading
+          myMessage={'😉 لا يوجد نتائج لعرضها ,لم تقم بإنشاء أي إعلان بعد'}
+        />
+      )}
+      <div className="flex flex-col w-full xl:w-[90%] 2xl:w-[80%] h-fit px-2 sm:px-16 pt-2 overflow-y-auto z-10 ">
         <MiddleBarAndPhoto
           isOpen={isOpen}
           setIsOpen={setIsOpen}
@@ -120,12 +125,6 @@ export default function MyPosts() {
           </h1>
         </div>
         <div>
-          {myPosts?.length === 0 && (
-            <Loading
-              myMessage={'😉 لا يوجد نتائج لعرضها ,لم تقم بإنشاء أي إعلان بعد'}
-            />
-          )}
-
           <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 p-2 sm:p-4 gap-4 justify-start items-start w-full border border-five">
             {myPosts?.length > 0 &&
               myPosts.map((post, index) => (

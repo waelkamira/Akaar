@@ -12,17 +12,17 @@ export default function Loading({ myMessage = 'لا يوجد نتائج لعرض
     }, 5000);
   }, []);
   return (
-    <div className="flex flex-col items-center justify-center  h-[300px] rounded-lg w-full">
+    <div className="flex flex-col items-center justify-center h-[300px] rounded-lg w-full sm:w-3/4 px-4">
       {isVisible && (
-        <div className="flex flex-col justify-start items-center bg-gray-300  w-full h-full p-8 transition duration-300">
+        <div className="flex flex-col justify-start items-center bg-four w-full h-full p-8 transition duration-300 rounded-[5px]">
           <div className="flex flex-col justify-center items-center">
             <FaGear className="animate-spin text-5xl mt-8 transition duration-300" />
             <FaGear className="animate-spin text-2xl transition duration-300 mx-8 w-full" />
           </div>
           <div className="w-full">
-            <hr className="w-1/2 h-[10px] bg-gray-600 rounded-xl border-hidden  my-4 transition duration-300" />
-            <hr className="w-3/4 h-[10px] bg-gray-600 rounded-xl border-hidden  my-4 transition duration-300" />
-            <hr className="w-full h-[10px] bg-gray-600 rounded-xl border-hidden  my-4 transition duration-300" />
+            <hr className="w-1/2 h-[10px] bg-one rounded-xl border-hidden  my-4 transition duration-300" />
+            <hr className="w-3/4 h-[10px] bg-one rounded-xl border-hidden  my-4 transition duration-300" />
+            <hr className="w-full h-[10px] bg-one rounded-xl border-hidden  my-4 transition duration-300" />
           </div>
         </div>
       )}
