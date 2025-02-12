@@ -9,8 +9,10 @@ export default function Button({ style, title, onClick, path = '', emoji }) {
         type="submit"
         onClick={onClick}
         className={
-          (style ? 'sm:text-lg p-1 lg:p-2 ' + style : 'text-sm p-0.5') +
-          ' btn flex justify-center items-center text-white text-nowrap select-none rounded-[5px] w-full max-h-12 hover:scale-[101%]'
+          (style
+            ? 'sm:text-lg text-sm p-0.5 lg:p-3 ' + style
+            : 'text-sm p-0.5') +
+          ' btn flex justify-center items-center my-2 text-white text-nowrap select-none rounded-[5px] w-full max-h-12 hover:scale-[101%]'
         }
       >
         {title}

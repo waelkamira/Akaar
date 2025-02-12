@@ -24,7 +24,7 @@ export default function MainNavbar() {
   return (
     <div className="flex-1 w-full fixed top-0 right-0 z-50">
       <div
-        className={`hidden xl:flex xl:flex-col xl:justify-between w-full overflow-hidden bg-two text-white border-three px-4`}
+        className={`hidden xl:flex xl:flex-col xl:justify-between w-full overflow-hidden bg-two text-white border-b-[10px] border-one px-4`}
       >
         <div className="flex justify-between items-center w-full">
           <ul className="flex justify-between gap-4 items-center h-20 py-4 w-5/6">
@@ -128,7 +128,7 @@ export default function MainNavbar() {
           </div>
         </div>
       </div>
-      <div className="flex justify-center items-center gap-2 w-full bg-three px-2 sm:px-4 border-b-[10px] border-one">
+      <div className="flex justify-center items-center gap-2 w-full bg-three px-2 sm:px-4 min-h-20">
         <div className="relative xl:hidden">
           <TfiMenuAlt
             className="text-[30px] sm:text-5xl text-white cursor-pointer"

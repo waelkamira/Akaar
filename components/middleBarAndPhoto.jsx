@@ -6,10 +6,15 @@ import { TfiMenuAlt } from 'react-icons/tfi';
 import { FiActivity } from 'react-icons/fi';
 import { useRouter } from 'next/navigation';
 
-export default function MiddleBarAndPhoto({ isOpen, setIsOpen, noButton }) {
+export default function MiddleBarAndPhoto({
+  isOpen,
+  setIsOpen,
+  noButton,
+  path,
+}) {
   const router = useRouter();
   return (
-    <div className="relative xl:hidden flex justify-between items-center w-full gap-2 mb-2 bg-one p-2 rounded">
+    <div className="relative xl:hidden flex justify-between items-center w-full gap-2 mb-2 bg-three p-2 rounded">
       <div>
         <TfiMenuAlt
           className="text-[30px] lg:text-5xl text-white cursor-pointer"
@@ -23,7 +28,7 @@ export default function MiddleBarAndPhoto({ isOpen, setIsOpen, noButton }) {
       </div>
       {noButton && (
         <button
-          onClick={() => router.push('/RealEstate/newPost')}
+          onClick={() => router.push(`${path}`)}
           className="relative text-sm lg:text-xl bg-white h-8 lg:h-11 w-3/4 border-r-[30%] shadow-lg border-one rounded hover:scale-[101%]"
         >
           إعلان جديد

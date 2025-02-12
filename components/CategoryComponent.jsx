@@ -106,7 +106,7 @@ export default function CategoryComponent() {
           options={options}
           theme={customTheme}
           styles={customStyles}
-          className="w-full text-md text-start z-[11]"
+          className="w-full text-md text-start text-black z-[11]"
           classNamePrefix="select"
           classNames={{
             control: (state) =>

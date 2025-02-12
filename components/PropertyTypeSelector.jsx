@@ -65,7 +65,7 @@ export default function PropertyTypeSelector() {
           isSearchable
           options={options}
           theme={customTheme}
-          className="w-full text-md rounded text-start z-[9] select-none"
+          className="w-full text-md rounded text-start text-black z-[9] select-none"
           classNamePrefix="select"
           classNames={{
             control: (state) =>

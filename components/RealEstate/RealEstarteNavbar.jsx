@@ -15,6 +15,7 @@ import { ImProfile } from 'react-icons/im';
 import { MdFavoriteBorder } from 'react-icons/md';
 import { TbTargetArrow } from 'react-icons/tb';
 import ClockWidget from '../ClockWidget';
+import { PiBuildingsFill } from 'react-icons/pi';
 
 export default function RealEstateNavbar() {
   const router = useRouter();
@@ -31,9 +32,16 @@ export default function RealEstateNavbar() {
         <ul className="flex justify-evenly gap-4 mr-4 items-center h-20 py-4 w-4/6">
           <div
             className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-14 transition-all duration-300"
-            onClick={() => router.push('/RealEstate')}
+            onClick={() => router.push('/')}
           >
             <FaHome className="text-xl select-none text-one" />
+            <li className=" text-xl select-none">الرئيسية</li>
+          </div>
+          <div
+            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-14 transition-all duration-300"
+            onClick={() => router.push('/RealEstate')}
+          >
+            <PiBuildingsFill className="text-xl select-none text-one" />
             <li className=" text-xl select-none">عقارات</li>
           </div>
           <div className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-14 transition-all duration-300">

@@ -430,7 +430,7 @@ export default function CarsPostForm({ setIsVisible, cancel = true }) {
                     id="اسم السيارة"
                     name="اسم السيارة"
                     placeholder="تويوتا كورولا موديل 2021"
-                    className="w-full text-sm sm:text-lg rounded text-start  h-9 sm:h-12 text-nowrap px-2 border border-four focus:outline-one"
+                    className="w-full text-sm sm:text-lg rounded text-start text-black  h-9 sm:h-12 text-nowrap px-2 border border-four focus:outline-one"
                   />
                 </div>
                 {/* نوع الإعلان */}
@@ -490,7 +490,7 @@ export default function CarsPostForm({ setIsVisible, cancel = true }) {
                       id="موديل السيارة"
                       name="موديل السيارة"
                       placeholder="land cruiser"
-                      className="w-full text-sm sm:text-lg rounded text-start  h-9 sm:h-12 text-nowrap px-2 border border-four focus:outline-one"
+                      className="w-full text-sm sm:text-lg rounded text-start text-black  h-9 sm:h-12 text-nowrap px-2 border border-four focus:outline-one"
                     />
                   </div>
                 </div>
@@ -537,7 +537,7 @@ export default function CarsPostForm({ setIsVisible, cancel = true }) {
                       id="السنة"
                       name="السنة"
                       placeholder="2021"
-                      className="w-full text-sm sm:text-lg rounded text-start  h-9 sm:h-12 text-nowrap px-2 border border-four focus:outline-one"
+                      className="w-full text-sm sm:text-lg rounded text-start text-black  h-9 sm:h-12 text-nowrap px-2 border border-four focus:outline-one"
                     />
                   </div>
                   <div className="w-full">
@@ -559,7 +559,7 @@ export default function CarsPostForm({ setIsVisible, cancel = true }) {
                       id="المسافة"
                       name="المسافة"
                       placeholder="50,000 كم"
-                      className="w-full text-sm sm:text-lg rounded text-start  h-9 sm:h-12 text-nowrap px-2 border border-four focus:outline-one"
+                      className="w-full text-sm sm:text-lg rounded text-start text-black  h-9 sm:h-12 text-nowrap px-2 border border-four focus:outline-one"
                     />
                   </div>
                 </div>
@@ -592,7 +592,7 @@ export default function CarsPostForm({ setIsVisible, cancel = true }) {
                       id="رقم الهاتف"
                       name="رقم الهاتف"
                       placeholder="+963 11 3391 4444"
-                      className="w-full text-sm sm:text-lg rounded text-start  h-9 sm:h-12 text-nowrap px-2 border border-four focus:outline-one"
+                      className="w-full text-sm sm:text-lg rounded text-start text-black  h-9 sm:h-12 text-nowrap px-2 border border-four focus:outline-one"
                     />
                   </div>
                   <div className="w-full">
@@ -622,7 +622,7 @@ export default function CarsPostForm({ setIsVisible, cancel = true }) {
                       id="سعر السيارة"
                       name="سعر السيارة"
                       placeholder="$ 00.0"
-                      className="w-full text-sm sm:text-lg rounded text-start  h-9 sm:h-12 text-nowrap px-2 border border-four focus:outline-one"
+                      className="w-full text-sm sm:text-lg rounded text-start text-black  h-9 sm:h-12 text-nowrap px-2 border border-four focus:outline-one"
                     />
                   </div>
                 </div>
@@ -679,7 +679,7 @@ export default function CarsPostForm({ setIsVisible, cancel = true }) {
               placeholder="ضع رابط الفيديو هنا"
               value={url}
               onChange={handleInputChange}
-              className="w-full text-sm sm:text-lg rounded text-start  h-9 sm:h-12 text-nowrap px-2 border border-four focus:outline-one"
+              className="w-full text-sm sm:text-lg rounded text-start text-black  h-9 sm:h-12 text-nowrap px-2 border border-four focus:outline-one"
             />
             {inputs?.link && (
               <div>

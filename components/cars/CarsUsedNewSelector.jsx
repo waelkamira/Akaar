@@ -108,7 +108,7 @@ export default function CarsUsedNewSelector() {
           options={options}
           theme={customTheme}
           styles={customStyles}
-          className="w-full text-md text-start z-[10]"
+          className="w-full text-md text-start text-black z-[10]"
           classNamePrefix="select"
           classNames={{
             control: (state) =>

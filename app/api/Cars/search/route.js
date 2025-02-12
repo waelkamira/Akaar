@@ -14,7 +14,7 @@ export async function POST(req) {
       limit = 5, // عدد العناصر في كل صفحة (افتراضيًا 5)
       city, // المدينة (اختياري)
       town, // المنطقة (اختياري)
-      adType, // نوع الإعلان (اختياري)
+      usedNew, // نوع الإعلان (اختياري)
       brand, // الماركة (اختياري)
       minPrice, // الحد الأدنى للسعر (اختياري)
       maxPrice, // الحد الأقصى للسعر (اختياري)
@@ -22,7 +22,7 @@ export async function POST(req) {
     console.log(
       city, // المدينة (اختياري)
       town, // المنطقة (اختياري)
-      adType, // نوع الإعلان (اختياري)
+      usedNew, // نوع الإعلان (اختياري)
       brand, // الماركة (اختياري)
       minPrice, // الحد الأدنى للسعر (اختياري)
       maxPrice
@@ -38,7 +38,7 @@ export async function POST(req) {
     if (brand) filters.brand = brand; // فلتر الماركة
     if (city) filters.city = city; // فلتر المدينة
     if (town) filters.town = town; // فلتر المنطقة
-    if (adType) filters.adType = adType; // فلتر نوع الإعلان
+    if (usedNew) filters.usedNew = usedNew; // فلتر نوع الإعلان
 
     // 2. فلترة الأسعار إذا كانت محددة
     if (minPrice || maxPrice) {
@@ -50,7 +50,7 @@ export async function POST(req) {
 
     // تسجيل شروط الفلترة للتتبع
     // console.log('Where Condition:', JSON.stringify(filters, null, 2));
-    // console.log('Filters:', { city, town, adType, brand, minPrice, maxPrice });
+    // console.log('Filters:', { city, town, usedNew, brand, minPrice, maxPrice });
 
     // جلب البيانات من قاعدة البيانات
     const cars = await prisma.car.findMany({

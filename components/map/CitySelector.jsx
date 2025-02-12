@@ -127,7 +127,7 @@ export default function CitySelector() {
           isSearchable
           theme={customTheme}
           styles={customStyles}
-          className="w-full text-md text-start rounded select-none "
+          className="w-full text-md text-start text-black rounded select-none "
           classNamePrefix="select"
           classNames={{
             control: (state) =>
@@ -162,7 +162,7 @@ export default function CitySelector() {
           isDisabled={!selectedCity}
           theme={customTheme}
           styles={customStyles}
-          className="w-full text-md text-start rounded select-none "
+          className="w-full text-md text-start text-black rounded select-none "
           classNamePrefix="select"
           classNames={{
             control: (state) =>

@@ -91,7 +91,7 @@ export default function CarsBrandSelector() {
           options={options}
           theme={customTheme}
           styles={customStyles}
-          className="w-full text-md rounded text-start z-[9] select-none"
+          className="w-full text-md rounded text-start text-black z-[9] select-none"
           classNamePrefix="select"
           classNames={{
             control: (state) =>
