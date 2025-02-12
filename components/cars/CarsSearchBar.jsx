@@ -34,10 +34,10 @@ export default function CarsSearchBar({ category, imgLink }) {
 
   // State واحد لتخزين جميع بيانات البحث
   const [searchData, setSearchData] = useState({
-    city: data?.city || '',
-    town: data?.town || '',
+    city: data?.propertyCity || '',
+    town: data?.propertyTown || '',
     adType: category || '',
-    brand: brand || '',
+    brand: brand?.label || '',
     minPrice: '',
     maxPrice: '',
   });
@@ -49,12 +49,12 @@ export default function CarsSearchBar({ category, imgLink }) {
   useEffect(() => {
     setSearchData((prevData) => ({
       ...prevData,
-      city: data?.city || '',
-      town: data?.town || '',
+      city: data?.propertyCity || '',
+      town: data?.propertyTown || '',
       adType: category || '',
-      brand: brand || '',
+      brand: brand?.label || '',
     }));
-  }, [data]);
+  }, [data, brand, category]);
 
   const fetchCarsAds = async () => {
     setLoading(true);
@@ -85,8 +85,17 @@ export default function CarsSearchBar({ category, imgLink }) {
     }
   };
 
-  const handleSearch = () => {
-    fetchCarsAds();
+  const handleSearch = async () => {
+    await fetchCarsAds();
+    // setSearchData({
+    //   ...searchData,
+    //   city: '',
+    //   town: '',
+    //   adType: '',
+    //   brand: '',
+    //   minPrice: '',
+    //   maxPrice: '',
+    // });
   };
 
   const handleInputChange = (e) => {
@@ -100,7 +109,7 @@ export default function CarsSearchBar({ category, imgLink }) {
   return (
     <div className="flex flex-col justify-center items-center w-full rounded-b">
       <CarsNavbar />
-      <div className="relative w-full h-[300px] lg:h-[600px] overflow-hidden">
+      {/* <div className="relative w-full h-[300px] lg:h-[600px] overflow-hidden">
         <Image
           src={imgLink}
           fill
@@ -108,7 +117,7 @@ export default function CarsSearchBar({ category, imgLink }) {
           className="object-cover object-center w-full h-auto"
           objectPosition="center"
         />
-      </div>
+      </div> */}
       <div className="flex flex-col w-full mt-4 rounded-[5px] flex-grow xl:w-[90%] 2xl:w-[70%] h-[1370px] px-2 pt-2 overflow-y-auto border rounded-b z-[0]">
         <MiddleBarAndPhoto
           isOpen={isOpen}
@@ -134,10 +143,10 @@ export default function CarsSearchBar({ category, imgLink }) {
           </button>
         </div>
 
-        <div className="flex flex-col w-full h-[1370px] overflow-y-auto">
+        <div className="flex flex-col w-full h-[1370px] overflow-y-auto ">
           {isShow && (
-            <div className="flex flex-col-reverse sm:flex-row justify-center items-center w-full border bg-white shadow-sm shadow-gray-300 border-t-[8px] sm:border-t-[20px] border-one rounded-md ">
-              <div className="relative text-center w-full md:w-1/4 px-2 xl:mb-4">
+            <div className="flex flex-col-reverse justify-center items-center w-full border bg-white shadow-sm shadow-gray-300 border-t-[8px] sm:border-t-[20px] border-one rounded-md py-2">
+              <div className="relative text-center w-full lg:w-1/2 px-2 xl:mb-2">
                 <Button
                   style={' '}
                   onClick={handleSearch}
@@ -212,10 +221,13 @@ export default function CarsSearchBar({ category, imgLink }) {
             </div>
           ) : (
             <div>
-              <div className="flex flex-col justify-center items-center w-full h-full">
-                <h1 className="">لا توجد بيانات لعرضها</h1>
+              <div className="flex flex-col justify-center items-center w-full h-full my-4">
+                <h1 className="text-md sm:text-xl mb-8">
+                  لم يتم العثور على نتائج مطابقة للبحث
+                </h1>
+                <Loading />
               </div>
-              <Link href={'#post1'}>
+              {/* <Link href={'#post1'}>
                 <div
                   className="flex items-center justify-center w-full cursor-pointer"
                   onClick={() => setPageNumber(pageNumber - 1)}
@@ -223,7 +235,7 @@ export default function CarsSearchBar({ category, imgLink }) {
                   <MdKeyboardDoubleArrowLeft className="text-2xl  text-one" />
                   <h1 className="">الصفحة السابقة</h1>
                 </div>
-              </Link>
+              </Link> */}
             </div>
           )}
         </div>

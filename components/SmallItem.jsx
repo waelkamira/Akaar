@@ -191,7 +191,7 @@ export default function SmallItem({ post, index, show = true, id = false }) {
             <hr className="w-full h-[1.5px] bg-gray-400  border-hidden select-none" />
           </>
         )} */}
-        <div className="text-four p-2 w-full">
+        <div className="p-2 w-full border-b my-2">
           <pre className="text-sm sm:text-lg text-start w-full line-clamp-1 select-none">
             {post?.description}
           </pre>
@@ -219,7 +219,7 @@ export default function SmallItem({ post, index, show = true, id = false }) {
               path.includes('myPosts') || path.includes('favoritePosts')
                 ? 'text-md'
                 : 'sm:text-2xl'
-            } btn p-2 my-2 bg-three text-white hover:scale-[101%] hover:font-medium rounded-[5px] text-center select-none w-full transition-all duration-300`}
+            } btn flex justify-center items-center  sm:text-lg p-1 lg:p-2 text-white text-nowrap select-none rounded-[5px] w-full md:w-1/2 max-h-12 hover:scale-[101%]`}
         >
           عرض الإعلان
         </button>
