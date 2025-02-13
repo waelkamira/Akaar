@@ -15,6 +15,7 @@ import { useRouter } from 'next/navigation';
 import { inputsContext } from '../../components/Context';
 import Button from '../../components/Button';
 import { MdKeyboardDoubleArrowDown } from 'react-icons/md';
+import HeroSlider from '../../components/photos/HeroSlider';
 
 export default function CarsHomePage() {
   const [isOpen, setIsOpen] = useState(false);
@@ -38,6 +39,15 @@ export default function CarsHomePage() {
       setCars(json);
     }
   }
+
+  const images = [
+    'https://i.imgur.com/uPsQqzu.png',
+    'https://i.imgur.com/xu9gOrf.jpg',
+    'https://i.imgur.com/VVu5la7.png',
+    'https://i.imgur.com/Kc6Pcu1.png',
+    'https://i.imgur.com/yH5NGMz.jpg',
+  ];
+
   return (
     <Suspense>
       <CarsNavbar />
@@ -53,16 +63,7 @@ export default function CarsHomePage() {
 
           {/* صورة الخلفية */}
           <div className="relative w-full h-[300px] lg:h-[900px] overflow-hidden">
-            <Image
-              src="https://i.imgur.com/ZAC6X1M.jpg"
-              fill
-              alt="home_photo"
-              className="object-cover object-center w-full h-auto"
-              objectPosition="center"
-            />
-
-            {/* التعتيم عبر طبقة فوق الصورة */}
-            {/* <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div> */}
+            <HeroSlider images={images} />
           </div>
 
           <div className="flex flex-col justify-center items-center w-full ">
@@ -170,7 +171,7 @@ export default function CarsHomePage() {
               <span>
                 <MdKeyboardDoubleArrowDown />
               </span>
-            </h1>{' '}
+            </h1>
           </div>
         </div>
       </div>
