@@ -49,7 +49,7 @@ export default function Home() {
           {realEstate?.length > 0 &&
             realEstate.map((item) => (
               <div
-                className="flex flex-col justify-center items-center w-full border cursor-pointer bg-white hover:scale-[103%] transition-transform duration-300 ease-in-out rounded-[15px] overflow-hidden"
+                className="flex flex-col justify-center items-center w-full border cursor-pointer bg-white hover:scale-[103%] transition-transform duration-300 ease-in-out rounded-[10px] overflow-hidden"
                 key={item?.id}
                 onClick={() => {
                   dispatch({ type: 'POST_ID', payload: item?.id });
@@ -94,7 +94,7 @@ export default function Home() {
           {cars?.length > 0 &&
             cars.map((car) => (
               <div
-                className="flex flex-col justify-center items-center w-full border cursor-pointer bg-white hover:scale-[103%] transition-transform duration-300 ease-in-out rounded-[15px] overflow-hidden"
+                className="flex flex-col justify-center items-center w-full border cursor-pointer bg-white hover:scale-[103%] transition-transform duration-300 ease-in-out rounded-[10px] overflow-hidden"
                 key={car?.id}
                 onClick={() => {
                   dispatch({ type: 'POST_ID', payload: car?.id });

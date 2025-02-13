@@ -57,7 +57,7 @@ export default function Card({ cardName, path, image, text, color, emoji }) {
       </div>
 
       <div
-        className={` w-full border border-four overflow-hidden rounded-b-[15px] sm:rounded-b-3xl`}
+        className={` w-full border overflow-hidden rounded-b-[15px] sm:rounded-b-3xl`}
       >
         <div className="flex justify-center items-center gap-2 my-2">
           <h1 className="text-md sm:text-xl">{emoji}</h1>
