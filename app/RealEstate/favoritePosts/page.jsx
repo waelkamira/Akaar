@@ -1,24 +1,24 @@
 'use client';
 import { useSession } from 'next-auth/react';
-import SmallItem from '../../components/SmallItem';
+import SmallItem from '../../../components/SmallItem';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { IoMdClose } from 'react-icons/io';
 import toast from 'react-hot-toast';
-import CustomToast from '../../components/CustomToast';
-import BackButton from '../../components/BackButton';
+import CustomToast from '../../../components/CustomToast';
+import BackButton from '../../../components/BackButton';
 import {
   MdKeyboardDoubleArrowRight,
   MdKeyboardDoubleArrowLeft,
 } from 'react-icons/md';
-import SideBarMenu from '../../components/SideBarMenu';
+import SideBarMenu from '../../../components/SideBarMenu';
 import { TfiMenuAlt } from 'react-icons/tfi';
-import Loading from '../../components/Loading';
-import Button from '../../components/Button';
-import MiddleBarAndPhoto from '../../components/middleBarAndPhoto';
+import Loading from '../../../components/Loading';
+import Button from '../../../components/Button';
+import MiddleBarAndPhoto from '../../../components/middleBarAndPhoto';
 import { usePathname } from 'next/navigation';
-import NavegationPages from '../../components/NavegationPages';
+import NavegationPages from '../../../components/NavegationPages';
 
 export default function Page() {
   const [isOpen, setIsOpen] = useState(false);

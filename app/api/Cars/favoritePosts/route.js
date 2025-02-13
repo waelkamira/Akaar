@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '../authOptions/route';
+import { authOptions } from '../../authOptions/route';
 import NodeCache from 'node-cache';
 
 // إعداد Supabase
