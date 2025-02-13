@@ -3,22 +3,22 @@ import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import React, { useContext, useEffect, useState } from 'react';
 import Link from 'next/link';
-import Button from '../../components/Button';
+import Button from '../../../components/Button';
 import { formatDistanceToNow } from 'date-fns/formatDistanceToNow';
 import toast from 'react-hot-toast';
 import { MdEdit } from 'react-icons/md';
-import { inputsContext } from '../../components/Context';
-import { getVideoIdAndPlatform } from '../../components/youtubeUtils';
+import { inputsContext } from '../../../components/Context';
+import { getVideoIdAndPlatform } from '../../../components/youtubeUtils';
 import dynamic from 'next/dynamic';
 
 // تحميل المكونات ديناميكيًا
-const CustomToast = dynamic(() => import('../../components/CustomToast'));
-const LoadingPhoto = dynamic(() => import('../../components/LoadingPhoto'));
-const ImageSlider = dynamic(() => import('../../components/imageSlider'));
-const EditItem = dynamic(() => import('../../components/editItem'));
-const OnClickMap = dynamic(() => import('../../components/map/onClickMap'));
+const CustomToast = dynamic(() => import('../../../components/CustomToast'));
+const LoadingPhoto = dynamic(() => import('../../../components/LoadingPhoto'));
+const ImageSlider = dynamic(() => import('../../../components/imageSlider'));
+const EditItem = dynamic(() => import('../../../components/editItem'));
+const OnClickMap = dynamic(() => import('../../../components/map/onClickMap'));
 const MiddleBarAndPhoto = dynamic(() =>
-  import('../../components/middleBarAndPhoto')
+  import('../../../components/middleBarAndPhoto')
 );
 
 export default function EditPost() {

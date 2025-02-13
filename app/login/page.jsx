@@ -168,7 +168,7 @@ export default function LogInPage() {
           </button> */}
 
           <div className="w-full">
-            <Button path={'/'} style= title={'إغلاق'} />
+            <Button path={'/'} style={' '} title={'إغلاق'} />
             {/* <Link href={'/'}>
               <button
                 type="submit"

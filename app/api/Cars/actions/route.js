@@ -1,7 +1,5 @@
 import NodeCache from 'node-cache';
-import { handleHeartsAction } from './hearts';
-import { handleLikesAction } from './likes';
-import { handleEmojisAction } from './emojis';
+
 import { supabase } from '../../../../lib/supabaseClient';
 
 // إنشاء كائن للتخزين المؤقت
@@ -126,22 +124,6 @@ export async function POST(req) {
       : 1;
 
     let response;
-    switch (actionType) {
-      case 'hearts':
-        response = await handleHeartsAction(
-          email,
-          mealId,
-          newActionValue,
-          meal
-        );
-        break;
-      case 'likes':
-        response = await handleLikesAction(email, mealId, newActionValue);
-        break;
-      case 'emojis':
-        response = await handleEmojisAction(email, mealId, newActionValue);
-        break;
-    }
 
     return new Response(JSON.stringify(response), {
       status: 200,
