@@ -7,6 +7,7 @@ import Image from 'next/image';
 import LoadingPhoto from './LoadingPhoto'; // تأكد من استيراد مكون التحميل
 import { MdKeyboardArrowRight, MdKeyboardArrowLeft } from 'react-icons/md';
 import { usePathname } from 'next/navigation';
+import Link from 'next/link';
 
 const CustomPrevArrow = (props) => {
   const { onClick } = props;
@@ -107,27 +108,29 @@ const PostGallery = ({ post }) => {
 
   return (
     <div className="overflow-hidden rounded w-full relative">
-      <Slider {...settings}>
-        {images.map((image, index) => (
-          <div
-            key={index}
-            className={`relative h-64 
+      <Link href={'#post1'}>
+        <Slider {...settings}>
+          {images.map((image, index) => (
+            <div
+              key={index}
+              className={`relative h-64 
           ${
             path.includes('myPosts') || path.includes('favoritePosts')
               ? ''
               : 'sm:h-96'
           }  overflow-hidden ronded-[5px] w-full`}
-          >
-            <Image
-              priority
-              src={image}
-              layout="fill"
-              objectFit="cover"
-              alt={`${post.propertyName} - Image ${index + 1}`}
-            />
-          </div>
-        ))}
-      </Slider>
+            >
+              <Image
+                priority
+                src={image}
+                layout="fill"
+                objectFit="cover"
+                alt={`${post.propertyName} - Image ${index + 1}`}
+              />
+            </div>
+          ))}
+        </Slider>
+      </Link>
     </div>
   );
 };

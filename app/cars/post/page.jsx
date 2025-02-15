@@ -38,7 +38,7 @@ export default function Page() {
   }
 
   return (
-    <div className="flex flex-col justify-center items-center w-full">
+    <div className="flex flex-col justify-center items-center w-full bg-five">
       <CarsNavbar />
       {post && <CarsItem {...post} />}
     </div>

@@ -14,6 +14,8 @@ import { GiRotaryPhone } from 'react-icons/gi';
 import { MdOutlineBedroomParent } from 'react-icons/md';
 import { FaTreeCity } from 'react-icons/fa6';
 import dynamic from 'next/dynamic';
+import CarsItemSmallItem from './CarsItemSmallItem';
+import { GiPathDistance } from 'react-icons/gi';
 
 // استخدام dynamic لتحميل المكونات بشكل ديناميكي
 const ImageSlider = dynamic(() => import('../imageSlider'), {
@@ -64,13 +66,6 @@ export default function CarsItem({
       setIframeSrc(iframeElement ? iframeElement.getAttribute('src') : null);
     }
   }, [link]);
-  //? هذه الدالة للتأكد إذا كان التاريخ المدخل صحيحا أو لا
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return isNaN(date)
-      ? 'Invalid date'
-      : formatDistanceToNow(date, { addSuffix: true });
-  };
 
   return (
     <>
@@ -122,81 +117,71 @@ export default function CarsItem({
 
                 <div className="flex flex-col  w-full">
                   <div className="flex flex-col sm:grid md:grid-cols-2 sm:gap-x-4 w-full">
-                    <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300 rounded-[5px] text-sm sm:text-lg lg:text-xl w-full h-10 sm:h-16 lg:h-20 my-1 sm:my-2 select-none">
-                      <span className="flex gap-1 items-center text-one text-md sm:text-xl mx-2 select-none">
-                        <FaHouseDamage className="text-gray-500" />
-                        اسم المعلن :
-                      </span>
-                      {userName}
-                    </h1>
+                    <CarsItemSmallItem
+                      icon={<FaHouseDamage className="text-gray-500" />}
+                      text={'اسم المعلن'}
+                      value={userName}
+                    />
 
-                    <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300 rounded-[5px] text-sm sm:text-lg lg:text-xl w-full h-10 sm:h-16 lg:h-20 my-1 sm:my-2 select-none">
-                      <span className="flex gap-1 items-center text-one text-md sm:text-xl mx-2 select-none">
-                        <VscUngroupByRefType className="text-gray-500" />
-                        ماركة السيارة :
-                      </span>
-                      {brand}
-                    </h1>
-                    <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300 rounded-[5px] text-sm sm:text-lg lg:text-xl w-full h-10 sm:h-16 lg:h-20 my-1 sm:my-2 select-none">
-                      <span className="flex gap-1 items-center text-one text-md sm:text-xl mx-2 select-none">
+                    <CarsItemSmallItem
+                      icon={<VscUngroupByRefType className="text-gray-500" />}
+                      text={'ماركة السيارة'}
+                      value={brand}
+                    />
+
+                    <CarsItemSmallItem
+                      icon={
                         <MdOutlineBedroomParent className="text-gray-500" />
-                        موديل السيارة :
-                      </span>
-                      {model}
-                    </h1>
-                    <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300 rounded-[5px] text-sm sm:text-lg lg:text-xl w-full h-10 sm:h-16 lg:h-20 my-1 sm:my-2 select-none">
-                      <span className="flex gap-1 items-center text-one text-md sm:text-xl mx-2 select-none">
+                      }
+                      text={'موديل السيارة'}
+                      value={model}
+                    />
+
+                    <CarsItemSmallItem
+                      icon={
                         <MdOutlineBedroomParent className="text-gray-500" />
-                        الحالة :
-                      </span>
-                      {usedNew}
-                    </h1>
-                    <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300 rounded-[5px] text-sm sm:text-lg lg:text-xl w-full h-10 sm:h-16 lg:h-20 my-1 sm:my-2 select-none">
-                      <span className="flex gap-1 items-center text-one text-md sm:text-xl mx-2 select-none">
+                      }
+                      text={'الحالة'}
+                      value={usedNew}
+                    />
+
+                    <CarsItemSmallItem
+                      icon={
                         <RxSpaceEvenlyHorizontally className="text-gray-500" />
-                        نوع الإعلان :
-                      </span>
-                      {adType}
-                    </h1>
-                    <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300 rounded-[5px] text-sm sm:text-lg lg:text-xl w-full h-10 sm:h-16 lg:h-20 my-1 sm:my-2 select-none">
-                      <span className="flex gap-1 items-center text-one text-md sm:text-xl mx-2 select-none">
-                        <FaHouseDamage className="text-gray-500" />
-                        المسافة :
-                      </span>
-                      {distance}
-                    </h1>
-                    <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300 rounded-[5px] text-sm sm:text-lg lg:text-xl w-full h-10 sm:h-16 lg:h-20 my-1 sm:my-2 select-none">
-                      <span className="flex gap-1 items-center text-one text-md sm:text-xl mx-2 select-none">
-                        <GiModernCity className="text-gray-500" />
-                        المدينة :
-                      </span>
-                      {city}
-                    </h1>
-                    <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300 rounded-[5px] text-sm sm:text-lg lg:text-xl w-full h-10 sm:h-16 lg:h-20 my-1 sm:my-2 select-none">
-                      <span className="flex gap-1 items-center text-one text-md sm:text-xl mx-2 select-none">
-                        <FaTreeCity className="text-gray-500" />
-                        اسم المنطقة :
-                      </span>
-                      {town}
-                    </h1>
+                      }
+                      text={'نوع الإعلان'}
+                      value={adType}
+                    />
 
-                    <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300 rounded-[5px] text-sm sm:text-lg lg:text-xl w-full h-10 sm:h-16 lg:h-20 my-1 sm:my-2">
-                      <span className="flex gap-1 items-center text-one text-md sm:text-xl mx-2">
-                        <GiRotaryPhone className="text-gray-500" />
-                        رقم الهاتف :
-                      </span>
-                      {phoneNumber}
-                    </h1>
-                    <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300 rounded-[5px] text-sm sm:text-lg lg:text-xl w-full h-10 sm:h-16 lg:h-20 my-1 sm:my-2 select-none">
-                      <span className="flex gap-1 items-center text-one text-md sm:text-xl mx-2 select-none">
-                        <MdOutlinePriceCheck className="text-gray-500" />
-                        السعر :
-                      </span>
-                      {price}
-                      <span className="flex gap-1 items-center text-one text-md sm:text-xl mx-2 select-none">
-                        $
-                      </span>
-                    </h1>
+                    <CarsItemSmallItem
+                      icon={<GiPathDistance className="text-gray-500" />}
+                      text={'المسافة'}
+                      value={distance}
+                    />
+
+                    <CarsItemSmallItem
+                      icon={<GiModernCity className="text-gray-500" />}
+                      text={'المدينة'}
+                      value={city}
+                    />
+
+                    <CarsItemSmallItem
+                      icon={<FaTreeCity className="text-gray-500" />}
+                      text={'اسم المنطقة'}
+                      value={town}
+                    />
+
+                    <CarsItemSmallItem
+                      icon={<GiRotaryPhone className="text-gray-500" />}
+                      text={'رقم الهاتف'}
+                      value={phoneNumber}
+                    />
+
+                    <CarsItemSmallItem
+                      icon={<MdOutlinePriceCheck className="text-gray-500" />}
+                      text={'السعر'}
+                      value={price}
+                    />
                   </div>
 
                   <div className="flex justify-between items-center my-4 lg:my-8  h-10 sm:h-16  w-full overflow-visible">

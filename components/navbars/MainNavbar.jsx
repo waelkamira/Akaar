@@ -15,12 +15,32 @@ import { ImSearch } from 'react-icons/im';
 import Button from '../Button';
 import { TfiMenuAlt } from 'react-icons/tfi';
 import SideBarMenu from '../SideBarMenu';
+import NavegationPages from '../NavegationPages';
+import SmallItem from '../SmallItem';
 
 export default function MainNavbar() {
   const router = useRouter();
   const session = useSession();
-  const [isOpen, setIsOpen] = useState(false);
+  const [pageNumber, setPageNumber] = useState(1);
 
+  const [isOpen, setIsOpen] = useState(false);
+  const [searshedKeyWord, setSearshedKeyWord] = useState('');
+  // console.log('searshedKeyWord', searshedKeyWord);
+  const [searchResults, setSearchResults] = useState([]);
+
+  async function handleSearch() {
+    console.log('handleSearch');
+    const response = await fetch('/api/search', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ searshedKeyWord, page: pageNumber }),
+    });
+    if (response.ok) {
+      const json = await response.json();
+      console.log('json', json);
+      setSearchResults(json);
+    }
+  }
   return (
     <div className="flex-1 w-full fixed top-0 right-0 z-50">
       <div
@@ -143,18 +163,43 @@ export default function MainNavbar() {
         <div className="relative text-center w-1/4 2xl:w-1/12">
           <Button
             style={' sm:p-6'}
-            onClick={'handleSearch'}
+            onClick={handleSearch}
             title={'بحث'}
             emoji={<ImSearch />}
           />
         </div>
         <input
-          type="text"
+          type="search"
           id="main_search"
+          value={searshedKeyWord}
+          onChange={(e) => setSearshedKeyWord(e.target.value)}
           autoFocus
           placeholder="ابحث عن عقار .. سيارة ..."
           // onChange={(e) => setMaxPrice(e.target.value)}
-          className="w-full xl:w-1/2 2xl:w-2/5 my-2 text-sm sm:text-lg rounded text-start z-40 h-9 sm:h-11 text-nowrap px-2 border border-four focus:outline-one"
+          className="w-full xl:w-1/2 2xl:w-2/5 my-2 text-sm sm:text-lg rounded text-start z-40 h-9 sm:h-12 text-nowrap px-2 border border-four focus:outline-one"
+        />
+      </div>
+      <div
+        className={`bg-five ${
+          searchResults?.length > 0 ? 'h-screen overflow-y-auto pb-24' : ''
+        }`}
+      >
+        <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 p-2 sm:p-4 gap-4 justify-start items-start w-full border border-five">
+          {searchResults?.length > 0 &&
+            searchResults.map((post, index) => (
+              <div
+                className="relative flex flex-col border-2 items-start h-full justify-start bg-one hover:scale-[101%] transition-transform duration-300 ease-in-out cursor-pointer rounded-[10px] overflow-hidden"
+                key={index}
+              >
+                <SmallItem post={post} index={index} show={false} />
+              </div>
+            ))}
+        </div>
+
+        <NavegationPages
+          array={searchResults}
+          setPageNumber={setPageNumber}
+          pageNumber={pageNumber}
         />
       </div>
     </div>

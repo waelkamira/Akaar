@@ -2,7 +2,7 @@
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { icon } from 'leaflet';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 // أيقونة مخصصة للدبابيس
 const customIcon = icon({
@@ -18,7 +18,7 @@ function SetZoomAndCenter({ latitude, longitude }) {
   const map = useMap();
   useEffect(() => {
     map.setView([latitude, longitude], 16);
-  }, [map, latitude, longitude]);
+  }, [latitude, longitude]); // إزالة `map` من التبعيات لتجنب الأخطاء
 
   return null;
 }
@@ -33,10 +33,12 @@ export default function SyriaMap({ lng = '', lat = '' }) {
     terrain: 'https://tile.opentopomap.org/{z}/{x}/{y}.png',
   };
 
+  // **إضافة `key` يجبر React على إعادة تحميل المكون فقط عند تغير `lat` أو `lng`**
   return (
     <div className="w-full z-40">
       <div className="w-full h-72 sm:h-[500px] rounded-md overflow-hidden">
         <MapContainer
+          key={`${latitude}-${longitude}`} // ✅ يجعل الخريطة تعيد التحميل فقط عند تغير الإحداثيات
           center={[latitude, longitude]}
           zoom={13}
           className="w-full h-full"

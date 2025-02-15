@@ -61,7 +61,7 @@ export async function GET(req) {
     const allPosts = [...propertyPosts, ...carPosts].sort(
       (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
     );
-    console.log('allPosts', allPosts);
+    // console.log('allPosts', allPosts);
     return new Response(
       JSON.stringify({
         count: propertyCount + carCount,
