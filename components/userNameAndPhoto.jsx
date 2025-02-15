@@ -5,14 +5,10 @@ import Image from 'next/image';
 import { formatDistanceToNow } from 'date-fns'; // استيراد الدالة
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { IoMdClose } from 'react-icons/io';
 import { useSession } from 'next-auth/react';
-import CustomToast from './CustomToast';
-import toast from 'react-hot-toast';
 
 export default function UserNameAndPhoto({ post }) {
   const path = usePathname();
-  const session = useSession();
   // console.log('post', post);
   //? هذه الدالة للتأكد إذا كان التاريخ المدخل صحيحا أو لا
   const formatDate = (dateString) => {
@@ -22,28 +18,6 @@ export default function UserNameAndPhoto({ post }) {
       : formatDistanceToNow(date, { addSuffix: true });
   };
 
-  async function handleDeletePost(post) {
-    const response = await fetch(`/api/favoritePosts?id=${post?.id}`, {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(post),
-    });
-
-    if (response.ok) {
-      toast.custom((t) => (
-        <CustomToast
-          t={t}
-          message={'تم حذف هذا البوست بنجاح'}
-          greenEmoji={'✔'}
-        />
-      ));
-      dispatch({ type: 'DELETE_POST', payload: post });
-    } else {
-      toast.custom((t) => (
-        <CustomToast t={t} message={'😐 حدث خطأ ما'} redEmoji={'✖'} />
-      ));
-    }
-  }
   return (
     <>
       <div className="flex justify-start items-center gap-2 w-full mb-4">
@@ -85,18 +59,6 @@ export default function UserNameAndPhoto({ post }) {
             </h1>
           </div>
         </Link>
-      </div>
-      <div className="flex justify-end items-center gap-2 w-full mb-4">
-        {session?.status === 'authenticated' &&
-          path.includes('favoritePosts') && (
-            <div
-              className={`px-1 py-[1px] flex flex-col items-center justify-center cursor-pointer  overflow-hidden rounded  hover:bg-one`}
-              onClick={() => handleDeletePost(post)}
-            >
-              <IoMdClose className="" />
-              <h6 className="text-[11px] select-none">حذف</h6>
-            </div>
-          )}
       </div>
     </>
   );

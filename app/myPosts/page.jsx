@@ -16,6 +16,7 @@ import MiddleBarAndPhoto from '../../components/middleBarAndPhoto';
 import Image from 'next/image';
 import NavegationPages from '../../components/NavegationPages';
 import MainNavbar from '../../components/navbars/MainNavbar';
+import Button from '../../components/Button';
 export default function MyPosts() {
   const [isOpen, setIsOpen] = useState(false);
   const [postId, setpostId] = useState('');
@@ -73,20 +74,7 @@ export default function MyPosts() {
   return (
     <div className="flex flex-col justify-center items-center w-full mt-20 xl:mt-44">
       <MainNavbar />
-      {/* <div className="relative w-full h-[300px] lg:h-[400px] border overflow-hidden">
-        <Image
-          src="https://i.imgur.com/wZ0aruw.jpg"
-          fill
-          alt="home_photo"
-          className="object-cover object-center w-full h-auto"
-          objectPosition="center"
-        />
-      </div> */}
-      {myPosts?.length === 0 && (
-        <Loading
-          myMessage={'😉 لا يوجد نتائج لعرضها ,لم تقم بإنشاء أي إعلان بعد'}
-        />
-      )}
+
       <div className="flex flex-col w-full xl:w-[90%] 2xl:w-[80%] h-fit px-2 sm:px-16 pt-2 overflow-y-auto z-10 ">
         <MiddleBarAndPhoto
           isOpen={isOpen}
@@ -118,83 +106,80 @@ export default function MyPosts() {
           </div>
         )}
 
-        <div className="flex flex-col justify-start items-center w-full gap-4 py-4">
-          <h1 className="grow text-lg lg:text-2xl w-full ">
-            <span className="text-one  text-2xl ml-2">#</span>
-            إعلاناتي <span className="text-one"> {userPostsCount}</span>
-          </h1>
-        </div>
-        <div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 p-2 sm:p-4 gap-4 justify-start items-start w-full border border-five">
-            {myPosts?.length > 0 &&
-              myPosts.map((post, index) => (
-                <div
-                  className="relative flex flex-col border-2 items-start h-full justify-start bg-one hover:scale-[101%] transition-transform duration-300 ease-in-out cursor-pointer rounded-[10px] overflow-hidden"
-                  key={index}
-                >
-                  {session?.status === 'authenticated' && (
-                    <div className="flex justify-between items-center w-full p-2 bg-one h-24 text-white ">
-                      <div
-                        className="flex flex-col items-center justify-center cursor-pointer  rounded p-1 md:text-xl  hover:bg-three hover:scale-[105%] transition-transform duration-150 ease-in-out"
-                        onClick={() => {
-                          dispatch({
-                            type: 'POST_ID',
-                            payload: post?.id,
-                          });
+        {session?.data?.user ? (
+          <div className="flex flex-col justify-center items-center w-full">
+            {' '}
+            <div className="flex flex-col justify-center items-center w-full gap-4 py-4 mt-16">
+              <h1 className="grow text-lg lg:text-2xl w-full ">
+                <span className="text-one  text-2xl ml-2">#</span>
+                إعلاناتي <span className="text-one"> {userPostsCount}</span>
+              </h1>
+            </div>
+            {myPosts?.length === 0 && session?.data?.user && (
+              <Loading
+                myMessage={
+                  '😉 لا يوجد نتائج لعرضها ,لم تقم بإنشاء أي إعلان بعد'
+                }
+              />
+            )}
+            <div className="w-full">
+              <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 p-2 sm:p-4 gap-4 justify-start items-start w-full border border-five">
+                {myPosts?.length > 0 &&
+                  myPosts.map((post, index) => (
+                    <div
+                      className="relative flex flex-col border-2 items-start h-full justify-start bg-one hover:scale-[101%] transition-transform duration-300 ease-in-out cursor-pointer rounded-[10px] overflow-hidden"
+                      key={index}
+                    >
+                      {session?.status === 'authenticated' && (
+                        <div className="flex justify-between items-center w-full p-2 bg-one h-24 text-white ">
+                          <div
+                            className="flex flex-col items-center justify-center cursor-pointer  rounded p-1 md:text-xl  hover:bg-three hover:scale-[105%] transition-transform duration-150 ease-in-out"
+                            onClick={() => {
+                              dispatch({
+                                type: 'POST_ID',
+                                payload: post?.id,
+                              });
 
-                          router.push(`/editPost`);
-                        }}
-                      >
-                        <MdEdit />
+                              router.push(`/editPost`);
+                            }}
+                          >
+                            <MdEdit />
 
-                        <h6 className="text-sm select-none">تعديل</h6>
-                      </div>
-                      <div
-                        className="flex flex-col items-center justify-center cursor-pointer  rounded p-1 md:text-xl  hover:bg-three hover:scale-[105%] transition-transform duration-150 ease-in-out"
-                        onClick={() => {
-                          setIsVisible(true);
-                          setpostId(post?.id);
-                        }}
-                      >
-                        <IoMdClose />
-                        <h6 className="text-sm select-none">حذف</h6>
-                      </div>
+                            <h6 className="text-sm select-none">تعديل</h6>
+                          </div>
+                          <div
+                            className="flex flex-col items-center justify-center cursor-pointer  rounded p-1 md:text-xl  hover:bg-three hover:scale-[105%] transition-transform duration-150 ease-in-out"
+                            onClick={() => {
+                              setIsVisible(true);
+                              setpostId(post?.id);
+                            }}
+                          >
+                            <IoMdClose />
+                            <h6 className="text-sm select-none">حذف</h6>
+                          </div>
+                        </div>
+                      )}
+                      <SmallItem post={post} index={index} show={false} />
                     </div>
-                  )}
-                  <SmallItem post={post} index={index} show={false} />
-                </div>
-              ))}
+                  ))}
+              </div>
+
+              <NavegationPages
+                array={myPosts}
+                setPageNumber={setPageNumber}
+                pageNumber={pageNumber}
+              />
+            </div>
           </div>
-          {/* <div className="flex items-center justify-around  mt-4">
-            {myPosts?.length >= 5 && (
-              <Link href={'#post1'}>
-                <div
-                  className="flex items-center justify-around cursor-pointer py-4"
-                  onClick={() => setPageNumber(pageNumber + 1)}
-                >
-                  <h1>الصفحة التالية</h1>
-                  <MdKeyboardDoubleArrowRight className="text-2xl  text-green-500 select-none" />
-                </div>
-              </Link>
-            )}
-            {pageNumber > 1 && (
-              <Link href={'#post1'}>
-                <div
-                  className="flex items-center justify-around cursor-pointer py-4"
-                  onClick={() => setPageNumber(pageNumber - 1)}
-                >
-                  <MdKeyboardDoubleArrowLeft className="text-2xl  text-green-500 select-none" />
-                  <h1>الصفحة السابقة</h1>
-                </div>
-              </Link>
-            )}
-          </div> */}
-          <NavegationPages
-            array={myPosts}
-            setPageNumber={setPageNumber}
-            pageNumber={pageNumber}
-          />
-        </div>
+        ) : (
+          <>
+            {' '}
+            <h1 className="mt-16 w-full text-center">
+              يجب عليك تسجيل الدخول أولا
+            </h1>
+            <Button title={'تسجيل الدخول'} path="/login" style={' '} />
+          </>
+        )}
       </div>
     </div>
   );

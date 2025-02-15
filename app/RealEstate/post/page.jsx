@@ -2,6 +2,7 @@
 import dynamic from 'next/dynamic';
 import React, { useContext, useEffect, useState } from 'react';
 import { inputsContext } from '../../../components/Context';
+import RealEstateNavbar from '../../../components/RealEstate/RealEstarteNavbar';
 
 // تحميل مكون Item بشكل ديناميكي
 const RealEstateItem = dynamic(
@@ -40,7 +41,8 @@ export default function Page() {
   }
 
   return (
-    <div className="flex flex-col justify-center items-center w-full">
+    <div className="flex flex-col justify-center items-center w-full bg-five">
+      <RealEstateNavbar />
       {post && <RealEstateItem {...post} />}
     </div>
   );

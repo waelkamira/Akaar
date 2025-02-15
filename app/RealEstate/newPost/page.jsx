@@ -30,16 +30,14 @@ export default function NewRealEstatePost() {
           onClick={(e) => e.stopPropagation()}
         >
           <div className=" w-full h-full flex flex-col items-center justify-start grow z-40 mt-16">
-            <div className="flex flex-col w-full justify-center items-center">
-              <div className="relative size-20 xl:h-44 xl:w-44 mt-2 ">
-                <Image
-                  priority
-                  src={'https://i.imgur.com/5pvgiAk.png'}
-                  fill
-                  alt="decoration"
-                  className="m-0"
-                />
-              </div>
+            <div className="relative w-28 h-24 xl:h-44 xl:w-96">
+              <Image
+                priority
+                src={'https://i.imgur.com/bhzNopE.png'}
+                fill
+                alt="decoration"
+                className="m-0"
+              />
             </div>
 
             {session?.status === 'unauthenticated' && (

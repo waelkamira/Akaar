@@ -6,7 +6,7 @@ import Button from '../Button';
 import { formatDistanceToNow } from 'date-fns/formatDistanceToNow';
 import Loading from '../Loading';
 import { FaHouseDamage } from 'react-icons/fa';
-import { RxSpaceEvenlyHorizontally } from 'react-icons/rx';
+import { RxSpaceEvenlyHorizontally, RxVideo } from 'react-icons/rx';
 import { VscUngroupByRefType } from 'react-icons/vsc';
 import { GiModernCity } from 'react-icons/gi';
 import { MdOutlinePriceCheck } from 'react-icons/md';
@@ -52,8 +52,10 @@ export default function Item({
 }) {
   const session = useSession();
   const [iframeSrc, setIframeSrc] = useState(null);
+  const [url, setUrl] = useState('');
+  const [embedLink, setEmbedLink] = useState('');
 
-  console.log('userName', userName);
+  console.log('link', link);
   useEffect(() => {
     if (typeof window !== 'undefined' && link) {
       const tempDiv = document.createElement('div');
@@ -62,13 +64,6 @@ export default function Item({
       setIframeSrc(iframeElement ? iframeElement.getAttribute('src') : null);
     }
   }, [link]);
-  //? هذه الدالة للتأكد إذا كان التاريخ المدخل صحيحا أو لا
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return isNaN(date)
-      ? 'Invalid date'
-      : formatDistanceToNow(date, { addSuffix: true });
-  };
 
   return (
     <>
@@ -84,7 +79,7 @@ export default function Item({
       )}
       {session?.status === 'authenticated' && (
         <div className="flex flex-col justify-center items-center w-full xl:w-[90%] 2xl:w-[70%] h-full sm:px-16 pt-2 overflow-y-auto z-10 px-2">
-          <div className="flex justify-center w-full ">
+          <div className="flex items-center justify-center w-full ">
             <div className="flex flex-col w-full p-2 sm:p-8 my-2 bg-three border-t-[20px] border-one rounded-t-lg">
               <UserNameAndPhoto
                 post={{
@@ -120,7 +115,7 @@ export default function Item({
 
                 <div className="flex flex-col  w-full">
                   <div className="flex flex-col sm:grid md:grid-cols-2 sm:gap-x-4 w-full">
-                    <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300  text-md sm:text-xl w-full min-h-20 my-2 select-none">
+                    <h1 className="flex justify-start items-center bg-white rounded-[5px] shadow-sm shadow-gray-300  text-md sm:text-xl w-full min-h-20 my-2 select-none">
                       <span className="flex gap-1 items-center text-one text-md sm:text-xl mx-2 select-none">
                         <FaHouseDamage className="text-gray-500" />
                         اسم المعلن :
@@ -128,21 +123,21 @@ export default function Item({
                       {userName}
                     </h1>
 
-                    <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300  text-md sm:text-xl w-full min-h-20 my-2 select-none">
+                    <h1 className="flex justify-start items-center bg-white rounded-[5px] shadow-sm shadow-gray-300  text-md sm:text-xl w-full min-h-20 my-2 select-none">
                       <span className="flex gap-1 items-center text-one text-md sm:text-xl mx-2 select-none">
                         <GiModernCity className="text-gray-500" />
                         المدينة :
                       </span>
                       {propertyCity}
                     </h1>
-                    <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300  text-md sm:text-xl w-full min-h-20 my-2 select-none">
+                    <h1 className="flex justify-start items-center bg-white rounded-[5px] shadow-sm shadow-gray-300  text-md sm:text-xl w-full min-h-20 my-2 select-none">
                       <span className="flex gap-1 items-center text-one text-md sm:text-xl mx-2 select-none">
                         <FaTreeCity className="text-gray-500" />
                         اسم المنطقة :
                       </span>
                       {propertyTown}
                     </h1>
-                    <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300  text-md sm:text-xl w-full min-h-20 my-2 select-none">
+                    <h1 className="flex justify-start items-center bg-white rounded-[5px] shadow-sm shadow-gray-300  text-md sm:text-xl w-full min-h-20 my-2 select-none">
                       <span className="flex gap-1 items-center text-one text-md sm:text-xl mx-2 select-none">
                         <RxSpaceEvenlyHorizontally className="text-gray-500" />
                         نوع العقار :
@@ -152,7 +147,7 @@ export default function Item({
                     {(propertyType === 'بيت' ||
                       propertyType === 'شقة' ||
                       propertyType === 'فيلا') && (
-                      <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300  text-md sm:text-xl w-full min-h-20 my-2 select-none">
+                      <h1 className="flex justify-start items-center bg-white rounded-[5px] shadow-sm shadow-gray-300  text-md sm:text-xl w-full min-h-20 my-2 select-none">
                         <span className="flex gap-1 items-center text-one text-md sm:text-xl mx-2 select-none">
                           <MdOutlineBedroomParent className="text-gray-500" />
                           عدد الغرف :
@@ -160,14 +155,14 @@ export default function Item({
                         {propertyRoomsNumber}
                       </h1>
                     )}
-                    <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300  text-md sm:text-xl w-full min-h-20 my-2 select-none">
+                    <h1 className="flex justify-start items-center bg-white rounded-[5px] shadow-sm shadow-gray-300  text-md sm:text-xl w-full min-h-20 my-2 select-none">
                       <span className="flex gap-1 items-center text-one text-md sm:text-xl mx-2 select-none">
                         <VscUngroupByRefType className="text-gray-500" />
                         المساحة :
                       </span>
                       {propertyArea}
                     </h1>
-                    <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300  text-md sm:text-xl w-full min-h-20 my-2 select-none">
+                    <h1 className="flex justify-start items-center bg-white rounded-[5px] shadow-sm shadow-gray-300  text-md sm:text-xl w-full min-h-20 my-2 select-none">
                       <span className="flex gap-1 items-center text-one text-md sm:text-xl mx-2 select-none">
                         <MdOutlinePriceCheck className="text-gray-500" />
                         السعر :
@@ -178,18 +173,13 @@ export default function Item({
                       </span>
                     </h1>
 
-                    <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300  text-md sm:text-xl w-full min-h-20 my-2 select-none">
+                    <h1 className="flex justify-start items-center bg-white rounded-[5px] shadow-sm shadow-gray-300  text-md sm:text-xl w-full min-h-20 my-2 select-none">
                       <span className="flex gap-1 items-center text-one text-md sm:text-xl mx-2 select-none">
                         <GiRotaryPhone className="text-gray-500" />
                         رقم الهاتف :
                       </span>
                       {phoneNumber}
                     </h1>
-                    {/* <h1 className="flex justify-start items-center bg-white shadow-sm shadow-gray-300  text-md sm:text-xl w-full min-h-20 my-2 select-none">
-                        <span className="flex gap-1 items-center text-one text-md sm:text-xl mx-2 select-none">
-                  
-                        </span>
-                      </h1> */}
                   </div>
 
                   <div className="flex justify-between items-center my-4 lg:my-8  h-10 sm:h-16  w-full overflow-visible">
@@ -201,11 +191,9 @@ export default function Item({
                     </h1>
                   </div>
 
-                  <div className="bg-white  p-4 w-full">
-                    <pre className="text-sm sm:text-lg text-start w-full select-none h-72 overflow-y-auto">
-                      {description}
-                    </pre>
-                  </div>
+                  <p className="flex justify-start items-start bg-white rounded-[5px] h-72 overflow-y-auto text-md sm:text-xl w-full min-h-20 my-2 p-2 select-none">
+                    {description}
+                  </p>
                 </div>
                 {lng !== '' && lat !== '' && (
                   <div>
@@ -217,12 +205,43 @@ export default function Item({
                         موقع العقار على الخريطة:
                       </h1>
                     </div>
-                    <div className="border border-one">
+                    <div className="">
                       <SyriaMap lng={lng} lat={lat} />
                     </div>
                   </div>
                 )}
-                {(link || iframeSrc) && (
+                <div className="w-full">
+                  <div className="flex justify-between items-center my-4 sm:my-4 lg:my-8  h-10 sm:h-16  w-full overflow-visible">
+                    <h1 className=" text-lg sm:text-xl w-full mb-2 select-none text-one">
+                      <span className="text-one text-2xl mx-2 select-none">
+                        #
+                      </span>
+                      فيديو:
+                    </h1>
+                  </div>
+
+                  {/* <input
+                    type="text"
+                    placeholder="ضع رابط الفيديو هنا"
+                    value={url}
+                    onChange={handleInputChange}
+                    className="w-full text-sm sm:text-lg rounded text-start text-black  h-9 sm:h-12 text-nowrap px-2 border border-four focus:outline-one"
+                  /> */}
+                  {(link || iframeSrc) && (
+                    <div>
+                      <iframe
+                        width="560"
+                        height="315"
+                        src={link || iframeSrc}
+                        frameBorder="0"
+                        allowFullScreen
+                        title="Embedded YouTube Video"
+                        className=" w-full h-44 sm:h-96 lg:h-[470px] xl:h-[500px] 2xl:h-[560px] rounded-[5px]"
+                      />
+                    </div>
+                  )}
+                </div>
+                {/* {(link || iframeSrc) && (
                   <div className="flex justify-between items-center my-4 sm:my-4 lg:my-16  h-10 sm:h-16  w-full overflow-visible">
                     <h1 className=" text-lg sm:text-xl w-full mb-2 select-none text-one">
                       <span className="text-one text-2xl mx-2 select-none">
@@ -234,18 +253,17 @@ export default function Item({
                 )}
                 <div className="flex justify-center items-center w-full mt-16">
                   <div className="flex flex-col  w-full">
-                    {/* Content rendering logic */}
                     {iframeSrc && (
                       <div className="mt-4">
                         <iframe
-                          src={iframeSrc}
+                          src={link || iframeSrc}
                           className="w-full h-44"
                           title="Property Video"
                         />
                       </div>
                     )}
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
