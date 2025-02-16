@@ -26,7 +26,7 @@ export default function MainNavbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [searshedKeyWord, setSearshedKeyWord] = useState(null);
   const [searchResults, setSearchResults] = useState([]);
-
+  const [totalCount, setTotalCount] = useState(0);
   async function handleSearch(newPage = 1) {
     console.log('handleSearch');
     if (searshedKeyWord) {
@@ -40,7 +40,8 @@ export default function MainNavbar() {
         const json = await response.json();
         console.log('json', json);
         if (newPage === 1) {
-          setSearchResults(json); // الصفحة الأولى، استبدل البيانات
+          setSearchResults(json?.data); // الصفحة الأولى، استبدل البيانات
+          setTotalCount(json?.totalCount);
         } else {
           setSearchResults((prevResults) => [...prevResults, ...json]); // أضف المزيد من النتائج
         }
@@ -208,11 +209,14 @@ export default function MainNavbar() {
         </div>
         {searchResults?.length > 0 && (
           <div
-            className={`w-full ${
+            className={`w-full text-white ${
               searchResults?.length > 0 ? 'pb-36 h-screen overflow-y-auto' : ''
             } `}
           >
             <div className="mt-8">
+              <h1 className="p-4">
+                نتائج البحث المطابقة:<span className="px-2">{totalCount}</span>
+              </h1>
               <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 p-2 sm:p-4 gap-4 justify-start items-start w-full py-16">
                 {searchResults.map((post, index) => (
                   <div

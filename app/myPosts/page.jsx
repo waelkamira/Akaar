@@ -49,7 +49,7 @@ export default function MyPosts() {
   //? هذه الدالة لحذف المنشورات
   async function handleDeletePost(postId) {
     const email = session?.data?.user?.email;
-    const response = await fetch(`/api/allPosts?email=${email}&id=${postId}`, {
+    const response = await fetch(`/api/deletePost`, {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ id: postId, email: email }),
@@ -83,8 +83,8 @@ export default function MyPosts() {
         />
 
         {isVisible && (
-          <div className="absolute flex flex-col items-center p-4 /95 z-50 inset-0 ">
-            <div className="sticky top-72 w-full sm:w-1/2 border border-white rounded">
+          <div className="absolute flex flex-col items-center p-4 /95 z-50 inset-0 bg-five/70 text-white">
+            <div className="sticky top-72 w-full sm:w-1/2 border border-white rounded bg-three">
               <h1 className="text-center text-lg sm:text-xl mt-4">
                 هل تريد حذف هذه الإعلان نهائيا؟
               </h1>
@@ -139,8 +139,15 @@ export default function MyPosts() {
                                 type: 'POST_ID',
                                 payload: post?.id,
                               });
-
-                              router.push(`/editPost`);
+                              localStorage.setItem(
+                                'postId',
+                                JSON.stringify(post?.id)
+                              );
+                              if (post?.title) {
+                                router.push(`/Cars/editPost`);
+                              } else {
+                                router.push(`/RealEstate/editPost`);
+                              }
                             }}
                           >
                             <MdEdit />

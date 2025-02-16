@@ -1,5 +1,4 @@
 import { PrismaClient } from '@prisma/client';
-import { toInteger } from 'lodash';
 
 const prisma = new PrismaClient();
 

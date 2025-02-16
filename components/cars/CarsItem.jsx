@@ -82,7 +82,7 @@ export default function CarsItem({
       {session?.status === 'authenticated' && (
         <div className="flex flex-col justify-center items-center w-full xl:w-[90%] 2xl:w-[80%] h-full sm:px-16 pt-2 overflow-y-auto z-10 px-2">
           <div className="flex justify-center w-full ">
-            <div className="flex flex-col w-full p-2 sm:p-8 my-2 bg-three border-t-[10px] border-one rounded-t-lg">
+            <div className="flex flex-col w-full p-2 sm:p-8 my-2 bg-white border-t-[10px] border-one rounded-t-lg">
               <UserNameAndPhoto
                 post={{
                   userImage: userImage,
@@ -194,7 +194,7 @@ export default function CarsItem({
                   </div>
 
                   <div className="bg-white  p-4 w-full rounded-[5px]">
-                    <pre className="text-sm sm:text-lg text-start w-full select-none h-72 overflow-y-auto">
+                    <pre className="flex justify-start items-start bg-white rounded-[5px] h-72 overflow-y-auto text-md sm:text-xl w-full shadow-sm shadow-gray-300 min-h-20 my-2 p-2 select-none">
                       {description}
                     </pre>
                   </div>
@@ -209,7 +209,7 @@ export default function CarsItem({
                         الموقع على الخريطة:
                       </h1>
                     </div>
-                    <div className="border border-one">
+                    <div>
                       <SyriaMap lng={lng} lat={lat} />
                     </div>
                   </div>
