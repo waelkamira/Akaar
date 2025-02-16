@@ -25,11 +25,11 @@ const FlipClock = () => {
   }, []);
 
   return (
-    <div className="flex justify-center items-center mx-4">
+    <div className="flex justify-center items-center mx-1">
       <TimeUnit value={time.seconds} />
-      <span className="text-2xl font-bold  select-none px-1">:</span>
+      <span className="text-lg font-bold text-white select-none">:</span>
       <TimeUnit value={time.minutes} />
-      <span className="text-2xl font-bold  select-none px-1">:</span>
+      <span className="text-lg font-bold text-white select-none">:</span>
       <TimeUnit value={time.hours} />
     </div>
   );
@@ -37,13 +37,13 @@ const FlipClock = () => {
 
 const TimeUnit = ({ value }) => {
   return (
-    <div className=" text-white select-none w-16 h-full flex justify-center items-center rounded-lg text-2xl font-bold">
+    <div className=" text-white select-none w-6 h-full flex justify-center items-center rounded-lg text-lg font-bold">
       {value}
     </div>
   );
 };
 
-export default function Page() {
+export default function ClockWidget() {
   return (
     <div className=" hidden 2xl:flex  select-none  flex-col items-center justify-center h-full">
       <FlipClock />
