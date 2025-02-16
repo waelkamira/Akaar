@@ -130,7 +130,6 @@ export default function MainNavbar() {
             </div>
           </ul>
           <div className="flex items-center justify-center">
-            <ClockWidget />
             <div
               className="relative flex justify-end w-fit min-w-[218px] cursor-pointer "
               onClick={() => router.push('/')}
@@ -149,63 +148,66 @@ export default function MainNavbar() {
         </div>
       </div>
       <div className="flex flex-col justify-center items-start w-full bg-three">
-        <div className="flex justify-center items-center gap-2 sm:gap-4 w-full">
-          <div className="relative xl:hidden">
-            <TfiMenuAlt
-              className="text-[30px] sm:text-5xl text-white cursor-pointer"
-              onClick={() => {
-                setIsOpen(!isOpen);
-              }}
-            />
-            <div className="absolute top-14 lg:top-20 right-0 z-50">
-              {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
-            </div>
-          </div>
-          <div className="relative text-center w-1/4 2xl:w-1/12">
-            {searchResults?.length > 0 ? (
-              <button
-                className="btn sm:text-lg text-sm p-0.5 lg:p-3 my-2 text-white text-nowrap select-none rounded-[5px] w-full max-h-12 hover:scale-[101%]"
-                style={{
-                  '--btn-background': '#F50610',
-                  // '--btn-hover-background': '#F50610',
-                }}
+        <div className="flex justify-between items-center gap-2 sm:gap-4 w-full">
+          <div className="flex justify-center items-center gap-2 sm:gap-4 w-full">
+            <div className="relative xl:hidden">
+              <TfiMenuAlt
+                className="text-[30px] sm:text-5xl text-white cursor-pointer"
                 onClick={() => {
-                  setPageNumber(1); // إعادة تعيين رقم الصفحة إلى 1 عند البحث الجديد
-                  setSearchResults([]);
+                  setIsOpen(!isOpen);
                 }}
-              >
-                إغلاق البحث
-              </button>
-            ) : (
-              <Button
-                style={' sm:p-6'}
-                onClick={() => handleSearch()}
-                title={'بحث'}
-                emoji={<ImSearch />}
               />
-            )}
+              <div className="absolute top-14 lg:top-20 right-0 z-50">
+                {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
+              </div>
+            </div>
+            <div className="relative text-center w-1/4 2xl:w-1/12">
+              {searchResults?.length > 0 ? (
+                <button
+                  className="btn sm:text-lg text-sm p-0.5 lg:p-3 my-2 text-white text-nowrap select-none rounded-[5px] w-full max-h-12 hover:scale-[101%]"
+                  style={{
+                    '--btn-background': '#F50610',
+                    // '--btn-hover-background': '#F50610',
+                  }}
+                  onClick={() => {
+                    setPageNumber(1); // إعادة تعيين رقم الصفحة إلى 1 عند البحث الجديد
+                    setSearchResults([]);
+                  }}
+                >
+                  إغلاق البحث
+                </button>
+              ) : (
+                <Button
+                  style={' sm:p-6'}
+                  onClick={() => handleSearch()}
+                  title={'بحث'}
+                  emoji={<ImSearch />}
+                />
+              )}
+            </div>
+            <input
+              type="search"
+              id="main_search"
+              value={searshedKeyWord}
+              onChange={(e) => {
+                setSearshedKeyWord(e?.target?.value);
+                if (searshedKeyWord?.length === 0) {
+                  setSearchResults([]);
+                }
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  handleSearch();
+                  setPageNumber(1);
+                }
+              }}
+              autoFocus
+              placeholder="ابحث عن عقار .. سيارة ..."
+              // onChange={(e) => setMaxPrice(e.target.value)}
+              className="w-full xl:w-1/2 2xl:w-2/5 my-2 text-sm sm:text-lg rounded text-start z-40 h-9 sm:h-12 text-nowrap px-2 border border-four focus:outline-one"
+            />
           </div>
-          <input
-            type="search"
-            id="main_search"
-            value={searshedKeyWord}
-            onChange={(e) => {
-              setSearshedKeyWord(e?.target?.value);
-              if (searshedKeyWord?.length === 0) {
-                setSearchResults([]);
-              }
-            }}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                handleSearch();
-                setPageNumber(1);
-              }
-            }}
-            autoFocus
-            placeholder="ابحث عن عقار .. سيارة ..."
-            // onChange={(e) => setMaxPrice(e.target.value)}
-            className="w-full xl:w-1/2 2xl:w-2/5 my-2 text-sm sm:text-lg rounded text-start z-40 h-9 sm:h-12 text-nowrap px-2 border border-four focus:outline-one"
-          />
+          {/* <ClockWidget /> */}
         </div>
         {searchResults?.length > 0 && (
           <div

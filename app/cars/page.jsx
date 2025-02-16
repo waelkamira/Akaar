@@ -32,7 +32,7 @@ export default function CarsHomePage() {
     fetchCarsAds();
   }, []);
   async function fetchCarsAds() {
-    const response = await fetch('/api/Cars/allPosts?limit=8');
+    const response = await fetch('/api/Cars/allPosts?limit=16');
     if (response.ok) {
       const json = await response?.json();
       console.log('json', json);

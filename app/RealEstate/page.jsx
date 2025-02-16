@@ -33,7 +33,7 @@ export default function RealEstateHomePage() {
   }, []);
 
   async function fetchRealEstateAds() {
-    const response = await fetch('/api/RealEstate/allPosts?limit=8');
+    const response = await fetch('/api/RealEstate/allPosts?limit=16');
     if (response.ok) {
       const json = await response?.json();
       console.log('json', json);
