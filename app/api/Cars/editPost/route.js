@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { toInteger } from 'lodash';
 
 const prisma = new PrismaClient();
 
@@ -8,19 +9,19 @@ export async function POST(req) {
 
   try {
     if (!id) {
-      return new Response(JSON.stringify({ error: 'يجب توفير معرف الوجبة' }), {
+      return new Response(JSON.stringify({ error: 'يجب توفير معرف الاعلان' }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' },
       });
     }
 
-    const post = await prisma.property.findUnique({
+    const post = await prisma.car.findUnique({
       where: { id },
     });
 
     if (!post) {
       return new Response(
-        JSON.stringify({ error: 'لم يتم العثور على الوجبة' }),
+        JSON.stringify({ error: 'لم يتم العثور على الاعلان' }),
         { status: 404, headers: { 'Content-Type': 'application/json' } }
       );
     }
@@ -38,19 +39,24 @@ export async function POST(req) {
   }
 }
 export async function PUT(req) {
-  const { id, ...data } = await req.json();
+  const { id, distance, year, price, ...data } = await req.json();
 
   try {
     if (!id) {
-      return new Response(JSON.stringify({ error: 'يجب توفير معرف الوجبة' }), {
+      return new Response(JSON.stringify({ error: 'يجب توفير معرف الاعلان' }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' },
       });
     }
 
-    const updatedPost = await prisma.property.update({
+    const updatedPost = await prisma.car.update({
       where: { id },
-      data,
+      data: {
+        ...data,
+        distance: distance ? toInteger(distance) : undefined,
+        price: price ? toInteger(price) : undefined,
+        year: year ? toInteger(year) : undefined,
+      },
     });
 
     return new Response(
@@ -64,7 +70,7 @@ export async function PUT(req) {
     console.error('Error updating post:', error);
     if (error.code === 'P2025') {
       return new Response(
-        JSON.stringify({ error: 'لم يتم العثور على الوجبة' }),
+        JSON.stringify({ error: 'لم يتم العثور على الاعلان' }),
         { status: 404, headers: { 'Content-Type': 'application/json' } }
       );
     }

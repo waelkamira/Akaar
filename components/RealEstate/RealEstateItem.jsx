@@ -80,7 +80,7 @@ export default function Item({
       {session?.status === 'authenticated' && (
         <div className="flex flex-col justify-center items-center w-full xl:w-[90%] 2xl:w-[70%] h-full sm:px-16 pt-2 overflow-y-auto z-10 px-2">
           <div className="flex items-center justify-center w-full ">
-            <div className="flex flex-col w-full p-2 sm:p-8 my-2 bg-three border-t-[20px] border-one rounded-t-lg">
+            <div className="flex flex-col w-full p-2 sm:p-8 my-2 bg-white border-t-[20px] border-one rounded-t-lg">
               <UserNameAndPhoto
                 post={{
                   userImage: userImage,
@@ -191,7 +191,7 @@ export default function Item({
                     </h1>
                   </div>
 
-                  <p className="flex justify-start items-start bg-white rounded-[5px] h-72 overflow-y-auto text-md sm:text-xl w-full min-h-20 my-2 p-2 select-none">
+                  <p className="flex justify-start items-start bg-white rounded-[5px] h-72 overflow-y-auto text-md sm:text-xl w-full shadow-sm shadow-gray-300 min-h-20 my-2 p-2 select-none">
                     {description}
                   </p>
                 </div>
@@ -210,24 +210,17 @@ export default function Item({
                     </div>
                   </div>
                 )}
-                <div className="w-full">
-                  <div className="flex justify-between items-center my-4 sm:my-4 lg:my-8  h-10 sm:h-16  w-full overflow-visible">
-                    <h1 className=" text-lg sm:text-xl w-full mb-2 select-none text-one">
-                      <span className="text-one text-2xl mx-2 select-none">
-                        #
-                      </span>
-                      فيديو:
-                    </h1>
-                  </div>
-
-                  {/* <input
-                    type="text"
-                    placeholder="ضع رابط الفيديو هنا"
-                    value={url}
-                    onChange={handleInputChange}
-                    className="w-full text-sm sm:text-lg rounded text-start text-black  h-9 sm:h-12 text-nowrap px-2 border border-four focus:outline-one"
-                  /> */}
-                  {(link || iframeSrc) && (
+                {(link || iframeSrc) && (
+                  <div className="w-full">
+                    <div className="flex justify-between items-center my-4 sm:my-4 lg:my-8  h-10 sm:h-16  w-full overflow-visible">
+                      <h1 className=" text-lg sm:text-xl w-full mb-2 select-none text-one">
+                        <span className="text-one text-2xl mx-2 select-none">
+                          #
+                        </span>
+                        فيديو:
+                      </h1>
+                    </div>
+                    (
                     <div>
                       <iframe
                         width="560"
@@ -239,8 +232,8 @@ export default function Item({
                         className=" w-full h-44 sm:h-96 lg:h-[470px] xl:h-[500px] 2xl:h-[560px] rounded-[5px]"
                       />
                     </div>
-                  )}
-                </div>
+                  </div>
+                )}
                 {/* {(link || iframeSrc) && (
                   <div className="flex justify-between items-center my-4 sm:my-4 lg:my-16  h-10 sm:h-16  w-full overflow-visible">
                     <h1 className=" text-lg sm:text-xl w-full mb-2 select-none text-one">

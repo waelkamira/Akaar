@@ -15,7 +15,9 @@ import dynamic from 'next/dynamic';
 const CustomToast = dynamic(() => import('../../../components/CustomToast'));
 const LoadingPhoto = dynamic(() => import('../../../components/LoadingPhoto'));
 const ImageSlider = dynamic(() => import('../../../components/imageSlider'));
-const EditItem = dynamic(() => import('../../../components/editItem'));
+const CarsEditItem = dynamic(() =>
+  import('../../../components/Cars/CarsEditItem')
+);
 const OnClickMap = dynamic(() => import('../../../components/map/onClickMap'));
 const MiddleBarAndPhoto = dynamic(() =>
   import('../../../components/middleBarAndPhoto')
@@ -28,21 +30,23 @@ export default function EditPost() {
   const [isOpen, setIsOpen] = useState(false);
   const session = useSession();
   const [editedPost, setEditedPost] = useState({});
-  const { location, postId } = useContext(inputsContext);
-  console.log('location', location);
+  const { location } = useContext(inputsContext);
+  const [postId, setpostId] = useState('');
+
+  console.log('postId', postId);
   const [inputs, setInputs] = useState({
     image: editedPost?.image,
     image1: editedPost?.image1,
     image2: editedPost?.image2,
     image3: editedPost?.image3,
     image4: editedPost?.image4,
-    propertyName: editedPost?.propertyName,
-    propertyType: editedPost?.propertyType,
-    propertyPrice: editedPost?.propertyPrice,
-    propertyArea: editedPost?.propertyArea,
-    propertyCity: editedPost?.propertyCity,
-    propertyTown: editedPost?.propertyTown,
-    propertyRoomsNumber: editedPost?.propertyRoomsNumber,
+    title: editedPost?.title,
+    adType: editedPost?.adType,
+    price: editedPost?.price,
+    usedNew: editedPost?.usedNew,
+    city: editedPost?.city,
+    town: editedPost?.town,
+    distance: editedPost?.distance,
     phoneNumber: editedPost?.phoneNumber,
     lat: location[0] || editedPost?.lat,
     lng: location[1] || editedPost?.lng,
@@ -55,7 +59,11 @@ export default function EditPost() {
   // console.log('inputs', inputs);
 
   useEffect(() => {
-    fetchEditedPost(postId);
+    if (typeof window !== 'undefined') {
+      const id = JSON.parse(localStorage.getItem('postId'));
+      fetchEditedPost(id);
+      setpostId(id);
+    }
   }, []);
 
   useEffect(() => {
@@ -64,6 +72,65 @@ export default function EditPost() {
       setInputs({ ...inputs, lat: location[0], lng: location[1] });
     }
   }, [location]);
+
+  async function fetchEditedPost(postId) {
+    const res = await fetch(`/api/Cars/editPost`, {
+      method: 'POST', // استخدم POST بدلاً من GET
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id: postId,
+      }),
+    });
+    const json = await res?.json();
+    if (res.ok) {
+      console.log('json from editedPost', json);
+      setEditedPost(json);
+      setInputs({
+        image1: json?.image1,
+        image2: json?.image2,
+        image3: json?.image3,
+        image4: json?.image4,
+        image5: json?.image5,
+        title: json?.title,
+        adType: json?.adType,
+        price: json?.price,
+        usedNew: json?.usedNew,
+        city: json?.city,
+        town: json?.town,
+        lat: location[0] || json?.lat,
+        lng: location[1] || json?.lng,
+        distance: json?.distance,
+        phoneNumber: json?.phoneNumber,
+        description: json?.description,
+        link: json?.linkValue, // التعامل مع الحقل `link` بشكل صحيح
+        hearts: json?.hearts,
+        userName: json?.userName,
+        userImage: json?.userImage,
+      });
+    }
+  }
+
+  async function handleEditPost(postId) {
+    // console.log('success');
+    const response = await fetch(`/api/Cars/editPost`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        ...inputs,
+        image: data?.image,
+        id: postId,
+      }),
+    });
+    if (response.ok) {
+      toast.custom((t) => (
+        <CustomToast
+          t={t}
+          message={'تم تعديل هذا الإعلان بنجاح'}
+          greenEmoji={'✔'}
+        />
+      ));
+    }
+  }
 
   let iframeSrc = null;
 
@@ -85,65 +152,6 @@ export default function EditPost() {
       ? 'Invalid date'
       : formatDistanceToNow(date, { addSuffix: true });
   };
-
-  const fetchEditedPost = async (postId) => {
-    const res = await fetch(`/api/editPost`, {
-      method: 'POST', // استخدم POST بدلاً من GET
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        id: postId,
-      }),
-    });
-    const json = await res?.json();
-    if (res.ok) {
-      console.log('json from editedPost', json);
-      setEditedPost(json);
-      setInputs({
-        image: json?.image,
-        image1: json?.image1,
-        image2: json?.image2,
-        image3: json?.image3,
-        image4: json?.image4,
-        propertyName: json?.propertyName,
-        propertyType: json?.propertyType,
-        propertyPrice: json?.propertyPrice,
-        propertyArea: json?.propertyArea,
-        propertyCity: json?.propertyCity,
-        propertyTown: json?.propertyTown,
-        lat: location[0] || json?.lat,
-        lng: location[1] || json?.lng,
-        propertyRoomsNumber: json?.propertyRoomsNumber,
-        phoneNumber: json?.phoneNumber,
-        description: json?.description,
-        link: json?.linkValue, // التعامل مع الحقل `link` بشكل صحيح
-        hearts: json?.hearts,
-        userName: json?.userName,
-        userImage: json?.userImage,
-      });
-    }
-  };
-
-  async function handleEditPost(postId) {
-    // console.log('success');
-    const response = await fetch(`/api/editPost`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        ...inputs,
-        image: data?.image,
-        id: postId,
-      }),
-    });
-    if (response.ok) {
-      toast.custom((t) => (
-        <CustomToast
-          t={t}
-          message={'تم تعديل هذا الإعلان بنجاح'}
-          greenEmoji={'✔'}
-        />
-      ));
-    }
-  }
 
   //? embed link هاتان الدالاتان للتعامل مع رابط اليويتوب الذي يقوم المستخدم بنسخه لتحويله الى
 
@@ -173,7 +181,7 @@ export default function EditPost() {
     }
   };
   return (
-    <div className="flex flex-col justify-center items-center w-full ">
+    <div className="flex flex-col justify-center items-center w-full bg-five">
       {session?.status === 'unauthenticated' && (
         <div className="p-4   m-2 md:m-8 border rounded-md rounded-md-one text-center h-screen">
           <h1 className="text-lg md:text-2xl p-2 my-8 ">
@@ -192,14 +200,8 @@ export default function EditPost() {
             noButton={false}
           />
 
-          <div className="flex flex-col justify-start items-center w-full gap-4 py-4">
-            <h1 className="grow text-lg lg:text-2xl w-full ">
-              <span className="text-one  text-2xl ml-2">#</span>
-              الإعلان
-            </h1>
-          </div>
-          <div className="flex justify-center w-full">
-            <div className="flex flex-col w-full border rounded-md p-2 sm:p-8 mt-4 bg-white">
+          <div className="flex justify-center w-full bg-white">
+            <div className="flex flex-col w-full border rounded-md p-2 sm:p-8 bg-white">
               <div className="flex justify-start items-center gap-2 w-full mb-4">
                 {/* صورة المستخدم */}
                 <div className="relative size-8 sm:size-10 lg:size-14 overflow-hidden rounded">
@@ -209,7 +211,7 @@ export default function EditPost() {
                       priority
                       src={editedPost?.userImage}
                       fill
-                      alt={editedPost?.propertyName}
+                      alt={editedPost?.title}
                     />
                   )}
                 </div>
@@ -230,11 +232,11 @@ export default function EditPost() {
               </div>
 
               {/* الاسم */}
-              <EditItem
+              <CarsEditItem
                 inputs={inputs}
                 setInputs={setInputs}
                 title={'عنوان الإعلان :'}
-                property={'propertyName'}
+                property={'title'}
                 handleEditPost={handleEditPost}
                 editedPost={editedPost}
                 postId={postId}
@@ -251,7 +253,7 @@ export default function EditPost() {
                 />
                 <button
                   onClick={() => handleEditPost(postId)}
-                  className="bg-gray-600 mb-2 w-full mt-4 sm:w-fit  duration-300 transition-colors ease-in-out hover:bg-one hover:scale-105 border rounded-md text-center select-none p-2"
+                  className="bg-gray-600 mb-2 w-full mt-4 sm:w-fit text-white duration-300 transition-colors ease-in-out hover:bg-one hover:scale-105 border rounded-md text-center select-none p-2"
                 >
                   حفظ التعديلات
                 </button>
@@ -261,7 +263,7 @@ export default function EditPost() {
               <div className=" mt-4">
                 {/* اسم المعلن */}
 
-                <EditItem
+                <CarsEditItem
                   inputs={inputs}
                   setInputs={setInputs}
                   title={'اسم المعلن :'}
@@ -270,76 +272,98 @@ export default function EditPost() {
                   editedPost={editedPost}
                   postId={postId}
                 />
-                {/*  نوع العقار */}
-                <EditItem
+                {/*  ماركة السيارة */}
+                <CarsEditItem
                   inputs={inputs}
                   setInputs={setInputs}
-                  title={'نوع العقار :'}
-                  property={'propertyType'}
+                  title={'ماركة السيارة :'}
+                  property={'brand'}
                   handleEditPost={handleEditPost}
                   editedPost={editedPost}
                   postId={postId}
                 />
 
-                {/*  عدد الغرف */}
+                {/*  موديل السيارة */}
 
-                {inputs?.propertyRoomsNumber !== '0' && (
-                  <EditItem
-                    inputs={inputs}
-                    setInputs={setInputs}
-                    title={'عدد الغرف :'}
-                    property={'propertyRoomsNumber'}
-                    handleEditPost={handleEditPost}
-                    editedPost={editedPost}
-                    postId={postId}
-                  />
-                )}
+                <CarsEditItem
+                  inputs={inputs}
+                  setInputs={setInputs}
+                  title={'موديل السيارة :'}
+                  property={'model'}
+                  handleEditPost={handleEditPost}
+                  editedPost={editedPost}
+                  postId={postId}
+                />
+
+                {/*  نوع الإعلان */}
+
+                <CarsEditItem
+                  inputs={inputs}
+                  setInputs={setInputs}
+                  title={'نوع الإعلان :'}
+                  property={'adType'}
+                  handleEditPost={handleEditPost}
+                  editedPost={editedPost}
+                  postId={postId}
+                />
+                {/*  المسافة */}
+
+                <CarsEditItem
+                  inputs={inputs}
+                  setInputs={setInputs}
+                  title={'المسافة :'}
+                  property={'distance'}
+                  handleEditPost={handleEditPost}
+                  editedPost={editedPost}
+                  postId={postId}
+                />
+
                 {/*  المدينة */}
-                <EditItem
+                <CarsEditItem
                   inputs={inputs}
                   setInputs={setInputs}
                   title={'المدينة :'}
-                  property={'propertyCity'}
+                  property={'city'}
                   handleEditPost={handleEditPost}
                   editedPost={editedPost}
                   postId={postId}
                 />
 
                 {/*  المنطقة */}
-                <EditItem
+                <CarsEditItem
                   inputs={inputs}
                   setInputs={setInputs}
                   title={'المنطقة :'}
-                  property={'propertyTown'}
+                  property={'town'}
                   handleEditPost={handleEditPost}
                   editedPost={editedPost}
                   postId={postId}
                 />
 
-                {/*  المساحة */}
-                <EditItem
+                {/*  الحالة */}
+                <CarsEditItem
                   inputs={inputs}
                   setInputs={setInputs}
-                  title={'المساحة :'}
-                  property={'propertyArea'}
+                  title={'الحالة :'}
+                  property={'usedNew'}
                   handleEditPost={handleEditPost}
                   editedPost={editedPost}
                   postId={postId}
                 />
 
                 {/*  السعر */}
-                <EditItem
+                <CarsEditItem
                   inputs={inputs}
                   setInputs={setInputs}
                   title={'السعر :'}
-                  property={'propertyPrice'}
+                  property={'price'}
                   handleEditPost={handleEditPost}
                   editedPost={editedPost}
                   postId={postId}
                 />
 
                 {/*  رقم الهاتف */}
-                <EditItem
+                <CarsEditItem
                   inputs={inputs}
                   setInputs={setInputs}
                   title={'رقم الهاتف :'}
@@ -385,13 +409,12 @@ export default function EditPost() {
                   </pre>
                   <button
                     onClick={() => handleEditPost(postId)}
-                    className="bg-gray-600 mb-2 w-full mt-4 sm:w-fit   duration-300 transition-colors ease-in-out hover:bg-one hover:scale-105 border rounded-md text-center select-none   p-2"
+                    className="bg-gray-600 mb-2 w-full mt-4 sm:w-fit text-white  duration-300 transition-colors ease-in-out hover:bg-one hover:scale-105 border rounded-md text-center select-none   p-2"
                   >
                     حفظ التعديلات
                   </button>
                 </div>
 
-                {/* الفيديو */}
                 {/* الموقع على الخريطة */}
                 <div className="flex flex-col justify-start items-center w-full gap-4 py-4">
                   <h1 className="grow text-lg lg:text-2xl w-full">
@@ -400,6 +423,8 @@ export default function EditPost() {
                   </h1>
                 </div>
                 <OnClickMap lat={editedPost?.lat} lng={editedPost?.lng} />
+
+                {/* الفيديو */}
                 <div>
                   <div className=" flex justify-between items-center my-4 h-10 sm:h-16 w-full overflow-visible">
                     <h1 className="  text-lg lg:text-xl xl:text-2xl w-full my-2 select-none">
@@ -421,7 +446,7 @@ export default function EditPost() {
                   </div>
                   <button
                     onClick={() => handleEditPost(postId)}
-                    className="bg-gray-600 mb-2 w-full mt-4 sm:w-fit   duration-300 transition-colors ease-in-out hover:bg-one hover:scale-105 border rounded-md text-center select-none   p-2"
+                    className="bg-gray-600 mb-2 w-full mt-4 sm:w-fit text-white  duration-300 transition-colors ease-in-out hover:bg-one hover:scale-105 border rounded-md text-center select-none   p-2"
                   >
                     حفظ التعديلات
                   </button>
@@ -438,7 +463,7 @@ export default function EditPost() {
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                       referrerpolicy="strict-origin-when-cross-origin"
                       allowfullscreen
-                      className=" w-full h-44 sm:h-96 lg:h-[470px] xl:h-[500px] 2xl:h-[560px]"
+                      className=" w-full h-44 sm:h-96 lg:h-[470px] xl:h-[500px] 2xl:h-[560px] rounded-[5px]"
                     />
                   )}
                   {inputs?.link && (
@@ -450,7 +475,7 @@ export default function EditPost() {
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                       referrerpolicy="strict-origin-when-cross-origin"
                       allowfullscreen
-                      className=" w-full h-44 sm:h-96 lg:h-[470px] xl:h-[500px] 2xl:h-[560px]"
+                      className=" w-full h-44 sm:h-96 lg:h-[470px] xl:h-[500px] 2xl:h-[560px] rounded-[5px]"
                     />
                   )}
                 </div>

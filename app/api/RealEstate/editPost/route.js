@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { toInteger } from 'lodash';
 
 const prisma = new PrismaClient();
 
@@ -38,7 +39,7 @@ export async function POST(req) {
   }
 }
 export async function PUT(req) {
-  const { id, ...data } = await req.json();
+  const { id, propertyPrice, ...data } = await req.json();
 
   try {
     if (!id) {
@@ -50,7 +51,10 @@ export async function PUT(req) {
 
     const updatedPost = await prisma.property.update({
       where: { id },
-      data,
+      data: {
+        ...data,
+        propertyPrice: toInteger(propertyPrice),
+      },
     });
 
     return new Response(

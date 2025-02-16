@@ -10,11 +10,22 @@ export async function POST(req) {
   const skip = (page - 1) * limit;
 
   try {
+    // حساب العدد الإجمالي للعقارات
+    const propertiesCount = await prisma.property.count({
+      where: {
+        propertyName: {
+          contains: searshedKeyWord,
+          mode: 'insensitive',
+        },
+      },
+    });
+
+    // جلب العقارات مع التصفية والتخطي والتحديد
     const properties = await prisma.property.findMany({
       where: {
         propertyName: {
-          contains: searshedKeyWord, // البحث عن الكلمة داخل الاسم
-          mode: 'insensitive', // البحث غير حساس لحالة الأحرف
+          contains: searshedKeyWord,
+          mode: 'insensitive',
         },
       },
       skip,
@@ -49,10 +60,21 @@ export async function POST(req) {
       },
     });
 
+    // حساب العدد الإجمالي للسيارات
+    const carsCount = await prisma.car.count({
+      where: {
+        title: {
+          contains: searshedKeyWord,
+          mode: 'insensitive',
+        },
+      },
+    });
+
+    // جلب السيارات مع التصفية والتخطي والتحديد
     const cars = await prisma.car.findMany({
       where: {
         title: {
-          contains: searshedKeyWord, // البحث عن الكلمة داخل عنوان السيارة
+          contains: searshedKeyWord,
           mode: 'insensitive',
         },
       },
@@ -89,7 +111,12 @@ export async function POST(req) {
       },
     });
 
-    const result = [...properties, ...cars];
+    const totalCount = propertiesCount + carsCount; // مجموع النتائج الكلي
+    const result = {
+      totalCount,
+      data: [...properties, ...cars], // إرسال البيانات المسترجعة
+    };
+
     return NextResponse.json(result);
   } catch (error) {
     console.error('Error fetching properties and cars:', error);
