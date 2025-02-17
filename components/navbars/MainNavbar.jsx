@@ -1,11 +1,15 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { FaHome } from 'react-icons/fa';
 import { GiExitDoor } from 'react-icons/gi';
 import { FcConferenceCall } from 'react-icons/fc';
 import { FaCanadianMapleLeaf } from 'react-icons/fa';
-import { MdOutlineMapsHomeWork } from 'react-icons/md';
+import {
+  MdKeyboardDoubleArrowLeft,
+  MdKeyboardDoubleArrowRight,
+  MdOutlineMapsHomeWork,
+} from 'react-icons/md';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
@@ -18,6 +22,7 @@ import SideBarMenu from '../SideBarMenu';
 import NavegationPages from '../NavegationPages';
 import SmallItem from '../SmallItem';
 import ClockWidget from '../ClockWidget';
+import Link from 'next/link';
 
 export default function MainNavbar() {
   const router = useRouter();
@@ -27,23 +32,41 @@ export default function MainNavbar() {
   const [searshedKeyWord, setSearshedKeyWord] = useState(null);
   const [searchResults, setSearchResults] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
+  const [hasMore, setHasMore] = useState(true); // إضافة حالة جديدة لـ hasMore
+
+  useEffect(() => {
+    handleSearch(pageNumber);
+  }, [pageNumber]);
+
   async function handleSearch(newPage = 1) {
     console.log('handleSearch');
     if (searshedKeyWord) {
       const response = await fetch('/api/search', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON?.stringify({ searshedKeyWord, page: newPage }),
+        body: JSON.stringify({ searshedKeyWord, page: newPage }),
       });
 
       if (response.ok) {
         const json = await response.json();
         console.log('json', json);
-        if (newPage === 1) {
-          setSearchResults(json?.data); // الصفحة الأولى، استبدل البيانات
-          setTotalCount(json?.totalCount);
+
+        // التحقق من أن json?.data هو مصفوفة
+        if (Array.isArray(json?.data)) {
+          if (newPage === 1) {
+            setSearchResults(json?.data); // الصفحة الأولى، استبدل البيانات
+            setTotalCount(json?.totalCount);
+          } else {
+            setSearchResults((prevResults) =>
+              [...prevResults, ...json?.data].slice(-6)
+            ); // أضف المزيد من النتائج
+          }
+          setHasMore(json.hasMore); // تحديث حالة hasMore
         } else {
-          setSearchResults((prevResults) => [...prevResults, ...json]); // أضف المزيد من النتائج
+          console.error(
+            'Expected json?.data to be an array, but got:',
+            json?.data
+          );
         }
       }
     } else {
@@ -170,8 +193,9 @@ export default function MainNavbar() {
                     // '--btn-hover-background': '#F50610',
                   }}
                   onClick={() => {
-                    setPageNumber(1); // إعادة تعيين رقم الصفحة إلى 1 عند البحث الجديد
-                    setSearchResults([]);
+                    setPageNumber(1); // إعادة تعيين رقم الصفحة إلى 1
+                    setSearchResults([]); // مسح النتائج
+                    setSearshedKeyWord(''); // مسح الكلمة المفتاحية
                   }}
                 >
                   إغلاق البحث
@@ -216,8 +240,9 @@ export default function MainNavbar() {
             } `}
           >
             <div className="mt-8">
-              <h1 className="p-4">
-                نتائج البحث المطابقة:<span className="px-2">{totalCount}</span>
+              <h1 className="p-8">
+                نتائج البحث المطابقة:
+                <span className="px-2 text-one">{totalCount}</span>
               </h1>
               <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 p-2 sm:p-4 gap-4 justify-start items-start w-full py-16">
                 {searchResults.map((post, index) => (
@@ -231,11 +256,36 @@ export default function MainNavbar() {
               </div>
             </div>
 
-            <NavegationPages
+            {/* <NavegationPages
               array={searchResults}
               setPageNumber={setPageNumber}
               pageNumber={pageNumber}
-            />
+            /> */}
+            <div className="flex items-center justify-around  my-4 ">
+              {/* عرض الأزرار بناءً على hasMore */}
+              {pageNumber > 1 && (
+                <Link href={'#post1'}>
+                  <div
+                    className="flex items-center justify-around cursor-pointer py-4"
+                    onClick={() => setPageNumber(pageNumber - 1)}
+                  >
+                    <MdKeyboardDoubleArrowLeft className="text-2xl text-one select-none" />
+                    <h1>الصفحة السابقة</h1>
+                  </div>
+                </Link>
+              )}
+              {hasMore && (
+                <Link href={'#post1'}>
+                  <div
+                    className="flex items-center justify-around cursor-pointer py-4"
+                    onClick={() => setPageNumber(pageNumber + 1)}
+                  >
+                    <MdKeyboardDoubleArrowRight className="text-2xl text-one select-none" />
+                    <h1>الصفحة التالية</h1>
+                  </div>
+                </Link>
+              )}
+            </div>
           </div>
         )}
       </div>

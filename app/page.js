@@ -10,6 +10,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import LoadingPhoto from '../components/LoadingPhoto';
 import Loading from '../components/Loading';
+import HeroSlider from '../components/photos/HeroSlider';
 
 export default function Home() {
   const [cars, setCars] = useState();
@@ -39,10 +40,19 @@ export default function Home() {
     }
   }
 
+  const images = [
+    'https://i.imgur.com/wHyvDAD.png',
+    'https://i.imgur.com/uPsQqzu.png',
+    'https://i.imgur.com/0DDS22z.jpg',
+    'https://i.imgur.com/Kc6Pcu1.png',
+    'https://i.imgur.com/rLz58YH.jpg',
+    'https://i.imgur.com/VVu5la7.png',
+  ];
   return (
     <main className="flex flex-col items-center justify-center overflow-hidden z-50 h-fit w-full bg-five rounded-b">
       <MainNavbar />
-      <div className="flex flex-col justify-center items-center w-full border-b mt-24 xl:mt-52">
+      <HeroSlider images={images} />
+      <div className="flex flex-col justify-center items-center w-full border-b mt-16">
         <h1 className="w-full text-center sm:text-lg my-4">عقارات</h1>
         {!realEstate && <Loading />}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-center items-center gap-4 w-full 2xl:w-[80%] h-full p-4 mb-4">

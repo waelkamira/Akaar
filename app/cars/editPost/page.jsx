@@ -83,7 +83,7 @@ export default function EditPost() {
     });
     const json = await res?.json();
     if (res.ok) {
-      console.log('json from editedPost', json);
+      // console.log('json from editedPost', json);
       setEditedPost(json);
       setInputs({
         image1: json?.image1,

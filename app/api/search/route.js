@@ -5,22 +5,11 @@ const prisma = new PrismaClient();
 
 export async function POST(req) {
   const { page, searshedKeyWord } = await req.json();
-
-  const limit = 5;
+  const limit = 6; // عدد النتائج لكل صفحة
   const skip = (page - 1) * limit;
 
   try {
-    // حساب العدد الإجمالي للعقارات
-    const propertiesCount = await prisma.property.count({
-      where: {
-        propertyName: {
-          contains: searshedKeyWord,
-          mode: 'insensitive',
-        },
-      },
-    });
-
-    // جلب العقارات مع التصفية والتخطي والتحديد
+    // جلب العقارات المطابقة
     const properties = await prisma.property.findMany({
       where: {
         propertyName: {
@@ -28,9 +17,6 @@ export async function POST(req) {
           mode: 'insensitive',
         },
       },
-      skip,
-      take: limit,
-      orderBy: { createdAt: 'desc' },
       select: {
         id: true,
         image1: true,
@@ -60,17 +46,7 @@ export async function POST(req) {
       },
     });
 
-    // حساب العدد الإجمالي للسيارات
-    const carsCount = await prisma.car.count({
-      where: {
-        title: {
-          contains: searshedKeyWord,
-          mode: 'insensitive',
-        },
-      },
-    });
-
-    // جلب السيارات مع التصفية والتخطي والتحديد
+    // جلب السيارات المطابقة
     const cars = await prisma.car.findMany({
       where: {
         title: {
@@ -78,9 +54,6 @@ export async function POST(req) {
           mode: 'insensitive',
         },
       },
-      skip,
-      take: limit,
-      orderBy: { createdAt: 'desc' },
       select: {
         id: true,
         userName: true,
@@ -111,10 +84,31 @@ export async function POST(req) {
       },
     });
 
-    const totalCount = propertiesCount + carsCount; // مجموع النتائج الكلي
+    // دمج النتائج وإضافة حقل type لتمييز المصدر
+    const combinedResults = [
+      ...properties.map((property) => ({ ...property, type: 'property' })),
+      ...cars.map((car) => ({ ...car, type: 'car' })),
+    ];
+
+    // ترتيب النتائج المدمجة بناءً على تاريخ الإنشاء
+    combinedResults.sort(
+      (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+    );
+
+    // حساب العدد الإجمالي للنتائج
+    const totalCount = combinedResults.length;
+
+    // تطبيق التخطي والتحديد
+    const limitedResults = combinedResults.slice(skip, skip + limit);
+
+    // تحديد ما إذا كانت هناك المزيد من النتائج
+    const hasMore = skip + limitedResults.length < totalCount;
+
+    // إرسال البيانات المسترجعة
     const result = {
       totalCount,
-      data: [...properties, ...cars], // إرسال البيانات المسترجعة
+      hasMore, // إضافة حقل لتحديد ما إذا كانت هناك المزيد من النتائج
+      data: limitedResults,
     };
 
     return NextResponse.json(result);
