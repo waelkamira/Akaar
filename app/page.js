@@ -51,6 +51,7 @@ export default function Home() {
   return (
     <main className="flex flex-col items-center justify-center overflow-hidden z-50 h-fit w-full bg-five rounded-b">
       <MainNavbar />
+
       <HeroSlider images={images} />
       <div className="flex flex-col justify-center items-center w-full border-b mt-16">
         <h1 className="w-full text-center sm:text-lg my-4">عقارات</h1>

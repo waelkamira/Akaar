@@ -61,7 +61,7 @@ export default function MainNavbar() {
               [...prevResults, ...json?.data].slice(-6)
             ); // أضف المزيد من النتائج
           }
-          setHasMore(json.hasMore); // تحديث حالة hasMore
+          setHasMore(json?.hasMore); // تحديث حالة hasMore
         } else {
           console.error(
             'Expected json?.data to be an array, but got:',
@@ -171,7 +171,7 @@ export default function MainNavbar() {
         </div>
       </div>
       <div className="flex flex-col justify-center items-start w-full bg-three">
-        <div className="flex justify-between items-center gap-2 sm:gap-4 w-full">
+        <div className="flex justify-between items-center gap-2 sm:gap-4 w-full px-2">
           <div className="flex justify-center items-center gap-2 sm:gap-4 w-full">
             <div className="relative xl:hidden">
               <TfiMenuAlt
@@ -184,67 +184,71 @@ export default function MainNavbar() {
                 {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
               </div>
             </div>
-            <div className="relative text-center w-1/4 2xl:w-1/12">
-              {searchResults?.length > 0 ? (
-                <button
-                  className="btn sm:text-lg text-sm p-0.5 lg:p-3 my-2 text-white text-nowrap select-none rounded-[5px] w-full max-h-12 hover:scale-[101%]"
-                  style={{
-                    '--btn-background': '#F50610',
-                    // '--btn-hover-background': '#F50610',
-                  }}
-                  onClick={() => {
-                    setPageNumber(1); // إعادة تعيين رقم الصفحة إلى 1
-                    setSearchResults([]); // مسح النتائج
-                    setSearshedKeyWord(''); // مسح الكلمة المفتاحية
-                  }}
-                >
-                  إغلاق البحث
-                </button>
-              ) : (
-                <Button
-                  style={' sm:p-6'}
-                  onClick={() => handleSearch()}
-                  title={'بحث'}
-                  emoji={<ImSearch />}
-                />
-              )}
+            <div className="flex justify-center items-center gap-2 w-full my-2 h-8 sm:h-12">
+              <div className="btn relative text-center w-2/4 2xl:w-1/12 bg-three border border-one rounded-[5px]   text-sm sm:text-lg z-40 text-nowrap focus:outline-one">
+                {searchResults?.length > 0 ? (
+                  <button
+                    className="btn text-sm sm:text-lg text-white text-nowrap select-none rounded-[5px] w-full h-full hover:scale-[101%]"
+                    style={{
+                      '--btn-background': '#F50610',
+                      // '--btn-hover-background': '#F50610',
+                    }}
+                    onClick={() => {
+                      setPageNumber(1); // إعادة تعيين رقم الصفحة إلى 1
+                      setSearchResults([]); // مسح النتائج
+                      setSearshedKeyWord(''); // مسح الكلمة المفتاحية
+                    }}
+                  >
+                    إغلاق البحث
+                  </button>
+                ) : (
+                  <button
+                    className="flex justify-center items-center sm:text-lg text-sm text-white text-nowrap select-none rounded-[5px] w-full h-full hover:scale-[101%]"
+                    onClick={() => handleSearch()}
+                  >
+                    <span className="px-1">
+                      <ImSearch />
+                    </span>
+                    بحث{' '}
+                  </button>
+                )}
+              </div>
+              <input
+                type="search"
+                id="main_search"
+                value={searshedKeyWord}
+                onChange={(e) => {
+                  setSearshedKeyWord(e?.target?.value);
+                  if (searshedKeyWord?.length === 0) {
+                    setSearchResults([]);
+                  }
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleSearch();
+                    setPageNumber(1);
+                  }
+                }}
+                autoFocus
+                placeholder="ابحث عن عقار .. سيارة ..."
+                className="w-full h-full xl:w-1/2 2xl:w-2/5 text-sm sm:text-lg text-start z-40 text-nowrap px-2 rounded-[5px] border border-four focus:outline-one"
+              />
             </div>
-            <input
-              type="search"
-              id="main_search"
-              value={searshedKeyWord}
-              onChange={(e) => {
-                setSearshedKeyWord(e?.target?.value);
-                if (searshedKeyWord?.length === 0) {
-                  setSearchResults([]);
-                }
-              }}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  handleSearch();
-                  setPageNumber(1);
-                }
-              }}
-              autoFocus
-              placeholder="ابحث عن عقار .. سيارة ..."
-              // onChange={(e) => setMaxPrice(e.target.value)}
-              className="w-full xl:w-1/2 2xl:w-2/5 my-2 text-sm sm:text-lg rounded text-start z-40 h-9 sm:h-12 text-nowrap px-2 border border-four focus:outline-one"
-            />
           </div>
           {/* <ClockWidget /> */}
         </div>
         {searchResults?.length > 0 && (
           <div
             className={`w-full text-white ${
-              searchResults?.length > 0 ? 'pb-36 h-screen overflow-y-auto' : ''
+              searchResults?.length > 0 ? 'pb-16 h-screen overflow-y-auto' : ''
             } `}
           >
-            <div className="mt-8">
-              <h1 className="p-8">
+            <div className="mt-4 sm:mt-8 p-2 sm:p-4">
+              <h1 className="sm:text-lg">
                 نتائج البحث المطابقة:
                 <span className="px-2 text-one">{totalCount}</span>
               </h1>
-              <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 p-2 sm:p-4 gap-4 justify-start items-start w-full py-16">
+              <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 gap-4 justify-start items-start w-full py-4 sm:py-8 lg:py-16">
                 {searchResults.map((post, index) => (
                   <div
                     className="relative flex flex-col border-2 items-start h-full justify-start bg-one hover:scale-[101%] transition-transform duration-300 ease-in-out cursor-pointer rounded-[10px] overflow-hidden"
