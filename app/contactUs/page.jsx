@@ -10,27 +10,21 @@ import { FiLinkedin } from 'react-icons/fi';
 import { TbBrandGmail } from 'react-icons/tb';
 import MiddleBarAndPhoto from '../../components/middleBarAndPhoto';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import MainNavbar from '../../components/navbars/MainNavbar';
 
 export default function ContactUs() {
   const [isOpen, setIsOpen] = useState(false);
-  const handleCopy = (email) => {
-    navigator.clipboard
-      .writeText(email)
-      .then(() => {
-        toast.success('تم النسخ إلى الحافظة', {
-          duration: 2000, // مدة ظهور الرسالة (2 ثانية)
-          position: 'bottom-center', // موقع الرسالة
-        });
-      })
-      .catch((err) => {
-        console.error('فشل النسخ: ', err);
-        toast.error('فشل النسخ إلى الحافظة');
-      });
-  };
+  const router = useRouter();
 
   return (
-    <div className="flex flex-col justify-center items-center w-full rounded-b">
-      <div className="relative w-full h-[300px] lg:h-[400px] border overflow-hidden">
+    <div
+      className="flex flex-col justify-center items-center w-full rounded-b
+    "
+    >
+      <MainNavbar />
+
+      <div className="relative w-full h-[300px] lg:h-[500px] border overflow-hidden mt-8 xl:mt-36">
         <Image
           src="https://i.imgur.com/wZ0aruw.jpg"
           fill
@@ -47,16 +41,16 @@ export default function ContactUs() {
             noButton={true}
           />
 
-          <div className="flex flex-col justify-between items-center w-full h-full text-gray-400 mt-2 cursor-pointer">
+          <div className="flex flex-col justify-between items-center w-full h-full mt-2 cursor-pointer">
             <div className="p-2 min-h-72 h-full rounded bg-gray-400/5 xl:bg-transparent xl:border border-gray-400/10 ">
               <h1 className="text-center  text-lg w-full select-none my-2">
-                موقع عقار
+                موقع تؤبرني
               </h1>
               <p className="text-start w-full select-none my-2 text-sm xl:text-lg leading-loose  p-4">
                 أولويتنا هي الثقة والاحترام والأمانة في الخدمة المهنية, أكثر من
                 موقع عقاري كلاسيكي؛ فريق عمل محترف، ومفهوم جودة الخدمة، مع
                 هيكلها الموثوق به، أصبحت مستشارك الذي لا غنى عنه لجميع عقاراتك
-                التي تبحث عنها أو تريد بيعها.يقوم موقع عقار للعقارات بتنفيذ
+                التي تبحث عنها أو تريد بيعها.يقوم موقع تؤبرني للعقارات بتنفيذ
                 ومراقبة جميع أعمال البيع والشراء والتأجير والتأجير العقاري بدقة
                 وفي بيئة موثوقة. بالنسبة لنا، كانت التعليقات الإيجابية التي
                 نتلقاها منكم مصدر تحفيز لنا لتقديم الأفضل.
@@ -98,21 +92,19 @@ export default function ContactUs() {
                         linkedin
                       </li>
                     </div>
-                    <span className="text-nowrap"></span>
                   </div>
                   <div
                     className="flex items-center justify-between gap-2 w-full  hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer px-2 xl:px-8 h-6 transition-all duration-300"
-                    onClick={() => handleCopy('waelkamira@gmail.com')} // إضافة حدث النقر
+                    onClick={() => router.push('/contactUs/byEmail')} // إضافة حدث النقر
                   >
                     <div className="flex gap-1 items-center">
                       <TbBrandGmail className="text-lg select-none text-one" />
                       <li className="text-md sm:text-lg text-nowrap">gmail </li>
                     </div>
-                    <span className="text-nowrap">waelkamira@gmail.com</span>
                   </div>
                   <div
                     className="flex flex-col sm:flex-row items-start justify-between gap-2 w-full  hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer px-2 xl:px-8 h-6 transition-all duration-300"
-                    onClick={() => handleCopy('ramond.shnaidr@hotmail.com')} // إضافة حدث النقر
+                    onClick={() => router.push('/contactUs/byEmail')} // إضافة حدث النقر
                   >
                     <div className="flex gap-1 items-center">
                       <MdOutlineAlternateEmail className="text-lg select-none text-one" />
@@ -120,11 +112,6 @@ export default function ContactUs() {
                         hotmail
                       </li>
                     </div>
-                    <span className="text-nowrap">
-                      <span className="text-nowrap">
-                        ramond.shnaidr@hotmail.com
-                      </span>
-                    </span>
                   </div>
                 </ul>
               </div>

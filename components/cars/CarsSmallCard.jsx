@@ -1,0 +1,70 @@
+'use client';
+import Image from 'next/image';
+import React, { useContext } from 'react';
+import LoadingPhoto from '../LoadingPhoto';
+import { inputsContext } from '../Context';
+import { useRouter } from 'next/navigation';
+
+export default function CarsSmallCard({ item }) {
+  const { dispatch } = useContext(inputsContext);
+  const router = useRouter();
+
+  return (
+    <div
+      className="flex flex-col justify-center items-center w-full border cursor-pointer bg-white hover:scale-[103%] transition-transform duration-300 ease-in-out rounded-[15px] overflow-hidden shadow-lg hover:shadow-xl relative"
+      key={item?.id}
+      onClick={() => {
+        dispatch({ type: 'POST_ID', payload: item?.id });
+        router.push(`/Cars/post`);
+      }}
+    >
+      {/* الصورة */}
+      <div className="relative w-full h-44">
+        {!item?.image1 && <LoadingPhoto />}
+        {item?.image1 && (
+          <Image
+            src={item?.image1}
+            fill
+            alt="item_photo"
+            className="object-cover transition-opacity duration-300 hover:opacity-90"
+          />
+        )}
+        {/* طبقة المثلث البرتقالي الشفاف */}
+        <div className="absolute inset-0 w-full h-full clip-triangle-right bg-white/15"></div>
+      </div>
+
+      {/* طبقة تظليل فوق الصورة */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+
+      {/* التفاصيل */}
+      <div className="flex justify-evenly gap-2 items-center w-full my-2 text-sm sm:text-md p-3 bg-white/90 backdrop-blur-sm rounded-b-[15px]">
+        <h1 className="font-semibold text-gray-800">{item?.brand}</h1>
+        <h1 className="flex justify-center items-center font-bold text-gray-900">
+          {item?.price}
+          <span className="text-one mx-1 select-none">$</span>
+        </h1>
+        <h1 className="flex justify-center items-center text-gray-700">
+          {item?.city}
+        </h1>
+      </div>
+
+      {/* أيقونة تفاعلية */}
+      <div className="absolute top-3 right-3 bg-white/80 backdrop-blur-sm rounded-full p-2 shadow-sm hover:bg-white transition-all duration-300">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-5 w-5 text-gray-700 hover:text-gray-900"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+          />
+        </svg>
+      </div>
+    </div>
+  );
+}

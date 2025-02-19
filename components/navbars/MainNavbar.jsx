@@ -235,7 +235,6 @@ export default function MainNavbar() {
               />
             </div>
           </div>
-          {/* <ClockWidget /> */}
         </div>
         {searchResults?.length > 0 && (
           <div
@@ -260,11 +259,6 @@ export default function MainNavbar() {
               </div>
             </div>
 
-            {/* <NavegationPages
-              array={searchResults}
-              setPageNumber={setPageNumber}
-              pageNumber={pageNumber}
-            /> */}
             <div className="flex items-center justify-around  my-4 ">
               {/* عرض الأزرار بناءً على hasMore */}
               {pageNumber > 1 && (

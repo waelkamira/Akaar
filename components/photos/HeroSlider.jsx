@@ -11,7 +11,10 @@ export default function HeroSlider({ images = [] }) {
   const isTablet = useMediaQuery({ minWidth: 768, maxWidth: 1023 });
   const isDesktop = useMediaQuery({ minWidth: 1024 });
 
+  // تحديد الارتفاع بناءً على حجم الشاشة
   const minHeight = isDesktop ? '100vh' : isTablet ? '70vh' : '50vh';
+  const maxHeight = isDesktop ? '100vh' : isTablet ? '70vh' : '50vh';
+
   useEffect(() => {
     if (images.length === 0) return;
     const resetTimeout = () => {
@@ -34,8 +37,8 @@ export default function HeroSlider({ images = [] }) {
 
   return (
     <div
-      className="relative w-full min-h-[50vh] md:min-h-[70vh] lg:min-h-[100vh] overflow-hidden bg-black"
-      style={{ minHeight }}
+      className="relative w-full overflow-hidden bg-black"
+      style={{ minHeight, maxHeight }}
     >
       {/* الصورة المتحركة */}
       <AnimatePresence>
@@ -64,22 +67,12 @@ export default function HeroSlider({ images = [] }) {
             exit={{ opacity: 0, y: -50 }}
             transition={{ duration: 0.8, delay: 0.3 }}
           >
-            <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold mb-4 drop-shadow-lg">
-              {/* REAL ESTATE AND CARS */}
+            <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold mb-4 drop-shadow-lg">
               عقارات وسيارات
             </h1>
-            <p className="text-base sm:text-lg md:text-2xl mb-2 drop-shadow-md">
-              Luxury Homes & Cars
-            </p>
-            <p className="text-xs sm:text-sm md:text-base mb-1 drop-shadow-sm">
-              Direct: (123) 456-7890
-            </p>
-            <p className="text-xs sm:text-sm md:text-base mb-1 drop-shadow-sm">
-              Email: contact@realestate.com
-            </p>
-            <p className="text-xs sm:text-sm md:text-base drop-shadow-sm">
-              Location: 1453 Macka TRB, L1984
-            </p>
+            <div className="flex flex-col gap-2 text-sm sm:text-lg md:text-xl">
+              <p className="mb-2 drop-shadow-md">Luxury Homes & Cars</p>
+            </div>
           </motion.div>
         </motion.div>
       </AnimatePresence>
@@ -109,7 +102,7 @@ export default function HeroSlider({ images = [] }) {
             }}
             className={`w-3 h-1 mx-2 transition-all duration-300 cursor-pointer ${
               i === index
-                ? 'bg-white w-8 shadow-md'
+                ? 'bg-white shadow-md'
                 : 'bg-gray-500 hover:bg-gray-400'
             }`}
             style={{

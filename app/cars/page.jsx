@@ -5,7 +5,7 @@ import SideBarMenu from '../../components/SideBarMenu';
 import { TfiMenuAlt } from 'react-icons/tfi';
 import { Suspense } from 'react';
 import Image from 'next/image';
-import CarsCard from '../../components/Cars/CarsCard';
+import Card from '../../components/ReusableComponents/Card';
 import { GiCarKey } from 'react-icons/gi';
 import CarsNavbar from '../../components/Cars/CarsNavbar';
 import { MdCarRental } from 'react-icons/md';
@@ -16,7 +16,7 @@ import { inputsContext } from '../../components/Context';
 import Button from '../../components/Button';
 import { MdKeyboardDoubleArrowDown } from 'react-icons/md';
 import HeroSlider from '../../components/photos/HeroSlider';
-
+import CarsSmallCard from '../../components/Cars/CarsSmallCard';
 export default function CarsHomePage() {
   const [isOpen, setIsOpen] = useState(false);
   const session = useSession();
@@ -62,11 +62,12 @@ export default function CarsHomePage() {
           </div>
 
           {/* صورة الخلفية */}
-          <div className="relative w-full h-[300px] lg:h-[900px] overflow-hidden">
+          {/* <div className="relative w-full h-full overflow-hidden">
             <HeroSlider images={images} />
-          </div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+          </div> */}
 
-          <div className="flex flex-col justify-center items-center w-full ">
+          <div className="flex flex-col justify-center items-center w-full">
             <div className="flex justify-center items-center gap-2 w-full text-nowrap py-8 ">
               <div className="flex flex-col justify-end items-end text-two ">
                 <h1
@@ -98,8 +99,8 @@ export default function CarsHomePage() {
                 </h1>
               </div>
             </div>
-            <div className="flex flex-col sm:flex-row justify-center w-full gap-4 xl:gap-16 px-4 xl:px-8 py-8 ">
-              <CarsCard
+            <div className="flex flex-col md:flex-row justify-center items-center w-full p-4">
+              <Card
                 cardName={'بيع/تأجير سيارة'}
                 path={'/Cars/newPost'}
                 text={
@@ -109,25 +110,25 @@ export default function CarsHomePage() {
                 image={'https://i.imgur.com/ZAC6X1M.jpg'}
                 emoji={<MdOutlineSell className="text-one" />}
               />
-              <CarsCard
+              <Card
                 cardName={'شراء سيارة'}
                 path={'/Cars/buy'}
                 text={
                   ' اعثر على سيارة أحلامك من خلال تجربة تصوير غامرة وأكبر عدد من الإعلانات، بما في ذلك أشياء لن تجدها في أي مكان آخر.'
                 }
-                color={'orange'}
+                color={'purple'}
                 image={'https://i.imgur.com/ARNWG2B.jpg'}
-                emoji={<GiCarKey className="text-one" />}
+                emoji={<GiCarKey className="text-[#803084]" />}
               />
-              <CarsCard
+              <Card
                 cardName={'استأجار سيارة'}
                 path={'/Cars/rent'}
                 text={
                   'نحن نعمل على إنشاء تجربة سلسة عبر الإنترنت, بدءاً من بناء أكبر شبكة تأجير سيارات إلى تقديم الطلبات، إلى دفع الإيجار.'
                 }
-                color={'orange'}
+                color={'green'}
                 image={'https://i.imgur.com/yH5NGMz.jpg'}
-                emoji={<MdCarRental className="text-one" />}
+                emoji={<MdCarRental className="text-[#119530]" />}
               />
             </div>
             <h1 className="w-full text-center sm:text-lg my-4">
@@ -137,29 +138,10 @@ export default function CarsHomePage() {
               {cars?.length > 0 &&
                 cars.map((car) => (
                   <div
-                    className="flex flex-col justify-center items-center w-full border cursor-pointer bg-white hover:scale-[103%] transition-transform duration-300 ease-in-out rounded-[15px] overflow-hidden"
+                    className="flex flex-col justify-center items-center w-full border cursor-pointer bg-white hover:scale-[103%] transition-transform duration-300 ease-in-out rounded-[15px] overflow-hidden shadow-lg hover:shadow-xl relative"
                     key={car?.id}
-                    onClick={() => {
-                      dispatch({ type: 'POST_ID', payload: car?.id });
-                      router.push('/Cars/post');
-                    }}
                   >
-                    <div className="relative w-full h-44">
-                      {!car?.image1 && <LoadingPhoto />}
-                      {car?.image1 && (
-                        <Image src={car?.image1} fill alt="car_photo" />
-                      )}
-                    </div>
-                    <div className="flex justify-evenly gap-2 items-center w-full my-2 text-sm sm:text-md">
-                      <h1>{car?.brand}</h1>
-                      <h1 className="flex justify-center items-center">
-                        {car?.price}
-                        <span className="text-one mx-1 select-none">$</span>
-                      </h1>
-                      <h1 className="flex justify-center items-center">
-                        {car?.city}
-                      </h1>
-                    </div>
+                    <CarsSmallCard item={car} />
                   </div>
                 ))}
             </div>

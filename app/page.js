@@ -11,6 +11,8 @@ import Image from 'next/image';
 import LoadingPhoto from '../components/LoadingPhoto';
 import Loading from '../components/Loading';
 import HeroSlider from '../components/photos/HeroSlider';
+import CarsSmallCard from '../components/Cars/CarsSmallCard';
+import RealEstateSmallCard from '../components/RealEstate/RealEstateSmallCard';
 
 export default function Home() {
   const [cars, setCars] = useState();
@@ -53,6 +55,7 @@ export default function Home() {
       <MainNavbar />
 
       <HeroSlider images={images} />
+
       <div className="flex flex-col justify-center items-center w-full border-b mt-16">
         <h1 className="w-full text-center sm:text-lg my-4">عقارات</h1>
         {!realEstate && <Loading />}
@@ -60,30 +63,14 @@ export default function Home() {
           {realEstate?.length > 0 &&
             realEstate.map((item) => (
               <div
-                className="flex flex-col justify-center items-center w-full border cursor-pointer bg-white hover:scale-[103%] transition-transform duration-300 ease-in-out rounded-[10px] overflow-hidden"
+                className="flex flex-col justify-center items-center w-full border cursor-pointer bg-white hover:scale-[103%] transition-transform duration-300 ease-in-out rounded-[10px] overflow-hidden shadow-lg hover:shadow-xl relative"
                 key={item?.id}
                 onClick={() => {
                   dispatch({ type: 'POST_ID', payload: item?.id });
                   router.push('/RealEstate/post');
                 }}
               >
-                <div className="relative w-full h-44">
-                  {!item?.image1 && <LoadingPhoto />}
-                  {item?.image1 && (
-                    <Image src={item?.image1} fill alt="item_photo" />
-                  )}
-                </div>
-                <div className="flex justify-evenly gap-2 items-center w-full my-2 text-sm sm:text-md">
-                  <h1>{item?.propertyType}</h1>
-                  <h1>{item?.propertyCategory}</h1>
-                  <h1 className="flex justify-center items-center">
-                    {item?.propertyCity}
-                  </h1>
-                  <h1 className="flex justify-center items-center">
-                    {item?.propertyPrice}
-                    <span className="text-one mx-1 select-none">$</span>
-                  </h1>
-                </div>
+                <RealEstateSmallCard item={item} />
               </div>
             ))}
         </div>
@@ -97,6 +84,7 @@ export default function Home() {
           </span>
         </h1>
       </div>
+
       <div className="flex flex-col justify-center items-center w-full ">
         <h1 className="w-full text-center sm:text-lg my-4">سيارات</h1>
 
@@ -105,29 +93,14 @@ export default function Home() {
           {cars?.length > 0 &&
             cars.map((car) => (
               <div
-                className="flex flex-col justify-center items-center w-full border cursor-pointer bg-white hover:scale-[103%] transition-transform duration-300 ease-in-out rounded-[10px] overflow-hidden"
+                className="flex flex-col justify-center items-center w-full border cursor-pointer bg-white hover:scale-[103%] transition-transform duration-300 ease-in-out rounded-[10px] overflow-hidden shadow-lg hover:shadow-xl relative"
                 key={car?.id}
                 onClick={() => {
                   dispatch({ type: 'POST_ID', payload: car?.id });
                   router.push('/Cars/post');
                 }}
               >
-                <div className="relative w-full h-44">
-                  {!car?.image1 && <LoadingPhoto />}
-                  {car?.image1 && (
-                    <Image src={car?.image1} fill alt="car_photo" />
-                  )}
-                </div>
-                <div className="flex justify-evenly gap-2 items-center w-full my-2 text-sm sm:text-md">
-                  <h1>{car?.brand}</h1>
-                  <h1 className="flex justify-center items-center">
-                    {car?.price}
-                    <span className="text-one mx-1 select-none">$</span>
-                  </h1>
-                  <h1 className="flex justify-center items-center">
-                    {car?.city}
-                  </h1>
-                </div>
+                <CarsSmallCard item={car} />
               </div>
             ))}
         </div>
@@ -142,18 +115,10 @@ export default function Home() {
         </h1>
       </div>
       <Footer />
-      {/* <div className="hidden lg:block relative w-full h-[300px] lg:h-[400px] border overflow-hidden">
-        <Image
-          src="https://i.imgur.com/1fGMLUK.png"
-          fill
-          alt="home_photo"
-          className="object-contain object-center w-1/3 h-auto px-14"
-          objectPosition="center"
-        />
-      </div> */}
+
       <h1
-        className="text-one font-stratos w-full text-lg tracking-wider select-none text-center pt-8 pb-4 border uppercase"
-        style={{ fontFamily: 'vanguardcf-heavy' }}
+        className="text-two w-full text-lg tracking-wider select-none text-center pt-8 pb-4 border uppercase"
+        // style={{ fontFamily: 'vanguardcf-heavy' }}
       >
         Copyright © 2025 tobirni web site. All Rights Reserved
       </h1>
