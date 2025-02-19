@@ -22,21 +22,6 @@ export default function Footer() {
   const router = useRouter();
   const session = useSession();
 
-  const handleCopy = (email) => {
-    navigator.clipboard
-      .writeText(email)
-      .then(() => {
-        toast.success('تم النسخ إلى الحافظة', {
-          duration: 2000, // مدة ظهور الرسالة (2 ثانية)
-          position: 'bottom-center', // موقع الرسالة
-        });
-      })
-      .catch((err) => {
-        console.error('فشل النسخ: ', err);
-        toast.error('فشل النسخ إلى الحافظة');
-      });
-  };
-
   return (
     <>
       <footer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-between items-center bg-five gap-2 mt-16 border-t w-full h-full pt-8 p-4">
@@ -233,25 +218,25 @@ export default function Footer() {
             </div>
             <div
               className="flex items-center justify-between gap-2 w-full  hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer px-2 xl:px-8 h-6 transition-all duration-300"
-              onClick={() => handleCopy('waelkamira@gmail.com')} // إضافة حدث النقر
+              onClick={() => router.push('/contactUs/byEmail')} // إضافة حدث النقر
             >
               <div className="flex gap-1 items-center">
                 <TbBrandGmail className="text-lg select-none text-one" />
                 <li className="text-md sm:text-lg text-nowrap">gmail </li>
               </div>
-              <span className="text-nowrap">waelkamira@gmail.com</span>
+              {/* <span className="text-nowrap">waelkamira@gmail.com</span> */}
             </div>
             <div
               className="flex flex-col sm:flex-row items-start justify-between gap-2 w-full  hover:border border-one rounded-lg hover:scale-[101%] hover:cursor-pointer px-2 xl:px-8 h-6 transition-all duration-300"
-              onClick={() => handleCopy('ramond.shnaidr@hotmail.com')} // إضافة حدث النقر
+              onClick={() => router.push('/contactUs/byEmail')} // إضافة حدث النقر
             >
               <div className="flex gap-1 items-center">
                 <MdOutlineAlternateEmail className="text-lg select-none text-one" />
                 <li className="text-md sm:text-lg text-nowrap">hotmail</li>
               </div>
-              <span className="text-nowrap">
+              {/* <span className="text-nowrap">
                 <span className="text-nowrap">ramond.shnaidr@hotmail.com</span>
-              </span>
+              </span> */}
             </div>
           </ul>
         </div>
