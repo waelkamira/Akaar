@@ -53,7 +53,7 @@ export default function ContactUs() {
     <div className="flex justify-center items-center w-full ">
       <MainNavbar />
       <form
-        className="flex flex-col items-center gap-4 mt-16 xl:mt-52 w-full xl:w-[70%] border border-four rounded-[5px] p-4 m-2 xl:p-16"
+        className="flex flex-col items-center gap-4 mt-16 xl:mt-52 w-full xl:w-[70%] border border-gray-300 rounded-[5px] p-4 m-2 xl:p-16"
         ref={form}
         onSubmit={sendEmail}
       >
@@ -71,7 +71,7 @@ export default function ContactUs() {
               type="text"
               name="user_name"
               placeholder="your name"
-              className="w-full text-sm sm:text-lg rounded text-start text-black z-40 h-9 sm:h-12 text-nowrap px-2 border border-four focus:outline-one"
+              className="w-full text-sm sm:text-lg rounded text-start text-black z-40 h-9 sm:h-12 text-nowrap px-2 border border-gray-300 focus:outline-one"
             />
           </div>
           <div className="flex flex-col grow w-full my-2">
@@ -87,7 +87,7 @@ export default function ContactUs() {
               type="email"
               name="user_email"
               placeholder="your email"
-              className="w-full text-sm sm:text-lg rounded text-start text-black z-40 h-9 sm:h-12 text-nowrap px-2 border border-four focus:outline-one"
+              className="w-full text-sm sm:text-lg rounded text-start text-black z-40 h-9 sm:h-12 text-nowrap px-2 border border-gray-300 focus:outline-one"
             />
           </div>
         </div>
@@ -103,7 +103,7 @@ export default function ContactUs() {
             }
             required
             name="message"
-            className="w-full rounded-[5px] outline-none border border-four focus:border-primary p-2 border-secondary text-sm sm:text-lg lg:text-xl min-h-[200px]"
+            className="w-full rounded-[5px] outline-none border border-gray-300 focus:border-primary p-2 border-secondary text-sm sm:text-lg lg:text-xl min-h-[200px]"
           />
         </div>
 

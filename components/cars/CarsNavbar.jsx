@@ -121,7 +121,7 @@ export default function CarsNavbar() {
                 </h1>
               </div>
             </div> */}
-            <div className="relative h-20 w-56 my-2 hover:scale-[103%]">
+            <div className="relative h-16 w-56 my-2 hover:scale-[103%] z-20">
               <Image
                 src="https://i.imgur.com/0oHqzqF.png"
                 fill
@@ -130,6 +130,7 @@ export default function CarsNavbar() {
                 objectPosition="top"
               />
             </div>
+            <div className="absolute inset-0 bg-gradient-radial from-white/30 via-transparent to-two z-10"></div>
           </div>
         </div>
       </div>

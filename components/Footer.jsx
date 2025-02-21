@@ -25,7 +25,7 @@ export default function Footer() {
   return (
     <>
       <footer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-between items-center bg-five gap-2 mt-16 border-t w-full h-full pt-8 p-4 text-black">
-        <div className=" p-2 min-h-72 h-full rounded my-2 bg-white xl:border border-gray-400/10   cursor-pointer">
+        <div className=" p-2 min-h-72 h-full rounded my-2 bg-white xl:border border-gray-300/10   cursor-pointer">
           <h1 className="text-center  text-lg w-full select-none my-2  font-medium">
             موقع متجر
           </h1>
@@ -42,7 +42,7 @@ export default function Footer() {
             والخدمة الممتازة في مكان واحد. 🚀
           </p>
         </div>
-        <div className=" p-2 min-h-72 h-full rounded my-2 bg-white xl:border border-gray-400/10  ">
+        <div className=" p-2 min-h-72 h-full rounded my-2 bg-white xl:border border-gray-300/10  ">
           <h1 className="text-center  text-lg w-full select-none my-2  font-medium">
             وصول سريع
           </h1>
@@ -110,7 +110,7 @@ export default function Footer() {
             </div>
           </ul>
         </div>
-        <div className=" p-2 min-h-72 h-full rounded my-2 bg-white xl:border border-gray-400/10  ">
+        <div className=" p-2 min-h-72 h-full rounded my-2 bg-white xl:border border-gray-300/10  ">
           <h1 className="text-center  text-lg w-full select-none my-2  font-medium">
             ساعات العمل
           </h1>
@@ -180,7 +180,7 @@ export default function Footer() {
             </div>
           </ul>
         </div>
-        <div className=" p-2 min-h-72 h-full rounded my-2 bg-white xl:border border-gray-400/10  ">
+        <div className=" p-2 min-h-72 h-full rounded my-2 bg-white xl:border border-gray-300/10  ">
           <h1 className="text-center  text-lg w-full select-none my-2  font-medium">
             معلومات الإتصال
           </h1>

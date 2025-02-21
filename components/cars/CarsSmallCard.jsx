@@ -11,7 +11,7 @@ export default function CarsSmallCard({ item }) {
 
   return (
     <div
-      className="flex flex-col justify-center items-center w-full border cursor-pointer bg-white hover:scale-[103%] transition-transform duration-300 ease-in-out rounded-[15px] overflow-hidden shadow-lg hover:shadow-xl relative"
+      className="flex flex-col justify-center items-center w-full cursor-pointer bg-one hover:scale-[103%] transition-transform duration-300 ease-in-out overflow-hidden hover:shadow-xl relative"
       key={item?.id}
       onClick={() => {
         dispatch({ type: 'POST_ID', payload: item?.id });
@@ -30,14 +30,14 @@ export default function CarsSmallCard({ item }) {
           />
         )}
         {/* طبقة المثلث البرتقالي الشفاف */}
-        <div className="absolute inset-0 w-full h-full clip-triangle-right bg-white/15"></div>
+        {/* <div className="absolute inset-0 w-full h-full clip-triangle-right bg-white/20"></div> */}
       </div>
 
       {/* طبقة تظليل فوق الصورة */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+      {/* <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div> */}
 
       {/* التفاصيل */}
-      <div className="flex justify-evenly gap-2 items-center w-full my-2 text-sm sm:text-md p-3 bg-white/90 backdrop-blur-sm rounded-b-[15px]">
+      <div className="flex justify-evenly gap-2 items-center w-full mt-2 text-sm sm:text-md p-3 bg-white ">
         <h1 className="font-semibold text-gray-800">{item?.brand}</h1>
         <h1 className="flex justify-center items-center font-bold text-gray-900">
           {item?.price}

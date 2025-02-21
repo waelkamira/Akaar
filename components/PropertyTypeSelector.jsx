@@ -70,7 +70,7 @@ export default function PropertyTypeSelector() {
           classNames={{
             control: (state) =>
               `${
-                state.isFocused ? 'border-orange-500' : 'border-four'
+                state.isFocused ? 'border-one' : 'border-gray-300'
               } sm:h-12 h-8`, // ارتفاع مختلف بناءً على عرض النافذة
           }}
         ></Select>

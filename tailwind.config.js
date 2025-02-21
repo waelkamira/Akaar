@@ -11,7 +11,7 @@ module.exports = {
         one: '#FF7C34',
         two: '#4C4D4F',
         three: '#7E7F81',
-        four: '#A7A8AA',
+        four: '#A1A5AD',
         five: '#F5F5F5',
       },
       backgroundImage: {

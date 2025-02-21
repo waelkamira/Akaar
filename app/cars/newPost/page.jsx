@@ -11,14 +11,14 @@ export default function NewCarPost() {
   const [isVisible, setIsVisible] = useState(false);
   const session = useSession();
   return (
-    <div className="flex flex-col justify-center items-center w-full">
+    <div className="flex flex-col justify-center items-center w-full bg-five">
       <CarsNavbar />
       <CarsSideBar Button={false} />
       <div className="flex flex-col justify-center items-center w-full xl:w-[90%] 2xl:w-[70%] h-full sm:px-16 pt-2 overflow-y-auto z-10 px-2">
         <div
           className={
             (session?.status === 'unauthenticated' ? 'h-fit ' : 'h-fit ') +
-            ' relative border border-four rounded w-full flex flex-col items-start justify-center sm:flex-row top-0 overflow-hidden'
+            ' relative border border-gray-300 rounded w-full flex flex-col items-start justify-center sm:flex-row top-0 overflow-hidden'
           }
           onClick={(e) => e.stopPropagation()}
         >
@@ -32,17 +32,9 @@ export default function NewCarPost() {
                 <Button title={'تسجيل الدخول'} path="/login" style={' '} />
               </div>
             )}
-            {/* <div className="relative w-28 h-24 xl:h-44 xl:w-96 ">
-              <Image
-                priority
-                src={'https://i.imgur.com/0oHqzqF.png'}
-                fill
-                alt="decoration"
-                className="m-0"
-              />
-            </div> */}
+
             {session?.status === 'authenticated' && (
-              <div className="w-full p-2 bg-five">
+              <div className="w-full p-2">
                 <h1 className="w-full text-center  text-sm md:text-lg my-4">
                   أدخل بيانات السيارة التي تريد بيعها أو تأجيرها
                 </h1>
