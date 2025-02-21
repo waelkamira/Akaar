@@ -1,18 +1,18 @@
 'use client';
 import { signOut, useSession } from 'next-auth/react';
 import React from 'react';
-import CurrentUser from '../components/CurrentUser';
+import CurrentUser from '../CurrentUser';
 import Image from 'next/image';
 import Link from 'next/link';
-import Button from './Button';
-import LoadingPhoto from './LoadingPhoto';
+import Button from '../Button';
+import LoadingPhoto from '../LoadingPhoto';
 
-export default function SideBarMenu({ setIsOpen }) {
+export default function CarsSideBarMenu({ setIsOpen }) {
   const session = useSession();
   const user = CurrentUser();
 
   return (
-    <div className=" p-4 w-52 mx-2 h-fit rounded bg-white">
+    <div className=" p-4 w-52 mx-2 h-fit rounded bg-white border">
       {session?.status === 'authenticated' && (
         <Link href={'/profile?username'}>
           <div className="flex flex-col justify-between items-center  w-full">
@@ -45,10 +45,12 @@ export default function SideBarMenu({ setIsOpen }) {
       {session?.status === 'authenticated' && (
         <div>
           <Button title={'الرئيسية'} path="/" />
-          <Button title={'بروفايل'} path="/profile" />
-          <Button title={'عقارات'} path="/RealEstate" />
           <Button title={'سيارات'} path="/Cars" />
           <Button title={'متجري'} path="/myPosts" />
+          <Button title={'بيع/تأجير سيارة'} path="/Cars/newPost" />
+          <Button title={'شراء سيارة'} path="/Cars/buy" />
+          <Button title={'استأجار سيارة'} path="/Cars/rent" />
+          <Button title={'بروفايل'} path="/profile" />
           <Button title={'اتصل بنا'} path={'/contactUs'} />
           {/* <Button title={'المفضلة'} path={'/favoritePosts'} /> */}
           {/* <Button title={'تسجيل الخروج'} path={'/'} onClick={() => signOut()} /> */}

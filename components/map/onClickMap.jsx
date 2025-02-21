@@ -251,7 +251,7 @@ export default function OnClickMap({
         </>
       )}
 
-      <div className="w-full h-72 sm:h-[500px] rounded-md overflow-hidden shadow-lg relative z-30">
+      <div className="w-full h-72 sm:h-[500px] rounded-[5px] overflow-hidden shadow-lg relative z-30">
         <MapContainer
           center={selectedLocation}
           zoom={7}

@@ -1,5 +1,4 @@
 'use client';
-
 import Footer from '../components/Footer';
 import SideBar from '../components/SideBar';
 import MainNavbar from '../components/navbars/MainNavbar';
@@ -29,46 +28,46 @@ export default function Home() {
     const response = await fetch('/api/Cars/allPosts?limit=8');
     if (response.ok) {
       const json = await response?.json();
-      // console.log('json', json);
       setCars(json);
     }
   }
+
   async function fetchRealEstateAds() {
     const response = await fetch('/api/RealEstate/allPosts?limit=8');
     if (response.ok) {
       const json = await response?.json();
-      // console.log('json', json);
       setRealEstate(json);
     }
   }
 
   const images = [
-    'https://i.imgur.com/wHyvDAD.png',
+    'https://i.imgur.com/wZ0aruw.jpg',
     'https://i.imgur.com/uPsQqzu.png',
-    'https://i.imgur.com/0DDS22z.jpg',
+    'https://i.imgur.com/wHyvDAD.png',
     'https://i.imgur.com/Kc6Pcu1.png',
     'https://i.imgur.com/rLz58YH.jpg',
     'https://i.imgur.com/VVu5la7.png',
   ];
+
   return (
     <main className="flex flex-col items-center justify-center overflow-hidden z-50 h-fit w-full bg-five rounded-b">
       <MainNavbar />
-
       <HeroSlider images={images} />
 
+      {/* Real Estate Section */}
       <div className="flex flex-col justify-center items-center w-full border-b mt-16">
-        <h1 className="w-full text-center sm:text-lg my-4">عقارات</h1>
+        <h1 className="w-full text-center sm:text-lg my-4 font-bold">عقارات</h1>
         {!realEstate && <Loading />}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-center items-center gap-4 w-full 2xl:w-[80%] h-full p-4 mb-4">
           {realEstate?.length > 0 &&
             realEstate.map((item) => (
               <div
-                className="flex flex-col justify-center items-center w-full border cursor-pointer bg-white hover:scale-[103%] transition-transform duration-300 ease-in-out rounded-[10px] overflow-hidden shadow-lg hover:shadow-xl relative"
                 key={item?.id}
                 onClick={() => {
                   dispatch({ type: 'POST_ID', payload: item?.id });
                   router.push('/RealEstate/post');
                 }}
+                className="flex flex-col justify-center items-center w-full border cursor-pointer bg-white hover:scale-[103%] transition-transform duration-300 ease-in-out rounded-[10px] overflow-hidden shadow-lg hover:shadow-xl relative"
               >
                 <RealEstateSmallCard item={item} />
               </div>
@@ -85,20 +84,20 @@ export default function Home() {
         </h1>
       </div>
 
+      {/* Cars Section */}
       <div className="flex flex-col justify-center items-center w-full ">
-        <h1 className="w-full text-center sm:text-lg my-4">سيارات</h1>
-
+        <h1 className="w-full text-center sm:text-lg my-4 font-bold">سيارات</h1>
         {!cars && <Loading />}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-center items-center gap-4 w-full 2xl:w-[80%] h-full p-4 mb-4">
           {cars?.length > 0 &&
             cars.map((car) => (
               <div
-                className="flex flex-col justify-center items-center w-full border cursor-pointer bg-white hover:scale-[103%] transition-transform duration-300 ease-in-out rounded-[10px] overflow-hidden shadow-lg hover:shadow-xl relative"
                 key={car?.id}
                 onClick={() => {
                   dispatch({ type: 'POST_ID', payload: car?.id });
                   router.push('/Cars/post');
                 }}
+                className="flex flex-col justify-center items-center w-full border cursor-pointer bg-white hover:scale-[103%] transition-transform duration-300 ease-in-out rounded-[10px] overflow-hidden shadow-lg hover:shadow-xl relative"
               >
                 <CarsSmallCard item={car} />
               </div>
@@ -114,12 +113,9 @@ export default function Home() {
           </span>
         </h1>
       </div>
-      <Footer />
 
-      <h1
-        className="text-two w-full text-lg tracking-wider select-none text-center pt-8 pb-4 border uppercase"
-        // style={{ fontFamily: 'vanguardcf-heavy' }}
-      >
+      <Footer />
+      <h1 className="w-full text-sm select-none text-center pt-8 pb-4 border uppercase">
         Copyright © 2025 tobirni web site. All Rights Reserved
       </h1>
     </main>

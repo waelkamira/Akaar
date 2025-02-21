@@ -18,6 +18,7 @@ import { useRouter } from 'next/navigation';
 import { inputsContext } from '../../components/Context';
 import LoadingPhoto from '../../components/LoadingPhoto';
 import RealEstateSmallCard from '../../components/RealEstate/RealEstateSmallCard';
+import RealEstateSideBar from '../../components/RealEstate/RealEstateSideBar';
 
 export default function RealEstateHomePage() {
   const [isOpen, setIsOpen] = useState(false);
@@ -54,18 +55,9 @@ export default function RealEstateHomePage() {
       <RealEstateNavbar />
       <div className="relative flex flex-col justify-center items-center z-40 sm:my-0 w-full">
         <div className="w-full">
-          <div className="xl:hidden absolute flex flex-col items-start gap-2 z-50 top-2 right-0 sm:top-4 sm:right-4  lg:right-12 w-fit">
-            <TfiMenuAlt
-              className="p-2 text-5xl text-one cursor-pointer"
-              onClick={() => setIsOpen(!isOpen)}
-            />
-            {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
-          </div>
-
-          {/* التعتيم عبر طبقة فوق الصورة */}
+          <RealEstateSideBar Button={true} />
           <div className="relative w-full h-full overflow-hidden">
             <HeroSlider images={images} />
-            {/* <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div> */}
           </div>
 
           <div className="flex flex-col justify-center items-center w-full ">

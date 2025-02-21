@@ -19,12 +19,12 @@ import { ImSearch } from 'react-icons/im';
 import { LuArrowDownNarrowWide } from 'react-icons/lu';
 import { LuArrowUpNarrowWide } from 'react-icons/lu';
 import Image from 'next/image';
-import MiddleBarAndPhoto from '../middleBarAndPhoto';
+import MiddleBarAndPhoto from './RealEstateSideBar';
 import NavegationPages from '../NavegationPages';
 import RealEstarteNavbar from '../RealEstate/RealEstarteNavbar';
+import RealEstateSideBar from './RealEstateSideBar';
 
 export default function SearchBar({ propertyCategory }) {
-  const [isOpen, setIsOpen] = useState(false);
   const [isShow, setIsShow] = useState(false);
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
@@ -88,7 +88,7 @@ export default function SearchBar({ propertyCategory }) {
   return (
     <div className="flex flex-col justify-center items-center w-full rounded-b bg-five">
       <RealEstarteNavbar />
-
+      <RealEstateSideBar Button={true} />
       <div className="flex flex-col-reverse xl:flex-row justify-center items-center w-full bg-three shadow-sm shadow-gray-300 text-white py-4">
         <div className="relative text-center w-full xl:w-1/4 px-2">
           <ImSearch className="hidden xl:block p-1 text-3xl text-one text-center w-full" />
@@ -153,15 +153,6 @@ export default function SearchBar({ propertyCategory }) {
       </div>
 
       <div className="flex flex-col w-full mt-4 rounded-[5px] flex-grow xl:w-[90%] 2xl:w-[60%] h-[1370px] px-2 pt-2 overflow-y-auto border rounded-b z-[0]">
-        <MiddleBarAndPhoto
-          isOpen={isOpen}
-          setIsOpen={setIsOpen}
-          isShow={isShow}
-          setIsShow={setIsShow}
-          noButton={true}
-          path={'/RealEstate/newPost'}
-        />
-
         <div className="flex flex-col w-full h-[1370px] overflow-y-auto">
           {allPosts?.length > 0 ? (
             <div className="flex flex-col justify-start w-full overflow-y-auto my-2 z-[0]">

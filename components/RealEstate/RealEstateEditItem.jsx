@@ -40,7 +40,7 @@ export default function EditItem({
 
           value={inputs?.[property] ?? editedPost?.[property] ?? ''} // استخدام القيمة الحالية أو القديمة أو فارغة
           onChange={handleChange}
-          className="grow p-2 text-lg lg:text-xl text-start select-none h-12 border rounded-md w-full focus:outline-one"
+          className="grow p-2 text-lg lg:text-xl text-start select-none h-12 border rounded-[5px] w-full focus:outline-one"
           autoFocus
         />
         <MdEdit className="absolute -top-4 right-0 text-2xl text-one " />
@@ -48,7 +48,7 @@ export default function EditItem({
 
       <button
         onClick={() => handleEditPost(postId)}
-        className="bg-gray-600 mb-2 w-full mt-4 sm:w-fit text-white duration-300 transition-colors ease-in-out hover:bg-one hover:scale-105 border rounded-md text-center select-none p-2"
+        className="bg-gray-600 mb-2 w-full mt-4 sm:w-fit text-white duration-300 transition-colors ease-in-out hover:bg-one hover:scale-105 border rounded-[5px] text-center select-none p-2"
       >
         حفظ التعديلات
       </button>

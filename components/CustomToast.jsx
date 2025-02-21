@@ -17,11 +17,11 @@ export default function CustomToast({
       <div className="flex justify-between items-center my-1">
         <div className="flex-1 w-full">
           <div className="flex justify-center items-center gap-2">
-            <div className="relative w-16 h-8 sm:w-28 sm:h-16 flex-shrink-0 pt-0.5 rounded-xl ">
+            <div className="relative w-16 h-8 sm:w-28 sm:h-16 flex-shrink-0 pt-0.5 rounded-[5px] ">
               <Image
                 priority
-                className="rounded-xl"
-                src="https://i.imgur.com/bhzNopE.png"
+                className="rounded-[5px]"
+                src="https://i.imgur.com/0oHqzqF.png"
                 alt="photo"
                 fill
               />
@@ -32,7 +32,7 @@ export default function CustomToast({
           </div>
         </div>
       </div>
-      {/* <hr className="w-full h-[1px]  rounded-xl border-hidden select-none my-1" /> */}
+      {/* <hr className="w-full h-[1px]  rounded-[5px] border-hidden select-none my-1" /> */}
 
       <div>
         <div>

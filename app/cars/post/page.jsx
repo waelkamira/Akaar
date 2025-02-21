@@ -2,6 +2,7 @@
 import dynamic from 'next/dynamic';
 import React, { useContext, useEffect, useState } from 'react';
 import { inputsContext } from '../../../components/Context';
+import CarsSideBar from '../../../components/Cars/CarsSideBar';
 import CarsNavbar from '../../../components/Cars/CarsNavbar';
 
 // تحميل مكون Item بشكل ديناميكي
@@ -40,7 +41,7 @@ export default function Page() {
   return (
     <div className="flex flex-col justify-center items-center w-full bg-five">
       <CarsNavbar />
-      {post && <CarsItem {...post} />}
+      <CarsSideBar /> {post && <CarsItem {...post} />}
     </div>
   );
 }

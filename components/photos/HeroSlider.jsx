@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import Image from 'next/image';
 import { useMediaQuery } from 'react-responsive';
 
 export default function HeroSlider({ images = [] }) {
@@ -40,24 +41,23 @@ export default function HeroSlider({ images = [] }) {
       className="relative w-full overflow-hidden bg-black"
       style={{ minHeight, maxHeight }}
     >
-      {/* الصورة المتحركة */}
       <AnimatePresence>
         <motion.div key={index} className="absolute w-full h-full">
           {/* الصورة */}
-          <motion.img
+          <Image
             src={images[index]}
-            initial={{ opacity: 0, scale: 1.2 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 1.2 }}
-            transition={{ duration: 1, ease: 'easeInOut' }}
-            className="w-full h-full object-cover"
+            alt="صورة السلايدر"
+            layout="fill"
+            objectFit="cover"
+            priority={index === 0}
+            loading={index === 0 ? 'eager' : 'lazy'}
+            placeholder="blur"
+            blurDataURL="/placeholder.jpg"
           />
           {/* طبقة التعتيم مع تأثير ضوئي خفيف */}
           <div
             className="absolute inset-0 bg-gradient-to-b from-transparent via-black/30 to-black/80"
-            style={{
-              boxShadow: 'inset 0 0 50px rgba(0, 0, 0, 0.5)',
-            }}
+            style={{ boxShadow: 'inset 0 0 50px rgba(0, 0, 0, 0.5)' }}
           ></div>
           {/* النص فوق الصورة */}
           <motion.div
@@ -105,9 +105,7 @@ export default function HeroSlider({ images = [] }) {
                 ? 'bg-white shadow-md'
                 : 'bg-gray-500 hover:bg-gray-400'
             }`}
-            style={{
-              transform: i === index ? 'scale(1.2)' : 'scale(1)',
-            }}
+            style={{ transform: i === index ? 'scale(1.2)' : 'scale(1)' }}
           ></button>
         ))}
       </div>

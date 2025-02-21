@@ -153,7 +153,7 @@ export default function SmallItem({ post, index, show = true, id = false }) {
           <>
             <div className=" w-full my-2 ">
               <div
-                className="btn flex justify-center items-center gap-2 w-fit cursor-pointer p-1 lg:p-2  border border-gray-500 select-none text-gray-200 hover: rounded-md"
+                className="btn flex justify-center items-center gap-2 w-fit cursor-pointer p-1 lg:p-2  border border-gray-500 select-none text-gray-200 hover: rounded-[5px]"
                 onClick={() => {
                   handleInteraction(post?.id, 'hearts', heart, setHeart);
                   if (session?.status === 'unauthenticated') {

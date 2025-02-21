@@ -16,7 +16,7 @@ import SideBarMenu from '../../../components/SideBarMenu';
 import { TfiMenuAlt } from 'react-icons/tfi';
 import Loading from '../../../components/Loading';
 import Button from '../../../components/Button';
-import MiddleBarAndPhoto from '../../../components/middleBarAndPhoto';
+import MiddleBarAndPhoto from '../../../components/RealEstate/RealEstateSideBar';
 import { usePathname } from 'next/navigation';
 import NavegationPages from '../../../components/NavegationPages';
 
@@ -90,7 +90,7 @@ export default function Page() {
         <MiddleBarAndPhoto
           isOpen={isOpen}
           setIsOpen={setIsOpen}
-          noButton={true}
+          Button={true}
         />
         <div className="relative w-full h-[300px] lg:h-[400px] border overflow-hidden rounded">
           <Image

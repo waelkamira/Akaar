@@ -31,20 +31,20 @@ export default function CarsNavbar() {
       <div className="flex justify-between w-full">
         <ul className="flex justify-evenly gap-4 mr-4 items-center h-20 py-4 w-5/6">
           <div
-            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-14 transition-all duration-300"
+            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-[5px] border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-14 transition-all duration-300"
             onClick={() => router.push('/')}
           >
             <FaHome className="text-xl select-none text-one" />
             <li className=" text-xl select-none">الرئيسية</li>
           </div>
           <div
-            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-14 transition-all duration-300"
+            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-[5px] border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-14 transition-all duration-300"
             onClick={() => router.push('/Cars')}
           >
             <FaCarSide className="text-xl select-none text-one" />
             <li className=" text-xl select-none">سيارات</li>
           </div>
-          <div className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-14 transition-all duration-300">
+          <div className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-[5px] border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-14 transition-all duration-300">
             {session?.status === 'unauthenticated' && (
               <div
                 className="flex items-center justify-center gap-2 hover:scale-105 hover:cursor-pointer hover:shadow-lg shadow-gray-300  p-2 px-8 h-14 transition-all duration-300"
@@ -66,7 +66,7 @@ export default function CarsNavbar() {
           </div>
 
           <div
-            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-14 transition-all duration-300"
+            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-[5px] border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-14 transition-all duration-300"
             onClick={() => router.push('/myPosts')}
           >
             <FaCanadianMapleLeaf className="text-xl select-none text-one" />
@@ -75,7 +75,7 @@ export default function CarsNavbar() {
             </li>
           </div>
           {/* <div
-            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-14 transition-all duration-300"
+            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-[5px] border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-14 transition-all duration-300"
             onClick={() => router.push('/favoritePosts')}
           >
             <TbTargetArrow className="text-xl select-none text-one" />
@@ -84,21 +84,21 @@ export default function CarsNavbar() {
             </li>
           </div> */}
           <div
-            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-14 transition-all duration-300"
+            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-[5px] border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-14 transition-all duration-300"
             onClick={() => router.push('/Cars/newPost')}
           >
             <FaDollarSign className="text-xl select-none text-one" />
             <li className=" text-xl select-none">بيع/تأجير سيارة</li>
           </div>
           <div
-            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-14 transition-all duration-300"
+            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-[5px] border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-14 transition-all duration-300"
             onClick={() => router.push('/Cars/buy')}
           >
             <GiPayMoney className="text-xl select-none text-one" />
             <li className=" text-xl select-none">شراء سيارة</li>
           </div>
           <div
-            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-lg border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-14 transition-all duration-300"
+            className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-[5px] border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-14 transition-all duration-300"
             onClick={() => router.push('/Cars/rent')}
           >
             <MdCarRental className="text-xl select-none text-one" />
@@ -114,16 +114,16 @@ export default function CarsNavbar() {
             {/* <div className="absolute top-5 left-24 flex justify-end ">
               <div className="absolute">
                 <h1 className="akar akarStroke lg:text-4xl lg:font-extrabold text-lg text-nowrap select-none">
-                  تؤبرني
+                  متجر
                 </h1>
                 <h1 className="absolute akarStroke lg:text-4xl lg:font-extrabold text-transparent text-lg text-nowrap select-none top-0 left-0 z-0">
-                  تؤبرني
+                  متجر
                 </h1>
               </div>
             </div> */}
-            <div className="relative h-16 w-44 py-2">
+            <div className="relative h-20 w-56 my-2 hover:scale-[103%]">
               <Image
-                src="https://i.imgur.com/bhzNopE.png"
+                src="https://i.imgur.com/0oHqzqF.png"
                 fill
                 objectFit="contain"
                 alt="home_photo"

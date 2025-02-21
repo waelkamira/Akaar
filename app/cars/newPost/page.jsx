@@ -5,41 +5,24 @@ import CarsPostForm from '../../../components/Cars/CarsPostForm';
 import { useSession } from 'next-auth/react';
 import Button from '../../../components/Button';
 import UploadingAndDisplayingImage from '../../../components/UploadingAndDisplayingImage';
-import MiddleBarAndPhoto from '../../../components/middleBarAndPhoto';
+import CarsSideBar from '../../../components/Cars/CarsSideBar';
 import CarsNavbar from '../../../components/Cars/CarsNavbar';
 export default function NewCarPost() {
-  const [isOpen, setIsOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const session = useSession();
   return (
     <div className="flex flex-col justify-center items-center w-full">
       <CarsNavbar />
-      <div className="flex flex-col w-full justify-center items-center bg-[#FF7C34]">
-        <div className="relative w-full h-[300px] lg:h-[600px] overflow-hidden">
-          <Image
-            priority
-            src={'https://i.imgur.com/ZAC6X1M.jpg'}
-            alt="decoration"
-            layout="fill"
-            objectFit="cover"
-          />
-        </div>
-      </div>
+      <CarsSideBar Button={false} />
       <div className="flex flex-col justify-center items-center w-full xl:w-[90%] 2xl:w-[70%] h-full sm:px-16 pt-2 overflow-y-auto z-10 px-2">
-        <MiddleBarAndPhoto
-          isOpen={isOpen}
-          setIsOpen={setIsOpen}
-          noButton={false}
-        />
-
         <div
           className={
             (session?.status === 'unauthenticated' ? 'h-fit ' : 'h-fit ') +
-            ' relative border border-four rounded w-full flex flex-col items-start mt-16 justify-center sm:flex-row top-0 overflow-hidden'
+            ' relative border border-four rounded w-full flex flex-col items-start justify-center sm:flex-row top-0 overflow-hidden'
           }
           onClick={(e) => e.stopPropagation()}
         >
-          <div className=" w-full h-full flex flex-col items-center justify-start grow z-40">
+          <div className=" w-full h-full flex flex-col items-center justify-start grow z-40 bg-five">
             {session?.status === 'unauthenticated' && (
               <div className="p-4   m-2 md:m-8 border border-gray-500 text-center">
                 <h1 className="text-lg md:text-2xl p-2  ">
@@ -49,6 +32,15 @@ export default function NewCarPost() {
                 <Button title={'تسجيل الدخول'} path="/login" style={' '} />
               </div>
             )}
+            {/* <div className="relative w-28 h-24 xl:h-44 xl:w-96 ">
+              <Image
+                priority
+                src={'https://i.imgur.com/0oHqzqF.png'}
+                fill
+                alt="decoration"
+                className="m-0"
+              />
+            </div> */}
             {session?.status === 'authenticated' && (
               <div className="w-full p-2 bg-five">
                 <h1 className="w-full text-center  text-sm md:text-lg my-4">

@@ -9,11 +9,12 @@ import { inputsContext } from '../Context';
 import { ImSearch } from 'react-icons/im';
 import { LuArrowDownNarrowWide } from 'react-icons/lu';
 import { LuArrowUpNarrowWide } from 'react-icons/lu';
-import MiddleBarAndPhoto from '../middleBarAndPhoto';
+import MiddleBarAndPhoto from '../RealEstate/RealEstateSideBar';
 import NavegationPages from '../NavegationPages';
 import CarsBrandSelector from './CarsBrandSelector';
 import CarsUsedNewSelector from './CarsUsedNewSelector';
 import CarsNavbar from './CarsNavbar';
+import CarsSideBar from './CarsSideBar';
 
 export default function CarsSearchBar({ imgLink }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -100,15 +101,7 @@ export default function CarsSearchBar({ imgLink }) {
   return (
     <div className="flex flex-col justify-center items-center w-full rounded-b">
       <CarsNavbar />
-      {/* <div className="relative w-full h-[300px] lg:h-[600px] overflow-hidden">
-        <Image
-          src={imgLink}
-          fill
-          alt="home_photo"
-          className="object-cover object-center w-full h-auto"
-          objectPosition="center"
-        />
-      </div> */}
+      <CarsSideBar Button={true} />
       {!carsAds && <Loading />}
 
       <div className="flex flex-col-reverse xl:flex-row justify-center items-center w-full bg-three shadow-sm shadow-gray-300 text-white py-4">
@@ -175,15 +168,6 @@ export default function CarsSearchBar({ imgLink }) {
       </div>
 
       <div className="flex flex-col w-full mt-4 rounded-[5px] flex-grow xl:w-[90%] 2xl:w-[70%] h-[1370px] px-2 pt-2 overflow-y-auto border rounded-b z-[0]">
-        <MiddleBarAndPhoto
-          isOpen={isOpen}
-          setIsOpen={setIsOpen}
-          isShow={isShow}
-          setIsShow={setIsShow}
-          noButton={true}
-          path={'/Cars/newPost'}
-        />
-
         <div className="flex flex-col w-full h-full overflow-y-auto ">
           {carsAds?.length > 0 ? (
             <div className="flex flex-col justify-start w-full overflow-y-auto my-2 z-[0]">

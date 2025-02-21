@@ -9,7 +9,7 @@ export default function Element({ path, title, onClick }) {
         onClick={onClick}
         title={title}
         style={
-          'p-2 text-sm  text-nowrap bg-five hover:bg-one rounded-xl hover:scale-[101%] my-3 w-full'
+          'p-2 text-sm  text-nowrap bg-five hover:bg-one rounded-[5px] hover:scale-[101%] my-3 w-full'
         }
       />
     </Link>

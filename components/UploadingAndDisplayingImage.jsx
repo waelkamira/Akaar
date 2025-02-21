@@ -71,7 +71,7 @@ export default function ImageUploader({ images = [] }) {
   return (
     <div className="flex flex-col justify-center items-center w-full px-2 sm:px-8">
       {/* الصورة الكبيرة في الأعلى */}
-      <div className="relative w-full h-72 sm:h-96 border border-four rounded-lg mb-4 bg-white">
+      <div className="relative w-full h-72 sm:h-96 border border-four rounded-[5px] mb-4 bg-white">
         {isLoading ? ( // إذا كانت الصور قيد التحميل، عرض مؤشر التحميل
           <LoadingPhoto />
         ) : filteredImages[0] ? ( // إذا كانت هناك صورة متاحة
@@ -83,7 +83,7 @@ export default function ImageUploader({ images = [] }) {
                 alt="الصورة الرئيسية"
                 layout="fill"
                 objectFit="cover"
-                className="rounded-lg"
+                className="rounded-[5px]"
               />
             </Link>
             {/* زر تغيير الصورة */}
@@ -118,7 +118,7 @@ export default function ImageUploader({ images = [] }) {
         {Array.from({ length: 4 }).map((_, index) => (
           <div
             key={index}
-            className="relative w-full h-48 border border-four rounded-lg flex justify-center items-center bg-white"
+            className="relative w-full h-48 border border-four rounded-[5px] flex justify-center items-center bg-white"
           >
             {isLoading ? ( // إذا كانت الصور قيد التحميل، عرض مؤشر التحميل
               <LoadingPhoto />
@@ -130,7 +130,7 @@ export default function ImageUploader({ images = [] }) {
                   alt={`الصورة ${index + 2}`}
                   layout="fill"
                   objectFit="cover"
-                  className="rounded-lg"
+                  className="rounded-[5px]"
                 />
                 {/* زر تغيير الصورة */}
                 <label

@@ -37,7 +37,7 @@ const FlipClock = () => {
 
 const TimeUnit = ({ value }) => {
   return (
-    <div className=" text-white select-none w-6 h-full flex justify-center items-center rounded-lg text-lg font-bold">
+    <div className=" text-white select-none w-6 h-full flex justify-center items-center rounded-[5px] text-lg font-bold">
       {value}
     </div>
   );

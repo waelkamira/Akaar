@@ -12,7 +12,7 @@ import { inputsContext } from '../../components/Context';
 import Loading from '../../components/Loading';
 import { useRouter } from 'next/navigation';
 import { MdEdit } from 'react-icons/md';
-import MiddleBarAndPhoto from '../../components/middleBarAndPhoto';
+import MiddleBarAndPhoto from '../../components/RealEstate/RealEstateSideBar';
 import Image from 'next/image';
 import NavegationPages from '../../components/NavegationPages';
 import MainNavbar from '../../components/navbars/MainNavbar';
@@ -72,15 +72,15 @@ export default function MyPosts() {
   }
 
   return (
-    <div className="flex flex-col justify-center items-center w-full mt-20 xl:mt-44">
+    <div className="flex flex-col justify-center items-center w-full">
       <MainNavbar />
 
       <div className="flex flex-col w-full xl:w-[90%] 2xl:w-[80%] h-fit px-2 sm:px-16 pt-2 overflow-y-auto z-10 ">
-        <MiddleBarAndPhoto
+        {/* <MiddleBarAndPhoto
           isOpen={isOpen}
           setIsOpen={setIsOpen}
-          noButton={true}
-        />
+          Button={true}
+        /> */}
 
         {isVisible && (
           <div className="absolute flex flex-col items-center p-4 /95 z-50 inset-0 bg-five/70 text-white">
@@ -91,13 +91,13 @@ export default function MyPosts() {
               <div className="flex justify-between items-center w-full h-24 sm:h-28 z-50 gap-8 p-8">
                 <button
                   onClick={() => handleDeletePost(postId)}
-                  className="btn rounded-xl w-full h-full border border-white hover:border-0"
+                  className="btn rounded-[5px] w-full h-full border border-white hover:border-0"
                 >
                   حذف
                 </button>
                 <button
                   onClick={() => setIsVisible(false)}
-                  className="btn rounded-xl w-full h-full border border-white hover:border-0"
+                  className="btn rounded-[5px] w-full h-full border border-white hover:border-0"
                 >
                   تراجع
                 </button>
@@ -109,7 +109,7 @@ export default function MyPosts() {
         {session?.data?.user ? (
           <div className="flex flex-col justify-center items-center w-full">
             {' '}
-            <div className="flex flex-col justify-center items-center w-full gap-4 py-4 mt-16">
+            <div className="flex flex-col justify-center items-center w-full gap-4 py-4">
               <h1 className="grow text-lg lg:text-2xl w-full ">
                 <span className="text-one  text-2xl ml-2">#</span>
                 إعلاناتي <span className="text-one"> {userPostsCount}</span>
@@ -123,7 +123,7 @@ export default function MyPosts() {
               />
             )}
             <div className="w-full">
-              <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 p-2 sm:p-4 gap-4 justify-start items-start w-full border border-five">
+              <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 gap-4 justify-start items-start w-full">
                 {myPosts?.length > 0 &&
                   myPosts.map((post, index) => (
                     <div

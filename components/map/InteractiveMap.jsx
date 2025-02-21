@@ -65,7 +65,7 @@ export default function InteractiveMap() {
         onSelectCity={handleCitySelect}
         onSelectTown={handleTownSelect}
       />
-      <div className="w-full h-72 sm:h-[500px] rounded-md overflow-hidden">
+      <div className="w-full h-72 sm:h-[500px] rounded-[5px] overflow-hidden">
         <MapContainer
           center={selectedLocation || [34.8021, 38.9968]}
           zoom={7}
