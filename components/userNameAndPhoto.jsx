@@ -9,7 +9,7 @@ import { useSession } from 'next-auth/react';
 
 export default function UserNameAndPhoto({ post }) {
   const path = usePathname();
-  // console.log('post', post);
+
   //? هذه الدالة للتأكد إذا كان التاريخ المدخل صحيحا أو لا
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -32,8 +32,10 @@ export default function UserNameAndPhoto({ post }) {
                 : 'size-8 sm:size-12 lg:size-14'
             } overflow-hidden rounded`}
           >
-            {![post?.userImage] && <LoadingPhoto />}
-            {[post?.userImage] && (
+            {/* تحقق من عدم وجود صورة */}
+            {!post?.userImage && <LoadingPhoto />}
+            {/* تحقق من وجود صورة */}
+            {post?.userImage && (
               <Image priority src={post?.userImage} fill alt={post?.userName} />
             )}
           </div>

@@ -64,19 +64,19 @@ export default function RealEstateHomePage() {
             <div className="flex justify-center items-center gap-2 w-full text-nowrap py-8 ">
               <div className="flex flex-col justify-end items-end text-two ">
                 <h1
-                  className="px-1 tracking-widest uppercase font-bold text-[8px] sm:text-[10px] lg:text-[11px] xl:text-[12px] select-none border-l border-two"
+                  className="px-1 tracking-widest uppercase font-bold text-[8px] sm:text-[10px] lg:text-[11px] xl:text-[12px] select-none border-l border-three"
                   style={{ fontFamily: 'Raleway-light' }}
                 >
                   business
                 </h1>
                 <h1
-                  className="px-1 tracking-widest uppercase font-bold text-[8px] sm:text-[10px] lg:text-[11px] xl:text-[12px] select-none border-l border-two"
+                  className="px-1 tracking-widest uppercase font-bold text-[8px] sm:text-[10px] lg:text-[11px] xl:text-[12px] select-none border-l border-three"
                   style={{ fontFamily: 'Raleway-light' }}
                 >
                   illustration
                 </h1>
                 <h1
-                  className="px-1 tracking-widest uppercase font-bold text-[8px] sm:text-[10px] lg:text-[11px] xl:text-[12px] select-none border-l border-two"
+                  className="px-1 tracking-widest uppercase font-bold text-[8px] sm:text-[10px] lg:text-[11px] xl:text-[12px] select-none border-l border-three"
                   style={{ fontFamily: 'Raleway-light' }}
                 >
                   eps10
@@ -131,7 +131,7 @@ export default function RealEstateHomePage() {
               {realEstate?.length > 0 &&
                 realEstate.map((item) => (
                   <div
-                    className="flex flex-col justify-center items-center w-full border cursor-pointer bg-white hover:scale-[103%] transition-transform duration-300 ease-in-out rounded-[15px] overflow-hidden text-black shadow-lg hover:shadow-xl relative"
+                    className="flex flex-col justify-center items-center w-full border cursor-pointer bg-white hover:scale-[103%] transition-transform duration-300 ease-in-out rounded-[5px] overflow-hidden text-black shadow-lg hover:shadow-xl relative"
                     key={item?.id}
                     onClick={() => {
                       dispatch({ type: 'POST_ID', payload: item?.id });

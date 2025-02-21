@@ -142,7 +142,7 @@ export default function CarsSearchBar({ imgLink }) {
                 placeholder="0"
                 value={searchData.minPrice}
                 onChange={handleInputChange}
-                className="w-full text-sm sm:text-lg rounded text-start text-black z-40 h-9 sm:h-12 text-nowrap px-2 border border-four focus:outline-one"
+                className="w-full text-sm sm:text-lg rounded text-start text-black z-40 h-9 sm:h-12 text-nowrap px-2 border border-gray-300 focus:outline-one"
               />
             </div>
             <div className=" w-full">
@@ -160,7 +160,7 @@ export default function CarsSearchBar({ imgLink }) {
                 placeholder="0"
                 value={searchData.maxPrice}
                 onChange={handleInputChange}
-                className="w-full text-sm sm:text-lg rounded text-start text-black z-40 h-9 sm:h-12 text-nowrap px-2 border border-four focus:outline-one"
+                className="w-full text-sm sm:text-lg rounded text-start text-black z-40 h-9 sm:h-12 text-nowrap px-2 border border-gray-300 focus:outline-one"
               />
             </div>
           </div>

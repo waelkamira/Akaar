@@ -116,7 +116,7 @@ export default function LogInPage() {
             name={'email'}
             placeholder="الإيميل"
             {...register('email')}
-            className=" placeholder-gray-400 transition-all placeholder:text-sm placeholder:sm:text-lg duration-300 grow py-2 border border-four border-solid focus:border focus:outline-one outline-none rounded-[5px] px-2 w-full caret-one  text-start"
+            className=" placeholder-gray-400 transition-all placeholder:text-sm placeholder:sm:text-lg duration-300 grow py-2 border border-gray-300 border-solid focus:border focus:outline-one outline-none rounded-[5px] px-2 w-full caret-one  text-start"
           />
         </div>
         {errors?.email && (
@@ -134,7 +134,7 @@ export default function LogInPage() {
             name={'password'}
             placeholder="كلمة السر"
             {...register('password')}
-            className=" placeholder-gray-400 placeholder:text-sm placeholder:sm:text-lg transition-all duration-300 grow py-2 border border-four border-solid focus:border focus:outline-one outline-none rounded-[5px] px-2 w-full caret-one  text-start"
+            className=" placeholder-gray-400 placeholder:text-sm placeholder:sm:text-lg transition-all duration-300 grow py-2 border border-gray-300 border-solid focus:border focus:outline-one outline-none rounded-[5px] px-2 w-full caret-one  text-start"
           />
         </div>
         {errors?.password && (

@@ -13,7 +13,7 @@ export default function NewRealEstatePost() {
   const [isVisible, setIsVisible] = useState(false);
   const session = useSession();
   return (
-    <div className="flex flex-col justify-center items-center w-full">
+    <div className="flex flex-col justify-center items-center w-full bg-five">
       <RealEstateNavbar />
       <div className="flex flex-col justify-center items-center w-full xl:w-[90%] 2xl:w-[70%] h-full sm:px-16 pt-2 overflow-y-auto z-10 px-2">
         <MiddleBarAndPhoto
@@ -30,16 +30,6 @@ export default function NewRealEstatePost() {
           onClick={(e) => e.stopPropagation()}
         >
           <div className=" w-full h-full flex flex-col items-center justify-start grow z-40 mt-16">
-            {/* <div className="relative w-28 h-24 xl:h-44 xl:w-96">
-              <Image
-                priority
-                src={'https://i.imgur.com/0oHqzqF.png'}
-                fill
-                alt="decoration"
-                className="m-0"
-              />
-            </div> */}
-
             {session?.status === 'unauthenticated' && (
               <div className="p-4   m-2 md:m-8 border border-gray-500 text-center">
                 <h1 className="text-lg md:text-2xl p-2  ">
@@ -50,7 +40,7 @@ export default function NewRealEstatePost() {
               </div>
             )}
             {session?.status === 'authenticated' && (
-              <div className="w-full p-2">
+              <div className="w-full p-2 bg-five">
                 <h1 className="w-full text-center  text-sm md:text-lg my-4">
                   أدخل بيانات العقار الذي تريد بيعه أو تأجيره
                 </h1>

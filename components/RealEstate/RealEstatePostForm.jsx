@@ -376,284 +376,282 @@ export default function PostForm({ setIsVisible, cancel = true }) {
   };
 
   return (
-    <>
-      <div className="w-full p-2 sm:p-8 h-fit ">
-        <form
-          className="flex flex-col justify-center items-start h-fit w-full mt-4 "
-          onSubmit={handleSubmit}
-        >
-          <div className="w-full">
-            <div className="flex flex-col gap-2 xl:gap-8 md:flex-row w-full ">
-              <div className="w-full">
-                <div className="flex flex-col items-center justify-center my-4 w-full">
-                  {errors.propertyCategory && (
-                    <h1 className="text-one text-2xl text-start w-full animate-bounce">
-                      التصنيف مطلوبة
-                    </h1>
-                  )}
+    <div className="w-full p-2 sm:p-8 h-fit">
+      <form
+        className="flex flex-col justify-center items-start h-fit w-full mt-4"
+        onSubmit={handleSubmit}
+      >
+        <div className="w-full">
+          <div className="flex flex-col gap-2 xl:gap-8 md:flex-row w-full ">
+            <div className="w-full">
+              <div className="flex flex-col items-center justify-center my-4 w-full">
+                {errors.propertyCategory && (
+                  <h1 className="text-one text-2xl text-start w-full animate-bounce">
+                    التصنيف مطلوبة
+                  </h1>
+                )}
 
-                  <CategoryComponent />
-                </div>
-                <div className="flex flex-col items-center justify-center my-4 w-full ">
-                  {errors.propertyType && (
-                    <h1 className="text-one text-2xl text-start w-full animate-bounce">
-                      اختيار نوع العقار مطلوب
-                    </h1>
-                  )}
-
-                  <PropertyTypeSelector />
-                </div>
-                <div className="flex flex-col items-center justify-center my-4 w-full ">
-                  {errors.propertyArea && (
-                    <h1 className="text-one text-2xl text-start w-full animate-bounce">
-                      مساحة العقار مطلوبة
-                    </h1>
-                  )}
-                  <div className="flex items-center gap-2 w-full justify-start my-2">
-                    <h1 className="flex text-right text-md select-none text-nowrap ">
-                      <span className="text-one text-lg xl:text-2xl ml-2">
-                        <RxSpaceEvenlyHorizontally />
-                      </span>
-                      مساحة العقار:
-                    </h1>
-                  </div>
-
-                  <input
-                    value={inputs?.propertyArea}
-                    onChange={(e) =>
-                      setInputs({ ...inputs, propertyArea: e.target.value })
-                    }
-                    type="number"
-                    id="مساحة العقار"
-                    name="مساحة العقار"
-                    placeholder="300 م2"
-                    className="w-full text-sm sm:text-lg rounded text-start text-black  h-9 sm:h-12 text-nowrap px-2 border border-four focus:outline-one"
-                  />
-                </div>
-
-                <div className="flex flex-col items-center justify-center my-4 w-full ">
-                  {errors.propertyRoomsNumber && (
-                    <h1 className="text-one text-2xl text-start w-full animate-bounce">
-                      اختيار عدد الغرف مطلوب
-                    </h1>
-                  )}
-
-                  <RoomsNumberSelector />
-                </div>
+                <CategoryComponent />
               </div>
+              <div className="flex flex-col items-center justify-center my-4 w-full ">
+                {errors.propertyType && (
+                  <h1 className="text-one text-2xl text-start w-full animate-bounce">
+                    اختيار نوع العقار مطلوب
+                  </h1>
+                )}
 
-              <div className="w-full">
-                <div className="flex flex-col items-center justify-center my-4 w-full ">
-                  {errors.propertyName && (
-                    <h1 className="text-one text-2xl text-start w-full animate-bounce">
-                      هذا الحقل مطلوب
-                    </h1>
-                  )}
-
-                  <div className="flex items-center gap-2 w-full justify-start my-2">
-                    <h1 className="flex text-right text-md select-none text-nowrap ">
-                      <span className="text-one text-lg xl:text-2xl ml-2">
-                        <FaHouseDamage />
-                      </span>
-                      اسم مناسب للإعلان:
-                    </h1>
-                  </div>
-                  <input
-                    value={inputs?.propertyName}
-                    autoFocus
-                    onChange={(e) =>
-                      setInputs({ ...inputs, propertyName: e.target.value })
-                    }
-                    type="text"
-                    id="اسم العقار"
-                    name="اسم العقار"
-                    placeholder=" بيت بداريا _ أرض بدوما .."
-                    className="w-full text-sm sm:text-lg rounded text-start text-black  h-9 sm:h-12 text-nowrap px-2 border border-four focus:outline-one"
-                  />
-                </div>
-
-                <div className="flex flex-col items-center justify-center my-4 w-full">
-                  {errors.propertyCity && (
-                    <h1 className="text-one text-2xl text-start w-full animate-bounce">
-                      حقل المدينة مطلوب
-                    </h1>
-                  )}
-
-                  <CitySelector />
-                </div>
-
-                <div className="flex flex-col items-center justify-center my-4 w-full ">
-                  {errors.phoneNumber && (
-                    <h1 className="text-one text-2xl text-start w-full animate-bounce">
-                      رقم الهاتف مطلوب
-                    </h1>
-                  )}
-                  <div className="flex items-center gap-2 w-full justify-start my-2">
-                    <h1 className="flex text-right text-md select-none text-nowrap ">
-                      <span className="text-one text-lg xl:text-2xl ml-2">
-                        <GiRotaryPhone />
-                      </span>
-                      رقم الهاتف:
-                    </h1>
-                  </div>
-
-                  <input
-                    value={inputs?.phoneNumber}
-                    onChange={(e) =>
-                      setInputs({
-                        ...inputs,
-                        phoneNumber: e.target.value,
-                      })
-                    }
-                    type="number"
-                    id="رقم الهاتف"
-                    name="رقم الهاتف"
-                    placeholder="+963 11 3391 4444"
-                    className="w-full text-sm sm:text-lg rounded text-start text-black  h-9 sm:h-12 text-nowrap px-2 border border-four focus:outline-one"
-                  />
-                </div>
-
-                <div className="flex flex-col items-center justify-center my-4 w-full ">
-                  {errors.propertyPrice && (
-                    <h1 className="text-one text-2xl text-start w-full animate-bounce">
-                      سعر العقار مطلوب
-                    </h1>
-                  )}
-                  <div className="flex items-center gap-2 w-full justify-start my-2">
-                    <h1
-                      className={`flex text-right text-md select-none text-nowrap `}
-                    >
-                      <span className="text-one text-lg xl:text-2xl ml-2">
-                        <MdOutlinePriceCheck />
-                      </span>
-                      {category?.label === 'بيع'
-                        ? ' سعر العقار:'
-                        : 'أجرة العقار شهرياً:'}
-                    </h1>
-                  </div>
-
-                  <input
-                    value={inputs?.propertyPrice}
-                    onChange={(e) =>
-                      setInputs({ ...inputs, propertyPrice: e.target.value })
-                    }
-                    type="number"
-                    id="سعر العقار"
-                    name="سعر العقار"
-                    placeholder="$ 00.0"
-                    className="w-full text-sm sm:text-lg rounded text-start text-black  h-9 sm:h-12 text-nowrap px-2 border border-four focus:outline-one"
-                  />
-                </div>
+                <PropertyTypeSelector />
               </div>
-            </div>
-          </div>
+              <div className="flex flex-col items-center justify-center my-4 w-full ">
+                {errors.propertyArea && (
+                  <h1 className="text-one text-2xl text-start w-full animate-bounce">
+                    مساحة العقار مطلوبة
+                  </h1>
+                )}
+                <div className="flex items-center gap-2 w-full justify-start my-2">
+                  <h1 className="flex text-right text-md select-none text-nowrap ">
+                    <span className="text-one text-lg xl:text-2xl ml-2">
+                      <RxSpaceEvenlyHorizontally />
+                    </span>
+                    مساحة العقار:
+                  </h1>
+                </div>
 
-          <div className="w-full">
-            {errors.description && (
-              <h1 className="text-one text-2xl text-start w-full animate-bounce">
-                حقل الوصف مطلوب
-              </h1>
-            )}
-            <div className="flex items-center gap-2 w-full justify-start my-2">
-              <h1 className="flex text-right text-lg ">
-                <span className="text-one text-lg xl:text-2xl ml-2">
-                  <MdOutlineFeaturedPlayList />
-                </span>
-                الوصف:
-              </h1>
-            </div>
-
-            <textarea
-              value={inputs?.description}
-              onChange={(e) =>
-                setInputs({ ...inputs, description: e.target.value })
-              }
-              dir="rtl"
-              rows={'6'}
-              name="الوصف"
-              id="الوصف"
-              placeholder="اكتب مواصفات عقارك هنا ..."
-              className="scrollBar flex text-right w-full p-2 border border-three/30 text-xl placeholder:text-sm lg:placeholder:text-lg h-36 outline-2 focus:outline-one rounded"
-            ></textarea>
-          </div>
-          <OnClickMap
-            chosenCity={data?.propertyCity}
-            chosentown={data?.propertyTown}
-            propertyCityLocation={propertyCityLocation}
-            propertyTownLocation={propertyTownLocation}
-          />
-          <div className="w-full">
-            <div className="flex items-center gap-2 w-full justify-start my-2 ">
-              <h1 className="flex text-right text-sm sm:text-lg select-none ">
-                <span className="text-one text-lg xl:text-2xl ml-2">
-                  <RxVideo />
-                </span>
-                أضف فيديو للعقار من يوتيوب أو تيك توك:
-              </h1>
-            </div>
-
-            <input
-              type="text"
-              placeholder="ضع رابط الفيديو هنا"
-              value={url}
-              onChange={handleInputChange}
-              className="w-full text-sm sm:text-lg rounded text-start text-black  h-9 sm:h-12 text-nowrap px-2 border border-four focus:outline-one"
-            />
-            {inputs?.link && (
-              <div>
-                <iframe
-                  width="560"
-                  height="315"
-                  src={inputs?.link}
-                  frameBorder="0"
-                  allowFullScreen
-                  title="Embedded YouTube Video"
-                  className=" w-full h-44 sm:h-96 lg:h-[470px] xl:h-[500px] 2xl:h-[560px]"
+                <input
+                  value={inputs?.propertyArea}
+                  onChange={(e) =>
+                    setInputs({ ...inputs, propertyArea: e.target.value })
+                  }
+                  type="number"
+                  id="مساحة العقار"
+                  name="مساحة العقار"
+                  placeholder="300 م2"
+                  className="w-full text-sm sm:text-lg rounded text-start text-black  h-9 sm:h-12 text-nowrap px-2 border border-gray-300 focus:outline-one"
                 />
               </div>
-            )}
+
+              <div className="flex flex-col items-center justify-center my-4 w-full ">
+                {errors.propertyRoomsNumber && (
+                  <h1 className="text-one text-2xl text-start w-full animate-bounce">
+                    اختيار عدد الغرف مطلوب
+                  </h1>
+                )}
+
+                <RoomsNumberSelector />
+              </div>
+            </div>
+
+            <div className="w-full">
+              <div className="flex flex-col items-center justify-center my-4 w-full ">
+                {errors.propertyName && (
+                  <h1 className="text-one text-2xl text-start w-full animate-bounce">
+                    هذا الحقل مطلوب
+                  </h1>
+                )}
+
+                <div className="flex items-center gap-2 w-full justify-start my-2">
+                  <h1 className="flex text-right text-md select-none text-nowrap ">
+                    <span className="text-one text-lg xl:text-2xl ml-2">
+                      <FaHouseDamage />
+                    </span>
+                    اسم مناسب للإعلان:
+                  </h1>
+                </div>
+                <input
+                  value={inputs?.propertyName}
+                  autoFocus
+                  onChange={(e) =>
+                    setInputs({ ...inputs, propertyName: e.target.value })
+                  }
+                  type="text"
+                  id="اسم العقار"
+                  name="اسم العقار"
+                  placeholder=" بيت بداريا _ أرض بدوما .."
+                  className="w-full text-sm sm:text-lg rounded text-start text-black  h-9 sm:h-12 text-nowrap px-2 border border-gray-300 focus:outline-one"
+                />
+              </div>
+
+              <div className="flex flex-col items-center justify-center my-4 w-full">
+                {errors.propertyCity && (
+                  <h1 className="text-one text-2xl text-start w-full animate-bounce">
+                    حقل المدينة مطلوب
+                  </h1>
+                )}
+
+                <CitySelector />
+              </div>
+
+              <div className="flex flex-col items-center justify-center my-4 w-full ">
+                {errors.phoneNumber && (
+                  <h1 className="text-one text-2xl text-start w-full animate-bounce">
+                    رقم الهاتف مطلوب
+                  </h1>
+                )}
+                <div className="flex items-center gap-2 w-full justify-start my-2">
+                  <h1 className="flex text-right text-md select-none text-nowrap ">
+                    <span className="text-one text-lg xl:text-2xl ml-2">
+                      <GiRotaryPhone />
+                    </span>
+                    رقم الهاتف:
+                  </h1>
+                </div>
+
+                <input
+                  value={inputs?.phoneNumber}
+                  onChange={(e) =>
+                    setInputs({
+                      ...inputs,
+                      phoneNumber: e.target.value,
+                    })
+                  }
+                  type="number"
+                  id="رقم الهاتف"
+                  name="رقم الهاتف"
+                  placeholder="+963 11 3391 4444"
+                  className="w-full text-sm sm:text-lg rounded text-start text-black  h-9 sm:h-12 text-nowrap px-2 border border-gray-300 focus:outline-one"
+                />
+              </div>
+
+              <div className="flex flex-col items-center justify-center my-4 w-full ">
+                {errors.propertyPrice && (
+                  <h1 className="text-one text-2xl text-start w-full animate-bounce">
+                    سعر العقار مطلوب
+                  </h1>
+                )}
+                <div className="flex items-center gap-2 w-full justify-start my-2">
+                  <h1
+                    className={`flex text-right text-md select-none text-nowrap `}
+                  >
+                    <span className="text-one text-lg xl:text-2xl ml-2">
+                      <MdOutlinePriceCheck />
+                    </span>
+                    {category?.label === 'بيع'
+                      ? ' سعر العقار:'
+                      : 'أجرة العقار شهرياً:'}
+                  </h1>
+                </div>
+
+                <input
+                  value={inputs?.propertyPrice}
+                  onChange={(e) =>
+                    setInputs({ ...inputs, propertyPrice: e.target.value })
+                  }
+                  type="number"
+                  id="سعر العقار"
+                  name="سعر العقار"
+                  placeholder="$ 00.0"
+                  className="w-full text-sm sm:text-lg rounded text-start text-black  h-9 sm:h-12 text-nowrap px-2 border border-gray-300 focus:outline-one"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="w-full">
+          {errors.description && (
+            <h1 className="text-one text-2xl text-start w-full animate-bounce">
+              حقل الوصف مطلوب
+            </h1>
+          )}
+          <div className="flex items-center gap-2 w-full justify-start my-2">
+            <h1 className="flex text-right text-lg ">
+              <span className="text-one text-lg xl:text-2xl ml-2">
+                <MdOutlineFeaturedPlayList />
+              </span>
+              الوصف:
+            </h1>
           </div>
 
-          <div className="flex flex-col sm:flex-row justify-around items-center gap-8 w-full my-12">
-            <button
-              type="submit"
-              className="btn bg-five rounded text-white hover:text-two shadow-lg hover:outline outline-one text-xl hover py-2 px-16 w-full"
-            >
-              نشر
-            </button>
-            {cancel && (
-              <button
-                type="text"
-                className="btn bg-five   shadow-sm shadow-gray-300 text-white hover:outline  outline-one text-xl hover py-2 px-16 w-full"
-                onClick={() => {
-                  setIsVisible(false);
-                  setInputs({
-                    image1: '',
-                    image2: '',
-                    image3: '',
-                    image4: '',
-                    image5: '',
-                    propertyName: '',
-                    propertyType: '',
-                    propertyRoomsNumber: '',
-                    propertyPrice: 0,
-                    propertyArea: '',
-                    propertyCity: '',
-                    phoneNumber: '',
-                    description: '',
-                    lng: '',
-                    lat: '',
-                    link: '',
-                    hearts: 0,
-                  });
-                }}
-              >
-                إلغاء
-              </button>
-            )}
+          <textarea
+            value={inputs?.description}
+            onChange={(e) =>
+              setInputs({ ...inputs, description: e.target.value })
+            }
+            dir="rtl"
+            rows={'6'}
+            name="الوصف"
+            id="الوصف"
+            placeholder="اكتب مواصفات عقارك هنا ..."
+            className="scrollBar flex text-right w-full p-2 border border-three/30 text-xl placeholder:text-sm lg:placeholder:text-lg h-36 outline-2 focus:outline-one rounded"
+          ></textarea>
+        </div>
+        <OnClickMap
+          chosenCity={data?.propertyCity}
+          chosentown={data?.propertyTown}
+          propertyCityLocation={propertyCityLocation}
+          propertyTownLocation={propertyTownLocation}
+        />
+        <div className="w-full">
+          <div className="flex items-center gap-2 w-full justify-start my-2 ">
+            <h1 className="flex text-right text-sm sm:text-lg select-none ">
+              <span className="text-one text-lg xl:text-2xl ml-2">
+                <RxVideo />
+              </span>
+              أضف فيديو للعقار من يوتيوب أو تيك توك:
+            </h1>
           </div>
-        </form>
-      </div>
-    </>
+
+          <input
+            type="text"
+            placeholder="ضع رابط الفيديو هنا"
+            value={url}
+            onChange={handleInputChange}
+            className="w-full text-sm sm:text-lg rounded text-start text-black  h-9 sm:h-12 text-nowrap px-2 border border-gray-300 focus:outline-one"
+          />
+          {inputs?.link && (
+            <div>
+              <iframe
+                width="560"
+                height="315"
+                src={inputs?.link}
+                frameBorder="0"
+                allowFullScreen
+                title="Embedded YouTube Video"
+                className=" w-full h-44 sm:h-96 lg:h-[470px] xl:h-[500px] 2xl:h-[560px]"
+              />
+            </div>
+          )}
+        </div>
+
+        <div className="flex flex-col sm:flex-row justify-around items-center gap-8 w-full my-12">
+          <button
+            type="submit"
+            className="btn bg-five rounded text-white hover:text-two shadow-lg hover:outline outline-one text-xl hover py-2 px-16 w-full"
+          >
+            نشر
+          </button>
+          {cancel && (
+            <button
+              type="text"
+              className="btn bg-five   shadow-sm shadow-gray-300 text-white hover:outline  outline-one text-xl hover py-2 px-16 w-full"
+              onClick={() => {
+                setIsVisible(false);
+                setInputs({
+                  image1: '',
+                  image2: '',
+                  image3: '',
+                  image4: '',
+                  image5: '',
+                  propertyName: '',
+                  propertyType: '',
+                  propertyRoomsNumber: '',
+                  propertyPrice: 0,
+                  propertyArea: '',
+                  propertyCity: '',
+                  phoneNumber: '',
+                  description: '',
+                  lng: '',
+                  lat: '',
+                  link: '',
+                  hearts: 0,
+                });
+              }}
+            >
+              إلغاء
+            </button>
+          )}
+        </div>
+      </form>
+    </div>
   );
 }

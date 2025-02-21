@@ -34,7 +34,7 @@ export default function ContactUs() {
       <main className="flex flex-col justify-center items-center pb-16 w-full rounded-b">
         <div className="flex flex-col justify-center items-center w-full xl:w-[90%] 2xl:w-[70%] h-full sm:px-16 pt-2 overflow-y-auto z-10 px-2">
           <div className="flex flex-col justify-between items-center w-full h-full mt-2 cursor-pointer">
-            <div className="p-2 min-h-72 h-full rounded bg-gray-400/5 xl:bg-transparent xl:border border-gray-400/10 ">
+            <div className="p-2 min-h-72 h-full rounded bg-gray-400/5 xl:bg-transparent xl:border border-gray-300/10 ">
               <h1 className="text-center  text-lg w-full select-none my-2 font-bold">
                 موقع متجر
               </h1>
@@ -76,7 +76,7 @@ export default function ContactUs() {
               </div>
             </div>
             <div className="w-full">
-              <div className=" p-2 min-h-72 h-full rounded my-2 bg-gray-400/5 xl:bg-transparent xl:border border-gray-400/10 ">
+              <div className=" p-2 min-h-72 h-full rounded my-2 bg-gray-400/5 xl:bg-transparent xl:border border-gray-300/10 ">
                 <h1 className="text-center  text-lg w-full select-none my-2 font-bold">
                   معلومات الإتصال
                 </h1>
@@ -134,7 +134,7 @@ export default function ContactUs() {
                   </div>
                 </ul>
               </div>
-              <div className=" p-2 min-h-72 h-full rounded my-2 bg-gray-400/5 xl:bg-transparent xl:border border-gray-400/10 ">
+              <div className=" p-2 min-h-72 h-full rounded my-2 bg-gray-400/5 xl:bg-transparent xl:border border-gray-300/10 ">
                 <h1 className="text-center  text-lg w-full select-none my-2 font-bold">
                   ساعات العمل
                 </h1>

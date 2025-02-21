@@ -157,7 +157,7 @@ export default function MainNavbar() {
               className="relative flex justify-end w-fit min-w-[218px] cursor-pointer "
               onClick={() => router.push('/')}
             >
-              <div className="relative h-20 w-56 my-2 hover:scale-[103%]">
+              <div className="relative h-16 w-56 my-2 hover:scale-[103%] z-20">
                 <Image
                   src="https://i.imgur.com/0oHqzqF.png"
                   fill
@@ -166,6 +166,7 @@ export default function MainNavbar() {
                   objectPosition="top"
                 />
               </div>
+              <div className="absolute inset-0 bg-gradient-radial from-white/30 via-transparent to-two z-10"></div>
             </div>
           </div>
         </div>
@@ -231,7 +232,7 @@ export default function MainNavbar() {
                 }}
                 autoFocus
                 placeholder="ابحث عن عقار .. سيارة ..."
-                className="w-full h-full xl:w-1/2 2xl:w-2/5 text-sm sm:text-lg text-start z-40 text-nowrap px-2 rounded-[5px] border border-four focus:outline-one"
+                className="w-full h-full xl:w-1/2 2xl:w-2/5 text-sm sm:text-lg text-start z-40 text-nowrap px-2 rounded-[5px] border border-gray-300 focus:outline-one"
               />
             </div>
           </div>

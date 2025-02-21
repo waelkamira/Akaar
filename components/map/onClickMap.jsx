@@ -154,7 +154,7 @@ export default function OnClickMap({
       minHeight: minHeight,
       height: 'auto',
       backgroundColor: 'white',
-      borderColor: state.isFocused ? '#FF7C34' : '#A7A8AA',
+      // borderColor: state.isFocused ? '#FF7C34' : '#A1A5AD',
       '&:hover': {
         borderColor: '#FF7C34',
       },
@@ -213,7 +213,7 @@ export default function OnClickMap({
               classNames={{
                 control: (state) =>
                   `${
-                    state.isFocused ? 'border-orange-500' : 'border-four'
+                    state.isFocused ? 'border-one' : 'border-gray-300'
                   } sm:h-12 h-8 w-full`,
               }}
             />
@@ -242,7 +242,7 @@ export default function OnClickMap({
                 classNames={{
                   control: (state) =>
                     `${
-                      state.isFocused ? 'border-orange-500' : 'border-four'
+                      state.isFocused ? 'border-one' : 'border-gray-300'
                     } sm:h-12 h-8 w-full`,
                 }}
               />
@@ -288,7 +288,7 @@ export default function OnClickMap({
       </div>
 
       {selectedLocation && (
-        <div className="mt-4 p-4 bg-white rounded  shadow-sm border border-four">
+        <div className="mt-4 p-4 bg-white rounded  shadow-sm border border-gray-300">
           <p>
             <h1 className="sm:font-bold"> الموقع الذي قمت بتحديده:</h1>
             {selectedLocation[0].toFixed(5)}, {selectedLocation[1].toFixed(5)}

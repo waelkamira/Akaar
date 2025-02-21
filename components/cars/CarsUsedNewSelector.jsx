@@ -66,7 +66,7 @@ export default function CarsUsedNewSelector() {
       minHeight: minHeight,
       height: 'auto',
       backgroundColor: 'white',
-      borderColor: state.isFocused ? '#FF7C34' : '#A7A8AA',
+      // borderColor: state.isFocused ? '#FF7C34' : '#A1A5AD',
       '&:hover': {
         borderColor: '#FF7C34',
       },
@@ -113,7 +113,7 @@ export default function CarsUsedNewSelector() {
           classNames={{
             control: (state) =>
               `${
-                state.isFocused ? 'border-orange-500' : 'border-four'
+                state.isFocused ? 'border-one' : 'border-gray-300'
               } sm:h-12 h-8 w-full`, // ارتفاع مختلف بناءً على عرض النافذة
           }}
         />
