@@ -161,7 +161,7 @@ export default function EditPost() {
           <div className="flex justify-center w-full">
             <div className="flex flex-col w-full 2xl:w-2/3 border   p-2 sm:p-8 mt-8 bg-white">
               <div className="flex justify-start items-center gap-2 w-full mb-4">
-                <div className="relative size-14 overflow-hidden rounded-xl">
+                <div className="relative size-14 overflow-hidden rounded-[5px]">
                   <Image
                     priority
                     src={editedRecipe?.userImage}

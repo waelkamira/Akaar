@@ -50,7 +50,7 @@ export default function SideBar() {
               className="flex justify-start items-center w-full cursor-pointer gap-2 line-clamp-1"
               onClick={() => router.push('/profile?username')}
             >
-              <div className="relative size-14 overflow-hidden rounded-xl">
+              <div className="relative size-14 overflow-hidden rounded-[5px]">
                 {!user?.image && <LoadingPhoto />}
 
                 {user?.image && (

@@ -3,6 +3,7 @@ import dynamic from 'next/dynamic';
 import React, { useContext, useEffect, useState } from 'react';
 import { inputsContext } from '../../../components/Context';
 import RealEstateNavbar from '../../../components/RealEstate/RealEstarteNavbar';
+import RealEstateSideBar from '../../../components/RealEstate/RealEstateSideBar';
 
 // تحميل مكون Item بشكل ديناميكي
 const RealEstateItem = dynamic(
@@ -14,6 +15,7 @@ const RealEstateItem = dynamic(
 
 export default function Page() {
   const [post, setPost] = useState({});
+  const [isOpen, setIsOpen] = useState(false);
   const { postId } = useContext(inputsContext);
 
   useEffect(() => {
@@ -43,6 +45,7 @@ export default function Page() {
   return (
     <div className="flex flex-col justify-center items-center w-full bg-five">
       <RealEstateNavbar />
+      <RealEstateSideBar Button={false} />
       {post && <RealEstateItem {...post} />}
     </div>
   );

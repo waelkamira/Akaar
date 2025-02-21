@@ -9,9 +9,10 @@ import toast from 'react-hot-toast';
 import Link from 'next/link';
 import CustomToast from '../../components/CustomToast';
 import BackButton from '../../components/BackButton';
-import MiddleBarAndPhoto from '../../components/middleBarAndPhoto';
+import MiddleBarAndPhoto from '../../components/RealEstate/RealEstateSideBar';
 import Loading from '../../components/Loading';
 import LoadingPhoto from '../../components/LoadingPhoto';
+import MainNavbar from '../../components/navbars/MainNavbar';
 export default function Profile() {
   const session = useSession();
   const [isOpen, setIsOpen] = useState(false);
@@ -62,7 +63,9 @@ export default function Profile() {
   }
 
   return (
-    <div className="flex justify-center w-full mt-24">
+    <div className="flex flex-col items-center justify-center w-full">
+      <MainNavbar />
+
       {session?.status === 'unauthenticated' && (
         <div className="p-4 bg-fm text-sm  md:text-lgdlg:text-xl our  m-2 md:m-8 border border-one text-center h-screen">
           <h1 className="text-lg m text-md xl:text-xldlg:text-2xl p-2 my-8 ">
@@ -76,13 +79,8 @@ export default function Profile() {
         </div>
       )}
       {session?.status === 'authenticated' && (
-        <div className="flex flex-col w-full xl:w-[90%] 2xl:w-[70%] h-full px-2 overflow-y-auto z-10 mb-16 sm:px-16 ">
-          <MiddleBarAndPhoto
-            isOpen={isOpen}
-            setIsOpen={setIsOpen}
-            noButton={true}
-          />
-          <div className="flex flex-col items-start gap-4 justify-start w-full h-full overflow-hidden rounded-lg border border-one xl:mt-4">
+        <div className="flex flex-col w-full xl:w-[90%] 2xl:w-[70%] h-full px-2 overflow-y-auto z-10 mb-16 sm:px-16 mt-8">
+          <div className="flex flex-col items-start gap-4 justify-start w-full h-full overflow-hidden rounded-[5px] border border-one xl:mt-4">
             <div className="flex justify-center items-center w-full bg-two py-2">
               {' '}
               <div className="relative min-h-64 w-64 rounded-full overflow-hidden bg-two">

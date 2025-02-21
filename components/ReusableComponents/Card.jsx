@@ -70,7 +70,7 @@ export default function Card({ cardName, path, image, text, color, emoji }) {
           <div className="px-4 mt-2">
             <button
               onClick={() => router.push(path)}
-              className="btn relative w-full my-2 text-white rounded-lg hover:scale-[101%] text-md sm:text-ةي hover:shadow-sm shadow-purple-300 p-1 lg:p-2 transition-transform duration-200 ease-in-out"
+              className="btn relative w-full my-2 text-white rounded-[5px] hover:scale-[101%] text-md sm:text-ةي hover:shadow-sm shadow-purple-300 p-1 lg:p-2 transition-transform duration-200 ease-in-out"
               style={{
                 '--btn-background': btnBackground,
                 '--btn-hover-background': btnHoverBackground,

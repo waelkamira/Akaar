@@ -36,7 +36,7 @@ export default function SyriaMap({ lng = '', lat = '' }) {
   // **إضافة `key` يجبر React على إعادة تحميل المكون فقط عند تغير `lat` أو `lng`**
   return (
     <div className="w-full z-40">
-      <div className="w-full h-72 sm:h-[500px] rounded-md overflow-hidden">
+      <div className="w-full h-72 sm:h-[500px] rounded-[5px] overflow-hidden">
         <MapContainer
           key={`${latitude}-${longitude}`} // ✅ يجعل الخريطة تعيد التحميل فقط عند تغير الإحداثيات
           center={[latitude, longitude]}

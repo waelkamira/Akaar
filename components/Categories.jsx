@@ -43,7 +43,7 @@ export default function CategoriesSlid() {
       </h1>
       {smallSize.map((category, index) => (
         <div
-          className=" flex flex-col justify-center items-center rounded-xl mx-4 cursor-pointer w-full "
+          className=" flex flex-col justify-center items-center rounded-[5px] mx-4 cursor-pointer w-full "
           key={index}
         >
           <div

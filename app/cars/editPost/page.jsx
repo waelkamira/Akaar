@@ -20,7 +20,7 @@ const CarsEditItem = dynamic(() =>
 );
 const OnClickMap = dynamic(() => import('../../../components/map/onClickMap'));
 const MiddleBarAndPhoto = dynamic(() =>
-  import('../../../components/middleBarAndPhoto')
+  import('../../../components/RealEstate/RealEstateSideBar')
 );
 
 export default function EditPost() {
@@ -183,7 +183,7 @@ export default function EditPost() {
   return (
     <div className="flex flex-col justify-center items-center w-full bg-five">
       {session?.status === 'unauthenticated' && (
-        <div className="p-4   m-2 md:m-8 border rounded-md rounded-md-one text-center h-screen">
+        <div className="p-4   m-2 md:m-8 border rounded-[5px] rounded-[5px]-one text-center h-screen">
           <h1 className="text-lg md:text-2xl p-2 my-8 ">
             يجب عليك تسجيل الدخول أولا لرؤية هذه الإعلان
           </h1>
@@ -197,11 +197,11 @@ export default function EditPost() {
           <MiddleBarAndPhoto
             isOpen={isOpen}
             setIsOpen={setIsOpen}
-            noButton={false}
+            Button={false}
           />
 
           <div className="flex justify-center w-full bg-white">
-            <div className="flex flex-col w-full border rounded-md p-2 sm:p-8 bg-white">
+            <div className="flex flex-col w-full border rounded-[5px] p-2 sm:p-8 bg-white">
               <div className="flex justify-start items-center gap-2 w-full mb-4">
                 {/* صورة المستخدم */}
                 <div className="relative size-8 sm:size-10 lg:size-14 overflow-hidden rounded">
@@ -253,7 +253,7 @@ export default function EditPost() {
                 />
                 <button
                   onClick={() => handleEditPost(postId)}
-                  className="bg-gray-600 mb-2 w-full mt-4 sm:w-fit text-white duration-300 transition-colors ease-in-out hover:bg-one hover:scale-105 border rounded-md text-center select-none p-2"
+                  className="bg-gray-600 mb-2 w-full mt-4 sm:w-fit text-white duration-300 transition-colors ease-in-out hover:bg-one hover:scale-105 border rounded-[5px] text-center select-none p-2"
                 >
                   حفظ التعديلات
                 </button>
@@ -385,7 +385,7 @@ export default function EditPost() {
                     </h1>
                   </div>
                   <pre
-                    className="relative grow p-2 text-lg lg:text-xl xl:text-2xl text-start select-none h-44 border rounded-md w-full focus:outline-one overflow-y-auto placeholder:text-sm"
+                    className="relative grow p-2 text-lg lg:text-xl xl:text-2xl text-start select-none h-44 border rounded-[5px] w-full focus:outline-one overflow-y-auto placeholder:text-sm"
                     contentEditable="true"
                     onInput={(e) =>
                       setInputs({
@@ -409,7 +409,7 @@ export default function EditPost() {
                   </pre>
                   <button
                     onClick={() => handleEditPost(postId)}
-                    className="bg-gray-600 mb-2 w-full mt-4 sm:w-fit text-white  duration-300 transition-colors ease-in-out hover:bg-one hover:scale-105 border rounded-md text-center select-none   p-2"
+                    className="bg-gray-600 mb-2 w-full mt-4 sm:w-fit text-white  duration-300 transition-colors ease-in-out hover:bg-one hover:scale-105 border rounded-[5px] text-center select-none   p-2"
                   >
                     حفظ التعديلات
                   </button>
@@ -441,12 +441,12 @@ export default function EditPost() {
                       placeholder="الصق رابط الفيديو الجديد هنا ..."
                       value={editedPost?.linkValue}
                       onChange={handleInputChange}
-                      className="text-right w-full p-2  text-lg outline-2 focus:outline-one h-12 border rounded-md placeholder:text-sm"
+                      className="text-right w-full p-2  text-lg outline-2 focus:outline-one h-12 border rounded-[5px] placeholder:text-sm"
                     />
                   </div>
                   <button
                     onClick={() => handleEditPost(postId)}
-                    className="bg-gray-600 mb-2 w-full mt-4 sm:w-fit text-white  duration-300 transition-colors ease-in-out hover:bg-one hover:scale-105 border rounded-md text-center select-none   p-2"
+                    className="bg-gray-600 mb-2 w-full mt-4 sm:w-fit text-white  duration-300 transition-colors ease-in-out hover:bg-one hover:scale-105 border rounded-[5px] text-center select-none   p-2"
                   >
                     حفظ التعديلات
                   </button>
@@ -459,7 +459,7 @@ export default function EditPost() {
                       src={iframeSrc || editedPost?.link}
                       title="YouTube video player"
                       frameborder
-                      rounded-md="0"
+                      rounded-[5px]="0"
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                       referrerpolicy="strict-origin-when-cross-origin"
                       allowfullscreen
@@ -471,7 +471,7 @@ export default function EditPost() {
                       src={inputs?.link}
                       title="YouTube video player"
                       frameborder
-                      rounded-md="0"
+                      rounded-[5px]="0"
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                       referrerpolicy="strict-origin-when-cross-origin"
                       allowfullscreen

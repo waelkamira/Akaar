@@ -5,7 +5,7 @@ import RealEstatePostForm from '../../../components/RealEstate/RealEstatePostFor
 import { useSession } from 'next-auth/react';
 import Button from '../../../components/Button';
 import UploadingAndDisplayingImage from '../../../components/UploadingAndDisplayingImage';
-import MiddleBarAndPhoto from '../../../components/middleBarAndPhoto';
+import MiddleBarAndPhoto from '../../../components/RealEstate/RealEstateSideBar';
 import RealEstateNavbar from '../../../components/RealEstate/RealEstarteNavbar';
 
 export default function NewRealEstatePost() {
@@ -19,7 +19,7 @@ export default function NewRealEstatePost() {
         <MiddleBarAndPhoto
           isOpen={isOpen}
           setIsOpen={setIsOpen}
-          noButton={false}
+          Button={false}
         />
 
         <div
@@ -30,15 +30,15 @@ export default function NewRealEstatePost() {
           onClick={(e) => e.stopPropagation()}
         >
           <div className=" w-full h-full flex flex-col items-center justify-start grow z-40 mt-16">
-            <div className="relative w-28 h-24 xl:h-44 xl:w-96">
+            {/* <div className="relative w-28 h-24 xl:h-44 xl:w-96">
               <Image
                 priority
-                src={'https://i.imgur.com/bhzNopE.png'}
+                src={'https://i.imgur.com/0oHqzqF.png'}
                 fill
                 alt="decoration"
                 className="m-0"
               />
-            </div>
+            </div> */}
 
             {session?.status === 'unauthenticated' && (
               <div className="p-4   m-2 md:m-8 border border-gray-500 text-center">

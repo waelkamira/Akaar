@@ -17,6 +17,8 @@ import Button from '../../components/Button';
 import { MdKeyboardDoubleArrowDown } from 'react-icons/md';
 import HeroSlider from '../../components/photos/HeroSlider';
 import CarsSmallCard from '../../components/Cars/CarsSmallCard';
+import CarsSideBar from '../../components/Cars/CarsSideBar';
+
 export default function CarsHomePage() {
   const [isOpen, setIsOpen] = useState(false);
   const session = useSession();
@@ -53,19 +55,13 @@ export default function CarsHomePage() {
       <CarsNavbar />
       <div className="relative flex flex-col justify-center items-center z-40 w-full bg-five">
         <div className="w-full">
-          <div className="xl:hidden absolute flex flex-col items-start gap-2 z-50 top-2 right-0 sm:top-4 sm:right-4 lg:right-12 w-fit">
-            <TfiMenuAlt
-              className="p-2 text-5xl text-one cursor-pointer"
-              onClick={() => setIsOpen(!isOpen)}
-            />
-            {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
-          </div>
+          <CarsSideBar Button={true} />
 
           {/* صورة الخلفية */}
-          {/* <div className="relative w-full h-full overflow-hidden">
+          <div className="relative w-full h-full overflow-hidden">
             <HeroSlider images={images} />
             <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
-          </div> */}
+          </div>
 
           <div className="flex flex-col justify-center items-center w-full">
             <div className="flex justify-center items-center gap-2 w-full text-nowrap py-8 ">
