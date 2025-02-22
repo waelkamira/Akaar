@@ -1,12 +1,12 @@
 'use client';
 import React, { useContext, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import CustomToast from './CustomToast';
+import CustomToast from '../CustomToast';
 import { usePathname, useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { IoMdClose } from 'react-icons/io';
-import { inputsContext } from '../components/Context';
-import PostGallery from './PostGallery';
+import { inputsContext } from '../Context';
+import PostGallery from '../photos/PostGallery';
 import UserNameAndPhoto from './userNameAndPhoto';
 
 export default function SmallItem({ post, index }) {

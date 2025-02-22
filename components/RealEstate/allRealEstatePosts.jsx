@@ -1,7 +1,7 @@
 'use client';
 import React, { useContext, useEffect, useState } from 'react';
-import SmallItem from '../SmallItem';
-import Loading from '../Loading';
+import SmallItem from '../ReusableComponents/SmallItem';
+import Loading from '../ReusableComponents/Loading';
 import {
   MdKeyboardDoubleArrowRight,
   MdKeyboardDoubleArrowLeft,
@@ -9,7 +9,7 @@ import {
 import Link from 'next/link';
 import CustomToast from '../CustomToast';
 import toast from 'react-hot-toast';
-import NavegationPages from '../NavegationPages';
+import NavegationPages from '../ReusableComponents/NavegationPages';
 
 export default function AllPosts({}) {
   const [pageNumber, setPageNumber] = useState(1);

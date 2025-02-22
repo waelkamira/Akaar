@@ -1,13 +1,32 @@
 'use client';
 import Image from 'next/image';
 import React, { useContext } from 'react';
-import LoadingPhoto from '../LoadingPhoto';
+import LoadingPhoto from '../photos/LoadingPhoto';
 import { inputsContext } from '../Context';
 import { useRouter } from 'next/navigation';
-
+import { formatDistanceToNow } from 'date-fns';
+import { ar } from 'date-fns/locale';
+import FormatDate from '../ReusableComponents/FormatDate';
 export default function CarsSmallCard({ item }) {
   const { dispatch } = useContext(inputsContext);
   const router = useRouter();
+
+  //? هذه الدالة للتأكد إذا كان التاريخ المدخل صحيحا أو لا
+
+  // const formatDate = (dateString) => {
+  //   const date = new Date(dateString);
+  //   if (isNaN(date)) return 'تاريخ غير صالح';
+
+  //   const diffInMs = Date.now() - date.getTime();
+  //   const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
+  //   const diffInDays = Math.floor(diffInHours / 24);
+
+  //   if (diffInHours < 24) {
+  //     return `منذ ${diffInHours} ${diffInHours === 1 ? 'ساعة' : 'ساعة'}`;
+  //   } else {
+  //     return `منذ ${diffInDays} ${diffInDays === 1 ? 'يوم' : 'يوم'}`;
+  //   }
+  // };
 
   return (
     <div
@@ -37,14 +56,17 @@ export default function CarsSmallCard({ item }) {
       {/* <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div> */}
 
       {/* التفاصيل */}
-      <div className="flex justify-evenly gap-2 items-center w-full mt-2 text-sm sm:text-md p-3 bg-white ">
-        <h1 className="font-semibold text-gray-800">{item?.brand}</h1>
-        <h1 className="flex justify-center items-center font-bold text-gray-900">
+      <div className="flex justify-evenly gap-2 items-center w-full mt-2 text-sm sm:text-md p-3 bg-white text-black">
+        <h1 className="">
+          {item?.brand?.match(/[\u0600-\u06FF\s]+/g)?.join('')}
+        </h1>{' '}
+        <h1 className="flex justify-center items-center">
           {item?.price}
           <span className="text-one mx-1 select-none">$</span>
         </h1>
-        <h1 className="flex justify-center items-center text-gray-700">
-          {item?.city}
+        <h1 className="flex justify-center items-center">{item?.city}</h1>
+        <h1 className="flex justify-center items-center">
+          {<FormatDate dateString={item?.createdAt} />}
         </h1>
       </div>
 

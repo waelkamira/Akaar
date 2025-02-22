@@ -18,7 +18,7 @@ const PropertyTypeSelector = dynamic(() => import('../PropertyTypeSelector'));
 const CurrentUser = dynamic(() => import('../CurrentUser'));
 const CustomToast = dynamic(() => import('../CustomToast'));
 const Confetti = dynamic(() =>
-  import('../SuccessComponent').then((mod) => mod.Confetti)
+  import('../ReusableComponents/SuccessComponent').then((mod) => mod.Confetti)
 );
 const OnClickMap = dynamic(() => import('../map/onClickMap'));
 const CategoryComponent = dynamic(() => import('../CategoryComponent'));

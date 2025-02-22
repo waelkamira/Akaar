@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Button from '../Button';
 import { formatDistanceToNow } from 'date-fns/formatDistanceToNow';
-import Loading from '../Loading';
+import Loading from '../ReusableComponents/Loading';
 import { FaHouseDamage } from 'react-icons/fa';
 import { RxSpaceEvenlyHorizontally } from 'react-icons/rx';
 import { VscUngroupByRefType } from 'react-icons/vsc';
@@ -16,6 +16,7 @@ import { FaTreeCity } from 'react-icons/fa6';
 import dynamic from 'next/dynamic';
 import CarsItemSmallItem from './CarsItemSmallItem';
 import { GiPathDistance } from 'react-icons/gi';
+import LoginButton from '../Buttons/LoginButton';
 
 // استخدام dynamic لتحميل المكونات بشكل ديناميكي
 const ImageSlider = dynamic(() => import('../imageSlider'), {
@@ -26,9 +27,12 @@ const SyriaMap = dynamic(() => import('../map/SyriaMap'), {
   loading: () => <Loading />, // عرض تحميل مؤقت أثناء التحميل
 });
 
-const UserNameAndPhoto = dynamic(() => import('../userNameAndPhoto'), {
-  loading: () => <Loading />, // عرض تحميل مؤقت أثناء التحميل
-});
+const UserNameAndPhoto = dynamic(
+  () => import('../ReusableComponents/userNameAndPhoto'),
+  {
+    loading: () => <Loading />, // عرض تحميل مؤقت أثناء التحميل
+  }
+);
 
 export default function CarsItem({
   phoneNumber,
@@ -69,16 +73,8 @@ export default function CarsItem({
 
   return (
     <>
-      {session?.status === 'unauthenticated' && (
-        <div className="p-4   m-2 md:m-8 border border-one text-center h-screen">
-          <h1 className="text-lg md:text-2xl p-2 my-8 ">
-            يجب عليك تسجيل الدخول أولا لرؤية هذا الإعلان
-          </h1>
-          <Link href={'/login'}>
-            <Button title={'تسجيل الدخول'} />
-          </Link>
-        </div>
-      )}
+      <LoginButton />
+
       {session?.status === 'authenticated' && (
         <div className="flex flex-col justify-center items-center w-full xl:w-[90%] 2xl:w-[80%] h-full sm:px-16 pt-2 overflow-y-auto z-10 px-2">
           <div className="flex justify-center w-full ">

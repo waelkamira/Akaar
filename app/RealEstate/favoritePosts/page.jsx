@@ -1,6 +1,6 @@
 'use client';
 import { useSession } from 'next-auth/react';
-import SmallItem from '../../../components/SmallItem';
+import SmallItem from '../../../components/ReusableComponents/SmallItem';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
@@ -14,11 +14,11 @@ import {
 } from 'react-icons/md';
 import SideBarMenu from '../../../components/SideBarMenu';
 import { TfiMenuAlt } from 'react-icons/tfi';
-import Loading from '../../../components/Loading';
+import Loading from '../../../components/ReusableComponents/Loading';
 import Button from '../../../components/Button';
 import MiddleBarAndPhoto from '../../../components/RealEstate/RealEstateSideBar';
 import { usePathname } from 'next/navigation';
-import NavegationPages from '../../../components/NavegationPages';
+import NavegationPages from '../../../components/ReusableComponents/NavegationPages';
 
 export default function Page() {
   const [isOpen, setIsOpen] = useState(false);

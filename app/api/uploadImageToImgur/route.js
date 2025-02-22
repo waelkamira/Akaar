@@ -36,7 +36,7 @@
 //   }
 // }
 import { NextResponse } from 'next/server';
-import imgurClientManager from '../../../components/ImgurClientManager';
+import imgurClientManager from '../../../components/photos/ImgurClientManager';
 
 export async function POST(req) {
   const formData = await req.formData();

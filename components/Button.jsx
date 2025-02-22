@@ -1,8 +1,10 @@
 'use client';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 
 export default function Button({ style, title, onClick, path = '', emoji }) {
+  const router = useRouter();
   return (
     <Link href={path} className="w-full">
       <button

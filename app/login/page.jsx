@@ -1,5 +1,4 @@
 'use client';
-
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -15,19 +14,12 @@ import { GiExitDoor } from 'react-icons/gi';
 
 export default function LogInPage() {
   const session = useSession();
-  // console.log(session?.data?.user?.name);
   const router = useRouter();
+
   const schema = z.object({
     email: z.string().email(),
-    password: z.string().min(),
+    password: z.string().min(5),
   });
-  // {
-  //   "version": 2,
-  //   "builds": [
-  //     { "src": "package.json", "use": "@vercel/node" },
-  //     { "src": "next.config.js", "use": "@vercel/next" }
-  //   ]
-  // }
 
   const {
     register,
@@ -36,10 +28,6 @@ export default function LogInPage() {
     setError,
     formState: { errors },
   } = useForm({ resolver: zodResolver(schema) });
-
-  //! و ضعنا هذه الجملة الشرطية هنا لانه عندما يقوم المستخدم بتسجيل الدخول عن طريق جوجل مثلا
-  //! أو احد البروفايدرز يتم انشاء جلسة اي ان عملية تسجيل الدخول صحيحة وبالتالي نقوم باعادة توجيه المستخدم الى الصفحة الرئيسية
-  //! التطبيق build حتى لاتسبب مشكلة عند  useEffect يجب وضع الجملة الشرطية هذه ضمن
 
   useEffect(() => {
     if (session?.data?.user?.email) {
@@ -62,28 +50,20 @@ export default function LogInPage() {
       });
       return;
     }
-    // console.log('getValues', getValues());
 
     const response = await signIn('credentials', {
       ...getValues(),
       redirect: false,
-      callbackUrl: '/',
+      // callbackUrl: '/',
     });
-
+    console.log('تم تسجيل الدخول بنجاح أهلا وسهلا');
     if (response.ok) {
-      const values = getValues();
-
-      localStorage.setItem('email', values?.email);
-      localStorage.setItem('password', values?.password);
-      router.push('/');
-      toast.custom((t) => (
-        <CustomToast
-          t={t}
-          message={' بهيجة اشرق لبن ترحب بكم أهلا وسهلا '}
-          emoji={''}
-          greenEmoji={''}
-        />
-      ));
+      toast.success('تم تسجيل الدخول بنجاح أهلا وسهلا');
+      setTimeout(() => {
+        const values = getValues();
+        localStorage.setItem('email', values?.email);
+        router.push('/');
+      }, 2000);
     } else {
       setError(response?.error);
       toast.custom((t) => (
@@ -98,54 +78,21 @@ export default function LogInPage() {
   }
 
   return (
-    <div className="flex justify-center items-center w-full h-96 text-lg md:text-xl text-end">
+    <div className="flex justify-center items-center w-full h-screen text-lg md:text-xl text-end bg-five p-2">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="w-full lg:w-1/2  p-8 rounded-[5px]  border border-one"
+        className="w-full lg:w-1/2 p-2 sm:p-8 rounded-[5px] border bg-white"
       >
         <h1 className="flex justify-center items-center w-full my-2 text-xl sm:text-2xl md:text-3xl xl:text-4xl  text-center select-none">
           تسجيل الدخول <GiExitDoor className="text-one" />
         </h1>
-
-        {/* <div className="relative flex flex-col items-start justify-center w-full">
-          <h1 className="w-full my-4 select-none text-start text-sm sm:text-lg">
-            البريد الإلكتروني
-          </h1>
-          <input
-            type="text"
-            name={'email'}
-            placeholder="الإيميل"
-            {...register('email')}
-            className=" placeholder-gray-400 transition-all placeholder:text-sm placeholder:sm:text-lg duration-300 grow py-2 border border-gray-300 border-solid focus:border focus:outline-one outline-none rounded-[5px] px-2 w-full caret-one  text-start"
-          />
-        </div>
-        {errors?.email && (
-          <h1 className="text-one text-md my-2 select-none">
-            {errors?.email?.message}
-          </h1>
-        )}
-
-        <div className="relative flex flex-col items-start justify-center w-full">
-          <h1 className="w-full my-4 select-none text-start text-sm sm:text-lg">
-            كلمة السر
-          </h1>
-          <input
-            type="password"
-            name={'password'}
-            placeholder="كلمة السر"
-            {...register('password')}
-            className=" placeholder-gray-400 placeholder:text-sm placeholder:sm:text-lg transition-all duration-300 grow py-2 border border-gray-300 border-solid focus:border focus:outline-one outline-none rounded-[5px] px-2 w-full caret-one  text-start"
-          />
-        </div>
-        {errors?.password && (
-          <h1 className="text-one text-md my-2 select-none">
-            {errors?.password?.message}
-          </h1>
-        )} */}
         <div
-          className="flex justify-center w-full bg-white border border-one rounded-[5px] px-4 py-2 items-center my-8 hover:shadow-sm shadow-gray-300 cursor-pointer"
+          className="flex justify-center w-full bg-white border rounded-[5px] px-4 py-2 items-center my-8 hover:shadow-sm shadow-gray-300 cursor-pointer"
           onClick={() => signIn('google')}
         >
+          <h1 className="text-sm sm:text-lg grow text-center text-gray-500 select-none font-semibold">
+            تسجيل الدخول عن طريق جوجل
+          </h1>
           <div className="relative h-8 w-8 ">
             <Image
               priority
@@ -155,38 +102,7 @@ export default function LogInPage() {
               objectFit="contain"
             />
           </div>
-          <h1 className="text-sm sm:text-lg grow text-center text-gray-500 select-none font-semibold">
-            تسجيل الدخول عن طريق جوجل
-          </h1>
         </div>
-        <div className="flex flex-col sm:flex-row justify-between gap-8 items-center mt-4 w-full">
-          {/* <button
-            type="submit"
-            className=" text-lg p-2  my-3  text-nowrap bg-five hover:bg-one  hover:scale-[101%] w-full "
-          >
-            تسجيل الدخول
-          </button> */}
-
-          <div className="w-full">
-            <Button path={'/'} style={' '} title={'إغلاق'} />
-            {/* <Link href={'/'}>
-              <button
-                type="submit"
-                className="text-lg p-2 my-3 rounded-[5px] text-nowrap bg-two hover:bg-one hover:scale-[101%] w-full "
-              >
-                إغلاق
-              </button>
-            </Link> */}
-          </div>
-        </div>
-        {/* <Link href={'/register'}>
-          <h1 className="mt-4 text-start text-sm sm:text-lg ml-2 text-nowrap">
-            ليس لديك حساب؟ قم بالتسجيل
-            <span className="text-one text-lg sm:text-xl hover:scale-105 mx-3">
-              هنا
-            </span>
-          </h1>
-        </Link> */}
       </form>
     </div>
   );

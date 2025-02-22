@@ -13,7 +13,7 @@ import dynamic from 'next/dynamic';
 
 // تحميل المكونات ديناميكيًا
 const CustomToast = dynamic(() => import('../../../components/CustomToast'));
-const LoadingPhoto = dynamic(() => import('../../../components/LoadingPhoto'));
+const LoadingPhoto = dynamic(() => import('../../../components/photos/LoadingPhoto'));
 const ImageSlider = dynamic(() => import('../../../components/imageSlider'));
 const EditItem = dynamic(() =>
   import('../../../components/RealEstate/RealEstateEditItem')

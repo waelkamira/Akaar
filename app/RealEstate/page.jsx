@@ -16,7 +16,7 @@ import RealEstateNavbar from '../../components/RealEstate/RealEstarteNavbar';
 import HeroSlider from '../../components/photos/HeroSlider';
 import { useRouter } from 'next/navigation';
 import { inputsContext } from '../../components/Context';
-import LoadingPhoto from '../../components/LoadingPhoto';
+import LoadingPhoto from '../../components/photos/LoadingPhoto';
 import RealEstateSmallCard from '../../components/RealEstate/RealEstateSmallCard';
 import RealEstateSideBar from '../../components/RealEstate/RealEstateSideBar';
 

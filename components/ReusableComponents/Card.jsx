@@ -2,7 +2,7 @@
 import Image from 'next/image';
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import LoadingPhoto from '../LoadingPhoto';
+import LoadingPhoto from '../photos/LoadingPhoto';
 
 export default function Card({ cardName, path, image, text, color, emoji }) {
   const router = useRouter();

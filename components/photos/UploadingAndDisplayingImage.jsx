@@ -2,7 +2,7 @@
 import { useContext, useState } from 'react';
 import Image from 'next/image';
 import { MdOutlineAddPhotoAlternate, MdClose } from 'react-icons/md'; // إضافة أيقونة الإغلاق
-import { inputsContext } from './Context';
+import { inputsContext } from '../Context';
 import LoadingPhoto from './LoadingPhoto'; // استيراد مكون LoadingPhoto
 import Link from 'next/link';
 

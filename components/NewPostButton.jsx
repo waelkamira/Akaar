@@ -5,7 +5,7 @@ import { RxCross2 } from 'react-icons/rx';
 import PostForm from './RealEstate/RealEstatePostForm';
 import { useSession } from 'next-auth/react';
 import Button from './Button';
-import UploadingAndDisplayingImage from './UploadingAndDisplayingImage';
+import UploadingAndDisplayingImage from './photos/UploadingAndDisplayingImage';
 
 export default function NewPostButton() {
   const [isVisible, setIsVisible] = useState(false);

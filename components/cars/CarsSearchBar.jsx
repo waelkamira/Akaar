@@ -207,7 +207,7 @@
 'use client';
 import React, { useState, useEffect, useContext, useMemo } from 'react';
 import CitySelector from '../map/CitySelector';
-import SmallItem from '../SmallItem';
+import SmallItem from '../ReusableComponents/SmallItem';
 import { MdOutlinePriceCheck } from 'react-icons/md';
 import Button from '../Button';
 import { inputsContext } from '../Context';
@@ -216,7 +216,7 @@ import CarsBrandSelector from './CarsBrandSelector';
 import CarsUsedNewSelector from './CarsUsedNewSelector';
 import CarsNavbar from './CarsNavbar';
 import CarsSideBar from './CarsSideBar';
-import NavegationPages from '../NavegationPages';
+import NavegationPages from '../ReusableComponents/NavegationPages';
 
 export default function CarsSearchBar({ imgLink }) {
   const [pageNumber, setPageNumber] = useState(1);

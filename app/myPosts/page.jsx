@@ -1,6 +1,6 @@
 'use client';
 import { useSession } from 'next-auth/react';
-import SmallItem from '../../components/SmallItem';
+import SmallItem from '../../components/ReusableComponents/SmallItem';
 import React, { useContext, useEffect, useState } from 'react';
 import { IoMdClose } from 'react-icons/io';
 import toast from 'react-hot-toast';
@@ -9,12 +9,12 @@ import { MdKeyboardDoubleArrowRight } from 'react-icons/md';
 import { MdKeyboardDoubleArrowLeft } from 'react-icons/md';
 import Link from 'next/link';
 import { inputsContext } from '../../components/Context';
-import Loading from '../../components/Loading';
+import Loading from '../../components/ReusableComponents/Loading';
 import { useRouter } from 'next/navigation';
 import { MdEdit } from 'react-icons/md';
 import MiddleBarAndPhoto from '../../components/RealEstate/RealEstateSideBar';
 import Image from 'next/image';
-import NavegationPages from '../../components/NavegationPages';
+import NavegationPages from '../../components/ReusableComponents/NavegationPages';
 import MainNavbar from '../../components/navbars/MainNavbar';
 import Button from '../../components/Button';
 export default function MyPosts() {

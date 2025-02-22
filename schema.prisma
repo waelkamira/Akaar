@@ -11,16 +11,18 @@ generator client {
 
 // 🟢 جدول المستخدمين
 model User {
-  id         String    @id @default(uuid())
+  id         String   @id @default(uuid())
   name       String
-  email      String    @unique
-  image      String?
+  email      String   @unique
+  password   String?  // كلمة المرور (قد تكون اختيارية للمستخدمين الذين يسجلون عبر Google)
+  isAdmin    Boolean  @default(false) // لتحديد ما إذا كان المستخدم مسؤولًا
+  image      String?  // صورة المستخدم
+  googleId   String?  // لتخزين معرف Google للمستخدمين الذين يسجلون عبر Google OAuth
   
-  // لا توجد علاقة مع العقارات أو السيارات
-
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
+
 
 // 🟢 جدول العقارات
 model Property {
