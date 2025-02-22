@@ -1,7 +1,13 @@
 import { PrismaClient } from '@prisma/client';
 import { toInteger } from 'lodash';
+import { LRUCache } from 'lru-cache';
 
 const prisma = new PrismaClient();
+
+const cache = new LRUCache({
+  max: 100, // الحد الأقصى للعناصر المخزنة
+  ttl: 60 * 1000, // مدة التخزين 60 ثانية
+});
 
 export async function GET(req) {
   const url = new URL(req.url);
@@ -11,21 +17,35 @@ export async function GET(req) {
   const page = parseInt(searchParams.get('page')) || 1;
   const limit = parseInt(searchParams.get('limit')) || 5;
   const skip = (page - 1) * limit;
-  // console.log('properties');
+
+  // إنشاء مفتاح فريد للتخزين المؤقت بناءً على الصفحة والحد الأقصى
+  const cacheKey = `cars-page-${page}-limit-${limit}`;
+
+  // التحقق مما إذا كانت البيانات مخزنة مسبقًا
+  if (cache.has(cacheKey)) {
+    console.log('📌 إعادة البيانات من الكاش');
+    return new Response(JSON.stringify(cache.get(cacheKey)), {
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+
   try {
+    console.log('🗄️ جلب البيانات من قاعدة البيانات...');
     // قراءة البيانات من جدول Car
-    const properties = await prisma?.car?.findMany({
+    const properties = await prisma.car.findMany({
       skip,
       take: limit,
       orderBy: { createdAt: 'desc' },
     });
-    // console.log('properties', properties);
+
+    // تخزين البيانات في الكاش
+    cache.set(cacheKey, properties);
 
     return new Response(JSON.stringify(properties), {
       headers: { 'Content-Type': 'application/json' },
     });
   } catch (error) {
-    console.error('Error fetching properties:', error);
+    console.error('❌ خطأ أثناء جلب البيانات:', error);
     return new Response(JSON.stringify({ error: 'Internal Server Error' }), {
       headers: { 'Content-Type': 'application/json' },
       status: 500,
@@ -36,7 +56,7 @@ export async function GET(req) {
 export async function POST(req) {
   try {
     const data = await req.json();
-    console.log('data', data);
+    // console.log('data', data);
 
     // إنشاء سجل جديد باستخدام Prisma
     const newCar = await prisma.car.create({

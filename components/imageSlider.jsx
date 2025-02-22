@@ -86,6 +86,7 @@ export default function ImageSlider({
                 src={image2}
                 layout="fill"
                 objectFit="contain"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 alt={'photo'}
               />
             )}
@@ -99,6 +100,7 @@ export default function ImageSlider({
                 src={image3}
                 layout="fill"
                 objectFit="contain"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 alt={'photo'}
               />
             )}
@@ -112,6 +114,7 @@ export default function ImageSlider({
                 src={image4}
                 layout="fill"
                 objectFit="contain"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 alt={'photo'}
               />
             )}
@@ -125,6 +128,7 @@ export default function ImageSlider({
                 src={image5}
                 layout="fill"
                 objectFit="contain"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 alt={'photo'}
               />
             )}
@@ -145,6 +149,7 @@ export default function ImageSlider({
                 src={image1}
                 layout="fill"
                 objectFit="contain"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 alt={'photo'}
               />
             )}
@@ -159,6 +164,7 @@ export default function ImageSlider({
                 src={image2}
                 layout="fill"
                 objectFit="contain"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 alt={'photo'}
               />
             )}
@@ -173,6 +179,7 @@ export default function ImageSlider({
                 src={image3}
                 layout="fill"
                 objectFit="contain"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 alt={'photo'}
               />
             )}
@@ -187,6 +194,7 @@ export default function ImageSlider({
                 src={image4}
                 layout="fill"
                 objectFit="contain"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 alt={'photo'}
               />
             )}
@@ -201,6 +209,7 @@ export default function ImageSlider({
                 src={image5}
                 layout="fill"
                 objectFit="contain"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 alt={'photo'}
               />
             )}

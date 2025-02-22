@@ -77,7 +77,7 @@ const PostGallery = ({ post }) => {
     // عرض الصورة الوحيدة مباشرةً دون استخدام السلايدر
     return (
       <div
-        className={`relative h-64 
+        className={`relative h-64
           ${
             path.includes('myPosts') || path.includes('favoritePosts')
               ? ''
@@ -113,7 +113,7 @@ const PostGallery = ({ post }) => {
           {images.map((image, index) => (
             <div
               key={index}
-              className={`relative h-64 
+              className={`relative h-64
           ${
             path.includes('myPosts') || path.includes('favoritePosts')
               ? ''
@@ -125,6 +125,7 @@ const PostGallery = ({ post }) => {
                 src={image}
                 layout="fill"
                 objectFit="cover"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 alt={`${post.propertyName} - Image ${index + 1}`}
               />
             </div>

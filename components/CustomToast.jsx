@@ -26,14 +26,9 @@ export default function CustomToast({
                 objectPosition="top"
               />
             </div>
-            <div className="absolute inset-0 bg-gradient-radial from-white/30 via-transparent to-two z-10"></div>
-            <div className="ml-3 flex-1">
-              <h1 className="text-xl"></h1>
-            </div>
           </div>
         </div>
       </div>
-      {/* <hr className="w-full h-[1px]  rounded-[5px] border-hidden select-none my-1" /> */}
 
       <div>
         <div>
