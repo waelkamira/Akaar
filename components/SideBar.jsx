@@ -6,8 +6,8 @@ import Button from './Button';
 import Image from 'next/image';
 import CurrentUser from '../components/CurrentUser';
 import NewPostButton from './NewPostButton';
-import Loading from './Loading';
-import LoadingPhoto from './LoadingPhoto';
+import Loading from './ReusableComponents/Loading';
+import LoadingPhoto from './photos/LoadingPhoto';
 
 export default function SideBar() {
   const router = useRouter();

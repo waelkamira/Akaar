@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import LoadingPhoto from './LoadingPhoto';
+import LoadingPhoto from '../photos/LoadingPhoto';
 import Image from 'next/image';
 import { formatDistanceToNow } from 'date-fns'; // استيراد الدالة
 import Link from 'next/link';
@@ -8,8 +8,9 @@ import { usePathname } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 
 export default function UserNameAndPhoto({ post }) {
+  const session = useSession();
   const path = usePathname();
-
+  console.log(session?.data?.user?.image);
   //? هذه الدالة للتأكد إذا كان التاريخ المدخل صحيحا أو لا
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -33,10 +34,15 @@ export default function UserNameAndPhoto({ post }) {
             } overflow-hidden rounded`}
           >
             {/* تحقق من عدم وجود صورة */}
-            {!post?.userImage && <LoadingPhoto />}
+            {session?.data?.user?.image && !post?.userImage && <LoadingPhoto />}
             {/* تحقق من وجود صورة */}
-            {post?.userImage && (
-              <Image priority src={post?.userImage} fill alt={post?.userName} />
+            {(session?.data?.user?.image || post?.userImage) && (
+              <Image
+                priority
+                src={session?.data?.user?.image || post?.userImage}
+                fill
+                alt={session?.data?.user?.name || post?.userName}
+              />
             )}
           </div>
           <div className="flex flex-col justify-center">
@@ -47,18 +53,20 @@ export default function UserNameAndPhoto({ post }) {
                   : 'text-[11px] sm:text-[15px]'
               }  text-eight select-none`}
             >
-              {post?.userName}
+              {session?.data?.user?.name || post?.userName}
             </h6>
-            <h1
-              className={`${
-                path.includes('myPosts') || path.includes('favoritePosts')
-                  ? 'text-[8px]'
-                  : 'text-[8px] sm:text-[12px]'
-              }   text-gray-400 select-none text-end`}
-              dir="ltr"
-            >
-              {formatDate(post?.createdAt)}
-            </h1>
+            {post && (
+              <h1
+                className={`${
+                  path.includes('myPosts') || path.includes('favoritePosts')
+                    ? 'text-[8px]'
+                    : 'text-[8px] sm:text-[12px]'
+                }   text-gray-400 select-none text-end`}
+                dir="ltr"
+              >
+                {formatDate(post?.createdAt) || ''}
+              </h1>
+            )}
           </div>
         </Link>
       </div>

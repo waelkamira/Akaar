@@ -1,9 +1,10 @@
 'use client';
 import Image from 'next/image';
 import React, { useContext } from 'react';
-import LoadingPhoto from '../LoadingPhoto';
+import LoadingPhoto from '../photos/LoadingPhoto';
 import { inputsContext } from '../Context';
 import { useRouter } from 'next/navigation';
+import FormatDate from '../ReusableComponents/FormatDate';
 
 export default function CarsSmallCard({ item }) {
   const { dispatch } = useContext(inputsContext);
@@ -35,16 +36,17 @@ export default function CarsSmallCard({ item }) {
       {/* <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div> */}
 
       {/* التفاصيل */}
-      <div className="flex justify-evenly gap-2 items-center w-full mt-2 text-sm sm:text-md p-3 bg-white ">
-        <h1 className="font-semibold text-gray-800">
-          {item?.propertyCategory}
-        </h1>
-        <h1 className="flex justify-center items-center font-bold text-gray-900">
+      <div className="flex justify-evenly gap-2 items-center w-full mt-2 text-sm sm:text-md p-3 bg-white text-black">
+        <h1>{item?.propertyCategory}</h1>
+        <h1 className="flex justify-center items-center">
           {item?.propertyPrice}
           <span className="text-one mx-1 select-none">$</span>
         </h1>
-        <h1 className="flex justify-center items-center text-gray-700">
+        <h1 className="flex justify-center items-center">
           {item?.propertyCity}
+        </h1>
+        <h1 className="flex justify-center items-center">
+          {<FormatDate dateString={item?.createdAt} />}
         </h1>
       </div>
 

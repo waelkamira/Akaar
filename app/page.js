@@ -1,27 +1,16 @@
 'use client';
 import Footer from '../components/Footer';
-import SideBar from '../components/SideBar';
 import MainNavbar from '../components/navbars/MainNavbar';
 import { MdKeyboardDoubleArrowDown } from 'react-icons/md';
 import { useContext, useEffect, useState } from 'react';
 import { inputsContext } from '../components/Context';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
-import LoadingPhoto from '../components/LoadingPhoto';
-import Loading from '../components/Loading';
+import Loading from '../components/ReusableComponents/Loading';
 import HeroSlider from '../components/photos/HeroSlider';
 import CarsSmallCard from '../components/Cars/CarsSmallCard';
 import RealEstateSmallCard from '../components/RealEstate/RealEstateSmallCard';
 import { motion } from 'framer-motion';
-import ColoredCards from '../components/reuseableComponents/ColoredCards';
-import {
-  FaBullseye,
-  FaClock,
-  FaComment,
-  FaCommentAlt,
-  FaHome,
-  FaLock,
-} from 'react-icons/fa';
+import ColoredCards from '../components/ReusableComponents/ColoredCards';
 
 export default function Home() {
   const [cars, setCars] = useState();
@@ -69,10 +58,10 @@ export default function Home() {
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="flex justify-center items-center w-full h-full gap-8 border py-8 my-8"
+        className="flex justify-center items-center w-full h-full gap-8 py-8 my-8"
       >
         <div
-          className="hidden lg:flex justify-center items-center w-1/8 mr-10 hover:scale-105 transition-transform duration-300 ease-in-out cursor-pointer"
+          className="hidden xl:flex justify-center items-center w-1/8 mr-10 hover:scale-105 transition-transform duration-300 ease-in-out cursor-pointer"
           onClick={() => router.push('/RealEstate')}
         >
           <ColoredCards number="1" text="عقارات" />
@@ -95,25 +84,24 @@ export default function Home() {
               </motion.div>
             ))}
         </div>
-
-        <button
-          onClick={() => router.push('/RealEstate/buy')}
-          className="lg:hidden flex items-center justify-center w-auto px-6 py-1 sm:py-3 bg-one text-white font-bold rounded-full hover:bg-two transition-colors duration-300 ease-in-out mb-8"
-        >
-          المزيد من العقارات{' '}
-          <MdKeyboardDoubleArrowDown className="ml-2 text-xl" />
-        </button>
       </motion.div>
+      <button
+        onClick={() => router.push('/RealEstate/buy')}
+        className="xl:hidden flex items-center justify-center w-auto px-6 py-1 sm:py-3 bg-one text-white font-bold rounded-full hover:bg-two transition-colors duration-300 ease-in-out mb-8"
+      >
+        المزيد من العقارات{' '}
+        <MdKeyboardDoubleArrowDown className="ml-2 text-xl" />
+      </button>
 
       {/* Cars Section */}
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="flex justify-center items-center w-full h-full gap-8 border py-8 my-8"
+        className="flex justify-center items-center w-full h-full gap-8 py-8 my-8"
       >
         <div
-          className="hidden lg:flex justify-center items-center w-1/8 mr-10 hover:scale-105 transition-transform duration-300 ease-in-out cursor-pointer"
+          className="hidden xl:flex justify-center items-center w-1/8 mr-10 hover:scale-105 transition-transform duration-300 ease-in-out cursor-pointer"
           onClick={() => router.push('/Cars')}
         >
           <ColoredCards number="2" text="سيارات" />
@@ -139,11 +127,12 @@ export default function Home() {
       </motion.div>
       <button
         onClick={() => router.push('/Cars/buy')}
-        className="lg:hidden flex items-center justify-center w-auto px-6 py-1 sm:py-3 bg-one text-white font-bold rounded-full hover:bg-two transition-colors duration-300 ease-in-out mb-8"
+        className="xl:hidden flex items-center justify-center w-auto px-6 py-1 sm:py-3 bg-one text-white font-bold rounded-full hover:bg-two transition-colors duration-300 ease-in-out mb-8"
       >
         المزيد من السيارات{' '}
         <MdKeyboardDoubleArrowDown className="ml-2 text-xl" />
       </button>
+
       <Footer />
       <h1 className="w-full text-sm select-none text-center pt-8 pb-4 border uppercase text-gray-600">
         Copyright © 2025 tobirni web site. All Rights Reserved

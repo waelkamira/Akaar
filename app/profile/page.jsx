@@ -10,9 +10,10 @@ import Link from 'next/link';
 import CustomToast from '../../components/CustomToast';
 import BackButton from '../../components/BackButton';
 import MiddleBarAndPhoto from '../../components/RealEstate/RealEstateSideBar';
-import Loading from '../../components/Loading';
-import LoadingPhoto from '../../components/LoadingPhoto';
+import Loading from '../../components/ReusableComponents/Loading';
+import LoadingPhoto from '../../components/photos/LoadingPhoto';
 import MainNavbar from '../../components/navbars/MainNavbar';
+import LoginButton from '../../components/Buttons/LoginButton';
 export default function Profile() {
   const session = useSession();
   const [isOpen, setIsOpen] = useState(false);
@@ -22,9 +23,14 @@ export default function Profile() {
   // console.log('user', user);
 
   useEffect(() => {
+    let newName = null;
     if (typeof window !== 'undefined') {
-      const newName = JSON.parse(localStorage.getItem('CurrentUser'));
-      setNewUserName(newName?.name);
+      try {
+        const storedUser = localStorage.getItem('CurrentUser');
+        newName = storedUser ? JSON.parse(storedUser) : null;
+      } catch (error) {
+        console.error('Error parsing CurrentUser from localStorage:', error);
+      }
     }
     // setNewImage(profile_image?.image);
     editProfileImageAndUserName();
@@ -52,7 +58,7 @@ export default function Profile() {
         dispatch({ type: 'PROFILE_IMAGE', payload: profile_image?.image });
         if (typeof window !== 'undefined') {
           const newName = JSON.parse(localStorage.getItem('CurrentUser'));
-          setNewUserName(newName?.name);
+          setNewUserName(newName?.name || '');
         }
       } else {
         toast.custom((t) => (
@@ -66,21 +72,11 @@ export default function Profile() {
     <div className="flex flex-col items-center justify-center w-full">
       <MainNavbar />
 
-      {session?.status === 'unauthenticated' && (
-        <div className="p-4 bg-fm text-sm  md:text-lgdlg:text-xl our  m-2 md:m-8 border border-one text-center h-screen">
-          <h1 className="text-lg m text-md xl:text-xldlg:text-2xl p-2 my-8 ">
-            يجب عليك تسجيل الدخول أولا لرؤية هذا البروفايل
-          </h1>
-          <div className="flex flex-col justify-between items-center gap-4 w-full">
-            <Button title={'تسجيل الدخول'} style={' '} path="/login" />
+      <LoginButton />
 
-            <BackButton />
-          </div>
-        </div>
-      )}
       {session?.status === 'authenticated' && (
         <div className="flex flex-col w-full xl:w-[90%] 2xl:w-[70%] h-full px-2 overflow-y-auto z-10 mb-16 sm:px-16 mt-8">
-          <div className="flex flex-col items-start gap-4 justify-start w-full h-full overflow-hidden rounded-[5px] border border-one xl:mt-4">
+          <div className="flex flex-col items-start gap-4 justify-start w-full h-full overflow-hidden rounded-[5px] border xl:mt-4">
             <div className="flex justify-center items-center w-full bg-two py-2">
               {' '}
               <div className="relative min-h-64 w-64 rounded-full overflow-hidden bg-two">

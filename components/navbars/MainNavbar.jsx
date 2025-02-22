@@ -19,8 +19,8 @@ import { ImSearch } from 'react-icons/im';
 import Button from '../Button';
 import { TfiMenuAlt } from 'react-icons/tfi';
 import SideBarMenu from '../SideBarMenu';
-import NavegationPages from '../NavegationPages';
-import SmallItem from '../SmallItem';
+import NavegationPages from '../ReusableComponents/NavegationPages';
+import SmallItem from '../ReusableComponents/SmallItem';
 import ClockWidget from '../ClockWidget';
 import Link from 'next/link';
 
@@ -88,6 +88,15 @@ export default function MainNavbar() {
               <FaHome className="text-xl select-none text-one" />
               <li className=" text-xl select-none">الرئيسية</li>
             </div>
+            <div
+              className="flex items-center justify-center gap-2 border-one hover:border-t-4 shadow-one hover:shadow-lg rounded-[5px]  hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-14 transition-all duration-300"
+              onClick={() => router.push('/myPosts')}
+            >
+              <FaCanadianMapleLeaf className="text-xl select-none text-one" />
+              <li className=" text-md xl:text-xl select-none text-nowrap">
+                متجري
+              </li>
+            </div>
             <div className="flex items-center justify-center gap-2 border-one hover:border-t-4 shadow-one hover:shadow-lg rounded-[5px]  hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-14 transition-all duration-300">
               {session?.status === 'unauthenticated' && (
                 <div
@@ -109,15 +118,6 @@ export default function MainNavbar() {
               )}
             </div>
 
-            <div
-              className="flex items-center justify-center gap-2 border-one hover:border-t-4 shadow-one hover:shadow-lg rounded-[5px]  hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-14 transition-all duration-300"
-              onClick={() => router.push('/myPosts')}
-            >
-              <FaCanadianMapleLeaf className="text-xl select-none text-one" />
-              <li className=" text-md xl:text-xl select-none text-nowrap">
-                متجري
-              </li>
-            </div>
             {/* <div
             className="flex items-center justify-center gap-2 border-one hover:border-t-4 shadow-one hover:shadow-lg rounded-[5px]  hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-14 transition-all duration-300"
             onClick={() => router.push('/favoritePosts')}

@@ -38,49 +38,6 @@ export default function RegisterPage() {
     }
   }, [router, session?.data?.user?.email]);
 
-  // async function onSubmit() {
-  //   // console.log('getValues', getValues());
-  //   if (getValues()?.name === '') {
-  //     setError('name', {
-  //       type: 'custom',
-  //       message: 'اسم المستخدم مطلوب',
-  //     });
-  //     return;
-  //   } else if (getValues()?.email === '') {
-  //     setError('email', {
-  //       type: 'custom',
-  //       message: 'عنوان البريد الإلكتروني مطلوب',
-  //     });
-  //     return;
-  //   } else if (getValues()?.password?.length < 5) {
-  //     setError('password', {
-  //       type: 'custom',
-  //       message:
-  //         'طول كلمة السر يجب أن يكون 5 أحرف (أو 5 أرقام وأحرف) على الأقل',
-  //     });
-  //     return;
-  //   }
-
-  //   const response = await fetch('/api/register', {
-  //     method: 'POST',
-  //     headers: { 'Content-Type': 'application/json' },
-  //     body: JSON.stringify(getValues()),
-  //   });
-
-  //   if (response.ok) {
-  //     router.push('/login');
-  //     toast.custom((t) => (
-  //       <CustomToast t={t} message={'🌿 تم التسجيل بنجاح 🌿'} />
-  //     ));
-  //   } else {
-  //     setError('email', {
-  //       type: 'custom',
-  //       message:
-  //         'هذا الإيميل موجود بالفعل! قم بتسجيل الدخول أو استخدم عنوان بريد الكتروني أخر',
-  //     });
-  //   }
-  // }
-
   async function onSubmit() {
     if (getValues()?.name === '') {
       setError('name', {
@@ -114,7 +71,6 @@ export default function RegisterPage() {
       // تخزين بيانات تسجيل الدخول في LocalStorage
       localStorage.setItem('username', values?.name);
       localStorage.setItem('email', values?.email);
-      localStorage.setItem('password', values?.password);
 
       router.push('/login');
       toast.custom((t) => (

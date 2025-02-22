@@ -2,8 +2,8 @@
 import React, { useContext, useEffect, useState } from 'react';
 import CitySelector from '../map/CitySelector';
 import PropertyTypeSelector from '../PropertyTypeSelector';
-import SmallItem from '../SmallItem';
-import Loading from '../Loading';
+import SmallItem from '../ReusableComponents/SmallItem';
+import Loading from '../ReusableComponents/Loading';
 import {
   MdKeyboardDoubleArrowRight,
   MdKeyboardDoubleArrowLeft,
@@ -20,7 +20,7 @@ import { LuArrowDownNarrowWide } from 'react-icons/lu';
 import { LuArrowUpNarrowWide } from 'react-icons/lu';
 import Image from 'next/image';
 import MiddleBarAndPhoto from './RealEstateSideBar';
-import NavegationPages from '../NavegationPages';
+import NavegationPages from '../ReusableComponents/NavegationPages';
 import RealEstarteNavbar from '../RealEstate/RealEstarteNavbar';
 import RealEstateSideBar from './RealEstateSideBar';
 

@@ -10,7 +10,7 @@ import { GiCarKey } from 'react-icons/gi';
 import CarsNavbar from '../../components/Cars/CarsNavbar';
 import { MdCarRental } from 'react-icons/md';
 import { MdOutlineSell } from 'react-icons/md';
-import LoadingPhoto from '../../components/LoadingPhoto';
+import LoadingPhoto from '../../components/photos/LoadingPhoto';
 import { useRouter } from 'next/navigation';
 import { inputsContext } from '../../components/Context';
 import Button from '../../components/Button';

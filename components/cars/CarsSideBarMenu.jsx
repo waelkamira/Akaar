@@ -5,7 +5,7 @@ import CurrentUser from '../CurrentUser';
 import Image from 'next/image';
 import Link from 'next/link';
 import Button from '../Button';
-import LoadingPhoto from '../LoadingPhoto';
+import LoadingPhoto from '../photos/LoadingPhoto';
 
 export default function CarsSideBarMenu({ setIsOpen }) {
   const session = useSession();

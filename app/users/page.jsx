@@ -13,8 +13,8 @@ import {
 import Link from 'next/link';
 import SideBarMenu from '../../components/SideBarMenu';
 import { TfiMenuAlt } from 'react-icons/tfi';
-import Loading from '../../components/Loading';
-import NavegationPages from '../../components/NavegationPages';
+import Loading from '../../components/ReusableComponents/Loading';
+import NavegationPages from '../../components/ReusableComponents/NavegationPages';
 
 export default function Users() {
   const [isOpen, setIsOpen] = useState(false);

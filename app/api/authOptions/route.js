@@ -1,13 +1,9 @@
-import { createClient } from '@supabase/supabase-js';
+import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
 
-// إعداد Supabase
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.NEXT_PUBLIC_SUPABASE_API
-);
+const prisma = new PrismaClient();
 
 export const authOptions = {
   secret: process.env.NEXT_PUBLIC_SECRET,
@@ -33,21 +29,19 @@ export const authOptions = {
         },
       },
       async authorize(credentials) {
-        const email = credentials?.email;
-        const password = credentials?.password;
+        const { email, password } = credentials;
 
-        const { data: user, error } = await supabase
-          .from('User')
-          .select('*')
-          .eq('email', email)
-          .single();
+        // البحث عن المستخدم بالبريد الإلكتروني
+        const user = await prisma.user.findUnique({
+          where: { email },
+        });
 
-        if (error || !user) {
+        if (!user) {
           throw new Error('Email not found');
         }
 
+        // التحقق من كلمة المرور
         const checkPassword = await bcrypt.compare(password, user.password);
-
         if (!checkPassword) {
           throw new Error('Incorrect password');
         }
@@ -63,40 +57,29 @@ export const authOptions = {
     },
     async signIn({ account, profile }) {
       if (account.provider === 'google') {
-        const { data: existingUser, error: existingUserError } = await supabase
-          .from('User')
-          .select('*')
-          .eq('email', profile.email)
-          .single();
-
-        if (existingUserError && existingUserError.code !== 'PGRST116') {
-          throw new Error(existingUserError.message);
-        }
+        const existingUser = await prisma.user.findUnique({
+          where: { email: profile.email },
+        });
 
         if (existingUser) {
+          // تحديث معرف Google إذا لم يكن مسجلاً مسبقًا
           if (!existingUser.googleId) {
-            const { error } = await supabase
-              .from('User')
-              .update({ googleId: profile.sub })
-              .eq('email', profile.email);
-
-            if (error) {
-              throw new Error(error.message);
-            }
+            await prisma.user.update({
+              where: { email: profile.email },
+              data: { googleId: profile.sub },
+            });
           }
         } else {
-          const { error } = await supabase.from('User').insert({
-            email: profile.email,
-            name: profile.name,
-            image: profile.picture,
-            googleId: profile.sub,
+          // إنشاء مستخدم جديد عند تسجيل الدخول لأول مرة باستخدام Google
+          await prisma.user.create({
+            data: {
+              email: profile.email,
+              name: profile.name,
+              image: profile.picture,
+              googleId: profile.sub,
+            },
           });
-
-          if (error) {
-            throw new Error(error.message);
-          }
         }
-
         return true;
       }
       return true;
@@ -111,113 +94,7 @@ export const authOptions = {
       return url.startsWith(baseUrl) ? url : baseUrl;
     },
   },
-  session: {
-    strategy: 'jwt',
-  },
+  session: { strategy: 'jwt' },
   debug: process.env.NODE_ENV === 'development',
   pages: { signIn: '/login' },
 };
-
-// import userPrisma from '../../../lib/UserPrismaClient';
-
-// import bcrypt from 'bcrypt';
-// import CredentialsProvider from 'next-auth/providers/credentials';
-// import GoogleProvider from 'next-auth/providers/google';
-
-// export const authOptions = {
-//   secret: process.env.NEXT_PUBLIC_SECRET,
-//   providers: [
-//     GoogleProvider({
-//       clientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
-//       clientSecret: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_SECRET,
-//       allowDangerousEmailAccountLinking: true,
-//     }),
-//     CredentialsProvider({
-//       name: 'credentials',
-//       credentials: {
-//         name: { label: 'Your name', type: 'text', placeholder: 'Your name' },
-//         email: {
-//           label: 'Your email',
-//           type: 'email',
-//           placeholder: 'Your email',
-//         },
-//         password: {
-//           label: 'Your password',
-//           type: 'password',
-//           placeholder: 'Your password',
-//         },
-//       },
-//       async authorize(credentials) {
-//         const email = credentials?.email;
-//         const password = credentials?.password;
-//         await userPrisma.$connect(); // التأكد من أن Prisma جاهزة
-//         const user = await userPrisma.user.findUnique({
-//           where: { email },
-//         });
-
-//         if (!user) {
-//           throw new Error('Email not found');
-//         }
-
-//         const checkPassword = await bcrypt.compare(password, user.password);
-
-//         if (!checkPassword) {
-//           throw new Error('Incorrect password');
-//         }
-
-//         return user;
-//       },
-//     }),
-//   ],
-//   callbacks: {
-//     async session({ session, token }) {
-//       session.user.id = token.sub;
-//       return session;
-//     },
-//     async signIn({ account, profile }) {
-//       await userPrisma.$connect(); // التأكد من أن Prisma جاهزة
-
-//       if (account.provider === 'google') {
-//         const existingUser = await userPrisma.user.findUnique({
-//           where: { email: profile.email },
-//         });
-
-//         if (existingUser) {
-//           await userPrisma.$connect(); // التأكد من أن Prisma جاهزة
-//           if (!existingUser.googleId) {
-//             await userPrisma.user.update({
-//               where: { email: profile.email },
-//               data: { googleId: profile.sub },
-//             });
-//           }
-//         } else {
-//           await userPrisma.user.create({
-//             data: {
-//               email: profile.email,
-//               name: profile.name,
-//               image: profile.picture,
-//               googleId: profile.sub,
-//             },
-//           });
-//         }
-
-//         return true;
-//       }
-//       return true;
-//     },
-//     async jwt({ token, account }) {
-//       if (account) {
-//         token.accessToken = account.access_token;
-//       }
-//       return token;
-//     },
-//     async redirect({ url, baseUrl }) {
-//       return url.startsWith(baseUrl) ? url : baseUrl;
-//     },
-//   },
-//   session: {
-//     strategy: 'jwt',
-//   },
-//   debug: process.env.NODE_ENV === 'development',
-//   pages: { signIn: '/login' },
-// };
