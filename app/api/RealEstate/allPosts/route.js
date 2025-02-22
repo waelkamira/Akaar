@@ -1,30 +1,49 @@
 import { PrismaClient } from '@prisma/client';
+import { LRUCache } from 'lru-cache';
 
 const prisma = new PrismaClient();
+
+// إعداد التخزين المؤقت باستخدام LRU Cache
+const cache = new LRUCache({
+  max: 100, // عدد العناصر القصوى في الكاش
+  ttl: 60 * 1000, // مدة التخزين المؤقت (60 ثانية)
+});
 
 export async function GET(req) {
   const url = new URL(req.url);
   const searchParams = url.searchParams;
 
-  // الحصول على قيم الصفحة والحد الأقصى
   const page = parseInt(searchParams.get('page')) || 1;
   const limit = parseInt(searchParams.get('limit')) || 5;
   const skip = (page - 1) * limit;
-  // console.log('properties');
+
+  // إنشاء مفتاح فريد للكاش بناءً على الصفحة والحد
+  const cacheKey = `properties-page-${page}-limit-${limit}`;
+
+  // التحقق مما إذا كانت البيانات موجودة في الكاش
+  if (cache.has(cacheKey)) {
+    console.log('📌 إعادة البيانات من الكاش');
+    return new Response(JSON.stringify(cache.get(cacheKey)), {
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+
   try {
-    // قراءة البيانات من جدول Property
+    console.log('🗄️ جلب البيانات من قاعدة البيانات...');
     const properties = await prisma.property.findMany({
       skip,
       take: limit,
       orderBy: { createdAt: 'desc' },
     });
-    // console.log('properties', properties);
+
+    // حفظ البيانات في الكاش
+    cache.set(cacheKey, properties);
 
     return new Response(JSON.stringify(properties), {
       headers: { 'Content-Type': 'application/json' },
     });
   } catch (error) {
-    console.error('Error fetching properties:', error);
+    console.error('❌ خطأ أثناء جلب البيانات:', error);
     return new Response(JSON.stringify({ error: 'Internal Server Error' }), {
       headers: { 'Content-Type': 'application/json' },
       status: 500,
@@ -35,7 +54,7 @@ export async function GET(req) {
 export async function POST(req) {
   try {
     const data = await req.json();
-    console.log('data', data);
+    // console.log('data', data);
 
     // تحويل propertyPrice إلى Int
     const propertyPriceValue = parseInt(data.propertyPrice, 10);

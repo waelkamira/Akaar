@@ -119,8 +119,8 @@ export async function GET(req) {
       },
     });
 
-    console.log('Applied Filters:', filters);
-    console.log('Properties found:', properties);
+    // console.log('Applied Filters:', filters);
+    // console.log('Properties found:', properties);
 
     return NextResponse.json({
       totalCount, // العدد الإجمالي للنتائج

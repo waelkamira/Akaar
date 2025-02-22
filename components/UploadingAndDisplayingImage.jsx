@@ -83,6 +83,7 @@ export default function ImageUploader({ images = [] }) {
                 alt="الصورة الرئيسية"
                 layout="fill"
                 objectFit="cover"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 className="rounded-[5px]"
               />
             </Link>
@@ -130,6 +131,7 @@ export default function ImageUploader({ images = [] }) {
                   alt={`الصورة ${index + 2}`}
                   layout="fill"
                   objectFit="cover"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   className="rounded-[5px]"
                 />
                 {/* زر تغيير الصورة */}
