@@ -5,72 +5,65 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 export async function GET(req) {
+  // التحقق من الجلسة
+
+  // استخراج قيم الصفحة والحدود
+  const url = new URL(req.url);
+  const page = parseInt(url.searchParams.get('page')) || 1;
+  const limit = parseInt(url.searchParams.get('limit')) || 5;
+  const userId = url.searchParams.get('userId') || '';
+  console.log('userId', userId);
   try {
-    // التحقق من البريد الإلكتروني
-    const session = await getServerSession(authOptions);
-    const email = session?.user?.email;
-    if (!email) {
+    if (!userId) {
       return new Response(
         JSON.stringify({ message: 'يجب توفير البريد الإلكتروني' }),
         { status: 400 }
       );
     }
 
-    // استخراج قيم الصفحة والحدود
-    const url = new URL(req.url);
-    const page = parseInt(url.searchParams.get('page')) || 1;
-    const limit = parseInt(url.searchParams.get('limit')) || 5;
-    const skip = (page - 1) * limit;
-
-    // التأكد من أن prisma معرف وأن الجداول موجودة
-    if (!prisma?.property) {
-      throw new Error('جدول property غير موجود.');
+    if (isNaN(page) || isNaN(limit)) {
+      return new Response(
+        JSON.stringify({ error: 'قيم الصفحة أو الحدود غير صالحة' }),
+        { status: 400 }
+      );
     }
 
-    // جلب عدد الإعلانات من جدول property
-    const propertyCount = await prisma.property.count({
-      where: { createdBy: email },
+    const skip = (page - 1) * limit;
+
+    // التحقق من وجود Prisma
+    if (!prisma?.product) {
+      throw new Error('جدول product غير موجود.');
+    }
+
+    // جلب عدد الإعلانات
+    const productCount = await prisma.product.count({
+      where: { userId: userId },
     });
 
-    // جلب الإعلانات من جدول property
-    const propertyPosts = await prisma.property.findMany({
-      where: { createdBy: email },
+    // جلب الإعلانات
+    const productPosts = await prisma.product.findMany({
+      where: { userId: userId },
       skip,
       take: limit,
       orderBy: { createdAt: 'desc' },
     });
 
-    // التحقق مما إذا كان جدول car موجودًا قبل جلب البيانات
-    let carCount = 0;
-    let carPosts = [];
-
-    if (prisma?.car) {
-      carCount = await prisma.car.count({
-        where: { createdBy: email },
-      });
-
-      carPosts = await prisma.car.findMany({
-        where: { createdBy: email },
-        skip,
-        take: limit,
-        orderBy: { createdAt: 'desc' },
-      });
+    if (productPosts.length === 0) {
+      return new Response(
+        JSON.stringify({ message: 'لم يتم العثور على إعلانات' }),
+        { status: 404 }
+      );
     }
 
-    // دمج الإعلانات وترتيبها حسب التاريخ
-    const allPosts = [...propertyPosts, ...carPosts].sort(
-      (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-    );
-    // console.log('allPosts', allPosts);
     return new Response(
       JSON.stringify({
-        count: propertyCount + carCount,
-        posts: allPosts,
+        count: productCount,
+        posts: productPosts,
       }),
       { status: 200 }
     );
   } catch (error) {
-    console.error('Error fetching user posts data:', error.message);
+    console.error('Error details:', error);
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
     });
@@ -92,11 +85,11 @@ export async function DELETE(req) {
 
   try {
     // تحقق إذا كانت الإعلان موجودة
-    const property = await prisma.property.findFirst({
-      where: { id, createdBy: email },
+    const product = await prisma.product.findFirst({
+      where: { id, userId: email },
     });
 
-    if (!property) {
+    if (!product) {
       return new Response(
         JSON.stringify({
           error: 'لم يتم العثور على الإعلان أو لا تملك صلاحية حذف هذه الإعلان',
@@ -106,13 +99,13 @@ export async function DELETE(req) {
     }
 
     // حذف الإعلان
-    await prisma.property.delete({ where: { id } });
+    await prisma.product.delete({ where: { id } });
 
     return new Response(JSON.stringify({ message: 'تم الحذف بنجاح ✔' }), {
       status: 200,
     });
   } catch (error) {
-    console.error('Error deleting property:', error);
+    console.error('Error deleting product:', error);
     return new Response(JSON.stringify({ error: 'Internal Server Error' }), {
       status: 500,
     });

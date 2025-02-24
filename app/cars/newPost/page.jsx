@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import CarsPostForm from '../../../components/Cars/CarsPostForm';
 import { useSession } from 'next-auth/react';
 import Button from '../../../components/Button';
-import UploadingAndDisplayingImage from '../../../components/UploadingAndDisplayingImage';
+import UploadingAndDisplayingImage from '../../../components/photos/UploadingAndDisplayingImage';
 import CarsSideBar from '../../../components/Cars/CarsSideBar';
 import CarsNavbar from '../../../components/Cars/CarsNavbar';
 export default function NewCarPost() {

@@ -1,12 +1,12 @@
 'use client';
 import React, { useContext, useEffect, useState } from 'react';
 import Select from 'react-select';
-import { inputsContext } from './Context.jsx';
+import { inputsContext } from '../Context.jsx';
 import { MdOutlineBedroomParent } from 'react-icons/md';
 import { usePathname } from 'next/navigation.js';
 
-export default function PropertyRoomsNumberSelector() {
-  const { dispatch, data } = useContext(inputsContext);
+export default function PropertyRoomsNumberSelector({ check }) {
+  const { dispatch } = useContext(inputsContext);
   const [propertyRoomsNumber, setPropertyRoomsNumber] = useState('');
   const path = usePathname();
 
@@ -56,15 +56,12 @@ export default function PropertyRoomsNumberSelector() {
             }`}
           >
             <span className="text-one text-lg xl:text-2xl ml-2">
-              <MdOutlineBedroomParent />
+              {!propertyRoomsNumber && check ? '❌' : <MdOutlineBedroomParent />}
             </span>
             عدد الغرف:
           </h1>
         </div>
         <Select
-          isDisabled={
-            !['بيت', 'شقة', 'فيلا'].includes(data?.propertyType?.value)
-          }
           defaultValue={propertyRoomsNumber}
           onChange={setPropertyRoomsNumber}
           placeholder="1 + 1"

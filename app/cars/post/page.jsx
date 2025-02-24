@@ -20,11 +20,11 @@ export default function Page() {
     }
     if (typeof window !== 'undefined') {
       const id = JSON.parse(localStorage.getItem('postId'));
-      console.log('id', id);
+      // console.log('id', id);
       if (id) fetchPost(id);
     }
   }, [postId]);
-  // console.log('post', post);
+  console.log('post', post);
 
   async function fetchPost(id) {
     const response = await fetch(`/api/Cars/showPostById`, {

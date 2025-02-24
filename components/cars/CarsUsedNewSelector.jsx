@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation.js';
 import { MdOutlineBedroomParent } from 'react-icons/md';
 import { HiMiniNewspaper } from 'react-icons/hi2';
 
-export default function CarsUsedNewSelector() {
+export default function CarsUsedNewSelector({ check }) {
   const { dispatch } = useContext(inputsContext);
   const [category, setCategory] = useState('');
   const path = usePathname();
@@ -94,7 +94,7 @@ export default function CarsUsedNewSelector() {
             }`}
           >
             <span className="text-one text-lg xl:text-2xl ml-2">
-              <HiMiniNewspaper />
+              {!category && check ? '❌' : <HiMiniNewspaper />}
             </span>
             الحالة جديدة/مستعملة:
           </h1>

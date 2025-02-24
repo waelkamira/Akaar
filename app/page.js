@@ -11,14 +11,19 @@ import CarsSmallCard from '../components/Cars/CarsSmallCard';
 import RealEstateSmallCard from '../components/RealEstate/RealEstateSmallCard';
 import { motion } from 'framer-motion';
 import ColoredCards from '../components/ReusableComponents/ColoredCards';
+import { useSession } from 'next-auth/react';
 
 export default function Home() {
   const [cars, setCars] = useState();
   const [realEstate, setRealEstate] = useState();
   const router = useRouter();
   const { dispatch } = useContext(inputsContext);
+  const session = useSession();
 
   useEffect(() => {
+    if (session?.status === 'unauthenticated') {
+      localStorage.clear();
+    }
     fetchCarsAds();
     fetchRealEstateAds();
   }, []);

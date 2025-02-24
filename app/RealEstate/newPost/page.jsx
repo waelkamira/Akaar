@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import RealEstatePostForm from '../../../components/RealEstate/RealEstatePostForm';
 import { useSession } from 'next-auth/react';
 import Button from '../../../components/Button';
-import UploadingAndDisplayingImage from '../../../components/UploadingAndDisplayingImage';
+import UploadingAndDisplayingImage from '../../../components/photos/UploadingAndDisplayingImage';
 import MiddleBarAndPhoto from '../../../components/RealEstate/RealEstateSideBar';
 import RealEstateNavbar from '../../../components/RealEstate/RealEstarteNavbar';
 

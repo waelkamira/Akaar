@@ -74,9 +74,9 @@ export const authOptions = {
           await prisma.user.create({
             data: {
               email: profile.email,
-              name: profile.name,
-              image: profile.picture,
+              userImage: profile.picture,
               googleId: profile.sub,
+              username: profile.name,
             },
           });
         }

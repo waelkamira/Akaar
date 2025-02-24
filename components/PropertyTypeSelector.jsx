@@ -5,7 +5,7 @@ import { inputsContext } from './Context.jsx';
 import { VscUngroupByRefType } from 'react-icons/vsc';
 import { usePathname } from 'next/navigation.js';
 
-export default function PropertyTypeSelector() {
+export default function PropertyTypeSelector({check}) {
   const { dispatch } = useContext(inputsContext);
   const [propertyType, setpropertyType] = useState('');
   const path = usePathname();
@@ -46,13 +46,9 @@ export default function PropertyTypeSelector() {
     <div className="flex flex-col w-full justify-start items-center ">
       <div className="w-full">
         <div className="flex items-center gap-2 w-full justify-start my-2">
-          <h1
-            className={`flex text-right text-md select-none text-nowrap ${
-              path.includes('newPost') ? '' : ''
-            }`}
-          >
+          <h1 className={`flex text-right text-md select-none text-nowrap `}>
             <span className="text-one text-lg xl:text-2xl ml-2">
-              <VscUngroupByRefType />
+              {!propertyType && check ? '❌' : <VscUngroupByRefType />}
             </span>
             نوع العقار:
           </h1>

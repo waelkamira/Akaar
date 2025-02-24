@@ -1,14 +1,15 @@
 import { PrismaClient } from '@prisma/client';
-import { toInteger } from 'lodash';
 import { LRUCache } from 'lru-cache';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '../../authOptions/route';
 
 const prisma = new PrismaClient();
-
 const cache = new LRUCache({
   max: 100, // الحد الأقصى للعناصر المخزنة
   ttl: 60 * 1000, // مدة التخزين 60 ثانية
 });
 
+// GET: جلب السيارات مع دعم التخزين المؤقت
 export async function GET(req) {
   const url = new URL(req.url);
   const searchParams = url.searchParams;
@@ -19,7 +20,7 @@ export async function GET(req) {
   const skip = (page - 1) * limit;
 
   // إنشاء مفتاح فريد للتخزين المؤقت بناءً على الصفحة والحد الأقصى
-  const cacheKey = `cars-page-${page}-limit-${limit}`;
+  const cacheKey = `products-page-${page}-limit-${limit}`;
 
   // التحقق مما إذا كانت البيانات مخزنة مسبقًا
   if (cache.has(cacheKey)) {
@@ -31,17 +32,16 @@ export async function GET(req) {
 
   try {
     console.log('🗄️ جلب البيانات من قاعدة البيانات...');
-    // قراءة البيانات من جدول Car
-    const properties = await prisma.car.findMany({
+    const products = await prisma.product.findMany({
       skip,
       take: limit,
       orderBy: { createdAt: 'desc' },
     });
 
     // تخزين البيانات في الكاش
-    cache.set(cacheKey, properties);
+    cache.set(cacheKey, products);
 
-    return new Response(JSON.stringify(properties), {
+    return new Response(JSON.stringify(products), {
       headers: { 'Content-Type': 'application/json' },
     });
   } catch (error) {
@@ -53,58 +53,94 @@ export async function GET(req) {
   }
 }
 
+// POST: إنشاء سيارة جديدة
 export async function POST(req) {
+  const session = await getServerSession(authOptions);
+  const user = session?.user;
+
+  // التحقق من وجود جلسة مستخدم
+  if (!user) {
+    return new Response(
+      JSON.stringify({ error: 'يجب تسجيل الدخول لإنشاء منتج' }),
+      { status: 401 }
+    );
+  }
+
   try {
     const data = await req.json();
-    // console.log('data', data);
+    console.log('data', data);
+
+    // التحقق من صحة البيانات المطلوبة
+    if (
+      !data?.title ||
+      // !data?.categoryId ||
+      // !data?.cityId ||
+      !data?.basePrice ||
+      !data?.description ||
+      !data?.images ||
+      data?.images.length === 0
+    ) {
+      return new Response(
+        JSON.stringify({ error: 'يرجى ملء جميع الحقول المطلوبة!' }),
+        { status: 400 }
+      );
+    }
 
     // إنشاء سجل جديد باستخدام Prisma
-    const newCar = await prisma.car.create({
+    const newProduct = await prisma.product.create({
       data: {
-        id: data?.id || undefined, // إذا كان id غير موجود، سيتم إنشاؤه تلقائيًا بواسطة Prisma
-        userName: data?.userName || null,
-        userImage: data?.userImage || null,
-        adType: data?.adType || null,
-        title: data?.title || null,
-        brand: data?.brand || null,
-        model: data?.model || null,
-        usedNew: data?.usedNew || null,
-        year: toInteger(data?.year),
-        price: toInteger(data?.price),
-        image1: data?.image || null,
-        image2: data?.image1 || null,
-        image3: data?.image2 || null,
-        image4: data?.image3 || null,
-        image5: data?.image4 || null,
-        city: data?.city || null,
+        id: data?.id || undefined,
+        title: data?.title,
+        userId: data?.userId || null,
+        adCategory: data?.adCategory || '',
+        city: data?.city || '',
         town: data?.town || null,
-        description: data?.description || null,
-        distance: toInteger(data.distance) || null, // تحويل distance إلى Float
+        basePrice: parseInt(data?.basePrice) || 0,
         phoneNumber: data?.phoneNumber || null,
-        lat: data?.lat || null,
-        lng: data?.lng || null,
-        link: data?.link || null,
-        createdBy: data?.createdBy || null,
-        createdAt: data?.createdAt ? new Date(data.createdAt) : undefined, // تحويل النص إلى كائن Date
-        updatedAt: data?.updatedAt ? new Date(data.updatedAt) : undefined, // تحويل النص إلى كائن Date
+        lng: data?.lng ? parseFloat(data?.lng) : null,
+        lat: data?.lat ? parseFloat(data?.lat) : null,
+        link: data?.link || '',
+        description: data?.description,
+        details: data?.details
+          ? {
+              usedNew: data?.details?.usedNew || 'غير محدد',
+              brand: data?.details?.brand || 'غير معروف',
+              model: data?.details?.model || 'غير معروف',
+              year: data?.details?.year ? parseInt(data?.details.year) : null,
+              distance: data?.details?.distance
+                ? parseFloat(data?.details.distance)
+                : null,
+            }
+          : {},
+        stockQuantity: data?.stockQuantity || 0,
+        isDeleted: false,
+        deletedAt: null,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        image1: data?.images[0],
+        image2: data?.images[1],
+        image3: data?.images[2],
+        image4: data?.images[3],
+        image5: data?.images[4],
       },
     });
 
     return new Response(
       JSON.stringify({
-        message: 'Car created successfully',
-        id: newCar.id,
+        message: 'تم إنشاء المنتج بنجاح',
+        id: newProduct.id,
       }),
       { status: 201 }
     );
   } catch (error) {
-    console.error('Error creating car:', error);
+    console.error('خطأ أثناء إنشاء المنتج:', error);
     return new Response(JSON.stringify({ error: 'Internal Server Error' }), {
       status: 500,
     });
   }
 }
 
+// PUT: تحديث بيانات السيارة
 export async function PUT(req) {
   try {
     const url = new URL(req.url);
@@ -112,54 +148,70 @@ export async function PUT(req) {
     const data = await req.json();
 
     if (!id) {
-      return new Response(JSON.stringify({ error: 'Car ID is required' }), {
+      return new Response(JSON.stringify({ error: 'رقم السيارة مطلوب' }), {
         status: 400,
       });
     }
 
     // تحديث البيانات باستخدام Prisma
-    await prisma?.car?.update({
+    await prisma.product.update({
       where: { id: id },
       data: {
-        ...data,
+        title: data?.title || undefined,
+        categoryId: data?.categoryId || undefined,
+        cityId: data?.cityId || undefined,
+        basePrice: parseFloat(data?.basePrice) || undefined,
+        town: data?.town || undefined,
+        phoneNumber: data?.phoneNumber || undefined,
+        description: data?.description || undefined,
+        lng: parseFloat(data?.lng) || undefined,
+        lat: parseFloat(data?.lat) || undefined,
+        details: {
+          update: {
+            usedNew: data?.details?.usedNew || undefined,
+            brand: data?.details?.brand || undefined,
+            model: data?.details?.model || undefined,
+            year: parseInt(data?.details?.year) || undefined,
+            distance: parseFloat(data?.details?.distance) || undefined,
+          },
+        },
         updatedAt: new Date(),
       },
     });
 
-    return new Response(
-      JSON.stringify({ message: 'Car updated successfully' }),
-      { status: 200 }
-    );
+    return new Response(JSON.stringify({ message: 'تم تحديث السيارة بنجاح' }), {
+      status: 200,
+    });
   } catch (error) {
-    console.error('Error updating car:', error);
+    console.error('خطأ أثناء تحديث السيارة:', error);
     return new Response(JSON.stringify({ error: 'Internal Server Error' }), {
       status: 500,
     });
   }
 }
 
+// DELETE: حذف السيارة
 export async function DELETE(req) {
   try {
     const url = new URL(req.url);
     const id = url.searchParams.get('id');
 
     if (!id) {
-      return new Response(JSON.stringify({ error: 'Car ID is required' }), {
+      return new Response(JSON.stringify({ error: 'رقم السيارة مطلوب' }), {
         status: 400,
       });
     }
 
     // حذف السجل باستخدام Prisma
-    await prisma?.car?.delete({
+    await prisma.product.delete({
       where: { id: id },
     });
 
-    return new Response(
-      JSON.stringify({ message: 'Car deleted successfully' }),
-      { status: 200 }
-    );
+    return new Response(JSON.stringify({ message: 'تم حذف السيارة بنجاح' }), {
+      status: 200,
+    });
   } catch (error) {
-    console.error('Error deleting car:', error);
+    console.error('خطأ أثناء حذف السيارة:', error);
     return new Response(JSON.stringify({ error: 'Internal Server Error' }), {
       status: 500,
     });

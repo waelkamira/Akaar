@@ -176,7 +176,12 @@ export default function Profile() {
                 <Button
                   title={'تسجيل الخروج'}
                   style={' '}
-                  onClick={() => signOut()}
+                  onClick={() => {
+                    if (typeof window !== 'undefined') {
+                      localStorage.clear();
+                    }
+                    signOut();
+                  }}
                 />
               </div>
             </div>

@@ -15,6 +15,7 @@ export default function SmallItem({ post, index }) {
   const session = useSession();
   const router = useRouter();
   const path = usePathname();
+  console.log('post 77777777777777', post);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -90,7 +91,9 @@ export default function SmallItem({ post, index }) {
           onClick={() => {
             if (session?.status === 'authenticated') {
               dispatch({ type: 'POST_ID', payload: post?.postId || post?.id });
-              router.push(post.adType ? `/Cars/post` : `/RealEstate/post`);
+              router.push(
+                post?.details?.distance ? `/Cars/post` : `/RealEstate/post`
+              );
             } else {
               toast.custom((t) => (
                 <CustomToast

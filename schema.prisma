@@ -1,112 +1,329 @@
-// تحديد مصدر البيانات
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-// تحديد مولد الكود
 generator client {
   provider = "prisma-client-js"
 }
 
 // 🟢 جدول المستخدمين
 model User {
-  id         String   @id @default(uuid())
-  name       String
-  email      String   @unique
-  password   String?  // كلمة المرور (قد تكون اختيارية للمستخدمين الذين يسجلون عبر Google)
-  isAdmin    Boolean  @default(false) // لتحديد ما إذا كان المستخدم مسؤولًا
-  image      String?  // صورة المستخدم
-  googleId   String?  // لتخزين معرف Google للمستخدمين الذين يسجلون عبر Google OAuth
-  
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id            String         @id @default(uuid())
+  username      String?        @unique
+  email         String         @unique
+  googleId      String?        @unique
+  password      String?        
+  roleId        String?       
+  userImage     String?       
+  products      Product[]
+  reviews       Review[]
+  favorites     Favorite[]
+  orders        Order[]
+  payments      Payment[]
+  notifications Notification[]
+  reports       Report[]
+  recommendations Recommendation[]
+  role          Role?          @relation(fields: [roleId], references: [id], onDelete: SetNull)
+  @@index([username])
+  @@index([email])
 }
-
-
-// 🟢 جدول العقارات
-model Property {
-  id                   String   @id @default(uuid())
-  image1               String?
-  image2               String?
-  image3               String?
-  image4               String?
-  image5               String?
-
-  propertyCategory     String?
-  propertyName         String?
-  propertyType         String?
-  propertyRoomsNumber  String?
-  propertyPrice        Int?
-  propertyArea         String?
-  propertyCity         String?
-  propertyTown         String?
-  phoneNumber          String?
-  description          String?
-
-  lng                  Float?
-  lat                  Float?
-  link                 String?   @default("")
-  hearts               Int?       @default(0)
-
-  userName             String?
-  userImage            String?
-  createdBy            String?
-  
-  createdAt            DateTime? @default(now())
-  updatedAt            DateTime? @updatedAt
-
-  // إضافة الفهارس لتحسين البحث
-  @@index([propertyCategory])
-  @@index([propertyType])
-  @@index([propertyRoomsNumber])
-  @@index([propertyPrice])
-  @@index([propertyCity])
-  @@index([propertyTown])
-}
-
-
-// 🟢 جدول السيارات
-model Car {
-  id                String   @id @default(uuid()) 
-  userName          String?   
-  userImage         String?   
-  adType            String?
-  title             String?
-
-  brand             String?  
-  model             String?
-  usedNew           String?  
-  year              Int?    
-  price             Int?   
-
-  image1               String?
-  image2               String?
-  image3               String?
-  image4               String?
-  image5               String?  
-
-
-  city              String?  
-  town              String?  
-
-  description       String?
-  distance          Int?    
-  phoneNumber       String?   
-
-  lng               Float?
-  lat               Float? 
-  link              String?
-
-  createdBy         String?
-  createdAt         DateTime  @default(now()) 
-  updatedAt         DateTime  @updatedAt 
-
-  // الفهارس لتحسين البحث
-  @@index([brand])
-  @@index([model])
-  @@index([year])
-  @@index([price])
-  @@index([city])
+// 🟢 جدول المنتجات
+model Product {
+  id              String               @id @default(uuid())
+  title           String?
+  userId          String?
+  // categoryId      String?              // جعلها اختيارية
+  // supplierId      String?
+  // countryId       String?
+  // cityId          String?              // جعلها اختيارية
+  image1          String?
+  image2          String?
+  image3          String?
+  image4          String?
+  image5          String?
+  basePrice       Int?
+  adCategory      String?
+  // conutry         String?            @default("sr")
+  city            String?
+  town            String?
+  phoneNumber     String?
+  lng             Float?
+  lat             Float?
+  link            String?             @default("")
+  details         Json?
+  description     String?
+  stockQuantity   Int?                // إدارة المخزون
+  isDeleted       Boolean             @default(false) // Soft Delete
+  deletedAt       DateTime?           // تاريخ الحذف
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  user            User?               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // category        Category?           @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  // supplier        Supplier?           @relation(fields: [supplierId], references: [id], onDelete: SetNull)
+  // country         Country?            @relation(fields: [countryId], references: [id], onDelete: Cascade)
+  // city            City?               @relation(fields: [cityId], references: [id], onDelete: SetNull)
+  translations    ProductTranslation[]
+  // images          ProductImage[]
+  priceHistory    ProductPriceHistory[]
+  inventory       Inventory[]         // علاقة مع المخزون
+  favorites       Favorite[]
+  reviews         Review[]
+  discounts       Discount[]
+  orders          Order[]
+  recommendations Recommendation[]
+  // @@index([categoryId])
+  // @@index([countryId])
+  // @@index([cityId])
+  @@index([basePrice])
   @@index([town])
+  @@index([title])
+  @@index([isDeleted]) // فهرسة لتسريع البحث باستخدام حالة الحذف
+}
+// 🟢 جدول الصور
+model ProductImage {
+  id         String   @id @default(uuid())
+  productId  String
+  image1        String   // تخزين الرابط الخارجي للصورة
+  image2        String   // تخزين الرابط الخارجي للصورة
+  image3        String   // تخزين الرابط الخارجي للصورة
+  image4        String   // تخزين الرابط الخارجي للصورة
+  image5        String   // تخزين الرابط الخارجي للصورة
+  isPrimary  Boolean  @default(false)
+  // product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+// 🟢 جدول الأدوار
+model Role {
+  id          String       @id @default(uuid())
+  name        String       @unique
+  permissions Permission[]
+  users       User[]
+}
+
+// 🟢 جدول الصلاحيات
+model Permission {
+  id    String   @id @default(uuid())
+  name  String   @unique
+  roles Role[]
+}
+
+// 🟢 جدول الفئات
+model Category {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?
+  // products    Product[]
+  @@index([name])
+}
+
+// 🟢 جدول الدول
+model Country {
+  id      String   @id @default(uuid())
+  name    String   @unique
+  code    String   @unique // e.g., "US", "AE"
+  cities  City[]
+  // products Product[]
+  suppliers Supplier[]
+  @@index([name])
+  @@index([code])
+}
+
+// 🟢 جدول المدن
+model City {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  countryId String
+  country   Country  @relation(fields: [countryId], references: [id], onDelete: Cascade)
+  // products  Product[]
+  suppliers Supplier[]
+  @@index([name])
+}
+
+// 🟢 جدول الموردين
+model Supplier {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  email     String   @unique
+  phone     String?
+  address   String?
+  countryId String
+  cityId    String?
+  // products  Product[]
+  country   Country  @relation(fields: [countryId], references: [id], onDelete: Cascade)
+  city      City?    @relation(fields: [cityId], references: [id], onDelete: SetNull)
+  @@index([name])
+  @@index([email])
+}
+
+
+
+// 🟢 جدول المخزون
+model Inventory {
+  id          String   @id @default(uuid())
+  productId   String
+  quantity    Int
+  isAvailable Boolean  @default(true)
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+// 🟢 جدول الترجمات للمنتجات
+model ProductTranslation {
+  id          String   @id @default(uuid())
+  productId   String
+  language    String   // e.g., "ar", "en", "fr"
+  title       String
+  description String?
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  @@unique([productId, language])
+  @@index([language])
+  @@index([title])
+  @@index([description])
+}
+
+
+
+// 🟢 جدول تاريخ الأسعار
+model ProductPriceHistory {
+  id        String   @id @default(uuid())
+  productId String
+  price     Int
+  changedAt DateTime @default(now())
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+// 🟢 جدول المفضلة
+model Favorite {
+  id        String   @id @default(uuid())
+  userId    String
+  productId String
+  createdAt DateTime @default(now())
+  isDeleted Boolean @default(false)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+// 🟢 جدول المراجعات والتقييمات
+model Review {
+  id        String   @id @default(uuid())
+  userId    String
+  productId String
+  rating    Int
+  comment   String?
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+// 🟢 جدول الطلبات
+model Order {
+  id              String   @id @default(uuid())
+  userId          String
+  productId       String
+  discountId      String?
+  shippingMethodId String?
+  quantity        Int
+  totalPrice      Int
+  status          String                  // e.g., "pending", "shipped", "delivered"
+  createdAt       DateTime                @default(now())
+  updatedAt       DateTime                @updatedAt
+  user            User                    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product         Product                 @relation(fields: [productId], references: [id], onDelete: Cascade)
+  payments        Payment[]
+  discount        Discount?               @relation(fields: [discountId], references: [id], onDelete: SetNull)
+  shipping        Shipping[]
+  returns         Return[]
+  shippingMethod  ShippingMethod?         @relation(fields: [shippingMethodId], references: [id], onDelete: SetNull)
+  @@index([status])
+}
+
+// 🟢 جدول المدفوعات
+model Payment {
+  id        String   @id @default(uuid())
+  orderId   String
+  userId    String
+  amount    Int
+  method    String   // e.g., "credit_card", "paypal"
+  status    String   // e.g., "pending", "completed", "failed"
+  createdAt DateTime @default(now())
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([status])
+}
+
+// 🟢 جدول الخصومات والعروض
+model Discount {
+  id        String   @id @default(uuid())
+  productId String
+  code      String   @unique
+  percentage Int
+  validFrom DateTime
+  validTo   DateTime
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  orders    Order[]
+  @@index([code])
+}
+
+// 🟢 جدول الشحن
+model Shipping {
+  id             String   @id @default(uuid())
+  orderId        String
+  status         String   // e.g., "pending", "shipped", "delivered"
+  trackingNumber String?
+  createdAt      DateTime @default(now())
+  order          Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  @@index([status])
+}
+
+// 🟢 جدول المرتجعات
+model Return {
+  id           String   @id @default(uuid())
+  orderId      String
+  reason       String
+  status       String   // e.g., "pending", "approved", "rejected"
+  refundAmount Float?
+  createdAt    DateTime @default(now())
+  order        Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  @@index([status])
+}
+
+// 🟢 جدول الإشعارات
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  type      String   // e.g., "order", "shipping", "promotion"
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// 🟢 جدول التقارير
+model Report {
+  id        String   @id @default(uuid())
+  userId    String
+  type      String   // e.g., "sales", "performance"
+  data      Json
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// 🟢 جدول التوصيات
+model Recommendation {
+  id        String   @id @default(uuid())
+  userId    String
+  productId String
+  score     Float
+  reason    String?  // e.g., "similar products", "popular in your area"
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+// 🟢 جدول طرق الشحن
+model ShippingMethod {
+  id        String   @id @default(uuid())
+  name      String
+  cost      Float
+  orders    Order[]
 }

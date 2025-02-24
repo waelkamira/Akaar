@@ -7,7 +7,7 @@ import { FaTreeCity } from 'react-icons/fa6';
 import { inputsContext } from '../Context';
 import { usePathname } from 'next/navigation';
 
-export default function CitySelector() {
+export default function CitySelector({ check }) {
   const [selectedCity, setSelectedCity] = useState(null);
   const [selectedTown, setSelectedTown] = useState(null);
   const { dispatch } = useContext(inputsContext);
@@ -112,7 +112,7 @@ export default function CitySelector() {
             }`}
           >
             <span className="text-one text-lg xl:text-2xl ml-2">
-              <GiModernCity />
+              {!selectedCity && check ? '❌' : <GiModernCity />}
             </span>
             المدينة:
           </h1>
@@ -146,7 +146,7 @@ export default function CitySelector() {
             }`}
           >
             <span className="text-one text-lg xl:text-2xl ml-2">
-              <FaTreeCity />
+              {!selectedTown && check ? '❌' : <FaTreeCity />}
             </span>
             المنطقة :
           </h1>

@@ -4,6 +4,8 @@ export const cities = [
     name: 'دمشق',
     latlng: [33.5138, 36.2765],
     towns: [
+      { name: 'غير محدد', latlng: [33.5138, 36.2765], zoom: 14 },
+
       { name: 'المزة', latlng: [33.505004, 36.278227] },
       { name: 'كفرسوسة', latlng: [33.493001, 36.274334] },
       { name: 'باب توما', latlng: [33.512397, 36.308559] },
@@ -102,6 +104,8 @@ export const cities = [
     name: 'ريف دمشق',
     latlng: [33.5, 36.3],
     towns: [
+      { name: 'غير محدد', latlng: [33.5138, 36.2765], zoom: 14 },
+
       { name: 'دوما', latlng: [33.5719, 36.4044] },
       { name: 'حرستا', latlng: [33.5548, 36.3653] },
       { name: 'عربين', latlng: [33.5421, 36.3476] },
@@ -189,6 +193,8 @@ export const cities = [
     latlng: [35.9306, 36.6331],
     zoom: 12,
     towns: [
+      { name: 'غير محدد', latlng: [33.5138, 36.2765], zoom: 14 },
+
       { name: 'مدينة إدلب', latlng: [35.9306, 36.6331], zoom: 14 },
       { name: 'معرة النعمان', latlng: [35.6472, 36.6706], zoom: 14 },
       { name: 'أريحا', latlng: [35.8121, 36.6116], zoom: 14 },
@@ -247,6 +253,8 @@ export const cities = [
     name: 'حلب',
     latlng: [36.2021, 37.1343],
     towns: [
+      { name: 'غير محدد', latlng: [33.5138, 36.2765], zoom: 14 },
+
       { name: 'الشيخ مقصود', latlng: [36.2215, 37.1634] },
       { name: 'صلاح الدين', latlng: [36.2069, 37.1587] },
       { name: 'الحمدانية', latlng: [36.2076, 37.1715] },
@@ -328,6 +336,8 @@ export const cities = [
     latlng: [34.7324, 36.7139],
     zoom: 12,
     towns: [
+      { name: 'غير محدد', latlng: [33.5138, 36.2765], zoom: 14 },
+
       { name: 'الرستن', latlng: [34.9212, 36.7321], zoom: 14 },
       { name: 'تلبيسة', latlng: [34.8396, 36.7312], zoom: 14 },
       { name: 'بابا عمرو', latlng: [34.7206, 36.7025], zoom: 14 },
@@ -385,6 +395,8 @@ export const cities = [
     latlng: [32.6257, 36.1058],
     zoom: 12,
     towns: [
+      { name: 'غير محدد', latlng: [33.5138, 36.2765], zoom: 14 },
+
       { name: 'درعا البلد', latlng: [32.6202, 36.1034], zoom: 14 },
       { name: 'المزيريب', latlng: [32.6973, 36.0634], zoom: 14 },
       { name: 'طفس', latlng: [32.7375, 36.0732], zoom: 14 },
@@ -443,6 +455,8 @@ export const cities = [
     latlng: [35.1318, 36.7525],
     zoom: 12,
     towns: [
+      { name: 'غير محدد', latlng: [33.5138, 36.2765], zoom: 14 },
+
       { name: 'حماة المدينة', latlng: [35.1346, 36.7521], zoom: 14 },
       { name: 'السلمية', latlng: [35.0135, 37.0529], zoom: 14 },
       { name: 'محردة', latlng: [35.2553, 36.5712], zoom: 14 },
@@ -499,6 +513,8 @@ export const cities = [
     latlng: [33.1257, 35.8245],
     zoom: 12,
     towns: [
+      { name: 'غير محدد', latlng: [33.5138, 36.2765], zoom: 14 },
+
       { name: 'مدينة القنيطرة', latlng: [33.1257, 35.8245], zoom: 14 },
       { name: 'خان أرنبة', latlng: [33.1353, 35.8572], zoom: 14 },
       { name: 'جبا', latlng: [33.1732, 35.8564], zoom: 14 },
@@ -555,6 +571,8 @@ export const cities = [
     latlng: [35.8625, 39.0217],
     zoom: 12,
     towns: [
+      { name: 'غير محدد', latlng: [33.5138, 36.2765], zoom: 14 },
+
       { name: 'مدينة الرقة', latlng: [35.8625, 39.0217], zoom: 14 },
       { name: 'الطبقة', latlng: [35.7854, 38.9796], zoom: 14 },
       { name: 'سلوك', latlng: [36.8397, 40.4938], zoom: 14 },
@@ -602,6 +620,8 @@ export const cities = [
     latlng: [36.746, 40.263],
     zoom: 12,
     towns: [
+      { name: 'غير محدد', latlng: [33.5138, 36.2765], zoom: 14 },
+
       { name: 'مدينة الحسكة', latlng: [36.746, 40.263], zoom: 14 },
       { name: 'القامشلي', latlng: [37.5145, 40.2254], zoom: 14 },
       { name: 'رأس العين', latlng: [36.7471, 40.1626], zoom: 14 },
@@ -655,6 +675,8 @@ export const cities = [
     latlng: [35.322, 40.2265],
     zoom: 12,
     towns: [
+      { name: 'غير محدد', latlng: [33.5138, 36.2765], zoom: 14 },
+
       { name: 'مدينة دير الزور', latlng: [35.322, 40.2265], zoom: 14 },
       { name: 'البوكمال', latlng: [34.4444, 40.5431], zoom: 14 },
       { name: 'الميادين', latlng: [35.4061, 40.225], zoom: 14 },
@@ -723,6 +745,8 @@ export const cities = [
     latlng: [35.5255, 35.7745],
     zoom: 12,
     towns: [
+      { name: 'غير محدد', latlng: [33.5138, 36.2765], zoom: 14 },
+
       { name: 'اللاذقية القديمة', latlng: [35.5249, 35.7699], zoom: 14 },
       { name: 'الصليبة', latlng: [35.5242, 35.7731], zoom: 14 },
       { name: 'المشروع السابع', latlng: [35.5362, 35.7725], zoom: 14 },
@@ -779,6 +803,8 @@ export const cities = [
     latlng: [34.8951, 35.8866],
     zoom: 12,
     towns: [
+      { name: 'غير محدد', latlng: [33.5138, 36.2765], zoom: 14 },
+
       { name: 'طرطوس القديمة', latlng: [34.8949, 35.8811], zoom: 14 },
       { name: 'الكورنيش الجنوبي', latlng: [34.8872, 35.8865], zoom: 14 },
       { name: 'الكورنيش الشمالي', latlng: [34.9021, 35.8823], zoom: 14 },
@@ -839,6 +865,8 @@ export const cities = [
     latlng: [35.3621, 35.9263],
     zoom: 12,
     towns: [
+      { name: 'غير محدد', latlng: [33.5138, 36.2765], zoom: 14 },
+
       { name: 'جبلة القديمة', latlng: [35.3611, 35.9289], zoom: 14 },
       { name: 'الصليبة', latlng: [35.3623, 35.9274], zoom: 14 },
       { name: 'الرميلة', latlng: [35.3662, 35.9247], zoom: 14 },

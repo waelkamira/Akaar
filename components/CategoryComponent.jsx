@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation.js';
 import { MdOutlineBedroomParent } from 'react-icons/md';
 import { FaDharmachakra } from 'react-icons/fa6';
 
-export default function CategoryComponent() {
+export default function CategoryComponent({ check }) {
   const { dispatch } = useContext(inputsContext);
   const [category, setCategory] = useState('');
   const path = usePathname();
@@ -86,13 +86,9 @@ export default function CategoryComponent() {
     <div className="flex flex-col w-full justify-start items-center ">
       <div className="w-full">
         <div className="flex items-center gap-2 w-full justify-start my-2">
-          <h1
-            className={`flex text-right text-md select-none text-nowrap ${
-              path.includes('newPost') ? '' : ''
-            }`}
-          >
+          <h1 className={`flex text-right text-md select-none text-nowrap `}>
             <span className="text-one text-lg xl:text-2xl ml-2">
-              <FaDharmachakra />
+              {!category && check ? '❌' : <FaDharmachakra />}
             </span>
             نوع الإعلان :
           </h1>
