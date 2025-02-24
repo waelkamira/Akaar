@@ -23,6 +23,7 @@ import NavegationPages from '../ReusableComponents/NavegationPages';
 import SmallItem from '../ReusableComponents/SmallItem';
 import ClockWidget from '../ClockWidget';
 import Link from 'next/link';
+import { TbTargetArrow } from 'react-icons/tb';
 
 export default function MainNavbar() {
   const router = useRouter();
@@ -118,15 +119,15 @@ export default function MainNavbar() {
               )}
             </div>
 
-            {/* <div
-            className="flex items-center justify-center gap-2 border-one hover:border-t-4 shadow-one hover:shadow-lg rounded-[5px]  hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-14 transition-all duration-300"
-            onClick={() => router.push('/favoritePosts')}
-          >
-            <TbTargetArrow className="text-xl select-none text-one" />
-            <li className=" text-md xl:text-xl select-none text-nowrap">
-              المفضلة
-            </li>
-          </div> */}
+            <div
+              className="flex items-center justify-center gap-2 border-one hover:border-t-4 shadow-one hover:shadow-lg rounded-[5px]  hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-14 transition-all duration-300"
+              onClick={() => router.push('/favorite')}
+            >
+              <TbTargetArrow className="text-xl select-none text-one" />
+              <li className=" text-md xl:text-xl select-none text-nowrap">
+                المفضلة
+              </li>
+            </div>
             <div
               className="flex items-center justify-center gap-2 border-one hover:border-t-4 shadow-one hover:shadow-lg rounded-[5px]  hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-14 transition-all duration-300"
               onClick={() => router.push('/RealEstate')}
@@ -232,7 +233,7 @@ export default function MainNavbar() {
                 }}
                 autoFocus
                 placeholder="ابحث عن عقار .. سيارة ..."
-                className="w-full h-full xl:w-1/2 2xl:w-2/5 text-sm sm:text-lg text-start z-40 text-nowrap px-2 rounded-[5px] border border-gray-300 focus:outline-one"
+                className="w-full h-full xl:w-1/2 2xl:w-2/5 text-sm sm:text-lg text-start text-nowrap px-2 rounded-[5px] border border-gray-300 focus:outline-one"
               />
             </div>
           </div>

@@ -1,5 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { LRUCache } from 'lru-cache';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '../../authOptions/route';
 
 const prisma = new PrismaClient();
 
@@ -52,63 +54,79 @@ export async function GET(req) {
 }
 
 export async function POST(req) {
+  const session = await getServerSession(authOptions);
+  const user = session?.user;
+
+  // التحقق من وجود جلسة مستخدم
+  if (!user) {
+    return new Response(
+      JSON.stringify({ error: 'يجب تسجيل الدخول لإنشاء منتج' }),
+      { status: 401 }
+    );
+  }
+
   try {
     const data = await req.json();
-    // console.log('data', data);
+    console.log('data', data);
 
-    // تحويل propertyPrice إلى Int
-    const propertyPriceValue = parseInt(data.propertyPrice, 10);
-
-    // التحقق من أن التحويل تم بنجاح وأن القيمة صالحة
-    if (isNaN(propertyPriceValue)) {
+    // التحقق من صحة البيانات المطلوبة
+    if (
+      !data?.title ||
+      !data?.basePrice ||
+      !data?.description ||
+      !data?.images ||
+      data?.images.length === 0
+    ) {
       return new Response(
-        JSON.stringify({ error: 'Invalid propertyPrice value' }),
+        JSON.stringify({ error: 'يرجى ملء جميع الحقول المطلوبة!' }),
         { status: 400 }
       );
     }
 
     // إنشاء سجل جديد باستخدام Prisma
-    const newProperty = await prisma.property.create({
+    const newProduct = await prisma.product.create({
       data: {
-        id: data?.id,
-
-        image1: data?.image1,
-        image2: data?.image2,
-        image3: data?.image3,
-        image4: data?.image4,
-        image5: data?.image,
-
-        propertyCategory: data?.propertyCategory,
-        propertyName: data?.propertyName,
-        propertyType: data?.propertyType,
-        propertyRoomsNumber: data?.propertyRoomsNumber,
-        propertyPrice: propertyPriceValue, // استخدام القيمة المحولة
-        propertyArea: data?.propertyArea,
-        propertyCity: data?.propertyCity,
-        propertyTown: data?.propertyTown,
-        phoneNumber: data?.phoneNumber,
+        id: data?.id || undefined,
+        title: data?.title,
+        userId: data?.userId || null,
+        adCategory: data?.adCategory || '',
+        city: data?.city || '',
+        town: data?.town || null,
+        basePrice: parseInt(data?.basePrice) || 0,
+        phoneNumber: data?.phoneNumber || null,
+        lng: data?.lng ? parseFloat(data?.lng) : null,
+        lat: data?.lat ? parseFloat(data?.lat) : null,
+        link: data?.link || '',
         description: data?.description,
-        lng: data?.lng,
-        lat: data?.lat,
-        link: data?.link || null, // التعامل مع الحقل `link` بشكل صحيح
-        hearts: data?.hearts,
-        userName: data?.userName,
-        userImage: data?.userImage,
-        createdBy: data?.createdBy,
-        createdAt: data?.createdAt ? new Date(data.createdAt) : undefined, // تحويل النص إلى كائن Date
-        updatedAt: data?.updatedAt ? new Date(data.updatedAt) : undefined, // تحويل النص إلى كائن Date
+        details: data?.details
+          ? {
+              roomsNumber: data?.details?.roomsNumber || 'غير محدد',
+              propertyType: data?.details?.propertyType || 'غير معروف',
+              area: data?.details?.area || 'غير معروف',
+            }
+          : {},
+        stockQuantity: data?.stockQuantity || 0,
+        isDeleted: false,
+        deletedAt: null,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        image1: data?.images[0],
+        image2: data?.images[1],
+        image3: data?.images[2],
+        image4: data?.images[3],
+        image5: data?.images[4],
       },
     });
 
     return new Response(
       JSON.stringify({
-        message: 'Property created successfully',
-        id: newProperty.id,
+        message: 'تم إنشاء المنتج بنجاح',
+        id: newProduct.id,
       }),
       { status: 201 }
     );
   } catch (error) {
-    console.error('Error creating property:', error);
+    console.error('خطأ أثناء إنشاء المنتج:', error);
     return new Response(JSON.stringify({ error: 'Internal Server Error' }), {
       status: 500,
     });

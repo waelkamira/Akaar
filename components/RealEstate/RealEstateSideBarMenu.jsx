@@ -53,7 +53,6 @@ export default function RealEstateSideBarMenu({ setIsOpen }) {
           <Button title={'بروفايل'} path="/profile" />
           <Button title={'اتصل بنا'} path={'/contactUs'} />
           {/* <Button title={'المفضلة'} path={'/favoritePosts'} /> */}
-          {/* <Button title={'تسجيل الخروج'} path={'/'} onClick={() => signOut()} /> */}
         </div>
       )}
 

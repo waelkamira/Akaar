@@ -53,7 +53,6 @@ export default function SideBarMenu({ setIsOpen }) {
           <Button title={'متجري'} path="/myPosts" />
           <Button title={'اتصل بنا'} path={'/contactUs'} />
           {/* <Button title={'المفضلة'} path={'/favoritePosts'} /> */}
-          {/* <Button title={'تسجيل الخروج'} path={'/'} onClick={() => signOut()} /> */}
         </div>
       )}
 

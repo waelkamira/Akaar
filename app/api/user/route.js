@@ -7,7 +7,7 @@ export async function GET(req) {
   const email = searchParams.get('email') || '';
 
   console.log('Full Query String:', req.url);
-  console.log('email:', email);
+  console.log('email************************:', email);
 
   try {
     if (email) {

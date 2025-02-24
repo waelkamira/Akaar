@@ -63,14 +63,14 @@ const CustomNextArrow = (props) => {
 
 const PostGallery = ({ post }) => {
   const path = usePathname();
-
+  console.log('post ********', post);
   // جمع الصور من الحقول المختلفة في مصفوفة واحدة
   const images = [
-    post.image1,
-    post.image2,
-    post.image3,
-    post.image4,
-    post.image5,
+    post?.image1,
+    post?.image2,
+    post?.image3,
+    post?.image4,
+    post?.image5,
   ].filter((img) => img); // تصفية الحقول الفارغة
 
   if (images.length === 1) {

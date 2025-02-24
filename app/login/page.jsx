@@ -11,11 +11,13 @@ import Image from 'next/image';
 import CustomToast from '../../components/CustomToast';
 import { useEffect } from 'react';
 import { GiExitDoor } from 'react-icons/gi';
-
+import CurrentUser from '../../components/CurrentUser';
 export default function LogInPage() {
   const session = useSession();
   const router = useRouter();
+  const user = CurrentUser();
 
+  // Schema for form validation
   const schema = z.object({
     email: z.string().email(),
     password: z.string().min(5),
@@ -29,12 +31,17 @@ export default function LogInPage() {
     formState: { errors },
   } = useForm({ resolver: zodResolver(schema) });
 
+  // Check if user is logged in and redirect to home page
   useEffect(() => {
-    if (session?.data?.user?.email) {
+    // Show welcome message if logged in via Google
+    console.log('user', user);
+    if (session?.data?.user) {
+      toast.success(`مرحبًا بك، ${user?.name || 'ضيف'}!`);
       router.push('/');
     }
-  }, [router, session?.data?.user?.email]);
+  }, [router, session?.data?.user]);
 
+  // Handle form submission for email/password login
   async function onSubmit() {
     if (getValues()?.email === '') {
       setError('email', {
@@ -54,9 +61,9 @@ export default function LogInPage() {
     const response = await signIn('credentials', {
       ...getValues(),
       redirect: false,
-      // callbackUrl: '/',
+      callbackUrl: '/',
     });
-    console.log('تم تسجيل الدخول بنجاح أهلا وسهلا');
+
     if (response.ok) {
       toast.success('تم تسجيل الدخول بنجاح أهلا وسهلا');
       setTimeout(() => {
