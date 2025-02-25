@@ -31,42 +31,19 @@ const UserNameAndPhoto = dynamic(
   }
 );
 
-export default function Item({
-  phoneNumber,
-  createdAt,
-  description,
-  image1,
-  image2,
-  image3,
-  image4,
-  image5,
-  lng,
-  lat,
-  link,
-  propertyArea,
-  propertyCity,
-  propertyTown,
-  propertyName,
-  propertyPrice,
-  propertyType,
-  propertyRoomsNumber,
-  userImage,
-  userName,
-}) {
+export default function RealEstateItem({ post }) {
   const session = useSession();
   const [iframeSrc, setIframeSrc] = useState(null);
-  const [url, setUrl] = useState('');
-  const [embedLink, setEmbedLink] = useState('');
 
-  console.log('link', link);
+  console.log('post', post);
   useEffect(() => {
-    if (typeof window !== 'undefined' && link) {
+    if (typeof window !== 'undefined' && post?.link) {
       const tempDiv = document.createElement('div');
-      tempDiv.innerHTML = link;
+      tempDiv.innerHTML = post?.link;
       const iframeElement = tempDiv.querySelector('iframe');
       setIframeSrc(iframeElement ? iframeElement.getAttribute('src') : null);
     }
-  }, [link]);
+  }, [post?.link]);
 
   return (
     <>
@@ -77,24 +54,22 @@ export default function Item({
             <div className="flex flex-col w-full p-2 sm:p-8 my-2 bg-white border-t-[20px] border-one rounded-t-lg">
               <UserNameAndPhoto
                 post={{
-                  userImage: userImage,
-                  userName: userName,
-                  createdAt: createdAt,
+                  createdAt: post?.createdAt,
                 }}
               />
 
               <div className="flex justify-center w-full">
                 <h1 className="sm:my-4 text-xl sm:text-3xl text-one font-medium select-none text-wrap line-clamp-1 max-w-[20ch] lg:max-w-[40ch] text-center">
-                  {propertyName}
+                  {post?.title}
                 </h1>
               </div>
-              {!image1 && <Loading myMessage={'جاري تحميل الصورة'} />}
+              {!post?.image1 && <Loading myMessage={'جاري تحميل الصورة'} />}
               <ImageSlider
-                image1={image1}
-                image2={image2}
-                image3={image3}
-                image4={image4}
-                image={image5}
+                image1={post?.image1}
+                image2={post?.image2}
+                image3={post?.image3}
+                image4={post?.image4}
+                image={post?.image5}
               />
 
               <div className=" mt-4 sm:mt-16">
@@ -114,65 +89,60 @@ export default function Item({
                         <FaHouseDamage className="text-gray-500" />
                         اسم المعلن :
                       </span>
-                      {userName}
+                      {session?.data?.user?.name}
                     </h1>
-
                     <h1 className="flex justify-start items-center bg-white rounded-[5px] shadow-sm shadow-gray-300  text-md sm:text-xl w-full min-h-20 my-2 select-none">
                       <span className="flex gap-1 items-center text-one text-md sm:text-xl mx-2 select-none">
                         <GiModernCity className="text-gray-500" />
                         المدينة :
                       </span>
-                      {propertyCity}
+                      {post?.city}
                     </h1>
                     <h1 className="flex justify-start items-center bg-white rounded-[5px] shadow-sm shadow-gray-300  text-md sm:text-xl w-full min-h-20 my-2 select-none">
                       <span className="flex gap-1 items-center text-one text-md sm:text-xl mx-2 select-none">
                         <FaTreeCity className="text-gray-500" />
                         اسم المنطقة :
                       </span>
-                      {propertyTown}
+                      {post?.town}
                     </h1>
                     <h1 className="flex justify-start items-center bg-white rounded-[5px] shadow-sm shadow-gray-300  text-md sm:text-xl w-full min-h-20 my-2 select-none">
                       <span className="flex gap-1 items-center text-one text-md sm:text-xl mx-2 select-none">
                         <RxSpaceEvenlyHorizontally className="text-gray-500" />
                         نوع العقار :
                       </span>
-                      {propertyType}
+                      {post?.details?.propertyType}
                     </h1>
-                    {(propertyType === 'بيت' ||
-                      propertyType === 'شقة' ||
-                      propertyType === 'فيلا') && (
-                      <h1 className="flex justify-start items-center bg-white rounded-[5px] shadow-sm shadow-gray-300  text-md sm:text-xl w-full min-h-20 my-2 select-none">
-                        <span className="flex gap-1 items-center text-one text-md sm:text-xl mx-2 select-none">
-                          <MdOutlineBedroomParent className="text-gray-500" />
-                          عدد الغرف :
-                        </span>
-                        {propertyRoomsNumber}
-                      </h1>
-                    )}
+
+                    <h1 className="flex justify-start items-center bg-white rounded-[5px] shadow-sm shadow-gray-300  text-md sm:text-xl w-full min-h-20 my-2 select-none">
+                      <span className="flex gap-1 items-center text-one text-md sm:text-xl mx-2 select-none">
+                        <MdOutlineBedroomParent className="text-gray-500" />
+                        عدد الغرف :
+                      </span>
+                      {post?.details?.roomsNumber}
+                    </h1>
                     <h1 className="flex justify-start items-center bg-white rounded-[5px] shadow-sm shadow-gray-300  text-md sm:text-xl w-full min-h-20 my-2 select-none">
                       <span className="flex gap-1 items-center text-one text-md sm:text-xl mx-2 select-none">
                         <VscUngroupByRefType className="text-gray-500" />
                         المساحة :
                       </span>
-                      {propertyArea}
+                      {post?.details?.area}
                     </h1>
                     <h1 className="flex justify-start items-center bg-white rounded-[5px] shadow-sm shadow-gray-300  text-md sm:text-xl w-full min-h-20 my-2 select-none">
                       <span className="flex gap-1 items-center text-one text-md sm:text-xl mx-2 select-none">
                         <MdOutlinePriceCheck className="text-gray-500" />
                         السعر :
                       </span>
-                      {propertyPrice}
+                      {post?.basePrice}
                       <span className="flex gap-1 items-center text-one text-md sm:text-xl mx-2 select-none">
                         $
                       </span>
                     </h1>
-
                     <h1 className="flex justify-start items-center bg-white rounded-[5px] shadow-sm shadow-gray-300  text-md sm:text-xl w-full min-h-20 my-2 select-none">
                       <span className="flex gap-1 items-center text-one text-md sm:text-xl mx-2 select-none">
                         <GiRotaryPhone className="text-gray-500" />
                         رقم الهاتف :
                       </span>
-                      {phoneNumber}
+                      {post?.phoneNumber}
                     </h1>
                   </div>
 
@@ -186,10 +156,10 @@ export default function Item({
                   </div>
 
                   <p className="flex justify-start items-start bg-white rounded-[5px] h-72 overflow-y-auto text-md sm:text-xl w-full shadow-sm shadow-gray-300 min-h-20 my-2 p-2 select-none">
-                    {description}
+                    {post?.description}
                   </p>
                 </div>
-                {lng !== '' && lat !== '' && (
+                {post?.lng !== '' && post?.lat !== '' && (
                   <div>
                     <div className="flex justify-between items-center my-4 lg:my-8  h-10 sm:h-16  w-full overflow-visible">
                       <h1 className=" text-lg sm:text-xl w-full mb-2 select-none text-one">
@@ -200,11 +170,11 @@ export default function Item({
                       </h1>
                     </div>
                     <div className="">
-                      <SyriaMap lng={lng} lat={lat} />
+                      <SyriaMap lng={post?.lng} lat={post?.lat} />
                     </div>
                   </div>
                 )}
-                {(link || iframeSrc) && (
+                {(post?.details?.link || iframeSrc) && (
                   <div className="w-full">
                     <div className="flex justify-between items-center my-4 sm:my-4 lg:my-8  h-10 sm:h-16  w-full overflow-visible">
                       <h1 className=" text-lg sm:text-xl w-full mb-2 select-none text-one">
@@ -219,7 +189,7 @@ export default function Item({
                       <iframe
                         width="560"
                         height="315"
-                        src={link || iframeSrc}
+                        src={post?.link || iframeSrc}
                         frameBorder="0"
                         allowFullScreen
                         title="Embedded YouTube Video"
@@ -228,29 +198,6 @@ export default function Item({
                     </div>
                   </div>
                 )}
-                {/* {(link || iframeSrc) && (
-                  <div className="flex justify-between items-center my-4 sm:my-4 lg:my-16  h-10 sm:h-16  w-full overflow-visible">
-                    <h1 className=" text-lg sm:text-xl w-full mb-2 select-none text-one">
-                      <span className="text-one text-2xl mx-2 select-none">
-                        #
-                      </span>
-                      فيديو:
-                    </h1>
-                  </div>
-                )}
-                <div className="flex justify-center items-center w-full mt-16">
-                  <div className="flex flex-col  w-full">
-                    {iframeSrc && (
-                      <div className="mt-4">
-                        <iframe
-                          src={link || iframeSrc}
-                          className="w-full h-44"
-                          title="Property Video"
-                        />
-                      </div>
-                    )}
-                  </div>
-                </div> */}
               </div>
             </div>
           </div>

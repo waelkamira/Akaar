@@ -46,7 +46,7 @@ export default function Page() {
     <div className="flex flex-col justify-center items-center w-full bg-five">
       <RealEstateNavbar />
       <RealEstateSideBar Button={false} />
-      {post && <RealEstateItem {...post} />}
+      {post && <RealEstateItem post={post} />}
     </div>
   );
 }
