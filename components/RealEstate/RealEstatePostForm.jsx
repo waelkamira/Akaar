@@ -12,11 +12,8 @@ import { MdOutlineFeaturedPlayList } from 'react-icons/md';
 import { RxVideo } from 'react-icons/rx';
 import { useRouter } from 'next/navigation';
 import { getVideoIdAndPlatform } from '../youtubeUtils';
-import { FaCarrot, FaHouseDamage } from 'react-icons/fa';
 import { GiModernCity, GiPathDistance, GiRotaryPhone } from 'react-icons/gi';
 import { MdOutlineSubtitles } from 'react-icons/md';
-import { IoCalendarNumber } from 'react-icons/io5';
-import { FaTreeCity } from 'react-icons/fa6';
 
 const PropertyTypeSelector = dynamic(() => import('../PropertyTypeSelector'));
 const Confetti = dynamic(() =>
@@ -120,7 +117,7 @@ export default function RealEstatePostForm({ setIsVisible, cancel = true }) {
           dispatch({ type: 'CITY_LOCATION', payload: '' });
           dispatch({ type: 'TOWN_LOCATION', payload: '' });
           dispatch({ type: 'LOCATION', payload: [] });
-          setIsVisible(false);
+          // setIsVisible(false);
           toast.success('تم إنشاء الإعلان بنجاح');
           router.push('/myPosts');
           setInputs({

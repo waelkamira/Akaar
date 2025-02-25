@@ -12,7 +12,7 @@ module.exports = {
         two: '#4C4D4F',
         three: '#7E7F81',
         four: '#A1A5AD',
-        five: '#F5F5F5',
+        five: '#F2F4F7',
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
