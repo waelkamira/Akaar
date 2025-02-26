@@ -7,6 +7,7 @@ import UploadingAndDisplayingImage from '../../components/photos/UploadingAndDis
 import { inputsContext } from '../../components/Context';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
+import LoginButton from '../../components/Buttons/LoginButton';
 import {
   MdCategory,
   MdTitle,
@@ -22,6 +23,7 @@ import FormSelect from './FormSelect';
 import FormTextarea from './FormTextarea';
 import FormSubmitButton from './FormSubmitButton';
 import OnClickMap from '../../components/map/onClickMap';
+import { useSession } from 'next-auth/react';
 
 export default function DynamicForm() {
   const { register, handleSubmit } = useForm();
@@ -29,7 +31,7 @@ export default function DynamicForm() {
   const [emptyFields, setEmptyFields] = useState([]);
   const router = useRouter();
   const { data, addImages, location } = useContext(inputsContext);
-
+  const session = useSession();
   const [formState, setFormState] = useState({
     id: uuidv4(),
     userId: '',
@@ -157,165 +159,169 @@ export default function DynamicForm() {
 
   return (
     <div className="flex justify-center items-center w-full bg-five text-sm sm:text-lg">
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          onSubmit();
-        }}
-        className="space-y-4 p-4 border rounded-lg shadow-md w-full xl:w-1/2"
-      >
-        <UploadingAndDisplayingImage />
+      {session?.user ? (
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            onSubmit();
+          }}
+          className="space-y-4 p-4 border rounded-lg shadow-md w-full xl:w-1/2"
+        >
+          <UploadingAndDisplayingImage />
 
-        <FormSelect
-          label="الفئة"
-          icon={<MdCategory className="text-one text-lg sm:text-xl" />}
-          name="category"
-          options={categories.map((cat) => ({
-            value: cat.id,
-            label: cat.name,
-          }))}
-          register={register}
-          errors={emptyFields}
-          onChange={(e) => setSelectedCategory(e.target.value)}
-          placeholder="-اختر-"
-        />
+          <FormSelect
+            label="الفئة"
+            icon={<MdCategory className="text-one text-lg sm:text-xl" />}
+            name="category"
+            options={categories.map((cat) => ({
+              value: cat.id,
+              label: cat.name,
+            }))}
+            register={register}
+            errors={emptyFields}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            placeholder="-اختر-"
+          />
 
-        <FormInput
-          label="عنوان الإعلان"
-          icon={<MdTitle className="text-one text-lg sm:text-xl" />}
-          name="title"
-          placeholder="عنوان الإعلان"
-          register={register}
-          errors={emptyFields}
-          onChange={handleInputChange}
-        />
+          <FormInput
+            label="عنوان الإعلان"
+            icon={<MdTitle className="text-one text-lg sm:text-xl" />}
+            name="title"
+            placeholder="عنوان الإعلان"
+            register={register}
+            errors={emptyFields}
+            onChange={handleInputChange}
+          />
 
-        <FormSelect
-          label="نوع الإعلان"
-          icon={<MdCategory className="text-one text-lg sm:text-xl" />}
-          name="adCategory"
-          options={[
-            { value: 'بيع', label: 'بيع' },
-            { value: 'أجار', label: 'أجار' },
-          ]}
-          register={register}
-          errors={emptyFields}
-          onChange={(e) =>
-            setFormState((prev) => ({ ...prev, adCategory: e.target.value }))
-          }
-          placeholder="-اختر-"
-        />
+          <FormSelect
+            label="نوع الإعلان"
+            icon={<MdCategory className="text-one text-lg sm:text-xl" />}
+            name="adCategory"
+            options={[
+              { value: 'بيع', label: 'بيع' },
+              { value: 'أجار', label: 'أجار' },
+            ]}
+            register={register}
+            errors={emptyFields}
+            onChange={(e) =>
+              setFormState((prev) => ({ ...prev, adCategory: e.target.value }))
+            }
+            placeholder="-اختر-"
+          />
 
-        <FormInput
-          label="المدينة"
-          icon={<MdLocationCity className="text-one text-lg sm:text-xl" />}
-          name="city"
-          placeholder="المدينة"
-          register={register}
-          errors={emptyFields}
-          onChange={handleInputChange}
-        />
+          <FormInput
+            label="المدينة"
+            icon={<MdLocationCity className="text-one text-lg sm:text-xl" />}
+            name="city"
+            placeholder="المدينة"
+            register={register}
+            errors={emptyFields}
+            onChange={handleInputChange}
+          />
 
-        <FormInput
-          label="المنطقة"
-          icon={<MdLocationOn className="text-one text-lg sm:text-xl" />}
-          name="town"
-          placeholder="المنطقة"
-          register={register}
-          errors={emptyFields}
-          onChange={handleInputChange}
-        />
+          <FormInput
+            label="المنطقة"
+            icon={<MdLocationOn className="text-one text-lg sm:text-xl" />}
+            name="town"
+            placeholder="المنطقة"
+            register={register}
+            errors={emptyFields}
+            onChange={handleInputChange}
+          />
 
-        <FormInput
-          label="رقم الهاتف"
-          icon={<MdPhone className="text-one text-lg sm:text-xl" />}
-          name="phoneNumber"
-          placeholder="رقم الهاتف"
-          type="number"
-          register={register}
-          errors={emptyFields}
-          onChange={handleInputChange}
-        />
+          <FormInput
+            label="رقم الهاتف"
+            icon={<MdPhone className="text-one text-lg sm:text-xl" />}
+            name="phoneNumber"
+            placeholder="رقم الهاتف"
+            type="number"
+            register={register}
+            errors={emptyFields}
+            onChange={handleInputChange}
+          />
 
-        {selectedCategory &&
-          categoryFields[selectedCategory]?.map((field, index) => (
-            <div key={index}>
-              <label className="font-medium mb-2 flex items-center gap-2">
-                {field?.icon} {field?.name}
-              </label>
-              {field?.options ? (
-                <select
-                  className={`w-full p-1 sm:p-2 lg:p-3 border rounded focus:outline-2 focus:outline-one ${
-                    emptyFields.includes(field?.name)
-                      ? 'outline-2 outline-red-500'
-                      : ''
-                  }`}
-                  required
-                  onChange={(e) =>
-                    handleDetailsChange(field?.name, e.target.value)
-                  }
-                >
-                  <option value="">{field?.placeholder}</option>
-                  {Object.entries(field?.options).map(([key, value]) => (
-                    <option key={value} value={value}>
-                      {value}
-                    </option>
-                  ))}
-                </select>
-              ) : (
-                <input
-                  placeholder={field?.placeholder}
-                  className={`w-full p-1 sm:p-2 lg:p-3 border rounded focus:outline-2 focus:outline-one ${
-                    emptyFields.includes(field?.name)
-                      ? 'outline-2 outline-red-500'
-                      : ''
-                  }`}
-                  required
-                  onChange={(e) =>
-                    handleDetailsChange(field?.name, e.target.value)
-                  }
-                />
-              )}
-              {emptyFields.includes(field?.name) && (
-                <p className="text-red-500 text-sm mt-1">هذا الحقل مطلوب</p>
-              )}
-            </div>
-          ))}
+          {selectedCategory &&
+            categoryFields[selectedCategory]?.map((field, index) => (
+              <div key={index}>
+                <label className="font-medium mb-2 flex items-center gap-2">
+                  {field?.icon} {field?.name}
+                </label>
+                {field?.options ? (
+                  <select
+                    className={`w-full p-1 sm:p-2 lg:p-3 border rounded focus:outline-2 focus:outline-one ${
+                      emptyFields.includes(field?.name)
+                        ? 'outline-2 outline-red-500'
+                        : ''
+                    }`}
+                    required
+                    onChange={(e) =>
+                      handleDetailsChange(field?.name, e.target.value)
+                    }
+                  >
+                    <option value="">{field?.placeholder}</option>
+                    {Object.entries(field?.options).map(([key, value]) => (
+                      <option key={value} value={value}>
+                        {value}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <input
+                    placeholder={field?.placeholder}
+                    className={`w-full p-1 sm:p-2 lg:p-3 border rounded focus:outline-2 focus:outline-one ${
+                      emptyFields.includes(field?.name)
+                        ? 'outline-2 outline-red-500'
+                        : ''
+                    }`}
+                    required
+                    onChange={(e) =>
+                      handleDetailsChange(field?.name, e.target.value)
+                    }
+                  />
+                )}
+                {emptyFields.includes(field?.name) && (
+                  <p className="text-red-500 text-sm mt-1">هذا الحقل مطلوب</p>
+                )}
+              </div>
+            ))}
 
-        <FormInput
-          label="السعر"
-          icon={<MdAttachMoney className="text-one text-lg sm:text-xl" />}
-          name="basePrice"
-          placeholder="السعر"
-          type="number"
-          register={register}
-          errors={emptyFields}
-          onChange={handleInputChange}
-        />
+          <FormInput
+            label="السعر"
+            icon={<MdAttachMoney className="text-one text-lg sm:text-xl" />}
+            name="basePrice"
+            placeholder="السعر"
+            type="number"
+            register={register}
+            errors={emptyFields}
+            onChange={handleInputChange}
+          />
 
-        <FormTextarea
-          label="وصف الإعلان"
-          icon={<MdDescription className="text-one text-lg sm:text-xl" />}
-          name="description"
-          placeholder="وصف الإعلان"
-          register={register}
-          errors={emptyFields}
-          onChange={handleInputChange}
-        />
+          <FormTextarea
+            label="وصف الإعلان"
+            icon={<MdDescription className="text-one text-lg sm:text-xl" />}
+            name="description"
+            placeholder="وصف الإعلان"
+            register={register}
+            errors={emptyFields}
+            onChange={handleInputChange}
+          />
 
-        <OnClickMap />
-        <FormInput
-          label="رابط الفيديو من يوتيوب أو تيك توك"
-          icon={<MdAttachMoney className="text-one text-lg sm:text-xl" />}
-          name="link"
-          placeholder="رابط الفيديو"
-          register={register}
-          errors={emptyFields}
-          onChange={handleInputChange}
-        />
+          <OnClickMap />
+          <FormInput
+            label="رابط الفيديو من يوتيوب أو تيك توك"
+            icon={<MdAttachMoney className="text-one text-lg sm:text-xl" />}
+            name="link"
+            placeholder="رابط الفيديو"
+            register={register}
+            errors={emptyFields}
+            onChange={handleInputChange}
+          />
 
-        <FormSubmitButton />
-      </form>
+          <FormSubmitButton />
+        </form>
+      ) : (
+        <LoginButton />
+      )}
     </div>
   );
 }
