@@ -11,7 +11,7 @@ export default function LoginButton() {
       {session?.status === 'unauthenticated' && (
         <div className="p-4 m-2 md:m-8 border text-center rounded-[5px] bg-white">
           <h1 className="text-sm md:text-lg lg:text-xl p-2 my-8 ">
-            يجب عليك تسجيل الدخول أولا لرؤية هذا الإعلان
+            يجب عليك تسجيل الدخول أولاً
           </h1>
 
           <Button title={'تسجيل الدخول'} style={' '} path="/login" />
