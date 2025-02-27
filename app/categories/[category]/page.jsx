@@ -1,59 +1,38 @@
+// app/categories/[category]/page.jsx
 'use client';
-import React, { useContext, useEffect, useState } from 'react';
-import { useSession } from 'next-auth/react';
-import { Suspense } from 'react';
-import Card from '../../components/ReusableComponents/Card';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'next/navigation';
+import SmallCard from '../../../components/ReusableComponents/SmallCard';
+import {
+  MdCarRental,
+  MdKeyboardDoubleArrowDown,
+  MdOutlineSell,
+} from 'react-icons/md';
+import Card from '../../../components/ReusableComponents/Card';
 import { GiCarKey } from 'react-icons/gi';
-import CarsNavbar from '../../components/Cars/CarsNavbar';
-import { MdCarRental } from 'react-icons/md';
-import { MdOutlineSell } from 'react-icons/md';
-import { useRouter } from 'next/navigation';
-import { inputsContext } from '../../components/Context';
-import { MdKeyboardDoubleArrowDown } from 'react-icons/md';
-import HeroSlider from '../../components/photos/HeroSlider';
-import CarsSmallCard from '../../components/Cars/CarsSmallCard';
-import CarsSideBar from '../../components/Cars/CarsSideBar';
+import HeroSlider from '../../../components/photos/HeroSlider';
 
-export default function CarsHomePage() {
-  const session = useSession();
-  const [cars, setCars] = useState();
-  const router = useRouter();
-  const { dispatch } = useContext(inputsContext);
-
-  if (typeof window !== 'undefined' && session?.user?.image) {
-    localStorage.setItem('image', JSON.stringify(session.user.image));
-  }
+const CategoryPage = () => {
+  const { category } = useParams(); // الحصول على اسم الفئة من الرابط
+  const [items, setItems] = useState([]);
 
   useEffect(() => {
-    fetchCarsAds();
-  }, []);
-  async function fetchCarsAds() {
-    const response = await fetch('/api/Cars/allPosts?limit=16');
-    if (response.ok) {
-      const json = await response?.json();
-      console.log('json', json);
-      setCars(json);
-    }
-  }
-
-  const images = [
-    'https://i.imgur.com/uPsQqzu.png',
-    'https://i.imgur.com/xu9gOrf.jpg',
-    'https://i.imgur.com/VVu5la7.png',
-    'https://i.imgur.com/Kc6Pcu1.png',
-    'https://i.imgur.com/yH5NGMz.jpg',
-  ];
+    // جلب البيانات المرتبطة بالفئة
+    fetch(`/api/categories/${category}`)
+      .then((response) => response.json())
+      .then((data) => setItems(data))
+      .catch((error) => console.error('Error fetching data:', error));
+  }, [category]);
 
   return (
-    <Suspense>
-      <CarsNavbar />
+    <div className="p-4">
       <div className="relative flex flex-col justify-center items-center z-40 w-full bg-five">
         <div className="w-full">
-          <CarsSideBar Button={true} />
+          {/* <CarsSideBar Button={true} /> */}
 
           {/* صورة الخلفية */}
           <div className="relative w-full h-full overflow-hidden">
-            <HeroSlider images={images} />
+            <HeroSlider />
             <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
           </div>
 
@@ -124,20 +103,16 @@ export default function CarsHomePage() {
             <h1 className="w-full text-center sm:text-lg my-4">
               أحدث الإعلانات
             </h1>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-center items-center gap-4 w-full 2xl:w-[80%] h-full p-4 mb-4">
-              {cars?.length > 0 &&
-                cars.map((car) => (
-                  <div
-                    className="flex flex-col justify-center items-center w-full border cursor-pointer bg-white hover:scale-[103%] transition-transform duration-300 ease-in-out rounded-[5px] overflow-hidden shadow-lg hover:shadow-xl relative"
-                    key={car?.id}
-                  >
-                    <CarsSmallCard item={car} />
-                  </div>
-                ))}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
+              {items.map((item) => (
+                <div key={item.id} className="border p-4 rounded-lg shadow-md">
+                  <SmallCard item={item} />
+                </div>
+              ))}
             </div>
             <h1
               onClick={() => router.push('/Cars/buy')}
-              className="flex items-center justify-center w-full text-one hover:scale-105 cursor-pointer mb-16 sm:text-xl"
+              className="flex items-center justify-center w-full my-8 text-one hover:scale-105 cursor-pointer mb-16 sm:text-xl"
             >
               المزيد من السيارات{' '}
               <span>
@@ -147,6 +122,8 @@ export default function CarsHomePage() {
           </div>
         </div>
       </div>
-    </Suspense>
+    </div>
   );
-}
+};
+
+export default CategoryPage;

@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { LRUCache } from 'lru-cache';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '../../authOptions/route';
+import { authOptions } from '../authOptions/route';
 
 const prisma = new PrismaClient();
 const cache = new LRUCache({
@@ -73,8 +73,6 @@ export async function POST(req) {
     // التحقق من صحة البيانات المطلوبة
     if (
       !data?.title ||
-      // !data?.categoryId ||
-      // !data?.cityId ||
       !data?.basePrice ||
       !data?.description ||
       !data?.images ||
@@ -92,6 +90,7 @@ export async function POST(req) {
         id: data?.id || undefined,
         title: data?.title,
         userId: data?.userId || null,
+        category: data?.category || null,
         adCategory: data?.adCategory || '',
         city: data?.city || '',
         town: data?.town || null,
@@ -101,17 +100,8 @@ export async function POST(req) {
         lat: data?.lat ? parseFloat(data?.lat) : null,
         link: data?.link || '',
         description: data?.description,
-        details: data?.details
-          ? {
-              usedNew: data?.details?.usedNew || 'غير محدد',
-              brand: data?.details?.brand || 'غير معروف',
-              model: data?.details?.model || 'غير معروف',
-              year: data?.details?.year ? parseInt(data?.details.year) : null,
-              distance: data?.details?.distance
-                ? parseFloat(data?.details.distance)
-                : null,
-            }
-          : {},
+        details: data?.details,
+
         stockQuantity: data?.stockQuantity || 0,
         isDeleted: false,
         deletedAt: null,
@@ -140,7 +130,7 @@ export async function POST(req) {
   }
 }
 
-// PUT: تحديث بيانات السيارة
+// PUT: تحديث بيانات منتج
 export async function PUT(req) {
   try {
     const url = new URL(req.url);
@@ -148,7 +138,7 @@ export async function PUT(req) {
     const data = await req.json();
 
     if (!id) {
-      return new Response(JSON.stringify({ error: 'رقم السيارة مطلوب' }), {
+      return new Response(JSON.stringify({ error: 'رقم منتج مطلوب' }), {
         status: 400,
       });
     }
@@ -179,41 +169,72 @@ export async function PUT(req) {
       },
     });
 
-    return new Response(JSON.stringify({ message: 'تم تحديث السيارة بنجاح' }), {
+    return new Response(JSON.stringify({ message: 'تم تحديث منتج بنجاح' }), {
       status: 200,
     });
   } catch (error) {
-    console.error('خطأ أثناء تحديث السيارة:', error);
+    console.error('خطأ أثناء تحديث منتج:', error);
     return new Response(JSON.stringify({ error: 'Internal Server Error' }), {
       status: 500,
     });
   }
 }
 
-// DELETE: حذف السيارة
+// DELETE: حذف منتج
+
 export async function DELETE(req) {
+  const { id } = await req.json();
+
   try {
-    const url = new URL(req.url);
-    const id = url.searchParams.get('id');
-    console.log('id', id);
     if (!id) {
-      return new Response(JSON.stringify({ error: 'رقم السيارة مطلوب' }), {
+      return new Response(JSON.stringify({ error: 'يجب توفير معرف الإعلان' }), {
         status: 400,
+        headers: { 'Content-Type': 'application/json' },
       });
     }
 
-    // حذف السجل باستخدام Prisma
-    await prisma.product.delete({
-      where: { id: id },
-    });
+    let deletedPost = null;
 
-    return new Response(JSON.stringify({ message: 'تم حذف السيارة بنجاح' }), {
+    // محاولة الحذف من جدول `product` أولاً
+    try {
+      deletedPost = await prisma.product.delete({
+        where: { id },
+      });
+    } catch (error) {
+      // في حال لم يتم العثور على الإعلان في `product`، نحاول في `property`
+      if (error.code !== 'P2025') {
+        throw error; // خطأ آخر غير "السجل غير موجود"
+      }
+    }
+
+    // إذا لم يتم العثور على الإعلان في `product`، نحاول البحث عنه في `property`
+    if (!deletedPost) {
+      try {
+        deletedPost = await prisma.property.delete({
+          where: { id },
+        });
+      } catch (error) {
+        if (error.code === 'P2025') {
+          return new Response(
+            JSON.stringify({
+              error: 'لم يتم العثور على الإعلان في أي من الجداول',
+            }),
+            { status: 404, headers: { 'Content-Type': 'application/json' } }
+          );
+        }
+        throw error;
+      }
+    }
+
+    return new Response(JSON.stringify({ message: 'تم حذف الإعلان بنجاح' }), {
       status: 200,
+      headers: { 'Content-Type': 'application/json' },
     });
   } catch (error) {
-    console.error('خطأ أثناء حذف السيارة:', error);
-    return new Response(JSON.stringify({ error: 'Internal Server Error' }), {
+    console.error('خطأ أثناء حذف الإعلان:', error);
+    return new Response(JSON.stringify({ error: 'حدث خطأ داخلي' }), {
       status: 500,
+      headers: { 'Content-Type': 'application/json' },
     });
   }
 }

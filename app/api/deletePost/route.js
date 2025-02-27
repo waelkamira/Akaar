@@ -15,19 +15,19 @@ export async function DELETE(req) {
 
     let deletedPost = null;
 
-    // محاولة الحذف من جدول `car` أولاً
+    // محاولة الحذف من جدول `product` أولاً
     try {
-      deletedPost = await prisma.car.delete({
+      deletedPost = await prisma.product.delete({
         where: { id },
       });
     } catch (error) {
-      // في حال لم يتم العثور على الإعلان في `car`، نحاول في `property`
+      // في حال لم يتم العثور على الإعلان في `product`، نحاول في `property`
       if (error.code !== 'P2025') {
         throw error; // خطأ آخر غير "السجل غير موجود"
       }
     }
 
-    // إذا لم يتم العثور على الإعلان في `car`، نحاول البحث عنه في `property`
+    // إذا لم يتم العثور على الإعلان في `product`، نحاول البحث عنه في `property`
     if (!deletedPost) {
       try {
         deletedPost = await prisma.property.delete({

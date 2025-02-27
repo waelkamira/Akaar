@@ -85,7 +85,7 @@ export default function CarsUsedNewSelector({ check }) {
   };
 
   return (
-    <div className="flex flex-col w-full justify-start items-center ">
+    <div className="flex flex-col w-full justify-start items-center text-black ">
       <div className="w-full">
         <div className="flex items-center gap-2 w-full justify-start my-2">
           <h1

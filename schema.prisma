@@ -38,6 +38,7 @@ model Product {
   // supplierId      String?
   // countryId       String?
   // cityId          String?              // جعلها اختيارية
+  category        String?
   image1          String?
   image2          String?
   image3          String?
@@ -45,7 +46,7 @@ model Product {
   image5          String?
   basePrice       Int?
   adCategory      String?
-  // conutry         String?            @default("sr")
+  conutry         String?            @default("sr")
   city            String?
   town            String?
   phoneNumber     String?
