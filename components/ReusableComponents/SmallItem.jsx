@@ -27,11 +27,14 @@ export default function SmallItem({ post, index }) {
   }, []);
 
   async function handleDeletePost(post) {
-    const response = await fetch(`/api/allPosts?id=${post?.id}&isAdmin=true`, {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(post),
-    });
+    const response = await fetch(
+      `/api/Cars/allPosts?id=${post?.id}&isAdmin=true`,
+      {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(post),
+      }
+    );
 
     if (response.ok) {
       toast.custom((t) => (

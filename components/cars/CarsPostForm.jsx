@@ -4,21 +4,19 @@ import dynamic from 'next/dynamic';
 import React, { useContext, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { inputsContext } from '../Context';
-import { useSession } from 'next-auth/react';
 import { v4 as uuidv4 } from 'uuid';
-import { FaCarrot, FaHouseDamage } from 'react-icons/fa';
+import { FaCarrot } from 'react-icons/fa';
 import { MdOutlinePriceCheck } from 'react-icons/md';
-import { GiModernCity, GiPathDistance, GiRotaryPhone } from 'react-icons/gi';
+import { GiPathDistance, GiRotaryPhone } from 'react-icons/gi';
 import { MdOutlineFeaturedPlayList } from 'react-icons/md';
 import { RxVideo } from 'react-icons/rx';
 import { useRouter } from 'next/navigation';
 import { MdOutlineSubtitles } from 'react-icons/md';
 import { IoCalendarNumber } from 'react-icons/io5';
 import { getVideoIdAndPlatform } from '../youtubeUtils';
-import { FaTreeCity } from 'react-icons/fa6';
+import CategorySelector from '../Categories/CategorySelector';
 
 const CarsBrandSelector = dynamic(() => import('./CarsBrandSelector'));
-const CustomToast = dynamic(() => import('../CustomToast'));
 const Confetti = dynamic(() =>
   import('../ReusableComponents/SuccessComponent').then((mod) => mod.Confetti)
 );
@@ -28,7 +26,6 @@ const CitySelector = dynamic(() => import('../map/CitySelector'));
 const CarsUsedNewSelector = dynamic(() => import('./CarsUsedNewSelector'));
 
 export default function CarsPostForm({ setIsVisible, cancel = true }) {
-  const session = useSession();
   const router = useRouter();
   const [url, setUrl] = useState('');
   const [embedLink, setEmbedLink] = useState('');
@@ -43,12 +40,14 @@ export default function CarsPostForm({ setIsVisible, cancel = true }) {
     townLocation,
     usedNew,
     brand,
+    categoryType,
   } = useContext(inputsContext);
 
   const [inputs, setInputs] = useState({
     id: uuidv4(),
     userId: '',
     title: '',
+    category: categoryType || '',
     images: addImages || [],
     adCategory: category?.label || '',
     city: data?.propertyCity || '',
@@ -78,6 +77,7 @@ export default function CarsPostForm({ setIsVisible, cancel = true }) {
     setInputs((prevInputs) => ({
       ...prevInputs,
       userId: userId,
+      category: categoryType || '',
       images: addImages || [],
       adCategory: category?.label || '',
       city: data?.propertyCity || '',
@@ -90,7 +90,7 @@ export default function CarsPostForm({ setIsVisible, cancel = true }) {
         brand: brand?.label || '',
       },
     }));
-  }, [category, data, usedNew, brand, location, addImages]);
+  }, [categoryType, category, data, usedNew, brand, location, addImages]);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -228,11 +228,13 @@ export default function CarsPostForm({ setIsVisible, cancel = true }) {
 
   return (
     <form
-      className="flex flex-col justify-center items-start h-fit w-full mt-4 "
+      className="flex flex-col justify-center items-start h-fit w-full mt-4 text-black"
       onSubmit={handleSubmit}
     >
       <div className="w-full">
         <div className="flex flex-col gap-2 xl:gap-4 md:flex-row w-full ">
+          {/* القسم الأول */}
+
           <div className="w-full p-2 xl:p-4 ">
             {/* عنوان الإعلان */}
             <div className="relative flex flex-col my-2 sm:my-4 items-center justify-center w-full ">
@@ -256,6 +258,11 @@ export default function CarsPostForm({ setIsVisible, cancel = true }) {
                 placeholder="تويوتا كورولا موديل 2021"
                 className={` w-full text-sm sm:text-lg rounded text-start text-black  h-9 sm:h-12 text-nowrap px-2 border border-gray-300 focus:outline-one`}
               />
+            </div>
+            {/* الفئة  */}
+
+            <div className="relative flex flex-col my-2 sm:my-4 items-center justify-center w-full ">
+              <CategorySelector check={check} />
             </div>
             {/* نوع الإعلان */}
             <div className="relative flex flex-col my-2 sm:my-4 items-center justify-center w-full">
@@ -303,7 +310,7 @@ export default function CarsPostForm({ setIsVisible, cancel = true }) {
               </div>
             </div>
           </div>
-
+          {/* القسم الثاني */}
           <div className="w-full p-2 xl:p-4 ">
             {/* المدينة والمنطقة*/}
             <div className="relative flex flex-col my-2 sm:my-4 items-center justify-center w-full">
@@ -402,144 +409,146 @@ export default function CarsPostForm({ setIsVisible, cancel = true }) {
                   className={` w-full text-sm sm:text-lg rounded text-start text-black  h-9 sm:h-12 text-nowrap px-2 border border-gray-300 focus:outline-one`}
                 />
               </div>
-              <div className="w-full">
-                <div className="flex items-center gap-2 w-full justify-start my-2">
-                  <h1
-                    className={`flex text-right text-md select-none text-nowrap `}
-                  >
-                    <span className={` text-one text-lg xl:text-2xl ml-2`}>
-                      {!inputs?.basePrice && check ? (
-                        '❌'
-                      ) : (
-                        <MdOutlinePriceCheck />
-                      )}
-                    </span>
-                    {category?.label === 'بيع'
-                      ? ' سعر السيارة:'
-                      : 'أجرة السيارة شهرياً:'}
-                  </h1>
-                </div>
-                <input
-                  value={inputs?.basePrice}
-                  onChange={(e) =>
-                    setInputs({ ...inputs, basePrice: e.target.value })
-                  }
-                  type="number"
-                  id="سعر السيارة"
-                  name="سعر السيارة"
-                  placeholder="$ 00.0"
-                  className={` w-full text-sm sm:text-lg rounded text-start text-black  h-9 sm:h-12 text-nowrap px-2 border border-gray-300 focus:outline-one`}
-                />
+            </div>
+            <div className="w-full">
+              <div className="flex items-center gap-2 w-full justify-start my-2">
+                <h1
+                  className={`flex text-right text-md select-none text-nowrap `}
+                >
+                  <span className={` text-one text-lg xl:text-2xl ml-2`}>
+                    {!inputs?.basePrice && check ? (
+                      '❌'
+                    ) : (
+                      <MdOutlinePriceCheck />
+                    )}
+                  </span>
+                  {category?.label === 'بيع'
+                    ? ' سعر السيارة:'
+                    : 'أجرة السيارة شهرياً:'}
+                </h1>
               </div>
+              <input
+                value={inputs?.basePrice}
+                onChange={(e) =>
+                  setInputs({ ...inputs, basePrice: e.target.value })
+                }
+                type="number"
+                id="سعر السيارة"
+                name="سعر السيارة"
+                placeholder="$ 00.0"
+                className={` w-full text-sm sm:text-lg rounded text-start text-black  h-9 sm:h-12 text-nowrap px-2 border border-gray-300 focus:outline-one`}
+              />
             </div>
           </div>
         </div>
       </div>
-      {/* الوصف */}
-      <div className="w-full">
-        <div className="flex items-center gap-2 w-full justify-start my-2">
-          <h1 className="flex text-right text-lg ">
-            <span className={` text-one text-lg xl:text-2xl ml-2`}>
-              {!inputs?.description && check ? (
-                '❌'
-              ) : (
-                <MdOutlineFeaturedPlayList />
-              )}
-            </span>
-            الوصف:
-          </h1>
-        </div>
-
-        <textarea
-          value={inputs?.description}
-          onChange={(e) =>
-            setInputs({ ...inputs, description: e.target.value })
-          }
-          dir="rtl"
-          rows={'6'}
-          name="الوصف"
-          id="الوصف"
-          placeholder="اكتب مواصفات سيارتك هنا ..."
-          className="scrollBar flex text-right w-full p-2 border border-gray-300 text-xl placeholder:text-sm lg:placeholder:text-lg h-36 outline-2 focus:outline-one rounded"
-        ></textarea>
-      </div>
-      <OnClickMap
-        chosenCity={data?.city}
-        chosentown={data?.town}
-        cityLocation={cityLocation}
-        townLocation={townLocation}
-      />
-      <div className="w-full">
-        <div className="flex items-center gap-2 w-full justify-start my-2 ">
-          <h1 className="flex text-right text-sm sm:text-lg select-none ">
-            <span className={` text-one text-lg xl:text-2xl ml-2`}>
-              <RxVideo />{' '}
-            </span>
-            أضف فيديو للسيارة من يوتيوب أو تيك توك:
-          </h1>
-        </div>
-
-        <input
-          type="text"
-          placeholder="ضع رابط الفيديو هنا"
-          value={url}
-          onChange={handleInputChange}
-          className={` w-full text-sm sm:text-lg rounded text-start text-black  h-9 sm:h-12 text-nowrap px-2 border border-gray-300 focus:outline-one`}
-        />
-        {inputs?.details?.link && (
-          <div>
-            <iframe
-              width="560"
-              height="315"
-              src={inputs?.details?.link}
-              frameBorder="0"
-              allowFullScreen
-              title="Embedded YouTube Video"
-              className=" w-full h-44 sm:h-96 lg:h-[470px] xl:h-[500px] 2xl:h-[560px]"
-            />
+      <div className="w-full p-4">
+        {/* الوصف */}
+        <div className="w-full">
+          <div className="flex items-center gap-2 w-full justify-start my-2">
+            <h1 className="flex text-right text-lg ">
+              <span className={` text-one text-lg xl:text-2xl ml-2`}>
+                {!inputs?.description && check ? (
+                  '❌'
+                ) : (
+                  <MdOutlineFeaturedPlayList />
+                )}
+              </span>
+              الوصف:
+            </h1>
           </div>
-        )}
-      </div>
 
-      <div className="flex flex-col sm:flex-row justify-around items-center gap-8 w-full my-12">
-        <button
-          type="submit"
-          className="btn bg-five rounded text-white hover:text-two shadow-lg hover:outline outline-one text-xl hover py-2 px-16 w-full"
-        >
-          نشر
-        </button>
-        {cancel && (
-          <button
+          <textarea
+            value={inputs?.description}
+            onChange={(e) =>
+              setInputs({ ...inputs, description: e.target.value })
+            }
+            dir="rtl"
+            rows={'6'}
+            name="الوصف"
+            id="الوصف"
+            placeholder="اكتب مواصفات سيارتك هنا ..."
+            className="scrollBar flex text-right w-full p-2 border border-gray-300 text-xl placeholder:text-sm lg:placeholder:text-lg h-36 outline-2 focus:outline-one rounded"
+          ></textarea>
+        </div>
+        <OnClickMap
+          chosenCity={data?.city}
+          chosentown={data?.town}
+          cityLocation={cityLocation}
+          townLocation={townLocation}
+        />
+        <div className="w-full">
+          <div className="flex items-center gap-2 w-full justify-start my-2 ">
+            <h1 className="flex text-right text-sm sm:text-lg select-none ">
+              <span className={` text-one text-lg xl:text-2xl ml-2`}>
+                <RxVideo />{' '}
+              </span>
+              أضف فيديو للسيارة من يوتيوب أو تيك توك:
+            </h1>
+          </div>
+
+          <input
             type="text"
-            className="btn bg-five   shadow-sm shadow-gray-300 text-white hover:outline  outline-one text-xl hover py-2 px-16 w-full"
-            onClick={() => {
-              setIsVisible(false);
-              setInputs({
-                userId: '',
-                title: '',
-                images: addImages || [],
-                adCategory: category?.label || '',
-                city: data?.propertyCity || '',
-                town: data?.propertyTown || '',
-                basePrice: '',
-                phoneNumber: '',
-                description: '',
-                lng: location[1] || 36.2765,
-                lat: location[0] || 33.5138,
-                details: {
-                  usedNew: usedNew?.label || '',
-                  brand: brand?.label || '',
-                  link: '',
-                  model: '',
-                  year: '',
-                  distance: '',
-                },
-              });
-            }}
+            placeholder="ضع رابط الفيديو هنا"
+            value={url}
+            onChange={handleInputChange}
+            className={` w-full text-sm sm:text-lg rounded text-start text-black  h-9 sm:h-12 text-nowrap px-2 border border-gray-300 focus:outline-one`}
+          />
+          {inputs?.details?.link && (
+            <div>
+              <iframe
+                width="560"
+                height="315"
+                src={inputs?.details?.link}
+                frameBorder="0"
+                allowFullScreen
+                title="Embedded YouTube Video"
+                className=" w-full h-44 sm:h-96 lg:h-[470px] xl:h-[500px] 2xl:h-[560px]"
+              />
+            </div>
+          )}
+        </div>
+
+        <div className="flex flex-col sm:flex-row justify-around items-center gap-8 w-full my-12">
+          <button
+            type="submit"
+            className="btn bg-five rounded text-white hover:text-two shadow-lg hover:outline outline-one text-xl hover py-2 px-16 w-full"
           >
-            إلغاء
+            نشر
           </button>
-        )}
+          {cancel && (
+            <button
+              type="text"
+              className="btn bg-five   shadow-sm shadow-gray-300 text-white hover:outline  outline-one text-xl hover py-2 px-16 w-full"
+              onClick={() => {
+                setIsVisible(false);
+                setInputs({
+                  userId: '',
+                  title: '',
+                  images: addImages || [],
+                  adCategory: category?.label || '',
+                  city: data?.propertyCity || '',
+                  town: data?.propertyTown || '',
+                  basePrice: '',
+                  phoneNumber: '',
+                  description: '',
+                  lng: location[1] || 36.2765,
+                  lat: location[0] || 33.5138,
+                  details: {
+                    usedNew: usedNew?.label || '',
+                    brand: brand?.label || '',
+                    link: '',
+                    model: '',
+                    year: '',
+                    distance: '',
+                  },
+                });
+              }}
+            >
+              إلغاء
+            </button>
+          )}
+        </div>
       </div>
     </form>
   );

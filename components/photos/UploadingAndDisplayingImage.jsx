@@ -115,11 +115,11 @@ export default function ImageUploader({ images = [] }) {
       </div>
 
       {/* الأربع صور الصغيرة في الأسفل */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full">
+      <div className="flex justify-center items-center gap-2 w-full">
         {Array.from({ length: 4 }).map((_, index) => (
           <div
             key={index}
-            className="relative w-full h-48 border border-gray-300 rounded-[5px] flex justify-center items-center bg-white"
+            className="relative size-16 sm:size-44 lg:size-72 border border-gray-300 rounded-[5px] flex justify-center items-center bg-white"
           >
             {isLoading ? ( // إذا كانت الصور قيد التحميل، عرض مؤشر التحميل
               <LoadingPhoto />
@@ -155,8 +155,8 @@ export default function ImageUploader({ images = [] }) {
                 htmlFor="file-upload"
                 className="flex flex-col items-center cursor-pointer"
               >
-                <MdOutlineAddPhotoAlternate className="text-one text-3xl" />
-                <h1 className=" text-sm sm:text-lg">أضف صورة</h1>
+                <MdOutlineAddPhotoAlternate className="text-one text-xl sm:text-2xl lg:text-3xl" />
+                <h1 className="text-[8px] sm:text-sm lg:text-lg">أضف صورة</h1>
               </label>
             )}
           </div>

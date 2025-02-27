@@ -5,7 +5,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Image from 'next/image';
 import { useMediaQuery } from 'react-responsive';
 
-export default function HeroSlider({ images = [] }) {
+export default function HeroSlider() {
   const [index, setIndex] = useState(0);
   const timeoutRef = useRef(null);
   const isMobile = useMediaQuery({ maxWidth: 767 });
@@ -26,7 +26,15 @@ export default function HeroSlider({ images = [] }) {
     };
     resetTimeout();
     return () => clearTimeout(timeoutRef.current);
-  }, [images, index]);
+  }, [index]);
+  const images = [
+    'https://i.imgur.com/wZ0aruw.jpg',
+    'https://i.imgur.com/uPsQqzu.png',
+    'https://i.imgur.com/wHyvDAD.png',
+    'https://i.imgur.com/Kc6Pcu1.png',
+    'https://i.imgur.com/rLz58YH.jpg',
+    'https://i.imgur.com/VVu5la7.png',
+  ];
 
   if (images.length === 0) {
     return (
@@ -35,7 +43,6 @@ export default function HeroSlider({ images = [] }) {
       </div>
     );
   }
-
   return (
     <div
       className="relative w-full overflow-hidden bg-black"

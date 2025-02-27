@@ -186,7 +186,7 @@ export default function RealEstatePostForm({ setIsVisible, cancel = true }) {
 
   return (
     <form
-      className="flex flex-col justify-center items-start h-fit w-full mt-4 "
+      className="flex flex-col justify-center items-start h-fit w-full mt-4 text-black"
       onSubmit={handleSubmit}
     >
       <div className="w-full">
@@ -393,109 +393,111 @@ export default function RealEstatePostForm({ setIsVisible, cancel = true }) {
           </div>
         </div>
       </div>
-      {/* الوصف */}
-      <div className="w-full">
-        <div className="flex items-center gap-2 w-full justify-start my-2">
-          <h1 className="flex text-right text-lg ">
-            <span className={` text-one text-lg xl:text-2xl ml-2`}>
-              {!inputs?.description && check ? (
-                '❌'
-              ) : (
-                <MdOutlineFeaturedPlayList />
-              )}
-            </span>
-            الوصف:
-          </h1>
-        </div>
-
-        <textarea
-          value={inputs?.description}
-          onChange={(e) =>
-            setInputs({ ...inputs, description: e.target.value })
-          }
-          dir="rtl"
-          rows={'6'}
-          name="الوصف"
-          id="الوصف"
-          placeholder="اكتب مواصفات عقارك هنا ..."
-          className="scrollBar flex text-right w-full p-2 border border-gray-300 text-xl placeholder:text-sm lg:placeholder:text-lg h-36 outline-2 focus:outline-one rounded"
-        ></textarea>
-      </div>
-      <OnClickMap
-        chosenCity={data?.city}
-        chosentown={data?.town}
-        cityLocation={cityLocation}
-        townLocation={townLocation}
-      />
-      <div className="w-full">
-        <div className="flex items-center gap-2 w-full justify-start my-2 ">
-          <h1 className="flex text-right text-sm sm:text-lg select-none ">
-            <span className={` text-one text-lg xl:text-2xl ml-2`}>
-              <RxVideo />{' '}
-            </span>
-            أضف فيديو للعقار من يوتيوب أو تيك توك:
-          </h1>
-        </div>
-
-        <input
-          type="text"
-          placeholder="ضع رابط الفيديو هنا"
-          value={url}
-          onChange={handleInputChange}
-          className={` w-full text-sm sm:text-lg rounded text-start text-black  h-9 sm:h-12 text-nowrap px-2 border border-gray-300 focus:outline-one`}
-        />
-        {inputs?.details?.link && (
-          <div>
-            <iframe
-              width="560"
-              height="315"
-              src={inputs?.details?.link}
-              frameBorder="0"
-              allowFullScreen
-              title="Embedded YouTube Video"
-              className=" w-full h-44 sm:h-96 lg:h-[470px] xl:h-[500px] 2xl:h-[560px]"
-            />
+      <div className="w-full p-4">
+        {/* الوصف */}
+        <div className="w-full">
+          <div className="flex items-center gap-2 w-full justify-start my-2">
+            <h1 className="flex text-right text-lg ">
+              <span className={` text-one text-lg xl:text-2xl ml-2`}>
+                {!inputs?.description && check ? (
+                  '❌'
+                ) : (
+                  <MdOutlineFeaturedPlayList />
+                )}
+              </span>
+              الوصف:
+            </h1>
           </div>
-        )}
-      </div>
 
-      <div className="flex flex-col sm:flex-row justify-around items-center gap-8 w-full my-12">
-        <button
-          type="submit"
-          className="btn bg-five rounded text-white hover:text-two shadow-lg hover:outline outline-one text-xl hover py-2 px-16 w-full"
-        >
-          نشر
-        </button>
-        {cancel && (
-          <button
+          <textarea
+            value={inputs?.description}
+            onChange={(e) =>
+              setInputs({ ...inputs, description: e.target.value })
+            }
+            dir="rtl"
+            rows={'6'}
+            name="الوصف"
+            id="الوصف"
+            placeholder="اكتب مواصفات عقارك هنا ..."
+            className="scrollBar flex text-right w-full p-2 border border-gray-300 text-xl placeholder:text-sm lg:placeholder:text-lg h-36 outline-2 focus:outline-one rounded"
+          ></textarea>
+        </div>
+        <OnClickMap
+          chosenCity={data?.city}
+          chosentown={data?.town}
+          cityLocation={cityLocation}
+          townLocation={townLocation}
+        />
+        <div className="w-full">
+          <div className="flex items-center gap-2 w-full justify-start my-2 ">
+            <h1 className="flex text-right text-sm sm:text-lg select-none ">
+              <span className={` text-one text-lg xl:text-2xl ml-2`}>
+                <RxVideo />{' '}
+              </span>
+              أضف فيديو للعقار من يوتيوب أو تيك توك:
+            </h1>
+          </div>
+
+          <input
             type="text"
-            className="btn bg-five   shadow-sm shadow-gray-300 text-white hover:outline  outline-one text-xl hover py-2 px-16 w-full"
-            onClick={() => {
-              setIsVisible(false);
-              setInputs({
-                userId: '',
-                title: '',
-                images: addImages || [],
-                adCategory: category?.label || '',
-                city: data?.propertyCity || '',
-                town: data?.propertyTown || '',
-                basePrice: '',
-                phoneNumber: '',
-                description: '',
-                lng: location[1] || 36.2765,
-                lat: location[0] || 33.5138,
-                details: {
-                  propertyType: data?.propertyType?.label || '',
-                  roomsNumber: data?.propertyRoomsNumber?.label || '',
-                  link: '',
-                  area: '',
-                },
-              });
-            }}
+            placeholder="ضع رابط الفيديو هنا"
+            value={url}
+            onChange={handleInputChange}
+            className={` w-full text-sm sm:text-lg rounded text-start text-black  h-9 sm:h-12 text-nowrap px-2 border border-gray-300 focus:outline-one`}
+          />
+          {inputs?.details?.link && (
+            <div>
+              <iframe
+                width="560"
+                height="315"
+                src={inputs?.details?.link}
+                frameBorder="0"
+                allowFullScreen
+                title="Embedded YouTube Video"
+                className=" w-full h-44 sm:h-96 lg:h-[470px] xl:h-[500px] 2xl:h-[560px]"
+              />
+            </div>
+          )}
+        </div>
+
+        <div className="flex flex-col sm:flex-row justify-around items-center gap-8 w-full my-12">
+          <button
+            type="submit"
+            className="btn bg-five rounded text-white hover:text-two shadow-lg hover:outline outline-one text-xl hover py-2 px-16 w-full"
           >
-            إلغاء
+            نشر
           </button>
-        )}
+          {cancel && (
+            <button
+              type="text"
+              className="btn bg-five   shadow-sm shadow-gray-300 text-white hover:outline  outline-one text-xl hover py-2 px-16 w-full"
+              onClick={() => {
+                setIsVisible(false);
+                setInputs({
+                  userId: '',
+                  title: '',
+                  images: addImages || [],
+                  adCategory: category?.label || '',
+                  city: data?.propertyCity || '',
+                  town: data?.propertyTown || '',
+                  basePrice: '',
+                  phoneNumber: '',
+                  description: '',
+                  lng: location[1] || 36.2765,
+                  lat: location[0] || 33.5138,
+                  details: {
+                    propertyType: data?.propertyType?.label || '',
+                    roomsNumber: data?.propertyRoomsNumber?.label || '',
+                    link: '',
+                    area: '',
+                  },
+                });
+              }}
+            >
+              إلغاء
+            </button>
+          )}
+        </div>
       </div>
     </form>
   );

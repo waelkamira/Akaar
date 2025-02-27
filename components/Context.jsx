@@ -114,6 +114,11 @@ function inputsReducer(currentState, action) {
         ...currentState,
         brand: action?.payload,
       };
+    case 'CATEGORY_TYPE':
+      return {
+        ...currentState,
+        categoryType: action?.payload,
+      };
 
     default:
       return currentState;
@@ -138,6 +143,7 @@ export function InputsContextProvider({ children }) {
     postId: '',
     usedNew: '',
     brand: '',
+    categoryType: '',
   });
   // console.log('from Context', state);
 
