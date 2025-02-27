@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { FaHome } from 'react-icons/fa';
 import { GiExitDoor } from 'react-icons/gi';
@@ -12,12 +12,24 @@ import Image from 'next/image';
 import { useSession } from 'next-auth/react';
 import { ImProfile } from 'react-icons/im';
 import { FaCarSide } from 'react-icons/fa';
+import categories from '../Categories/categories';
 
-export default function CarsNavbar() {
+export default function SecondNavBar({ category }) {
+  const [selectedCategory, setSelectedCategory] = useState('');
   const router = useRouter();
   const session = useSession();
   const pathname = usePathname();
+  useEffect(() => {
+    findCategory();
+  }, []);
 
+  function findCategory() {
+    if (categories) {
+      const result = categories?.filter((ca) => ca.id === category);
+      setSelectedCategory(result[0]);
+      console.log('result', result);
+    }
+  }
   return (
     <div
       className={`hidden xl:flex xl:flex-col xl:justify-between w-full overflow-hidden bg-two text-white px-4 border-b-[10px] border-one ${
@@ -38,7 +50,7 @@ export default function CarsNavbar() {
             onClick={() => router.push('/Cars')}
           >
             <FaCarSide className="text-xl select-none text-one" />
-            <li className=" text-xl select-none">سيارات</li>
+            <li className=" text-xl select-none">{selectedCategory?.name}</li>
           </div>
           <div className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-[5px] border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-14 transition-all duration-300">
             {session?.status === 'unauthenticated' && (
@@ -84,21 +96,21 @@ export default function CarsNavbar() {
             onClick={() => router.push('/DynamicForm')}
           >
             <FaDollarSign className="text-xl select-none text-one" />
-            <li className=" text-xl select-none">بيع/تأجير سيارة</li>
+            <li className=" text-xl select-none">بيع/تأجير </li>
           </div>
           <div
             className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-[5px] border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-14 transition-all duration-300"
             onClick={() => router.push('/Cars/buy')}
           >
             <GiPayMoney className="text-xl select-none text-one" />
-            <li className=" text-xl select-none">شراء سيارة</li>
+            <li className=" text-xl select-none">شراء </li>
           </div>
           <div
             className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-[5px] border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-14 transition-all duration-300"
             onClick={() => router.push('/Cars/rent')}
           >
             <MdCarRental className="text-xl select-none text-one" />
-            <li className=" text-xl select-none">استأجار سيارة</li>
+            <li className=" text-xl select-none">استأجار </li>
           </div>
         </ul>
         <div className="flex items-center justify-center">

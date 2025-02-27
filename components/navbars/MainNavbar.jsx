@@ -1,6 +1,5 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { usePathname } from 'next/navigation';
 import { FaHome } from 'react-icons/fa';
 import { GiExitDoor } from 'react-icons/gi';
 import { FcConferenceCall } from 'react-icons/fc';
@@ -16,14 +15,12 @@ import { useSession } from 'next-auth/react';
 import { ImProfile } from 'react-icons/im';
 import { GiCarWheel } from 'react-icons/gi';
 import { ImSearch } from 'react-icons/im';
-import Button from '../Button';
 import { TfiMenuAlt } from 'react-icons/tfi';
 import SideBarMenu from '../SideBarMenu';
-import NavegationPages from '../ReusableComponents/NavegationPages';
 import SmallItem from '../ReusableComponents/SmallItem';
-import ClockWidget from '../ClockWidget';
 import Link from 'next/link';
 import { TbTargetArrow } from 'react-icons/tb';
+import CategoriesNavBar from './CategoriesNavBar';
 
 export default function MainNavbar() {
   const router = useRouter();
@@ -137,6 +134,13 @@ export default function MainNavbar() {
             </div>
             <div
               className="flex items-center justify-center gap-2 border-one hover:border-t-4 shadow-one hover:shadow-lg rounded-[5px]  hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-14 transition-all duration-300"
+              onClick={() => router.push('/DynamicForm')}
+            >
+              <MdOutlineMapsHomeWork className="text-xl select-none text-one" />
+              <li className=" text-xl select-none">إنشاء إعلان</li>
+            </div>
+            <div
+              className="flex items-center justify-center gap-2 border-one hover:border-t-4 shadow-one hover:shadow-lg rounded-[5px]  hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-14 transition-all duration-300"
               onClick={() => router.push('/Cars')}
             >
               <GiCarWheel className="text-xl select-none text-one" />
@@ -172,6 +176,10 @@ export default function MainNavbar() {
           </div>
         </div>
       </div>
+      <div className="bg-sky-400">
+        <CategoriesNavBar />
+      </div>
+
       <div className="flex flex-col justify-center items-start w-full bg-three">
         <div className="flex justify-between items-center gap-2 sm:gap-4 w-full px-2">
           <div className="flex justify-center items-center gap-2 sm:gap-4 w-full">

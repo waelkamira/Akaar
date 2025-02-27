@@ -92,6 +92,7 @@ export default function DynamicForm() {
 
   const validateForm = () => {
     const requiredFields = [
+      'userId',
       'title',
       'category',
       'adCategory',
@@ -109,8 +110,8 @@ export default function DynamicForm() {
     // التحقق من الحقول الإضافية
     if (selectedCategory && categoryFields[selectedCategory]) {
       categoryFields[selectedCategory].forEach((field) => {
-        if (!formState.details[field.name]?.trim()) {
-          emptyFieldsList.push(field.name);
+        if (!formState.details[field?.name]?.trim()) {
+          emptyFieldsList.push(field?.name);
         }
       });
     }
@@ -130,7 +131,7 @@ export default function DynamicForm() {
       return;
     }
 
-    const formData = { ...formState, adCategory: selectedCategory };
+    const formData = { ...formState, category: selectedCategory };
     console.log('Form Data to be sent:', formData);
 
     try {
@@ -195,7 +196,7 @@ export default function DynamicForm() {
           name="adCategory"
           options={[
             { value: 'بيع', label: 'بيع' },
-            { value: 'تأجير', label: 'تأجير' },
+            { value: 'أجار', label: 'أجار' },
           ]}
           register={register}
           errors={emptyFields}
@@ -240,22 +241,22 @@ export default function DynamicForm() {
           categoryFields[selectedCategory]?.map((field, index) => (
             <div key={index}>
               <label className="font-medium mb-2 flex items-center gap-2">
-                {field.icon} {field.name}
+                {field?.icon} {field?.name}
               </label>
-              {field.options ? (
+              {field?.options ? (
                 <select
                   className={`w-full p-1 sm:p-2 lg:p-3 border rounded focus:outline-2 focus:outline-one ${
-                    emptyFields.includes(field.name)
+                    emptyFields.includes(field?.name)
                       ? 'outline-2 outline-red-500'
                       : ''
                   }`}
                   required
                   onChange={(e) =>
-                    handleDetailsChange(field.name, e.target.value)
+                    handleDetailsChange(field?.name, e.target.value)
                   }
                 >
-                  <option value="">{field.placeholder}</option>
-                  {Object.entries(field.options).map(([key, value]) => (
+                  <option value="">{field?.placeholder}</option>
+                  {Object.entries(field?.options).map(([key, value]) => (
                     <option key={value} value={value}>
                       {value}
                     </option>
@@ -263,19 +264,19 @@ export default function DynamicForm() {
                 </select>
               ) : (
                 <input
-                  placeholder={field.placeholder}
+                  placeholder={field?.placeholder}
                   className={`w-full p-1 sm:p-2 lg:p-3 border rounded focus:outline-2 focus:outline-one ${
-                    emptyFields.includes(field.name)
+                    emptyFields.includes(field?.name)
                       ? 'outline-2 outline-red-500'
                       : ''
                   }`}
                   required
                   onChange={(e) =>
-                    handleDetailsChange(field.name, e.target.value)
+                    handleDetailsChange(field?.name, e.target.value)
                   }
                 />
               )}
-              {emptyFields.includes(field.name) && (
+              {emptyFields.includes(field?.name) && (
                 <p className="text-red-500 text-sm mt-1">هذا الحقل مطلوب</p>
               )}
             </div>
