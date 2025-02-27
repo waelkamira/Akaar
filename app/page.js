@@ -63,7 +63,6 @@ export default function Home() {
   return (
     <main className="flex flex-col items-center justify-center overflow-hidden z-50 h-fit w-full bg-five rounded-b">
       <MainNavbar />
-      <CategoriesNavBar />
       <HeroSlider images={images} />
 
       {/* عرض البيانات لكل فئة */}
@@ -90,7 +89,9 @@ export default function Home() {
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => {
-                    dispatch({ type: 'POST_ID', payload: item?.id });
+                    if (typeof window !== 'undefined') {
+                      localStorage.setItem('item', JSON.stringify(item));
+                    }
                     router.push('/post');
                   }}
                   className="flex flex-col justify-center items-center w-full border cursor-pointer bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out rounded-[10px] overflow-hidden shadow-lg relative"

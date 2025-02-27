@@ -16,7 +16,7 @@ import { FaTreeCity } from 'react-icons/fa6';
 import dynamic from 'next/dynamic';
 import LoginButton from '../Buttons/LoginButton';
 // استخدام dynamic لتحميل المكونات بشكل ديناميكي
-const ImageSlider = dynamic(() => import('../imageSlider'), {
+const ImageSlider = dynamic(() => import('../photos/imageSlider'), {
   loading: () => <Loading />, // عرض تحميل مؤقت أثناء التحميل
 });
 

@@ -19,7 +19,7 @@ import { GiPathDistance } from 'react-icons/gi';
 import LoginButton from '../Buttons/LoginButton';
 
 // استخدام dynamic لتحميل المكونات بشكل ديناميكي
-const ImageSlider = dynamic(() => import('../imageSlider'), {
+const ImageSlider = dynamic(() => import('../photos/imageSlider'), {
   loading: () => <Loading />, // عرض تحميل مؤقت أثناء التحميل
 });
 
