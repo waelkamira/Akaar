@@ -24,6 +24,7 @@ import FormTextarea from './FormTextarea';
 import FormSubmitButton from './FormSubmitButton';
 import OnClickMap from '../../components/map/onClickMap';
 import { useSession } from 'next-auth/react';
+import MainNavbar from '../../components/navbars/MainNavbar';
 
 export default function DynamicForm() {
   const { register, handleSubmit } = useForm();
@@ -32,6 +33,9 @@ export default function DynamicForm() {
   const router = useRouter();
   const { data, addImages, location } = useContext(inputsContext);
   const session = useSession();
+  console.log(typeof selectedCategory);
+  console.log('selectedCategory', selectedCategory);
+
   const [formState, setFormState] = useState({
     id: uuidv4(),
     userId: '',
@@ -158,14 +162,15 @@ export default function DynamicForm() {
   };
 
   return (
-    <div className="flex justify-center items-center w-full bg-five text-sm sm:text-lg">
-      {session?.user ? (
+    <div className="flex flex-col justify-center items-center w-full bg-five text-sm sm:text-lg">
+      <MainNavbar />
+      {session?.status === 'authenticated' ? (
         <form
           onSubmit={(e) => {
             e.preventDefault();
             onSubmit();
           }}
-          className="space-y-4 p-4 border rounded-lg shadow-md w-full xl:w-1/2"
+          className="space-y-4 p-4 mt-4 border rounded-lg shadow-md w-full xl:w-1/2"
         >
           <UploadingAndDisplayingImage />
 
@@ -187,7 +192,7 @@ export default function DynamicForm() {
             label="عنوان الإعلان"
             icon={<MdTitle className="text-one text-lg sm:text-xl" />}
             name="title"
-            placeholder="عنوان الإعلان"
+            placeholder="ضع عنوان بسيط"
             register={register}
             errors={emptyFields}
             onChange={handleInputChange}
@@ -213,7 +218,7 @@ export default function DynamicForm() {
             label="المدينة"
             icon={<MdLocationCity className="text-one text-lg sm:text-xl" />}
             name="city"
-            placeholder="المدينة"
+            placeholder="دمشق"
             register={register}
             errors={emptyFields}
             onChange={handleInputChange}
@@ -223,7 +228,7 @@ export default function DynamicForm() {
             label="المنطقة"
             icon={<MdLocationOn className="text-one text-lg sm:text-xl" />}
             name="town"
-            placeholder="المنطقة"
+            placeholder="المزة"
             register={register}
             errors={emptyFields}
             onChange={handleInputChange}
@@ -233,7 +238,7 @@ export default function DynamicForm() {
             label="رقم الهاتف"
             icon={<MdPhone className="text-one text-lg sm:text-xl" />}
             name="phoneNumber"
-            placeholder="رقم الهاتف"
+            placeholder="+963 955555555"
             type="number"
             register={register}
             errors={emptyFields}
@@ -289,7 +294,7 @@ export default function DynamicForm() {
             label="السعر"
             icon={<MdAttachMoney className="text-one text-lg sm:text-xl" />}
             name="basePrice"
-            placeholder="السعر"
+            placeholder="500 $"
             type="number"
             register={register}
             errors={emptyFields}
@@ -300,7 +305,7 @@ export default function DynamicForm() {
             label="وصف الإعلان"
             icon={<MdDescription className="text-one text-lg sm:text-xl" />}
             name="description"
-            placeholder="وصف الإعلان"
+            placeholder="اكتب وصف للشيء الذي تريد بيعه ..."
             register={register}
             errors={emptyFields}
             onChange={handleInputChange}

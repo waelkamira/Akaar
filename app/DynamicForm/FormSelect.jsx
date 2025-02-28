@@ -18,7 +18,7 @@ const FormSelect = ({
       </label>
       <select
         {...register(name)}
-        className={`w-full p-1 sm:p-2 lg:p-3 border rounded focus:outline-2 focus:outline-one ${
+        className={`w-full p-1 sm:p-2 lg:p-3 border rounded focus:outline-2 cursor-pointer focus:outline-one ${
           errors.includes(name) ? 'outline-2 outline-red-500' : ''
         }`}
         onChange={onChange}
@@ -26,7 +26,11 @@ const FormSelect = ({
       >
         <option value="">{placeholder}</option>
         {options.map((option) => (
-          <option key={option.value} value={option.value}>
+          <option
+            key={option.value}
+            value={option.value}
+            className="cursor-pointer"
+          >
             {option.label}
           </option>
         ))}

@@ -7,96 +7,67 @@ import { useRouter } from 'next/navigation';
 import LoadingPhoto from '../photos/LoadingPhoto';
 import FormatDate from './FormatDate';
 import categoryFields from '../Categories/categoryFields';
+
 export default function SmallCard({ item }) {
   const { dispatch } = useContext(inputsContext);
   const router = useRouter();
   const session = useSession();
   const [isFavorited, setIsFavorited] = useState(false);
   const fields = categoryFields[item?.category] || [];
-  // جلب حالة الإعجاب عند تحميل المكون
-  // useEffect(() => {
-  //   if (session?.data?.user?.email) {
-  //     fetch(`/api/favorite?postId=${item?.id}&email=${session.data.user.email}`)
-  //       .then((res) => res.json())
-  //       .then((data) => setIsFavorited(data?.favorited || false))
-  //       .catch((error) =>
-  //         console.error('Error fetching favorite status:', error)
-  //       );
-  //   }
-  // }, [session, item?.id]);
 
-  // const handleFavoriteClick = async (id) => {
-  //   if (!session) {
-  //     alert('يجب تسجيل الدخول أولاً!');
-  //     return;
-  //   }
-
-  //   try {
-  //     const res = await fetch('/api/favorite', {
-  //       method: 'POST',
-  //       body: JSON.stringify({
-  //         postId: id,
-  //         email: session?.data?.user?.email,
-  //       }),
-  //       headers: { 'Content-Type': 'application/json' },
-  //     });
-
-  //     if (!res.ok) {
-  //       throw new Error(`HTTP error! status: ${res.status}`);
-  //     }
-
-  //     const data = await res.json();
-  //     setIsFavorited(data.favorited || false);
-  //   } catch (error) {
-  //     console.error('خطأ أثناء الإضافة للمفضلة:', error);
-  //   }
-  // };
-  console.log('item', item);
   return (
     <div
-      className="flex flex-col justify-center items-center w-full cursor-pointer bg-one hover:scale-[103%] transition-transform duration-300 ease-in-out overflow-hidden hover:shadow-xl relative"
+      className="flex flex-col justify-center items-center w-full cursor-pointer bg-white hover:shadow-2xl transition-shadow duration-300 ease-in-out rounded-lg overflow-hidden relative"
       key={item?.id}
       onClick={() => {
-        dispatch({ type: 'POST_ID', payload: item?.id });
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('item', JSON.stringify(item));
+        }
         router.push('/post');
       }}
     >
       {/* الصورة */}
-      <div className="relative w-full h-44">
+      <div className="relative w-full h-48">
         {!item?.image1 && <LoadingPhoto />}
         {item?.image1 && (
           <Image
             src={item?.image1}
             fill
             alt="item_photo"
-            className="object-cover transition-opacity duration-300 hover:opacity-90"
+            className="object-cover transition-transform duration-300 hover:scale-105 rounded-t-lg"
           />
         )}
       </div>
+
       {/* التفاصيل */}
-      <div className="flex justify-between gap-2 items-center w-full mt-2 text-sm sm:text-md p-3 bg-white text-black">
-        <h1>{item?.adCategory}</h1>
-        <h1>
-          {item?.title
-            ?.split(' ') // تقسيم النص إلى كلمات
-            .slice(0, 3) // أخذ أول 3 كلمات
-            .join(' ')}
+      <div className="flex flex-col justify-between gap-2 w-full p-4 bg-white text-black rounded-b-lg">
+        {/* العنوان */}
+        <h1 className="text-lg font-semibold text-gray-800 line-clamp-1">
+          {item?.title}
         </h1>
-        <h1 className="flex justify-center items-center">{item?.city}</h1>
-        <h1 className="flex justify-center items-center text-xl font-bold">
-          {item?.basePrice}
-          <span className="text-green-500 mx-1 select-none text-xl font-bold">
-            $
-          </span>
-        </h1>
-        <h1 className="absolute top-2 left-2 z-50 flex justify-center items-center bg-one rounded-full px-2">
-          {<FormatDate dateString={item?.createdAt} />}
-        </h1>
+
+        {/* السعر والمدينة */}
+        <div className="flex justify-between items-center">
+          <h1 className="text-sm text-gray-600">{item?.city}</h1>
+          <h1 className="text-xl font-bold text-green-600">
+            {item?.basePrice}{' '}
+            <span className="text-green-600 mx-1 select-none text-sm">$</span>
+          </h1>
+        </div>
+
+        {/* تاريخ الإنشاء */}
+        <div className="absolute top-2 left-2 z-50 flex justify-center items-center bg-white/80 rounded-full px-2 py-1 shadow-sm text-xs text-gray-700">
+          <FormatDate dateString={item?.createdAt} />
+        </div>
       </div>
+
       {/* تفاصيل إضافية بناءً على الفئة */}
-      <div className="w-full p-3 bg-gray-100">
-        {fields?.slice(1, 3).map((field, index) => (
-          <div key={index} className="flex items-center gap-2 mb-2">
+      <div className="w-full p-4 bg-gray-50 border-t border-gray-200">
+        {fields?.slice(0, 2).map((field, index) => (
+          <div
+            key={index}
+            className="flex items-center gap-2 mb-2 text-sm text-gray-700"
+          >
             {field.icon}
             <p>
               {field.name}: {item.details?.[field.name]}
@@ -104,20 +75,20 @@ export default function SmallCard({ item }) {
           </div>
         ))}
       </div>
-      {/* أيقونة تفاعلية */}
+
+      {/* أيقونة المفضلة */}
       <div
         className={`absolute top-3 right-3 ${
-          isFavorited ? 'bg-orange-500' : 'bg-white/80'
-        } backdrop-blur-sm rounded-full p-2 shadow-sm hover:bg-white transition-all duration-300 cursor-pointer`}
+          isFavorited ? 'bg-red-500' : 'bg-white/80'
+        } backdrop-blur-sm rounded-full p-2 shadow-md hover:bg-red-100 transition-all duration-300 cursor-pointer`}
         onClick={(e) => {
-          handleFavoriteClick(item?.id);
           e.stopPropagation();
         }}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           className={`h-5 w-5 ${
-            isFavorited ? 'text-white' : 'text-gray-700 hover:text-gray-900'
+            isFavorited ? 'text-white' : 'text-gray-700 hover:text-red-500'
           }`}
           fill="none"
           viewBox="0 0 24 24"
@@ -134,89 +105,3 @@ export default function SmallCard({ item }) {
     </div>
   );
 }
-
-// export default function SmallCard({ item }) {
-//   const { dispatch } = useContext(inputsContext);
-//   const router = useRouter();
-//   const session = useSession();
-//   const [isFavorited, setIsFavorited] = useState(false);
-
-//   // جلب الحقول المناسبة بناءً على الفئة
-//   const fields = categoryFields[item?.category] || [];
-
-//   return (
-//     <div
-//       className="flex flex-col justify-center items-center w-full cursor-pointer bg-one hover:scale-[103%] transition-transform duration-300 ease-in-out overflow-hidden hover:shadow-xl relative"
-//       key={item?.id}
-//       onClick={() => {
-//         dispatch({ type: 'POST_ID', payload: item?.id });
-//         router.push('/post');
-//       }}
-//     >
-//       {/* الصورة */}
-//       <div className="relative w-full h-44">
-//         {!item?.image1 && <LoadingPhoto />}
-//         {item?.image1 && (
-//           <Image
-//             src={item?.image1}
-//             fill
-//             alt="item_photo"
-//             className="object-cover transition-opacity duration-300 hover:opacity-90"
-//           />
-//         )}
-//       </div>
-//       {/* التفاصيل */}
-//       <div className="flex justify-evenly gap-2 items-center w-full mt-2 text-sm sm:text-md p-3 bg-white text-black">
-//         <h1>{item?.propertyCategory}</h1>
-//         <h1 className="flex justify-center items-center">
-//           {item?.basePrice}
-//           <span className="text-one mx-1 select-none">$</span>
-//         </h1>
-//         <h1 className="flex justify-center items-center">
-//           {item?.propertyCity}
-//         </h1>
-//         <h1 className="flex justify-center items-center">
-//           {<FormatDate dateString={item?.createdAt} />}
-//         </h1>
-//       </div>
-//       {/* تفاصيل إضافية بناءً على الفئة */}
-//       <div className="w-full p-3 bg-gray-100">
-//         {fields.map((field, index) => (
-//           <div key={index} className="flex items-center gap-2 mb-2">
-//             {field.icon}
-//             <p>
-//               {field.name}: {item.details?.[field.name] || field.placeholder}
-//             </p>
-//           </div>
-//         ))}
-//       </div>
-//       {/* أيقونة تفاعلية */}
-//       <div
-//         className={`absolute top-3 right-3 ${
-//           isFavorited ? 'bg-orange-500' : 'bg-white/80'
-//         } backdrop-blur-sm rounded-full p-2 shadow-sm hover:bg-white transition-all duration-300 cursor-pointer`}
-//         onClick={(e) => {
-//           handleFavoriteClick(item?.id);
-//           e.stopPropagation();
-//         }}
-//       >
-//         <svg
-//           xmlns="http://www.w3.org/2000/svg"
-//           className={`h-5 w-5 ${
-//             isFavorited ? 'text-white' : 'text-gray-700 hover:text-gray-900'
-//           }`}
-//           fill="none"
-//           viewBox="0 0 24 24"
-//           stroke="currentColor"
-//         >
-//           <path
-//             strokeLinecap="round"
-//             strokeLinejoin="round"
-//             strokeWidth={2}
-//             d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-//           />
-//         </svg>
-//       </div>
-//     </div>
-//   );
-// }

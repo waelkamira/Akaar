@@ -82,11 +82,11 @@ export default function Page() {
       icon: <FaDollarSign className="text-one text-lg sm:text-xl" />,
       value: post?.adCategory,
     },
-    {
-      name: 'الدولة',
-      icon: <FaGlobe className="text-one text-lg sm:text-xl" />,
-      value: post?.country,
-    },
+    // {
+    //   name: 'الدولة',
+    //   icon: <FaGlobe className="text-one text-lg sm:text-xl" />,
+    //   value: post?.country,
+    // },
     {
       name: 'المدينة',
       icon: <FaMapMarkerAlt className="text-one text-lg sm:text-xl" />,

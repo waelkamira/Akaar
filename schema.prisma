@@ -46,7 +46,7 @@ model Product {
   image5          String?
   basePrice       Int?
   adCategory      String?
-  country         String?            @default("sr")
+  // country         String?            @default("sy")
   city            String?
   town            String?
   phoneNumber     String?
