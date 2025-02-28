@@ -93,10 +93,10 @@ export default function SmallItem({ post, index }) {
         <button
           onClick={() => {
             if (session?.status === 'authenticated') {
-              dispatch({ type: 'POST_ID', payload: post?.postId || post?.id });
-              router.push(
-                post?.details?.distance ? `/Cars/post` : `/RealEstate/post`
-              );
+              if (typeof window !== 'undefined') {
+                localStorage.setItem('item', JSON.stringify(post));
+              }
+              router.push('/post');
             } else {
               toast.custom((t) => (
                 <CustomToast

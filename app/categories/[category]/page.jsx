@@ -78,33 +78,33 @@ const CategoryPage = () => {
           </div>
           <div className="flex flex-col md:flex-row justify-center items-center w-full p-4">
             <Card
-              cardName={'بيع/تأجير منتج'}
+              cardName={'بيع '}
               path={'/products/newPost'}
               text={
                 'بغض النظر عن المنتج الذي تريد بيعه أو تأجيره، يمكننا مساعدتك في إتمام العملية بشكل ناجح وبأسرع وقت ممكن.'
               }
               color={'orange'}
-              image={'https://i.imgur.com/ZAC6X1M.jpg'}
+              image={'https://i.imgur.com/zktgE57.jpg'}
               emoji={<MdOutlineShoppingCart className="text-one" />}
             />
             <Card
-              cardName={'شراء منتج'}
+              cardName={'شراء '}
               path={'/products/buy'}
               text={
                 'اعثر على المنتج الذي تريده من خلال تجربة تصوير غامرة وأكبر عدد من الإعلانات، بما في ذلك أشياء لن تجدها في أي مكان آخر.'
               }
               color={'purple'}
-              image={'https://i.imgur.com/ARNWG2B.jpg'}
+              image={'https://i.imgur.com/Nai6Zkj.jpg'}
               emoji={<MdShoppingBasket className="text-[#803084]" />}
             />
             <Card
-              cardName={'استئجار منتج'}
+              cardName={'استئجار '}
               path={'/products/rent'}
               text={
                 'نحن نعمل على إنشاء تجربة سلسة عبر الإنترنت، بدءاً من بناء أكبر شبكة تأجير إلى تقديم الطلبات، إلى دفع الإيجار.'
               }
               color={'green'}
-              image={'https://i.imgur.com/yH5NGMz.jpg'}
+              image={'https://i.imgur.com/dKOSQOs.jpg'}
               emoji={<MdOutlineCalendarToday className="text-[#119530]" />}
             />
           </div>

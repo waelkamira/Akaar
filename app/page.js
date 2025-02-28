@@ -72,10 +72,10 @@ export default function Home() {
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="flex justify-center items-center w-full h-full gap-8 py-8 my-8"
+          className="flex flex-col xl:flex-row justify-center items-center w-full h-full gap-8 py-8 my-8"
         >
           <div
-            className="hidden xl:flex justify-center items-center w-1/8 mr-10 hover:scale-105 transition-transform duration-300 ease-in-out cursor-pointer"
+            className="flex justify-center items-center w-1/8 mr-10 hover:scale-105 transition-transform duration-300 ease-in-out cursor-pointer"
             onClick={() => router.push(`/categories/${category.id}`)}
           >
             <ColoredCards number={category.id} text={category.name} />

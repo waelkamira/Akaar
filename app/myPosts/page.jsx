@@ -5,20 +5,15 @@ import React, { useContext, useEffect, useState } from 'react';
 import { IoMdClose } from 'react-icons/io';
 import toast from 'react-hot-toast';
 import CustomToast from '../../components/CustomToast';
-import { MdKeyboardDoubleArrowRight } from 'react-icons/md';
-import { MdKeyboardDoubleArrowLeft } from 'react-icons/md';
-import Link from 'next/link';
 import { inputsContext } from '../../components/Context';
 import Loading from '../../components/ReusableComponents/Loading';
 import { useRouter } from 'next/navigation';
 import { MdEdit } from 'react-icons/md';
-import MiddleBarAndPhoto from '../../components/RealEstate/RealEstateSideBar';
-import Image from 'next/image';
 import NavegationPages from '../../components/ReusableComponents/NavegationPages';
 import MainNavbar from '../../components/navbars/MainNavbar';
 import Button from '../../components/Button';
+
 export default function MyPosts() {
-  const [isOpen, setIsOpen] = useState(false);
   const [postId, setpostId] = useState('');
   const [isVisible, setIsVisible] = useState(false);
   const { dispatch } = useContext(inputsContext);
@@ -108,7 +103,7 @@ export default function MyPosts() {
           </div>
         )}
 
-        {session?.data?.user ? (
+        {session?.status === 'authenticated' ? (
           <div className="flex flex-col justify-center items-center w-full">
             {' '}
             <div className="flex flex-col justify-center items-center w-full gap-4 py-4">
@@ -117,7 +112,7 @@ export default function MyPosts() {
                 إعلاناتي <span className="text-one"> {userPostsCount}</span>
               </h1>
             </div>
-            {myPosts?.length === 0 && session?.data?.user && (
+            {myPosts?.length === 0 && (
               <Loading
                 myMessage={
                   '😉 لا يوجد نتائج لعرضها ,لم تقم بإنشاء أي إعلان بعد'
@@ -131,43 +126,42 @@ export default function MyPosts() {
                     <div
                       className="relative flex flex-col border-2 items-start h-full justify-start bg-one hover:scale-[101%] transition-transform duration-300 ease-in-out cursor-pointer rounded-[10px] overflow-hidden"
                       key={index}
+                      onClick={() => {
+                        if (typeof window !== 'undefined') {
+                          localStorage.setItem('item', JSON.stringify(post));
+                        }
+                        router.push('/post');
+                      }}
                     >
-                      {session?.status === 'authenticated' && (
-                        <div className="flex justify-between items-center w-full p-2 bg-one h-24 text-white ">
-                          <div
-                            className="flex flex-col items-center justify-center cursor-pointer  rounded p-1 md:text-xl  hover:bg-three hover:scale-[105%] transition-transform duration-150 ease-in-out"
-                            onClick={() => {
-                              dispatch({
-                                type: 'POST_ID',
-                                payload: post?.id,
-                              });
-                              localStorage.setItem(
-                                'postId',
-                                JSON.stringify(post?.id)
-                              );
-                              if (post?.title) {
-                                router.push(`/Cars/editPost`);
-                              } else {
-                                router.push(`/RealEstate/editPost`);
-                              }
-                            }}
-                          >
-                            <MdEdit />
+                      <div className="flex justify-between items-center w-full p-2 bg-one h-24 text-white ">
+                        <div
+                          className="flex flex-col items-center justify-center cursor-pointer  rounded p-1 md:text-xl  hover:bg-three hover:scale-[105%] transition-transform duration-150 ease-in-out"
+                          // onClick={() => {
+                          //   if (typeof window !== 'undefined') {
+                          //     localStorage.setItem(
+                          //       'item',
+                          //       JSON.stringify(post)
+                          //     );
+                          //   }
+                          //   router.push('/post');
+                          // }}
+                        >
+                          <MdEdit />
 
-                            <h6 className="text-sm select-none">تعديل</h6>
-                          </div>
-                          <div
-                            className="flex flex-col items-center justify-center cursor-pointer  rounded p-1 md:text-xl  hover:bg-three hover:scale-[105%] transition-transform duration-150 ease-in-out"
-                            onClick={() => {
-                              setIsVisible(true);
-                              setpostId(post?.id);
-                            }}
-                          >
-                            <IoMdClose />
-                            <h6 className="text-sm select-none">حذف</h6>
-                          </div>
+                          <h6 className="text-sm select-none">تعديل</h6>
                         </div>
-                      )}
+                        <div
+                          className="flex flex-col items-center justify-center cursor-pointer  rounded p-1 md:text-xl  hover:bg-three hover:scale-[105%] transition-transform duration-150 ease-in-out"
+                          onClick={() => {
+                            setIsVisible(true);
+                            setpostId(post?.id);
+                          }}
+                        >
+                          <IoMdClose />
+                          <h6 className="text-sm select-none">حذف</h6>
+                        </div>
+                      </div>
+
                       <SmallItem post={post} index={index} show={false} />
                     </div>
                   ))}

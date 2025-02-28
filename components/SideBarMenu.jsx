@@ -1,11 +1,8 @@
 'use client';
-import { signOut, useSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import React from 'react';
 import CurrentUser from '../components/CurrentUser';
-import Image from 'next/image';
-import Link from 'next/link';
 import Button from './Button';
-import LoadingPhoto from './photos/LoadingPhoto';
 import UserNameAndPhoto from './ReusableComponents/userNameAndPhoto';
 
 export default function SideBarMenu({ setIsOpen }) {
@@ -14,29 +11,7 @@ export default function SideBarMenu({ setIsOpen }) {
 
   return (
     <div className=" p-4 w-52 mx-2 h-fit rounded bg-white">
-      {session?.status === 'authenticated' && (
-        // <Link href={'/profile?username'}>
-        //   <div className="flex flex-col justify-between items-center  w-full">
-        //     <div className="flex justify-start items-center w-full cursor-pointer line-clamp-1 mb-2">
-        //       <div className="relative size-10 overflow-hidden rounded-[5px]">
-        //         {!user?.image && <LoadingPhoto />}
-        //         {user?.image && (
-        //           <Image
-        //             priority
-        //             src={user?.image}
-        //             fill
-        //             alt={session?.data?.user?.name}
-        //           />
-        //         )}
-        //       </div>
-        //       <h1 className="  text-nowrap text-start mx-3 text-sm line-clamp-1 select-none">
-        //         {session?.data?.user?.name}
-        //       </h1>
-        //     </div>
-        //   </div>
-        // </Link>
-        <UserNameAndPhoto />
-      )}
+      {session?.status === 'authenticated' && <UserNameAndPhoto />}
       {session?.status === 'unauthenticated' && (
         <Button title={'تسجيل الدخول'} path={'/login'} />
       )}
