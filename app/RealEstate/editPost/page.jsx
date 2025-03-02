@@ -12,7 +12,7 @@ import { getVideoIdAndPlatform } from '../../../components/youtubeUtils';
 import dynamic from 'next/dynamic';
 
 // تحميل المكونات ديناميكيًا
-const CustomToast = dynamic(() => import('../../../components/CustomToast'));
+const CustomToast = dynamic(() => import('../../../components/ReusableComponents/CustomToast'));
 const LoadingPhoto = dynamic(() => import('../../../components/photos/LoadingPhoto'));
 const ImageSlider = dynamic(() => import('../../../components/photos/imageSlider'));
 const EditItem = dynamic(() =>

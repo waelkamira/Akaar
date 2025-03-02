@@ -4,7 +4,7 @@ import SmallItem from '../../components/ReusableComponents/SmallItem';
 import React, { useContext, useEffect, useState } from 'react';
 import { IoMdClose } from 'react-icons/io';
 import toast from 'react-hot-toast';
-import CustomToast from '../../components/CustomToast';
+import CustomToast from '../../components/ReusableComponents/CustomToast';
 import { inputsContext } from '../../components/Context';
 import Loading from '../../components/ReusableComponents/Loading';
 import { useRouter } from 'next/navigation';

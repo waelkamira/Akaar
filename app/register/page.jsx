@@ -9,7 +9,7 @@ import toast from 'react-hot-toast';
 import Link from 'next/link';
 import Image from 'next/image';
 import { signIn, useSession } from 'next-auth/react';
-import CustomToast from '../../components/CustomToast';
+import CustomToast from '../../components/ReusableComponents/CustomToast';
 import { useEffect } from 'react';
 
 export default function RegisterPage() {

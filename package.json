@@ -37,6 +37,8 @@
     "drizzle-orm": "^0.32.0",
     "formik": "^2.4.6",
     "framer-motion": "^12.4.2",
+    "imagekit": "^6.0.0",
+    "imagekitio-react": "^4.2.0",
     "ioredis": "^5.4.1",
     "json2csv": "^6.0.0-alpha.2",
     "keen-slider": "^6.8.6",

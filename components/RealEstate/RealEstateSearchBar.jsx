@@ -1,6 +1,6 @@
 'use client';
 import React, { useContext, useEffect, useState } from 'react';
-import CitySelector from '../map/CitySelector';
+import CitySelector from '../Selectors/CitySelector';
 import PropertyTypeSelector from '../PropertyTypeSelector';
 import SmallItem from '../ReusableComponents/SmallItem';
 import Loading from '../ReusableComponents/Loading';
@@ -12,7 +12,7 @@ import Link from 'next/link';
 import { MdOutlinePriceCheck } from 'react-icons/md';
 import Button from '../Button';
 import { inputsContext } from '../Context';
-import CustomToast from '../CustomToast';
+import CustomToast from '../ReusableComponents/CustomToast';
 import toast from 'react-hot-toast';
 import RoomsNumberSelector from '../roomsNumberSelector';
 import { ImSearch } from 'react-icons/im';

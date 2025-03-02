@@ -11,7 +11,7 @@ import { ImProfile } from 'react-icons/im';
 import { GiCarWheel } from 'react-icons/gi';
 import { TbTargetArrow } from 'react-icons/tb';
 
-export default function FirsrNavBar() {
+export default function FirstNavBar() {
   const router = useRouter();
   const session = useSession();
 
@@ -67,13 +67,13 @@ export default function FirsrNavBar() {
               المفضلة
             </li>
           </div>
-          <div
+          {/* <div
             className="flex items-center justify-center gap-2 border-one hover:border-t-4 shadow-one hover:shadow-lg rounded-[5px]  hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-14 transition-all duration-300"
             onClick={() => router.push('/RealEstate')}
           >
             <MdOutlineMapsHomeWork className="text-xl select-none text-one" />
             <li className=" text-xl select-none">عقارات</li>
-          </div>
+          </div> */}
           <div
             className="flex items-center justify-center gap-2 border-one hover:border-t-4 shadow-one hover:shadow-lg rounded-[5px]  hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-14 transition-all duration-300"
             onClick={() => router.push('/DynamicForm')}
@@ -81,13 +81,13 @@ export default function FirsrNavBar() {
             <MdOutlineMapsHomeWork className="text-xl select-none text-one" />
             <li className=" text-xl select-none">إنشاء إعلان</li>
           </div>
-          <div
+          {/* <div
             className="flex items-center justify-center gap-2 border-one hover:border-t-4 shadow-one hover:shadow-lg rounded-[5px]  hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-14 transition-all duration-300"
             onClick={() => router.push('/Cars')}
           >
             <GiCarWheel className="text-xl select-none text-one" />
             <li className=" text-xl select-none">سيارات</li>
-          </div>
+          </div> */}
 
           <div
             className="flex items-center justify-center gap-2 border-one hover:border-t-4 shadow-one hover:shadow-lg rounded-[5px]  hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-14 transition-all duration-300"

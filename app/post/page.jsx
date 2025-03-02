@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { inputsContext } from '../../components/Context';
 import CarsSideBar from '../../components/Cars/CarsSideBar';
 import SecondNavBar from '../../components/navbars/SecondNavBar';
-import categoryFields from '../../components/Categories/categoryFields';
+import categoryFields from '../../components/lists/categoryFields';
 import Loading from '../../components/ReusableComponents/Loading';
 import dynamic from 'next/dynamic';
 import ItemSmallItem from '../../components/ReusableComponents/ItemSmallItem';
@@ -47,6 +47,7 @@ export default function Page() {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const item = JSON.parse(localStorage.getItem('item'));
+      console.log('item', item);
       setPost(item);
     }
   }, []);

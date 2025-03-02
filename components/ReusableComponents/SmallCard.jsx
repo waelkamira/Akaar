@@ -6,7 +6,7 @@ import { inputsContext } from '../Context';
 import { useRouter } from 'next/navigation';
 import LoadingPhoto from '../photos/LoadingPhoto';
 import FormatDate from './FormatDate';
-import categoryFields from '../Categories/categoryFields';
+import categoryFields from '../lists/categoryFields';
 
 export default function SmallCard({ item }) {
   const { dispatch } = useContext(inputsContext);
@@ -17,7 +17,7 @@ export default function SmallCard({ item }) {
 
   return (
     <div
-      className="flex flex-col justify-center items-center w-full cursor-pointer bg-white hover:shadow-2xl transition-shadow duration-300 ease-in-out rounded-lg overflow-hidden relative"
+      className="flex flex-col justify-center items-center w-full cursor-pointer bg-white hover:shadow-2xl transition-shadow duration-300 ease-in-out rounded-lg overflow-hidden relative group"
       key={item?.id}
       onClick={() => {
         if (typeof window !== 'undefined') {
@@ -26,24 +26,28 @@ export default function SmallCard({ item }) {
         router.push('/post');
       }}
     >
-      {/* الصورة */}
+      {/* الصورة مع طبقة هوفر برتقالية */}
       <div className="relative w-full h-48">
         {!item?.image1 && <LoadingPhoto />}
         {item?.image1 && (
-          <Image
-            src={item?.image1}
-            fill
-            alt="item_photo"
-            className="object-cover transition-transform duration-300 hover:scale-105 rounded-t-lg"
-          />
+          <div className="relative w-full h-48 overflow-hidden rounded-t-lg">
+            <Image
+              src={item?.image1}
+              fill
+              alt="item_photo"
+              className="object-cover transition-transform duration-300 group-hover:scale-105"
+            />
+          </div>
         )}
+        {/* الطبقة البرتقالية عند الهوفر */}
+        <div className="absolute inset-0 bg-one/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
       </div>
 
       {/* التفاصيل */}
       <div className="flex flex-col justify-between gap-2 w-full p-4 bg-white text-black rounded-b-lg">
         {/* العنوان */}
         <h1 className="text-lg font-semibold text-gray-800 line-clamp-1">
-          {item?.title}
+          {item?.title.split(' ').slice(0, 3).join(' ')}
         </h1>
 
         {/* السعر والمدينة */}
@@ -56,7 +60,7 @@ export default function SmallCard({ item }) {
         </div>
 
         {/* تاريخ الإنشاء */}
-        <div className="absolute top-2 left-2 z-50 flex justify-center items-center bg-white/80 rounded-full px-2 py-1 shadow-sm text-xs text-gray-700">
+        <div className="absolute top-2 left-2 z-0 flex justify-center items-center bg-white/80 rounded-full px-2 py-1 shadow-sm text-xs text-gray-700">
           <FormatDate dateString={item?.createdAt} />
         </div>
       </div>

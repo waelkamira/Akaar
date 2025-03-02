@@ -63,7 +63,7 @@ const CustomNextArrow = (props) => {
 
 const PostGallery = ({ post }) => {
   const path = usePathname();
-  console.log('post ********', post);
+  // console.log('post ********', post);
   // جمع الصور من الحقول المختلفة في مصفوفة واحدة
   const images = [
     post?.image1,

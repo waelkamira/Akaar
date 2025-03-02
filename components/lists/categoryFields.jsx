@@ -1,3 +1,15 @@
+'use client';
+import { cities } from './Cities';
+import CarsBrandSelector from '../Cars/CarsBrandSelector';
+import YearsSelector from '../Selectors/yearSelector';
+import Selector from '../Selectors/Selector';
+import { usedNewList } from '../Cars/UsedNewList';
+import { fuelList } from '../Cars/FuelList';
+import { milegeList } from '../Cars/MileageList';
+import { BsFillFuelPumpDieselFill } from 'react-icons/bs';
+import { IoSpeedometerOutline } from 'react-icons/io5';
+import { realEstatePropertyTypeList } from '../RealEstate/RealEstatePropertyTypeList';
+import { realEstateRoomsNumberList } from '../RealEstate/RealEstateRoomsNumberList';
 import {
   FaHome,
   FaBed,
@@ -22,36 +34,31 @@ import {
   FaSeedling,
   FaStethoscope,
 } from 'react-icons/fa';
+import { VscUngroupByRefType } from 'react-icons/vsc';
 
 const categoryFields = {
   1: [
     {
-      name: 'نوع العقار',
-      icon: <FaHome className="text-one text-lg sm:text-xl" />,
-      placeholder: '-اختر-',
-      options: {
-        1: 'بيت',
-        2: 'شقة',
-        3: 'أرض',
-        4: 'مزرعة',
-        5: 'فيلا',
-        6: 'معمل',
-        7: 'غير ذلك',
-      },
+      component: (
+        <Selector
+          list={realEstatePropertyTypeList}
+          placeholder={'شقة'}
+          contextType={'REALESTATE_PROPERTY_TYPE'}
+          icon={<FaHome className="text-one text-lg sm:text-xl" />}
+        />
+      ),
     },
     {
-      name: 'عدد الغرف',
-      icon: <FaBed className="text-one text-lg sm:text-xl" />,
-      placeholder: '-اختر-',
-      options: {
-        1: '1 + 1',
-        2: '2 + 1',
-        3: '3 + 1',
-        4: '4 + 1',
-        5: '5 + 1',
-        6: 'غير ذلك',
-      },
+      component: (
+        <Selector
+          list={realEstateRoomsNumberList}
+          placeholder={'3 + 1 عدد الغرف'}
+          contextType={'REALESTATE_ROOMS_NUMBER'}
+          icon={<FaBed className="text-one text-lg sm:text-xl" />}
+        />
+      ),
     },
+
     {
       name: 'المساحة',
       icon: <FaRulerCombined className="text-one text-lg sm:text-xl" />,
@@ -60,44 +67,45 @@ const categoryFields = {
   ],
   2: [
     {
-      name: 'الماركة',
-      icon: <FaCar className="text-one text-lg sm:text-xl" />,
-      placeholder: 'تويوتا',
+      component: <CarsBrandSelector />,
     },
     {
-      name: 'الموديل',
-      icon: <FaTools className="text-one text-lg sm:text-xl" />,
-      placeholder: 'كورولا',
+      component: <YearsSelector />,
+    },
+
+    {
+      component: (
+        <Selector
+          list={usedNewList}
+          placeholder={'الحالة'}
+          contextType={'CAR_USED_NEW'}
+          icon={<VscUngroupByRefType className="text-one text-lg sm:text-xl" />}
+        />
+      ),
     },
     {
-      name: 'السنة',
-      icon: <FaCalendarAlt className="text-one text-lg sm:text-xl" />,
-      placeholder: '2021',
+      component: (
+        <Selector
+          list={fuelList}
+          placeholder={'الوقود'}
+          contextType={'CAR_FUEL'}
+          icon={
+            <BsFillFuelPumpDieselFill className="text-one text-lg sm:text-xl" />
+          }
+        />
+      ),
     },
     {
-      name: 'الحالة',
-      icon: <FaCar className="text-one text-lg sm:text-xl" />,
-      placeholder: '-اختر-',
-      options: {
-        1: 'جديدة',
-        2: 'مستعملة',
-      },
-    },
-    {
-      name: 'نوع الوقود',
-      icon: <FaCar className="text-one text-lg sm:text-xl" />,
-      placeholder: '-اختر-',
-      options: {
-        1: 'بنزين',
-        2: 'ديزل',
-        3: 'كهرباء',
-        4: 'هجين',
-      },
-    },
-    {
-      name: 'عدد الكيلومترات',
-      icon: <FaCar className="text-one text-lg sm:text-xl" />,
-      placeholder: 'أدخل عدد الكيلومترات',
+      component: (
+        <Selector
+          list={milegeList}
+          placeholder={'الكيلومترات'}
+          contextType={'CAR_MILEAGE'}
+          icon={
+            <IoSpeedometerOutline className="text-one text-lg sm:text-xl" />
+          }
+        />
+      ),
     },
   ],
   3: [

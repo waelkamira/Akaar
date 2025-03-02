@@ -12,20 +12,22 @@ import Image from 'next/image';
 import { useSession } from 'next-auth/react';
 import { ImProfile } from 'react-icons/im';
 import { FaCarSide } from 'react-icons/fa';
-import categories from '../Categories/categories';
+import categories from '../lists/categories';
+import { TbTargetArrow } from 'react-icons/tb';
 
 export default function SecondNavBar({ category }) {
   const [selectedCategory, setSelectedCategory] = useState('');
   const router = useRouter();
   const session = useSession();
   const pathname = usePathname();
+
   useEffect(() => {
     findCategory();
   }, []);
 
   function findCategory() {
     if (categories) {
-      const result = categories?.filter((ca) => ca.id === category);
+      const result = categories?.filter((ca) => ca?.id === category);
       setSelectedCategory(result[0]);
       console.log('result', result);
     }
@@ -47,7 +49,7 @@ export default function SecondNavBar({ category }) {
           </div>
           <div
             className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-[5px] border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-14 transition-all duration-300"
-            onClick={() => router.push('/Cars')}
+            onClick={() => router.push('/')}
           >
             <FaCarSide className="text-xl select-none text-one" />
             <li className=" text-xl select-none">{selectedCategory?.name}</li>
@@ -82,7 +84,7 @@ export default function SecondNavBar({ category }) {
               متجري
             </li>
           </div>
-          {/* <div
+          <div
             className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-[5px] border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-14 transition-all duration-300"
             onClick={() => router.push('/favoritePosts')}
           >
@@ -90,45 +92,34 @@ export default function SecondNavBar({ category }) {
             <li className=" text-md xl:text-xl select-none text-nowrap">
               المفضلة
             </li>
-          </div> */}
+          </div>
           <div
             className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-[5px] border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-14 transition-all duration-300"
             onClick={() => router.push('/DynamicForm')}
           >
             <FaDollarSign className="text-xl select-none text-one" />
-            <li className=" text-xl select-none">بيع/تأجير </li>
+            <li className=" text-xl select-none">إنشاء إعلان</li>
           </div>
           <div
             className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-[5px] border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-14 transition-all duration-300"
-            onClick={() => router.push('/Cars/buy')}
+            onClick={() => router.push('/products/buy')}
           >
             <GiPayMoney className="text-xl select-none text-one" />
             <li className=" text-xl select-none">شراء </li>
           </div>
           <div
             className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-[5px] border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-14 transition-all duration-300"
-            onClick={() => router.push('/Cars/rent')}
+            onClick={() => router.push('/products/rent')}
           >
             <MdCarRental className="text-xl select-none text-one" />
             <li className=" text-xl select-none">استأجار </li>
           </div>
         </ul>
         <div className="flex items-center justify-center">
-          {/* <ClockWidget /> */}
           <div
             className="relative flex justify-end w-fit min-w-[218px] cursor-pointer "
             onClick={() => router.push('/')}
           >
-            {/* <div className="absolute top-5 left-24 flex justify-end ">
-              <div className="absolute">
-                <h1 className="akar akarStroke lg:text-4xl lg:font-extrabold text-lg text-nowrap select-none">
-                  متجر
-                </h1>
-                <h1 className="absolute akarStroke lg:text-4xl lg:font-extrabold text-transparent text-lg text-nowrap select-none top-0 left-0 z-0">
-                  متجر
-                </h1>
-              </div>
-            </div> */}
             <div className="relative h-16 w-56 my-2 hover:scale-[103%] z-20">
               <Image
                 src="https://i.imgur.com/0oHqzqF.png"

@@ -2,7 +2,7 @@
 import { useState, useEffect, useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import { v4 as uuidv4 } from 'uuid';
-import categories from '../../components/Categories/categories';
+import categories from '../../components/lists/categories';
 import UploadingAndDisplayingImage from '../../components/photos/UploadingAndDisplayingImage';
 import { inputsContext } from '../../components/Context';
 import toast from 'react-hot-toast';
@@ -17,7 +17,7 @@ import {
   MdDescription,
   MdAttachMoney,
 } from 'react-icons/md';
-import categoryFields from '../../components/Categories/categoryFields';
+import categoryFields from '../../components/lists/categoryFields';
 import FormInput from './FormInput';
 import FormSelect from './FormSelect';
 import FormTextarea from './FormTextarea';
@@ -245,7 +245,7 @@ export default function DynamicForm() {
             onChange={handleInputChange}
           />
 
-          {selectedCategory &&
+          {/* {selectedCategory &&
             categoryFields[selectedCategory]?.map((field, index) => (
               <div key={index}>
                 <label className="font-medium mb-2 flex items-center gap-2">
@@ -288,8 +288,52 @@ export default function DynamicForm() {
                   <p className="text-red-500 text-sm mt-1">هذا الحقل مطلوب</p>
                 )}
               </div>
+            ))} */}
+          {selectedCategory &&
+            categoryFields[selectedCategory]?.map((field, index) => (
+              <div
+                key={index}
+                className="flex flex-col xl:flex-row justify-center items-center w-full"
+              >
+                {/* الحقل مع الأيقونة والعنوان */}
+                <div className="flex items-center w-full border rounded focus:outline-2 focus:outline-one  bg-white text-nowrap">
+                  {/* الأيقونة */}
+                  <span className="text-one xl:text-xl">{field?.icon}</span>
+                  {/* العنوان */}
+                  <span className="text-black">{field?.name}</span>
+                  {/* الحقل (input أو select أو مكون مخصص) */}
+                  {field?.options ? (
+                    <select
+                      className="w-full bg-transparent focus:outline-none text-gray-500"
+                      onChange={(e) =>
+                        handleDetailsChange(field?.name, e.target.value)
+                      }
+                    >
+                      {Object.entries(field?.options).map(([key, value]) => (
+                        <option
+                          key={value}
+                          value={value}
+                          className="text-black h-full"
+                        >
+                          {value}
+                        </option>
+                      ))}
+                    </select>
+                  ) : field?.component ? (
+                    // عرض المكون المخصص إذا كان موجودًا
+                    field.component
+                  ) : (
+                    <input
+                      placeholder={field?.placeholder}
+                      className="w-full bg-transparent focus:outline-none sm:h-12 h-8"
+                      onChange={(e) =>
+                        handleDetailsChange(field?.name, e.target.value)
+                      }
+                    />
+                  )}
+                </div>
+              </div>
             ))}
-
           <FormInput
             label="السعر"
             icon={<MdAttachMoney className="text-one text-lg sm:text-xl" />}

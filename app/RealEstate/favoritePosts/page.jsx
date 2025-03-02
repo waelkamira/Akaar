@@ -6,7 +6,7 @@ import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { IoMdClose } from 'react-icons/io';
 import toast from 'react-hot-toast';
-import CustomToast from '../../../components/CustomToast';
+import CustomToast from '../../../components/ReusableComponents/CustomToast';
 import BackButton from '../../../components/BackButton';
 import {
   MdKeyboardDoubleArrowRight,

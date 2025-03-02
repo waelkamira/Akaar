@@ -1,7 +1,7 @@
 'use client';
 import React, { useContext, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import CustomToast from '../CustomToast';
+import CustomToast from './CustomToast';
 import { usePathname, useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { IoMdClose } from 'react-icons/io';

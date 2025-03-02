@@ -1,18 +1,22 @@
 'use client';
 import React, { useContext, useEffect, useState } from 'react';
-import Select from 'react-select';
+import Select, { components } from 'react-select';
 import { inputsContext } from '../Context.jsx';
-import { VscUngroupByRefType } from 'react-icons/vsc';
-import categories from './categories.jsx';
 
-export default function CategorySelector({ check }) {
+export default function Selector({
+  check,
+  list,
+  placeholder,
+  contextType,
+  icon,
+}) {
   const { dispatch } = useContext(inputsContext);
   const [category, setCategory] = useState('');
 
   useEffect(() => {
     if (category?.id !== '' && category?.id !== undefined) {
       dispatch({
-        type: 'CATEGORY_TYPE',
+        type: contextType,
         payload: category,
       });
     }
@@ -30,24 +34,27 @@ export default function CategorySelector({ check }) {
     };
   }
 
+  const CustomPlaceholder = (props) => {
+    return (
+      <components.Placeholder {...props}>
+        <div className="flex items-center gap-2 text-gray-400">
+          {icon}
+          <span>{placeholder}</span>
+        </div>
+      </components.Placeholder>
+    );
+  };
+
   return (
     <div className="flex flex-col w-full justify-start items-center text-black z-50">
       <div className="w-full">
-        <div className="flex items-center gap-2 w-full justify-start my-2">
-          <h1 className={`flex text-right text-md select-none text-nowrap `}>
-            <span className="text-one text-lg xl:text-2xl ml-2">
-              {!category && check ? '❌' : <VscUngroupByRefType />}
-            </span>
-            الصنف:
-          </h1>
-        </div>
         <Select
-          value={categories.find((c) => c.id === category?.id) || null}
+          value={list?.find((c) => c.id === category?.id) || null}
           onChange={(selectedOption) => setCategory(selectedOption || '')}
-          placeholder="الإلكترونيات"
+          placeholder={placeholder}
           isClearable
           isSearchable
-          options={categories.map((c) => ({ id: c.id, name: c.name }))}
+          options={list?.map((c) => ({ id: c.id, name: c.name }))}
           getOptionLabel={(e) => e.name} // تحديد كيفية عرض الخيارات
           getOptionValue={(e) => e.id} // تحديد كيفية اختيار القيم
           theme={customTheme}
@@ -59,6 +66,7 @@ export default function CategorySelector({ check }) {
                 state.isFocused ? 'border-one' : 'border-gray-300'
               } sm:h-12 h-8`,
           }}
+          components={{ Placeholder: CustomPlaceholder }}
         />
       </div>
     </div>

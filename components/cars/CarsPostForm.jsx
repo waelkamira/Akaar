@@ -14,15 +14,17 @@ import { useRouter } from 'next/navigation';
 import { MdOutlineSubtitles } from 'react-icons/md';
 import { IoCalendarNumber } from 'react-icons/io5';
 import { getVideoIdAndPlatform } from '../youtubeUtils';
-import CategorySelector from '../Categories/CategorySelector';
+import CategorySelector from '../Selectors/CategorySelector';
 
 const CarsBrandSelector = dynamic(() => import('./CarsBrandSelector'));
 const Confetti = dynamic(() =>
   import('../ReusableComponents/SuccessComponent').then((mod) => mod.Confetti)
 );
 const OnClickMap = dynamic(() => import('../map/onClickMap'));
-const CategoryComponent = dynamic(() => import('../CategoryComponent'));
-const CitySelector = dynamic(() => import('../map/CitySelector'));
+const CategoryComponent = dynamic(() =>
+  import('../Selectors/CategoryComponent')
+);
+const CitySelector = dynamic(() => import('../Selectors/CitySelector'));
 const CarsUsedNewSelector = dynamic(() => import('./CarsUsedNewSelector'));
 
 export default function CarsPostForm({ setIsVisible, cancel = true }) {
