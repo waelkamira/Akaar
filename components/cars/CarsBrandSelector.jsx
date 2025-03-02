@@ -1,8 +1,7 @@
-'use client';
 import React, { useContext, useEffect, useState } from 'react';
-import Select from 'react-select';
+import Select, { components } from 'react-select';
 import { inputsContext } from '../Context';
-import { FaCar } from 'react-icons/fa'; // استبدلت VscUngroupByRefType برمز آخر
+import { FaCar } from 'react-icons/fa';
 import { usePathname } from 'next/navigation.js';
 import { carBrands } from './carBrands.jsx';
 
@@ -15,9 +14,9 @@ export default function CarsBrandSelector({ check }) {
 
   useEffect(() => {
     const updateSize = () => {
-      setMinHeight(window.innerWidth >= 640 ? '48px' : '20px'); // sm: 640px
+      setMinHeight(window.innerWidth >= 640 ? '48px' : '20px');
     };
-    updateSize(); // استدعاء أولي عند التحميل
+    updateSize();
     window.addEventListener('resize', updateSize);
     return () => window.removeEventListener('resize', updateSize);
   }, []);
@@ -38,7 +37,6 @@ export default function CarsBrandSelector({ check }) {
   function customTheme(theme) {
     return {
       ...theme,
-      borderRadius: 5,
       colors: {
         ...theme.colors,
         primary: '#FF7C34',
@@ -61,7 +59,6 @@ export default function CarsBrandSelector({ check }) {
     valueContainer: (provided) => ({
       ...provided,
       minHeight: minHeight,
-      padding: '0 1rem',
       display: 'flex',
       alignItems: 'center',
     }),
@@ -71,21 +68,24 @@ export default function CarsBrandSelector({ check }) {
     }),
   };
 
+  // مكون مخصص للـ Placeholder لإضافة الأيقونة
+  const CustomPlaceholder = (props) => {
+    return (
+      <components.Placeholder {...props}>
+        <div className="flex items-center gap-2 text-gray-400">
+          <FaCar className="text-one text-lg sm:text-xl" />
+          <span>الماركة تويوتا</span>
+        </div>
+      </components.Placeholder>
+    );
+  };
+
   return (
     <div className="flex flex-col w-full justify-start items-center text-black">
       <div className="w-full">
-        <div className="flex items-center gap-2 w-full justify-start my-2">
-          <h1 className={`flex text-right text-md select-none text-nowrap`}>
-            <span className="text-one text-lg xl:text-2xl ml-2">
-              {!brand?.value && check ? '❌' : <FaCar />}
-            </span>
-            الماركة :
-          </h1>
-        </div>
         <Select
           value={brand}
           onChange={handleBrandChange}
-          placeholder="تويوتا"
           isClearable
           isSearchable
           options={options}
@@ -95,10 +95,9 @@ export default function CarsBrandSelector({ check }) {
           classNamePrefix="select"
           classNames={{
             control: (state) =>
-              `${
-                state.isFocused ? 'border-one' : 'border-gray-300'
-              } sm:h-12 h-8`, // ارتفاع مختلف بناءً على عرض النافذة
+              `${state.isFocused ? 'border-one' : 'border-gray-300'} `,
           }}
+          components={{ Placeholder: CustomPlaceholder }}
         />
       </div>
     </div>

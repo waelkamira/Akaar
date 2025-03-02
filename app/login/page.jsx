@@ -8,7 +8,7 @@ import toast from 'react-hot-toast';
 import Link from 'next/link';
 import { signIn, useSession } from 'next-auth/react';
 import Image from 'next/image';
-import CustomToast from '../../components/CustomToast';
+import CustomToast from '../../components/ReusableComponents/CustomToast';
 import { useEffect } from 'react';
 import { GiExitDoor } from 'react-icons/gi';
 import CurrentUser from '../../components/CurrentUser';

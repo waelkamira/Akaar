@@ -1,6 +1,12 @@
 'use client';
 
+import { FaCar } from 'react-icons/fa';
+
 export const carBrands = [
+  // {
+  //   value: 'الماركة',
+  //   label: `الماركة ${(<FaCar className="text-one text-lg sm:text-xl" />)}`,
+  // },
   { value: 'تويوتا', label: 'تويوتا Toyota' },
   { value: 'فورد', label: 'فورد Ford' },
   { value: 'شيفروليه', label: 'شيفروليه Chevrolet' },

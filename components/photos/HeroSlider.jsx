@@ -59,7 +59,7 @@ export default function HeroSlider() {
             priority={index === 0}
             loading={index === 0 ? 'eager' : 'lazy'}
             placeholder="blur"
-            blurDataURL="/placeholder.jpg"
+            blurDataURL="/placeholder.png"
           />
           {/* طبقة التعتيم مع تأثير ضوئي خفيف */}
           <div

@@ -14,6 +14,14 @@ const nextConfig = {
       },
       {
         protocol: 'https',
+        hostname: 'ik.imagekit.io',
+      },
+      {
+        protocol: 'https',
+        hostname: 'i.ibb.co',
+      },
+      {
+        protocol: 'https',
         hostname: 'via.placeholder.com',
       },
       {

@@ -1,7 +1,7 @@
 'use client';
 import React, { useContext, useEffect, useState } from 'react';
 import Select from 'react-select';
-import { inputsContext } from './Context.jsx';
+import { inputsContext } from '../Context.jsx';
 import { usePathname } from 'next/navigation.js';
 import { MdOutlineBedroomParent } from 'react-icons/md';
 import { FaDharmachakra } from 'react-icons/fa6';
@@ -14,14 +14,12 @@ export default function CategoryComponent({ check }) {
 
   const options = [
     { value: 'بيع', label: 'بيع' },
-    // { value: 'شراء', label: 'شراء' },
     { value: 'أجار', label: 'أجار' },
   ];
 
   // كائن يحتوي على القيم وأسماء النماذج المرتبطة بها
   const modelMapping = {
     بيع: 'بيع',
-    // شراء: 'شراء',
     أجار: 'أجار',
   };
 

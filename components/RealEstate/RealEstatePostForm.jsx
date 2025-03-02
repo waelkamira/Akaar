@@ -20,8 +20,10 @@ const Confetti = dynamic(() =>
   import('../ReusableComponents/SuccessComponent').then((mod) => mod.Confetti)
 );
 const OnClickMap = dynamic(() => import('../map/onClickMap'));
-const CategoryComponent = dynamic(() => import('../CategoryComponent'));
-const CitySelector = dynamic(() => import('../map/CitySelector'));
+const CategoryComponent = dynamic(() =>
+  import('../Selectors/CategoryComponent')
+);
+const CitySelector = dynamic(() => import('../Selectors/CitySelector'));
 const RoomsNumberSelector = dynamic(() => import('./RoomsNumberSelector'));
 
 export default function RealEstatePostForm({ setIsVisible, cancel = true }) {

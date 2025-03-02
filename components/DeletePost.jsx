@@ -2,7 +2,7 @@
 import toast from 'react-hot-toast';
 import { inputsContext } from './Context';
 import { useContext } from 'react';
-import CustomToast from './CustomToast';
+import CustomToast from './ReusableComponents/CustomToast';
 
 export default function DeletePostHandler({ recipe }) {
   const { dispatch } = useContext(inputsContext);

@@ -4,15 +4,14 @@ import {
   MdKeyboardDoubleArrowLeft,
   MdKeyboardDoubleArrowRight,
 } from 'react-icons/md';
-import { useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react';
+
 import { ImSearch } from 'react-icons/im';
 import { TfiMenuAlt } from 'react-icons/tfi';
 import SideBarMenu from '../SideBarMenu';
 import SmallItem from '../ReusableComponents/SmallItem';
 import Link from 'next/link';
 import CategoriesNavBar from './CategoriesNavBar';
-import FirsrNavBar from './FirsrNavBar';
+import FirstNavBar from './FirstNavBar';
 export default function MainNavbar() {
   const [pageNumber, setPageNumber] = useState(1);
   const [isOpen, setIsOpen] = useState(false);
@@ -63,11 +62,11 @@ export default function MainNavbar() {
 
   return (
     <div className="flex-1 w-full">
-      <FirsrNavBar />
-      <div className="flex flex-row-reverse justify-start items-center gap-4 w-full bg-three">
+      <FirstNavBar />
+      <div className="flex flex-col-reverse sm:flex-row-reverse justify-start items-center gap-1 sm:gap-4 w-full bg-three">
         <CategoriesNavBar />
 
-        <div className="flex flex-col justify-center items-start w-full xl:w-2/5">
+        <div className="flex flex-col justify-center items-start w-full ">
           <div className="flex justify-between items-center gap-2 sm:gap-4 w-full px-2">
             <div className="flex justify-center items-center gap-2 sm:gap-4 w-full">
               <div className="relative xl:hidden">
@@ -81,8 +80,8 @@ export default function MainNavbar() {
                   {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
                 </div>
               </div>
-              <div className="flex justify-center items-center gap-2 w-full my-2 h-8 sm:h-12">
-                <div className="btn relative text-center w-full xl:w-1/2 bg-three border border-one rounded-[5px]   text-sm sm:text-lg z-40 text-nowrap focus:outline-one">
+              <div className="flex justify-center items-center gap-2 w-full my-2 h-8 sm:h-12 ">
+                <div className="sm:text-lg text-sm p-2 xl:w-1/2 lg:p-3 bg-one flex justify-center items-center my-2 text-white text-nowrap select-none rounded-[5px] w-full max-h-12 hover:scale-[101%]">
                   {searchResults?.length > 0 ? (
                     <button
                       className="btn text-sm sm:text-lg text-white text-nowrap select-none rounded-[5px] w-full h-full hover:scale-[101%]"
@@ -100,7 +99,7 @@ export default function MainNavbar() {
                     </button>
                   ) : (
                     <button
-                      className="flex justify-center items-center sm:text-lg text-sm text-white text-nowrap select-none rounded-[5px] w-full h-full hover:scale-[101%]"
+                      className="flex justify-center items-center sm:text-lg text-sm text-white text-nowrap select-none rounded-[5px] w-full h-6 hover:scale-[101%]"
                       onClick={() => handleSearch()}
                     >
                       <span className="px-1">
@@ -128,7 +127,7 @@ export default function MainNavbar() {
                   }}
                   autoFocus
                   placeholder="ابحث عن عقار .. سيارة ..."
-                  className="w-full h-full text-sm sm:text-lg text-start text-nowrap px-2 rounded-[5px] border border-gray-300 focus:outline-one"
+                  className="flex justify-center items-center sm:text-lg text-sm text-white text-nowrap select-none rounded-[5px] w-full px-2 sm:h-12 h-8"
                 />
               </div>
             </div>

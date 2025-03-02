@@ -10,7 +10,7 @@ import 'leaflet/dist/leaflet.css';
 import { icon } from 'leaflet';
 import { useState, useRef, useEffect, useContext, useCallback } from 'react';
 import { inputsContext } from '../Context';
-import { cities } from './Cities';
+import { cities } from '../lists/Cities';
 import { FaMapMarkedAlt } from 'react-icons/fa';
 import Select from 'react-select';
 import { GiModernCity } from 'react-icons/gi';

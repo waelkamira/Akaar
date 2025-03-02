@@ -9,7 +9,7 @@ import SideBarMenu from './SideBarMenu';
 import { TfiMenuAlt } from 'react-icons/tfi';
 import { formatDistanceToNow } from 'date-fns/formatDistanceToNow';
 import { useParams } from 'next/navigation';
-import CustomToast from './CustomToast';
+import CustomToast from './ReusableComponents/CustomToast';
 import toast from 'react-hot-toast';
 import { MdEdit } from 'react-icons/md';
 import UploadingAndDisplayingImage from './UploadingAndDisplayingImage';

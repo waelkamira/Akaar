@@ -44,7 +44,7 @@ const categories = [
   { id: 20, name: 'زراعة', path: '/categories/20', icon: <FaSeedling /> },
   {
     id: 21,
-    name: 'أجهزة_طبية',
+    name: 'طبية',
     path: '/categories/21',
     icon: <FaStethoscope />,
   },

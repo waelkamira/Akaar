@@ -10,7 +10,7 @@ export default function Card({ cardName, path, image, text, color, emoji }) {
   // تحديد الألوان بناءً على القيمة الممررة
   const borderColor =
     color === 'green'
-      ? 'border-[#119530]'
+      ? 'border-[#50F999]'
       : color === 'orange'
       ? 'border-[#FF7C34]'
       : color === 'purple'
@@ -19,7 +19,7 @@ export default function Card({ cardName, path, image, text, color, emoji }) {
 
   const bgColor =
     color === 'green'
-      ? 'bg-[#119530]'
+      ? 'bg-[#50F999]'
       : color === 'orange'
       ? 'bg-[#FF7C34]'
       : color === 'purple'
@@ -28,7 +28,7 @@ export default function Card({ cardName, path, image, text, color, emoji }) {
 
   const btnBackground =
     color === 'green'
-      ? '#119530'
+      ? '#50F999'
       : color === 'orange'
       ? '#FF7C34'
       : color === 'purple'
@@ -37,7 +37,7 @@ export default function Card({ cardName, path, image, text, color, emoji }) {
 
   const btnHoverBackground =
     color === 'green'
-      ? '#119530'
+      ? '#50F999'
       : color === 'orange'
       ? '#FF7C34'
       : color === 'purple'
@@ -57,9 +57,7 @@ export default function Card({ cardName, path, image, text, color, emoji }) {
           {image && <Image src={image} fill objectFit="cover" alt={cardName} />}
         </div>
 
-        <div
-          className={` w-full border overflow-hidden rounded-b-[15px] sm:rounded-b-3xl`}
-        >
+        <div className={` w-full border overflow-hidden rounded-[5px]`}>
           <div className="flex justify-center items-center gap-2 my-2">
             <h1 className="text-md sm:text-xl">{emoji}</h1>
             <h1 className="text-md sm:text-lg">{cardName}</h1>
@@ -79,22 +77,6 @@ export default function Card({ cardName, path, image, text, color, emoji }) {
               {cardName}
             </button>
           </div>
-          {/* <div
-            className={`flex justify-around items-start py-2 h-10 lg:h-12 w-full hover:${bgColor} transition-transform duration-500 ease-linear`}
-          >
-            <div className="flex flex-col justify-center items-center gap-1">
-              <h1>Comments</h1>
-              <h1>526</h1>
-            </div>
-            <div className="flex flex-col justify-center items-center gap-1">
-              <h1>Views</h1>
-              <h1>526</h1>
-            </div>
-            <div className="flex flex-col justify-center items-center gap-1">
-              <h1>Reads</h1>
-              <h1>526</h1>
-            </div>
-          </div> */}
         </div>
       </div>
     </div>

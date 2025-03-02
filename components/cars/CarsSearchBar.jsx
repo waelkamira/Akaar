@@ -206,7 +206,7 @@
 // }
 'use client';
 import React, { useState, useEffect, useContext, useMemo } from 'react';
-import CitySelector from '../map/CitySelector';
+import CitySelector from '../Selectors/CitySelector';
 import SmallItem from '../ReusableComponents/SmallItem';
 import { MdOutlinePriceCheck } from 'react-icons/md';
 import Button from '../Button';

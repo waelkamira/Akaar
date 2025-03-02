@@ -7,7 +7,7 @@ import {
   MdKeyboardDoubleArrowLeft,
 } from 'react-icons/md';
 import Link from 'next/link';
-import CustomToast from '../CustomToast';
+import CustomToast from '../ReusableComponents/CustomToast';
 import toast from 'react-hot-toast';
 import NavegationPages from '../ReusableComponents/NavegationPages';
 

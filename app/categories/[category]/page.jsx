@@ -16,6 +16,7 @@ import { GiCarKey } from 'react-icons/gi';
 import HeroSlider from '../../../components/photos/HeroSlider';
 import SecondNavBar from '../../../components/navbars/SecondNavBar';
 import CarsSideBar from '../../../components/Cars/CarsSideBar';
+import CategoriesProductsSearchBar from '../../../components/Categories/CategoriesProductsSearchBar';
 
 const CategoryPage = () => {
   const { category } = useParams(); // الحصول على اسم الفئة من الرابط
@@ -23,7 +24,11 @@ const CategoryPage = () => {
 
   useEffect(() => {
     // جلب البيانات المرتبطة بالفئة
-    fetchCategory();
+    if (category) {
+      console.log('category', category);
+
+      fetchCategory();
+    }
   }, [category]);
 
   async function fetchCategory() {
@@ -37,15 +42,15 @@ const CategoryPage = () => {
     <div className="relative flex flex-col justify-center items-center z-40 w-full  bg-five">
       <div className="w-full">
         <CarsSideBar Button={true} />
-        <SecondNavBar category={category} />
+        <CategoriesProductsSearchBar category={category} />
         {/* صورة الخلفية */}
         <div className="relative w-full h-full overflow-hidden">
-          <HeroSlider />
+          {/* <HeroSlider /> */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
         </div>
 
         <div className="flex flex-col justify-center items-center w-full">
-          <div className="flex justify-center items-center gap-2 w-full text-nowrap py-8 ">
+          {/* <div className="flex justify-center items-center gap-2 w-full text-nowrap py-8 ">
             <div className="flex flex-col justify-end items-end text-two ">
               <h1
                 className="px-1 tracking-widest uppercase font-bold text-[8px] sm:text-[10px] lg:text-[11px] xl:text-[12px] select-none border-l border-three"
@@ -71,7 +76,6 @@ const CategoryPage = () => {
                 className="text-[30px] sm:text-[50px] xl:text-[70px] tracking-[1px] pb-2 xl:tracking-[3px] text-one font-medium text-center select-none uppercase"
                 style={{ fontFamily: 'vanguardcf-heavy' }}
               >
-                {/* اختر القسم المناسب */}
                 categories
               </h1>
             </div>
@@ -84,9 +88,10 @@ const CategoryPage = () => {
                 'بغض النظر عن المنتج الذي تريد بيعه أو تأجيره، يمكننا مساعدتك في إتمام العملية بشكل ناجح وبأسرع وقت ممكن.'
               }
               color={'orange'}
-              image={'https://i.imgur.com/zktgE57.jpg'}
+              image={'https://i.imgur.com/T7QZKZQ.png'}
               emoji={<MdOutlineShoppingCart className="text-one" />}
             />
+
             <Card
               cardName={'شراء '}
               path={'/products/buy'}
@@ -94,7 +99,7 @@ const CategoryPage = () => {
                 'اعثر على المنتج الذي تريده من خلال تجربة تصوير غامرة وأكبر عدد من الإعلانات، بما في ذلك أشياء لن تجدها في أي مكان آخر.'
               }
               color={'purple'}
-              image={'https://i.imgur.com/Nai6Zkj.jpg'}
+              image={'https://i.imgur.com/Y4RDaop.png'}
               emoji={<MdShoppingBasket className="text-[#803084]" />}
             />
             <Card
@@ -104,10 +109,11 @@ const CategoryPage = () => {
                 'نحن نعمل على إنشاء تجربة سلسة عبر الإنترنت، بدءاً من بناء أكبر شبكة تأجير إلى تقديم الطلبات، إلى دفع الإيجار.'
               }
               color={'green'}
-              image={'https://i.imgur.com/dKOSQOs.jpg'}
+              image={'https://i.imgur.com/AHgYtdk.png'}
               emoji={<MdOutlineCalendarToday className="text-[#119530]" />}
             />
-          </div>
+          </div> */}
+
           <h1 className="w-full text-center sm:text-lg my-4">أحدث الإعلانات</h1>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full xl:w-[70%]">
             {items.map((item) => (

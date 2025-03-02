@@ -7,7 +7,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { inputsContext } from '../../components/Context';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
-import CustomToast from '../../components/CustomToast';
+import CustomToast from '../../components/ReusableComponents/CustomToast';
 import BackButton from '../../components/BackButton';
 import MiddleBarAndPhoto from '../../components/RealEstate/RealEstateSideBar';
 import Loading from '../../components/ReusableComponents/Loading';
