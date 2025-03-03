@@ -45,16 +45,13 @@ export default function ImageUploader({ images = [] }) {
           data = await response.json();
         }
 
-        if (
-          data.success ||
-          (service === 'Postimages' && data.status === 'OK')
-        ) {
+        if (data.success) {
           uploadedLink =
             data?.data?.url || data?.image?.url || data?.data?.link;
           console.log(
             `تم الرفع بنجاح إلى: ${service} - الرابط: ${uploadedLink}`
           );
-          toast.success('تم الرفع بنجاح');
+          toast.success('تم رفع الصورة بنجاح');
           break; // إيقاف المحاولات عند النجاح
         }
       } catch (error) {

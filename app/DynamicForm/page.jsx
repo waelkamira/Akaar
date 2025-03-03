@@ -25,6 +25,7 @@ import FormSubmitButton from './FormSubmitButton';
 import OnClickMap from '../../components/map/onClickMap';
 import { useSession } from 'next-auth/react';
 import MainNavbar from '../../components/navbars/MainNavbar';
+import CitySelector from '../../components/Selectors/CitySelector';
 
 export default function DynamicForm() {
   const { register, handleSubmit } = useForm();
@@ -162,7 +163,7 @@ export default function DynamicForm() {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center w-full bg-five text-sm sm:text-lg">
+    <div className="flex flex-col justify-center items-center w-full bg-five text-sm sm:text-lg mt-24 sm:mt-16 lg:mt-44">
       <MainNavbar />
       {session?.status === 'authenticated' ? (
         <form
@@ -192,7 +193,7 @@ export default function DynamicForm() {
             label="عنوان الإعلان"
             icon={<MdTitle className="text-one text-lg sm:text-xl" />}
             name="title"
-            placeholder="ضع عنوان بسيط"
+            placeholder="ضع عنوان مناسب لمنتجك"
             register={register}
             errors={emptyFields}
             onChange={handleInputChange}
@@ -213,7 +214,7 @@ export default function DynamicForm() {
             }
             placeholder="-اختر-"
           />
-
+          {/* 
           <FormInput
             label="المدينة"
             icon={<MdLocationCity className="text-one text-lg sm:text-xl" />}
@@ -232,7 +233,9 @@ export default function DynamicForm() {
             register={register}
             errors={emptyFields}
             onChange={handleInputChange}
-          />
+          /> */}
+
+          <CitySelector />
 
           <FormInput
             label="رقم الهاتف"
@@ -245,7 +248,7 @@ export default function DynamicForm() {
             onChange={handleInputChange}
           />
 
-          {/* {selectedCategory &&
+          {selectedCategory &&
             categoryFields[selectedCategory]?.map((field, index) => (
               <div key={index}>
                 <label className="font-medium mb-2 flex items-center gap-2">
@@ -288,52 +291,8 @@ export default function DynamicForm() {
                   <p className="text-red-500 text-sm mt-1">هذا الحقل مطلوب</p>
                 )}
               </div>
-            ))} */}
-          {selectedCategory &&
-            categoryFields[selectedCategory]?.map((field, index) => (
-              <div
-                key={index}
-                className="flex flex-col xl:flex-row justify-center items-center w-full"
-              >
-                {/* الحقل مع الأيقونة والعنوان */}
-                <div className="flex items-center w-full border rounded focus:outline-2 focus:outline-one  bg-white text-nowrap">
-                  {/* الأيقونة */}
-                  <span className="text-one xl:text-xl">{field?.icon}</span>
-                  {/* العنوان */}
-                  <span className="text-black">{field?.name}</span>
-                  {/* الحقل (input أو select أو مكون مخصص) */}
-                  {field?.options ? (
-                    <select
-                      className="w-full bg-transparent focus:outline-none text-gray-500"
-                      onChange={(e) =>
-                        handleDetailsChange(field?.name, e.target.value)
-                      }
-                    >
-                      {Object.entries(field?.options).map(([key, value]) => (
-                        <option
-                          key={value}
-                          value={value}
-                          className="text-black h-full"
-                        >
-                          {value}
-                        </option>
-                      ))}
-                    </select>
-                  ) : field?.component ? (
-                    // عرض المكون المخصص إذا كان موجودًا
-                    field.component
-                  ) : (
-                    <input
-                      placeholder={field?.placeholder}
-                      className="w-full bg-transparent focus:outline-none sm:h-12 h-8"
-                      onChange={(e) =>
-                        handleDetailsChange(field?.name, e.target.value)
-                      }
-                    />
-                  )}
-                </div>
-              </div>
             ))}
+
           <FormInput
             label="السعر"
             icon={<MdAttachMoney className="text-one text-lg sm:text-xl" />}
