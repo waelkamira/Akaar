@@ -67,13 +67,7 @@ export default function FirstNavBar() {
               المفضلة
             </li>
           </div>
-          {/* <div
-            className="flex items-center justify-center gap-2 border-one hover:border-t-4 shadow-one hover:shadow-lg rounded-[5px]  hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-14 transition-all duration-300"
-            onClick={() => router.push('/RealEstate')}
-          >
-            <MdOutlineMapsHomeWork className="text-xl select-none text-one" />
-            <li className=" text-xl select-none">عقارات</li>
-          </div> */}
+
           <div
             className="flex items-center justify-center gap-2 border-one hover:border-t-4 shadow-one hover:shadow-lg rounded-[5px]  hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-14 transition-all duration-300"
             onClick={() => router.push('/DynamicForm')}
@@ -81,13 +75,6 @@ export default function FirstNavBar() {
             <MdOutlineMapsHomeWork className="text-xl select-none text-one" />
             <li className=" text-xl select-none">إنشاء إعلان</li>
           </div>
-          {/* <div
-            className="flex items-center justify-center gap-2 border-one hover:border-t-4 shadow-one hover:shadow-lg rounded-[5px]  hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-14 transition-all duration-300"
-            onClick={() => router.push('/Cars')}
-          >
-            <GiCarWheel className="text-xl select-none text-one" />
-            <li className=" text-xl select-none">سيارات</li>
-          </div> */}
 
           <div
             className="flex items-center justify-center gap-2 border-one hover:border-t-4 shadow-one hover:shadow-lg rounded-[5px]  hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-14 transition-all duration-300"

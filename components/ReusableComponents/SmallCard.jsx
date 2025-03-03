@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import LoadingPhoto from '../photos/LoadingPhoto';
 import FormatDate from './FormatDate';
 import categoryFields from '../lists/categoryFields';
+import categories from '../lists/categories';
 
 export default function SmallCard({ item }) {
   const { dispatch } = useContext(inputsContext);
@@ -14,7 +15,7 @@ export default function SmallCard({ item }) {
   const session = useSession();
   const [isFavorited, setIsFavorited] = useState(false);
   const fields = categoryFields[item?.category] || [];
-
+  // console.log('fields', fields);
   return (
     <div
       className="flex flex-col justify-center items-center w-full cursor-pointer bg-white hover:shadow-2xl transition-shadow duration-300 ease-in-out rounded-lg overflow-hidden relative group"
@@ -67,17 +68,25 @@ export default function SmallCard({ item }) {
 
       {/* تفاصيل إضافية بناءً على الفئة */}
       <div className="w-full p-4 bg-gray-50 border-t border-gray-200">
-        {fields?.slice(0, 2).map((field, index) => (
-          <div
-            key={index}
-            className="flex items-center gap-2 mb-2 text-sm text-gray-700"
-          >
-            {field.icon}
-            <p>
-              {field.name}: {item.details?.[field.name]}
-            </p>
-          </div>
-        ))}
+        {Object.entries(item?.details || {}) // تحويل الكائن إلى مصفوفة من الإدخالات
+          .slice(-2) // أخذ العنصرين الأولين
+          .map(
+            (
+              [key, value],
+              index // تفكيك الإدخال إلى مفتاح وقيمة
+            ) => (
+              <div
+                key={index}
+                className="flex items-center gap-2 mb-2 text-sm text-gray-700"
+              >
+                {fields[index]?.icon || fields[index]?.component?.props?.icon}{' '}
+                {/* عرض الأيقونة المقابلة */}
+                <p>
+                  {key}: {value} {/* عرض المفتاح والقيمة */}
+                </p>
+              </div>
+            )
+          )}
       </div>
 
       {/* أيقونة المفضلة */}

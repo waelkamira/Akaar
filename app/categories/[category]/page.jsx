@@ -17,8 +17,10 @@ import HeroSlider from '../../../components/photos/HeroSlider';
 import SecondNavBar from '../../../components/navbars/SecondNavBar';
 import CarsSideBar from '../../../components/Cars/CarsSideBar';
 import CategoriesProductsSearchBar from '../../../components/Categories/CategoriesProductsSearchBar';
+import FirstNavBar from '../../../components/navbars/FirstNavBar';
 
 const CategoryPage = () => {
+  const [showSearch, setShowSearch] = useState(false);
   const { category } = useParams(); // الحصول على اسم الفئة من الرابط
   const [items, setItems] = useState([]);
 
@@ -41,14 +43,23 @@ const CategoryPage = () => {
   return (
     <div className="relative flex flex-col justify-center items-center z-40 w-full  bg-five">
       <div className="w-full">
+        <FirstNavBar />
         <CarsSideBar Button={true} />
-        <CategoriesProductsSearchBar category={category} />
+
+        <div className="p-2 bg-three">
+          <button
+            className="flex justify-center items-center rounded-[5px] sm:text-lg text-sm bg-one text-white text-nowrap h-12 select-none w-full hover:scale-[101%]"
+            onClick={() => setShowSearch(!showSearch)}
+          >
+            {showSearch ? 'إخفاء فلاتر البحث' : 'عرض فلاتر البحث'}
+          </button>
+        </div>
+        {showSearch && <CategoriesProductsSearchBar category={category} />}
         {/* صورة الخلفية */}
         <div className="relative w-full h-full overflow-hidden">
           {/* <HeroSlider /> */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
         </div>
-
         <div className="flex flex-col justify-center items-center w-full">
           {/* <div className="flex justify-center items-center gap-2 w-full text-nowrap py-8 ">
             <div className="flex flex-col justify-end items-end text-two ">

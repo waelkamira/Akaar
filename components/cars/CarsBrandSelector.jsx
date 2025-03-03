@@ -3,13 +3,13 @@ import Select, { components } from 'react-select';
 import { inputsContext } from '../Context';
 import { FaCar } from 'react-icons/fa';
 import { usePathname } from 'next/navigation.js';
-import { carBrands } from './carBrands.jsx';
+import { carsBrandsList } from './CarsBrandsList.jsx';
 
 export default function CarsBrandSelector({ check }) {
   const { dispatch } = useContext(inputsContext);
   const [brand, setBrand] = useState(null);
   const path = usePathname();
-  const options = carBrands;
+  const options = carsBrandsList;
   const [minHeight, setMinHeight] = useState('20px');
 
   useEffect(() => {

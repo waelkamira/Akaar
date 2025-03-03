@@ -61,7 +61,7 @@ export default function MainNavbar() {
   }
 
   return (
-    <div className="flex-1 w-full">
+    <div className="flex-1 w-full fixed top-0 left-0 z-[1000]">
       <FirstNavBar />
       <div className="flex flex-col-reverse sm:flex-row-reverse justify-start items-center gap-1 sm:gap-4 w-full bg-three">
         <CategoriesNavBar />

@@ -69,7 +69,7 @@ export default function MyPosts() {
   }
 
   return (
-    <div className="flex flex-col justify-center items-center w-full">
+    <div className="flex flex-col justify-center items-center w-full mt-24 sm:mt-16 lg:mt-44">
       <MainNavbar />
 
       <div className="flex flex-col w-full xl:w-[90%] 2xl:w-[80%] h-fit px-2 sm:px-16 pt-2 overflow-y-auto z-10 ">

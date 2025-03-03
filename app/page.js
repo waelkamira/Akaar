@@ -62,25 +62,23 @@ export default function Home() {
   ];
 
   return (
-    <main className="flex flex-col items-center justify-center overflow-hidden z-50 h-fit w-full bg-five rounded-b">
+    <main className="flex flex-col items-center justify-center mt-24 sm:mt-16 lg:mt-44 overflow-hidden z-50 h-fit w-full bg-five rounded-b">
       <MainNavbar />
       <HeroSlider images={images} />
-
-      {/* عرض البيانات لكل فئة */}
       {categories?.map((category) => (
         <motion.div
           key={category.id}
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="flex flex-col justify-center items-center w-full h-full "
+          className="flex flex-col justify-center items-center w-full h-full"
         >
           <div className="flex flex-col xl:flex-row justify-center items-center w-full h-full gap-8 py-8 my-8">
             <div
               className="flex justify-center items-center w-1/8 xl:mr-6 hover:scale-105 transition-transform duration-300 ease-in-out cursor-pointer"
               onClick={() => {
                 if (typeof window !== 'undefined') {
-                  localStorage.setItem('category', JSON.stringify(category.id));
+                  localStorage.setItem('category', JSON.stringify(category));
                 }
                 router.push(`/categories/${category.id}`);
               }}
@@ -112,12 +110,11 @@ export default function Home() {
             className="flex justify-center items-center gap-2 cursor-pointer text-lg hover:scale-105 transition-transform ease-in-out duration-200"
             onClick={() => {
               if (typeof window !== 'undefined') {
-                localStorage.setItem('category', JSON.stringify(category.id));
+                localStorage.setItem('category', JSON.stringify(category));
               }
               router.push(`/categories/${category.id}`);
             }}
           >
-            {' '}
             <FaAngleDoubleLeft className="text-one" />
             <motion.span
               whileHover={{ scale: 1.05 }}
