@@ -15,7 +15,7 @@ import { getVideoIdAndPlatform } from '../youtubeUtils';
 import { GiModernCity, GiPathDistance, GiRotaryPhone } from 'react-icons/gi';
 import { MdOutlineSubtitles } from 'react-icons/md';
 
-const PropertyTypeSelector = dynamic(() => import('../PropertyTypeSelector'));
+// const PropertyTypeSelector = dynamic(() => import('../PropertyTypeSelector'));
 const Confetti = dynamic(() =>
   import('../ReusableComponents/SuccessComponent').then((mod) => mod.Confetti)
 );
@@ -225,7 +225,7 @@ export default function RealEstatePostForm({ setIsVisible, cancel = true }) {
                 </div>
                 {/*   نوع العقار */}
                 <div className="w-full">
-                  <PropertyTypeSelector check={check} />
+                  {/* <PropertyTypeSelector check={check} /> */}
                 </div>
               </div>
             </div>

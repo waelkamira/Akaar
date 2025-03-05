@@ -21,7 +21,7 @@ const FormInput = ({
         {...register(name)}
         type={type}
         placeholder={placeholder}
-        className={`w-full p-1 sm:p-2 lg:p-3 border rounded focus:outline-2 focus:outline-one ${
+        className={`w-full p-1 sm:p-2 lg:p-3 h-[32px] sm:h-[40px] xl:h-[48px] border rounded focus:outline-2 focus:outline-one ${
           errors?.includes(name) ? 'outline-2 outline-red-500' : ''
         }`}
         onChange={onChange}

@@ -35,7 +35,7 @@ export async function GET(req, { params }) {
 
     // تخزين البيانات في الكاش
     cache.set(cacheKey, products);
-    console.log('products', products);
+    // console.log('products', products);
 
     return NextResponse.json(products);
   } catch (error) {

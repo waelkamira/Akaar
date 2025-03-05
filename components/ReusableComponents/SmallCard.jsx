@@ -91,7 +91,7 @@ export default function SmallCard({ item }) {
 
       {/* أيقونة المفضلة */}
       <div
-        className={`absolute top-3 right-3 ${
+        className={`absolute top-2 right-2 ${
           isFavorited ? 'bg-red-500' : 'bg-white/80'
         } backdrop-blur-sm rounded-full p-2 shadow-md hover:bg-red-100 transition-all duration-300 cursor-pointer`}
         onClick={(e) => {
