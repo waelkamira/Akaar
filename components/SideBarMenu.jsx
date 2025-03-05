@@ -4,14 +4,28 @@ import React from 'react';
 import CurrentUser from '../components/CurrentUser';
 import Button from './Button';
 import UserNameAndPhoto from './ReusableComponents/userNameAndPhoto';
-import categories from './lists/categories'; // تأكد من استيراد القائمة
+import categories from './lists/categories';
+import mainButtons from './lists/mainButtons';
+import Link from 'next/link';
+import { IoCloseOutline } from 'react-icons/io5';
 
 export default function SideBarMenu({ setIsOpen }) {
   const session = useSession();
   const user = CurrentUser();
 
   return (
-    <div className="p-4 w-52 mx-2 rounded bg-white overflow-y-auto h-screen pb-24">
+    <div className="p-4 w-60 mx-2 rounded-lg bg-five shadow-xl text-three overflow-y-auto h-screen pb-24">
+      {/* زر إغلاق القائمة */}
+      <div className="flex justify-end">
+        <button
+          onClick={() => setIsOpen(false)}
+          className="text-2xl text-three hover:text-gray-300 transition duration-200"
+        >
+          <IoCloseOutline />
+        </button>
+      </div>
+
+      {/* عرض معلومات المستخدم */}
       {session?.status === 'authenticated' && <UserNameAndPhoto />}
       {session?.status === 'unauthenticated' && (
         <Button title={'تسجيل الدخول'} path={'/login'} />
@@ -22,42 +36,43 @@ export default function SideBarMenu({ setIsOpen }) {
       )}
 
       {session?.status === 'authenticated' && (
-        <div>
-          <Button title={'الرئيسية'} path="/" />
-          <Button title={'بروفايل'} path="/profile" />
-          <Button title={'متجري'} path="/myPosts" />
-          <Button title={'اتصل بنا'} path={'/contactUs'} />
-          <button
-            className="text-sm p-0.5 my-2 bg-one text-white text-nowrap select-none rounded-[5px] w-full max-h-12 hover:border hover:border-[#596067] hover:scale-[101%]"
-            onClick={() => setIsOpen(false)}
-          >
-            إغلاق
-          </button>
+        <div className="mt-4">
+          {mainButtons?.map((button) => (
+            <Button
+              key={button?.title}
+              title={button?.title}
+              path={button?.path}
+              emoji={button?.emoji}
+            />
+          ))}
         </div>
       )}
 
       {/* عرض أزرار الفئات */}
-      <div className="mt-4">
+      <h1 className="mt-6 text-lg font-semibold border-b pb-2">اختر فئة:</h1>
+      <div className="space-y-2 border rounded-lg p-4 bg-white shadow-md">
         {categories.map((category) => (
-          <Button
+          <Link
+            href={category.path}
             key={category.id}
-            title={
-              <div className="flex items-center gap-2">
-                {category.icon} {/* عرض الأيقونة */}
-                <span>{category.name}</span> {/* عرض اسم الفئة */}
-              </div>
-            }
-            path={category.path}
-          />
+            className="flex items-center gap-2 p-2 rounded hover:bg-gray-100 hover:text-one transition-all duration-300 ease-in-out"
+          >
+            <span className="text-xl">{category?.icon}</span>
+            <span className="text-sm text-gray-700 hover:text-gray-700">
+              {category?.name}
+            </span>
+          </Link>
         ))}
       </div>
 
-      <button
-        className="text-sm p-0.5 my-2 bg-one text-white text-nowrap select-none rounded-[5px] w-full max-h-12 hover:border hover:border-[#596067] hover:scale-[101%]"
-        onClick={() => setIsOpen(false)}
-      >
-        إغلاق
-      </button>
+      {/* زر إغلاق القائمة */}
+      <div className="mt-6">
+        <Button
+          title={'إغلاق'}
+          onClick={() => setIsOpen(false)}
+          emoji={<IoCloseOutline />}
+        />
+      </div>
     </div>
   );
 }

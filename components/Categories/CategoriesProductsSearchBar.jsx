@@ -128,7 +128,7 @@ export default function CategoriesProductsSearchBar({ adCategory }) {
   }
   return (
     <div className="flex flex-col justify-center items-center w-full rounded-b text-black">
-      <div className="flex flex-col-reverse xl:flex-row justify-center items-center w-full bg-three shadow-sm shadow-gray-300 py-2">
+      <div className="flex flex-col-reverse xl:flex-row justify-center items-center w-full bg-three shadow-sm shadow-gray-300 py-2 pt-0">
         <div className="relative text-center w-full xl:w-1/5 px-2">
           <ImSearch className="hidden xl:block p-1 text-3xl text-one text-center w-full" />
           <button
@@ -167,7 +167,7 @@ export default function CategoriesProductsSearchBar({ adCategory }) {
               <h1
                 className={`flex justify-start items-center gap-1 text-black transition-all duration-300 text-nowrap ${
                   searchData?.maxPrice
-                    ? 'absolute top-0 right-0 scale-75 text-xs'
+                    ? 'absolute top-0 right-0 scale-75 text-xs '
                     : 'px-2 scale-100 text-base'
                 } peer-placeholder-shown:scale-100 peer-placeholder-shown:text-base`}
               >

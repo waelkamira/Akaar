@@ -15,7 +15,7 @@ import Card from '../../../components/ReusableComponents/Card';
 import { GiCarKey } from 'react-icons/gi';
 import HeroSlider from '../../../components/photos/HeroSlider';
 import SecondNavBar from '../../../components/navbars/SecondNavBar';
-import CarsSideBar from '../../../components/Cars/CarsSideBar';
+import SideBar from '../../../components/SideBar';
 import CategoriesProductsSearchBar from '../../../components/Categories/CategoriesProductsSearchBar';
 import FirstNavBar from '../../../components/navbars/FirstNavBar';
 
@@ -44,7 +44,7 @@ const CategoryPage = () => {
     <div className="relative flex flex-col justify-center items-center z-40 w-full  bg-five">
       <div className="w-full">
         <FirstNavBar />
-        <CarsSideBar Button={true} />
+        <SideBar Button={true} />
 
         <div className="p-2 bg-three">
           <button

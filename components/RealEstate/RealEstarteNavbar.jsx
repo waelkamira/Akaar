@@ -85,7 +85,7 @@ export default function RealEstateNavbar() {
           </div> */}
           <div
             className="flex items-center justify-center gap-2 hover:border-t-4  shadow-one hover:shadow-lg rounded-[5px] border-one hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 2xl:px-8 h-14 transition-all duration-300"
-            onClick={() => router.push('/DynamicForm')}
+            onClick={() => router.push('/dynamicForm')}
           >
             <FaDollarSign className="text-xl select-none text-one" />
             <li className=" text-xl select-none">بيع</li>

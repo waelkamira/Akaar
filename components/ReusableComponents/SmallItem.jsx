@@ -110,7 +110,7 @@ export default function SmallItem({ post, index }) {
             path.includes('myPosts') || path.includes('favoritePosts')
               ? 'text-md'
               : 'sm:text-2xl'
-          } btn flex justify-center items-center sm:text-lg p-1 lg:p-2 text-white text-nowrap select-none rounded-[5px] w-full md:w-1/2 max-h-12 hover:scale-[101%]`}
+          } btn flex justify-center items-center sm:text-lg p-1 lg:p-2 text-white text-nowrap select-none rounded-[5px] w-full max-h-12 hover:scale-[101%]`}
         >
           عرض الإعلان
         </button>

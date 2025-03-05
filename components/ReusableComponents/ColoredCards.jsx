@@ -1,3 +1,4 @@
+'use client';
 import { motion } from 'framer-motion';
 
 import {
@@ -28,159 +29,118 @@ import {
   FaSunset,
 } from 'react-icons/fa';
 
-// //! الافضل
 const cardStyles = {
   1: {
     gradient: 'from-orange-400 via-orange-300 to-orange-400',
     icon: <FaHome />,
-  }, // عقارات (برتقالي)
+  },
   2: {
     gradient: 'from-red-400 via-red-300 to-red-400',
     icon: <FaCar />,
-  }, // سيارات (أزرق)
+  },
   3: {
     gradient: 'from-sky-400 via-sky-300 to-sky-400',
     icon: <FaMobile />,
-  }, // هواتف (أصفر)
+  },
   4: {
     gradient: 'from-pink-400 via-pink-300 to-pink-400',
     icon: <FaLaptop />,
-  }, // كمبيوترات (بني)
+  },
   5: {
     gradient: 'from-red-400 via-red-300 to-red-400',
     icon: <FaLaptop />,
-  }, // إلكترونيات (أحمر)
+  },
   6: {
     gradient: 'from-amber-400 via-amber-300 to-amber-400',
     icon: <FaUtensils />,
-  }, // مطبخ (أصفر-برتقالي)
+  },
   7: {
     gradient: 'from-green-400 via-green-300 to-green-400',
     icon: <FaCouch />,
-  }, // أثاث (أخضر)
+  },
   8: {
     gradient: 'from-pink-400 via-pink-300 to-pink-400',
     icon: <FaTshirt />,
-  }, // موضة (وردي)
+  },
   9: {
     gradient: 'from-sky-400 via-sky-300 to-sky-400',
     icon: <FaCamera />,
-  }, // أجهزة (أزرق فاتح)
+  },
   10: {
     gradient: 'from-lime-400 via-lime-300 to-lime-400',
     icon: <FaSkating />,
-  }, // رياضة (أخضر فاتح)
+  },
   11: {
     gradient: 'from-purple-400 via-purple-300 to-purple-400',
     icon: <FaGamepad />,
-  }, // ألعاب (بنفسجي)
+  },
   12: {
     gradient: 'from-sky-400 via-sky-300 to-sky-400',
     icon: <FaBook />,
-  }, // كتب (أصفر)
+  },
   13: {
     gradient: 'from-rose-400 via-rose-300 to-rose-400',
     icon: <FaSmile />,
-  }, // جمال (وردي)
+  },
   14: {
     gradient: 'from-emerald-400 via-emerald-300 to-emerald-400',
     icon: <FaUtensils />,
-  }, // أغذية (أخضر زاهي)
+  },
   15: {
     gradient: 'from-cyan-400 via-cyan-300 to-cyan-400',
     icon: <FaTools />,
-  }, // أدوات (سيان)
+  },
   16: {
     gradient: 'from-red-400 via-red-300 to-red-400',
     icon: <FaBicycle />,
-  }, // دراجات (أحمر)
+  },
   17: {
     gradient: 'from-teal-400 via-teal-300 to-teal-400',
     icon: <FaPlane />,
-  }, // سياحة (أزرق سماوي)
+  },
   18: {
     gradient: 'from-gray-400 via-gray-300 to-gray-400',
     icon: <FaTools />,
-  }, // أدوات صناعية (رمادي)
+  },
   19: {
     gradient: 'from-amber-400 via-amber-300 to-amber-400',
     icon: <FaGift />,
-  }, // هدايا (ذهبي)
+  },
   20: {
     gradient: 'from-green-400 via-green-300 to-green-400',
     icon: <FaSeedling />,
-  }, // زراعة (أخضر)
+  },
   21: {
     gradient: 'from-teal-400 via-teal-300 to-teal-400',
     icon: <FaStethoscope />,
-  }, // أجهزة طبية (أخضر-سيان)
+  },
   22: {
     gradient: 'from-violet-400 via-violet-300 to-violet-400',
     icon: <FaMusic />,
-  }, // موسيقى (بنفسجي)
+  },
   23: {
     gradient: 'from-orange-400 via-orange-300 to-orange-400',
     icon: <FaPaintBrush />,
-  }, // فنون (برتقالي)
+  },
   24: {
     gradient: 'from-gray-400 via-gray-300 to-gray-400',
     icon: <FaFilm />,
-  }, // أفلام (رمادي)
+  },
   25: {
     gradient: 'from-lime-400 via-lime-300 to-lime-400',
     icon: <FaDumbbell />,
-  }, // معدات رياضية (أخضر فاتح)
+  },
   26: {
     gradient: 'from-sky-400 via-sky-300 to-sky-400',
     icon: <FaMedkit />,
-  }, // مستلزمات طبية (أزرق)
+  },
 };
 
 // ✅ مكون الكارد القابل لإعادة الاستخدام
 export default function RotatedCard({ number, text }) {
-  const { gradient, icon } = cardStyles[number] || cardStyles[1]; // افتراضيًا الرقم 1 إذا لم يكن موجودًا
+  const { gradient, icon } = cardStyles[number] || cardStyles[1];
 
   return (
-    // <motion.div
-    //   initial={{ opacity: 0, y: 50 }}
-    //   animate={{ opacity: 1, y: 0 }}
-    //   transition={{ duration: 0.5 }}
-    //   whileHover={{
-    //     scale: 1.05,
-    //     boxShadow: '0px 10px 20px rgba(0, 0, 0, 0.2)',
-    //   }} // تأثير التكبير والظل عند التمرير
-    //   className={`relative flex items-center justify-between w-64 h-12 xl:h-16 bg-gradient-to-r ${gradient} text-white rounded-full shadow-2xl p-4 cursor-pointer hover:shadow-3xl transition-all duration-300`}
-    // >
-    //   <div className="flex items-center justify-center gap-2">
-    //     {/* الأيقونة داخل دائرة بتدرج لوني */}
-    //     <motion.div
-    //       whileHover={{ rotate: 15 }} // دوران الأيقونة عند التمرير
-    //       className={`size-16 xl:size-20 bg-white/20 backdrop-blur-sm flex items-center justify-center rounded-full shadow-lg border-2 border-white/30`}
-    //     >
-    //       <span
-    //         className="text-3xl text-white"
-    //         style={{ textShadow: '2px 2px 5px rgba(0, 0, 0, 0.3)' }}
-    //       >
-    //         {icon}
-    //       </span>
-    //     </motion.div>
-    //     {/* النص مع ظل يتناسب مع انحناءات الرقم */}
-    //     <motion.span
-    //       whileHover={{ scale: 1.1 }} // تكبير الرقم عند التمرير
-    //       className="flex items-center justify-center text-5xl font-bold opacity-90 text-white"
-    //       style={{ textShadow: '2px 2px 5px rgba(0, 0, 0, 0.3)' }}
-    //     >
-    //       {number}
-    //     </motion.span>
-    //     <motion.span
-    //       whileHover={{ scale: 1.05 }} // تكبير النص عند التمرير
-    //       className="text-xl font-semibold text-white/90"
-    //       style={{ textShadow: '2px 2px 5px rgba(0, 0, 0, 0.3)' }}
-    //     >
-    //       {text}
-    //     </motion.span>
-    //   </div>
-    // </motion.div>
     <motion.div
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}

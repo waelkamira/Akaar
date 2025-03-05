@@ -35,11 +35,22 @@ import {
   FaGift,
   FaSeedling,
   FaStethoscope,
+  FaShower,
 } from 'react-icons/fa';
 import { VscUngroupByRefType } from 'react-icons/vsc';
+import { MdOutlineBedroomParent } from 'react-icons/md';
 
 const categoryFields = {
   1: [
+    {
+      name: 'نوع الإعلان',
+      icon: <MdOutlineBedroomParent className="text-one text-lg sm:text-xl" />,
+      placeholder: '-اختر-',
+      options: {
+        1: 'بيع',
+        2: 'أجار',
+      },
+    },
     {
       name: 'نوع العقار',
       icon: <FaHome className="text-one text-lg sm:text-xl" />,
@@ -69,7 +80,7 @@ const categoryFields = {
     },
     {
       name: 'عدد الحمامات',
-      icon: <FaBed className="text-one text-lg sm:text-xl" />,
+      icon: <FaShower className="text-one text-lg sm:text-xl" />,
       placeholder: '-اختر-',
       options: {
         1: '1',

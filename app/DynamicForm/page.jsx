@@ -17,7 +17,7 @@ import {
   MdDescription,
   MdAttachMoney,
 } from 'react-icons/md';
-import categoryFields from '../../components/lists/categoryFields';
+// import categoryFields from '../../components/lists/categoryFields';
 import FormInput from './FormInput';
 import FormSelect from './FormSelect';
 import FormTextarea from './FormTextarea';
@@ -28,22 +28,24 @@ import MainNavbar from '../../components/navbars/MainNavbar';
 import CitySelector from '../../components/Selectors/CitySelector';
 
 export default function DynamicForm() {
+  const [categoryFields, setCategoryFields] = useState([]);
   const { register, handleSubmit } = useForm();
   const [selectedCategory, setSelectedCategory] = useState('');
   const [emptyFields, setEmptyFields] = useState([]);
   const router = useRouter();
   const { data, addImages, location } = useContext(inputsContext);
   const session = useSession();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   console.log(typeof selectedCategory);
   console.log('selectedCategory', selectedCategory);
 
   const [formState, setFormState] = useState({
-    id: uuidv4(),
+    id: '',
     userId: '',
     title: '',
-    category: selectedCategory || '',
+    category: selectedCategory?.id || '',
     images: addImages || [],
-    adCategory: '',
     city: data?.propertyCity || '',
     town: data?.propertyTown || '',
     basePrice: '',
@@ -55,12 +57,45 @@ export default function DynamicForm() {
     details: {},
   });
 
+  // ✅ جلب الفئة`category`
+
+  const handleCategoryChange = (catagory) => {
+    console.log(categories[catagory - 1]); // للتأكد من البيانات التي يتم تمريرها
+    if (catagory) {
+      setSelectedCategory(categories[catagory - 1]); // تخزين نص الـ option المحدد
+    } else {
+      setSelectedCategory(null); // إعادة تعيين الحالة إذا لم يتم اختيار شيء
+    }
+  };
+
+  // ✅ تحميل الحقول بناءً على الفئة عند تغيير `category`
+  useEffect(() => {
+    if (selectedCategory) {
+      console.log('selectedCategory *************', selectedCategory);
+
+      setLoading(true);
+      setError(null);
+
+      import(`../../components/categoryFields/${selectedCategory?.name}.jsx`)
+        .then((module) => {
+          setCategoryFields(module.default);
+          setLoading(false);
+          console.log('module.default *************', module.default);
+        })
+        .catch((err) => {
+          console.error('Failed to load fields:', err);
+          setError('فشل في تحميل الحقول');
+          setLoading(false);
+        });
+    }
+  }, [selectedCategory]);
+
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('CurrentUser'));
     setFormState((prev) => ({
       ...prev,
       userId: user?.id || '',
-      category: selectedCategory || prev.category,
+      category: selectedCategory?.id || '',
       images: addImages.length ? addImages : prev.images,
       city: data?.propertyCity || prev.city,
       town: data?.propertyTown || prev.town,
@@ -102,7 +137,6 @@ export default function DynamicForm() {
       'userId',
       'title',
       'category',
-      'adCategory',
       'city',
       'town',
       'phoneNumber',
@@ -111,7 +145,8 @@ export default function DynamicForm() {
     ];
 
     const emptyFieldsList = requiredFields.filter(
-      (field) => !formState[field]?.trim()
+      (field) =>
+        typeof formState[field] === 'string' && !formState[field].trim()
     );
 
     // التحقق من الحقول الإضافية
@@ -138,8 +173,8 @@ export default function DynamicForm() {
       return;
     }
 
-    const formData = { ...formState, category: selectedCategory };
-    console.log('Form Data to be sent:', formData);
+    const formData = { ...formState, category: `${selectedCategory?.id}` };
+    console.log('formData to be sent:', formData);
 
     try {
       const response = await fetch('/api/product', {
@@ -181,11 +216,11 @@ export default function DynamicForm() {
             name="category"
             options={categories.map((cat) => ({
               value: cat.id,
-              label: cat.name,
+              label: cat.name, // النص المعروض في القائمة
             }))}
             register={register}
             errors={emptyFields}
-            onChange={(e) => setSelectedCategory(e.target.value)}
+            onChange={(e) => handleCategoryChange(e.target.value)} // تمرير الدالة المعدلة
             placeholder="-اختر-"
           />
 
@@ -199,7 +234,7 @@ export default function DynamicForm() {
             onChange={handleInputChange}
           />
 
-          <FormSelect
+          {/* <FormSelect
             label="نوع الإعلان"
             icon={<MdCategory className="text-one text-lg sm:text-xl" />}
             name="adCategory"
@@ -213,7 +248,7 @@ export default function DynamicForm() {
               setFormState((prev) => ({ ...prev, adCategory: e.target.value }))
             }
             placeholder="-اختر-"
-          />
+          /> */}
           {/* 
           <FormInput
             label="المدينة"
@@ -249,7 +284,7 @@ export default function DynamicForm() {
           />
 
           {selectedCategory &&
-            categoryFields[selectedCategory]?.map((field, index) => (
+            categoryFields?.map((field, index) => (
               <div key={index}>
                 <label className="font-medium mb-2 flex items-center gap-2">
                   {field?.icon} {field?.name}

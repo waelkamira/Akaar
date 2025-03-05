@@ -49,7 +49,7 @@ export async function POST(req) {
     });
 
     // تسجيل النتائج للتتبع
-    console.log('Products:', products);
+    // console.log('Products:', products);
 
     return NextResponse.json(products);
   } catch (error) {
