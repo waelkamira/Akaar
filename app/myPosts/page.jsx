@@ -69,10 +69,10 @@ export default function MyPosts() {
   }
 
   return (
-    <div className="flex flex-col justify-center items-center w-full mt-24 sm:mt-16 lg:mt-44">
+    <div className="flex flex-col justify-center items-center w-full">
       <MainNavbar />
 
-      <div className="flex flex-col w-full xl:w-[90%] 2xl:w-[80%] h-fit px-2 sm:px-16 pt-2 overflow-y-auto z-10 ">
+      <div className="flex flex-col w-full xl:w-[90%] 2xl:w-[80%] h-fit px-2 sm:px-16 overflow-y-auto z-10 ">
         {/* <MiddleBarAndPhoto
           isOpen={isOpen}
           setIsOpen={setIsOpen}
@@ -80,7 +80,7 @@ export default function MyPosts() {
         /> */}
 
         {isVisible && (
-          <div className="absolute flex flex-col items-center p-4 /95 z-50 inset-0 bg-five/70 text-white">
+          <div className="absolute flex flex-col items-center p-4 z-50 inset-0 bg-five/70 text-white">
             <div className="sticky top-72 w-full sm:w-1/2 border border-white rounded bg-three">
               <h1 className="text-center text-lg sm:text-xl mt-4">
                 هل تريد حذف هذه الإعلان نهائيا؟
@@ -130,7 +130,7 @@ export default function MyPosts() {
                         if (typeof window !== 'undefined') {
                           localStorage.setItem('item', JSON.stringify(post));
                         }
-                        router.push('/post');
+                        router.push(`/post/${post?.id}`);
                       }}
                     >
                       <div className="flex justify-between items-center w-full p-2 bg-one h-24 text-white ">
@@ -143,7 +143,7 @@ export default function MyPosts() {
                           //       JSON.stringify(post)
                           //     );
                           //   }
-                          //   router.push('/post');
+                          //   router.push(`/post/${}`);
                           // }}
                         >
                           <MdEdit />

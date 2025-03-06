@@ -8,14 +8,14 @@ export default function FirstNavBar() {
       className={`hidden xl:flex xl:flex-col xl:justify-start w-full overflow-hidden bg-two text-white border-b-[10px] border-one px-4`}
     >
       <div className="flex justify-between items-center w-full">
-        <ul className="flex justify-evenly gap-4 items-center h-20 py-4 w-[60%]">
+        <ul className="flex justify-evenly gap-4 items-center h-20 py-4 w-full 2xl:w-[60%]">
           {mainButtons?.map((button) => (
             <Link
               href={button?.path}
               key={button?.title}
               className="flex items-center justify-center gap-2 border-one hover:border-t-4 shadow-one hover:shadow-lg rounded-[5px]  hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-14 transition-all duration-300"
             >
-              <span className="text-one"> {button?.emoji}</span>
+              <span className="text-one text-2xl"> {button?.emoji}</span>
               <li className=" text-xl select-none">{button?.title}</li>
             </Link>
           ))}

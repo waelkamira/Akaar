@@ -63,8 +63,8 @@ const Navbar = () => {
       },
       '@media (min-width: 1280px)': {
         // شاشات فوق 1024px (ديسكتوب)
-        minHeight: '56px',
-        height: '56px',
+        minHeight: '50px',
+        height: '50px',
       },
     }),
     option: (provided, state) => ({
@@ -115,7 +115,7 @@ const Navbar = () => {
         isClearable // إمكانية مسح الاختيار
         isSearchable // إمكانية البحث داخل القائمة
         styles={customStyles} // الأنماط المخصصة
-        className="flex-grow sm:text-lg text-sm text-white text-nowrap select-none rounded-[5px] h-[32px] sm:h-[40px] xl:h-[56px] bg-gray-700/50 backdrop-blur-lg transition-all shadow-md hover:shadow-lg"
+        className="flex-grow sm:text-lg text-sm text-white text-nowrap select-none rounded-[5px] h-[32px] sm:h-[40px] xl:h-[50px] bg-gray-700/50 backdrop-blur-lg transition-all shadow-md hover:shadow-lg"
         classNamePrefix="select" // بادئة لفئات CSS
       />
     </div>

@@ -28,20 +28,23 @@ export default function UserNameAndPhoto({ post }) {
         >
           <div
             className={`relative ${
-              path.includes('myPosts') || path.includes('favoritePosts')
-                ? 'size-8'
-                : 'size-8 sm:size-12 lg:size-14'
+              path.includes('myPosts') ||
+              path.includes('favoritePosts') ||
+              path.includes('myPosts') ||
+              path.includes('/')
+                ? 'size-10'
+                : 'size-10 sm:size-12 lg:size-14'
             } overflow-hidden rounded`}
           >
             {/* تحقق من عدم وجود صورة */}
-            {session?.data?.user?.image && !post?.userImage && <LoadingPhoto />}
+            {session?.data?.user?.image && <LoadingPhoto />}
             {/* تحقق من وجود صورة */}
-            {(session?.data?.user?.image || post?.userImage) && (
+            {session?.data?.user?.image && (
               <Image
                 priority
-                src={session?.data?.user?.image || post?.userImage}
+                src={session?.data?.user?.image}
                 fill
-                alt={session?.data?.user?.name || post?.userName}
+                alt={session?.data?.user?.name}
               />
             )}
           </div>
@@ -51,9 +54,9 @@ export default function UserNameAndPhoto({ post }) {
                 path.includes('myPosts') || path.includes('favoritePosts')
                   ? 'text-[11px]'
                   : 'text-[11px] sm:text-[15px]'
-              }  text-eight select-none`}
+              }  text-eight select-none text-five font-medium`}
             >
-              {session?.data?.user?.name || post?.userName}
+              {session?.data?.user?.name}
             </h6>
             {post && (
               <h1
@@ -61,7 +64,7 @@ export default function UserNameAndPhoto({ post }) {
                   path.includes('myPosts') || path.includes('favoritePosts')
                     ? 'text-[8px]'
                     : 'text-[8px] sm:text-[12px]'
-                }   text-gray-400 select-none text-end`}
+                }   text-white/50 select-none text-end`}
                 dir="ltr"
               >
                 {formatDate(post?.createdAt) || ''}

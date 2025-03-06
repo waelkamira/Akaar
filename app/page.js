@@ -14,6 +14,7 @@ import { useSession } from 'next-auth/react';
 import CategoriesNavBar from '../components/navbars/CategoriesNavBar';
 import categories from '../components/lists/categories';
 import { FaAngleDoubleLeft, FaAngleDoubleRight } from 'react-icons/fa';
+import Link from 'next/link';
 
 export default function Home() {
   const [productsByCategory, setProductsByCategory] = useState({});
@@ -69,11 +70,9 @@ export default function Home() {
   }
 
   return (
-    <main className="relative flex flex-row-reverse items-start justify-between  overflow-hidden z-50 h-fit w-full bg-five rounded-b">
-      <div className="relative flex-col justify-between items-start w-full 2xl:w-[93%] h-full">
-        <MainNavbar />
-        {/* <HeroSlider /> */}
-        <div className="flex flex-col items-center justify-center mt-28 sm:mt-36 overflow-hidden z-50 h-fit w-full bg-five rounded-b">
+    <main className="relative flex flex-row-reverse items-start justify-between  overflow-hidden z-[40] h-fit w-full bg-five rounded-b">
+      <div className="relative flex-col justify-between items-start w-full 2xl:w-[90%] h-full">
+        <div className="flex flex-col items-center justify-center mt-10 overflow-hidden z-50 h-fit w-full bg-five rounded-b">
           {categories?.map((category) => (
             <motion.div
               key={category.id}
@@ -82,7 +81,7 @@ export default function Home() {
               transition={{ duration: 0.5 }}
               className="flex flex-col justify-center items-center w-full h-full"
             >
-              <div className="flex flex-col 2xl:flex-row justify-center items-center w-full h-full gap-8 py-8 my-8">
+              <div className="flex flex-col justify-center items-center w-full h-full gap-8 py-8 my-8">
                 <div
                   className="flex justify-center items-center w-1/8 xl:mr-6 hover:scale-105 transition-transform duration-300 ease-in-out cursor-pointer"
                   onClick={() => {
@@ -109,7 +108,7 @@ export default function Home() {
                           if (typeof window !== 'undefined') {
                             localStorage.setItem('item', JSON.stringify(item));
                           }
-                          router.push('/post');
+                          router.push(`/post/${item?.id}`);
                         }}
                         className="flex flex-col justify-center items-center w-full sm:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1rem)] xl:w-[calc(25%-1rem)] border cursor-pointer bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out rounded-[10px] overflow-hidden shadow-lg relative"
                       >
@@ -148,21 +147,38 @@ export default function Home() {
           Copyright © 2025 Matjar web site. All Rights Reserved
         </h1>
       </div>
-      <div className="hidden 2xl:flex flex-col align-center w-[7%] bg-white h-screen overflow-y-auto">
-        <div className="flex flex-col items-center fixed top-28 right-0 z-50 w-[7%] h-[800px] py-16 overflow-y-auto bg-three">
-          {categories?.map((ca) => (
-            <button
-              key={ca?.id}
-              className="w-full text-center p-3 h-12 text-white hover:bg-white hover:text-two transition-all duration-300 ease-in-out transform hover:scale-105 "
-              onClick={() => {
-                if (typeof window !== 'undefined') {
-                  localStorage.setItem('category', JSON.stringify(ca));
-                }
-                router.push(ca?.path);
-              }}
+      <div className=" hidden 2xl:flex flex-col align-center w-[7%] h-screen overflow-y-auto">
+        <div className="flex flex-col items-center fixed top-40 right-0 z-50 w-[10%] h-screen pb-40 pt-14 overflow-y-auto bg-three shadow-lg">
+          {categories?.map((ca, index) => (
+            <motion.div
+              key={ca?.title}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: index * 0.1 }}
             >
-              {ca?.name}
-            </button>
+              <Link
+                href={ca?.path}
+                className="relative flex items-center justify-around gap-3 w-32 h-10 mb-4 rounded-lg cursor-pointer bg-gradient-to-r from-transparent to-transparent hover:from-one hover:to-three text-white shadow-md hover:shadow-xl transition-all duration-300 ease-in-out transform hover:scale-105"
+              >
+                {/* تأثير الإضاءة الخفيفة */}
+                <div className="absolute inset-0 bg-three rounded-lg shadow-inner opacity-30 w-full" />
+
+                {/* الأيقونة */}
+                <span className="text-2xl hover:text-one">{ca?.icon}</span>
+
+                {/* النص */}
+                <span className="text-lg font-medium select-none">
+                  {ca?.name}
+                </span>
+
+                {/* تأثير زخرفي عند التحويم */}
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-one to-three rounded-lg opacity-0 transition-opacity duration-300"
+                  style={{ zIndex: -1 }}
+                  whileHover={{ opacity: 1 }}
+                />
+              </Link>
+            </motion.div>
           ))}
         </div>
       </div>

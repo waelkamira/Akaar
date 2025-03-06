@@ -16,19 +16,24 @@ html {
 .rubik {
   font-family: var(' --font-rubik');
 }
-
+/* ✅ التحكم في عرض شريط التمرير */
 ::-webkit-scrollbar {
   width: 5px;
 }
-::-webkit-scrollbar-track {
-  background-color: '#FF7C34';
-}
 
-::-webkit-scrollbar-thumb {
-  background: #c5c5c5;
+/* ✅ تغيير لون المسار (الخلفية) */
+::-webkit-scrollbar-track {
+  background-color: #7e7f81; /* برتقالي */
   border-radius: 20px;
 }
 
+/* ✅ تغيير لون شريط التمرير */
+::-webkit-scrollbar-thumb {
+  background: #9a9c9e;
+  border-radius: 20px;
+}
+
+/* ✅ منع ظهور الشريط بشكل غير مستحب عند الأطراف */
 ::-webkit-scrollbar-track {
   border-radius: 20px;
 }
