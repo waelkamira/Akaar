@@ -24,7 +24,7 @@ export default function SmallCard({ item }) {
         if (typeof window !== 'undefined') {
           localStorage.setItem('item', JSON.stringify(item));
         }
-        router.push('/post');
+        router.push(`/post/${item?.id}`);
       }}
     >
       {/* الصورة مع طبقة هوفر برتقالية */}

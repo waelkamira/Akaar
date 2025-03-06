@@ -198,8 +198,8 @@ export default function DynamicForm() {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center w-full bg-five text-sm sm:text-lg mt-24 sm:mt-16 lg:mt-44">
-      <MainNavbar />
+    <div className="flex flex-col justify-center items-center w-full bg-five text-sm sm:text-lg">
+      {/* <MainNavbar /> */}
       {session?.status === 'authenticated' ? (
         <form
           onSubmit={(e) => {

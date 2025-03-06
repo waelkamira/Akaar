@@ -81,7 +81,7 @@ const PostGallery = ({ post }) => {
           ${
             path.includes('myPosts') || path.includes('favoritePosts')
               ? ''
-              : 'sm:h-96'
+              : 'sm:h-64'
           }  overflow-hidden ronded-[5px] w-full`}
       >
         <Image
@@ -117,7 +117,7 @@ const PostGallery = ({ post }) => {
           ${
             path.includes('myPosts') || path.includes('favoritePosts')
               ? ''
-              : 'sm:h-96'
+              : 'sm:h-64'
           }  overflow-hidden ronded-[5px] w-full`}
             >
               <Image

@@ -1,14 +1,10 @@
 'use client';
 import { useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
-import { inputsContext } from '../../components/Context';
-import CarsSideBar from '../../components/Cars/CarsSideBar';
-import SecondNavBar from '../../components/navbars/SecondNavBar';
-import categoryFields from '../../components/lists/categoryFields';
-import Loading from '../../components/ReusableComponents/Loading';
+import categoryFields from '../../../components/lists/categoryFields';
+import Loading from '../../../components/ReusableComponents/Loading';
 import dynamic from 'next/dynamic';
-import ItemSmallItem from '../../components/ReusableComponents/ItemSmallItem';
-import LoginButton from '../../components/Buttons/LoginButton';
+import ItemSmallItem from '../../../components/ReusableComponents/ItemSmallItem';
 import {
   FaTag,
   FaClock,
@@ -22,18 +18,18 @@ import {
 
 // تحميل المكونات بشكل ديناميكي
 const ImageSlider = dynamic(
-  () => import('../../components/photos/imageSlider'),
+  () => import('../../../components/photos/imageSlider'),
   {
     loading: () => <Loading />,
   }
 );
 
-const SyriaMap = dynamic(() => import('../../components/map/SyriaMap'), {
+const SyriaMap = dynamic(() => import('../../../components/map/SyriaMap'), {
   loading: () => <Loading />,
 });
 
 const UserNameAndPhoto = dynamic(
-  () => import('../../components/ReusableComponents/userNameAndPhoto'),
+  () => import('../../../components/ReusableComponents/userNameAndPhoto'),
   {
     loading: () => <Loading />,
   }
@@ -112,9 +108,7 @@ export default function Page() {
   ];
 
   return (
-    <div className="flex flex-col justify-center items-center w-full bg-five">
-      <SecondNavBar />
-      <CarsSideBar />
+    <div className="flex flex-col justify-center items-center w-full bg-five mt-16">
       {post && (
         <div className="w-full xl:w-[80%] 2xl:w-[70%] p-3 bg-gray-100">
           {session?.status === 'authenticated' && (

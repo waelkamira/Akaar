@@ -4,6 +4,8 @@ import { ImProfile } from 'react-icons/im';
 import { FcConferenceCall } from 'react-icons/fc';
 import { TbTargetArrow } from 'react-icons/tb';
 import { MdOutlineMapsHomeWork } from 'react-icons/md';
+import { IoIosContacts } from 'react-icons/io';
+import { CgProfile } from 'react-icons/cg';
 
 const mainButtons = [
   {
@@ -34,7 +36,7 @@ const mainButtons = [
   {
     title: 'اتصل بنا',
     path: '/contactUs',
-    emoji: <FcConferenceCall />,
+    emoji: <IoIosContacts />,
   },
 ];
 

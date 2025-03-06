@@ -43,6 +43,7 @@ export default function SideBarMenu({ setIsOpen }) {
               title={button?.title}
               path={button?.path}
               emoji={button?.emoji}
+              onClick={() => setIsOpen(false)}
             />
           ))}
         </div>

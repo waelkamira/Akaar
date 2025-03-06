@@ -53,50 +53,52 @@ export default function SmallItem({ post, index }) {
   }
 
   return (
-    <div className="rounded-[5px] bg-white mb-4 w-full h-full border">
-      <div
-        key={index}
-        className="flex flex-col justify-center items-center w-full mt-0 p-2 my-2 transition-all duration-300"
-      >
-        <div className="flex items-center justify-start w-full">
-          <UserNameAndPhoto
-            userImage={post?.userImage}
-            userName={post?.userName}
-            createdAt={post?.createdAt}
-            post={post}
-          />
+    <div
+      className="rounded-xl bg-white/10 border w-[95%] border-white/10 shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden"
+      onClick={() => {
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('item', JSON.stringify(post));
+        }
+        router.push(`/post`);
+      }}
+    >
+      <div className="flex flex-col justify-center items-center w-full p-4">
+        {/* صورة المستخدم واسمه */}
+        <div className="flex items-center justify-between w-full mb-4">
+          <UserNameAndPhoto post={post} />
           {currentUser?.isAdmin === 1 && path === '/' && (
             <div
-              className="flex flex-col items-center justify-center cursor-pointer p-2 md:text-2xl hover:bg-one"
+              className="flex flex-col items-center justify-center cursor-pointer p-2 text-red-500 hover:bg-red-500/10 rounded-full"
               onClick={() => handleDeletePost(post)}
             >
-              <IoMdClose />
+              <IoMdClose className="text-xl" />
               <h6 className="text-sm select-none">حذف</h6>
             </div>
           )}
         </div>
-        <h1
-          className={`text-one ${
-            path.includes('myPosts') || path.includes('favoritePosts')
-              ? 'sm:my-2 text-lg line-clamp-1 max-w-[20ch]'
-              : 'sm:my-4 text-xl sm:text-3xl line-clamp-1 max-w-[20ch] lg:max-w-[40ch]'
-          } font-medium select-none`}
-        >
-          {post?.propertyName || post?.title}
+
+        {/* العنوان */}
+        <h1 className="text-xl font-semibold text-white line-clamp-1 mb-2">
+          {post?.title}
         </h1>
+
+        {/* معرض الصور */}
         <PostGallery post={post} />
-        <div className="p-2 w-full border-b my-2">
-          <pre className="text-sm sm:text-lg text-start w-full line-clamp-1 select-none">
-            {post?.description}
-          </pre>
-        </div>
+
+        {/* الوصف */}
+        <div className="w-full border-t border-white/10 my-4"></div>
+        <pre className="text-sm text-white/80 line-clamp-2 mb-4">
+          {post?.description}
+        </pre>
+
+        {/* زر عرض الإعلان */}
         <button
           onClick={() => {
             if (session?.status === 'authenticated') {
               if (typeof window !== 'undefined') {
                 localStorage.setItem('item', JSON.stringify(post));
               }
-              router.push('/post');
+              router.push(`/post/${post?.id}`);
             } else {
               toast.custom((t) => (
                 <CustomToast
@@ -106,11 +108,7 @@ export default function SmallItem({ post, index }) {
               ));
             }
           }}
-          className={`${
-            path.includes('myPosts') || path.includes('favoritePosts')
-              ? 'text-md'
-              : 'sm:text-2xl'
-          } btn flex justify-center items-center sm:text-lg p-1 lg:p-2 text-white text-nowrap select-none rounded-[5px] w-full max-h-12 hover:scale-[101%]`}
+          className="w-full bg-white/10 text-white py-2 rounded-lg hover:bg-white/20 transition-colors duration-300"
         >
           عرض الإعلان
         </button>
