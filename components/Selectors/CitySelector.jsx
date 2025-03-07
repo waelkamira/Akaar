@@ -5,25 +5,12 @@ import { cities } from '../lists/Cities';
 import { GiModernCity } from 'react-icons/gi';
 import { FaTreeCity } from 'react-icons/fa6';
 import { inputsContext } from '../Context';
-import { usePathname } from 'next/navigation';
 
 export default function CitySelector({ check }) {
   const [selectedCity, setSelectedCity] = useState(null);
   const [selectedTown, setSelectedTown] = useState(null);
   const { dispatch } = useContext(inputsContext);
-  const path = usePathname();
   const [minHeight, setMinHeight] = useState('48px');
-
-  // useEffect(() => {
-  //   const updateSize = () => {
-  //     setMinHeight(window.innerWidth >= 640 ? '48px' : '48px'); // sm: 640px
-  //   };
-
-  //   updateSize();
-  //   window.addEventListener('resize', updateSize);
-
-  //   return () => window.removeEventListener('resize', updateSize);
-  // }, []);
 
   useEffect(() => {
     if (selectedCity?.value && selectedCity?.latlng) {
@@ -141,7 +128,7 @@ export default function CitySelector({ check }) {
           isSearchable
           theme={customTheme}
           styles={customStyles}
-          className="w-full text-md text-start text-black rounded select-none z-[100]"
+          className="w-full min-w-56 text-md text-start text-black rounded select-none z-[100]"
           classNamePrefix="select"
           components={{
             SingleValue: CitySingleValue,
@@ -160,7 +147,7 @@ export default function CitySelector({ check }) {
           isDisabled={!selectedCity}
           theme={customTheme}
           styles={customStyles}
-          className="w-full text-md text-start text-black rounded select-none z-[99]"
+          className="w-full min-w-56 text-md text-start text-black rounded select-none z-[99]"
           classNamePrefix="select"
           components={{
             SingleValue: TownSingleValue,

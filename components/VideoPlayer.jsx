@@ -44,7 +44,7 @@ export default function VideoPlayer() {
       <div className="absolute bottom-4 left-0 right-0 flex justify-center space-x-4 p-2 bg-gray-800 bg-opacity-70 rounded-b-lg">
         <button
           onClick={togglePlayPause}
-          className=" p-2 rounded-[5px] bg-blue-600 hover:bg-blue-500 focus:outline-none"
+          className=" p-2 rounded-[5px] focus:outline-none"
         >
           ⏯️
         </button>

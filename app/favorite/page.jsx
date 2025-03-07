@@ -15,7 +15,7 @@ import { MdEdit } from 'react-icons/md';
 import MiddleBarAndPhoto from '../../components/RealEstate/RealEstateSideBar';
 import Image from 'next/image';
 import NavegationPages from '../../components/ReusableComponents/NavegationPages';
-import MainNavbar from '../../components/navbars/MainNavbar';
+import MainNavbar from '../../components/Search/SearchBar';
 import Button from '../../components/Button';
 export default function MyFavorites() {
   const [isOpen, setIsOpen] = useState(false);

@@ -6,8 +6,8 @@ import { inputsContext } from '../Context';
 import { useRouter } from 'next/navigation';
 import LoadingPhoto from '../photos/LoadingPhoto';
 import FormatDate from './FormatDate';
-import categoryFields from '../lists/categoryFields';
-import categories from '../lists/categories';
+import categoryFields from '../Categories/categoryFields';
+import categories from '../Categories/categories';
 
 export default function SmallCard({ item }) {
   const { dispatch } = useContext(inputsContext);
@@ -48,7 +48,7 @@ export default function SmallCard({ item }) {
       <div className="flex flex-col justify-between gap-2 w-full p-4 bg-white text-black rounded-b-lg">
         {/* العنوان */}
         <h1 className="text-lg font-semibold text-gray-800 line-clamp-1">
-          {item?.title.split(' ').slice(0, 3).join(' ')}
+          {item?.title?.split(' ').slice(0, 3).join(' ')}
         </h1>
 
         {/* السعر والمدينة */}

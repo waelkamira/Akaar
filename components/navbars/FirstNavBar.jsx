@@ -2,10 +2,11 @@
 import Image from 'next/image';
 import mainButtons from '../lists/mainButtons';
 import Link from 'next/link';
+import SearchBar from '../Search/SearchBar';
 export default function FirstNavBar() {
   return (
     <div
-      className={`hidden xl:flex xl:flex-col xl:justify-start w-full overflow-hidden bg-two text-white border-b-[10px] border-one px-4`}
+      className={`flex xl:flex-col xl:justify-start w-full overflow-hidden bg-two text-white border-b-[10px] border-one`}
     >
       <div className="flex justify-between items-center w-full">
         <ul className="flex justify-evenly gap-4 items-center h-20 py-4 w-full 2xl:w-[60%]">
@@ -38,6 +39,7 @@ export default function FirstNavBar() {
           </Link>
         </div>
       </div>
+      {/* <SearchBar /> */}
     </div>
   );
 }

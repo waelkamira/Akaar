@@ -1,48 +1,47 @@
-// app/api/categories/[category]/route.js
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
+import { toInteger } from 'lodash';
 
 const prisma = new PrismaClient();
-const cache = new Map(); // تخزين البيانات مؤقتًا
 
 export async function GET(req, { params }) {
   const { category } = params;
   const url = new URL(req.url);
   const searchParams = url.searchParams;
-  console.log('category', category);
-  // الحصول على قيم الصفحة والحد الأقصى
+  console.log('category من داخل الدالة', category);
+
+  // الحصول على قيم الصفحة والحد الأقصى مع قيم افتراضية
   const page = parseInt(searchParams.get('page')) || 1;
-  const limit = parseInt(searchParams.get('limit')) || 5;
+  const limit = parseInt(searchParams.get('limit')) || 8;
   const skip = (page - 1) * limit;
 
-  // إنشاء مفتاح فريد للتخزين المؤقت بناءً على الصفحة والحد الأقصى
-  const cacheKey = `products-${category}-page-${page}-limit-${limit}`;
-
-  // التحقق مما إذا كانت البيانات مخزنة مسبقًا
-  if (cache.has(cacheKey)) {
-    console.log('📌 إعادة البيانات من الكاش');
-    return NextResponse.json(cache.get(cacheKey));
-  }
-
   try {
-    console.log('🗄️ جلب البيانات من قاعدة البيانات...');
+    // جلب العدد الإجمالي للمنتجات
+    const totalCount = await prisma.product.count({
+      where: { category: toInteger(category) },
+    });
+
+    // جلب المنتجات
     const products = await prisma.product.findMany({
-      where: { category: category }, // تصفية البيانات حسب الـ
+      where: { category: toInteger(category) }, // تصفية البيانات حسب الفئة
       skip, // تخطي عدد معين من العناصر
       take: limit, // الحد الأقصى للعناصر
       orderBy: { createdAt: 'desc' }, // ترتيب العناصر حسب التاريخ
     });
 
-    // تخزين البيانات في الكاش
-    cache.set(cacheKey, products);
-    // console.log('products', products);
-
-    return NextResponse.json(products);
+    // إرجاع البيانات مع العدد الإجمالي
+    return NextResponse.json({
+      data: products,
+      hasMore: skip + products.length < totalCount,
+      totalCount, // إضافة totalCount إلى الرد
+    });
   } catch (error) {
     console.error('❌ خطأ أثناء جلب البيانات:', error);
     return NextResponse.json(
       { error: 'Internal Server Error', details: error.message },
       { status: 500 }
     );
+  } finally {
+    await prisma.$disconnect(); // إغلاق اتصال Prisma بعد الانتهاء
   }
 }

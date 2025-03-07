@@ -1,5 +1,7 @@
 'use client';
+
 import { FaCalendarAlt, FaCar, FaTools } from 'react-icons/fa';
+import CarsBrandSelector from '../Cars/CarsBrandSelector';
 import YearsSelector from '../Selectors/yearSelector';
 import { BsFillFuelPumpDieselFill } from 'react-icons/bs';
 import { IoSpeedometerOutline } from 'react-icons/io5';
@@ -8,18 +10,7 @@ import { FaCarSide } from 'react-icons/fa';
 
 const realEstate = [
   {
-    name: 'adType', // المفتاح الإنجليزي
-    label: 'نوع الإعلان', // الاسم العربي
-    icon: <FaCarSide className="text-one text-lg sm:text-xl" />,
-    placeholder: '-اختر-',
-    options: {
-      1: 'بيع',
-      2: 'أجار',
-    },
-  },
-  {
-    name: 'brand', // المفتاح الإنجليزي
-    label: 'الماركة', // الاسم العربي
+    name: 'الماركة',
     icon: <FaCar className="text-one text-lg sm:text-xl" />,
     placeholder: 'تويوتا',
     options: {
@@ -142,20 +133,17 @@ const realEstate = [
     },
   },
   {
-    name: 'model', // المفتاح الإنجليزي
-    label: 'الموديل', // الاسم العربي
+    name: 'الموديل',
     icon: <FaTools className="text-one text-lg sm:text-xl" />,
     placeholder: 'كورولا',
   },
   {
-    name: 'year', // المفتاح الإنجليزي
-    label: 'السنة', // الاسم العربي
+    name: 'السنة',
     icon: <FaCalendarAlt className="text-one text-lg sm:text-xl" />,
     placeholder: '2021',
   },
   {
-    name: 'condition', // المفتاح الإنجليزي
-    label: 'الحالة', // الاسم العربي
+    name: 'الحالة',
     icon: <GiCarWheel className="text-one text-lg sm:text-xl" />,
     placeholder: '-اختر-',
     options: {
@@ -163,10 +151,17 @@ const realEstate = [
       2: 'مستعملة',
     },
   },
-
   {
-    name: 'fuelType', // المفتاح الإنجليزي
-    label: 'نوع الوقود', // الاسم العربي
+    name: 'نوع الإعلان',
+    icon: <FaCarSide className="text-one text-lg sm:text-xl" />,
+    placeholder: '-اختر-',
+    options: {
+      1: 'بيع',
+      2: 'أجار',
+    },
+  },
+  {
+    name: 'نوع الوقود',
     icon: <BsFillFuelPumpDieselFill className="text-one text-lg sm:text-xl" />,
     placeholder: '-اختر-',
     options: {
@@ -177,12 +172,11 @@ const realEstate = [
     },
     component: <YearsSelector />,
   },
+
   {
-    name: 'mileage', // المفتاح الإنجليزي
-    label: 'عدد الكيلومترات', // الاسم العربي
+    name: 'عدد الكيلومترات',
     icon: <IoSpeedometerOutline className="text-one text-lg sm:text-xl" />,
     placeholder: '20.000',
   },
 ];
-
 export default realEstate;

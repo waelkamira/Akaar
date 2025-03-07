@@ -1,7 +1,7 @@
 'use client';
 import { useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
-import categoryFields from '../../../components/lists/categoryFields';
+import categoryFields from '../../../components/Categories/categoryFields';
 import Loading from '../../../components/ReusableComponents/Loading';
 import dynamic from 'next/dynamic';
 import ItemSmallItem from '../../../components/ReusableComponents/ItemSmallItem';

@@ -1,6 +1,6 @@
 'use client';
 import Footer from '../components/Footer';
-import MainNavbar from '../components/navbars/MainNavbar';
+import MainNavbar from '../components/Search/SearchBar';
 import { MdKeyboardDoubleArrowDown } from 'react-icons/md';
 import { useContext, useEffect, useState } from 'react';
 import { inputsContext } from '../components/Context';
@@ -12,7 +12,7 @@ import { motion } from 'framer-motion';
 import ColoredCards from '../components/ReusableComponents/ColoredCards';
 import { useSession } from 'next-auth/react';
 import CategoriesNavBar from '../components/navbars/CategoriesNavBar';
-import categories from '../components/lists/categories';
+import categories from '../components/Categories/categories';
 import { FaAngleDoubleLeft, FaAngleDoubleRight } from 'react-icons/fa';
 import Link from 'next/link';
 
@@ -56,11 +56,13 @@ export default function Home() {
 
       // انتظار اكتمال جميع الطلبات
       const results = await Promise.all(promises);
+      console.log('results.data', results.data);
+      console.log('results', results);
 
       // تخزين البيانات في حالة منفصلة لكل فئة
       const data = {};
       categories.forEach((category, index) => {
-        data[category.id] = results[index];
+        data[category.id] = results[index]?.data;
       });
 
       setProductsByCategory(data);
@@ -83,7 +85,7 @@ export default function Home() {
             >
               <div className="flex flex-col justify-center items-center w-full h-full gap-8 py-8 my-8">
                 <div
-                  className="flex justify-center items-center w-1/8 xl:mr-6 hover:scale-105 transition-transform duration-300 ease-in-out cursor-pointer"
+                  className="flex justify-center items-center w-1/8 xl:mr-6 hover:scale-105 mb-8 transition-transform duration-300 ease-in-out cursor-pointer"
                   onClick={() => {
                     if (typeof window !== 'undefined') {
                       localStorage.setItem(
@@ -91,7 +93,9 @@ export default function Home() {
                         JSON.stringify(category)
                       );
                     }
-                    router.push(`/categories/${category.id}`);
+                    router.push(
+                      `/categories/${category?.id}?category=${category.name}`
+                    );
                   }}
                 >
                   <ColoredCards number={category.id} text={category.name} />
@@ -124,7 +128,9 @@ export default function Home() {
                           JSON.stringify(category)
                         );
                       }
-                      router.push(`/categories/${category.id}`);
+                      router.push(
+                        `/categories/${category?.id}?category=${category.name}`
+                      );
                     }}
                   >
                     <FaAngleDoubleLeft className="text-one" />
@@ -147,8 +153,9 @@ export default function Home() {
           Copyright © 2025 Matjar web site. All Rights Reserved
         </h1>
       </div>
+      {/* القائمة الجانبية */}
       <div className=" hidden 2xl:flex flex-col align-center w-[7%] h-screen overflow-y-auto">
-        <div className="flex flex-col items-center fixed top-40 right-0 z-50 w-[10%] h-screen pb-40 pt-14 overflow-y-auto bg-three shadow-lg">
+        <div className="flex flex-col items-center fixed top-40 right-0 z-50 w-[11%] h-screen pb-40 pt-14 overflow-y-auto bg-three shadow-lg">
           {categories?.map((ca, index) => (
             <motion.div
               key={ca?.title}
@@ -156,9 +163,15 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: index * 0.1 }}
             >
-              <Link
+              <div
                 href={ca?.path}
                 className="relative flex items-center justify-around gap-3 w-32 h-10 mb-4 rounded-lg cursor-pointer bg-gradient-to-r from-transparent to-transparent hover:from-one hover:to-three text-white shadow-md hover:shadow-xl transition-all duration-300 ease-in-out transform hover:scale-105"
+                onClick={() => {
+                  if (typeof window !== 'undefined') {
+                    localStorage.setItem('category', JSON.stringify(ca));
+                  }
+                  router?.push(ca.path);
+                }}
               >
                 {/* تأثير الإضاءة الخفيفة */}
                 <div className="absolute inset-0 bg-three rounded-lg shadow-inner opacity-30 w-full" />
@@ -177,7 +190,7 @@ export default function Home() {
                   style={{ zIndex: -1 }}
                   whileHover={{ opacity: 1 }}
                 />
-              </Link>
+              </div>
             </motion.div>
           ))}
         </div>

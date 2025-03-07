@@ -12,7 +12,7 @@ import BackButton from '../../components/BackButton';
 import MiddleBarAndPhoto from '../../components/RealEstate/RealEstateSideBar';
 import Loading from '../../components/ReusableComponents/Loading';
 import LoadingPhoto from '../../components/photos/LoadingPhoto';
-import MainNavbar from '../../components/navbars/MainNavbar';
+import MainNavbar from '../../components/Search/SearchBar';
 import LoginButton from '../../components/Buttons/LoginButton';
 export default function Profile() {
   const session = useSession();

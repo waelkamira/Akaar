@@ -3,7 +3,7 @@ import React, { useRef, useState } from 'react';
 import emailjs from '@emailjs/browser';
 import toast from 'react-hot-toast';
 import Button from '../../../components/Button';
-import MainNavbar from '../../../components/navbars/MainNavbar';
+import MainNavbar from '../../../components/Search/SearchBar';
 
 export default function ContactUs() {
   const [userInfo, setUserInfo] = useState({

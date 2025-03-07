@@ -11,7 +11,7 @@ import {
 } from 'react-icons/md'; // أيقونات من react-icons/md
 import { GiCarKey } from 'react-icons/gi'; // أيقونات من react-icons/gi
 import { useRouter } from 'next/navigation';
-import MainNavbar from '../../components/navbars/MainNavbar';
+import MainNavbar from '../../components/Search/SearchBar';
 import HeroSlider from '../../components/photos/HeroSlider';
 import Card from '../../components/ReusableComponents/Card'; // تأكد من تعديل المسار حسب مكان المكون
 
@@ -92,7 +92,7 @@ export default function ContactUs() {
 
   return (
     <div className="absolute top-8 xl:top-16 flex flex-col justify-center items-center w-full rounded-b text-black">
-      <MainNavbar />
+      {/* <MainNavbar /> */}
       <HeroSlider />
 
       <main className="flex flex-col justify-center items-center pb-16 w-full rounded-b">
