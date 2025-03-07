@@ -1,17 +1,9 @@
 'use client';
-import { cities } from './Cities';
 import CarsBrandSelector from '../Cars/CarsBrandSelector';
 import YearsSelector from '../Selectors/yearSelector';
 import Selector from '../Selectors/Selector';
 import { usedNewList } from '../Cars/UsedNewList';
-import { fuelList } from '../Cars/FuelList';
-import { milegeList } from '../Cars/MileageList';
-import { BsFillFuelPumpDieselFill } from 'react-icons/bs';
-import { IoSpeedometerOutline } from 'react-icons/io5';
-import { realEstatePropertyTypeList } from '../RealEstate/RealEstatePropertyTypeList';
-import { realEstateRoomsNumberList } from '../RealEstate/RealEstateRoomsNumberList';
-import { years } from '../lists/Years';
-import { carsBrandsList } from '../Cars/CarsBrandsList';
+
 import {
   FaHome,
   FaBed,

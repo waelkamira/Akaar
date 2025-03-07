@@ -38,7 +38,7 @@ model Product {
   // supplierId      String?
   // countryId       String?
   // cityId          String?              // جعلها اختيارية
-  category        String?
+  category        Int
   image1          String?
   image2          String?
   image3          String?

@@ -8,59 +8,104 @@ export async function POST(req) {
   try {
     const body = await req.json();
 
-    // تفكيك البيانات مع قيم افتراضية
+    // تفكيك البيانات مع تعيين قيم افتراضية
     const {
       page = 1,
-      limit = 5,
+      limit = 8,
       city,
       town,
-      adCategory,
+      details,
       category,
       minPrice,
       maxPrice,
     } = body;
-    console.log('adCategory', adCategory, 'category', category);
 
-    // حساب البيانات للصفحة الحالية
+    // تحويل details من سلسلة نصية إلى كائن JSON إذا لزم الأمر
+    let parsedDetails = details;
+    if (typeof details === 'string') {
+      parsedDetails = JSON.parse(details);
+    }
+
+    // تسجيل الفلاتر المستلمة بشكل مفصل
+    console.log('Received Filters:', {
+      category,
+      details: parsedDetails,
+    });
+
+    // حساب الصفحات
     const skip = (page - 1) * limit;
 
-    // إعداد شروط الفلترة
+    // إنشاء كائن الفلاتر
     const filters = {};
 
-    // 1. تطبيق الفلاتر فقط إذا كانت القيم موجودة
+    // 1️⃣ تطبيق الفلاتر الأساسية
     if (category) filters.category = category;
     if (city) filters.city = city;
     if (town) filters.town = town;
-    if (adCategory) filters.adCategory = adCategory;
 
-    // 2. فلترة الأسعار إذا كانت محددة
+    // 2️⃣ فلترة الأسعار إذا كانت محددة
     if (minPrice || maxPrice) {
-      filters.price = {
+      filters.basePrice = {
         ...(minPrice ? { gte: toInteger(minPrice) } : {}),
         ...(maxPrice ? { lte: toInteger(maxPrice) } : {}),
       };
     }
 
+    // 3️⃣ البحث داخل `details` المخزن كـ JSONB في PostgreSQL
+    if (
+      parsedDetails &&
+      typeof parsedDetails === 'object' &&
+      Object.keys(parsedDetails).length > 0
+    ) {
+      // إنشاء مصفوفة لشروط البحث داخل details
+      const detailsFilters = Object.entries(parsedDetails).map(
+        ([key, value]) => ({
+          details: {
+            path: [key], // الوصول إلى الحقل داخل JSONB
+            equals: value, // البحث عن القيمة المطابقة
+          },
+        })
+      );
+
+      // دمج شروط details مع الفلاتر الأخرى
+      filters.AND = detailsFilters;
+    }
+
+    // تسجيل الفلاتر المطبقة بشكل مفصل
+    console.log('Applied Filters:', JSON.stringify(filters, null, 2));
+
+    // حساب العدد الإجمالي للنتائج
+    const totalCount = await prisma.product.count({
+      where: Object.keys(filters).length > 0 ? filters : {}, // تطبيق الفلاتر فقط إذا كانت موجودة
+    });
+
+    // تنفيذ الاستعلام
     const products = await prisma.product.findMany({
-      where: Object.keys(filters).length > 0 ? filters : {}, // تطبيق الفلاتر إذا كانت موجودة
+      where: Object.keys(filters).length > 0 ? filters : {}, // تطبيق الفلاتر فقط إذا كانت موجودة
       skip,
       take: limit,
       orderBy: { createdAt: 'desc' },
     });
 
-    // تسجيل النتائج للتتبع
-    // console.log('Products:', products);
+    // تسجيل المنتجات التي تم جلبها
+    console.log('hasMore:', skip + products.length < totalCount);
+    console.log('totalCount:', totalCount);
+    console.log('products.length:', products.length);
+    console.log('skip:', skip);
 
-    return NextResponse.json(products);
+    // إرجاع النتائج
+    return NextResponse.json({
+      totalCount: totalCount,
+      hasMore: skip + products.length < totalCount,
+      data: products,
+    });
   } catch (error) {
-    // تسجيل الأخطاء في حالة حدوثها
     console.error('Error fetching products:', error);
     return NextResponse.json(
       { error: 'Internal Server Error' },
       { status: 500 }
     );
   } finally {
-    // إغلاق اتصال Prisma بعد الانتهاء
     await prisma.$disconnect();
   }
 }

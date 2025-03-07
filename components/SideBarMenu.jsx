@@ -4,7 +4,7 @@ import React from 'react';
 import CurrentUser from '../components/CurrentUser';
 import Button from './Button';
 import UserNameAndPhoto from './ReusableComponents/userNameAndPhoto';
-import categories from './lists/categories';
+import categories from './Categories/categories';
 import mainButtons from './lists/mainButtons';
 import Link from 'next/link';
 import { IoCloseOutline } from 'react-icons/io5';

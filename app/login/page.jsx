@@ -36,7 +36,7 @@ export default function LogInPage() {
     // Show welcome message if logged in via Google
     console.log('user', user);
     if (session?.data?.user) {
-      toast.success(`مرحبًا بك، ${user?.name || 'ضيف'}!`);
+      toast.success(`مرحبًا بك`);
       router.push('/');
     }
   }, [router, session?.data?.user]);

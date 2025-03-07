@@ -3,11 +3,15 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Select from 'react-select';
 import { IoIosArrowBack } from 'react-icons/io';
-import categories from '../lists/categories';
+import categories from '../Categories/categories';
+import { FaTreeCity } from 'react-icons/fa6';
+import { GiModernCity } from 'react-icons/gi';
+import { TbCategoryPlus } from 'react-icons/tb';
 
-const Navbar = () => {
+const CategoriesNavBar = () => {
   const router = useRouter();
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [minHeight, setMinHeight] = useState('48px');
 
   // دالة لمعالجة اختيار الفئة
   const handleCategoryChange = (selectedOption) => {
@@ -45,81 +49,75 @@ const Navbar = () => {
 
   // الأنماط المخصصة لـ react-select
   const customStyles = {
-    control: (provided) => ({
+    control: (provided, state) => ({
       ...provided,
-      backgroundColor: '#5B6069',
-      borderColor: '#e2e8f0',
-      borderRadius: '5px',
-      minHeight: '32px', // الارتفاع الافتراضي
-      height: '32px',
-      boxShadow: 'none',
+      minHeight: minHeight,
+      height: 'auto',
+      backgroundColor: 'white',
       '&:hover': {
         borderColor: '#FF7C34',
       },
-      '@media (min-width: 640px)': {
-        // شاشات فوق 640px (تابلت فأعلى)
-        minHeight: '40px',
-        height: '40px',
-      },
-      '@media (min-width: 1280px)': {
-        // شاشات فوق 1024px (ديسكتوب)
-        minHeight: '50px',
-        height: '50px',
-      },
     }),
-    option: (provided, state) => ({
+    valueContainer: (provided) => ({
       ...provided,
-      backgroundColor: state.isFocused ? '#fadfae' : 'white', // لون الخلفية عند التركيز
-      color: state.isSelected ? '#FFFFFF' : '#000', // لون النص الأبيض إذا كانت الفئة مختارة
+      minHeight: minHeight,
+      padding: '0 1rem',
+      display: 'flex',
+      alignItems: 'center',
     }),
-    menu: (provided) => ({
+    indicatorsContainer: (provided) => ({
       ...provided,
-      borderRadius: '5px', // تدوير زوايا القائمة المنسدلة
-      boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', // إضافة ظل للقائمة
-    }),
-    placeholder: (provided) => ({
-      ...provided,
-      color: '#99A0AC', // تغيير لون الـ placeholder إلى الأبيض
-    }),
-    singleValue: (provided) => ({
-      ...provided,
-      color: '#FFFFFF', // لون النص للأيقونة المختارة
-    }),
-    dropdownIndicator: (provided) => ({
-      ...provided,
-      color: '#99A0AC', // تغيير لون المؤشر إلى الأبيض
-      '&:hover': {
-        color: '#FF7C34', // تغيير لون المؤشر عند التحويم
-      },
-    }),
-    input: (provided) => ({
-      ...provided,
-      color: '#FFFFFF', // لون النص عند الكتابة
-      caretColor: '#FFFFFF', // تغيير لون مؤشر الكتابة إلى الأبيض
+      minHeight: minHeight,
     }),
   };
+  function customTheme(theme) {
+    return {
+      ...theme,
+      borderRadius: 5,
+      colors: {
+        ...theme.colors,
+        primary: '#FF7C34',
+        primary25: '#fadfae',
+      },
+    };
+  }
+  const CategoriesSingleValue = ({ data }) => (
+    <div className="flex items-center gap-2">{data.label}</div>
+  );
 
+  // ✅ تخصيص النص داخل الحقل عند عدم اختيار أي قيمة
+  const CategoriesPlaceholder = () => (
+    <div className="flex items-center gap-2 text-gray-500">
+      <TbCategoryPlus className="text-one text-lg" />
+      <span>اختر فئة أولاً</span>
+    </div>
+  );
   return (
-    <div className="flex justify-start gap-2 items-center w-full text-white p-2 bg-one lg:bg-transparent">
+    <div className="flex justify-start gap-2 items-center w-full text-white bg-one lg:bg-transparent">
       {/* عنوان اختيار الفئة */}
-      <h1 className="flex justify-center items-center sm:text-lg text-sm text-white text-nowrap select-none rounded-[5px] w-[20%] lg:w-[40%] p-2">
-        اختر الفئة:
-      </h1>
+      {/* <h1 className="flex justify-center items-center sm:text-lg text-sm text-white text-nowrap select-none rounded-[5px] w-[20%] lg:w-[40%] p-2">
+        البحث حسب الفئة:{' '}
+      </h1> */}
 
       {/* قائمة منسدلة لاختيار الفئة */}
       <Select
         value={selectedCategory} // القيمة المحددة حاليًا
         onChange={handleCategoryChange} // دالة لمعالجة التغيير عند الاختيار
         options={options} // الخيارات المتاحة للاختيار
-        placeholder=" عقارات... سيارات..." // النص الافتراضي قبل الاختيار
+        placeholder="اختر الفئة" // النص الافتراضي قبل الاختيار
         isClearable // إمكانية مسح الاختيار
         isSearchable // إمكانية البحث داخل القائمة
+        theme={customTheme}
         styles={customStyles} // الأنماط المخصصة
-        className="flex-grow sm:text-lg text-sm text-white text-nowrap select-none rounded-[5px] h-[32px] sm:h-[40px] xl:h-[50px] bg-gray-700/50 backdrop-blur-lg transition-all shadow-md hover:shadow-lg"
+        className="w-full text-md text-start text-black rounded select-none z-[200]"
         classNamePrefix="select" // بادئة لفئات CSS
+        components={{
+          SingleValue: CategoriesSingleValue,
+          Placeholder: CategoriesPlaceholder,
+        }}
       />
     </div>
   );
 };
 
-export default Navbar;
+export default CategoriesNavBar;

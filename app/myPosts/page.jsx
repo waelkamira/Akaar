@@ -10,7 +10,7 @@ import Loading from '../../components/ReusableComponents/Loading';
 import { useRouter } from 'next/navigation';
 import { MdEdit } from 'react-icons/md';
 import NavegationPages from '../../components/ReusableComponents/NavegationPages';
-import MainNavbar from '../../components/navbars/MainNavbar';
+import MainNavbar from '../../components/Search/SearchBar';
 import Button from '../../components/Button';
 
 export default function MyPosts() {

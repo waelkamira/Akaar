@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import Select from 'react-select';
 import { inputsContext } from '../Context.jsx';
 import { VscUngroupByRefType } from 'react-icons/vsc';
-import categories from '../lists/categories.jsx';
+import categories from '../Categories/categories.jsx';
 
 export default function CategorySelector({ check }) {
   const { dispatch } = useContext(inputsContext);

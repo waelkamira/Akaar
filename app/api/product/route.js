@@ -91,7 +91,6 @@ export async function POST(req) {
         title: data?.title,
         userId: data?.userId || null,
         category: data?.category || null,
-        adCategory: data?.adCategory || '',
         city: data?.city || '',
         town: data?.town || null,
         basePrice: parseInt(data?.basePrice) || 0,
