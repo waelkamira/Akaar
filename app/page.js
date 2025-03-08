@@ -1,49 +1,21 @@
 'use client';
 import Footer from '../components/Footer';
-import MainNavbar from '../components/Search/SearchBar';
-import { MdKeyboardDoubleArrowDown } from 'react-icons/md';
-import { useContext, useEffect, useState } from 'react';
-import { inputsContext } from '../components/Context';
 import { useRouter } from 'next/navigation';
 import Loading from '../components/ReusableComponents/Loading';
-import HeroSlider from '../components/photos/HeroSlider';
 import SmallCard from '../components/ReusableComponents/SmallCard';
 import { motion } from 'framer-motion';
 import ColoredCards from '../components/ReusableComponents/ColoredCards';
-import { useSession } from 'next-auth/react';
-import CategoriesNavBar from '../components/navbars/CategoriesNavBar';
 import categories from '../components/Categories/categories';
 import { FaAngleDoubleLeft, FaAngleDoubleRight } from 'react-icons/fa';
-import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 export default function Home() {
   const [productsByCategory, setProductsByCategory] = useState({});
   const router = useRouter();
-  const { dispatch } = useContext(inputsContext);
-  const session = useSession();
 
   useEffect(() => {
-    // if (session?.status === 'unauthenticated') {
-    //   localStorage.clear();
-    // }
     fetchProductsByCategory();
   }, []);
-  // ✅ تحميل الحقول بناءً على الفئة عند تغيير `category`
-  // useEffect(() => {
-  //   if (selectedCategory) {
-  //     console.log('selectedCategory *************', selectedCategory);
-
-  //     import(`../../components/categoryFields/${selectedCategory?.name}.jsx`)
-  //       .then((module) => {
-  //         setCategoryFields(module.default);
-  //         console.log('module.default *************', module.default);
-  //       })
-  //       .catch((err) => {
-  //         console.error('Failed to load fields:', err);
-  //         setError('فشل في تحميل الحقول');
-  //       });
-  //   }
-  // }, [selectedCategory]);
 
   async function fetchProductsByCategory() {
     try {

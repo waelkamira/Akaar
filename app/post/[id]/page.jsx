@@ -39,12 +39,18 @@ export default function Page() {
   const [post, setPost] = useState({});
   const [iframeSrc, setIframeSrc] = useState(null);
   const session = useSession();
+  const [categoryFields, setCategoryFields] = useState([]);
+  const [category, setCategory] = useState('');
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const item = JSON.parse(localStorage.getItem('item'));
+      const categoryName = JSON.parse(localStorage.getItem('category'));
+
       console.log('item', item);
+      console.log('categoryName', categoryName?.name);
       setPost(item);
+      setCategory(categoryName?.name);
     }
   }, []);
 
@@ -56,6 +62,28 @@ export default function Page() {
       setIframeSrc(iframeElement ? iframeElement.getAttribute('src') : null);
     }
   }, [post?.link]);
+
+  // جلب الحقول بناءً على الفئة
+  useEffect(() => {
+    if (category) {
+      import(`../../../components/categoryFields/${category}.jsx`)
+        .then((module) => {
+          setCategoryFields(module.default);
+        })
+        .catch((err) => {
+          console.error('Failed to load fields:', err);
+          setError('فشل في تحميل الحقول');
+        });
+    }
+  }, [category]);
+
+  // دالة لتحويل القيم إلى النصوص المقابلة
+  const getFieldValue = (field, value) => {
+    if (field.options && field.options[value]) {
+      return field.options[value]; // إرجاع النص المقابل للقيمة
+    }
+    return value; // إذا لم يكن هناك خيارات، إرجاع القيمة كما هي
+  };
 
   // الحقول المشتركة
   const commonFields = [
@@ -79,11 +107,6 @@ export default function Page() {
       icon: <FaDollarSign className="text-one text-lg sm:text-xl" />,
       value: post?.adCategory,
     },
-    // {
-    //   name: 'الدولة',
-    //   icon: <FaGlobe className="text-one text-lg sm:text-xl" />,
-    //   value: post?.country,
-    // },
     {
       name: 'المدينة',
       icon: <FaMapMarkerAlt className="text-one text-lg sm:text-xl" />,
@@ -104,11 +127,11 @@ export default function Page() {
   // دمج الحقول المشتركة مع الحقول الخاصة بالفئة
   const fields = [
     ...commonFields,
-    ...(categoryFields[post?.category] || []), // الحقول الخاصة بالفئة
+    ...categoryFields, // الحقول الخاصة بالفئة
   ];
 
   return (
-    <div className="flex flex-col justify-center items-center w-full bg-five mt-16">
+    <div className="flex flex-col justify-center items-center w-full bg-five mt-16 text-black">
       {post && (
         <div className="w-full xl:w-[80%] 2xl:w-[70%] p-3 bg-gray-100">
           {session?.status === 'authenticated' && (
@@ -148,19 +171,20 @@ export default function Page() {
 
                     <div className="flex flex-col w-full">
                       <div className="flex flex-col sm:grid md:grid-cols-2 sm:gap-x-4 w-full">
-                        {fields.map((field, index) => (
-                          <ItemSmallItem
-                            key={index}
-                            icon={field.icon}
-                            text={field.name}
-                            value={
-                              // إذا كان الحقل من الحقول المشتركة، استخدم القيمة مباشرة
-                              field.value ||
-                              // إذا كان الحقل من الحقول الخاصة بالفئة، استخدم القيمة من post?.details
-                              post?.details?.[field.name]
-                            }
-                          />
-                        ))}
+                        {fields.map((field, index) => {
+                          const value =
+                            post?.details?.[field?.name] || field?.value;
+                          const displayValue = getFieldValue(field, value);
+
+                          return (
+                            <ItemSmallItem
+                              key={index}
+                              icon={field?.icon}
+                              text={field?.label || field?.name}
+                              value={displayValue}
+                            />
+                          );
+                        })}
                       </div>
 
                       <div className="flex justify-between items-center my-4 lg:my-8 h-10 sm:h-16 w-full overflow-visible">
