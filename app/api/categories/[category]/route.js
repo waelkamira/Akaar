@@ -8,7 +8,7 @@ export async function GET(req, { params }) {
   const { category } = params;
   const url = new URL(req.url);
   const searchParams = url.searchParams;
-  console.log('category من داخل الدالة', category);
+  // console.log('category من داخل الدالة', category);
 
   // الحصول على قيم الصفحة والحد الأقصى مع قيم افتراضية
   const page = parseInt(searchParams.get('page')) || 1;

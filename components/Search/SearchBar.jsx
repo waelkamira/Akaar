@@ -1,18 +1,15 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import {
-  MdKeyboardDoubleArrowLeft,
-  MdKeyboardDoubleArrowRight,
-} from 'react-icons/md';
+import { IoMdClose } from 'react-icons/io';
 import { ImSearch } from 'react-icons/im';
 import { TfiMenuAlt } from 'react-icons/tfi';
 import SideBarMenu from '../SideBarMenu';
 import SmallItem from '../ReusableComponents/SmallItem';
-import CategoriesNavBar from '../navbars/CategoriesNavBar';
-import FirstNavBar from '../navbars/FirstNavBar';
 import { usePathname, useRouter } from 'next/navigation';
 import NavegationPages from '../ReusableComponents/NavegationPages';
 import CategoriesProductsSearchBar from './CategoriesProductsSearchBar';
+import { FiFilter } from 'react-icons/fi';
+
 export default function SearchBar() {
   const [pageNumber, setPageNumber] = useState(1);
   const [isOpen, setIsOpen] = useState(false);
@@ -57,9 +54,7 @@ export default function SearchBar() {
             setSearchResults(json?.data);
             setTotalCount(json?.totalCount);
           } else {
-            setSearchResults((prevResults) =>
-              [...prevResults, ...json?.data].slice(-6)
-            );
+            setSearchResults((prevResults) => [...prevResults, ...json?.data]);
           }
           setHasMore(json?.hasMore);
         } else {
@@ -106,6 +101,13 @@ export default function SearchBar() {
               )}
             </div>
 
+            {/* عرض ايقونة فلاتر البحث في الشاشة الصغيرة */}
+            <div
+              className="xl:hidden text-white text-2xl"
+              onClick={() => setShowSearch(!showSearch)}
+            >
+              <FiFilter />
+            </div>
             {/* زر البحث أو إغلاق البحث */}
             <button
               className={`${
@@ -116,7 +118,7 @@ export default function SearchBar() {
                   totalCount === 0)
                   ? 'bg-[#EC2D20]'
                   : 'bg-one'
-              } flex justify-center items-center sm:text-lg text-sm text-white text-nowrap select-none rounded-[5px] h-[32px] sm:h-[40px] xl:h-[50px] xl:w-[10%] p-2 hover:scale-[101%] transition-transform shadow-md border border-white hover:shadow-lg`}
+              } hidden sm:flex justify-center items-center sm:text-lg text-sm text-white text-nowrap select-none rounded-[5px] h-[32px] sm:h-[40px] xl:h-[50px] xl:w-[10%] p-2 hover:scale-[101%] transition-transform shadow-md border border-white hover:shadow-lg`}
               onClick={() => {
                 if (
                   searchResults?.length > 0 ||
@@ -171,15 +173,11 @@ export default function SearchBar() {
           </div>
         </div>
         {/* زر فلاتر البحث */}
-        <div className={path === '/' ? 'hidden' : `p-2 bg-three`}>
-          <button
-            className="flex justify-center items-center rounded-[5px] sm:text-lg text-sm bg-one text-white h-12 w-full transition-transform"
-            onClick={() => setShowSearch(!showSearch)}
-          >
-            {showSearch ? 'إخفاء فلاتر البحث' : 'عرض فلاتر البحث'}
-          </button>
-        </div>
-        {showSearch && <CategoriesProductsSearchBar />}
+
+        <CategoriesProductsSearchBar
+          showSearch={showSearch}
+          setShowSearch={setShowSearch}
+        />
         {/* عرض نتائج البحث */}
         {isLoading ? (
           <div className="w-full text-white pb-32 h-screen overflow-y-auto bg-white backdrop-blur-lg">
@@ -192,6 +190,14 @@ export default function SearchBar() {
         ) : searchResults?.length > 0 ? (
           <div className="w-full text-white pb-32 h-screen overflow-y-auto bg-white backdrop-blur-lg">
             <div className="mt-8 p-4">
+              <h1
+                onClick={() => handleClearSearch()}
+                className="flex flex-col justify-center items-end w-full gap-1 sm:text-lg font-semibold text-three"
+              >
+                <span className="text-2xl px-2 text-red-500 font-bold my-2">
+                  <IoMdClose />
+                </span>
+              </h1>
               <h1 className="sm:text-lg font-semibold text-three">
                 نتائج البحث المطابقة:{' '}
                 <span className="px-2 text-one font-bold">{totalCount}</span>

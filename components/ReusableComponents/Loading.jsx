@@ -12,7 +12,7 @@ export default function Loading({ myMessage = 'لا يوجد نتائج لعرض
     }, 5000);
   }, []);
   return (
-    <div className="flex flex-col items-center justify-center h-[300px] rounded-[5px] w-full px-4">
+    <div className="flex flex-col items-center justify-center h-[300px] rounded-[5px] w-full px-4 bg-white">
       {isVisible && (
         <div className="flex flex-col justify-start items-center bg-four w-full h-full p-8 transition duration-300 rounded-[5px]">
           <div className="flex flex-col justify-center items-center">

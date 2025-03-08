@@ -15,15 +15,13 @@ const CategoryPage = () => {
   const searchParams = useSearchParams();
   const category = searchParams.get('category'); // استخراج قيمة "category"
   const { id } = useParams();
-  console.log('category', category);
+  // console.log('category', category);
 
   useEffect(() => {
     fetchCategoryProducts();
   }, [category, id, pageNumber]);
 
   async function fetchCategoryProducts() {
-    console.log('category من داخل الدالة', category);
-    console.log('id من داخل الدالة', id);
     if (!hasMore || loading) return;
 
     setLoading(true);
@@ -52,7 +50,7 @@ const CategoryPage = () => {
   };
 
   return (
-    <div className="relative flex flex-col justify-center items-center z-0 w-full bg-five mt-8 xl:mt-8">
+    <div className="relative flex flex-col justify-center items-center z-0 w-full bg-five mt-44">
       <div className="w-full">
         {/* <div className="p-2 bg-three">
           <button

@@ -93,12 +93,7 @@ const CategoriesNavBar = () => {
     </div>
   );
   return (
-    <div className="flex justify-start gap-2 items-center w-full text-white bg-one lg:bg-transparent">
-      {/* عنوان اختيار الفئة */}
-      {/* <h1 className="flex justify-center items-center sm:text-lg text-sm text-white text-nowrap select-none rounded-[5px] w-[20%] lg:w-[40%] p-2">
-        البحث حسب الفئة:{' '}
-      </h1> */}
-
+    <div className="flex justify-start gap-2 items-center w-full text-white lg:bg-transparent">
       {/* قائمة منسدلة لاختيار الفئة */}
       <Select
         value={selectedCategory} // القيمة المحددة حاليًا
