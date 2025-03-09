@@ -15,7 +15,7 @@ export default function SmallItem({ post, index }) {
   const session = useSession();
   const router = useRouter();
   const path = usePathname();
-  console.log('post 77777777777777', post);
+  // console.log('post 77777777777777', post);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {

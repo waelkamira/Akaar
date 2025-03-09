@@ -8,16 +8,6 @@ import { FaCarSide } from 'react-icons/fa';
 
 const realEstate = [
   {
-    name: 'adType', // المفتاح الإنجليزي
-    label: 'نوع الإعلان', // الاسم العربي
-    icon: <FaCarSide className="text-one text-lg sm:text-xl" />,
-    placeholder: '-اختر-',
-    options: {
-      1: 'بيع',
-      2: 'أجار',
-    },
-  },
-  {
     name: 'brand', // المفتاح الإنجليزي
     label: 'الماركة', // الاسم العربي
     icon: <FaCar className="text-one text-lg sm:text-xl" />,
@@ -139,6 +129,16 @@ const realEstate = [
       114: 'أوتوموبيلي ماتيراتسي Automobili Matarazzi',
       115: 'أوتوموبيلي نوتشيولا Automobili Nucciola',
       116: 'غير ذلك',
+    },
+  },
+  {
+    name: 'adType', // المفتاح الإنجليزي
+    label: 'نوع الإعلان', // الاسم العربي
+    icon: <FaCarSide className="text-one text-lg sm:text-xl" />,
+    placeholder: '-اختر-',
+    options: {
+      1: 'بيع',
+      2: 'أجار',
     },
   },
   {

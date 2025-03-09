@@ -88,7 +88,7 @@ export default function Home() {
                         }}
                         className="flex flex-col justify-center items-center w-full sm:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1rem)] xl:w-[calc(25%-1rem)] border cursor-pointer bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out rounded-[10px] overflow-hidden shadow-lg relative"
                       >
-                        <SmallCard item={item} />
+                        <SmallCard item={item} categoryName={category?.name} />
                       </motion.div>
                     ))}
                   <div
