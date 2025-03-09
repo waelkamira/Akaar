@@ -21,7 +21,7 @@ export default function UserNameAndPhoto({ post }) {
 
   return (
     <>
-      <div className="flex justify-start items-center gap-2 w-full mb-4">
+      <div className="flex justify-start items-center gap-2 w-full mb-4 text-black">
         <Link
           href={'/profile'}
           className="cursor-pointer flex justify-start items-center gap-2 w-fit h-fit "
@@ -30,7 +30,6 @@ export default function UserNameAndPhoto({ post }) {
             className={`relative ${
               path.includes('myPosts') ||
               path.includes('favoritePosts') ||
-              path.includes('myPosts') ||
               path.includes('/')
                 ? 'size-10'
                 : 'size-10 sm:size-12 lg:size-14'
@@ -54,7 +53,7 @@ export default function UserNameAndPhoto({ post }) {
                 path.includes('myPosts') || path.includes('favoritePosts')
                   ? 'text-[11px]'
                   : 'text-[11px] sm:text-[15px]'
-              }  text-eight select-none text-five font-medium`}
+              }  text-eight select-non font-medium`}
             >
               {session?.data?.user?.name}
             </h6>
@@ -64,7 +63,7 @@ export default function UserNameAndPhoto({ post }) {
                   path.includes('myPosts') || path.includes('favoritePosts')
                     ? 'text-[8px]'
                     : 'text-[8px] sm:text-[12px]'
-                }   text-white/50 select-none text-end`}
+                }   text-black/70 select-none text-end`}
                 dir="ltr"
               >
                 {formatDate(post?.createdAt) || ''}

@@ -6,7 +6,7 @@ import SearchBar from '../Search/SearchBar';
 export default function FirstNavBar() {
   return (
     <div
-      className={`hidden xl:flex xl:flex-col xl:justify-start w-full overflow-hidden bg-two text-white border-b-[10px] border-one`}
+      className={`hidden xl:flex xl:flex-col xl:justify-start w-full overflow-hidden bg-two text-white border-b-[10px] border-one z-[1000]`}
     >
       <div className="flex justify-between items-center w-full">
         <ul className="flex justify-evenly gap-4 items-center h-20 py-4 w-full 2xl:w-[60%]">

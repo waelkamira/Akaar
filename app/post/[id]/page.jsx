@@ -1,7 +1,6 @@
 'use client';
 import { useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
-import categoryFields from '../../../components/Categories/categoryFields';
 import Loading from '../../../components/ReusableComponents/Loading';
 import dynamic from 'next/dynamic';
 import ItemSmallItem from '../../../components/ReusableComponents/ItemSmallItem';
@@ -10,8 +9,6 @@ import {
   FaClock,
   FaDollarSign,
   FaMapMarkerAlt,
-  FaGlobe,
-  FaFileAlt,
   FaPhone,
   FaVideo,
 } from 'react-icons/fa';
@@ -102,11 +99,7 @@ export default function Page() {
       icon: <FaDollarSign className="text-one text-lg sm:text-xl" />,
       value: post?.basePrice,
     },
-    {
-      name: 'نوع الإعلان',
-      icon: <FaDollarSign className="text-one text-lg sm:text-xl" />,
-      value: post?.adCategory,
-    },
+
     {
       name: 'المدينة',
       icon: <FaMapMarkerAlt className="text-one text-lg sm:text-xl" />,
@@ -226,7 +219,7 @@ export default function Page() {
                             <span className="text-one text-2xl mx-2 select-none">
                               #
                             </span>
-                            فيديو للإعلان:
+                            الفيديو :
                           </h1>
                         </div>
                         <div className="flex justify-center items-center w-full">

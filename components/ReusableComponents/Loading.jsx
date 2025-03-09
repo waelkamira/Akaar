@@ -9,7 +9,7 @@ export default function Loading({ myMessage = 'لا يوجد نتائج لعرض
     setTimeout(() => {
       setMessage(myMessage);
       setIsVisible(false);
-    }, 5000);
+    }, 3000);
   }, []);
   return (
     <div className="flex flex-col items-center justify-center h-[300px] rounded-[5px] w-full px-4 bg-white">
