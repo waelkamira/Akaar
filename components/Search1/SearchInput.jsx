@@ -1,7 +1,12 @@
-import React from 'react';
+'use client';
+import React, { useState } from 'react';
 import { ImSearch } from 'react-icons/im';
+import { TfiMenuAlt } from 'react-icons/tfi';
+import SideBarMenu from '../SideBarMenu';
 
 export default function SearchInput({ searchData, setSearchData, onSearch }) {
+  const [isOpen, setIsOpen] = useState(false);
+
   const handleInputChange = (e) => {
     setSearchData((prev) => ({ ...prev, searchedKeyword: e.target.value }));
   };
@@ -14,6 +19,17 @@ export default function SearchInput({ searchData, setSearchData, onSearch }) {
 
   return (
     <div className="flex justify-center items-center gap-2 p-2 bg-three ">
+      <div className="xl:hidden">
+        <TfiMenuAlt
+          className="text-[30px] lg:text-5xl text-white cursor-pointer"
+          onClick={() => {
+            setIsOpen(!isOpen);
+          }}
+        />
+        <div className="absolute top-14 lg:top-20 right-0 z-50">
+          {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
+        </div>
+      </div>
       <button
         onClick={onSearch}
         className="flex justify-center items-center bg-one sm:text-lg text-sm text-white text-nowrap select-none rounded-[5px] h-[32px] sm:h-[40px] xl:h-[50px] xl:w-[10%] p-2 hover:scale-[101%] transition-transform shadow-md border border-white hover:shadow-lg"

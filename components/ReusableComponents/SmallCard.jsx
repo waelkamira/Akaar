@@ -12,7 +12,7 @@ export default function SmallCard({ item, categoryName }) {
   const searchParams = useSearchParams();
   const category = searchParams.get('category') || categoryName;
 
-  console.log('item', item);
+  // console.log('item', item);
 
   // دالة لتحويل القيم إلى النصوص المقابلة
   const getFieldValue = (field, value) => {

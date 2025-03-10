@@ -295,12 +295,12 @@ export default function EditPost() {
                   postId={postId}
                 />
 
-                {/*  نوع الإعلان */}
+                {/*  بيع/أجار */}
 
                 <CarsEditItem
                   inputs={inputs}
                   setInputs={setInputs}
-                  title={'نوع الإعلان :'}
+                  title={'بيع/أجار :'}
                   property={'adType'}
                   handleEditPost={handleEditPost}
                   editedPost={editedPost}

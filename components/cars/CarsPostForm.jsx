@@ -266,7 +266,7 @@ export default function CarsPostForm({ setIsVisible, cancel = true }) {
             <div className="relative flex flex-col my-2 sm:my-4 items-center justify-center w-full ">
               <CategorySelector check={check} />
             </div>
-            {/* نوع الإعلان */}
+            {/* بيع/أجار */}
             <div className="relative flex flex-col my-2 sm:my-4 items-center justify-center w-full">
               <div className="flex flex-col sm:flex-row justify-center items-center gap-4 w-full">
                 <div className="w-full">

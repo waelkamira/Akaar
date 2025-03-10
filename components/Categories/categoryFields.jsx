@@ -35,7 +35,7 @@ import { MdOutlineBedroomParent } from 'react-icons/md';
 const categoryFields = {
   1: [
     {
-      name: 'نوع الإعلان',
+      name: 'بيع/أجار',
       icon: <MdOutlineBedroomParent className="text-one text-lg sm:text-xl" />,
       placeholder: '-اختر-',
       options: {

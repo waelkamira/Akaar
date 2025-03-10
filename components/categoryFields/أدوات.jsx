@@ -152,7 +152,7 @@ const realEstate = [
     },
   },
   {
-    name: 'نوع الإعلان',
+    name: 'بيع/أجار',
     icon: <FaCarSide className="text-one text-lg sm:text-xl" />,
     placeholder: '-اختر-',
     options: {

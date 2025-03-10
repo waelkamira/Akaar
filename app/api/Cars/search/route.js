@@ -14,7 +14,7 @@ export async function POST(req) {
       limit = 5, // عدد العناصر في كل صفحة (افتراضيًا 5)
       city, // المدينة (اختياري)
       town, // المنطقة (اختياري)
-      usedNew, // نوع الإعلان (اختياري)
+      usedNew, // بيع/أجار (اختياري)
       brand, // الماركة (اختياري)
       minPrice, // الحد الأدنى للسعر (اختياري)
       maxPrice, // الحد الأقصى للسعر (اختياري)
@@ -22,7 +22,7 @@ export async function POST(req) {
     console.log(
       city, // المدينة (اختياري)
       town, // المنطقة (اختياري)
-      usedNew, // نوع الإعلان (اختياري)
+      usedNew, // بيع/أجار (اختياري)
       brand, // الماركة (اختياري)
       minPrice, // الحد الأدنى للسعر (اختياري)
       maxPrice
@@ -38,7 +38,7 @@ export async function POST(req) {
     if (brand) filters.brand = brand; // فلتر الماركة
     if (city) filters.city = city; // فلتر المدينة
     if (town) filters.town = town; // فلتر المنطقة
-    if (usedNew) filters.usedNew = usedNew; // فلتر نوع الإعلان
+    if (usedNew) filters.usedNew = usedNew; // فلتر بيع/أجار
 
     // 2. فلترة الأسعار إذا كانت محددة
     if (minPrice || maxPrice) {

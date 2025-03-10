@@ -145,7 +145,7 @@ export default function CarsItem({
                       icon={
                         <RxSpaceEvenlyHorizontally className="text-gray-500" />
                       }
-                      text={'نوع الإعلان'}
+                      text={'بيع/أجار'}
                       value={adType}
                     />
 

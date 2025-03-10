@@ -88,7 +88,7 @@ export default function CategoryComponent({ check }) {
             <span className="text-one text-lg xl:text-2xl ml-2">
               {!category && check ? '❌' : <FaDharmachakra />}
             </span>
-            نوع الإعلان :
+            بيع/أجار :
           </h1>
         </div>
         <Select

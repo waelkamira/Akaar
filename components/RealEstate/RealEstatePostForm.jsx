@@ -219,7 +219,7 @@ export default function RealEstatePostForm({ setIsVisible, cancel = true }) {
             </div>
             <div className="relative flex flex-col my-2 sm:my-4 items-center justify-center w-full">
               <div className="flex flex-col sm:flex-row justify-center items-center gap-4 w-full">
-                {/* نوع الإعلان */}
+                {/* بيع/أجار */}
                 <div className="w-full">
                   <CategoryComponent check={check} />
                 </div>
