@@ -25,7 +25,7 @@ const realEstate = [
   },
   {
     name: 'adType', // المفتاح الإنجليزي
-    label: 'نوع الإعلان', // الاسم العربي
+    label: 'بيع/أجار', // الاسم العربي
     icon: <MdOutlineBedroomParent className="text-one text-lg sm:text-xl" />,
     placeholder: '-اختر-',
     options: {

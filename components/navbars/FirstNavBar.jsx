@@ -39,6 +39,7 @@ export default function FirstNavBar() {
           </Link>
         </div>
       </div>
+
       {/* <SearchBar /> */}
     </div>
   );

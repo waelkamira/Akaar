@@ -236,7 +236,7 @@
 //           />
 
 //           {/* <FormSelect
-//             label="نوع الإعلان"
+//             label="بيع/أجار"
 //             icon={<MdCategory className="text-one text-lg sm:text-xl" />}
 //             name="adCategory"
 //             options={[

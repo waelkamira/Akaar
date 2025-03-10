@@ -133,7 +133,7 @@ const realEstate = [
   },
   {
     name: 'adType', // المفتاح الإنجليزي
-    label: 'نوع الإعلان', // الاسم العربي
+    label: 'بيع/أجار', // الاسم العربي
     icon: <FaCarSide className="text-one text-lg sm:text-xl" />,
     placeholder: '-اختر-',
     options: {
@@ -145,19 +145,19 @@ const realEstate = [
     name: 'model', // المفتاح الإنجليزي
     label: 'الموديل', // الاسم العربي
     icon: <FaTools className="text-one text-lg sm:text-xl" />,
-    placeholder: 'كورولا',
+    placeholder: 'الموديل',
   },
   {
     name: 'year', // المفتاح الإنجليزي
     label: 'السنة', // الاسم العربي
     icon: <FaCalendarAlt className="text-one text-lg sm:text-xl" />,
-    placeholder: '2021',
+    placeholder: 'السنة',
   },
   {
     name: 'condition', // المفتاح الإنجليزي
     label: 'الحالة', // الاسم العربي
     icon: <GiCarWheel className="text-one text-lg sm:text-xl" />,
-    placeholder: '-اختر-',
+    placeholder: 'الحالة',
     options: {
       1: 'جديدة',
       2: 'مستعملة',
@@ -166,9 +166,9 @@ const realEstate = [
 
   {
     name: 'fuelType', // المفتاح الإنجليزي
-    label: 'نوع الوقود', // الاسم العربي
+    label: 'الوقود', // الاسم العربي
     icon: <BsFillFuelPumpDieselFill className="text-one text-lg sm:text-xl" />,
-    placeholder: '-اختر-',
+    placeholder: 'الوقود',
     options: {
       1: 'بنزين',
       2: 'ديزل',
@@ -179,9 +179,9 @@ const realEstate = [
   },
   {
     name: 'mileage', // المفتاح الإنجليزي
-    label: 'عدد الكيلومترات', // الاسم العربي
+    label: 'الكيلومترات', // الاسم العربي
     icon: <IoSpeedometerOutline className="text-one text-lg sm:text-xl" />,
-    placeholder: '20.000',
+    placeholder: 'الكيلومترات',
   },
 ];
 

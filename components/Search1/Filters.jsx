@@ -70,57 +70,57 @@ export default function Filters({
 
   return (
     <>
-      {' '}
       {/* زر فلاتر البحث */}
-      <div className={`p-2 bg-three`}>
+      {/* <div className={`p-2 bg-three`}>
         <button
           className="hidden xl:flex justify-center items-center rounded-[5px] sm:text-lg text-sm bg-one text-white h-12 w-full transition-transform"
           onClick={() => setShowSearch(!showSearch)}
         >
           {showSearch ? 'إخفاء فلاتر البحث' : 'عرض فلاتر البحث'}
         </button>
-      </div>
-      {showSearch && (
-        <div className="flex flex-col justify-center items-center w-full rounded-b text-black z-0">
-          {/* الحقول والازرار */}
-          <div className="flex flex-col-reverse xl:flex-row justify-center items-center w-full bg-three shadow-sm shadow-gray-300 py-2 pt-0">
-            <SearchControls onSearch={onSearch} onReset={onReset} />
-            <div className="flex flex-col justify-center items-center gap-2 w-full">
-              <div className="flex flex-col xl:flex-row items-center justify-center gap-2 w-full px-2 text-white">
-                <CategoriesNavBar />
-                <CitySelector />
+      </div> */}
+      <div className="flex justify-start items-center w-full rounded-b text-black z-0">
+        {/* الحقول والازرار */}
+        <div className="flex justify-start items-start bg-three shadow-sm shadow-gray-300 py-2 pt-0 overflow-x-auto w-[2000px]">
+          <SearchControls
+            onSearch={onSearch}
+            onReset={onReset}
+            searchData={searchData}
+          />
+          <div className="flex justify-start items-start gap-2 w-fit">
+            <div className="relative flex items-start justify-start gap-2 w-fit text-white ">
+              <CategoriesNavBar />
+              <CitySelector />
 
-                <PriceInput
-                  label="أدنى سعر"
-                  name="minPrice"
-                  value={searchData.minPrice}
-                  onChange={handleInputChange}
-                />
-                <PriceInput
-                  label="أعلى سعر"
-                  name="maxPrice"
-                  value={searchData.maxPrice}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <div className="flex flex-col xl:flex-row items-center justify-center gap-2 w-full px-2">
-                {loading && <p>جاري التحميل...</p>}
-                {error && <p className="text-red-500">{error}</p>}
-                {!loading &&
-                  !error &&
-                  fields?.map((field, index) => (
-                    <DynamicField
-                      key={index}
-                      field={field}
-                      value={selectedValues[field.name]}
-                      onChange={handleChange}
-                    />
-                  ))}
-              </div>
+              <PriceInput
+                label="أدنى سعر"
+                name="minPrice"
+                value={searchData.minPrice}
+                onChange={handleInputChange}
+              />
+              <PriceInput
+                label="أعلى سعر"
+                name="maxPrice"
+                value={searchData.maxPrice}
+                onChange={handleInputChange}
+              />
+              {loading && <p>جاري التحميل...</p>}
+              {error && <p className="text-red-500">{error}</p>}
+              {!loading &&
+                !error &&
+                fields?.map((field, index) => (
+                  <DynamicField
+                    key={index}
+                    field={field}
+                    value={selectedValues[field.name]}
+                    onChange={handleChange}
+                  />
+                ))}
             </div>
+            <div className="flex flex-col xl:flex-row items-center justify-center gap-2 w-fit px-2"></div>
           </div>
         </div>
-      )}
+      </div>
     </>
   );
 }

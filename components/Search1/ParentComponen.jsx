@@ -36,6 +36,7 @@ export default function ParentComponent() {
 
   useEffect(() => {
     if (isSearchTriggered) {
+      console.log('تم اعادة التصيير');
       handleSearch();
     }
   }, [pageNumber, isSearchTriggered]);
@@ -45,7 +46,11 @@ export default function ParentComponent() {
     setIsLoading(true);
     setIsSearchTriggered(true);
 
-    console.log('تم اعادة التصيير');
+    // إعادة تعيين النتائج إذا كانت هذه هي الصفحة الأولى حتى يتم عرض النتائج الجديدة في كل مرة يتم فيها الضغط على بحث
+    if (pageNumber === 1) {
+      setSearchResults([]);
+    }
+
     try {
       console.log('searchData قبل الإرسال:', searchData);
 
@@ -59,9 +64,9 @@ export default function ParentComponent() {
 
       if (response.ok) {
         if (pageNumber === 1) {
-          setSearchResults(json?.data);
+          setSearchResults(json?.data); // تعيين النتائج الجديدة
         } else {
-          setSearchResults((prevResults) => [...prevResults, ...json?.data]);
+          setSearchResults((prevResults) => [...prevResults, ...json?.data]); // إضافة النتائج الجديدة إلى النتائج الحالية
         }
 
         setTotalCount(json.totalCount);
@@ -70,6 +75,8 @@ export default function ParentComponent() {
       }
     } catch (error) {
       console.error('حدث خطأ أثناء الإرسال:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -101,7 +108,7 @@ export default function ParentComponent() {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full z-[10000]">
       {/* شريط البحث */}
       <SearchInput
         searchData={searchData}

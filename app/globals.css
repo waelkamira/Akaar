@@ -18,26 +18,26 @@ html {
 }
 /* ✅ التحكم في عرض شريط التمرير */
 ::-webkit-scrollbar {
-  width: 5px;
+  width: 5px; /* عرض شريط التمرير العمودي */
+  height: 5px; /* ارتفاع شريط التمرير الأفقي */
 }
 
 /* ✅ تغيير لون المسار (الخلفية) */
 ::-webkit-scrollbar-track {
-  background-color: #7e7f81; /* برتقالي */
-  border-radius: 20px;
+  background-color: #7e7f81; /* لون خلفية شريط التمرير */
+  border-radius: 20px; /* زوايا دائرية */
 }
 
 /* ✅ تغيير لون شريط التمرير */
 ::-webkit-scrollbar-thumb {
-  background: #9a9c9e;
-  border-radius: 20px;
+  background: #9a9c9e; /* لون شريط التمرير */
+  border-radius: 20px; /* زوايا دائرية */
 }
 
 /* ✅ منع ظهور الشريط بشكل غير مستحب عند الأطراف */
 ::-webkit-scrollbar-track {
-  border-radius: 20px;
+  border-radius: 20px; /* زوايا دائرية */
 }
-
 pre {
   white-space: pre-line;
   word-wrap: break-word;

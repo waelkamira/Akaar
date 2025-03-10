@@ -44,8 +44,8 @@ export default function Page() {
       const item = JSON.parse(localStorage.getItem('item'));
       const categoryName = JSON.parse(localStorage.getItem('category'));
 
-      console.log('item', item);
-      console.log('categoryName', categoryName?.name);
+      // console.log('item', item);
+      // console.log('categoryName', categoryName?.name);
       setPost(item);
       setCategory(categoryName?.name);
     }
