@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { ImSearch } from 'react-icons/im';
 import { TfiMenuAlt } from 'react-icons/tfi';
 import SideBarMenu from '../SideBarMenu';
+import toast from 'react-hot-toast';
 
 export default function SearchInput({ searchData, setSearchData, onSearch }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -38,6 +39,7 @@ export default function SearchInput({ searchData, setSearchData, onSearch }) {
           <ImSearch className="mr-2" /> بحث
         </span>
       </button>
+
       <input
         type="text"
         value={searchData.searchedKeyword}

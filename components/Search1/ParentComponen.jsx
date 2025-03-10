@@ -12,6 +12,7 @@ export default function ParentComponent() {
   const [isSearchTriggered, setIsSearchTriggered] = useState(false);
   const [totalCount, setTotalCount] = useState(0);
   const [hasMore, setHasMore] = useState(true);
+  const [rerender, setRerender] = useState(false);
   const { data, dispatch } = useContext(inputsContext);
   const { id } = useParams();
   console.log('params', id);
@@ -82,6 +83,8 @@ export default function ParentComponent() {
 
   // دالة إعادة تعيين الفلاتر
   const resetFilters = () => {
+    setRerender(!rerender);
+
     setSearchData({
       category: id,
       searchedKeyword: '',
@@ -108,7 +111,7 @@ export default function ParentComponent() {
   };
 
   return (
-    <div className="w-full z-[10000]">
+    <div className="w-full">
       {/* شريط البحث */}
       <SearchInput
         searchData={searchData}
@@ -122,6 +125,7 @@ export default function ParentComponent() {
         setSearchData={setSearchData}
         onSearch={handleSearch}
         onReset={resetFilters}
+        rerender={rerender}
       />
 
       {/* نتائج البحث */}

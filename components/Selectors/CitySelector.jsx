@@ -204,7 +204,7 @@ export default function CitySelector({ check }) {
         <select
           value={selectedCity}
           onChange={handleCityChange}
-          className="w-28 border rounded focus:outline-2 focus:outline-one bg-white text-black h-6 px-2"
+          className="w-28 border rounded focus:outline-2 focus:outline-one bg-white text-black h-[27px] px-2"
         >
           <option value="" disabled>
             المدينة
@@ -222,7 +222,7 @@ export default function CitySelector({ check }) {
         <select
           value={selectedTown}
           onChange={handleTownChange}
-          className="w-28 border rounded focus:outline-2 focus:outline-one bg-white text-black h-6 px-2"
+          className="w-28 border rounded focus:outline-2 focus:outline-one bg-white text-black h-[27px] px-2"
           disabled={!selectedCity}
         >
           <option value="" disabled>
