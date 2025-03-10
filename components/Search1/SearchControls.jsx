@@ -32,7 +32,7 @@ export default function SearchControls({ onSearch, onReset, searchData }) {
   };
 
   return (
-    <div className="flex items-center justify-center w-fit gap-2 text-black px-2">
+    <div className="flex items-center justify-center w-fit gap-2 text-black">
       {/* <button
         className="flex justify-center items-center w-28 focus:outline-none h-6 bg-one rounded-[5px] text-white"
         onClick={handleSearchClick} // استخدام الدالة الجديدة
@@ -45,7 +45,7 @@ export default function SearchControls({ onSearch, onReset, searchData }) {
       </button> */}
 
       <button
-        className="w-28 focus:outline-none h-6 bg-one text-white rounded-[5px] "
+        className="w-28 focus:outline-none h-[27px] bg-one text-white rounded-[5px] "
         onClick={onReset}
       >
         حذف الفلاتر

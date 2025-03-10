@@ -104,7 +104,7 @@
 //         isSearchable // إمكانية البحث داخل القائمة
 //         theme={customTheme}
 //         styles={customStyles} // الأنماط المخصصة
-//         className="w-full text-md text-start text-black rounded select-none z-[200]"
+//         className="w-full text-md text-start text-black rounded select-none z-[1000]"
 //         classNamePrefix="select" // بادئة لفئات CSS
 //         components={{
 //           SingleValue: CategoriesSingleValue,
@@ -119,56 +119,50 @@
 'use client';
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { IoIosArrowBack } from 'react-icons/io';
 import categories from '../Categories/categories';
 
 const CategoriesNavBar = () => {
   const router = useRouter();
-  const [selectedCategory, setSelectedCategory] = useState < string > '';
+  const [selectedCategory, setSelectedCategory] = useState('');
 
-  const handleCategoryChange = (category) => {
-    setSelectedCategory(category.id);
+  const handleCategoryChange = (event) => {
+    const selectedOption = event.target.selectedOptions[0]; // الحصول على الخيار المحدد
+    const categoryId = selectedOption.value;
+    const categoryPath = selectedOption.getAttribute('data-path');
 
-    if (typeof window !== 'undefined') {
-      try {
-        const { id, name, path } = category;
-        localStorage.setItem('category', JSON.stringify({ id, name, path }));
-      } catch (error) {
-        console.error('Failed to save category to localStorage:', error);
-      }
+    if (categoryPath) {
+      setSelectedCategory(categoryId);
+      localStorage.setItem(
+        'category',
+        JSON.stringify({
+          id: categoryId,
+          name: selectedOption.textContent,
+          path: categoryPath,
+        })
+      );
+      router.push(categoryPath); // الانتقال إلى المسار المحدد
     }
-    router.push(category.path);
   };
 
   return (
-    <div className="w-60 bg-white border rounded shadow-md text-black p-4">
-      <h2 className="text-lg font-bold text-gray-700 mb-3">الفئات</h2>
-      <ul className="flex flex-col gap-2 max-h-72 overflow-y-auto">
+    <div className="w-28 h-[27px] bg-white border rounded shadow-md text-black">
+      {/* قائمة Select */}
+      <select
+        value={selectedCategory}
+        onChange={handleCategoryChange}
+        className="w-28 h-full bg-transparent text-sm rounded cursor-pointer focus:outline-none"
+      >
+        <option value="">اختر الفئة أولاً</option>
         {categories.map((category) => (
-          <li
+          <option
             key={category.id}
-            role="button"
-            tabIndex={0}
-            aria-label={`Select ${category.name}`}
-            className={`flex items-center justify-between p-2 rounded cursor-pointer transition-all 
-              ${
-                selectedCategory === category.id
-                  ? 'bg-one text-white'
-                  : 'hover:bg-gray-100'
-              }`}
-            onClick={() => handleCategoryChange(category)}
-            onKeyPress={(e) =>
-              e.key === 'Enter' && handleCategoryChange(category)
-            }
+            value={category.id}
+            data-path={category.path} // تخزين المسار داخل الخيار
           >
-            <div className="flex items-center gap-2 text-sm">
-              <span className="text-one">{category.icon}</span>
-              <span>{category.name}</span>
-            </div>
-            <IoIosArrowBack />
-          </li>
+            {category.name}
+          </option>
         ))}
-      </ul>
+      </select>
     </div>
   );
 };

@@ -19,17 +19,17 @@ export default function SearchResults({
   return (
     <>
       {results?.length > 0 && (
-        <div className="min-h-[50vh] pb-72 bg-three w-full inset-0 h-[900px] overflow-y-auto ">
+        <div className="min-h-[50vh] pb-72 bg-three w-full inset-0 h-[900px] overflow-y-auto border-t border-gray-400">
           {/* عرض النتائج */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             className="p-2 mx-auto w-full"
           >
-            <div className="flex flex-col items-center gap-8 w-full min-w-72">
-              <h1 className="text-3xl font-bold text-white mb-12">
+            <div className="flex flex-col items-center gap-8 w-full min-w-72 my-4 sm:my-12">
+              <h1 className="sm:text-3xl font-bold text-white select-none">
                 عدد النتائج المطابقة للبحث{' '}
-                <span className="text-green-600">{totalCount}</span>
+                <span className="text-one">{totalCount}</span>
               </h1>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full">
