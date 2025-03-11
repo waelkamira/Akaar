@@ -1,70 +1,38 @@
-import Select from 'react-select';
+'use client';
+
+import { useEffect } from 'react';
 
 export default function DynamicField({ field, value, onChange }) {
   return (
     <div
-      className={`relative flex items-center w-full border rounded focus:outline-2 focus:outline-one bg-white text-nowrap`}
+      className={`relative flex items-center w-fit border rounded focus:outline-2 focus:outline-one bg-white text-nowrap text-gray-400 text-sm`}
     >
-      <div className="flex-grow min-w-[100px]">
+      <div className="flex-grow text-sm">
         {field?.options ? (
-          <Select
-            options={Object.entries(field?.options).map(([key, value]) => ({
-              value: key,
-              label: (
-                <div className="flex items-center gap-2">
-                  <span className="text-one">{field?.icon}</span>
-                  <span>{value}</span>
-                </div>
-              ),
-            }))}
-            formatOptionLabel={(option) => option.label}
-            onChange={(selectedOption) =>
-              onChange(field?.name, selectedOption.value)
-            }
-            placeholder={
-              <div className="flex items-center gap-2">
+          <select
+            onChange={(e) => onChange(field?.name, e.target.value)}
+            className="w-28 bg-transparent focus:outline-none text-black h-6 text-sm"
+          >
+            <option value="" disabled selected className="text-sm">
+              <div className="flex items-center gap-2 text-black">
                 <span className="text-one">{field?.icon}</span>
-                <span>{field?.label}</span>
+                <span className="text-sm">{field?.label}</span>
               </div>
-            }
-            classNamePrefix="select"
-            className="w-full bg-transparent focus:outline-none h-12"
-            styles={{
-              control: (base) => ({
-                ...base,
-                minHeight: '3rem',
-                border: 'none',
-                boxShadow: 'none',
-              }),
-              option: (provided, state) => ({
-                ...provided,
-                backgroundColor: state.isFocused ? '#fadfae' : 'white',
-                color: state.isFocused ? '#1a202c' : '#4a5568',
-              }),
-              menu: (provided) => ({
-                ...provided,
-                borderRadius: '5px',
-                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-              }),
-            }}
-          />
+            </option>
+            {Object.entries(field?.options).map(([key, value]) => (
+              <option key={key} value={key} className="text-sm">
+                <div className="flex items-center gap-2 text-black text-sm">
+                  <span className="text-one">{field?.icon}</span>
+                  <span className="text-black text-sm">{value}</span>
+                </div>
+              </option>
+            ))}
+          </select>
         ) : (
-          <div className="relative flex items-center w-full border rounded focus:outline-2 focus:outline-one bg-white text-nowrap">
-            <h1
-              className={`flex justify-start items-center gap-1 text-black transition-all duration-300 text-nowrap ${
-                value
-                  ? 'absolute top-0 right-0 scale-75 text-xs'
-                  : 'px-2 scale-100 text-base'
-              } peer-placeholder-shown:scale-100 peer-placeholder-shown:text-base`}
-            >
-              <span className="text-one xl:text-xl transition-all duration-300">
-                {field?.icon}
-              </span>
-              {field?.label}
-            </h1>
+          <div className="relative flex items-center w-fit border rounded focus:outline-2 focus:outline-one bg-white text-nowrap h-6">
             <input
               placeholder={field?.placeholder}
-              className="w-full bg-transparent focus:outline-none h-12 px-2 pt-4 peer bg-white rounded-[5px] text-black"
+              className="w-28 bg-transparent focus:outline-none h-6 bg-white rounded-[5px] text-black"
               onChange={(e) => onChange(field?.name, e.target.value)}
             />
           </div>

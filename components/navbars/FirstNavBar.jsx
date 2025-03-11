@@ -2,7 +2,6 @@
 import Image from 'next/image';
 import mainButtons from '../lists/mainButtons';
 import Link from 'next/link';
-import SearchBar from '../Search/SearchBar';
 export default function FirstNavBar() {
   return (
     <div
@@ -39,8 +38,6 @@ export default function FirstNavBar() {
           </Link>
         </div>
       </div>
-
-      {/* <SearchBar /> */}
     </div>
   );
 }

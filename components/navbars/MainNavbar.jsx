@@ -1,8 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import FirstNavBar from './FirstNavBar';
-import ParentComponen from '../Search1/ParentComponen';
-import SearchBar from '../Search/SearchBar';
+import ParentComponen from '../Search/ParentComponent';
 //toast بهذه القيمة حتى يكون أعلى من الخريطة التي هي افتراضيا 1000 وأقل من z-[1001]  تم تعيين
 export default function MainNavbar() {
   return (
