@@ -31,16 +31,19 @@ export default function Filters({
   };
 
   useEffect(() => {
+    console.log('تم اعادة الريندر من فلترز');
     setSearchData((prev) => ({
       ...prev,
       category: id,
       city: data?.propertyCity || '',
       town: data?.propertyTown || '',
     }));
-  }, [category, data]);
+  }, [category, data, rerender]);
 
   // جلب الحقول حسب اسم الفئة
   useEffect(() => {
+    console.log('تم اعادة الريندر من فلترز2 ');
+
     if (category) {
       setLoading(true);
       setError(null);
