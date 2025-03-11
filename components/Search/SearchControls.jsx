@@ -1,23 +1,25 @@
-// components/SearchControls.js
 'use client';
+import toast from 'react-hot-toast';
 import { ImSearch } from 'react-icons/im';
 
-export default function SearchControls({ onSearch, onReset }) {
+export default function SearchControls({ onSearch, onReset, searchData }) {
+  // console.log('searchData', searchData);
+
   return (
-    <div className="flex flex-col items-center justify-center w-full xl:w-1/5 p-2 gap-3">
-      <button
-        className="flex justify-center items-center sm:text-lg text-sm bg-one text-white text-nowrap h-12 select-none rounded-[5px] w-full hover:scale-[101%]"
-        onClick={onSearch}
+    <div className="flex items-center justify-center w-fit gap-2 text-black">
+      {/* <button
+        className="flex justify-center items-center w-28 focus:outline-none h-6 bg-one rounded-[5px] text-white"
+        onClick={handleSearchClick} // استخدام الدالة الجديدة
       >
         <span>
           {' '}
-          <ImSearch className="hidden xl:block p-1 text-3xl text-center w-full" />
+          <ImSearch className=" p-1 text-xl text-center w-full " />
         </span>
         بحث
-      </button>
+      </button> */}
 
       <button
-        className="flex justify-center items-center sm:text-lg text-sm bg-three border text-white text-nowrap  h-12 select-none rounded-[5px] w-full hover:scale-[101%]"
+        className="w-28 focus:outline-none h-[27px] bg-one text-white rounded-[5px] border border-white hover:scale-[102%]"
         onClick={onReset}
       >
         حذف الفلاتر

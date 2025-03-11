@@ -4,6 +4,16 @@ import { MdOutlineBedroomParent } from 'react-icons/md';
 
 const realEstate = [
   {
+    name: 'adType', // المفتاح الإنجليزي
+    label: 'بيع/أجار', // الاسم العربي
+    icon: <MdOutlineBedroomParent className="text-one text-lg sm:text-xl" />,
+    placeholder: '-اختر-',
+    options: {
+      1: 'بيع',
+      2: 'أجار',
+    },
+  },
+  {
     name: 'rooms', // المفتاح الإنجليزي
     label: 'عدد الغرف', // الاسم العربي
     icon: <FaBed className="text-one text-lg sm:text-xl" />,
@@ -23,16 +33,7 @@ const realEstate = [
     icon: <FaRulerCombined className="text-one text-lg sm:text-xl" />,
     placeholder: '200 م²',
   },
-  {
-    name: 'adType', // المفتاح الإنجليزي
-    label: 'بيع/أجار', // الاسم العربي
-    icon: <MdOutlineBedroomParent className="text-one text-lg sm:text-xl" />,
-    placeholder: '-اختر-',
-    options: {
-      1: 'بيع',
-      2: 'أجار',
-    },
-  },
+
   {
     name: 'propertyType', // المفتاح الإنجليزي
     label: 'نوع العقار', // الاسم العربي
