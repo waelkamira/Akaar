@@ -1,6 +1,6 @@
 'use client';
 import { useSession } from 'next-auth/react';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import Loading from '../../../components/ReusableComponents/Loading';
 import dynamic from 'next/dynamic';
 import ItemSmallItem from '../../../components/ReusableComponents/ItemSmallItem';
@@ -10,7 +10,6 @@ import {
   FaDollarSign,
   FaMapMarkerAlt,
   FaPhone,
-  FaVideo,
 } from 'react-icons/fa';
 
 // تحميل المكونات بشكل ديناميكي
@@ -38,29 +37,18 @@ export default function Page() {
   const session = useSession();
   const [categoryFields, setCategoryFields] = useState([]);
   const [category, setCategory] = useState('');
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const item = JSON.parse(localStorage.getItem('item'));
       const categoryName = JSON.parse(localStorage.getItem('category'));
-
-      // console.log('item', item);
-      // console.log('categoryName', categoryName?.name);
+      console.log('item', item);
       setPost(item);
       setCategory(categoryName?.name);
     }
   }, []);
 
-  useEffect(() => {
-    if (typeof window !== 'undefined' && post?.link) {
-      const tempDiv = document.createElement('div');
-      tempDiv.innerHTML = post?.link;
-      const iframeElement = tempDiv.querySelector('iframe');
-      setIframeSrc(iframeElement ? iframeElement.getAttribute('src') : null);
-    }
-  }, [post?.link]);
-
-  // جلب الحقول بناءً على الفئة
   useEffect(() => {
     if (category) {
       import(`../../../components/categoryFields/${category}.jsx`)
@@ -74,54 +62,103 @@ export default function Page() {
     }
   }, [category]);
 
-  // دالة لتحويل القيم إلى النصوص المقابلة
   const getFieldValue = (field, value) => {
     if (field.options && field.options[value]) {
-      return field.options[value]; // إرجاع النص المقابل للقيمة
+      return field.options[value];
     }
-    return value; // إذا لم يكن هناك خيارات، إرجاع القيمة كما هي
+    return value;
   };
 
-  // الحقول المشتركة
-  const commonFields = [
-    {
-      name: 'العنوان',
-      icon: <FaTag className="text-one text-lg sm:text-xl" />,
-      value: post?.title,
-    },
-    {
-      name: 'تاريخ الإعلان',
-      icon: <FaClock className="text-one text-lg sm:text-xl" />,
-      value: post?.createdAt,
-    },
-    {
-      name: 'السعر',
-      icon: <FaDollarSign className="text-one text-lg sm:text-xl" />,
-      value: post?.basePrice,
-    },
+  const commonFields = useMemo(
+    () => [
+      {
+        name: 'العنوان',
+        icon: <FaTag className="text-one text-lg sm:text-xl" />,
+        value: post?.title,
+      },
+      {
+        name: 'تاريخ الإعلان',
+        icon: <FaClock className="text-one text-lg sm:text-xl" />,
+        value: post?.createdAt,
+      },
+      {
+        name: 'السعر',
+        icon: <FaDollarSign className="text-one text-lg sm:text-xl" />,
+        value: post?.basePrice,
+      },
+      {
+        name: 'المدينة',
+        icon: <FaMapMarkerAlt className="text-one text-lg sm:text-xl" />,
+        value: post?.city,
+      },
+      {
+        name: 'المنطقة',
+        icon: <FaMapMarkerAlt className="text-one text-lg sm:text-xl" />,
+        value: post?.town,
+      },
+      {
+        name: 'رقم الهاتف',
+        icon: <FaPhone className="text-one text-lg sm:text-xl" />,
+        value: post?.phoneNumber,
+      },
+    ],
+    [post]
+  );
 
-    {
-      name: 'المدينة',
-      icon: <FaMapMarkerAlt className="text-one text-lg sm:text-xl" />,
-      value: post?.city,
-    },
-    {
-      name: 'المنطقة',
-      icon: <FaMapMarkerAlt className="text-one text-lg sm:text-xl" />,
-      value: post?.town,
-    },
-    {
-      name: 'رقم الهاتف',
-      icon: <FaPhone className="text-one text-lg sm:text-xl" />,
-      value: post?.phoneNumber,
-    },
-  ];
+  const fields = useMemo(
+    () => [...commonFields, ...categoryFields],
+    [commonFields, categoryFields]
+  );
+  useEffect(() => {
+    const fetchEmbedUrl = async () => {
+      if (post?.link) {
+        const embedUrl = await getEmbedUrl(post?.link);
+        setIframeSrc(embedUrl);
+      }
+    };
+    fetchEmbedUrl();
+  }, [post?.link]);
 
-  // دمج الحقول المشتركة مع الحقول الخاصة بالفئة
-  const fields = [
-    ...commonFields,
-    ...categoryFields, // الحقول الخاصة بالفئة
-  ];
+  if (error) {
+    return <div>{error}</div>;
+  }
+
+  const getEmbedUrl = async (url) => {
+    if (!url) return null;
+
+    // رابط يوتيوب
+    if (url.includes('youtube.com') || url.includes('youtu.be')) {
+      const videoId = url.match(
+        /(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
+      );
+      if (videoId && videoId[1]) {
+        const embedUrl = `https://www.youtube.com/embed/${videoId[1]}`;
+        return (await checkUrl(embedUrl)) ? embedUrl : null;
+      }
+    }
+
+    // رابط تيك توك
+    if (url.includes('tiktok.com')) {
+      const videoId = url.match(/\/video\/(\d+)/);
+      if (videoId && videoId[1]) {
+        const embedUrl = `https://www.tiktok.com/embed/${videoId[1]}`;
+        return (await checkUrl(embedUrl)) ? embedUrl : null;
+      }
+    }
+
+    return null; // إذا لم يكن الرابط يوتيوب أو تيك توك صالح
+  };
+
+  // دالة للتحقق من صلاحية الرابط
+  const checkUrl = async (url) => {
+    try {
+      const response = await fetch(url, { method: 'HEAD' });
+      return response.ok;
+    } catch (error) {
+      console.error('رابط غير صالح:', error);
+      return false;
+    }
+  };
 
   return (
     <div className="flex flex-col justify-center items-center w-full bg-five mt-16 text-black">
@@ -212,7 +249,7 @@ export default function Page() {
                       </div>
                     )}
 
-                    {(post?.link || iframeSrc) && (
+                    {post?.link && iframeSrc && (
                       <div>
                         <div className="flex justify-between items-center my-4 sm:my-4 h-10 sm:h-16 w-full overflow-visible">
                           <h1 className="text-one font-bold text-lg sm:text-xl w-full mb-2 select-none">
@@ -224,11 +261,15 @@ export default function Page() {
                         </div>
                         <div className="flex justify-center items-center w-full">
                           <div className="flex flex-col w-full">
-                            <iframe
-                              src={iframeSrc || post?.link}
-                              className="w-full h-44 sm:h-96"
-                              title="Property Video"
-                            />
+                            {iframeSrc && (
+                              <iframe
+                                src={iframeSrc}
+                                className="w-full h-44 sm:h-96"
+                                title="Property Video"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen
+                              />
+                            )}
                           </div>
                         </div>
                       </div>

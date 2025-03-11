@@ -70,15 +70,7 @@ export default function MyPosts() {
 
   return (
     <div className="flex flex-col justify-center items-center w-full">
-      <MainNavbar />
-
       <div className="flex flex-col w-full xl:w-[90%] 2xl:w-[80%] h-fit px-2 sm:px-16 overflow-y-auto z-10 ">
-        {/* <MiddleBarAndPhoto
-          isOpen={isOpen}
-          setIsOpen={setIsOpen}
-          Button={true}
-        /> */}
-
         {isVisible && (
           <div className="absolute flex flex-col items-center p-4 z-50 inset-0 bg-five/70 text-white">
             <div className="sticky top-72 w-full sm:w-1/2 border border-white rounded bg-three">

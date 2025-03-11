@@ -13,14 +13,22 @@ export default function SearchResults({
   isSearchTriggered,
   setPageNumber,
   pageNumber,
-  resetFilters,
+  onReset,
 }) {
   const router = useRouter();
+
   return (
-    <>
-      {results?.length > 0 && (
-        <div className="min-h-[50vh] pb-72 bg-three w-full inset-0 h-[900px] overflow-y-auto border-t border-gray-400">
-          {/* عرض النتائج */}
+    <div className="bg-three h-full border-t border-gray-400">
+      {/* حالة التحميل */}
+      {isLoading && (
+        <div className="h-[300px] flex items-center justify-center">
+          <Loading myMessage="جارٍ التحميل..." />
+        </div>
+      )}
+
+      {/* عرض النتائج */}
+      {!isLoading && results?.length > 0 && (
+        <div className="min-h-[50vh] pb-72 pt-8 bg-three w-full inset-0 h-[900px] overflow-y-auto">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -33,16 +41,17 @@ export default function SearchResults({
               </h1>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full">
-                {results.map((item) => (
+                {results?.map((item) => (
                   <motion.div
                     key={item?.id}
                     whileHover={{ scale: 1.03 }}
                     whileTap={{ scale: 0.97 }}
                     onClick={() => {
+                      onReset();
                       if (typeof window !== 'undefined') {
                         localStorage.setItem('item', JSON.stringify(item));
                       }
-                      resetFilters();
+
                       router.push(`/post/${item?.id}`);
                     }}
                     className="cursor-pointer group relative overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-all"
@@ -71,13 +80,20 @@ export default function SearchResults({
           </motion.div>
         </div>
       )}
-      {/* حالة التحميل */}
-      {isLoading && isSearchTriggered && (
-        <div className="bg-three">
-          {' '}
-          <Loading myMessage="لا يوجد نتائج مطابقة للبحث قم بتعديل فلاتر البحث للعثور على نتائج أفضل" />
-        </div>
-      )}
-    </>
+
+      {/* حالة عدم وجود نتائج */}
+      {!isLoading &&
+        isSearchTriggered &&
+        (!results || results.length === 0) && (
+          <div className="h-[300px] flex flex-col items-center justify-center">
+            <p className="text-white text-lg font-bold">
+              لا يوجد نتائج مطابقة للبحث.
+            </p>
+            <p className="text-gray-300 text-sm mt-2">
+              حاول تعديل فلاتر البحث أو إدخال كلمات بحث مختلفة.
+            </p>
+          </div>
+        )}
+    </div>
   );
 }

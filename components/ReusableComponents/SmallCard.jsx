@@ -110,7 +110,7 @@ export default function SmallCard({ item, categoryName }) {
                       {field?.icon}{' '}
                       {/* 5. عرض الأيقونة المقابلة للحقل إذا كانت موجودة */}
                       <p>
-                        {field?.label || field.name}: {displayValue}{' '}
+                        {field?.label || field.name}: {displayValue}
                         {/* 6. عرض اسم الحقل (`label`) أو المفتاح (`name`) والقيمة (`displayValue`) */}
                       </p>
                     </div>
