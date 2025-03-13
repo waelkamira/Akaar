@@ -16,7 +16,7 @@ export const useSearchLogic = () => {
   const searchDataRef = useRef();
 
   const [searchData, setSearchData] = useState({
-    category: '',
+    categoryId: '',
     searchedKeyword: '',
     city: data?.propertyCity || '',
     town: data?.propertyTown || '',
@@ -31,12 +31,10 @@ export const useSearchLogic = () => {
       setRerender(true);
       setSearchData((prev) => ({
         ...prev,
-        category: category?.id || '',
+        categoryId: category?.id || '',
         city: data?.propertyCity || '',
         town: data?.propertyTown || '',
       }));
-      // setPageNumber(1); // إعادة تعيين الصفحة الأولى عند تغيير id
-      setIsSearchTriggered(true); // تشغيل البحث مباشرة بعد تغيير id
     }
   }, [id, data]);
 
@@ -69,7 +67,7 @@ export const useSearchLogic = () => {
   ]);
 
   useEffect(() => {
-    if (isSearchTriggered || pageNumber) {
+    if (isSearchTriggered || pageNumber > 0) {
       handleSearch();
     }
   }, [id, isSearchTriggered, pageNumber]);
@@ -112,7 +110,7 @@ export const useSearchLogic = () => {
 
   const resetFilters = () => {
     setSearchData({
-      category: '',
+      categoryId: '',
       searchedKeyword: '',
       city: '',
       town: '',
