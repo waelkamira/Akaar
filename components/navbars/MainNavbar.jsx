@@ -6,9 +6,10 @@ import { usePathname } from 'next/navigation';
 export default function MainNavbar() {
   const path = usePathname();
   return (
-    <div className="flex flex-col justify-center items-center w-full inset-0 bg-one/5 mb-44 bg-three z-50">
-      <div className="fixed top-0 right-0 z-[1001] w-full">
+    <div className="flex flex-col justify-center items-center w-full inset-0 bg-one/5 mb-44 bg-three z-50 ">
+      <div className="fixed top-0 right-0 z-[1001] w-full ">
         <FirstNavBar />
+
         {path.includes('newPost') ? '' : <Search />}
       </div>
     </div>

@@ -104,7 +104,7 @@ export default function CarsNavbar() {
         <div className="flex items-center justify-center">
           {/* <ClockWidget /> */}
           <div
-            className="relative flex justify-end w-fit min-w-[218px] cursor-pointer "
+            className="relative flex justify-end w-full min-w-[218px] cursor-pointer "
             onClick={() => router.push('/')}
           >
             {/* <div className="absolute top-5 left-24 flex justify-end ">

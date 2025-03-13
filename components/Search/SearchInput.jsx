@@ -33,7 +33,7 @@ export default function SearchInput({ searchData, setSearchData, onSearch }) {
       </div>
       <button
         onClick={onSearch}
-        className="flex justify-center items-center bg-one sm:text-lg text-sm text-white text-nowrap select-none rounded-[5px] h-[32px] sm:h-[40px] xl:h-[50px] xl:w-[10%] p-2 hover:scale-[101%] transition-transform shadow-md border border-white hover:shadow-lg"
+        className="flex justify-center items-center bg-one sm:text-lg text-sm text-white text-nowrap select-none rounded-[5px] h-[32px] sm:h-[40px] xl:h-[50px] xl:w-[195px] p-2 hover:scale-[101%] transition-transform shadow-md border border-white hover:shadow-lg"
       >
         <span className="flex justify-center items-center gap-1 h-full cursor-pointer">
           <ImSearch className="mr-2" /> بحث

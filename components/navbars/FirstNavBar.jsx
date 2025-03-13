@@ -23,7 +23,7 @@ export default function FirstNavBar() {
         <div className="flex items-center justify-center">
           <Link
             href={'/'}
-            className="relative flex justify-end w-fit min-w-[218px] cursor-pointer "
+            className="relative flex justify-end w-full min-w-[218px] cursor-pointer "
           >
             <div className="relative h-16 w-56 my-2 hover:scale-[103%] z-20">
               <Image

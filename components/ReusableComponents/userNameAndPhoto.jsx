@@ -24,7 +24,7 @@ export default function UserNameAndPhoto({ post }) {
       <div className="flex justify-start items-center gap-2 w-full mb-4 text-black">
         <Link
           href={'/profile'}
-          className="cursor-pointer flex justify-start items-center gap-2 w-fit h-fit "
+          className="cursor-pointer flex justify-start items-center gap-2 w-full h-fit "
         >
           <div
             className={`relative ${

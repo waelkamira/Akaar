@@ -3,194 +3,179 @@ import React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-import {
-  MdOutlineBedroomParent,
-  MdOutlineAttachMoney,
-  MdOutlineAddLocationAlt,
-  MdOutlineAlternateEmail,
-  MdOutlineMapsHomeWork,
-} from 'react-icons/md';
-import { GiBuyCard, GiExitDoor, GiPayMoney, GiCarKey } from 'react-icons/gi';
-import {
-  FaDollarSign,
-  FaHome,
-  FaHouseDamage,
-  FaFacebookF,
-  FaCanadianMapleLeaf,
-} from 'react-icons/fa';
-import { FaCalendarDays } from 'react-icons/fa6';
+import { MdOutlineAddLocationAlt, MdOutlineMapsHomeWork } from 'react-icons/md';
+import { GiExitDoor } from 'react-icons/gi';
+import { FaHome, FaFacebookF, FaCanadianMapleLeaf } from 'react-icons/fa';
 import { FiLinkedin } from 'react-icons/fi';
 import { TbBrandGmail, TbTargetArrow } from 'react-icons/tb';
 import { FcConferenceCall } from 'react-icons/fc';
 import { ImProfile } from 'react-icons/im';
+import Image from 'next/image';
 
 export default function Footer() {
   const router = useRouter();
   const session = useSession();
 
   return (
-    <footer className="bg-two text-white py-8 my-8">
-      <div className=" flex justify-between items-start gap-8 px-4 w-full">
-        {/* القسم الأول: وصف الموقع */}
-        <div className="space-y-4 p-4 rounded-lg bg-one h-72 w-full">
-          <h3 className="text-3xl font-bold">موقع متجر</h3>
-          <p className="text-md">
-            يتميز موقع متجر بخاصية البحث المتقدمة، مما يسمح للمستخدمين بالبحث
-            بسهولة عن العقارات والسيارات كما يوفر الموقع إمكانية التواصل المباشر
-            بين البائعين والمشترين بسهولة، مما يعزز الثقة ويسهل إتمام الصفقات
-            بنجاح. تم تصميم الموقع لتوفير تجربة تصفح سلسة وسريعة، مع تحسينات
-            تضمن توافقه مع جميع الأجهزة، يعد موقع متجر وجهة مثالية للبيع
-            والتأجير، حيث يجمع بين التصميم الجذاب، الوظائف العملية، والخدمة
-            الممتازة في مكان واحد. 🚀
-          </p>
+    <footer className="bg-gradient-to-b from-two to-five text-black py-12 my-8 w-full xl:w-[99%] shadow-lg">
+      {/* القسم الأول: وصف الموقع */}
+      <div className="flex flex-col xl:flex-row justify-center items-center mx-auto px-4 gap-2">
+        <div className="flex flex-col md:flex-row items-center justify-between mb-8">
+          <Link
+            href={'/'}
+            className="relative flex justify-end w-full md:w-auto min-w-[218px] cursor-pointer mb-4 md:mb-0"
+          >
+            <div className="relative h-20 w-64 hover:scale-105 transition-transform duration-300 z-20">
+              <Image
+                src="https://i.imgur.com/0oHqzqF.png"
+                fill
+                objectFit="contain"
+                alt="home_photo"
+                objectPosition="top"
+              />
+            </div>
+          </Link>
+          <div className="max-w-2xl text-center md:text-right">
+            <p className="text-sm sm:text-lg leading-relaxed text-five">
+              يتميز موقع متجر بخاصية البحث المتقدمة، مما يسمح للمستخدمين بالبحث
+              بسهولة عن العقارات والسيارات. كما يوفر الموقع إمكانية التواصل
+              المباشر بين البائعين والمشترين، مما يعزز الثقة ويسهل إتمام الصفقات
+              بنجاح. 🚀
+            </p>
+          </div>
         </div>
 
-        {/* القسم الثاني: الوصول السريع */}
-        <div className="space-y-4 p-4 rounded-lg bg-one h-72 w-full">
-          <h3 className="text-xl font-bold">وصول سريع</h3>
-          <ul className="flex flex-col justify-start items-start space-y-2">
-            <div
-              className="flex items-center justify-start gap-2  shadow-one   hover:scale-105 hover:cursor-pointer px-2 transition-all duration-300"
-              onClick={() => router.push('/')}
-            >
-              <FaHome className="text-lg select-none text-two" />
-              <li className=" text-md select-none">الرئيسية</li>
-            </div>
-            <div
-              className="flex items-center justify-start gap-2  shadow-one   hover:scale-105 hover:cursor-pointer px-2 transition-all duration-300"
-              onClick={() => router.push('/myPosts')}
-            >
-              <FaCanadianMapleLeaf className="text-lg select-none text-two" />
-              <li className=" text-md xl:text-md select-none text-nowrap">
-                متجري
-              </li>
-            </div>
-            <div className="flex items-center justify-start gap-2  shadow-one   hover:scale-105 hover:cursor-pointer px-2 transition-all duration-300">
-              {session?.status === 'unauthenticated' && (
-                <div
-                  className="flex items-center justify-start gap-2 hover:cursor-pointer transition-all duration-300"
-                  onClick={() => router.push('/login')}
-                >
-                  <GiExitDoor className="text-lg select-none text-two" />
-                  <li className=" text-md select-none">تسجيل الدخول</li>
-                </div>
+        <div className="flex flex-col xl:flex-row justify-center items-center gap-8 w-full xl:w-3/5">
+          {/* القسم الثاني: الوصول السريع */}
+          <div className="bg-white p-6 rounded-xl shadow-md w-full min-w-[200px] xl:min-h-[450px]">
+            <h3 className="text-xl font-bold mb-4 text-one">وصول سريع</h3>
+            <ul className="space-y-2">
+              {[
+                { icon: <FaHome />, text: 'الرئيسية', path: '/' },
+                {
+                  icon: <FaCanadianMapleLeaf />,
+                  text: 'متجري',
+                  path: '/myPosts',
+                },
+                { icon: <TbTargetArrow />, text: 'المفضلة', path: '/favorite' },
+                {
+                  icon: <MdOutlineMapsHomeWork />,
+                  text: 'إنشاء إعلان',
+                  path: '/newPost',
+                },
+                {
+                  icon: <FcConferenceCall />,
+                  text: 'اتصل بنا',
+                  path: '/contactUs',
+                },
+              ].map((item, index) => (
+                <li key={index}>
+                  <button
+                    onClick={() => router.push(item.path)}
+                    className="flex items-center space-x-2 hover:text-one transition-colors duration-300 gap-2"
+                  >
+                    <span className="text-one">{item.icon}</span>
+                    <span>{item.text}</span>
+                  </button>
+                </li>
+              ))}
+              {session?.status === 'unauthenticated' ? (
+                <li>
+                  <button
+                    onClick={() => router.push('/login')}
+                    className="flex items-center space-x-2 hover:text-one transition-colors duration-300 gap-2"
+                  >
+                    <GiExitDoor className="text-one" />
+                    <span>تسجيل الدخول</span>
+                  </button>
+                </li>
+              ) : (
+                <li>
+                  <button
+                    onClick={() => router.push('/profile')}
+                    className="flex items-center space-x-2 hover:text-one transition-colors duration-300 gap-2"
+                  >
+                    <ImProfile className="text-one" />
+                    <span>بروفايل</span>
+                  </button>
+                </li>
               )}
-              {session?.status === 'authenticated' && (
-                <div
-                  className="flex items-center justify-start gap-2 border-one transition-all duration-300"
-                  onClick={() => router.push('/profile')}
+            </ul>
+          </div>
+
+          {/* القسم الثالث: ساعات العمل */}
+          <div className="bg-white p-6 rounded-xl shadow-md w-full min-w-[200px] xl:min-h-[450px]">
+            <h3 className="text-xl font-bold mb-4 text-one">معلومات الاتصال</h3>
+            <ul className="space-y-4">
+              <li className="flex items-center space-x-2">
+                <MdOutlineAddLocationAlt className="text-one text-xl" />
+                <span>سوريا - دمشق</span>
+              </li>
+              {[
+                {
+                  icon: <FaFacebookF />,
+                  text: 'Facebook',
+                  href: 'https://facebook.com',
+                },
+                {
+                  icon: <FiLinkedin />,
+                  text: 'LinkedIn',
+                  href: 'https://linkedin.com',
+                },
+                {
+                  icon: <TbBrandGmail />,
+                  text: 'Gmail',
+                  onClick: () => router.push('/contactUs/byEmail'),
+                },
+              ].map((item, index) => (
+                <li key={index}>
+                  {item.href ? (
+                    <a
+                      href={item.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center space-x-2 hover:text-one transition-colors duration-300 gap-2"
+                    >
+                      <span className="text-one text-xl">{item.icon}</span>
+                      <span>{item.text}</span>
+                    </a>
+                  ) : (
+                    <button
+                      onClick={item.onClick}
+                      className="flex items-center space-x-2 hover:text-one transition-colors duration-300 gap-2"
+                    >
+                      <span className="text-one text-xl">{item.icon}</span>
+                      <span>{item.text}</span>
+                    </button>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+          {/* القسم الرابع: معلومات الاتصال */}
+
+          <div className="bg-white p-6 rounded-xl shadow-md w-full min-w-[200px] xl:min-h-[450px]">
+            <h3 className="text-xl font-bold mb-4 text-one">ساعات العمل</h3>
+            <ul className="space-y-2">
+              {[
+                'الاثنين',
+                'الثلاثاء',
+                'الأربعاء',
+                'الخميس',
+                'الجمعة',
+                'السبت',
+                'الأحد',
+              ].map((day, index) => (
+                <li
+                  key={index}
+                  className="flex justify-between items-center border-b border-gray-200 py-2 text-nowrap gap-2"
                 >
-                  <ImProfile className="text-lg select-none text-two" />
-                  <li className=" text-md select-none">بروفايل</li>
-                </div>
-              )}
-            </div>
-
-            <div
-              className="flex items-center justify-start gap-2  shadow-one   hover:scale-105 hover:cursor-pointer px-2 transition-all duration-300"
-              onClick={() => router.push('/favorite')}
-            >
-              <TbTargetArrow className="text-lg select-none text-two" />
-              <li className=" text-md xl:text-md select-none text-nowrap">
-                المفضلة
-              </li>
-            </div>
-
-            <div
-              className="flex items-center justify-start gap-2  shadow-one   hover:scale-105 hover:cursor-pointer px-2 transition-all duration-300"
-              onClick={() => router.push('/newPost')}
-            >
-              <MdOutlineMapsHomeWork className="text-lg select-none text-two" />
-              <li className=" text-md select-none">إنشاء إعلان</li>
-            </div>
-
-            <div
-              className="flex items-center justify-start gap-2  shadow-one   hover:scale-105 hover:cursor-pointer px-2 transition-all duration-300"
-              onClick={() => router.push('/contactUs')}
-            >
-              <FcConferenceCall className="text-lg select-none text-two" />
-              <li className=" text-md xl:text-md select-none text-nowrap">
-                اتصل بنا
-              </li>
-            </div>
-          </ul>
-        </div>
-
-        {/* القسم الثالث: ساعات العمل */}
-        <div className="space-y-4 p-4 rounded-lg bg-one h-72 w-full">
-          <h3 className="text-xl font-bold">ساعات العمل</h3>
-          <ul className="space-y-2">
-            <li className="flex justify-between">
-              <span className="text-white ml-2">الاثنين</span>
-              <span className="text-two">09:00 - 18:00</span>
-            </li>
-            <li className="flex justify-between">
-              <span className="text-white ml-2">الثلاثاء</span>
-              <span className="text-two">09:00 - 18:00</span>
-            </li>
-            <li className="flex justify-between">
-              <span className="text-white ml-2">الأربعاء</span>
-              <span className="text-two">09:00 - 18:00</span>
-            </li>
-            <li className="flex justify-between">
-              <span className="text-white ml-2">الخميس</span>
-              <span className="text-two">09:00 - 18:00</span>
-            </li>
-            <li className="flex justify-between">
-              <span className="text-white ml-2">الجمعة</span>
-              <span className="text-two">09:00 - 18:00</span>
-            </li>
-            <li className="flex justify-between">
-              <span className="text-white ml-2">السبت</span>
-              <span className="text-two">09:00 - 18:00</span>
-            </li>
-            <li className="flex justify-between">
-              <span className="text-white ml-2">الأحد</span>
-              <span className="text-two">09:00 - 18:00</span>
-            </li>
-          </ul>
-        </div>
-
-        {/* القسم الرابع: معلومات الاتصال */}
-        <div className="space-y-4 p-4 rounded-lg bg-one h-72 w-full">
-          <h3 className="text-xl font-bold">معلومات الاتصال</h3>
-          <ul className="space-y-2">
-            <li className="flex items-center space-x-2">
-              <MdOutlineAddLocationAlt className="text-two ml-2" />
-              <span>سوريا - دمشق</span>
-            </li>
-            <li className="flex items-center space-x-2">
-              <FaFacebookF className="text-two ml-2" />
-              <a
-                href="https://facebook.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-two hover:scale-105"
-              >
-                Facebook
-              </a>
-            </li>
-            <li className="flex items-center space-x-2">
-              <FiLinkedin className="text-two ml-2" />
-              <a
-                href="https://linkedin.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-two hover:scale-105"
-              >
-                LinkedIn
-              </a>
-            </li>
-            <li className="flex items-center space-x-2">
-              <TbBrandGmail className="text-two ml-2" />
-              <button
-                onClick={() => router.push('/contactUs/byEmail')}
-                className="hover:text-two hover:scale-105"
-              >
-                Gmail
-              </button>
-            </li>
-          </ul>
+                  <span>{day}</span>
+                  <span className="text-one font-semibold">09:00 - 18:00</span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
     </footer>
