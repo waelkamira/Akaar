@@ -42,16 +42,13 @@ export default function Page() {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const item = JSON.parse(localStorage.getItem('item'));
-      const categoryName = JSON.parse(localStorage.getItem('category'));
-      console.log('item', item);
       setPost(item);
-      setCategory(categoryName?.name);
     }
   }, []);
 
   useEffect(() => {
-    if (category) {
-      import(`../../../components/categoryFields/${category}.jsx`)
+    if (post?.categoryName) {
+      import(`../../../components/categoryFields/${post?.categoryName}.jsx`)
         .then((module) => {
           setCategoryFields(module.default);
         })
@@ -60,10 +57,11 @@ export default function Page() {
           setError('فشل في تحميل الحقول');
         });
     }
-  }, [category]);
+  }, [post?.categoryName]);
 
   const getFieldValue = (field, value) => {
     if (field.options && field.options[value]) {
+      console.log('field.options[value]', field.options[value]);
       return field.options[value];
     }
     return value;
@@ -174,65 +172,90 @@ export default function Page() {
                     }}
                   />
 
-                  <div className="flex justify-center w-full">
-                    <h1 className="sm:my-4 text-xl sm:text-3xl text-one font-medium select-none text-wrap line-clamp-1 max-w-[20ch] lg:max-w-[40ch] text-center">
-                      {post?.title}
-                    </h1>
-                  </div>
-
-                  {!post?.image1 && <Loading myMessage={'جاري تحميل الصورة'} />}
-                  <ImageSlider
-                    image1={post?.image1}
-                    image2={post?.image2}
-                    image3={post?.image3}
-                    image4={post?.image4}
-                    image5={post?.image5}
-                  />
-
-                  <div className="mt-4 sm:mt-16">
-                    <div className="flex justify-between items-center my-4 lg:my-8 h-10 sm:h-16 w-full overflow-visible">
-                      <h1 className="text-one font-bold text-lg sm:text-xl w-full mb-2 select-none">
-                        <span className="text-one text-2xl mx-2 select-none">
-                          #
-                        </span>
-                        مواصفات الإعلان:
+                  {/* عرض العنوان إذا كان موجودًا */}
+                  {post?.title && (
+                    <div className="flex justify-center w-full">
+                      <h1 className="sm:my-4 text-xl sm:text-3xl text-one font-medium select-none text-wrap line-clamp-1 max-w-[20ch] lg:max-w-[40ch] text-center">
+                        {post?.title}
                       </h1>
                     </div>
+                  )}
 
-                    <div className="flex flex-col w-full">
-                      <div className="flex flex-col sm:grid md:grid-cols-2 sm:gap-x-4 w-full">
-                        {fields.map((field, index) => {
-                          const value =
-                            post?.details?.[field?.name] || field?.value;
-                          const displayValue = getFieldValue(field, value);
+                  {/* عرض Loading إذا لم توجد صورة */}
+                  {!post?.image1 && <Loading myMessage={'جاري تحميل الصورة'} />}
 
-                          return (
-                            <ItemSmallItem
-                              key={index}
-                              icon={field?.icon}
-                              text={field?.label || field?.name}
-                              value={displayValue}
-                            />
-                          );
-                        })}
+                  {/* عرض ImageSlider إذا كانت هناك صور */}
+                  {(post?.image1 ||
+                    post?.image2 ||
+                    post?.image3 ||
+                    post?.image4 ||
+                    post?.image5) && (
+                    <ImageSlider
+                      image1={post?.image1}
+                      image2={post?.image2}
+                      image3={post?.image3}
+                      image4={post?.image4}
+                      image5={post?.image5}
+                    />
+                  )}
+
+                  <div className="mt-4 sm:mt-16">
+                    {/* عرض مواصفات الإعلان إذا كانت هناك تفاصيل */}
+                    {post?.details && (
+                      <div>
+                        <div className="flex justify-between items-center my-4 lg:my-8 h-10 sm:h-16 w-full overflow-visible">
+                          <h1 className="text-one font-bold text-lg sm:text-xl w-full mb-2 select-none">
+                            <span className="text-one text-2xl mx-2 select-none">
+                              #
+                            </span>
+                            مواصفات الإعلان:
+                          </h1>
+                        </div>
+
+                        <div className="flex flex-col w-full">
+                          <div className="flex flex-col sm:grid md:grid-cols-2 sm:gap-x-4 w-full">
+                            {fields.map((field, index) => {
+                              const value =
+                                post?.details?.[field?.name] || field?.value;
+                              const displayValue = getFieldValue(field, value);
+                              console.log('displayValue', displayValue);
+
+                              // عرض الحقل فقط إذا كانت القيمة موجودة
+                              return displayValue ? (
+                                <ItemSmallItem
+                                  key={index}
+                                  icon={field?.icon}
+                                  text={field?.label || field?.name}
+                                  value={displayValue}
+                                />
+                              ) : null;
+                            })}
+                          </div>
+                        </div>
                       </div>
+                    )}
 
-                      <div className="flex justify-between items-center my-4 lg:my-8 h-10 sm:h-16 w-full overflow-visible">
-                        <h1 className="text-one font-bold text-lg sm:text-xl w-full mb-2 select-none">
-                          <span className="text-one text-2xl mx-2 select-none">
-                            #
-                          </span>
-                          وصف الإعلان:
-                        </h1>
+                    {/* عرض وصف الإعلان إذا كان موجودًا */}
+                    {post?.description && (
+                      <div>
+                        <div className="flex justify-between items-center my-4 lg:my-8 h-10 sm:h-16 w-full overflow-visible">
+                          <h1 className="text-one font-bold text-lg sm:text-xl w-full mb-2 select-none">
+                            <span className="text-one text-2xl mx-2 select-none">
+                              #
+                            </span>
+                            وصف الإعلان:
+                          </h1>
+                        </div>
+
+                        <div className="bg-white p-4 w-full rounded-[5px]">
+                          <pre className="flex justify-start items-start bg-white rounded-[5px] h-72 overflow-y-auto text-md sm:text-xl w-full shadow-sm shadow-gray-300 min-h-20 my-2 p-2 select-none">
+                            {post?.description}
+                          </pre>
+                        </div>
                       </div>
+                    )}
 
-                      <div className="bg-white p-4 w-full rounded-[5px]">
-                        <pre className="flex justify-start items-start bg-white rounded-[5px] h-72 overflow-y-auto text-md sm:text-xl w-full shadow-sm shadow-gray-300 min-h-20 my-2 p-2 select-none">
-                          {post?.description}
-                        </pre>
-                      </div>
-                    </div>
-
+                    {/* عرض الخريطة إذا كانت الإحداثيات موجودة */}
                     {post?.lng && post?.lat && (
                       <div>
                         <div className="flex justify-between items-center my-4 lg:my-8 h-10 sm:h-16 w-full overflow-visible">
@@ -249,6 +272,7 @@ export default function Page() {
                       </div>
                     )}
 
+                    {/* عرض الفيديو إذا كان الرابط موجودًا */}
                     {post?.link && iframeSrc && (
                       <div>
                         <div className="flex justify-between items-center my-4 sm:my-4 h-10 sm:h-16 w-full overflow-visible">

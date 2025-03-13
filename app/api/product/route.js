@@ -69,20 +69,20 @@ export async function POST(req) {
   try {
     const data = await req.json();
     console.log('data', data);
-
-    // التحقق من صحة البيانات المطلوبة
-    if (
-      !data?.title ||
-      !data?.basePrice ||
-      !data?.description ||
-      !data?.images ||
-      data?.images.length === 0
-    ) {
-      return new Response(
-        JSON.stringify({ error: 'يرجى ملء جميع الحقول المطلوبة!' }),
-        { status: 400 }
-      );
-    }
+    //! يجب اعادة تفعيلها عند الرفع يجب عمل استثناء لي حتى استطيع الرفع بسرعة
+    // // التحقق من صحة البيانات المطلوبة
+    // if (
+    //   !data?.title ||
+    //   !data?.basePrice ||
+    //   !data?.description ||
+    //   !data?.images ||
+    //   data?.images.length === 0
+    // ) {
+    //   return new Response(
+    //     JSON.stringify({ error: 'يرجى ملء جميع الحقول المطلوبة!' }),
+    //     { status: 400 }
+    //   );
+    // }
 
     // إنشاء سجل جديد باستخدام Prisma
     const newProduct = await prisma.product.create({
@@ -90,7 +90,8 @@ export async function POST(req) {
         id: data?.id || undefined,
         title: data?.title,
         userId: data?.userId || null,
-        category: data?.category || null,
+        categoryId: data?.category,
+        categoryName: data?.categoryName,
         city: data?.city || '',
         town: data?.town || null,
         basePrice: parseInt(data?.basePrice) || 0,
@@ -130,50 +131,49 @@ export async function POST(req) {
 }
 
 // PUT: تحديث بيانات منتج
+
 export async function PUT(req) {
   try {
-    const url = new URL(req.url);
-    const id = url.searchParams.get('id');
-    const data = await req.json();
+    const { id, ...data } = await req.json(); // استخراج `id` والبيانات الأخرى
+    console.log('Received ID:', id);
+    console.log('Received Data:', data);
 
     if (!id) {
-      return new Response(JSON.stringify({ error: 'رقم منتج مطلوب' }), {
+      return new Response(JSON.stringify({ error: 'رقم المنتج مطلوب' }), {
         status: 400,
       });
     }
 
-    // تحديث البيانات باستخدام Prisma
-    await prisma.product.update({
+    // التحقق مما إذا كان المنتج موجودًا أولًا
+    const existingProduct = await prisma.product.findUnique({
       where: { id: id },
-      data: {
-        title: data?.title || undefined,
-        categoryId: data?.categoryId || undefined,
-        cityId: data?.cityId || undefined,
-        basePrice: parseFloat(data?.basePrice) || undefined,
-        town: data?.town || undefined,
-        phoneNumber: data?.phoneNumber || undefined,
-        description: data?.description || undefined,
-        lng: parseFloat(data?.lng) || undefined,
-        lat: parseFloat(data?.lat) || undefined,
-        details: {
-          update: {
-            usedNew: data?.details?.usedNew || undefined,
-            brand: data?.details?.brand || undefined,
-            model: data?.details?.model || undefined,
-            year: parseInt(data?.details?.year) || undefined,
-            distance: parseFloat(data?.details?.distance) || undefined,
-          },
-        },
-        updatedAt: new Date(),
-      },
     });
 
-    return new Response(JSON.stringify({ message: 'تم تحديث منتج بنجاح' }), {
+    if (!existingProduct) {
+      return new Response(JSON.stringify({ error: 'المنتج غير موجود' }), {
+        status: 404,
+      });
+    }
+
+    // فلترة الحقول الفارغة لمنع تحديثها
+    const filteredData = Object.fromEntries(
+      Object.entries(data).filter(
+        ([_, value]) => value !== '' && value !== null
+      )
+    );
+
+    // تحديث البيانات
+    await prisma.product.update({
+      where: { id: id },
+      data: filteredData,
+    });
+
+    return new Response(JSON.stringify({ message: 'تم تحديث المنتج بنجاح' }), {
       status: 200,
     });
   } catch (error) {
-    console.error('خطأ أثناء تحديث منتج:', error);
-    return new Response(JSON.stringify({ error: 'Internal Server Error' }), {
+    console.error('خطأ أثناء تحديث المنتج:', error);
+    return new Response(JSON.stringify({ error: 'خطأ داخلي في السيرفر' }), {
       status: 500,
     });
   }

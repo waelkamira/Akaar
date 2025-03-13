@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react';
 import Select, { components } from 'react-select';
-import { inputsContext } from '../Context';
+import { inputsContext } from '../authContext/Context';
 import { FaCar } from 'react-icons/fa';
 import { usePathname } from 'next/navigation.js';
-import { carsBrandsList } from './CarsBrandsList.jsx';
+import { carsBrandsList } from '../lists/CarsBrandsList.jsx';
 
 export default function CarsBrandSelector({ check }) {
   const { dispatch } = useContext(inputsContext);

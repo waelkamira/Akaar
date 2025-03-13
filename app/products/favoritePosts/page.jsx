@@ -7,15 +7,15 @@ import React, { useEffect, useState } from 'react';
 import { IoMdClose } from 'react-icons/io';
 import toast from 'react-hot-toast';
 import CustomToast from '../../../components/ReusableComponents/CustomToast';
-import BackButton from '../../../components/BackButton';
+import BackButton from '../../../components/ReusableComponents/BackButton';
 import {
   MdKeyboardDoubleArrowRight,
   MdKeyboardDoubleArrowLeft,
 } from 'react-icons/md';
-import SideBarMenu from '../../../components/SideBarMenu';
+import SideBarMenu from '../../../components/ReusableComponents/SideBarMenu';
 import { TfiMenuAlt } from 'react-icons/tfi';
 import Loading from '../../../components/ReusableComponents/Loading';
-import Button from '../../../components/Button';
+import Button from '../../../components/ReusableComponents/Button';
 import MiddleBarAndPhoto from '../../../components/RealEstate/RealEstateSideBar';
 import { usePathname } from 'next/navigation';
 import NavegationPages from '../../../components/ReusableComponents/NavegationPages';

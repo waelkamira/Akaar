@@ -2,7 +2,7 @@
 import Image from 'next/image';
 import React, { useContext } from 'react';
 import LoadingPhoto from '../photos/LoadingPhoto';
-import { inputsContext } from '../Context';
+import { inputsContext } from '../authContext/Context';
 import { useRouter } from 'next/navigation';
 import { formatDistanceToNow } from 'date-fns';
 import { ar } from 'date-fns/locale';

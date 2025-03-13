@@ -98,7 +98,7 @@ export default function Footer() {
 
             <div
               className="flex items-center justify-start gap-2  shadow-one   hover:scale-105 hover:cursor-pointer px-2 transition-all duration-300"
-              onClick={() => router.push('/dynamicForm')}
+              onClick={() => router.push('/newPost')}
             >
               <MdOutlineMapsHomeWork className="text-lg select-none text-two" />
               <li className=" text-md select-none">إنشاء إعلان</li>

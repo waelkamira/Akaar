@@ -1,132 +1,16 @@
-// 'use client';
-// import React, { useState } from 'react';
-// import { useRouter } from 'next/navigation';
-// import Select from 'react-select';
-// import { IoIosArrowBack } from 'react-icons/io';
-// import categories from '../Categories/categories';
-// import { FaTreeCity } from 'react-icons/fa6';
-// import { GiModernCity } from 'react-icons/gi';
-// import { TbCategoryPlus } from 'react-icons/tb';
-
-// const CategoriesNavBar = () => {
-//   const router = useRouter();
-//   const [selectedCategory, setSelectedCategory] = useState(null);
-//   const [minHeight, setMinHeight] = useState('48px');
-
-//   // دالة لمعالجة اختيار الفئة
-//   const handleCategoryChange = (selectedOption) => {
-//     setSelectedCategory(selectedOption); // تحديث الحالة بالفئة المختارة
-//     if (selectedOption) {
-//       if (typeof window !== 'undefined') {
-//         console.log('selectedOption', selectedOption);
-
-//         // حفظ فقط القيم القابلة للتخزين بدون مكونات React
-//         const { id, name, path } = selectedOption;
-//         localStorage.setItem('category', JSON.stringify({ id, name, path }));
-//       }
-//       router.push(selectedOption.path); // توجيه المستخدم إلى المسار الخاص بالفئة المختارة
-//     }
-//   };
-
-//   // تحويل قائمة الفئات إلى خيارات مناسبة لـ react-select
-//   const options = categories.map((category) => ({
-//     id: category?.id,
-//     name: category.name,
-//     label: (
-//       <div className="flex items-center justify-between">
-//         <div className="flex justify-start items-center gap-2">
-//           <span className="ml-2 text-one">{category.icon}</span>{' '}
-//           {/* أيقونة الفئة */}
-//           <span>{category.name}</span> {/* اسم الفئة */}
-//         </div>
-//         <span>
-//           <IoIosArrowBack /> {/* أيقونة السهم */}
-//         </span>
-//       </div>
-//     ),
-//     path: category.path, // المسار المرتبط بالفئة
-//   }));
-
-//   // الأنماط المخصصة لـ react-select
-//   const customStyles = {
-//     control: (provided, state) => ({
-//       ...provided,
-//       minHeight: minHeight,
-//       height: 'auto',
-//       backgroundColor: 'white',
-//       '&:hover': {
-//         borderColor: '#FF7C34',
-//       },
-//     }),
-//     valueContainer: (provided) => ({
-//       ...provided,
-//       minHeight: minHeight,
-//       padding: '0 1rem',
-//       display: 'flex',
-//       alignItems: 'center',
-//     }),
-//     indicatorsContainer: (provided) => ({
-//       ...provided,
-//       minHeight: minHeight,
-//     }),
-//   };
-//   function customTheme(theme) {
-//     return {
-//       ...theme,
-//       borderRadius: 5,
-//       colors: {
-//         ...theme.colors,
-//         primary: '#FF7C34',
-//         primary25: '#fadfae',
-//       },
-//     };
-//   }
-//   const CategoriesSingleValue = ({ data }) => (
-//     <div className="flex items-center gap-2">{data.label}</div>
-//   );
-
-//   // ✅ تخصيص النص داخل الحقل عند عدم اختيار أي قيمة
-//   const CategoriesPlaceholder = () => (
-//     <div className="flex items-center gap-2 text-gray-500">
-//       <TbCategoryPlus className="text-one text-lg" />
-//       <span>اختر فئة أولاً</span>
-//     </div>
-//   );
-//   return (
-//     <div className="flex justify-start gap-2 items-center w-full text-white lg:bg-transparent">
-//       {/* قائمة منسدلة لاختيار الفئة */}
-//       <Select
-//         value={selectedCategory} // القيمة المحددة حاليًا
-//         onChange={handleCategoryChange} // دالة لمعالجة التغيير عند الاختيار
-//         options={options} // الخيارات المتاحة للاختيار
-//         placeholder="اختر الفئة" // النص الافتراضي قبل الاختيار
-//         isClearable // إمكانية مسح الاختيار
-//         isSearchable // إمكانية البحث داخل القائمة
-//         theme={customTheme}
-//         styles={customStyles} // الأنماط المخصصة
-//         className="w-full text-md text-start text-black rounded select-none z-[1000]"
-//         classNamePrefix="select" // بادئة لفئات CSS
-//         components={{
-//           SingleValue: CategoriesSingleValue,
-//           Placeholder: CategoriesPlaceholder,
-//         }}
-//       />
-//     </div>
-//   );
-// };
-
-// export default CategoriesNavBar;
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import categories from '../Categories/categories';
 
 const CategoriesNavBar = () => {
   const router = useRouter();
   const [selectedCategory, setSelectedCategory] = useState('');
+  const [showArrow, setShowArrow] = useState(false); // حالة لإظهار السهم
 
+  // دالة لمعالجة تغيير الفئة
   const handleCategoryChange = (event) => {
-    const selectedOption = event.target.selectedOptions[0]; // الحصول على الخيار المحدد
+    const selectedOption = event.target.selectedOptions[0];
     const categoryId = selectedOption.value;
     const categoryPath = selectedOption.getAttribute('data-path');
 
@@ -140,29 +24,59 @@ const CategoriesNavBar = () => {
           path: categoryPath,
         })
       );
-      router.push(categoryPath); // الانتقال إلى المسار المحدد
+      router.push(categoryPath);
+
+      // // إظهار السهم
+      // setShowArrow(true);
     }
   };
-
+  useEffect(() => {
+    setShowArrow(true);
+  }, []);
+  // إخفاء السهم بعد 5 ثوانٍ
+  setTimeout(() => {
+    setShowArrow(false);
+  }, 50000);
   return (
-    <div className="w-28 h-[27px] bg-white border rounded shadow-md text-black">
+    <div className="relative w-28 h-[27px] bg-white border rounded shadow-md text-black">
       {/* قائمة Select */}
       <select
         value={selectedCategory}
         onChange={handleCategoryChange}
-        className="w-28 h-full bg-transparent text-sm rounded cursor-pointer focus:outline-none"
+        className=" w-28 h-full bg-transparent text-sm rounded cursor-pointer focus:outline-none"
       >
         <option value="">اختر الفئة أولاً</option>
         {categories.map((category) => (
           <option
             key={category.id}
             value={category.id}
-            data-path={category.path} // تخزين المسار داخل الخيار
+            data-path={category.path}
           >
             {category.name}
           </option>
         ))}
       </select>
+      {/* السهم */}
+      {/* {showArrow && (
+        <div
+          className="absolute -bottom-5 left-1/2 transform -translate-x-1/2"
+          style={{
+            position: 'absolute',
+            bottom: '-20px', // يتم وضعه أسفل القائمة
+            left: '50%', // توسيط أفقي
+            transform: 'translateX(-50%)', // توسيط أفقي
+          }}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            className="w-6 h-6 text-one bg-red-600"
+          >
+            <path d="M12 2a1 1 0 011 1v16.586l5.293-5.293a1 1 0 011.414 1.414l-7 7a1 1 0 01-1.414 0l-7-7a1 1 0 011.414-1.414L11 19.586V3a1 1 0 011-1z" />
+          </svg>
+        </div>
+      )} */}
     </div>
   );
 };

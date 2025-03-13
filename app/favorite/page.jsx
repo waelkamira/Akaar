@@ -1,27 +1,17 @@
 'use client';
 import { useSession } from 'next-auth/react';
 import SmallItem from '../../components/ReusableComponents/SmallItem';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { IoMdClose } from 'react-icons/io';
 import toast from 'react-hot-toast';
 import CustomToast from '../../components/ReusableComponents/CustomToast';
-import { MdKeyboardDoubleArrowRight } from 'react-icons/md';
-import { MdKeyboardDoubleArrowLeft } from 'react-icons/md';
-import Link from 'next/link';
-import { inputsContext } from '../../components/Context';
 import Loading from '../../components/ReusableComponents/Loading';
 import { useRouter } from 'next/navigation';
-import { MdEdit } from 'react-icons/md';
-import MiddleBarAndPhoto from '../../components/RealEstate/RealEstateSideBar';
-import Image from 'next/image';
 import NavegationPages from '../../components/ReusableComponents/NavegationPages';
-import MainNavbar from '../../components/Search/SearchBar';
-import Button from '../../components/Button';
+import Button from '../../components/ReusableComponents/Button';
 export default function MyFavorites() {
-  const [isOpen, setIsOpen] = useState(false);
   const [favoriteId, setfavoriteId] = useState('');
   const [isVisible, setIsVisible] = useState(false);
-  const { dispatch } = useContext(inputsContext);
   const [pageNumber, setPageNumber] = useState(1);
   const [userFavoritesCount, setUserFavoritesCount] = useState(0);
   const session = useSession();
@@ -70,8 +60,6 @@ export default function MyFavorites() {
 
   return (
     <div className="flex flex-col justify-center items-center w-full">
-      <MainNavbar />
-
       <div className="flex flex-col w-full xl:w-[90%] 2xl:w-[80%] h-fit px-2 sm:px-16 pt-2 overflow-y-auto z-10 mt-16">
         {isVisible && (
           <div className="absolute flex flex-col items-center p-4 /95 z-50 inset-0 bg-black/60 text-white">
@@ -101,7 +89,7 @@ export default function MyFavorites() {
             {myFavorites?.length === 0 && session?.data?.user && (
               <Loading
                 myMessage={
-                  '😉 لا يوجد نتائج لعرضها ,لم تقم بإنشاء أي إعلان بعد'
+                  'لا يوجد نتائج لعرضها ,لم تقم بالإعجاب بأي إعلان بعد 😉 '
                 }
               />
             )}

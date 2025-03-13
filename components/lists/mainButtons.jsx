@@ -30,7 +30,7 @@ const mainButtons = [
   },
   {
     title: 'إنشاء إعلان',
-    path: '/dynamicForm',
+    path: '/newPost',
     emoji: <MdOutlineMapsHomeWork />,
   },
   {

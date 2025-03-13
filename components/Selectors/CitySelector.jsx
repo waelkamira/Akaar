@@ -161,7 +161,7 @@
 'use client';
 import React, { useState, useEffect, useContext } from 'react';
 import { cities } from '../lists/Cities';
-import { inputsContext } from '../Context';
+import { inputsContext } from '../authContext/Context';
 
 export default function CitySelector({ check }) {
   const [selectedCity, setSelectedCity] = useState('');

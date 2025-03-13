@@ -1,26 +1,20 @@
 'use client';
-import CurrentUser from '../../components/CurrentUser';
-import Button from '../../components/Button';
+import CurrentUser from '../../components/ReusableComponents/CurrentUser';
+import Button from '../../components/ReusableComponents/Button';
 import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import React, { useContext, useEffect, useState } from 'react';
-import { inputsContext } from '../../components/Context';
+import { inputsContext } from '../../components/authContext/Context';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
 import CustomToast from '../../components/ReusableComponents/CustomToast';
-import BackButton from '../../components/BackButton';
-import MiddleBarAndPhoto from '../../components/RealEstate/RealEstateSideBar';
-import Loading from '../../components/ReusableComponents/Loading';
 import LoadingPhoto from '../../components/photos/LoadingPhoto';
-import MainNavbar from '../../components/Search/SearchBar';
 import LoginButton from '../../components/Buttons/LoginButton';
 export default function Profile() {
   const session = useSession();
-  const [isOpen, setIsOpen] = useState(false);
   const user = CurrentUser();
   const { profile_image, dispatch } = useContext(inputsContext);
   const [newUserName, setNewUserName] = useState('');
-  // console.log('user', user);
 
   useEffect(() => {
     let newName = null;
@@ -32,7 +26,6 @@ export default function Profile() {
         console.error('Error parsing CurrentUser from localStorage:', error);
       }
     }
-    // setNewImage(profile_image?.image);
     editProfileImageAndUserName();
   }, [profile_image?.image]);
 
@@ -41,7 +34,6 @@ export default function Profile() {
       if (typeof window !== 'undefined') {
         localStorage.setItem('image', JSON.stringify(profile_image?.image));
       }
-      // console.log('newUserName', newUserName);
       const response = await fetch('/api/user', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },

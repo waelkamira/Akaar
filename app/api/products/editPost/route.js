@@ -15,7 +15,7 @@ export async function POST(req) {
       });
     }
 
-    const post = await prisma.car.findUnique({
+    const post = await prisma.product.findUnique({
       where: { id },
     });
 
@@ -49,7 +49,7 @@ export async function PUT(req) {
       });
     }
 
-    const updatedPost = await prisma.car.update({
+    const updatedPost = await prisma.product.update({
       where: { id },
       data: {
         ...data,

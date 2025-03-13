@@ -11,7 +11,6 @@ import {
 } from 'react-icons/md'; // أيقونات من react-icons/md
 import { GiCarKey } from 'react-icons/gi'; // أيقونات من react-icons/gi
 import { useRouter } from 'next/navigation';
-import MainNavbar from '../../components/Search/SearchBar';
 import HeroSlider from '../../components/photos/HeroSlider';
 import Card from '../../components/ReusableComponents/Card'; // تأكد من تعديل المسار حسب مكان المكون
 
@@ -66,7 +65,7 @@ export default function ContactUs() {
   const cardsData = [
     {
       cardName: 'بيع',
-      path: '/dynamicForm',
+      path: '/newPost',
       text: 'يوفر موقع متجر إمكانية التواصل المباشر بين البائعين والمشترين أو المستأجرين والملاك. يمكن للمستخدمين الاتصال بالبائعين مباشرة عبر الهاتف لطرح أي أسئلة أو استفسارات.',
       color: 'orange',
       image: 'https://i.imgur.com/uGXmBJO.jpg',

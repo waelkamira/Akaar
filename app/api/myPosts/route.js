@@ -36,19 +36,19 @@ export async function GET(req) {
     }
 
     // جلب عدد الإعلانات
-    const productCount = await prisma.product.count({
+    const totalCount = await prisma.product.count({
       where: { userId: userId },
     });
 
     // جلب الإعلانات
-    const productPosts = await prisma.product.findMany({
+    const products = await prisma.product.findMany({
       where: { userId: userId },
       skip,
       take: limit,
       orderBy: { createdAt: 'desc' },
     });
 
-    if (productPosts.length === 0) {
+    if (products.length === 0) {
       return new Response(
         JSON.stringify({ message: 'لم يتم العثور على إعلانات' }),
         { status: 404 }
@@ -57,8 +57,9 @@ export async function GET(req) {
 
     return new Response(
       JSON.stringify({
-        count: productCount,
-        posts: productPosts,
+        hasMore: skip + products.length < totalCount,
+        count: totalCount,
+        data: products,
       }),
       { status: 200 }
     );

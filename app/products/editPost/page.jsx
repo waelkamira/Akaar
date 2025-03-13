@@ -3,12 +3,12 @@ import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import React, { useContext, useEffect, useState } from 'react';
 import Link from 'next/link';
-import Button from '../../../components/Button';
+import Button from '../../../components/ReusableComponents/Button';
 import { formatDistanceToNow } from 'date-fns/formatDistanceToNow';
 import toast from 'react-hot-toast';
 import { MdEdit } from 'react-icons/md';
-import { inputsContext } from '../../../components/Context';
-import { getVideoIdAndPlatform } from '../../../components/youtubeUtils';
+import { inputsContext } from '../../../components/authContext/Context';
+import { getVideoIdAndPlatform } from '../../../components/ReusableComponents/youtubeUtils';
 import dynamic from 'next/dynamic';
 
 // تحميل المكونات ديناميكيًا

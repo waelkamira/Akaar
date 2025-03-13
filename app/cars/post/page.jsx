@@ -1,7 +1,7 @@
 'use client';
 import dynamic from 'next/dynamic';
 import React, { useContext, useEffect, useState } from 'react';
-import { inputsContext } from '../../../components/Context';
+import { inputsContext } from '../../../components/authContext/Context';
 import CarsSideBar from '../../../components/Cars/CarsSideBar';
 import CarsNavbar from '../../../components/Cars/CarsNavbar';
 

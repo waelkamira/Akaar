@@ -2,7 +2,7 @@
 import { useContext, useState } from 'react';
 import Image from 'next/image';
 import { MdOutlineAddPhotoAlternate, MdClose } from 'react-icons/md';
-import { inputsContext } from '../Context';
+import { inputsContext } from '../authContext/Context';
 import LoadingPhoto from './LoadingPhoto';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
@@ -11,9 +11,15 @@ export default function ImageUploader({ images = [] }) {
   const { dispatch, addImages } = useContext(inputsContext);
   const [isLoading, setIsLoading] = useState(false);
 
+  // دالة للتحقق من وجود الصورة في المصفوفة
+  const isImageAlreadyAdded = (imageLink) => {
+    const allImages = [...(addImages || []), ...(images || [])];
+    return allImages.includes(imageLink);
+  };
+
   // دالة لرفع الصورة إلى الخدمات بالتناوب
   const uploadImage = async (file) => {
-    const services = ['Imgur', 'Imgbb', 'ImageKit']; // أضف Postimages إلى القائمة
+    const services = ['Imgur', 'Imgbb', 'ImageKit'];
     let uploadedLink = null;
 
     for (const service of services) {
@@ -22,7 +28,6 @@ export default function ImageUploader({ images = [] }) {
         let data;
 
         if (service === 'ImageKit') {
-          // رفع الصورة إلى ImageKit
           const formData = new FormData();
           formData.append('file', file);
 
@@ -33,7 +38,6 @@ export default function ImageUploader({ images = [] }) {
 
           data = await response.json();
         } else {
-          // رفع الصورة إلى الخدمات الأخرى (Imgur, Imgbb)
           const formData = new FormData();
           formData.append('image', file);
 
@@ -52,7 +56,7 @@ export default function ImageUploader({ images = [] }) {
             `تم الرفع بنجاح إلى: ${service} - الرابط: ${uploadedLink}`
           );
           toast.success('تم رفع الصورة بنجاح');
-          break; // إيقاف المحاولات عند النجاح
+          break;
         }
       } catch (error) {
         console.error(`فشل الرفع إلى ${service}:`, error);
@@ -84,8 +88,10 @@ export default function ImageUploader({ images = [] }) {
       const file = selectedFiles[i];
       const imageLink = await uploadImage(file);
 
-      if (imageLink) {
+      if (imageLink && !isImageAlreadyAdded(imageLink)) {
         newImages.push(imageLink);
+      } else if (imageLink) {
+        toast.error('هذه الصورة موجودة مسبقًا.');
       }
     }
 
@@ -93,7 +99,7 @@ export default function ImageUploader({ images = [] }) {
 
     dispatch({
       type: 'ADD_IMAGE',
-      payload: [...(addImages || []), ...newImages, ...(images || [])],
+      payload: [...(addImages || []), ...newImages],
     });
   };
 

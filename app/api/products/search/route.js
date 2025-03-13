@@ -88,10 +88,10 @@ export async function POST(req) {
     });
 
     // تسجيل المنتجات التي تم جلبها
-    console.log('hasMore:', skip + products.length < totalCount);
-    console.log('totalCount:', totalCount);
-    console.log('products.length:', products.length);
-    console.log('skip:', skip);
+    // console.log('hasMore:', skip + products.length < totalCount);
+    // console.log('totalCount:', totalCount);
+    // console.log('products.length:', products.length);
+    // console.log('skip:', skip);
 
     // إرجاع النتائج
     return NextResponse.json({

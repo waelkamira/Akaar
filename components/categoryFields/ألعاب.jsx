@@ -1,7 +1,7 @@
 'use client';
 
 import { FaCalendarAlt, FaCar, FaTools } from 'react-icons/fa';
-import CarsBrandSelector from '../Cars/CarsBrandSelector';
+import CarsBrandSelector from '../Selectors/CarsBrandSelector';
 import YearsSelector from '../Selectors/yearSelector';
 import { BsFillFuelPumpDieselFill } from 'react-icons/bs';
 import { IoSpeedometerOutline } from 'react-icons/io5';

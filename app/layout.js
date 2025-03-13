@@ -2,7 +2,7 @@ import './globals.css';
 import { Inter } from 'next/font/google';
 import { Rubik } from 'next/font/google';
 import { Toaster } from 'react-hot-toast';
-import { InputsContextProvider } from '../components/Context';
+import { InputsContextProvider } from '../components/authContext/Context';
 import AuthContextProvider from '../components/authContext/AuthContext';
 import MainNavBar from '../components/navbars/MainNavBar';
 

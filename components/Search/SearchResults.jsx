@@ -16,17 +16,10 @@ export default function SearchResults({
   onReset,
 }) {
   const router = useRouter();
-  console.log('hasMore', hasMore);
+  // console.log('hasMore', hasMore);
 
   return (
     <div className="bg-three h-full border-t border-gray-400">
-      {/* حالة التحميل */}
-      {isLoading && (
-        <div className="h-[300px] flex items-center justify-center">
-          <Loading myMessage="جارٍ التحميل..." />
-        </div>
-      )}
-
       {/* عرض النتائج */}
       {!isLoading && results?.length > 0 && (
         <div className="min-h-[50vh] pb-72 pt-8 bg-three w-full inset-0 h-[900px] overflow-y-auto">
@@ -95,7 +88,12 @@ export default function SearchResults({
           </motion.div>
         </div>
       )}
-
+      {/* حالة التحميل */}
+      {isLoading && isSearchTriggered && (
+        <div className="h-[300px] flex items-center justify-center">
+          <Loading myMessage="جارٍ التحميل..." />
+        </div>
+      )}
       {/* حالة عدم وجود نتائج */}
       {!isLoading &&
         isSearchTriggered &&

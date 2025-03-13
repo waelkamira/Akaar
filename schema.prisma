@@ -34,11 +34,12 @@ model Product {
   id              String               @id @default(uuid())
   title           String?
   userId          String?
-  // categoryId      String?              // جعلها اختيارية
+  // categoryId      String?            
   // supplierId      String?
   // countryId       String?
-  // cityId          String?              // جعلها اختيارية
-  category        Int
+  // cityId          String?              
+  categoryId      Int    @default(1) // قم بتغيير 1 إلى أي قيمة منطقية
+  categoryName    String @default("عقارات") // قم بتغيير "غير مصنف" إلى قيمة افتراضية مناسبة   
   image1          String?
   image2          String?
   image3          String?
