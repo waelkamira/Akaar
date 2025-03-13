@@ -23,6 +23,13 @@ export default function SearchResults({
       {/* عرض النتائج */}
       {!isLoading && results?.length > 0 && (
         <div className="min-h-[50vh] pb-72 pt-8 bg-three w-full inset-0 h-[900px] overflow-y-auto">
+          <button
+            onClick={() => onReset()}
+            className="text-white mx-2 text-nowrap"
+          >
+            إغلاق ❌
+          </button>
+
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

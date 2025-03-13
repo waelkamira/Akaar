@@ -14,6 +14,10 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('category');
+      localStorage.removeItem('item');
+    }
     fetchProductsByCategory();
   }, []);
 
@@ -118,8 +122,8 @@ export default function Home() {
                 </div>
               </motion.div>
             ))}
+          <Footer />
         </div>
-        <Footer />
         <h1 className="w-full text-sm select-none text-center pt-8 pb-4 border uppercase text-gray-600">
           Copyright © 2025 Matjar web site. All Rights Reserved
         </h1>

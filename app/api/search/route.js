@@ -10,7 +10,7 @@ export async function POST(req) {
   // تفكيك البيانات مع تعيين قيم افتراضية
   console.log('body', body);
   const {
-    page = 1,
+    page = 0, // القيمة الافتراضية لـ page هي 0
     limit = 8,
     searchedKeyword,
     city,
@@ -50,11 +50,11 @@ export async function POST(req) {
       details: parsedDetails,
     });
 
-    // التأكد من أن قيمة page لا تكون أقل من 1
-    const currentPage = Math.max(1, page);
+    // التأكد من أن قيمة page لا تكون أقل من 0
+    const currentPage = Math.max(0, page);
 
-    // حساب الصفحات
-    const skip = (currentPage - 1) * limit;
+    // حساب الصفحات مع التأكد من أن skip تكون موجبة
+    const skip = Math.max(0, currentPage * limit);
 
     // إنشاء كائن الفلاتر
     const filters = {};
