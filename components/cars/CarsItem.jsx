@@ -2,7 +2,7 @@
 import { useSession } from 'next-auth/react';
 import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import Button from '../Button';
+import Button from '../ReusableComponents/Button';
 import { formatDistanceToNow } from 'date-fns/formatDistanceToNow';
 import Loading from '../ReusableComponents/Loading';
 import { FaHouseDamage } from 'react-icons/fa';

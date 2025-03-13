@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { ImSearch } from 'react-icons/im';
 import { TfiMenuAlt } from 'react-icons/tfi';
-import SideBarMenu from '../SideBarMenu';
+import SideBarMenu from '../ReusableComponents/SideBarMenu';
 import toast from 'react-hot-toast';
 
 export default function SearchInput({ searchData, setSearchData, onSearch }) {

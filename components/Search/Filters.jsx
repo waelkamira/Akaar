@@ -1,12 +1,13 @@
 'use client';
 import React, { useState, useEffect, useContext } from 'react';
 import CitySelector from '../Selectors/CitySelector';
-import { inputsContext } from '../Context';
+import { inputsContext } from '../authContext/Context';
 import SearchControls from './SearchControls';
 import PriceInput from './PriceInput';
 import DynamicField from './DynamicField';
 import CategoriesNavBar from '../navbars/CategoriesNavBar';
 import { useSearchParams } from 'next/navigation';
+import { FaArrowUp } from 'react-icons/fa6';
 
 export default function Filters({
   searchData,
@@ -24,6 +25,7 @@ export default function Filters({
   const id = searchParams.get('id'); // استخراج قيمة "category"
   const [showSearch, setShowSearch] = useState(false);
   const [selectedValues, setSelectedValues] = useState({});
+  const [showArrow, setShowArrow] = useState(false); // حالة لإظهار السهم
 
   const handleChange = (name, value) => {
     setSelectedValues((prev) => ({ ...prev, [name]: value }));
@@ -31,7 +33,7 @@ export default function Filters({
   };
 
   useEffect(() => {
-    console.log('تم اعادة الريندر من فلترز');
+    // console.log('تم اعادة الريندر من فلترز');
     setSearchData((prev) => ({
       ...prev,
       category: id,
@@ -42,7 +44,7 @@ export default function Filters({
 
   // جلب الحقول حسب اسم الفئة
   useEffect(() => {
-    console.log('تم اعادة الريندر من فلترز2 ');
+    // console.log('تم اعادة الريندر من فلترز2 ');
 
     if (category) {
       setLoading(true);
@@ -61,6 +63,14 @@ export default function Filters({
     }
   }, [category, rerender]);
 
+  useEffect(() => {
+    setShowArrow(true);
+  }, [rerender]);
+
+  // إخفاء السهم بعد 5 ثوانٍ
+  setTimeout(() => {
+    setShowArrow(false);
+  }, 10000);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setSearchData((prev) => ({ ...prev, [name]: value }));
@@ -74,14 +84,19 @@ export default function Filters({
   };
 
   return (
-    <div className="flex items-start justify-start gap-2 text-white overflow-x-scroll w-full flex-nowrap bg-three px-2 ">
+    <div className="flex items-start justify-start gap-2 text-white overflow-x-scroll overflow-visible w-full flex-nowrap bg-three px-2 ">
       <div className="flex justify-end items-start gap-2">
         <SearchControls
           onSearch={onSearch}
           onReset={onReset}
           searchData={searchData}
         />
-        <CategoriesNavBar />
+        <div className="relative flex-2 items-center gap-2 justify-center w-full">
+          <CategoriesNavBar />
+          {showArrow && (
+            <FaArrowUp className="animate-pulse mt-2 text-center w-full text-one" />
+          )}
+        </div>
         <CitySelector />
       </div>
 

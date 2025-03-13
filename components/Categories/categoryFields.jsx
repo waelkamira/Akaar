@@ -1,5 +1,5 @@
 'use client';
-import CarsBrandSelector from '../Cars/CarsBrandSelector';
+import CarsBrandSelector from '../Selectors/CarsBrandSelector';
 import YearsSelector from '../Selectors/yearSelector';
 import Selector from '../Selectors/Selector';
 import { usedNewList } from '../Cars/UsedNewList';

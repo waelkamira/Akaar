@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useContext } from 'react';
 import { useParams } from 'next/navigation';
-import { inputsContext } from '../Context';
+import { inputsContext } from '../authContext/Context';
+import { useCallback } from 'react';
 
 export const useSearchLogic = () => {
   const [searchResults, setSearchResults] = useState([]);
@@ -9,12 +10,13 @@ export const useSearchLogic = () => {
   const [isSearchTriggered, setIsSearchTriggered] = useState(false);
   const [totalCount, setTotalCount] = useState(0);
   const [hasMore, setHasMore] = useState(false);
+  const [rerender, setRerender] = useState(false);
   const { data, dispatch } = useContext(inputsContext);
   const { id } = useParams();
   const searchDataRef = useRef();
 
   const [searchData, setSearchData] = useState({
-    category: id || '',
+    category: '',
     searchedKeyword: '',
     city: data?.propertyCity || '',
     town: data?.propertyTown || '',
@@ -24,17 +26,23 @@ export const useSearchLogic = () => {
   });
 
   useEffect(() => {
-    searchDataRef.current = searchData;
-  }, [searchData]);
+    if (typeof window !== 'undefined') {
+      const category = JSON?.parse(localStorage.getItem('category'));
+      setRerender(true);
+      setSearchData((prev) => ({
+        ...prev,
+        category: category?.id || '',
+        city: data?.propertyCity || '',
+        town: data?.propertyTown || '',
+      }));
+      // setPageNumber(1); // إعادة تعيين الصفحة الأولى عند تغيير id
+      setIsSearchTriggered(true); // تشغيل البحث مباشرة بعد تغيير id
+    }
+  }, [id, data]);
 
   useEffect(() => {
-    setSearchData((prev) => ({
-      ...prev,
-      category: id || '',
-      city: data?.propertyCity || '',
-      town: data?.propertyTown || '',
-    }));
-  }, [id, data]);
+    searchDataRef.current = searchData;
+  }, [searchData]);
 
   useEffect(() => {
     const delaySearch = setTimeout(() => {
@@ -64,13 +72,16 @@ export const useSearchLogic = () => {
     if (isSearchTriggered || pageNumber) {
       handleSearch();
     }
-  }, [isSearchTriggered, pageNumber]);
+  }, [id, isSearchTriggered, pageNumber]);
 
-  const handleSearch = async () => {
+  const handleSearch = useCallback(async () => {
+    if (!isSearchTriggered && pageNumber === 0) return;
+
     setIsLoading(true);
-    console.log('تم استدعاء الدالة');
+    setSearchResults([]);
+
     try {
-      const response = await fetch('/api/searchOne', {
+      const response = await fetch('/api/search', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -92,7 +103,7 @@ export const useSearchLogic = () => {
       setIsLoading(false);
       setIsSearchTriggered(false);
     }
-  };
+  }, [isSearchTriggered, pageNumber]);
 
   const handleSearchButtonClick = () => {
     setIsSearchTriggered(true);
@@ -101,7 +112,7 @@ export const useSearchLogic = () => {
 
   const resetFilters = () => {
     setSearchData({
-      category: id || '',
+      category: '',
       searchedKeyword: '',
       city: '',
       town: '',
@@ -128,5 +139,6 @@ export const useSearchLogic = () => {
     setPageNumber,
     handleSearchButtonClick,
     resetFilters,
+    rerender,
   };
 };

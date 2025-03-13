@@ -5,14 +5,17 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import LoadingPhoto from '../photos/LoadingPhoto';
 import FormatDate from './FormatDate';
 
-export default function SmallCard({ item, categoryName }) {
+export default function SmallCard({ item, category }) {
   const router = useRouter();
   const [isFavorited, setIsFavorited] = useState(false);
   const [categoryFields, setCategoryFields] = useState([]);
-  const searchParams = useSearchParams();
-  const category = searchParams.get('category') || categoryName;
+  // const searchParams = useSearchParams();
+  // const category = searchParams.get('category') || category;
 
-  // console.log('item', item);
+  console.log('item', item);
+  console.log('basePrice', typeof item?.basePrice);
+  console.log('basePrice', item?.basePrice);
+  // console.log('category', category);
 
   // دالة لتحويل القيم إلى النصوص المقابلة
   const getFieldValue = (field, value) => {
@@ -25,7 +28,7 @@ export default function SmallCard({ item, categoryName }) {
   // جلب الحقول بناءً على الفئة
   useEffect(() => {
     if (category) {
-      import(`../categoryFields/${category}.jsx`)
+      import(`../categoryFields/${category?.name}.jsx`)
         .then((module) => {
           setCategoryFields(module.default);
         })
@@ -44,6 +47,7 @@ export default function SmallCard({ item, categoryName }) {
           onClick={() => {
             if (typeof window !== 'undefined') {
               localStorage.setItem('item', JSON.stringify(item));
+              localStorage.setItem('category', JSON.stringify(category));
             }
             router.push(`/post/${item?.id}`);
           }}
@@ -65,62 +69,64 @@ export default function SmallCard({ item, categoryName }) {
             <div className="absolute inset-0 bg-one/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           </div>
 
-          {/* التفاصيل */}
           <div className="flex flex-col justify-between gap-2 w-full p-4 bg-white text-black rounded-b-lg">
-            {/* العنوان */}
-            <h1 className="text-lg font-semibold text-gray-800 line-clamp-1">
-              {item?.title?.split(' ').slice(0, 3).join(' ')}
-            </h1>
-
-            {/* السعر والمدينة */}
-            <div className="flex justify-between items-center">
-              <h1 className="text-sm text-gray-600">{item?.city}</h1>
-              <h1 className="text-xl font-bold text-green-600">
-                {item?.basePrice}{' '}
-                <span className="text-green-600 mx-1 select-none text-sm">
-                  $
-                </span>
+            {item?.title && (
+              <h1 className="text-lg font-semibold text-gray-800 line-clamp-1">
+                {item?.title?.split(' ').slice(0, 5).join(' ')}
               </h1>
+            )}
+
+            <div className="flex justify-between items-center">
+              {/* {item?.city && (
+                <h1 className="text-sm text-gray-600">{item?.city}</h1>
+              )}
+              {item?.basePrice > 0 && (
+                <h1 className="text-xl font-bold text-green-600">
+                  {item?.basePrice}
+                  <span className="text-green-600 mx-1 select-none text-sm">
+                    $
+                  </span>
+                </h1>
+              )} */}
+              {item?.description && (
+                <h1 className="text-sm line-clamp-2">{item?.description}</h1>
+              )}
             </div>
 
-            {/* تاريخ الإنشاء */}
-            <div className="absolute top-2 left-2 z-0 flex justify-center items-center bg-white/80 rounded-full px-2 py-1 shadow-sm text-xs text-gray-700">
-              <FormatDate dateString={item?.createdAt} />
-            </div>
+            {item?.createdAt && (
+              <div className="absolute top-2 left-2 z-0 flex justify-center items-center bg-white/80 rounded-full px-2 py-1 shadow-sm text-xs text-gray-700">
+                <FormatDate dateString={item?.createdAt} />
+              </div>
+            )}
           </div>
 
+          {/* الحقول الإضافية */}
           <div className="w-full p-4 bg-gray-50 border-t border-gray-200">
             {categoryFields
               ?.slice(0, 2) // أخذ أول حقلين فقط
               ?.map((field, index) => {
-                // 1. التحقق من وجود الحقل في `item.details`
-                if (item?.details && item.details.hasOwnProperty(field.name)) {
-                  // 2. الحصول على قيمة الحقل من `item.details`
-                  const value = item.details[field.name];
+                const value = item.details[field.name];
+                const displayValue = getFieldValue(field, value);
 
-                  // 3. تحويل القيمة إلى النص المقابل باستخدام `getFieldValue` إذا كان الحقل يحتوي على خيارات (`options`)
-                  const displayValue = getFieldValue(field, value);
+                return (
+                  <div
+                    key={index} // مفتاح فريد لكل عنصر
+                    className="flex items-center gap-2 mb-2 text-sm text-gray-700"
+                  >
+                    {field?.icon}{' '}
+                    <h3>
+                      <span className="text-gray-500">
+                        {field?.label || field.name}
+                      </span>
+                      :{' '}
+                      <span className="font-bold">
+                        {' '}
+                        {displayValue || 'غير محدد'}
+                      </span>
+                    </h3>
+                  </div>
+                );
 
-                  // 4. عرض الحقل والقيمة
-                  return (
-                    <div
-                      key={index} // مفتاح فريد لكل عنصر
-                      className="flex items-center gap-2 mb-2 text-sm text-gray-700"
-                    >
-                      {field?.icon}{' '}
-                      {/* 5. عرض الأيقونة المقابلة للحقل إذا كانت موجودة */}
-                      <h3>
-                        <span className="text-gray-500">
-                          {field?.label || field.name}
-                        </span>
-                        : <span className="font-bold"> {displayValue}</span>
-                        {/* 6. عرض اسم الحقل (`label`) أو المفتاح (`name`) والقيمة (`displayValue`) */}
-                      </h3>
-                    </div>
-                  );
-                }
-
-                // 7. إذا لم يكن الحقل موجودًا في `item.details`، لا يتم عرضه
                 return null;
               })}
           </div>

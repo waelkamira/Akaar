@@ -5,7 +5,7 @@ import CustomToast from './CustomToast';
 import { usePathname, useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { IoMdClose } from 'react-icons/io';
-import { inputsContext } from '../Context';
+import { inputsContext } from '../authContext/Context';
 import PostGallery from '../photos/PostGallery';
 import UserNameAndPhoto from './userNameAndPhoto';
 
@@ -15,7 +15,6 @@ export default function SmallItem({ post, index }) {
   const session = useSession();
   const router = useRouter();
   const path = usePathname();
-  // console.log('post 77777777777777', post);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -54,25 +53,26 @@ export default function SmallItem({ post, index }) {
 
   return (
     <div
-      className="rounded-xl bg-white/10 border w-[95%] border-white/10 shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden"
+      className="rounded-xl bg-white/10 border border-white/10 shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden w-[95%]"
       onClick={() => {
-        if (typeof window !== 'undefined') {
+        if (typeof window !== 'undefined')
           localStorage.setItem('item', JSON.stringify(post));
-        }
-        router.push(`/post`);
+        router.push('/post');
       }}
     >
-      <div className="flex flex-col justify-center items-center w-full p-4">
+      <div className="flex flex-col items-center p-4 w-full">
         {/* صورة المستخدم واسمه */}
-        <div className="flex items-center justify-between w-full mb-4">
+        <div className="flex justify-between w-full mb-4">
           <UserNameAndPhoto post={post} />
           {currentUser?.isAdmin === 1 && path === '/' && (
             <div
-              className="flex flex-col items-center justify-center cursor-pointer p-2 text-red-500 hover:bg-red-500/10 rounded-full"
-              onClick={() => handleDeletePost(post)}
+              className="flex items-center cursor-pointer p-2 text-red-500 hover:bg-red-500/10 rounded-full"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleDeletePost(post);
+              }}
             >
               <IoMdClose className="text-xl" />
-              <h6 className="text-sm select-none">حذف</h6>
             </div>
           )}
         </div>
@@ -86,24 +86,23 @@ export default function SmallItem({ post, index }) {
         <PostGallery post={post} />
 
         {/* الوصف */}
-        <div className="w-full border-t border-white/10 my-4"></div>
-        <pre className="text-sm text-white/80 line-clamp-2 mb-4">
+        <pre className="text-sm text-white/80 line-clamp-2 my-4">
           {post?.description}
         </pre>
 
         {/* زر عرض الإعلان */}
         <button
-          onClick={() => {
+          onClick={(e) => {
+            e.stopPropagation();
             if (session?.status === 'authenticated') {
-              if (typeof window !== 'undefined') {
+              if (typeof window !== 'undefined')
                 localStorage.setItem('item', JSON.stringify(post));
-              }
               router.push(`/post/${post?.id}`);
             } else {
               toast.custom((t) => (
                 <CustomToast
                   t={t}
-                  message={'يجب عليك تسجيل الدخول أولا لرؤية هذه الإعلان 😉'}
+                  message="يجب تسجيل الدخول لرؤية هذا الإعلان 😉"
                 />
               ));
             }

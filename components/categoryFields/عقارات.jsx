@@ -19,11 +19,25 @@ const realEstate = [
     icon: <FaBed className="text-one text-lg sm:text-xl" />,
     placeholder: '-اختر-',
     options: {
-      1: '1 + 1',
-      2: '2 + 1',
-      3: '3 + 1',
-      4: '4 + 1',
-      5: '5 + 1',
+      1: '1',
+      2: '2',
+      3: '3',
+      4: '4',
+      5: '5',
+      6: 'غير ذلك',
+    },
+  },
+  {
+    name: 'livingrooms', // المفتاح الإنجليزي
+    label: 'عدد الصالونات', // الاسم العربي
+    icon: <FaBed className="text-one text-lg sm:text-xl" />,
+    placeholder: '-اختر-',
+    options: {
+      1: '1',
+      2: '2',
+      3: '3',
+      4: '4',
+      5: '5',
       6: 'غير ذلك',
     },
   },

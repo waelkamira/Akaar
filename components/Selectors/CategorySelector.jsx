@@ -1,7 +1,7 @@
 'use client';
 import React, { useContext, useEffect, useState } from 'react';
 import Select from 'react-select';
-import { inputsContext } from '../Context.jsx';
+import { inputsContext } from '../authContext/Context.jsx';
 import { VscUngroupByRefType } from 'react-icons/vsc';
 import categories from '../Categories/categories.jsx';
 

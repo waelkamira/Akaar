@@ -5,7 +5,7 @@ import Filters from './Filters';
 import SearchResults from './SearchResults';
 import { useSearchLogic } from './useSearchLogic';
 
-export default function ParentComponent() {
+export default function Search() {
   const {
     searchData,
     setSearchData,

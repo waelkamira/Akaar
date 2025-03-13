@@ -1,10 +1,10 @@
 'use client';
 import { signOut, useSession } from 'next-auth/react';
 import React from 'react';
-import CurrentUser from '../CurrentUser';
+import CurrentUser from '../ReusableComponents/CurrentUser';
 import Image from 'next/image';
 import Link from 'next/link';
-import Button from '../Button';
+import Button from '../ReusableComponents/Button';
 import LoadingPhoto from '../photos/LoadingPhoto';
 
 export default function CarsSideBarMenu({ setIsOpen }) {

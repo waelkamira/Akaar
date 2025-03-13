@@ -2,7 +2,7 @@
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import Button from '../../components/Button';
+import Button from '../../components/ReusableComponents/Button';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
@@ -11,7 +11,7 @@ import Image from 'next/image';
 import CustomToast from '../../components/ReusableComponents/CustomToast';
 import { useEffect } from 'react';
 import { GiExitDoor } from 'react-icons/gi';
-import CurrentUser from '../../components/CurrentUser';
+import CurrentUser from '../../components/ReusableComponents/CurrentUser';
 export default function LogInPage() {
   const session = useSession();
   const router = useRouter();

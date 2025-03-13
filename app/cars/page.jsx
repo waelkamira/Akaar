@@ -8,7 +8,7 @@ import CarsNavbar from '../../components/Cars/CarsNavbar';
 import { MdCarRental } from 'react-icons/md';
 import { MdOutlineSell } from 'react-icons/md';
 import { useRouter } from 'next/navigation';
-import { inputsContext } from '../../components/Context';
+import { inputsContext } from '../../components/authContext/Context';
 import { MdKeyboardDoubleArrowDown } from 'react-icons/md';
 import HeroSlider from '../../components/photos/HeroSlider';
 import CarsSmallCard from '../../components/Cars/CarsSmallCard';

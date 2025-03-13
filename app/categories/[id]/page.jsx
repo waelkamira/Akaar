@@ -50,7 +50,7 @@ const CategoryPage = () => {
   };
 
   return (
-    <div className="relative flex flex-col justify-center items-center z-0 w-full bg-five mt-44">
+    <div className="relative flex flex-col justify-center items-center z-0 w-full bg-five sm:mt-56">
       <div className="w-full">
         {/* <div className="p-2 bg-three">
           <button

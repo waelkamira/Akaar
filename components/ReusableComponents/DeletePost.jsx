@@ -1,8 +1,8 @@
 'use client';
 import toast from 'react-hot-toast';
-import { inputsContext } from './Context';
+import { inputsContext } from '../authContext/Context';
 import { useContext } from 'react';
-import CustomToast from './ReusableComponents/CustomToast';
+import CustomToast from './CustomToast';
 
 export default function DeletePostHandler({ recipe }) {
   const { dispatch } = useContext(inputsContext);

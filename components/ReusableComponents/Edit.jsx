@@ -9,11 +9,11 @@ import SideBarMenu from './SideBarMenu';
 import { TfiMenuAlt } from 'react-icons/tfi';
 import { formatDistanceToNow } from 'date-fns/formatDistanceToNow';
 import { useParams } from 'next/navigation';
-import CustomToast from './ReusableComponents/CustomToast';
+import CustomToast from './CustomToast';
 import toast from 'react-hot-toast';
 import { MdEdit } from 'react-icons/md';
 import UploadingAndDisplayingImage from './UploadingAndDisplayingImage';
-import { inputsContext } from './Context';
+import { inputsContext } from '../authContext/Context';
 import { getYoutubeVideoId } from './youtubeUtils';
 
 export default function EditPost() {

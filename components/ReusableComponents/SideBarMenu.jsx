@@ -1,11 +1,11 @@
 'use client';
 import { useSession } from 'next-auth/react';
 import React from 'react';
-import CurrentUser from '../components/CurrentUser';
+import CurrentUser from './CurrentUser';
 import Button from './Button';
-import UserNameAndPhoto from './ReusableComponents/userNameAndPhoto';
-import categories from './Categories/categories';
-import mainButtons from './lists/mainButtons';
+import UserNameAndPhoto from './userNameAndPhoto';
+import categories from '../Categories/categories';
+import mainButtons from '../lists/mainButtons';
 import Link from 'next/link';
 import { IoCloseOutline } from 'react-icons/io5';
 

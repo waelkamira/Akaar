@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { inputsContext } from './Context';
+import { inputsContext } from '../authContext/Context';
 import { useSession } from 'next-auth/react';
 
 export default function CurrentUser() {

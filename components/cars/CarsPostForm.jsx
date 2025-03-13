@@ -3,7 +3,7 @@
 import dynamic from 'next/dynamic';
 import React, { useContext, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { inputsContext } from '../Context';
+import { inputsContext } from '../authContext/Context';
 import { v4 as uuidv4 } from 'uuid';
 import { FaCarrot } from 'react-icons/fa';
 import { MdOutlinePriceCheck } from 'react-icons/md';
@@ -13,10 +13,12 @@ import { RxVideo } from 'react-icons/rx';
 import { useRouter } from 'next/navigation';
 import { MdOutlineSubtitles } from 'react-icons/md';
 import { IoCalendarNumber } from 'react-icons/io5';
-import { getVideoIdAndPlatform } from '../youtubeUtils';
+import { getVideoIdAndPlatform } from '../ReusableComponents/youtubeUtils';
 import CategorySelector from '../Selectors/CategorySelector';
 
-const CarsBrandSelector = dynamic(() => import('./CarsBrandSelector'));
+const CarsBrandSelector = dynamic(() =>
+  import('../Selectors/CarsBrandSelector')
+);
 const Confetti = dynamic(() =>
   import('../ReusableComponents/SuccessComponent').then((mod) => mod.Confetti)
 );

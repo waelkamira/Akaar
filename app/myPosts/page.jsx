@@ -5,13 +5,12 @@ import React, { useContext, useEffect, useState } from 'react';
 import { IoMdClose } from 'react-icons/io';
 import toast from 'react-hot-toast';
 import CustomToast from '../../components/ReusableComponents/CustomToast';
-import { inputsContext } from '../../components/Context';
+import { inputsContext } from '../../components/authContext/Context';
 import Loading from '../../components/ReusableComponents/Loading';
 import { useRouter } from 'next/navigation';
 import { MdEdit } from 'react-icons/md';
 import NavegationPages from '../../components/ReusableComponents/NavegationPages';
-import MainNavbar from '../../components/Search/SearchBar';
-import Button from '../../components/Button';
+import Button from '../../components/ReusableComponents/Button';
 
 export default function MyPosts() {
   const [postId, setpostId] = useState('');
@@ -19,6 +18,7 @@ export default function MyPosts() {
   const { dispatch } = useContext(inputsContext);
   const [pageNumber, setPageNumber] = useState(1);
   const [userPostsCount, setUserPostsCount] = useState(0);
+  const [hasMore, setHasMore] = useState(false);
   const session = useSession();
   const [myPosts, setmyPosts] = useState([]);
   const router = useRouter();
@@ -28,19 +28,22 @@ export default function MyPosts() {
       const data = JSON.parse(localStorage.getItem('CurrentUser'));
       const userId = data?.id;
       console.log('userId', userId);
-      fetchmyPosts(userId);
+      fetchMyPosts(userId);
     }
   }, [pageNumber, session]);
 
-  const fetchmyPosts = async (userId) => {
-    await fetch(`/api/myPosts?page=${pageNumber}&userId=${userId}&limit=8`)
-      .then((res) => res?.json())
-      .then((res) => {
-        setmyPosts(res?.posts);
-        setUserPostsCount(res?.count);
-        console.log(res?.posts);
-        dispatch({ type: 'MY_POSTS', payload: res });
-      });
+  const fetchMyPosts = async (userId) => {
+    const response = await fetch(
+      `/api/myPosts?page=${pageNumber}&userId=${userId}&limit=8`
+    );
+    if (response.ok) {
+      const json = await response.json();
+      setHasMore(json.hasMore);
+      setmyPosts(json?.data);
+      setUserPostsCount(json?.count);
+      console.log(json?.data);
+      dispatch({ type: 'MY_POSTS', payload: json });
+    }
   };
 
   //? هذه الدالة لحذف المنشورات
@@ -53,6 +56,10 @@ export default function MyPosts() {
     });
 
     if (response.ok) {
+      const data = JSON.parse(localStorage.getItem('CurrentUser'));
+      const userId = data?.id;
+      fetchMyPosts(userId); // إعادة جلب البيانات بعد الحذف
+      setIsVisible(false);
       toast.custom((t) => (
         <CustomToast
           t={t}
@@ -60,8 +67,6 @@ export default function MyPosts() {
           redEmoji={'✖'}
         />
       ));
-      fetchmyPosts();
-      setIsVisible(false);
     } else {
       toast.custom((t) => <CustomToast t={t} message={'حدث خطأ ما 😐'} />);
       setIsVisible(false);
@@ -69,8 +74,9 @@ export default function MyPosts() {
   }
 
   return (
-    <div className="flex flex-col justify-center items-center w-full">
-      <div className="flex flex-col w-full xl:w-[90%] 2xl:w-[80%] h-fit px-2 sm:px-16 overflow-y-auto z-10 ">
+    <div className="flex flex-col justify-center items-center w-full ">
+      <div className="flex flex-col w-full xl:w-[90%] 2xl:w-[80%] h-fit px-2 sm:px-16 overflow-y-auto z-10 border my-4">
+        {/* تأكيد الحذف */}
         {isVisible && (
           <div className="absolute flex flex-col items-center p-4 z-50 inset-0 bg-five/70 text-white">
             <div className="sticky top-72 w-full sm:w-1/2 border border-white rounded bg-three">
@@ -95,10 +101,10 @@ export default function MyPosts() {
           </div>
         )}
 
-        {session?.status === 'authenticated' ? (
-          <div className="flex flex-col justify-center items-center w-full">
+        {session?.status === 'authenticated' && (
+          <div className="flex flex-col justify-center items-center w-full ">
             {' '}
-            <div className="flex flex-col justify-center items-center w-full gap-4 py-4">
+            <div className="flex flex-col justify-center items-center w-full gap-4 py-4 mt-16">
               <h1 className="grow text-lg lg:text-2xl w-full ">
                 <span className="text-one  text-2xl ml-2">#</span>
                 إعلاناتي <span className="text-one"> {userPostsCount}</span>
@@ -111,8 +117,9 @@ export default function MyPosts() {
                 }
               />
             )}
+            {/* عرض الإعلانات */}
             <div className="w-full">
-              <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 gap-4 justify-start items-start w-full">
+              <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 gap-4 justify-start items-start w-full mt-16">
                 {myPosts?.length > 0 &&
                   myPosts.map((post, index) => (
                     <div
@@ -125,18 +132,19 @@ export default function MyPosts() {
                         router.push(`/post/${post?.id}`);
                       }}
                     >
-                      <div className="flex justify-between items-center w-full p-2 bg-one h-24 text-white ">
+                      <div className="flex justify-between items-center w-full p-2 bg-one h-24 text-white">
                         <div
                           className="flex flex-col items-center justify-center cursor-pointer  rounded p-1 md:text-xl  hover:bg-three hover:scale-[105%] transition-transform duration-150 ease-in-out"
-                          // onClick={() => {
-                          //   if (typeof window !== 'undefined') {
-                          //     localStorage.setItem(
-                          //       'item',
-                          //       JSON.stringify(post)
-                          //     );
-                          //   }
-                          //   router.push(`/post/${}`);
-                          // }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (typeof window !== 'undefined') {
+                              localStorage.setItem(
+                                'item',
+                                JSON.stringify(post)
+                              );
+                            }
+                            router.push(`/editPost/${post?.id}`);
+                          }}
                         >
                           <MdEdit />
 
@@ -144,7 +152,8 @@ export default function MyPosts() {
                         </div>
                         <div
                           className="flex flex-col items-center justify-center cursor-pointer  rounded p-1 md:text-xl  hover:bg-three hover:scale-[105%] transition-transform duration-150 ease-in-out"
-                          onClick={() => {
+                          onClick={(e) => {
+                            e.stopPropagation();
                             setIsVisible(true);
                             setpostId(post?.id);
                           }}
@@ -158,22 +167,24 @@ export default function MyPosts() {
                     </div>
                   ))}
               </div>
-
-              <NavegationPages
-                array={myPosts}
-                setPageNumber={setPageNumber}
-                pageNumber={pageNumber}
-              />
             </div>
           </div>
-        ) : (
-          <>
+        )}
+
+        <NavegationPages
+          hasMore={hasMore}
+          setPageNumber={setPageNumber}
+          pageNumber={pageNumber}
+        />
+
+        {session?.status === 'unauthenticated' && (
+          <div className="w-full">
             {' '}
             <h1 className="mt-16 w-full text-center">
               يجب عليك تسجيل الدخول أولا
             </h1>
             <Button title={'تسجيل الدخول'} path="/login" style={' '} />
-          </>
+          </div>
         )}
       </div>
     </div>

@@ -1,7 +1,7 @@
 'use client';
 import React, { useContext, useEffect, useState } from 'react';
 import Select from 'react-select';
-import { inputsContext } from '../Context.jsx';
+import { inputsContext } from '../authContext/Context.jsx';
 import { usePathname } from 'next/navigation.js';
 import { MdOutlineBedroomParent } from 'react-icons/md';
 import { HiMiniNewspaper } from 'react-icons/hi2';
