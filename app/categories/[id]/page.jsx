@@ -3,8 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
 import SmallCard from '../../../components/ReusableComponents/SmallCard';
 import { MdKeyboardDoubleArrowRight } from 'react-icons/md';
-import Loading from '../../../components/ReusableComponents/Loading';
-import { toInteger } from 'lodash';
 
 const CategoryPage = () => {
   const [products, setProducts] = useState([]);
@@ -50,60 +48,55 @@ const CategoryPage = () => {
   };
 
   return (
-    <div className="relative flex flex-col justify-center items-center z-0 w-full bg-five sm:mt-56">
-      <div className="w-full">
-        {/* <div className="p-2 bg-three">
-          <button
-            className="flex justify-center items-center rounded-[5px] sm:text-lg text-sm bg-one text-white h-12 w-full hover:scale-105 transition-transform"
-            onClick={() => setShowSearch(!showSearch)}
-          >
-            {showSearch ? 'إخفاء فلاتر البحث' : 'عرض فلاتر البحث'}
-          </button>
-        </div> */}
+    <div className="relative bg-five sm:mt-32 p-2 sm:p-4 lg:p-8">
+      <div className=" mx-auto w-full lg:max-w-[80%] ">
+        <div className="flex flex-col items-center">
+          <h1 className="text-2xl sm:text-3xl font-bold text-three mb-8 border-b-2 border-one pb-2">
+            أحدث الإعلانات
+          </h1>
 
-        {/* {showSearch && <CategoriesProductsSearchBar />} */}
+          <div className="w-full xl:w-[70%] space-y-6">
+            <div className="flex items-center justify-between bg-white p-4 rounded-lg shadow-sm">
+              <h2 className="text-lg font-medium">
+                عدد الإعلانات الموجودة:
+                <span className="text-green-600 font-bold mx-2">
+                  {totalCount}
+                </span>
+              </h2>
+            </div>
 
-        <div className="flex flex-col justify-center items-center w-full">
-          <h1 className="w-full text-center sm:text-lg my-4">أحدث الإعلانات</h1>
-          <div className="flex flex-col justify-center items-center w-full xl:w-[70%]">
-            {' '}
-            <h1 className="w-full text-start sm:text-lg my-4">
-              {' '}
-              عدد الإعلانات الموجودة:
-              <span className="px-2 text-green-600"> {totalCount}</span>{' '}
-            </h1>
-            {loading && pageNumber === 1 && <Loading />}
-            <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-4 w-full ">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {products.length > 0
                 ? products.map((item) => (
                     <div
                       key={item.id}
-                      className="border p-4 rounded-lg shadow-md"
+                      className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden"
                     >
                       <SmallCard item={item} />
                     </div>
                   ))
                 : !loading && (
-                    <p className="text-center text-gray-500">
-                      لا توجد منتجات متاحة
-                    </p>
+                    <div className="col-span-full text-center py-12 bg-white rounded-lg">
+                      <p className="text-gray-500 text-lg">
+                        لا توجد منتجات متاحة
+                      </p>
+                    </div>
                   )}
             </div>
           </div>
 
-          {/* أزرار التنقل بين الصفحات */}
-          <div className="flex items-center justify-around my-16 w-full">
-            {hasMore && (
+          {hasMore && (
+            <div className="mt-12 mb-8">
               <button
-                className="flex items-center justify-center gap-2 py-2 px-6 bg-three text-white rounded-[5px] hover:bg-two transition-colors shadow-md"
+                className="group flex items-center gap-3 bg-three hover:bg-two px-8 py-3 rounded-lg text-white font-medium transition-all duration-300 shadow-lg hover:shadow-xl"
                 onClick={handleNextPage}
                 disabled={loading}
               >
-                المزيد من النتائج{' '}
-                <MdKeyboardDoubleArrowRight className="text-xl" />
+                <span>المزيد من النتائج</span>
+                <MdKeyboardDoubleArrowRight className="text-xl group-hover:translate-x-1 transition-transform" />
               </button>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -9,7 +9,7 @@ export default function BackButton() {
       href={'/'}
       className=" sm:left-16 rounded-[5px] overflow-hidden bg-white"
     >
-      <div className="flex items-center justify-center overflow-hidden cursor-pointer xl:w-fit border border-white">
+      <div className="flex items-center justify-center overflow-hidden cursor-pointer xl:w-full border border-white">
         {/* <button className="flex items-center justify-center  text-sm lg:text-xl bg-one p-1 pb-2 lg:p-2">
           رجوع
         </button> */}

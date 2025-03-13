@@ -198,13 +198,13 @@ export default function CitySelector({ check }) {
   const selectedCityData = cities.find((city) => city.name === selectedCity);
 
   return (
-    <div className="flex gap-2 w-full justify-start items-center text-sm">
+    <div className="flex flex-col sm:flex-row gap-2 w-full justify-start items-center text-sm">
       {/* قائمة المدن */}
-      <div className="w-28">
+      <div className="w-full sm:w-28">
         <select
           value={selectedCity}
           onChange={handleCityChange}
-          className="w-28 border rounded focus:outline-2 focus:outline-one bg-white text-black h-[27px] px-2"
+          className="w-full sm:w-28 border rounded focus:outline-2 focus:outline-one bg-white text-black h-[27px] px-2"
         >
           <option value="" disabled>
             المدينة
@@ -218,11 +218,11 @@ export default function CitySelector({ check }) {
       </div>
 
       {/* قائمة المناطق */}
-      <div className="w-28">
+      <div className="w-full sm:w-28">
         <select
           value={selectedTown}
           onChange={handleTownChange}
-          className="w-28 border rounded focus:outline-2 focus:outline-one bg-white text-black h-[27px] px-2"
+          className="w-full sm:w-28 border rounded focus:outline-2 focus:outline-one bg-white text-black h-[27px] px-2"
           disabled={!selectedCity}
         >
           <option value="" disabled>

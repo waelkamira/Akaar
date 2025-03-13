@@ -253,7 +253,7 @@ export default function EditPost() {
                 />
                 <button
                   onClick={() => handleEditPost(postId)}
-                  className="bg-gray-600 mb-2 w-full mt-4 sm:w-fit text-white duration-300 transition-colors ease-in-out hover:bg-one hover:scale-105 border rounded-[5px] text-center select-none p-2"
+                  className="bg-gray-600 mb-2 w-full mt-4 sm:w-full text-white duration-300 transition-colors ease-in-out hover:bg-one hover:scale-105 border rounded-[5px] text-center select-none p-2"
                 >
                   حفظ التعديلات
                 </button>
@@ -409,7 +409,7 @@ export default function EditPost() {
                   </pre>
                   <button
                     onClick={() => handleEditPost(postId)}
-                    className="bg-gray-600 mb-2 w-full mt-4 sm:w-fit text-white  duration-300 transition-colors ease-in-out hover:bg-one hover:scale-105 border rounded-[5px] text-center select-none   p-2"
+                    className="bg-gray-600 mb-2 w-full mt-4 sm:w-full text-white  duration-300 transition-colors ease-in-out hover:bg-one hover:scale-105 border rounded-[5px] text-center select-none   p-2"
                   >
                     حفظ التعديلات
                   </button>
@@ -446,7 +446,7 @@ export default function EditPost() {
                   </div>
                   <button
                     onClick={() => handleEditPost(postId)}
-                    className="bg-gray-600 mb-2 w-full mt-4 sm:w-fit text-white  duration-300 transition-colors ease-in-out hover:bg-one hover:scale-105 border rounded-[5px] text-center select-none   p-2"
+                    className="bg-gray-600 mb-2 w-full mt-4 sm:w-full text-white  duration-300 transition-colors ease-in-out hover:bg-one hover:scale-105 border rounded-[5px] text-center select-none   p-2"
                   >
                     حفظ التعديلات
                   </button>

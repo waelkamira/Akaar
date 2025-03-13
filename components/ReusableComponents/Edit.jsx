@@ -210,7 +210,7 @@ export default function EditPost() {
 
                 <button
                   onClick={() => handleeditPost()}
-                  className="bg-five mb-2 w-full sm:w-fit hover:bg-one  hover:scale-105 border text-center select-none   p-2"
+                  className="bg-five mb-2 w-full sm:w-full hover:bg-one  hover:scale-105 border text-center select-none   p-2"
                 >
                   حفظ التعديلات
                 </button>
@@ -218,7 +218,7 @@ export default function EditPost() {
               <UploadingAndDisplayingImage img={editedRecipe?.image} />
               <button
                 onClick={() => handleeditPost()}
-                className="bg-five mb-2 w-full sm:w-fit mt-4 hover:bg-one  hover:scale-105 border text-center select-none   p-2"
+                className="bg-five mb-2 w-full sm:w-full mt-4 hover:bg-one  hover:scale-105 border text-center select-none   p-2"
               >
                 حفظ التعديلات
               </button>
@@ -265,7 +265,7 @@ export default function EditPost() {
                 </pre>
                 <button
                   onClick={() => handleeditPost()}
-                  className="bg-five mb-2 w-full mt-4 sm:w-fit hover:bg-one  hover:scale-105 border text-center select-none   p-2"
+                  className="bg-five mb-2 w-full mt-4 sm:w-full hover:bg-one  hover:scale-105 border text-center select-none   p-2"
                 >
                   حفظ التعديلات
                 </button>
@@ -310,7 +310,7 @@ export default function EditPost() {
                 </pre>
                 <button
                   onClick={() => handleeditPost()}
-                  className="bg-five mb-2 w-full mt-4 sm:w-fit hover:bg-one  hover:scale-105 border text-center select-none   p-2"
+                  className="bg-five mb-2 w-full mt-4 sm:w-full hover:bg-one  hover:scale-105 border text-center select-none   p-2"
                 >
                   حفظ التعديلات
                 </button>
@@ -359,7 +359,7 @@ export default function EditPost() {
                     </pre>
                     <button
                       onClick={() => handleeditPost()}
-                      className="bg-five mb-2 w-full mt-4 sm:w-fit hover:bg-one  hover:scale-105 border text-center select-none   p-2"
+                      className="bg-five mb-2 w-full mt-4 sm:w-full hover:bg-one  hover:scale-105 border text-center select-none   p-2"
                     >
                       حفظ التعديلات
                     </button>
@@ -392,7 +392,7 @@ export default function EditPost() {
                 />
                 <button
                   onClick={() => handleeditPost()}
-                  className="bg-five mb-2 w-full mt-4 sm:w-fit hover:bg-one  hover:scale-105 border text-center select-none   p-2"
+                  className="bg-five mb-2 w-full mt-4 sm:w-full hover:bg-one  hover:scale-105 border text-center select-none   p-2"
                 >
                   حفظ التعديلات
                 </button>
