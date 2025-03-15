@@ -38,7 +38,7 @@ const CategoriesNavBar = () => {
     setShowArrow(false);
   }, 50000);
   return (
-    <div className="relative w-full sm:w-28 h-[27px] bg-white border rounded shadow-md text-black">
+    <div className="relative w-full sm:w-28 h-8 sm:h-[27px] bg-white border rounded shadow-md text-black">
       {/* قائمة Select */}
       <select
         value={selectedCategory}
@@ -56,27 +56,6 @@ const CategoriesNavBar = () => {
           </option>
         ))}
       </select>
-      {/* السهم */}
-      {/* {showArrow && (
-        <div
-          className="absolute -bottom-5 left-1/2 transform -translate-x-1/2"
-          style={{
-            position: 'absolute',
-            bottom: '-20px', // يتم وضعه أسفل القائمة
-            left: '50%', // توسيط أفقي
-            transform: 'translateX(-50%)', // توسيط أفقي
-          }}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            className="w-6 h-6 text-one bg-red-600"
-          >
-            <path d="M12 2a1 1 0 011 1v16.586l5.293-5.293a1 1 0 011.414 1.414l-7 7a1 1 0 01-1.414 0l-7-7a1 1 0 011.414-1.414L11 19.586V3a1 1 0 011-1z" />
-          </svg>
-        </div>
-      )} */}
     </div>
   );
 };

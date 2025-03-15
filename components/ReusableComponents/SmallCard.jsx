@@ -9,13 +9,6 @@ export default function SmallCard({ item, category }) {
   const router = useRouter();
   const [isFavorited, setIsFavorited] = useState(false);
   const [categoryFields, setCategoryFields] = useState([]);
-  // const searchParams = useSearchParams();
-  // const category = searchParams.get('category') || category;
-
-  console.log('item', item);
-  console.log('basePrice', typeof item?.basePrice);
-  console.log('basePrice', item?.basePrice);
-  // console.log('category', category);
 
   // دالة لتحويل القيم إلى النصوص المقابلة
   const getFieldValue = (field, value) => {

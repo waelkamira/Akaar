@@ -180,41 +180,69 @@ export default function OnClickMap({
 
   return (
     <div className="w-full ">
-      {!lat && !lng && (
-        <>
-          <div className="flex flex-col justify-start items-start gap-2 w-full my-3">
-            <div className="flex">
-              <span className="flex text-one text-lg xl:text-2xl ml-2">
-                <FaMapMarkedAlt />
-              </span>
-              <span className="flex text-sm sm:text-lg select-none text-nowrap ">
-                حدد الموقع على الخريطة :
-              </span>
-            </div>
-            <h1 className="text-right text-sm sm:text-lg select-none ">
-              اختر المدينة من القائمة ثم اختر المنطقة من القائمة الثانية ثم قم
-              بعمل زووم على الخريطة واضغط على الموقع بدقة
-            </h1>
+      <>
+        <div className="flex flex-col justify-start items-start gap-2 w-full my-3">
+          <div className="flex">
+            <span className="flex text-one text-lg xl:text-2xl ml-2">
+              <FaMapMarkedAlt />
+            </span>
+            <span className="flex text-sm sm:text-lg select-none text-nowrap ">
+              حدد الموقع على الخريطة :
+            </span>
           </div>
-          <div className="mb-4 relative z-50">
+          <h1 className="text-right text-sm sm:text-lg select-none ">
+            اختر المدينة من القائمة ثم اختر المنطقة من القائمة الثانية ثم قم
+            بعمل زووم على الخريطة واضغط على الموقع بدقة
+          </h1>
+        </div>
+        <div className="mb-4 relative z-50">
+          <label className="flex text-right mb-2 text-lg sm:text-md select-none text-nowrap">
+            <span className="text-one text-lg xl:text-2xl ml-2">
+              <GiModernCity />
+            </span>
+            اختر المدينة:
+          </label>
+          <Select
+            options={cityOptions}
+            onChange={handleCityChange}
+            value={cityOptions.find(
+              (option) => option.value === selectedCity?.name
+            )}
+            placeholder="-- اختر المدينة --"
+            isClearable
+            isSearchable
+            theme={customTheme}
+            styles={customStyles}
+            className="w-full text-md text-start text-black rounded select-none z-40"
+            classNamePrefix="select"
+            classNames={{
+              control: (state) =>
+                `${
+                  state.isFocused ? 'border-one' : 'border-gray-300'
+                } sm:h-12 h-8 w-full`,
+            }}
+          />
+        </div>
+        {selectedCity && (
+          <div className="mb-4 relative z-40">
             <label className="flex text-right mb-2 text-lg sm:text-md select-none text-nowrap">
               <span className="text-one text-lg xl:text-2xl ml-2">
-                <GiModernCity />
+                <FaTreeCity />
               </span>
-              اختر المدينة:
+              اختر البلدة:
             </label>
             <Select
-              options={cityOptions}
-              onChange={handleCityChange}
-              value={cityOptions.find(
-                (option) => option.value === selectedCity?.name
+              options={townOptions}
+              onChange={handleTownChange}
+              value={townOptions.find(
+                (option) => option.value === selectedTown?.name
               )}
-              placeholder="-- اختر المدينة --"
+              placeholder="-- اختر البلدة --"
               isClearable
               isSearchable
               theme={customTheme}
               styles={customStyles}
-              className="w-full text-md text-start text-black rounded select-none z-40"
+              className="w-full text-md text-start text-black rounded select-none z-30"
               classNamePrefix="select"
               classNames={{
                 control: (state) =>
@@ -224,38 +252,8 @@ export default function OnClickMap({
               }}
             />
           </div>
-          {selectedCity && (
-            <div className="mb-4 relative z-40">
-              <label className="flex text-right mb-2 text-lg sm:text-md select-none text-nowrap">
-                <span className="text-one text-lg xl:text-2xl ml-2">
-                  <FaTreeCity />
-                </span>
-                اختر البلدة:
-              </label>
-              <Select
-                options={townOptions}
-                onChange={handleTownChange}
-                value={townOptions.find(
-                  (option) => option.value === selectedTown?.name
-                )}
-                placeholder="-- اختر البلدة --"
-                isClearable
-                isSearchable
-                theme={customTheme}
-                styles={customStyles}
-                className="w-full text-md text-start text-black rounded select-none z-30"
-                classNamePrefix="select"
-                classNames={{
-                  control: (state) =>
-                    `${
-                      state.isFocused ? 'border-one' : 'border-gray-300'
-                    } sm:h-12 h-8 w-full`,
-                }}
-              />
-            </div>
-          )}
-        </>
-      )}
+        )}
+      </>
 
       <div className="w-full h-72 sm:h-[500px] rounded-[5px] overflow-hidden shadow-lg relative">
         <button

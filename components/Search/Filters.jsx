@@ -218,13 +218,13 @@ export default function Filters({
 
   const FilterContent = () => (
     <div className="flex flex-col sm:flex-row items-start justify-start gap-2 w-full sm:pb-1 overflow-x-auto whitespace-nowrap scrollbar-thin scrollbar-thumb-one scrollbar-track-three 2xl:mr-[203px]">
-      <div className="flex flex-col sm:flex-row justify-end items-start gap-2 min-w-max">
+      <div className="flex flex-col sm:flex-row justify-start items-start gap-2 w-full sm:w-fit">
         <SearchControls
           onSearch={onSearch}
           onReset={onReset}
           searchData={searchData}
         />
-        <div className="relative flex-2 items-center gap-2 justify-center">
+        <div className="relative flex-2 items-center gap-2 justify-center w-full">
           <CategoriesNavBar />
           {showArrow && (
             <FaArrowUp className="animate-pulse mt-2 text-center w-full text-one" />
@@ -233,7 +233,7 @@ export default function Filters({
         <CitySelector />
       </div>
 
-      <div className="flex flex-col sm:flex-row justify-end items-start gap-2 min-w-max">
+      <div className="flex flex-col sm:flex-row justify-end items-start gap-2 min-w-max w-full sm:w-fit">
         {loading && <p>جاري التحميل...</p>}
         {error && <p className="text-red-500">{error}</p>}
         {!loading &&
@@ -248,7 +248,7 @@ export default function Filters({
           ))}
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-2 min-w-max">
+      <div className="flex flex-col sm:flex-row gap-2 min-w-max w-full sm:w-fit">
         <PriceInput
           label="أدنى سعر"
           name="minPrice"
@@ -264,8 +264,6 @@ export default function Filters({
       </div>
     </div>
   );
-
-  // ... imports remain the same
 
   return (
     <>

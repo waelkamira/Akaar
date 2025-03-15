@@ -1,6 +1,7 @@
 import { FaBed, FaHome, FaRulerCombined } from 'react-icons/fa';
 import { FaShower } from 'react-icons/fa6';
 import { MdOutlineBedroomParent } from 'react-icons/md';
+import { MdOutlineLiving } from 'react-icons/md';
 
 const realEstate = [
   {
@@ -30,7 +31,7 @@ const realEstate = [
   {
     name: 'livingrooms', // المفتاح الإنجليزي
     label: 'عدد الصالونات', // الاسم العربي
-    icon: <FaBed className="text-one text-lg sm:text-xl" />,
+    icon: <MdOutlineLiving className="text-one text-lg sm:text-xl" />,
     placeholder: '-اختر-',
     options: {
       1: '1',
