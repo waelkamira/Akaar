@@ -10,7 +10,7 @@ export default function PriceInput({ label, name, value, onChange }) {
         placeholder={`${label}`}
         value={value}
         onChange={onChange}
-        className="w-full sm:w-28 bg-transparent focus:outline-none h-6 px-2 bg-white rounded-[5px] text-black text-sm"
+        className="w-full sm:w-28 bg-transparent focus:outline-none h-8 sm:h-6 px-2 bg-white rounded-[5px] text-black text-sm"
       />
     </div>
   );

@@ -130,8 +130,6 @@ export async function POST(req) {
   }
 }
 
-// PUT: تحديث بيانات منتج
-
 export async function PUT(req) {
   try {
     const { id, ...data } = await req.json(); // استخراج `id` والبيانات الأخرى
@@ -155,30 +153,42 @@ export async function PUT(req) {
       });
     }
 
-    // فلترة الحقول الفارغة لمنع تحديثها
-    const filteredData = Object.fromEntries(
-      Object.entries(data).filter(
-        ([_, value]) => value !== '' && value !== null
-      )
-    );
+    // // فلترة الحقول الفارغة لمنع تحديثها
+    // const filteredData = Object.fromEntries(
+    //   Object.entries(data).filter(
+    //     ([_, value]) => value !== '' && value !== null
+    //   )
+    // );
+    // console.log('Filtered Data:', filteredData);
 
     // تحديث البيانات
-    await prisma.product.update({
+    const updatedProduct = await prisma.product.update({
       where: { id: id },
-      data: filteredData,
+      data: {
+        ...data,
+        updatedAt: new Date(), // تحديث التاريخ التلقائي
+      },
     });
 
-    return new Response(JSON.stringify({ message: 'تم تحديث المنتج بنجاح' }), {
-      status: 200,
-    });
+    return new Response(
+      JSON.stringify({
+        message: 'تم تحديث المنتج بنجاح',
+        product: updatedProduct,
+      }),
+      {
+        status: 200,
+      }
+    );
   } catch (error) {
     console.error('خطأ أثناء تحديث المنتج:', error);
-    return new Response(JSON.stringify({ error: 'خطأ داخلي في السيرفر' }), {
-      status: 500,
-    });
+    return new Response(
+      JSON.stringify({ error: 'خطأ داخلي في السيرفر', details: error.message }),
+      {
+        status: 500,
+      }
+    );
   }
 }
-
 // DELETE: حذف منتج
 
 export async function DELETE(req) {

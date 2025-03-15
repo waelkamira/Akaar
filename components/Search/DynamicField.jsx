@@ -11,7 +11,7 @@ export default function DynamicField({ field, value, onChange }) {
         {field?.options ? (
           <select
             onChange={(e) => onChange(field?.name, e.target.value)}
-            className="w-full sm:w-28 bg-transparent focus:outline-none text-black h-6 text-sm"
+            className="w-full sm:w-28 bg-transparent focus:outline-none text-black h-8 sm:h-6 text-sm"
           >
             <option value="" disabled selected className="text-sm">
               <div className="flex items-center gap-2 text-black">
@@ -29,10 +29,10 @@ export default function DynamicField({ field, value, onChange }) {
             ))}
           </select>
         ) : (
-          <div className="relative flex items-center w-full border rounded focus:outline-2 focus:outline-one bg-white text-nowrap h-6">
+          <div className="relative flex items-center w-full border rounded focus:outline-2 focus:outline-one bg-white text-nowrap h-8 sm:h-6">
             <input
               placeholder={field?.placeholder}
-              className="w-full sm:w-28 bg-transparent focus:outline-none h-6 bg-white rounded-[5px] text-black"
+              className="w-full sm:w-28 bg-transparent focus:outline-none h-8 sm:h-6 bg-white rounded-[5px] text-black"
               onChange={(e) => onChange(field?.name, e.target.value)}
             />
           </div>

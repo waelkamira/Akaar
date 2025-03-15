@@ -97,6 +97,7 @@ export default function ImageUploader({ images = [] }) {
 
     setIsLoading(false);
 
+    // تحديث الحالة بإضافة الصور الجديدة
     dispatch({
       type: 'ADD_IMAGE',
       payload: [...(addImages || []), ...newImages],
@@ -107,6 +108,8 @@ export default function ImageUploader({ images = [] }) {
   const handleRemoveImage = (index) => {
     const updatedImages = [...(addImages || [])];
     updatedImages.splice(index, 1);
+
+    // تحديث الحالة بإزالة الصورة
     dispatch({
       type: 'ADD_IMAGE',
       payload: updatedImages,

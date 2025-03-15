@@ -1,9 +1,9 @@
 'use client';
 import { motion } from 'framer-motion';
-import { FaAngleDoubleLeft, FaAngleDoubleRight } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 import SmallCard from '../ReusableComponents/SmallCard';
 import Loading from '../ReusableComponents/Loading';
+import NavegationPages from '../ReusableComponents/NavegationPages';
 
 const fadeIn = {
   initial: { opacity: 0, y: 20 },
@@ -27,40 +27,13 @@ const ResultsGrid = ({ results, onItemClick }) => (
   </div>
 );
 
-const PaginationButtons = ({ hasMore, pageNumber, setPageNumber }) => (
-  <div className="flex items-center gap-4 mt-12">
-    {hasMore && (
-      <motion.button
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.98 }}
-        className="flex items-center gap-2 px-2 sm:px-6 py-1 sm:py-3 bg-one text-white rounded-full shadow-lg hover:bg-opacity-90 transition-all"
-        onClick={() => setPageNumber(pageNumber + 1)}
-      >
-        <span className="text-sm sm:text-lg font-medium">الصفحة التالية</span>
-        <FaAngleDoubleRight className="text-xl" />
-      </motion.button>
-    )}
-    {pageNumber > 1 && (
-      <motion.button
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.98 }}
-        className="flex items-center gap-2 px-2 sm:px-6 py-1 sm:py-3 bg-one text-white rounded-full shadow-lg hover:bg-opacity-90 transition-all"
-        onClick={() => setPageNumber(pageNumber - 1)}
-      >
-        <FaAngleDoubleLeft className="text-xl" />
-        <span className="text-sm sm:text-lg font-medium">الصفحة السابقة</span>
-      </motion.button>
-    )}
-  </div>
-);
-
 const NoResults = () => (
   <motion.div
     {...fadeIn}
     className="h-[300px] flex flex-col items-center justify-center text-center px-4"
   >
     <div className="bg-white/10 p-6 rounded-lg backdrop-blur-sm">
-      <h3 className="text-white text-xl font-bold mb-3">
+      <h3 className="text-two text-sm sm:text-lg text-xl font-bold mb-3">
         عذراً، لم نتمكن من العثور على نتائج
       </h3>
       <p className="text-gray-300 text-sm mb-4">
@@ -109,25 +82,28 @@ export default function SearchResults({
 
   if (!isLoading && results?.length > 0) {
     return (
-      <div className="min-h-[50vh] pb-72 pt-8 bg-three w-full inset-0 h-[900px] overflow-y-auto">
+      <div className="min-h-[50vh] pb-72 pt-8 bg-five w-full inset-0 h-[900px] overflow-y-auto">
         <div className="flex justify-between items-center px-4 mb-6">
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={onReset}
-            className="border hover:bg-one text-white px-4 py-1 rounded-[5px] transition-all"
+            className="border border-one hover:bg-one text-two text-sm sm:text-lg px-4 py-1 rounded-[5px] transition-all"
           >
             إغلاق ❌
           </motion.button>
-          <motion.h2 {...fadeIn} className="text-white text-lg">
+          <motion.h2 {...fadeIn} className="text-two text-sm sm:text-lg">
             تم العثور على{' '}
             <span className="text-one font-bold">{totalCount}</span> نتيجة
           </motion.h2>
         </div>
 
-        <motion.div {...fadeIn} className="p-2 mx-auto w-full">
+        <motion.div
+          {...fadeIn}
+          className="flex flex-col justify-center items-center p-2 mx-auto w-full"
+        >
           <ResultsGrid results={results} onItemClick={handleItemClick} />
-          <PaginationButtons
+          <NavegationPages
             hasMore={hasMore}
             pageNumber={pageNumber}
             setPageNumber={setPageNumber}

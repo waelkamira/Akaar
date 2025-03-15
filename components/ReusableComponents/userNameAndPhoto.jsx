@@ -10,7 +10,7 @@ import { useSession } from 'next-auth/react';
 export default function UserNameAndPhoto({ post }) {
   const session = useSession();
   const path = usePathname();
-  console.log(session?.data?.user?.image);
+  // console.log(session?.data?.user?.image);
   //? هذه الدالة للتأكد إذا كان التاريخ المدخل صحيحا أو لا
   const formatDate = (dateString) => {
     const date = new Date(dateString);
