@@ -6,8 +6,9 @@ import { useRouter } from 'next/navigation';
 import SmallCard from '../../components/ReusableComponents/SmallCard';
 import NavegationPages from '../../components/ReusableComponents/NavegationPages';
 import Loading from '../../components/ReusableComponents/Loading';
-import Button from '../../components/ReusableComponents/Button';
+import Button from '../../components/Buttons/Button';
 import PostActions from './PostActions';
+import LoginButton from '../../components/Buttons/LoginButton';
 
 const MyPostsContent = () => {
   const { dispatch } = useContext(inputsContext);
@@ -91,12 +92,13 @@ const MyPostsContent = () => {
         />
 
         {session?.status === 'unauthenticated' && (
-          <div className="w-full">
-            <h1 className="mt-16 w-full text-center">
-              يجب عليك تسجيل الدخول أولا
-            </h1>
-            <Button title={'تسجيل الدخول'} path="/login" style={' '} />
-          </div>
+          // <div className="w-full">
+          //   <h1 className="mt-16 w-full text-center">
+          //     يجب عليك تسجيل الدخول أولا
+          //   </h1>
+          //   <Button title={'تسجيل الدخول'} path="/login" style={' '} />
+          // </div>
+          <LoginButton />
         )}
       </div>
     </div>

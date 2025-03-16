@@ -27,7 +27,7 @@ export default function Footer() {
           >
             <div className="relative h-20 w-64 hover:scale-105 transition-transform duration-300 z-20">
               <Image
-                src="https://i.imgur.com/0oHqzqF.png"
+                src="/logo.png"
                 fill
                 objectFit="contain"
                 alt="home_photo"
