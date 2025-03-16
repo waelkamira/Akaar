@@ -1,10 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // distDir: 'build',
   compress: true,
-
+  swcMinify: true, // تمكين minification باستخدام SWC
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: true, // تجاهل أخطاء TypeScript أثناء البناء
   },
   images: {
     remotePatterns: [
@@ -14,27 +13,7 @@ const nextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'scontent-ord5-1.xx.fbcdn.net',
-      },
-      {
-        protocol: 'https',
-        hostname: 'scontent-lga3-1.xx.fbcdn.net',
-      },
-      {
-        protocol: 'https',
-        hostname: 'scontent-hou1-1.xx.fbcdn.net',
-      },
-      {
-        protocol: 'https',
-        hostname: 'scontent-ord5-2.xx.fbcdn.net',
-      },
-      {
-        protocol: 'https',
-        hostname: 'scontent-msp1-1.xx.fbcdn.net',
-      },
-      {
-        protocol: 'https',
-        hostname: 'scontent-lga3-2.xx.fbcdn.net',
+        hostname: '**.fbcdn.net', // السماح بجميع النطاقات الفرعية لـ fbcdn.net
       },
       {
         protocol: 'https',
