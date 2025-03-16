@@ -1,75 +1,103 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
 export async function GET(req) {
-  try {
-    // استخراج المعاملات من الرابط
-    const { searchParams } = new URL(req.url);
-    const email = searchParams.get('email');
-    const page = parseInt(searchParams.get('page')) || 1;
-    const limit = parseInt(searchParams.get('limit')) || 5;
-    const skip = (page - 1) * limit;
+  // استخراج userId من الطلب (يمكن أن يكون عبر query params أو headers)
+  const { searchParams } = new URL(req.url);
+  const userId = searchParams.get('userId');
+  const page = parseInt(searchParams.get('page')) || 0;
+  const limit = parseInt(searchParams.get('limit')) || 8;
+  // التأكد من أن قيمة page لا تكون أقل من 0
+  const currentPage = Math.max(0, page);
+  // حساب الصفحات مع التأكد من أن skip تكون موجبة
+  const skip = Math.max(0, currentPage * limit);
 
-    if (!email) {
-      return NextResponse.json({ error: 'Email is required' }, { status: 400 });
+  try {
+    if (!userId) {
+      return NextResponse.json(
+        { error: 'User ID is required' },
+        { status: 400 }
+      );
     }
 
+    // التحقق من وجود المستخدم
+    const userExists = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!userExists) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+    // حساب العدد الإجمالي للنتائج
+    const totalCount = await prisma.favorite.count({
+      where: { userId }, // تطبيق الفلاتر فقط إذا كانت موجودة
+    });
     // جلب المفضلات الخاصة بالمستخدم
     const favorites = await prisma.favorite.findMany({
-      where: { email },
-      select: { id: true }, // جلب فقط `id` من المفضلات
+      where: { userId },
       skip,
       take: limit,
-      orderBy: { createdAt: 'desc' },
+      orderBy: { createdAt: 'desc' }, // الترتيب حسب تاريخ ال��ضافة
+      select: {
+        product: true, // جلب تفاصيل المنتج المرتبط بكل سجل في المفضلة
+      },
     });
 
-    // استخراج جميع `id`s من المفضلات
-    const favoriteIds = favorites.map((fav) => fav.id);
-
-    if (favoriteIds.length === 0) {
-      return NextResponse.json({ message: 'No favorites found', data: [] });
-    }
-
-    // البحث عن الإعلانات المطابقة في `car` و `property`
-    const cars = await prisma.car.findMany({
-      where: { favoriteId: { in: favoriteIds } },
-    });
-
-    const properties = await prisma.property.findMany({
-      where: { favoriteId: { in: favoriteIds } },
-    });
-
-    const results = [...properties, ...cars];
-    console.log('results', results);
-    // إرجاع البيانات
-    return NextResponse.json(results);
+    // إرجاع قائمة المنتجات المفضلة
+    return NextResponse.json(
+      {
+        totalCount: totalCount,
+        hasMore: skip + favorites.length < totalCount,
+        favorites: favorites.map((fav) => fav.product),
+        message: 'تم جلب المفضلة بنجاح',
+      },
+      { status: 200 }
+    );
   } catch (error) {
     console.error('Error fetching favorites:', error);
     return NextResponse.json(
-      { error: 'Internal Server Error' },
+      { error: 'حدث خطأ أثناء جلب المفضلة' },
       { status: 500 }
     );
   } finally {
     await prisma.$disconnect();
   }
 }
-
 export async function POST(req) {
-  try {
-    const { postId, email } = await req.json();
+  const { id, userId } = await req.json();
+  console.log('id', id, 'userId', userId);
 
-    if (!postId || !email) {
+  try {
+    if (!id || !userId) {
       return NextResponse.json(
-        { error: 'Post ID and email are required' },
+        { error: 'Post ID and userId are required' },
         { status: 400 }
       );
     }
 
-    // التحقق مما إذا كان البوست مضافًا بالفعل في المفضلة
+    // التحقق من وجود المستخدم
+    const userExists = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!userExists) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+
+    // التحقق من وجود المنتج
+    const productExists = await prisma.product.findUnique({
+      where: { id: id },
+    });
+
+    if (!productExists) {
+      return NextResponse.json({ error: 'Product not found' }, { status: 404 });
+    }
+
+    // التحقق مما إذا كان المنتج مضافًا بالفعل في المفضلة
     const existingFavorite = await prisma.favorite.findFirst({
-      where: { email, postId },
+      where: { userId, productId: id },
       select: { id: true }, // جلب الـ ID فقط
     });
 
@@ -80,35 +108,35 @@ export async function POST(req) {
       });
 
       return NextResponse.json({
-        message: 'Removed from favorites',
+        message: 'تم حذفه من المفضلة بنجاح',
         favorited: false,
       });
     } else {
       // إضافة للمفضلة
       await prisma.favorite.create({
-        data: { email, postId },
+        data: {
+          user: { connect: { id: userId } }, // ربط المستخدم الموجود مسبقًا
+          product: { connect: { id: id } }, // ربط المنتج الموجود مسبقًا
+        },
       });
 
       return NextResponse.json({
-        message: 'Added to favorites',
+        message: 'تم إضافته إلى المفضلة بنجاح',
         favorited: true,
       });
     }
   } catch (error) {
     console.error('Error handling favorite:', error);
-    return NextResponse.json(
-      { error: 'Internal Server Error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'حدث خطأ أثناء ما' }, { status: 500 });
   } finally {
     await prisma.$disconnect();
   }
 }
 export async function DELETE(req) {
-  const { postId, email } = await req.json();
+  const { id, userId } = await req.json();
   try {
     const existingFavorite = await prisma.favorite.findFirst({
-      where: { postId, email },
+      where: { id, userId },
       select: { id: true },
     });
     if (existingFavorite?.id) {

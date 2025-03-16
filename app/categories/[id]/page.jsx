@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
 import SmallCard from '../../../components/ReusableComponents/SmallCard';
 import { MdKeyboardDoubleArrowRight } from 'react-icons/md';
+import Loading from '../../../components/ReusableComponents/Loading';
 
 const CategoryPage = () => {
   const [products, setProducts] = useState([]);
@@ -57,7 +58,7 @@ const CategoryPage = () => {
 
           <div className="w-full xl:w-[70%] space-y-6">
             <div className="flex items-center justify-between bg-white p-4 rounded-lg shadow-sm">
-              <h2 className="text-lg font-medium">
+              <h2 className="text-lg font-medium select-none">
                 عدد الإعلانات الموجودة:
                 <span className="text-green-600 font-bold mx-2">
                   {totalCount}
@@ -65,6 +66,7 @@ const CategoryPage = () => {
               </h2>
             </div>
 
+            {products.length === 0 && <Loading myMessage={'جاري التحميل...'} />}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {products.length > 0
                 ? products.map((item) => (

@@ -1,144 +1,146 @@
 'use client';
 import { useSession } from 'next-auth/react';
-import SmallItem from '../../components/ReusableComponents/SmallItem';
 import React, { useEffect, useState } from 'react';
 import { IoMdClose } from 'react-icons/io';
 import toast from 'react-hot-toast';
 import CustomToast from '../../components/ReusableComponents/CustomToast';
 import Loading from '../../components/ReusableComponents/Loading';
 import { useRouter } from 'next/navigation';
-import NavegationPages from '../../components/ReusableComponents/NavegationPages';
 import Button from '../../components/ReusableComponents/Button';
-export default function MyFavorites() {
-  const [favoriteId, setfavoriteId] = useState('');
-  const [isVisible, setIsVisible] = useState(false);
-  const [pageNumber, setPageNumber] = useState(1);
-  const [userFavoritesCount, setUserFavoritesCount] = useState(0);
+import SmallCard from '../../components/ReusableComponents/SmallCard';
+import { MdKeyboardDoubleArrowRight } from 'react-icons/md';
+
+export default function Favorites() {
+  const [favoriteId, setFavoriteId] = useState(null); // ID للعنصر المراد حذفه
+  const [isVisible, setIsVisible] = useState(false); // حالة نافذة التأكيد
+  const [myFavorites, setMyFavorites] = useState([]); // قائمة المفضلة
+  const [userId, setUserId] = useState(null);
+  const [pageNumber, setPageNumber] = useState(0);
+  const [hasMore, setHasMore] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [totalCount, setTotalCount] = useState(0);
+
   const session = useSession();
-  const [myFavorites, setmyFavorites] = useState([]);
   const router = useRouter();
 
+  // جلب معرف المستخدم
   useEffect(() => {
-    fetchmyFavorites();
-  }, [session]);
-
-  function fetchmyFavorites() {
-    if (session?.data?.user?.email) {
-      fetch(`/api/favorite?email=${session.data.user.email}`)
-        .then((res) => res.json())
-        .then((data) => {
-          const favoriteIds = data?.favorites?.map((fav) => fav?.id) || [];
-          setmyFavorites(favoriteIds);
-        })
-        .catch((error) => console.error('Error fetching favorites:', error));
+    if (typeof window !== 'undefined') {
+      const user = JSON.parse(localStorage.getItem('CurrentUser'));
+      setUserId(user?.id);
     }
-  }
-  //? هذه الدالة لحذف المنشورات من المفضلة
-  async function handleDeletePost(favoriteId) {
-    const email = session?.data?.user?.email;
-    const response = await fetch(`/api/favorite`, {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: favoriteId, email: email }),
-    });
+  }, []);
 
-    if (response.ok) {
+  // جلب المفضلة عند تحميل الصفحة
+  useEffect(() => {
+    if (userId) {
+      fetchMyFavorites();
+    }
+  }, [userId, pageNumber]);
+
+  // دالة لجلب المفضلة
+  async function fetchMyFavorites() {
+    try {
+      if (!userId) return;
+
+      setLoading(true);
+      const response = await fetch(
+        `/api/favorite?userId=${userId}&page=${pageNumber}&limit=8`
+      );
+      const json = await response.json();
+
+      if (json.favorites) {
+        setMyFavorites([...myFavorites, ...json?.favorites]);
+        setTotalCount(json?.totalCount);
+        setHasMore(json?.hasMore);
+      }
+    } catch (error) {
+      console.error('Error fetching favorites:', error);
       toast.custom((t) => (
-        <CustomToast
-          t={t}
-          message={'تم حذف هذا الإعلان من قائمة إعلاناتك'}
-          redEmoji={'✖'}
-        />
+        <CustomToast t={t} message={'حدث خطأ أثناء جلب المفضلة 😐'} />
       ));
-      fetchmyFavorites();
-      setIsVisible(false);
-    } else {
-      toast.custom((t) => <CustomToast t={t} message={'حدث خطأ ما 😐'} />);
-      setIsVisible(false);
+    } finally {
+      setLoading(false);
     }
   }
+
+  const handleNextPage = () => {
+    if (hasMore && !loading) {
+      setPageNumber((prev) => prev + 1);
+    }
+  };
 
   return (
-    <div className="flex flex-col justify-center items-center w-full">
-      <div className="flex flex-col w-full xl:w-[90%] 2xl:w-[80%] h-fit px-2 sm:px-16 pt-2 overflow-y-auto z-10 mt-16">
-        {isVisible && (
-          <div className="absolute flex flex-col items-center p-4 /95 z-50 inset-0 bg-black/60 text-white">
-            <div className="sticky top-72 w-full sm:w-1/2 border border-white rounded bg-white">
-              <h1 className="text-center text-lg sm:text-xl mt-4">
-                هل تريد حذف هذه الإعلان نهائيا من المفضلة؟
-              </h1>
-              <div className="flex justify-between items-center w-full h-24 sm:h-28 z-50 gap-8 p-8">
-                <button
-                  onClick={() => handleDeletePost(favoriteId)}
-                  className="btn rounded-[5px] w-full h-full border border-white hover:border-0"
-                >
-                  حذف
-                </button>
-                <button
-                  onClick={() => setIsVisible(false)}
-                  className="btn rounded-[5px] w-full h-full border border-white hover:border-0"
-                >
-                  تراجع
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+    <div className="flex flex-col justify-center items-center w-full my-4 sm:my-16">
+      <div className="flex flex-col w-full xl:w-[90%] 2xl:w-[80%] px-2 sm:px-16 pt-2 overflow-y-auto">
+        <div className="flex items-center justify-between bg-white p-4 rounded-[5px] shadow-sm my-8">
+          <h2 className="text-lg font-medium select-none">
+            عدد الإعلانات التي أعجبت بها:
+            <span className="text-green-600 font-bold mx-2">{totalCount}</span>
+          </h2>
+        </div>
         {session?.data?.user ? (
-          <div className="flex flex-col justify-center items-center w-full">
-            {myFavorites?.length === 0 && session?.data?.user && (
-              <Loading
-                myMessage={
-                  'لا يوجد نتائج لعرضها ,لم تقم بالإعجاب بأي إعلان بعد 😉 '
-                }
-              />
-            )}
-            <div className="w-full">
-              <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 gap-4 justify-start items-start w-full">
-                {myFavorites?.length > 0 &&
-                  myFavorites.map((favorite, index) => (
-                    <div
-                      className="relative flex flex-col border-2 items-start h-full justify-start bg-one hover:scale-[101%] transition-transform duration-300 ease-in-out cursor-pointer rounded-[10px] overflow-hidden"
-                      key={index}
-                    >
-                      {session?.status === 'authenticated' && (
-                        <div className="flex justify-between items-center w-full p-2 bg-one h-24 text-white ">
-                          <div
-                            className="flex flex-col items-center justify-center cursor-pointer  rounded p-1 md:text-xl  hover:bg-three hover:scale-[105%] transition-transform duration-150 ease-in-out"
-                            onClick={() => {
-                              setIsVisible(true);
-                              setfavoriteId(favorite?.id);
-                            }}
-                          >
-                            <IoMdClose />
-                            <h6 className="text-sm select-none">حذف</h6>
-                          </div>
-                        </div>
-                      )}
-                      <SmallItem
-                        favorite={favorite}
-                        index={index}
-                        show={false}
-                      />
-                    </div>
-                  ))}
-              </div>
-
-              <NavegationPages
-                array={myFavorites}
-                setPageNumber={setPageNumber}
-                pageNumber={pageNumber}
-              />
-            </div>
-          </div>
-        ) : (
           <>
-            {' '}
-            <h1 className="mt-16 w-full text-center">
-              يجب عليك تسجيل الدخول أولا
-            </h1>
-            <Button title={'تسجيل الدخول'} path="/login" style={' '} />
+            {myFavorites.length === 0 ? (
+              <Loading myMessage={'لم تقم بالإعجاب بأي إعلان بعد 😉'} />
+            ) : (
+              <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 gap-6">
+                {myFavorites.map((favorite, index) => (
+                  <div
+                    key={index}
+                    className="relative flex flex-col border border-gray-200 items-start h-full justify-start bg-white hover:shadow-lg transition-all duration-300 ease-in-out cursor-pointer rounded-lg overflow-hidden"
+                  >
+                    {/* زر الحذف */}
+                    <div className="absolute top-2 right-2">
+                      <div
+                        className="flex flex-col items-center justify-center cursor-pointer rounded-full p-2 bg-white/80 backdrop-blur-sm hover:bg-gray-100 transition-colors duration-150 shadow-sm"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setFavoriteId(favorite.id);
+                          setIsVisible(true);
+                        }}
+                      >
+                        <IoMdClose className="text-red-500 text-xl" />
+                        <h6 className="text-xs text-red-500 select-none">
+                          حذف
+                        </h6>
+                      </div>
+                    </div>
+
+                    {/* عرض المنتج */}
+                    <SmallCard item={favorite} />
+                  </div>
+                ))}
+              </div>
+            )}
+            {/* زر التنقل */}
+
+            {hasMore && (
+              <div className="mt-12 mb-8 flex justify-center">
+                <button
+                  className="group flex items-center gap-3 bg-three hover:bg-two px-8 py-3 rounded-lg text-white font-medium transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+                  onClick={handleNextPage}
+                  disabled={loading}
+                >
+                  <span>المزيد من النتائج</span>
+                  <MdKeyboardDoubleArrowRight className="text-xl group-hover:translate-x-1 transition-transform" />
+                </button>
+              </div>
+            )}
           </>
+        ) : (
+          <div className="flex flex-col items-center justify-center w-full mt-16">
+            <h1 className="text-center text-lg sm:text-xl font-semibold">
+              يجب عليك تسجيل الدخول أولاً
+            </h1>
+            <Button
+              title={'تسجيل الدخول'}
+              path="/login"
+              style={
+                'mt-4 bg-three hover:bg-two text-white px-6 py-2 rounded-lg transition-all duration-300 transform hover:scale-105'
+              }
+            />
+          </div>
         )}
       </div>
     </div>

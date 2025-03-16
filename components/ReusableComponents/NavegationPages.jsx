@@ -32,7 +32,7 @@ export default function NavegationPages({
         </motion.button>
       )}
 
-      {pageNumber > 1 && (
+      {pageNumber > 0 && (
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}

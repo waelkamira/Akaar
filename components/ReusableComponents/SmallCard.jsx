@@ -1,14 +1,19 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import LoadingPhoto from '../photos/LoadingPhoto';
 import FormatDate from './FormatDate';
+import { TbHeartFilled } from 'react-icons/tb'; // أيقونة القلب
+import { useSession } from 'next-auth/react';
+import toast from 'react-hot-toast';
 
 export default function SmallCard({ item, category }) {
   const router = useRouter();
-  const [isFavorited, setIsFavorited] = useState(false);
+  const [isFavorited, setIsFavorited] = useState(false); // حالة المفضلة
   const [categoryFields, setCategoryFields] = useState([]);
+  const [userId, setUserId] = useState(null);
+  const session = useSession();
 
   // دالة لتحويل القيم إلى النصوص المقابلة
   const getFieldValue = (field, value) => {
@@ -20,8 +25,8 @@ export default function SmallCard({ item, category }) {
 
   // جلب الحقول بناءً على الفئة
   useEffect(() => {
-    if (category) {
-      import(`../categoryFields/${category?.name}.jsx`)
+    if (item?.categoryName) {
+      import(`../categoryFields/${item?.categoryName}.jsx`)
         .then((module) => {
           setCategoryFields(module.default);
         })
@@ -29,7 +34,63 @@ export default function SmallCard({ item, category }) {
           console.error('Failed to load fields:', err);
         });
     }
-  }, [category]);
+  }, [item]);
+
+  // جلب معرف المستخدم
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const user = JSON.parse(localStorage.getItem('CurrentUser'));
+      setUserId(user?.id);
+    }
+  }, []);
+
+  useEffect(() => {
+    checkFavoriteStatus();
+  }, [item?.id, userId]);
+
+  // التحقق مما إذا كان المنتج مضافًا إلى المفضلة
+  async function checkFavoriteStatus() {
+    if (item?.id && userId) {
+      const response = await fetch(`/api/favorite/check`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ productId: item.id, userId }),
+      });
+      if (response.ok) {
+        const json = await response.json();
+        setIsFavorited(json.favorited); // تحديث حالة المفضلة
+      } else {
+        console.error('حدث خطأ أثناء التحقق من المفضلة:', json.error);
+      }
+    }
+  }
+  // إضافة أو إزالة المنتج من المفضلة
+  const handleFavorite = async () => {
+    if (!item?.id || !userId) return;
+
+    try {
+      const response = await fetch('/api/favorite', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id: item.id, userId }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setIsFavorited(data.favorited); // تحديث حالة المفضلة بناءً على الاستجابة
+        toast.success(data.message);
+      } else {
+        toast.error('حدث خطأ أثناء إضافته إلى المفضلة');
+      }
+    } catch (error) {
+      console.error('Error handling favorite:', error);
+    }
+  };
 
   return (
     <>
@@ -70,17 +131,9 @@ export default function SmallCard({ item, category }) {
             )}
 
             <div className="flex justify-between items-center">
-              {/* {item?.city && (
+              {item?.city && (
                 <h1 className="text-sm text-gray-600">{item?.city}</h1>
               )}
-              {item?.basePrice > 0 && (
-                <h1 className="text-xl font-bold text-green-600">
-                  {item?.basePrice}
-                  <span className="text-green-600 mx-1 select-none text-sm">
-                    $
-                  </span>
-                </h1>
-              )} */}
               {item?.description && (
                 <h1 className="text-sm line-clamp-2">{item?.description}</h1>
               )}
@@ -119,37 +172,28 @@ export default function SmallCard({ item, category }) {
                     </h3>
                   </div>
                 );
-
-                return null;
               })}
           </div>
 
           {/* أيقونة المفضلة */}
           <div
-            className={`absolute top-2 right-2 ${
-              isFavorited ? 'bg-red-500' : 'bg-white/80'
-            } backdrop-blur-sm rounded-full p-2 shadow-md hover:bg-red-100 transition-all duration-300 cursor-pointer`}
+            className="absolute top-0 right-0 z-10 size-10 p-2"
             onClick={(e) => {
-              e.stopPropagation();
-              setIsFavorited(!isFavorited);
+              e.stopPropagation(); // منع انتشار الحدث إلى البطاقة الرئيسية
+              handleFavorite(); // إضافة/إزالة من المفضلة
             }}
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className={`h-5 w-5 ${
-                isFavorited ? 'text-white' : 'text-gray-700 hover:text-red-500'
-              }`}
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
+            <div
+              className={`bg-white/80 backdrop-blur-sm rounded-full p-1 shadow-md shadow-gray-500 transition-all duration-300 hover:scale-110 cursor-pointer`}
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+              <TbHeartFilled
+                className={`size-4 ${
+                  isFavorited
+                    ? 'text-red-500'
+                    : 'text-gray-400 hover:text-red-500 '
+                } transition-colors duration-300`}
               />
-            </svg>
+            </div>
           </div>
         </div>
       )}

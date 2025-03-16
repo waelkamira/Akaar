@@ -39,28 +39,6 @@ const MyPostsContent = () => {
     }
   };
 
-  // const handleDeletePost = async (postId) => {
-  //   const email = session?.data?.user?.email;
-  //   const response = await fetch(`/api/deletePost`, {
-  //     method: 'DELETE',
-  //     headers: { 'Content-Type': 'application/json' },
-  //     body: JSON.stringify({ id: postId, email: email }),
-  //   });
-
-  //   if (response.ok) {
-  //     const data = JSON.parse(localStorage.getItem('CurrentUser'));
-  //     const userId = data?.id;
-  //     fetchMyPosts(userId);
-  //   }
-  // };
-
-  // const handleEditPost = (post) => {
-  //   if (typeof window !== 'undefined') {
-  //     localStorage.setItem('item', JSON.stringify(post));
-  //   }
-  //   router.push(`/editPost/${post?.id}`);
-  // };
-
   return (
     <div className="flex flex-col justify-center items-center w-full">
       <div className="flex flex-col w-full xl:w-[90%] 2xl:w-[80%] h-fit px-2 sm:px-16 overflow-y-auto z-10 border my-4">
