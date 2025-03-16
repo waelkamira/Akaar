@@ -153,14 +153,6 @@ export async function PUT(req) {
       });
     }
 
-    // // فلترة الحقول الفارغة لمنع تحديثها
-    // const filteredData = Object.fromEntries(
-    //   Object.entries(data).filter(
-    //     ([_, value]) => value !== '' && value !== null
-    //   )
-    // );
-    // console.log('Filtered Data:', filteredData);
-
     // تحديث البيانات
     const updatedProduct = await prisma.product.update({
       where: { id: id },
@@ -192,48 +184,49 @@ export async function PUT(req) {
 // DELETE: حذف منتج
 
 export async function DELETE(req) {
-  const { id } = await req.json();
+  const { id, userId } = await req.json();
 
   try {
-    if (!id) {
-      return new Response(JSON.stringify({ error: 'يجب توفير معرف الإعلان' }), {
-        status: 400,
+    if (!id || !userId) {
+      return new Response(
+        JSON.stringify({ error: 'يجب توفير معرف الإعلان ومعرف المستخدم' }),
+        {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    // التحقق من وجود الإعلان
+    const post = await prisma.product.findUnique({
+      where: { id },
+    });
+
+    if (!post) {
+      return new Response(JSON.stringify({ error: 'الإعلان غير موجود' }), {
+        status: 404,
         headers: { 'Content-Type': 'application/json' },
       });
     }
 
-    let deletedPost = null;
-
-    // محاولة الحذف من جدول `product` أولاً
-    try {
-      deletedPost = await prisma.product.delete({
-        where: { id },
-      });
-    } catch (error) {
-      // في حال لم يتم العثور على الإعلان في `product`، نحاول في `property`
-      if (error.code !== 'P2025') {
-        throw error; // خطأ آخر غير "السجل غير موجود"
-      }
-    }
-
-    // إذا لم يتم العثور على الإعلان في `product`، نحاول البحث عنه في `property`
-    if (!deletedPost) {
-      try {
-        deletedPost = await prisma.property.delete({
-          where: { id },
-        });
-      } catch (error) {
-        if (error.code === 'P2025') {
-          return new Response(
-            JSON.stringify({
-              error: 'لم يتم العثور على الإعلان في أي من الجداول',
-            }),
-            { status: 404, headers: { 'Content-Type': 'application/json' } }
-          );
+    // التحقق من أن المستخدم الحالي هو المنشئ أو المشرف
+    const isAdmin = false; // يمكنك تعديل هذا بناءً على دور المستخدم
+    if (post.userId !== userId || isAdmin) {
+      return new Response(
+        JSON.stringify({
+          error: 'ليس لديك الصلاحية لحذف هذا الإعلان',
+        }),
+        {
+          status: 403,
+          headers: { 'Content-Type': 'application/json' },
         }
-        throw error;
-      }
+      );
     }
+
+    // حذف الإعلان
+    await prisma.product.delete({
+      where: { id },
+    });
 
     return new Response(JSON.stringify({ message: 'تم حذف الإعلان بنجاح' }), {
       status: 200,

@@ -17,9 +17,9 @@ export default function Footer() {
   const session = useSession();
 
   return (
-    <footer className="bg-gradient-to-b from-two to-five text-black py-12 my-8 w-full xl:w-[99%] shadow-lg">
+    <footer className="bg-two text-black py-12 my-8 w-full xl:w-[99%] shadow-lg">
       {/* القسم الأول: وصف الموقع */}
-      <div className="flex flex-col xl:flex-row justify-center items-center mx-auto px-4 gap-2">
+      <div className="flex flex-col justify-center items-center mx-auto px-4 gap-2">
         <div className="flex flex-col md:flex-row items-center justify-between mb-8">
           <Link
             href={'/'}
@@ -45,9 +45,9 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="flex flex-col xl:flex-row justify-center items-center gap-8 w-full xl:w-3/5">
+        <div className="flex flex-col justify-center items-center gap-8 w-full">
           {/* القسم الثاني: الوصول السريع */}
-          <div className="bg-white p-6 rounded-xl shadow-md w-full min-w-[200px] xl:min-h-[450px]">
+          <div className="bg-white p-6 rounded-[5px] shadow-md w-full min-w-[200px]">
             <h3 className="text-xl font-bold mb-4 text-one">وصول سريع</h3>
             <ul className="space-y-2">
               {[
@@ -104,7 +104,7 @@ export default function Footer() {
           </div>
 
           {/* القسم الثالث: ساعات العمل */}
-          <div className="bg-white p-6 rounded-xl shadow-md w-full min-w-[200px] xl:min-h-[450px]">
+          <div className="bg-white p-6 rounded-[5px] shadow-md w-full min-w-[200px]">
             <h3 className="text-xl font-bold mb-4 text-one">معلومات الاتصال</h3>
             <ul className="space-y-4">
               <li className="flex items-center space-x-2">
@@ -154,7 +154,7 @@ export default function Footer() {
           </div>
           {/* القسم الرابع: معلومات الاتصال */}
 
-          <div className="bg-white p-6 rounded-xl shadow-md w-full min-w-[200px] xl:min-h-[450px]">
+          <div className="bg-white p-6 rounded-[5px] shadow-md w-full min-w-[200px]">
             <h3 className="text-xl font-bold mb-4 text-one">ساعات العمل</h3>
             <ul className="space-y-2">
               {[

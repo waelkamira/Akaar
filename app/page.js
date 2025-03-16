@@ -15,8 +15,8 @@ const Home = () => {
 
   useEffect(() => {
     const clearLocalStorage = () => {
-      localStorage.removeItem('category');
-      localStorage.removeItem('item');
+      // localStorage.removeItem('category');
+      // localStorage.removeItem('item');
     };
     clearLocalStorage();
     fetchProductsByCategory();

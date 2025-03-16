@@ -70,7 +70,7 @@ model Product {
   // images          ProductImage[]
   priceHistory    ProductPriceHistory[]
   inventory       Inventory[]         // علاقة مع المخزون
-  favorites       Favorite[]
+  favorites       Favorite[] // قائمة بالمفضلات المرتبطة بالمستخدم
   reviews         Review[]
   discounts       Discount[]
   orders          Order[]
@@ -82,6 +82,21 @@ model Product {
   @@index([town])
   @@index([title])
   @@index([isDeleted]) // فهرسة لتسريع البحث باستخدام حالة الحذف
+}
+
+
+// 🟢 جدول المفضلة
+model Favorite {
+  id        String   @id @default(uuid())
+  userId    String
+  productId String
+  createdAt DateTime @default(now())
+  isDeleted Boolean  @default(false)
+  
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId]) // ضمان عدم وجود تكرار لنفس المستخدم والمنتج
 }
 // 🟢 جدول الصور
 model ProductImage {
@@ -195,16 +210,6 @@ model ProductPriceHistory {
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
 }
 
-// 🟢 جدول المفضلة
-model Favorite {
-  id        String   @id @default(uuid())
-  userId    String
-  productId String
-  createdAt DateTime @default(now())
-  isDeleted Boolean @default(false)
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-}
 
 // 🟢 جدول المراجعات والتقييمات
 model Review {

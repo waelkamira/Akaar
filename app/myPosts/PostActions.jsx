@@ -11,17 +11,39 @@ const PostActions = ({ post, session, fetchMyPosts }) => {
   const router = useRouter();
 
   const handleDeletePost = async (postId) => {
-    const email = session?.data?.user?.email;
-    const response = await fetch(`/api/deletePost`, {
+    const data = JSON.parse(localStorage.getItem('CurrentUser'));
+    const userId = data?.id;
+
+    if (!userId) {
+      toast.custom((t) => (
+        <CustomToast t={t} message={'يجب تسجيل الدخول أولاً'} />
+      ));
+      return;
+    }
+
+    const response = await fetch(`/api/product`, {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: postId, email: email }),
+      body: JSON.stringify({ id: postId, userId }),
     });
 
     if (response.ok) {
-      const data = JSON.parse(localStorage.getItem('CurrentUser'));
-      const userId = data?.id;
-      fetchMyPosts(userId);
+      fetchMyPosts(userId); // تحديث القائمة بعد الحذف
+      toast.custom((t) => (
+        <CustomToast
+          t={t}
+          message={'تم حذف الإعلان بنجاح ✅'}
+          greenEmoji={'✔'}
+        />
+      ));
+    } else {
+      const errorData = await response.json();
+      toast.custom((t) => (
+        <CustomToast
+          t={t}
+          message={errorData.error || 'حدث خطأ أثناء الحذف 😐'}
+        />
+      ));
     }
   };
 

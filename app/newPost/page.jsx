@@ -22,14 +22,15 @@ import FormTextarea from './FormTextarea';
 import FormSubmitButton from './FormSubmitButton';
 import OnClickMap from '../../components/map/onClickMap';
 import { useSession } from 'next-auth/react';
-
+import { FaTreeCity } from 'react-icons/fa6';
+import { PiBuildingsDuotone } from 'react-icons/pi';
 export default function NewPost() {
   const [categoryFields, setCategoryFields] = useState([]);
   const { register, handleSubmit } = useForm();
   const [selectedCategory, setSelectedCategory] = useState('');
   const [emptyFields, setEmptyFields] = useState([]);
   const router = useRouter();
-  const { addImages, location } = useContext(inputsContext);
+  const { addImages, location, dispatch } = useContext(inputsContext);
   const session = useSession();
   const [error, setError] = useState(null);
 
@@ -74,15 +75,17 @@ export default function NewPost() {
   }, [selectedCategory]);
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('CurrentUser'));
-    setFormState((prev) => ({
-      ...prev,
-      userId: user?.id || '',
-      categoryId: selectedCategory?.id || '',
-      images: addImages.length ? addImages : prev.images,
-      lng: location?.[1] || prev.lng,
-      lat: location?.[0] || prev.lat,
-    }));
+    if (typeof window !== 'undefined') {
+      const user = JSON.parse(localStorage.getItem('CurrentUser'));
+      setFormState((prev) => ({
+        ...prev,
+        userId: user?.id || '',
+        categoryId: selectedCategory?.id || '',
+        images: addImages.length ? addImages : prev.images,
+        lng: location?.[1] || prev.lng,
+        lat: location?.[0] || prev.lat,
+      }));
+    }
   }, [selectedCategory, location, addImages]);
 
   const handleInputChange = (e) => {
@@ -143,7 +146,20 @@ export default function NewPost() {
     return emptyFieldsList.length === 0;
   };
 
+  // التحقق من الصور
+  const validateImages = () => {
+    if (addImages.length === 0) {
+      toast.error('يرجى إضافة صورة على الأقل.');
+      return false;
+    }
+    return true;
+  };
+
+  // إرسال النموذج
   const onSubmit = async () => {
+    if (!validateImages()) {
+      return;
+    }
     if (!validateForm()) {
       toast.error('يرجى ملء جميع الحقول المطلوبة.');
       return;
@@ -167,6 +183,7 @@ export default function NewPost() {
       if (response.ok) {
         console.log('Product added successfully:', await response.json());
         toast.success('تم إنشاء الإعلان بنجاح');
+        dispatch({ type: 'ADD_IMAGE', payload: [] });
         router.push('/myPosts');
       } else {
         console.error('Failed to add product:', await response.text());
@@ -208,14 +225,16 @@ export default function NewPost() {
             label="عنوان الإعلان"
             icon={<MdTitle className="text-one text-lg sm:text-xl" />}
             name="title"
-            placeholder="ضع عنوان مناسب لمنتجك"
+            placeholder="ضع عنوان مناسب للإعلان"
             register={register}
             errors={emptyFields}
             onChange={handleInputChange}
           />
           <FormInput
             label="المدينة"
-            icon={<MdTitle className="text-one text-lg sm:text-xl" />}
+            icon={
+              <PiBuildingsDuotone className="text-one text-lg sm:text-xl" />
+            }
             name="city"
             placeholder="دمشق"
             register={register}
@@ -224,15 +243,13 @@ export default function NewPost() {
           />
           <FormInput
             label="المنطقة"
-            icon={<MdTitle className="text-one text-lg sm:text-xl" />}
+            icon={<FaTreeCity className="text-one text-lg sm:text-xl" />}
             name="town"
             placeholder="المزة"
             register={register}
             errors={emptyFields}
             onChange={handleInputChange}
           />
-
-          {/* <CitySelector /> */}
 
           <FormInput
             label="رقم الهاتف"
