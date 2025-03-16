@@ -31,7 +31,7 @@ export const useSearchLogic = () => {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const category = JSON?.parse(localStorage.getItem('category')) || {
+      const category = JSON.parse(localStorage.getItem('category')) ?? {
         id: 1,
         name: 'عقارات',
         path: '/categories/1?category=عقارات',

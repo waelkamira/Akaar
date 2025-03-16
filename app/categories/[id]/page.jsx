@@ -49,11 +49,11 @@ const CategoryPage = () => {
   };
 
   return (
-    <div className="relative bg-five sm:mt-32 p-2 sm:p-4 lg:p-8">
-      <div className=" mx-auto w-full lg:max-w-[80%] ">
+    <div className="relative bg-five sm:mt-80 p-2 sm:p-4 lg:p-8">
+      <div className=" mx-auto w-full lg:max-w-[90%] ">
         <div className="flex flex-col items-center">
-          <h1 className="text-2xl sm:text-3xl font-bold text-three mb-8 border-b-2 border-one pb-2">
-            أحدث الإعلانات
+          <h1 className="text-2xl sm:text-3xl font-bold text-three mb-8 border-b-2 border-one pb-2 select-none">
+            أحدث إعلانات ال{category}
           </h1>
 
           <div className="w-full xl:w-[70%] space-y-6">
@@ -95,7 +95,7 @@ const CategoryPage = () => {
                 disabled={loading}
               >
                 <span>المزيد من النتائج</span>
-                <MdKeyboardDoubleArrowRight className="text-xl group-hover:translate-x-1 transition-transform" />
+                <MdKeyboardDoubleArrowRight className="text-xl group-hover:translate-x-1 transition-transform text-one" />
               </button>
             </div>
           )}

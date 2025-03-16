@@ -1,6 +1,7 @@
 'use client';
 import Link from 'next/link';
 import React from 'react';
+import { FaCanadianMapleLeaf } from 'react-icons/fa';
 
 export default function Button({ style, title, onClick, path = '', emoji }) {
   return (
@@ -22,7 +23,9 @@ export default function Button({ style, title, onClick, path = '', emoji }) {
             '0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06)',
         }}
       >
-        <span className="mx-2 select-none">{emoji}</span>
+        <span className="mx-2 select-none">
+          {emoji || <FaCanadianMapleLeaf className="" />}
+        </span>
         <span className="text-center w-full border-r border-white  pl-4">
           {' '}
           {title}

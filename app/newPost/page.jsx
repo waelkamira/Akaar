@@ -203,7 +203,7 @@ export default function NewPost() {
             e.preventDefault();
             onSubmit();
           }}
-          className="space-y-4 p-4 mt-16 border rounded-lg shadow-md w-full xl:w-1/2"
+          className="space-y-4 p-4 mt-40 border rounded-lg shadow-md w-full xl:w-1/2"
         >
           <UploadingAndDisplayingImage />
 

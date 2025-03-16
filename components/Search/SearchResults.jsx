@@ -82,7 +82,7 @@ export default function SearchResults({
 
   if (!isLoading && results?.length > 0) {
     return (
-      <div className="min-h-[50vh] pb-72 pt-8 bg-five w-full inset-0 h-[900px] overflow-y-auto">
+      <div className="min-h-[50vh] pb-72 pt-8 bg-three w-full inset-0 h-[900px] overflow-y-auto">
         <div className="flex justify-between items-center px-4 mb-6">
           <motion.button
             whileHover={{ scale: 1.05 }}
