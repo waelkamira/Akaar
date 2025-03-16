@@ -13,6 +13,7 @@ export default function SmallCard({ item, category }) {
   const [isFavorited, setIsFavorited] = useState(false); // حالة المفضلة
   const [categoryFields, setCategoryFields] = useState([]);
   const [userId, setUserId] = useState(null);
+  const [favoriteProductIds, setFavoriteProductIds] = useState([]); // قائمة المفضلات
   const session = useSession();
 
   // دالة لتحويل القيم إلى النصوص المقابلة
@@ -44,28 +45,40 @@ export default function SmallCard({ item, category }) {
     }
   }, []);
 
+  // جلب قائمة المفضلات
   useEffect(() => {
     checkFavoriteStatus();
-  }, [item?.id, userId]);
+  }, [userId]);
 
   // التحقق مما إذا كان المنتج مضافًا إلى المفضلة
   async function checkFavoriteStatus() {
-    if (item?.id && userId) {
+    if (userId) {
       const response = await fetch(`/api/favorite/check`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ productId: item.id, userId }),
+        body: JSON.stringify({ userId }),
       });
       if (response.ok) {
         const json = await response.json();
-        setIsFavorited(json.favorited); // تحديث حالة المفضلة
+        console.log('المفضلات:', json); // تسجيل البيانات للتحقق
+        setFavoriteProductIds(json?.favoriteProductIds || []); // تخزين قائمة المفضلات
       } else {
-        console.error('حدث خطأ أثناء التحقق من المفضلة:', json.error);
+        console.error('حدث خطأ أثناء التحقق من المفضلة:', json?.error);
       }
     }
   }
+
+  // تحديث حالة المفضلة بناءً على قائمة المفضلات
+  useEffect(() => {
+    if (item?.id && favoriteProductIds.includes(String(item?.id))) {
+      setIsFavorited(true);
+    } else {
+      setIsFavorited(false);
+    }
+  }, [item?.id, favoriteProductIds]);
+
   // إضافة أو إزالة المنتج من المفضلة
   const handleFavorite = async () => {
     if (!item?.id || !userId) return;
@@ -83,6 +96,16 @@ export default function SmallCard({ item, category }) {
 
       if (response.ok) {
         setIsFavorited(data.favorited); // تحديث حالة المفضلة بناءً على الاستجابة
+
+        // تحديث قائمة المفضلات محليًا
+        if (data.favorited) {
+          setFavoriteProductIds((prev) => [...prev, String(item.id)]); // إضافة المنتج إلى القائمة
+        } else {
+          setFavoriteProductIds((prev) =>
+            prev.filter((id) => id !== String(item.id))
+          ); // إزالة المنتج من القائمة
+        }
+
         toast.success(data.message);
       } else {
         toast.error('حدث خطأ أثناء إضافته إلى المفضلة');
@@ -101,6 +124,7 @@ export default function SmallCard({ item, category }) {
           onClick={() => {
             if (typeof window !== 'undefined') {
               localStorage.setItem('item', JSON.stringify(item));
+              console.log('category', category);
               localStorage.setItem('category', JSON.stringify(category));
             }
             router.push(`/post/${item?.id}`);

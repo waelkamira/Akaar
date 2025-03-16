@@ -139,7 +139,7 @@ import { inputsContext } from '../authContext/Context';
 import SearchControls from './SearchControls';
 import PriceInput from './PriceInput';
 import DynamicField from './DynamicField';
-import CategoriesNavBar from '../navbars/CategoriesNavBar';
+import CategoriesNavBar from '../Selectors/CategoriesSelector';
 import { useSearchParams } from 'next/navigation';
 import { FaArrowUp } from 'react-icons/fa6';
 
@@ -279,7 +279,7 @@ export default function Filters({
       </div>
 
       {/* Desktop View */}
-      <div className="hidden sm:block bg-three px-2">
+      <div className="hidden sm:block bg-one px-2">
         <FilterContent />
       </div>
 

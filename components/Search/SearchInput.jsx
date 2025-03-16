@@ -19,7 +19,7 @@ export default function SearchInput({ searchData, setSearchData, onSearch }) {
   };
 
   return (
-    <div className="flex justify-center items-center gap-2 p-2 bg-three ">
+    <div className="flex justify-center items-center gap-2 p-2 bg-one">
       <div className="xl:hidden">
         <TfiMenuAlt
           className="text-[30px] lg:text-5xl text-white cursor-pointer"
@@ -46,7 +46,7 @@ export default function SearchInput({ searchData, setSearchData, onSearch }) {
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
         placeholder="ابحث عن عقار أو سيارة..."
-        className="flex-grow sm:text-lg text-sm text-white text-nowrap select-none rounded-[5px] h-[32px] sm:h-[40px] xl:h-[50px] text-[10px] sm:text-[15px] xl:text-[22px] bg-[#5B6069] backdrop-blur-lg border focus:outline-none border-white transition-all shadow-md hover:shadow-lg placeholder:pr-2 placeholder:text-md pr-2"
+        className="flex-grow sm:text-lg text-sm text-white text-nowrap select-none rounded-[5px] h-[32px] sm:h-[40px] xl:h-[50px] text-[10px] sm:text-[15px] xl:text-[22px] bg-white backdrop-blur-lg border focus:outline-none border-white transition-all shadow-md hover:shadow-lg placeholder:pr-2 placeholder:text-md pr-2"
       />
     </div>
   );

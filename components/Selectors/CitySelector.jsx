@@ -223,7 +223,6 @@ export default function CitySelector({ check }) {
           value={selectedTown}
           onChange={handleTownChange}
           className="w-full sm:w-28 border rounded focus:outline-2 focus:outline-one bg-white text-black h-8 sm:h-[27px] px-2"
-          disabled={!selectedCity}
         >
           <option value="" disabled>
             المنطقة

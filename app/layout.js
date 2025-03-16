@@ -29,7 +29,7 @@ export default function RootLayout({ children }) {
           <InputsContextProvider>
             {' '}
             <MainNavBar />
-            <CategoriesSideBar />
+            {/* <CategoriesSideBar /> */}
             {children}
           </InputsContextProvider>
         </AuthContextProvider>
