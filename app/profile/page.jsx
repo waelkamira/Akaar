@@ -1,6 +1,6 @@
 'use client';
 import CurrentUser from '../../components/ReusableComponents/CurrentUser';
-import Button from '../../components/ReusableComponents/Button';
+import Button from '../../components/Buttons/Button';
 import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import React, { useContext, useEffect, useState } from 'react';

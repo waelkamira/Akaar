@@ -6,9 +6,9 @@ import toast from 'react-hot-toast';
 import CustomToast from '../../components/ReusableComponents/CustomToast';
 import Loading from '../../components/ReusableComponents/Loading';
 import { useRouter } from 'next/navigation';
-import Button from '../../components/ReusableComponents/Button';
 import SmallCard from '../../components/ReusableComponents/SmallCard';
 import { MdKeyboardDoubleArrowRight } from 'react-icons/md';
+import LoginButton from '../../components/Buttons/LoginButton';
 
 export default function Favorites() {
   const [favoriteId, setFavoriteId] = useState(null); // ID للعنصر المراد حذفه
@@ -71,7 +71,7 @@ export default function Favorites() {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center w-full my-4 sm:my-16">
+    <div className="flex flex-col justify-center items-center w-full my-4 sm:my-80">
       <div className="flex flex-col w-full xl:w-[90%] 2xl:w-[80%] px-2 sm:px-16 pt-2 overflow-y-auto">
         <div className="flex items-center justify-between bg-white p-4 rounded-[5px] shadow-sm my-8">
           <h2 className="text-lg font-medium select-none">
@@ -129,18 +129,19 @@ export default function Favorites() {
             )}
           </>
         ) : (
-          <div className="flex flex-col items-center justify-center w-full mt-16">
-            <h1 className="text-center text-lg sm:text-xl font-semibold">
-              يجب عليك تسجيل الدخول أولاً
-            </h1>
-            <Button
-              title={'تسجيل الدخول'}
-              path="/login"
-              style={
-                'mt-4 bg-three hover:bg-two text-white px-6 py-2 rounded-lg transition-all duration-300 transform hover:scale-105'
-              }
-            />
-          </div>
+          // <div className="flex flex-col items-center justify-center w-full mt-16">
+          //   <h1 className="text-center text-lg sm:text-xl font-semibold">
+          //     يجب عليك تسجيل الدخول أولاً
+          //   </h1>
+          //   <Button
+          //     title={'تسجيل الدخول'}
+          //     path="/login"
+          //     style={
+          //       'mt-4 bg-three hover:bg-two text-white px-6 py-2 rounded-lg transition-all duration-300 transform hover:scale-105'
+          //     }
+          //   />
+          // </div>
+          <LoginButton />
         )}
       </div>
     </div>

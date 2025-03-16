@@ -2,7 +2,7 @@
 import React, { useRef, useState } from 'react';
 import emailjs from '@emailjs/browser';
 import toast from 'react-hot-toast';
-import Button from '../../../components/ReusableComponents/Button';
+import Button from '../../../components/Buttons/Button';
 
 export default function ContactUs() {
   const [userInfo, setUserInfo] = useState({

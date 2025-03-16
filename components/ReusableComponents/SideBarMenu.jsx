@@ -2,7 +2,7 @@
 import { useSession } from 'next-auth/react';
 import React from 'react';
 import CurrentUser from './CurrentUser';
-import Button from './Button';
+import Button from '../Buttons/Button';
 import UserNameAndPhoto from './userNameAndPhoto';
 import categories from '../Categories/categories';
 import mainButtons from '../lists/mainButtons';

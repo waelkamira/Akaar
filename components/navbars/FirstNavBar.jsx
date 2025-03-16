@@ -27,7 +27,7 @@
 //           >
 //             <div className="relative h-16 w-56 my-2 hover:scale-[103%] z-20">
 //               <Image
-//                 src="https://i.imgur.com/0oHqzqF.png"
+//                 src="/logo.png"
 //                 fill
 //                 objectFit="contain"
 //                 alt="home_photo"
@@ -68,9 +68,9 @@ export default function FirstNavBar() {
             href={'/'}
             className="relative flex justify-end w-full min-w-[218px] cursor-pointer "
           >
-            <div className="relative h-16 w-56 my-2 hover:scale-[103%] z-20">
+            <div className="relative h-16 w-56 my-2 hover:scale-[103%] z-20 ">
               <Image
-                src="https://i.imgur.com/0oHqzqF.png"
+                src="/logo.png"
                 fill
                 objectFit="contain"
                 alt="home_photo"

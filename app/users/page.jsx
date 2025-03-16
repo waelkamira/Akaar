@@ -5,7 +5,7 @@ import CurrentUser from '../../components/ReusableComponents/CurrentUser';
 import { IoMdClose, IoIosSearch } from 'react-icons/io';
 import toast from 'react-hot-toast';
 import CustomToast from '../../components/ReusableComponents/CustomToast';
-import BackButton from '../../components/ReusableComponents/BackButton';
+import BackButton from '../../components/Buttons/BackButton';
 import {
   MdKeyboardDoubleArrowRight,
   MdKeyboardDoubleArrowLeft,
