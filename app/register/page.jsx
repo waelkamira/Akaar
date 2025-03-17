@@ -149,7 +149,7 @@ export default function RegisterPage() {
           className="flex justify-between w-full bg-white rounded-[5px] px-4 py-2 items-center my-8 hover:shadow-sm shadow-gray-300 cursor-pointer"
           onClick={() => signIn('google')}
         >
-          <div className="relative h-8 w-8">
+          <div className="relative h-9 w-8">
             <Image
               priority
               src={'/google.png'}

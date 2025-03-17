@@ -5,18 +5,8 @@ import { MdOutlineLiving } from 'react-icons/md';
 
 const realEstate = [
   {
-    name: 'adType', // المفتاح الإنجليزي
-    label: 'بيع/أجار', // الاسم العربي
-    icon: <MdOutlineBedroomParent className="text-one text-lg sm:text-xl" />,
-    placeholder: '-اختر-',
-    options: {
-      1: 'بيع',
-      2: 'أجار',
-    },
-  },
-  {
     name: 'rooms', // المفتاح الإنجليزي
-    label: 'عدد الغرف', // الاسم العربي
+    label: ' الغرف', // الاسم العربي
     icon: <FaBed className="text-one text-lg sm:text-xl" />,
     placeholder: '-اختر-',
     options: {
@@ -30,7 +20,7 @@ const realEstate = [
   },
   {
     name: 'livingrooms', // المفتاح الإنجليزي
-    label: 'عدد الصالونات', // الاسم العربي
+    label: ' الصالونات', // الاسم العربي
     icon: <MdOutlineLiving className="text-one text-lg sm:text-xl" />,
     placeholder: '-اختر-',
     options: {
@@ -48,7 +38,16 @@ const realEstate = [
     icon: <FaRulerCombined className="text-one text-lg sm:text-xl" />,
     placeholder: '200 م²',
   },
-
+  {
+    name: 'adType', // المفتاح الإنجليزي
+    label: 'بيع/أجار', // الاسم العربي
+    icon: <MdOutlineBedroomParent className="text-one text-lg sm:text-xl" />,
+    placeholder: '-اختر-',
+    options: {
+      1: 'بيع',
+      2: 'أجار',
+    },
+  },
   {
     name: 'propertyType', // المفتاح الإنجليزي
     label: 'نوع العقار', // الاسم العربي
@@ -67,7 +66,7 @@ const realEstate = [
 
   {
     name: 'bathrooms', // المفتاح الإنجليزي
-    label: 'عدد الحمامات', // الاسم العربي
+    label: ' الحمامات', // الاسم العربي
     icon: <FaShower className="text-one text-lg sm:text-xl" />,
     placeholder: '-اختر-',
     options: {

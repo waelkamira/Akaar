@@ -69,7 +69,7 @@ export default function ContactUs() {
               type="text"
               name="user_name"
               placeholder="your name"
-              className="w-full text-sm sm:text-lg rounded text-start text-black z-40 h-9 sm:h-12 text-nowrap px-2 border border-gray-300 focus:outline-one"
+              className="w-full text-sm sm:text-lg rounded text-start text-black z-40 h-9  sm:h-12 text-nowrap px-2 border border-gray-300 focus:outline-one"
             />
           </div>
           <div className="flex flex-col grow w-full my-2">
@@ -85,7 +85,7 @@ export default function ContactUs() {
               type="email"
               name="user_email"
               placeholder="your email"
-              className="w-full text-sm sm:text-lg rounded text-start text-black z-40 h-9 sm:h-12 text-nowrap px-2 border border-gray-300 focus:outline-one"
+              className="w-full text-sm sm:text-lg rounded text-start text-black z-40 h-9  sm:h-12 text-nowrap px-2 border border-gray-300 focus:outline-one"
             />
           </div>
         </div>
