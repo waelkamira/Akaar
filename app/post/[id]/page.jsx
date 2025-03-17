@@ -11,6 +11,7 @@ import {
   FaMapMarkerAlt,
   FaPhone,
 } from 'react-icons/fa';
+import { motion } from 'framer-motion';
 
 // تحميل المكونات بشكل ديناميكي
 const ImageSlider = dynamic(
@@ -43,6 +44,7 @@ export default function Page() {
     if (typeof window !== 'undefined') {
       const item = JSON.parse(localStorage.getItem('item'));
       setPost(item);
+      console.log('item', item);
     }
   }, []);
 
@@ -71,32 +73,36 @@ export default function Page() {
     () => [
       {
         name: 'العنوان',
-        icon: <FaTag className="text-one text-lg sm:text-xl" />,
+        icon: <FaTag className="text-primary-500 text-lg sm:text-xl" />,
         value: post?.title,
       },
       {
         name: 'تاريخ الإعلان',
-        icon: <FaClock className="text-one text-lg sm:text-xl" />,
+        icon: <FaClock className="text-primary-500 text-lg sm:text-xl" />,
         value: post?.createdAt,
       },
       {
         name: 'السعر',
-        icon: <FaDollarSign className="text-one text-lg sm:text-xl" />,
+        icon: <FaDollarSign className="text-primary-500 text-lg sm:text-xl" />,
         value: post?.basePrice,
       },
       {
         name: 'المدينة',
-        icon: <FaMapMarkerAlt className="text-one text-lg sm:text-xl" />,
+        icon: (
+          <FaMapMarkerAlt className="text-primary-500 text-lg sm:text-xl" />
+        ),
         value: post?.city,
       },
       {
         name: 'المنطقة',
-        icon: <FaMapMarkerAlt className="text-one text-lg sm:text-xl" />,
+        icon: (
+          <FaMapMarkerAlt className="text-primary-500 text-lg sm:text-xl" />
+        ),
         value: post?.town,
       },
       {
         name: 'رقم الهاتف',
-        icon: <FaPhone className="text-one text-lg sm:text-xl" />,
+        icon: <FaPhone className="text-primary-500 text-lg sm:text-xl" />,
         value: post?.phoneNumber,
       },
     ],
@@ -107,6 +113,7 @@ export default function Page() {
     () => [...commonFields, ...categoryFields],
     [commonFields, categoryFields]
   );
+
   useEffect(() => {
     const fetchEmbedUrl = async () => {
       if (post?.link) {
@@ -159,13 +166,18 @@ export default function Page() {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center w-full bg-five mt-16 text-black">
+    <div className="flex flex-col justify-center items-center w-full bg-gray-50 min-h-screen p-6 sm:p-12">
       {post && (
-        <div className="w-full xl:w-[80%] 2xl:w-[70%] p-3 bg-gray-100">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="w-full xl:w-[80%] 2xl:w-[70%] bg-white shadow-2xl rounded-2xl overflow-hidden"
+        >
           {session?.status === 'authenticated' && (
             <div className="flex flex-col justify-center items-center w-full h-full sm:px-16 pt-2 overflow-y-auto z-10 px-2">
               <div className="flex justify-center w-full">
-                <div className="flex flex-col w-full p-2 sm:p-8 my-2 bg-white border-t-[10px] border-one rounded-t-lg">
+                <div className="flex flex-col w-full p-2 sm:p-8 my-2 bg-white">
                   <UserNameAndPhoto
                     post={{
                       createdAt: post?.createdAt,
@@ -175,7 +187,7 @@ export default function Page() {
                   {/* عرض العنوان إذا كان موجودًا */}
                   {post?.title && (
                     <div className="flex justify-center w-full">
-                      <h1 className="sm:my-4 text-xl sm:text-3xl text-one font-medium select-none text-wrap line-clamp-1 max-w-[20ch] lg:max-w-[40ch] text-center">
+                      <h1 className="sm:my-4 text-xl sm:text-3xl text-primary-500 font-semibold select-none text-wrap line-clamp-1 max-w-[20ch] lg:max-w-[40ch] text-center">
                         {post?.title}
                       </h1>
                     </div>
@@ -204,8 +216,8 @@ export default function Page() {
                     {post?.details && (
                       <div>
                         <div className="flex justify-between items-center my-4 lg:my-8 h-10 sm:h-16 w-full overflow-visible">
-                          <h1 className="text-one font-bold text-lg sm:text-xl w-full mb-2 select-none">
-                            <span className="text-one text-2xl mx-2 select-none">
+                          <h1 className="text-primary-500 font-bold text-lg sm:text-xl w-full mb-2 select-none">
+                            <span className="text-primary-500 text-2xl mx-2 select-none">
                               #
                             </span>
                             مواصفات الإعلان:
@@ -218,7 +230,7 @@ export default function Page() {
                               const value =
                                 post?.details?.[field?.name] || field?.value;
                               const displayValue = getFieldValue(field, value);
-                              console.log('displayValue', displayValue);
+                              // console.log('displayValue', displayValue);
 
                               // عرض الحقل فقط إذا كانت القيمة موجودة
                               return displayValue ? (
@@ -239,16 +251,16 @@ export default function Page() {
                     {post?.description && (
                       <div>
                         <div className="flex justify-between items-center my-4 lg:my-8 h-10 sm:h-16 w-full overflow-visible">
-                          <h1 className="text-one font-bold text-lg sm:text-xl w-full mb-2 select-none">
-                            <span className="text-one text-2xl mx-2 select-none">
+                          <h1 className="text-primary-500 font-bold text-lg sm:text-xl w-full mb-2 select-none">
+                            <span className="text-primary-500 text-2xl mx-2 select-none">
                               #
                             </span>
                             وصف الإعلان:
                           </h1>
                         </div>
 
-                        <div className="bg-white p-4 w-full rounded-[5px]">
-                          <pre className="flex justify-start items-start bg-white rounded-[5px] h-72 overflow-y-auto text-md sm:text-xl w-full shadow-sm shadow-gray-300 min-h-20 my-2 p-2 select-none">
+                        <div className="bg-gray-50 p-4 w-full rounded-lg">
+                          <pre className="flex justify-start items-start bg-white rounded-lg h-72 overflow-y-auto text-md sm:text-xl w-full shadow-sm shadow-gray-300 min-h-20 my-2 p-2 select-none">
                             {post?.description}
                           </pre>
                         </div>
@@ -259,8 +271,8 @@ export default function Page() {
                     {post?.lng && post?.lat && (
                       <div>
                         <div className="flex justify-between items-center my-4 lg:my-8 h-10 sm:h-16 w-full overflow-visible">
-                          <h1 className="text-one font-bold text-lg sm:text-xl w-full mb-2 select-none">
-                            <span className="text-one text-2xl mx-2 select-none">
+                          <h1 className="text-primary-500 font-bold text-lg sm:text-xl w-full mb-2 select-none">
+                            <span className="text-primary-500 text-2xl mx-2 select-none">
                               #
                             </span>
                             الموقع على الخريطة:
@@ -276,8 +288,8 @@ export default function Page() {
                     {post?.link && iframeSrc && (
                       <div>
                         <div className="flex justify-between items-center my-4 sm:my-4 h-10 sm:h-16 w-full overflow-visible">
-                          <h1 className="text-one font-bold text-lg sm:text-xl w-full mb-2 select-none">
-                            <span className="text-one text-2xl mx-2 select-none">
+                          <h1 className="text-primary-500 font-bold text-lg sm:text-xl w-full mb-2 select-none">
+                            <span className="text-primary-500 text-2xl mx-2 select-none">
                               #
                             </span>
                             الفيديو :
@@ -303,7 +315,7 @@ export default function Page() {
               </div>
             </div>
           )}
-        </div>
+        </motion.div>
       )}
     </div>
   );

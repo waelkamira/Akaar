@@ -176,7 +176,7 @@ const Home = () => {
   return (
     <main className="relative flex flex-row-reverse items-start justify-between overflow-hidden z-[40] h-fit w-full bg-five rounded-b">
       <div className="relative flex-col justify-between items-start w-full h-full">
-        <div className="flex flex-col items-center justify-center overflow-hidden z-50 h-fit w-full bg-five rounded-b mt-32">
+        <div className="flex flex-col items-center justify-center overflow-hidden z-50 h-fit w-full bg-five rounded-b ">
           {categories
             .filter((category) => productsByCategory[category.id]?.length > 0) // فلترة الفئات التي تحتوي على منتجات
             .map((category) => (

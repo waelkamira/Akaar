@@ -49,10 +49,10 @@ const CategoryPage = () => {
   };
 
   return (
-    <div className="relative bg-five sm:mt-80 p-2 sm:p-4 lg:p-8">
-      <div className=" mx-auto w-full lg:max-w-[90%] ">
+    <div className="relative bg-five sm:mt-16 p-2 sm:p-4">
+      <div className=" mx-auto w-full lg:max-w-[90%] mt-16">
         <div className="flex flex-col items-center">
-          <h1 className="text-2xl sm:text-3xl font-bold text-three mb-8 border-b-2 border-one pb-2 select-none">
+          <h1 className="text-lg sm:text-3xl font-bold text-three mb-8 border-b-2 border-one pb-2 select-none">
             أحدث إعلانات ال{category}
           </h1>
 

@@ -200,11 +200,11 @@ export default function CitySelector({ check }) {
   return (
     <div className="flex flex-col sm:flex-row gap-2 w-full justify-start items-center text-sm">
       {/* قائمة المدن */}
-      <div className="w-full sm:w-28">
+      <div className="w-full sm:w-32">
         <select
           value={selectedCity}
           onChange={handleCityChange}
-          className="w-full sm:w-28 border rounded focus:outline-2 focus:outline-one bg-white text-black h-8 sm:h-[27px] px-2"
+          className="w-full sm:w-32 border rounded focus:outline-2 focus:outline-one bg-white text-black h-9 sm:h-[27px] px-2"
         >
           <option value="" disabled>
             المدينة
@@ -218,11 +218,11 @@ export default function CitySelector({ check }) {
       </div>
 
       {/* قائمة المناطق */}
-      <div className="w-full sm:w-28">
+      <div className="w-full sm:w-32">
         <select
           value={selectedTown}
           onChange={handleTownChange}
-          className="w-full sm:w-28 border rounded focus:outline-2 focus:outline-one bg-white text-black h-8 sm:h-[27px] px-2"
+          className="w-full sm:w-32 border rounded focus:outline-2 focus:outline-one bg-white text-black h-9 sm:h-[27px] px-2"
         >
           <option value="" disabled>
             المنطقة

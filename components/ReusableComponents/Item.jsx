@@ -133,7 +133,7 @@ export default function Item({ fields }) {
                       <div>
                         <iframe
                           src={iframeSrc || fields?.link}
-                          className="w-full h-44 sm:h-96"
+                          className="w-full h-44 sm:h-9 6"
                           title="Property Video"
                         />
                       </div>

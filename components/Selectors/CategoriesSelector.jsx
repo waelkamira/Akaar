@@ -38,14 +38,14 @@ const CategoriesNavBar = () => {
     setShowArrow(false);
   }, 50000);
   return (
-    <div className="relative w-full sm:w-28 h-8 sm:h-[27px] bg-white border rounded shadow-md text-black">
+    <div className="relative w-full sm:w-32 h-9 sm:h-[27px] bg-white border rounded px-2 text-black">
       {/* قائمة Select */}
       <select
         value={selectedCategory}
         onChange={handleCategoryChange}
-        className=" w-full sm:w-28 h-full bg-transparent text-sm rounded cursor-pointer focus:outline-none"
+        className=" w-full sm:w-32 h-full bg-transparent text-sm rounded cursor-pointer focus:outline-none"
       >
-        <option value="">اختر الفئة أولاً</option>
+        <option value="">اختر الفئة </option>
         {categories.map((category) => (
           <option
             key={category.id}

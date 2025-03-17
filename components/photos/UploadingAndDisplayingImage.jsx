@@ -123,7 +123,7 @@ export default function ImageUploader({ images = [] }) {
   return (
     <div className="flex flex-col justify-center items-center w-full px-2 sm:px-8">
       {/* الصورة الكبيرة في الأعلى */}
-      <div className="relative w-full h-72 sm:h-96 border border-gray-300 rounded-[5px] mb-4 bg-white">
+      <div className="relative w-full h-72 sm:h-9 6 border border-gray-300 rounded-[5px] mb-4 bg-white">
         {isLoading ? (
           <LoadingPhoto />
         ) : filteredImages[0] ? (

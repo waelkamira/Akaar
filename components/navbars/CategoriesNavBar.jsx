@@ -26,7 +26,7 @@ const CategoriesNavBar = () => {
   };
 
   return (
-    <div className="flex justify-center gap-4 p-4 rounded-lg shadow-md bg-white overflow-x-auto">
+    <div className="hidden sm:flex justify-center gap-4 p-4 rounded-lg shadow-md bg-white overflow-x-auto">
       {categories.map((category) => (
         <button
           key={category.id}
@@ -34,7 +34,7 @@ const CategoriesNavBar = () => {
           className={`flex flex-col items-center justify-center bg-white text-gray-500 
             ${
               selectedCategory?.id === category.id
-                ? 'bg-gradient-to-r from-orange-600 to-orange-400 text-white'
+                ? 'bg-gradient-to-r from-one via-orange-300 to-one text-white'
                 : 'hover:bg-gray-100 hover:text-gray-700'
             }
             p-3 rounded-lg shadow-md transition-all duration-300 w-20 h-20 transform hover:scale-105`}

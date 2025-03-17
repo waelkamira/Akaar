@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useEffect } from 'react';
 import LoadingPhoto from '../photos/LoadingPhoto';
 import Image from 'next/image';
 import { formatDistanceToNow } from 'date-fns'; // استيراد الدالة
@@ -10,6 +10,20 @@ import { useSession } from 'next-auth/react';
 export default function UserNameAndPhoto({ post }) {
   const session = useSession();
   const path = usePathname();
+  const [user, setUser] = React.useState();
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const storedUser = JSON.parse(localStorage.getItem('CurrentUser'));
+        console.log('storedUser', storedUser);
+        setUser(storedUser);
+      } catch (error) {
+        console.error('Error parsing CurrentUser from localStorage:', error);
+      }
+    }
+  }, []);
+
   // console.log(session?.data?.user?.image);
   //? هذه الدالة للتأكد إذا كان التاريخ المدخل صحيحا أو لا
   const formatDate = (dateString) => {
@@ -36,12 +50,14 @@ export default function UserNameAndPhoto({ post }) {
             } overflow-hidden rounded`}
           >
             {/* تحقق من عدم وجود صورة */}
-            {session?.data?.user?.image && <LoadingPhoto />}
+            {(session?.data?.user?.image || user?.userImage) && (
+              <LoadingPhoto />
+            )}
             {/* تحقق من وجود صورة */}
-            {session?.data?.user?.image && (
+            {(session?.data?.user?.image || user?.userImage) && (
               <Image
                 priority
-                src={session?.data?.user?.image}
+                src={user?.userImage || session?.data?.user?.image}
                 fill
                 alt={session?.data?.user?.name}
               />
@@ -55,7 +71,7 @@ export default function UserNameAndPhoto({ post }) {
                   : 'text-[11px] sm:text-[15px]'
               }  text-eight select-non font-medium`}
             >
-              {session?.data?.user?.name}
+              {user?.username || session?.data?.user?.name}
             </h6>
             {post && (
               <h1

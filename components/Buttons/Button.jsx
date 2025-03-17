@@ -13,7 +13,9 @@ export default function Button({ style, title, onClick, path = '', emoji }) {
         type="submit"
         onClick={onClick}
         className={
-          (style ? 'sm:text-lg text-sm p-2 lg:p-3 ' + style : 'text-sm p-0.5') +
+          (style
+            ? 'sm:text-lg text-sm p-2 lg:p-3 ' + style
+            : ' text-sm p-0.5') +
           ' btn flex justify-between text-white items-center my-2 text-nowrap select-none rounded-[5px] w-full max-h-12 transition-all duration-300 ease-in-out transform hover:scale-[102%] shadow-md hover:shadow-lg'
         }
         style={{

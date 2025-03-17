@@ -37,11 +37,11 @@ export async function GET(req) {
 
 export async function PUT(req) {
   try {
-    const { email, image, name } = await req.json();
+    const { id, userImage, username } = await req.json();
 
     const updatedUser = await prisma.user.update({
-      where: { email },
-      data: { image, name },
+      where: { id },
+      data: { userImage, username },
     });
 
     return new Response(JSON.stringify(updatedUser), { status: 200 });
@@ -55,22 +55,22 @@ export async function PUT(req) {
 
 export async function DELETE(req) {
   try {
-    const { email } = await req.json();
+    const { userId } = await req.json();
 
     // التحقق مما إذا كان المستخدم موجودًا قبل الحذف
     const existingUser = await prisma.user.findUnique({
-      where: { email },
+      where: { userId },
     });
 
     if (!existingUser) {
-      console.error(`User with email ${email} not found.`);
+      console.error(`User with userId ${userId} not found.`);
       return new Response(JSON.stringify({ error: 'User not found' }), {
         status: 404,
       });
     }
 
     const deletedUser = await prisma.user.delete({
-      where: { email },
+      where: { userId },
     });
 
     return new Response(JSON.stringify(deletedUser), { status: 200 });

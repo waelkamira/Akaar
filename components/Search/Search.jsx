@@ -4,6 +4,7 @@ import SearchInput from './SearchInput';
 import Filters from './Filters';
 import SearchResults from './SearchResults';
 import { useSearchLogic } from './useSearchLogic';
+import CategoriesNavBar from '../navbars/CategoriesNavBar';
 
 export default function Search() {
   const {
@@ -33,6 +34,7 @@ export default function Search() {
         onSearch={handleSearchButtonClick}
         onReset={resetFilters}
       />
+      <CategoriesNavBar />
       <SearchResults
         results={searchResults}
         isLoading={isLoading}

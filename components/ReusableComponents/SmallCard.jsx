@@ -7,6 +7,8 @@ import FormatDate from './FormatDate';
 import { TbHeartFilled } from 'react-icons/tb'; // أيقونة القلب
 import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
+import { FaRegHeart } from 'react-icons/fa6';
+import { IoLocationOutline } from 'react-icons/io5';
 
 export default function SmallCard({ item, category }) {
   const router = useRouter();
@@ -131,49 +133,59 @@ export default function SmallCard({ item, category }) {
           }}
         >
           {/* الصورة مع طبقة هوفر برتقالية */}
-          <div className="relative w-full h-48">
+          <div className="relative w-full h-48 bg-gray-300">
             {!item?.image1 && <LoadingPhoto />}
             {item?.image1 && (
               <div className="relative w-full h-48 overflow-hidden rounded-t-lg">
                 <Image
                   src={item?.image1}
                   fill
+                  priority
+                  objectFit="cover"
                   alt="item_photo"
                   className="object-cover transition-transform duration-300 group-hover:scale-105"
                 />
+                {item?.createdAt && (
+                  <div className="absolute bottom-2 right-2 z-0 flex justify-center items-center bg-white rounded-full px-2 py-1 shadow-sm text-xs text-black">
+                    <FormatDate dateString={item?.createdAt} />
+                  </div>
+                )}
+                {item?.details?.propertyType && (
+                  <div className="absolute top-2 right-2 z-0 flex justify-center items-center bg-one  rounded-full px-3 py-1 shadow-sm text-xs text-white">
+                    {item?.details?.propertyType === '1' ? 'بيع' : 'إجار'}{' '}
+                  </div>
+                )}
               </div>
             )}
             {/* الطبقة البرتقالية عند الهوفر */}
-            <div className="absolute inset-0 bg-one/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div className="absolute inset-0 bg-one/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           </div>
 
           <div className="flex flex-col justify-between gap-2 w-full p-4 bg-white text-black rounded-b-lg">
+            <h5 className="flex items-center justify-start gap-1 font-thin text-sm text-gray-700">
+              <IoLocationOutline className="text-one" />
+              {item?.city || 'غير محدد'}
+            </h5>
+
             {item?.title && (
-              <h1 className="text-lg font-semibold text-gray-800 line-clamp-1">
+              <h1 className="text-lg text-gray-800 line-clamp-1 font-serif font-medium">
                 {item?.title?.split(' ').slice(0, 5).join(' ')}
               </h1>
             )}
 
-            <div className="flex justify-between items-center">
-              {item?.city && (
-                <h1 className="text-sm text-gray-600">{item?.city}</h1>
-              )}
+            <div className="flex flex-col justify-between items-start">
               {item?.description && (
-                <h1 className="text-sm line-clamp-2">{item?.description}</h1>
+                <h1 className="text-sm line-clamp-2 font-thin text-gray-700">
+                  {item?.description}
+                </h1>
               )}
             </div>
-
-            {item?.createdAt && (
-              <div className="absolute top-2 left-2 z-0 flex justify-center items-center bg-white/80 rounded-full px-2 py-1 shadow-sm text-xs text-gray-700">
-                <FormatDate dateString={item?.createdAt} />
-              </div>
-            )}
           </div>
 
           {/* الحقول الإضافية */}
-          <div className="w-full p-4 bg-gray-50 border-t border-gray-200">
+          <div className="flex justify-start items-center gap-1 w-full p-4 border-t border-gray-200">
             {categoryFields
-              ?.slice(0, 2) // أخذ أول حقلين فقط
+              ?.slice(0, 3) // أخذ أول حقلين فقط
               ?.map((field, index) => {
                 const value = item.details[field.name];
                 const displayValue = getFieldValue(field, value);
@@ -183,34 +195,37 @@ export default function SmallCard({ item, category }) {
                     key={index} // مفتاح فريد لكل عنصر
                     className="flex items-center gap-2 mb-2 text-sm text-gray-700"
                   >
-                    {field?.icon}{' '}
-                    <h3>
-                      <span className="text-gray-500">
+                    {/* {field?.icon}{' '} */}
+                    <h6 className="flex items-center gap-1 font-thin">
+                      <span className="text-gray-500 text-nowrap">
                         {field?.label || field.name}
                       </span>
                       :{' '}
-                      <span className="font-bold">
-                        {' '}
-                        {displayValue || 'غير محدد'}
-                      </span>
-                    </h3>
+                      <span className="font-bold"> {displayValue || '?'}</span>
+                    </h6>
                   </div>
                 );
               })}
           </div>
+          <h1 className="flex justify-between items-center text-start w-full text-md font-bold text-one p-4">
+            <span className="text-one"> {item?.basePrice} $</span>
+            <button className="bg-one text-white p-2 rounded-full text-sm font-thin">
+              عرض التفاصيل
+            </button>
+          </h1>
 
           {/* أيقونة المفضلة */}
           <div
-            className="absolute top-0 right-0 z-10 size-10 p-2"
+            className="absolute top-0 left-2 z-10 size-10 p-2"
             onClick={(e) => {
               e.stopPropagation(); // منع انتشار الحدث إلى البطاقة الرئيسية
               handleFavorite(); // إضافة/إزالة من المفضلة
             }}
           >
             <div
-              className={`bg-white/80 backdrop-blur-sm rounded-full p-1 shadow-md shadow-gray-500 transition-all duration-300 hover:scale-110 cursor-pointer`}
+              className={`bg-white backdrop-blur-sm rounded-full size-8 p-2 shadow-md shadow-gray-500 transition-all duration-300 hover:scale-110 cursor-pointer`}
             >
-              <TbHeartFilled
+              <FaRegHeart
                 className={`size-4 ${
                   isFavorited
                     ? 'text-red-500'

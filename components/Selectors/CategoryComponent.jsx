@@ -106,7 +106,7 @@ export default function CategoryComponent({ check }) {
             control: (state) =>
               `${
                 state.isFocused ? 'border-one' : 'border-gray-300'
-              } sm:h-12 h-8 w-full`, // ارتفاع مختلف بناءً على عرض النافذة
+              } sm:h-12 h-9 w-full`, // ارتفاع مختلف بناءً على عرض النافذة
           }}
         />
       </div>

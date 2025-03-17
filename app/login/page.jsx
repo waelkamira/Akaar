@@ -100,7 +100,7 @@ export default function LogInPage() {
           <h1 className="text-sm sm:text-lg grow text-center text-gray-500 select-none font-semibold">
             تسجيل الدخول عن طريق جوجل
           </h1>
-          <div className="relative h-8 w-8 ">
+          <div className="relative h-9 w-8 ">
             <Image
               priority
               src={'/google.png'}

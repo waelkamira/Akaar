@@ -219,7 +219,7 @@ export default function OnClickMap({
               control: (state) =>
                 `${
                   state.isFocused ? 'border-one' : 'border-gray-300'
-                } sm:h-12 h-8 w-full`,
+                } sm:h-12 h-9 w-full`,
             }}
           />
         </div>
@@ -248,7 +248,7 @@ export default function OnClickMap({
                 control: (state) =>
                   `${
                     state.isFocused ? 'border-one' : 'border-gray-300'
-                  } sm:h-12 h-8 w-full`,
+                  } sm:h-12 h-9 w-full`,
               }}
             />
           </div>
