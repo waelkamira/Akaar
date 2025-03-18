@@ -1,7 +1,6 @@
 'use client';
 import { useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
-import CurrentUser from '../../components/ReusableComponents/CurrentUser';
 import { IoMdClose, IoIosSearch } from 'react-icons/io';
 import toast from 'react-hot-toast';
 import CustomToast from '../../components/ReusableComponents/CustomToast';
@@ -11,7 +10,7 @@ import {
   MdKeyboardDoubleArrowLeft,
 } from 'react-icons/md';
 import Link from 'next/link';
-import SideBarMenu from '../../components/ReusableComponents/SideBarMenu';
+import SideBarMenu from '../../components/navbars/SideBarMenu';
 import { TfiMenuAlt } from 'react-icons/tfi';
 import Loading from '../../components/ReusableComponents/Loading';
 import NavegationPages from '../../components/ReusableComponents/NavegationPages';
@@ -21,13 +20,26 @@ export default function Users() {
   const [pageNumber, setPageNumber] = useState(1);
   const [users, setUsers] = useState([]);
   const [findUser, setFindUser] = useState('');
-  const admin = CurrentUser();
+  const [user, setUser] = useState('');
   const session = useSession();
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const storedUser = localStorage.getItem('CurrentUser');
+        const user = storedUser ? JSON.parse(storedUser) : null;
+        setUser(user);
+      } catch (error) {
+        console.error('Error parsing CurrentUser from localStorage:', error);
+      }
+    }
+  }, []);
 
   useEffect(() => {
     fetchAllUsers();
   }, []);
-  if (!session?.status === 'authenticated' || !admin?.isAdmin) {
+
+  if (!session?.status === 'authenticated' || !user?.isAdmin) {
     return null;
   }
 

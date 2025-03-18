@@ -72,7 +72,7 @@ function inputsReducer(currentState, action) {
     case 'PROFILE_IMAGE':
       return {
         ...currentState,
-        profile_image: { image: action.payload },
+        profileImage: { image: action.payload },
       };
     case 'IMAGE_ERROR':
       return {
@@ -131,7 +131,7 @@ export function InputsContextProvider({ children }) {
     data: {},
     addImages: [], // مصفوفة لتخزين روابط الصور
     imageError: {},
-    profile_image: {},
+    profileImage: {},
     allPosts: [],
     newPost: {},
     deletedRecipe: {},

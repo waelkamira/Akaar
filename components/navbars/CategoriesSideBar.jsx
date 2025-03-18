@@ -42,7 +42,7 @@ export default function CategoriesSideBar() {
             transition={{ duration: 0.4 }}
           >
             <motion.div
-              className="relative flex items-center justify-around gap-3 w-32 h-10 mb-4 rounded-lg cursor-pointer bg-gradient-to-r from-transparent to-transparent hover:from-one hover:to-three text-white shadow-md hover:shadow-xl transition-all duration-300 ease-in-out transform hover:scale-105"
+              className="relative flex items-center justify-around gap-3 w-28 h-10 mb-4 rounded-lg cursor-pointer bg-gradient-to-r from-transparent to-transparent hover:from-one hover:to-three text-white shadow-md hover:shadow-xl transition-all duration-300 ease-in-out transform hover:scale-105"
               onClick={() => handleCategoryClick(category)}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}

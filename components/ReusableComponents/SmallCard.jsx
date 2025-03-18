@@ -183,7 +183,7 @@ export default function SmallCard({ item, category }) {
           </div>
 
           {/* الحقول الإضافية */}
-          <div className="flex justify-start items-center gap-1 w-full p-4 border-t border-gray-200">
+          <div className="flex justify-start items-center gap-1 w-full p-4 border-t border-gray-200 font-serif">
             {categoryFields
               ?.slice(0, 3) // أخذ أول حقلين فقط
               ?.map((field, index) => {

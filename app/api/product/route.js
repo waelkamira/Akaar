@@ -69,7 +69,6 @@ export async function POST(req) {
   try {
     const data = await req.json();
     console.log('data', data);
-    //! يجب اعادة تفعيلها عند الرفع يجب عمل استثناء لي حتى استطيع الرفع بسرعة
     // // التحقق من صحة البيانات المطلوبة
     // if (
     //   !data?.title ||

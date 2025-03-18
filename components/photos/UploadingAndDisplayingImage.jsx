@@ -7,7 +7,7 @@ import LoadingPhoto from './LoadingPhoto';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 
-export default function ImageUploader({ images = [] }) {
+export default function UploadingAndDisplayingImage({ images = [] }) {
   const { dispatch, addImages } = useContext(inputsContext);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -121,9 +121,9 @@ export default function ImageUploader({ images = [] }) {
   const filteredImages = allImages.filter(Boolean);
 
   return (
-    <div className="flex flex-col justify-center items-center w-full px-2 sm:px-8">
+    <div className="flex flex-col justify-center items-center w-full px-2 sm:px-8 h-full my-8">
       {/* الصورة الكبيرة في الأعلى */}
-      <div className="relative w-full h-72 sm:h-9 6 border border-gray-300 rounded-[5px] mb-4 bg-white">
+      <div className="relative w-full min-h-72 lg:h-[500px] border border-gray-300 rounded-[5px] mb-4 bg-white">
         {isLoading ? (
           <LoadingPhoto />
         ) : filteredImages[0] ? (
@@ -168,7 +168,7 @@ export default function ImageUploader({ images = [] }) {
         {Array.from({ length: 4 }).map((_, index) => (
           <div
             key={index}
-            className="relative size-16 sm:size-44 lg:size-72 border border-gray-300 rounded-[5px] flex justify-center items-center bg-white"
+            className="relative size-16 sm:size-32 border border-gray-300 rounded-[5px] flex justify-center items-center bg-white"
           >
             {isLoading ? (
               <LoadingPhoto />
@@ -180,7 +180,7 @@ export default function ImageUploader({ images = [] }) {
                   alt={`الصورة ${index + 2}`}
                   fill
                   style={{ objectFit: 'cover' }}
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  // sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   className="rounded-[5px]"
                 />
                 <label

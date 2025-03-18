@@ -1,5 +1,4 @@
 'use client';
-import CurrentUser from '../../components/ReusableComponents/CurrentUser';
 import Button from '../../components/Buttons/Button';
 import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
@@ -14,39 +13,30 @@ import { motion } from 'framer-motion';
 
 export default function Profile() {
   const session = useSession();
-  const user = CurrentUser();
-  const { profile_image, dispatch } = useContext(inputsContext);
-  const [newUserName, setNewUserName] = useState('');
-  const [imagePreview, setImagePreview] = useState(null);
+  const { dispatch } = useContext(inputsContext);
+  const [user, setUser] = useState('');
+  const [userName, setUserName] = useState('');
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       try {
-        const storedUser = localStorage.getItem('CurrentUser');
-        const newName = storedUser ? JSON.parse(storedUser) : null;
-        setNewUserName(newName?.name || '');
+        const getUser = JSON.parse(localStorage.getItem('CurrentUser'));
+        console.log(getUser);
+        setUser(getUser);
       } catch (error) {
         console.error('Error parsing CurrentUser from localStorage:', error);
       }
     }
   }, []);
 
-  // Handle image file change
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setImagePreview(URL.createObjectURL(file));
-      dispatch({ type: 'PROFILE_IMAGE', payload: file });
-    }
-  };
-
-  // Save changes (name and image)
+  // Save changes (name)
   async function saveProfileChanges() {
-    if (profile_image?.image || newUserName) {
+    if (user) {
+      console.log(user);
       const formData = {
         id: user?.id,
-        userImage: imagePreview || user?.userImage,
-        username: newUserName || user?.username,
+        username: userName || user?.username,
+        userImage: session?.data?.user?.image,
       };
 
       const response = await fetch('/api/user', {
@@ -57,10 +47,13 @@ export default function Profile() {
 
       if (response.ok) {
         toast.success('تم تحديث الملف الشخصي بنجاح');
-        dispatch({ type: 'PROFILE_IMAGE', payload: profile_image?.image });
+        const response = await fetch(
+          `/api/user?email=${session?.data?.user?.email}`
+        );
+        const json = await response.json();
+
         if (typeof window !== 'undefined') {
-          const newName = JSON.parse(localStorage.getItem('CurrentUser'));
-          setNewUserName(newName?.name || '');
+          localStorage.setItem('CurrentUser', JSON.stringify(json));
         }
       } else {
         toast.custom((t) => (
@@ -71,7 +64,7 @@ export default function Profile() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center w-full min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 p-6 sm:p-12">
+    <div className="flex flex-col items-center justify-start w-full min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 p-6 sm:p-12">
       <LoginButton />
 
       {session?.status === 'authenticated' && (
@@ -83,58 +76,27 @@ export default function Profile() {
         >
           <div className="flex flex-col items-center gap-8">
             {/* Profile Image Section */}
-            <div className="relative w-40 h-40 rounded-full overflow-hidden shadow-lg bg-gray-200 group">
-              {!imagePreview ? (
-                !session?.data?.user?.image ? (
-                  <LoadingPhoto />
-                ) : (
-                  <Image
-                    priority
-                    src={session?.data?.user?.image}
-                    layout="fill"
-                    objectFit="cover"
-                    alt={session?.data?.user?.name}
-                    className="rounded-full"
-                  />
-                )
+            <div className="relative w-40 h-40 rounded-full overflow-hidden shadow-lg bg-gray-200">
+              {!session?.data?.user?.image ? (
+                <LoadingPhoto />
               ) : (
                 <Image
                   priority
-                  src={imagePreview}
+                  src={session?.data?.user?.image}
                   layout="fill"
                   objectFit="cover"
-                  alt="New Profile"
+                  alt={session?.data?.user?.name}
                   className="rounded-full"
                 />
               )}
-
-              {/* Change Image Button */}
-              <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <label
-                  htmlFor="file-input"
-                  className="cursor-pointer text-white font-semibold text-lg"
-                >
-                  تغيير الصورة
-                </label>
-              </div>
             </div>
 
-            {/* Image Upload Input */}
-            <input
-              id="file-input"
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              className="hidden"
-            />
-
             {/* User Name Section */}
-
             <div className="flex flex-col items-center gap-2 w-full">
               <input
                 type="text"
-                value={newUserName}
-                onChange={(e) => setNewUserName(e.target.value)}
+                value={userName}
+                onChange={(e) => setUserName(e.target.value)}
                 placeholder="أدخل اسمك الجديد"
                 className="px-4 py-3 text-lg text-gray-700 border rounded-lg w-full bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
               />
@@ -183,7 +145,7 @@ export default function Profile() {
                   }
                   signOut();
                 }}
-                style="bg-red-500 text-white hover:bg-red-600 transition-all py-3 rounded-lg w-full text-lg font-semibold"
+                style="text-white hover:bg-red-600 transition-all py-3 rounded-lg w-full text-lg font-semibold"
               />
             </div>
           </div>

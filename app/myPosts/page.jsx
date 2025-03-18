@@ -42,7 +42,7 @@ const MyPostsContent = () => {
 
   return (
     <div className="flex flex-col justify-center items-center w-full">
-      <div className="flex flex-col w-full xl:w-[90%] 2xl:w-[80%] h-fit px-2 sm:px-16 overflow-y-auto z-10 border my-4">
+      <div className="flex flex-col w-full xl:w-[90%] 2xl:w-[80%] h-fit px-2 sm:px-16 overflow-y-auto z-10 border-2 my-4">
         {session?.status === 'authenticated' && (
           <div className="flex flex-col justify-center items-center w-full">
             <div className="flex flex-col justify-center items-center w-full gap-4 py-4 mt-16">
@@ -90,17 +90,8 @@ const MyPostsContent = () => {
           setPageNumber={setPageNumber}
           pageNumber={pageNumber}
         />
-
-        {session?.status === 'unauthenticated' && (
-          // <div className="w-full">
-          //   <h1 className="mt-16 w-full text-center">
-          //     يجب عليك تسجيل الدخول أولا
-          //   </h1>
-          //   <Button title={'تسجيل الدخول'} path="/login" style={' '} />
-          // </div>
-          <LoginButton />
-        )}
       </div>
+      {session?.status === 'unauthenticated' && <LoginButton />}
     </div>
   );
 };

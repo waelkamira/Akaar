@@ -71,7 +71,7 @@ export default function Favorites() {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center w-full my-4 sm:my-80">
+    <div className="flex flex-col justify-center items-center w-full sm:my-8">
       <div className="flex flex-col w-full xl:w-[90%] 2xl:w-[80%] px-2 sm:px-16 pt-2 overflow-y-auto">
         <div className="flex items-center justify-between bg-white p-4 rounded-[5px] shadow-sm my-8">
           <h2 className="text-lg font-medium select-none">

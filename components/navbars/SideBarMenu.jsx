@@ -1,9 +1,8 @@
 'use client';
 import { useSession } from 'next-auth/react';
-import React, { useState } from 'react';
-import CurrentUser from './CurrentUser';
+import React, { useEffect, useState } from 'react';
 import Button from '../Buttons/Button';
-import UserNameAndPhoto from './userNameAndPhoto';
+import UserNameAndPhoto from '../ReusableComponents/userNameAndPhoto';
 import categories from '../Categories/categories';
 import mainButtons from '../lists/mainButtons';
 import Link from 'next/link';
@@ -14,18 +13,30 @@ import { motion, AnimatePresence } from 'framer-motion';
 export default function SideBarMenu() {
   const [isOpen, setIsOpen] = useState(false);
   const session = useSession();
-  const user = CurrentUser();
+  const [user, setUser] = useState('');
 
   // مجموعة ألوان أنيقة
   const primaryColor = '#7E7F81';
   const secondaryColor = '#374151'; // رمادي داكن
   const backgroundColor = 'rgba(255, 255, 255, 0.2)'; // أبيض شفاف
 
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const storedUser = localStorage.getItem('CurrentUser');
+        const user = storedUser ? JSON.parse(storedUser) : null;
+        setUser(user);
+      } catch (error) {
+        console.error('Error parsing CurrentUser from localStorage:', error);
+      }
+    }
+  }, []);
+
   return (
-    <div className="relative flex flex-col justify-start items-start gap-3 w-fit">
+    <div className="xl:hidden relative flex flex-col justify-start items-start gap-3 w-fit">
       {/* زر فتح القائمة */}
       <TfiMenuAlt
-        className="sm:hidden w-fit pr-1 text-4xl lg:text-5xl text-white cursor-pointer z-[1005] transition-transform duration-300 hover:scale-110"
+        className=" w-fit p-1 sm:m-2 text-4xl lg:text-5xl text-white cursor-pointer z-[1005] transition-transform duration-300 hover:scale-110"
         onClick={() => setIsOpen(!isOpen)}
       />
 
@@ -53,7 +64,7 @@ export default function SideBarMenu() {
               {/* معلومات المستخدم */}
               {session?.status === 'authenticated' && (
                 <div onClick={() => setIsOpen(false)}>
-                  <UserNameAndPhoto />
+                  <UserNameAndPhoto size={'size-24'} />
                 </div>
               )}
               {session?.status === 'unauthenticated' && (

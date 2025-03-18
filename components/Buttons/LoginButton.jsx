@@ -9,11 +9,10 @@ export default function LoginButton() {
   return (
     <>
       {session?.status === 'unauthenticated' && (
-        <div className="p-4 m-2 md:m-8 border text-center rounded-[5px] bg-white mt-32">
+        <div className="bg-white w-full h-72 flex flex-col items-center justify-start p-8 border-2 border-one rounded-lg">
           <h1 className="text-sm md:text-lg lg:text-xl p-2 my-8 ">
             يجب عليك تسجيل الدخول أولاً
           </h1>
-
           <Button title={'تسجيل الدخول'} style={' '} path="/login" />
         </div>
       )}

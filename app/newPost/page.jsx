@@ -24,6 +24,7 @@ import OnClickMap from '../../components/map/onClickMap';
 import { useSession } from 'next-auth/react';
 import { FaTreeCity } from 'react-icons/fa6';
 import { PiBuildingsDuotone } from 'react-icons/pi';
+
 export default function NewPost() {
   const [categoryFields, setCategoryFields] = useState([]);
   const { register, handleSubmit } = useForm();
@@ -39,6 +40,7 @@ export default function NewPost() {
     userId: '',
     title: '',
     categoryId: selectedCategory?.id || '',
+    categoryName: selectedCategory?.name || '',
     images: addImages || [],
     city: '',
     town: '',
@@ -81,6 +83,7 @@ export default function NewPost() {
         ...prev,
         userId: user?.id || '',
         categoryId: selectedCategory?.id || '',
+        categoryName: selectedCategory?.name || '',
         images: addImages.length ? addImages : prev.images,
         lng: location?.[1] || prev.lng,
         lat: location?.[0] || prev.lat,
@@ -121,6 +124,7 @@ export default function NewPost() {
       'userId',
       'title',
       'categoryId',
+      'categoryName',
       'city',
       'town',
       'phoneNumber',
