@@ -89,10 +89,18 @@ export default function ContactUs() {
     },
   ];
 
+  const images = [
+    'https://i.imgur.com/wZ0aruw.jpg',
+    'https://i.imgur.com/uPsQqzu.png',
+    'https://i.imgur.com/wHyvDAD.png',
+    'https://i.imgur.com/Kc6Pcu1.png',
+    'https://i.imgur.com/rLz58YH.jpg',
+    'https://i.imgur.com/VVu5la7.png',
+  ];
   return (
     <div className="absolute top-8 xl:top-16 flex flex-col justify-center items-center w-full rounded-b text-black">
       {/* <MainNavbar /> */}
-      <HeroSlider />
+      <HeroSlider images={images} />
 
       <main className="flex flex-col justify-center items-center pb-16 w-full rounded-b">
         <div className="flex flex-col justify-center items-center w-full xl:w-[90%] 2xl:w-[70%] h-full sm:px-16 pt-2 overflow-y-auto z-10 px-2">

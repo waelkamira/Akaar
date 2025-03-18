@@ -10,7 +10,7 @@ import PostGallery from '../photos/PostGallery';
 import UserNameAndPhoto from './userNameAndPhoto';
 import { motion } from 'framer-motion';
 export default function SmallItem({ post, index }) {
-  const [currentUser, setCurrentUser] = useState(null);
+  const [user, setUser] = useState(null);
   const { dispatch } = useContext(inputsContext);
   const session = useSession();
   const router = useRouter();
@@ -18,9 +18,9 @@ export default function SmallItem({ post, index }) {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const userData = localStorage.getItem('CurrentUser');
+      const userData = localStorage.getItem('User');
       if (userData && userData !== 'undefined') {
-        setCurrentUser(JSON.parse(userData));
+        setUser(JSON.parse(userData));
       }
     }
   }, []);
@@ -67,7 +67,7 @@ export default function SmallItem({ post, index }) {
         {/* User Info & Admin Controls */}
         <div className="flex justify-between items-center w-full mb-6">
           <UserNameAndPhoto post={post} />
-          {currentUser?.isAdmin === 1 && path === '/' && (
+          {user?.isAdmin === 1 && path === '/' && (
             <motion.div
               whileTap={{ scale: 0.95 }}
               className="flex items-center cursor-pointer p-2.5 text-red-400 hover:bg-red-500/20 

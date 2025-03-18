@@ -12,7 +12,7 @@ const PostForm = ({
   handleSave,
 }) => {
   return (
-    <div className="flex flex-col gap-4 mt-4 w-full">
+    <div className="flex flex-col gap-4 mt-8 w-full h-full">
       {/* الحقول الأساسية */}
       {commonFields.map((field, index) => (
         <div key={index} className="flex flex-col gap-2">

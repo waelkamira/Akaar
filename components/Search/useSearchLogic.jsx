@@ -31,12 +31,29 @@ export const useSearchLogic = () => {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const category = JSON.parse(localStorage.getItem('category')) ?? {
+      // استرجاع القيمة من local storage
+      const storedCategory = localStorage.getItem('category');
+
+      // تحديد القيمة الافتراضية هنا
+      const defaultValue = {
         id: 1,
         name: 'عقارات',
         path: '/categories/1?category=عقارات',
         icon: <BsFillHouseFill className="text-2xl" />,
       };
+
+      let category;
+      if (storedCategory) {
+        try {
+          category = JSON.parse(storedCategory);
+        } catch (error) {
+          console.error('Failed to parse category from localStorage', error);
+          category = defaultValue; // استخدم القيمة الافتراضية في حالة حدوث خطأ
+        }
+      } else {
+        category = defaultValue; // استخدم القيمة الافتراضية إذا كانت القيمة فارغة
+      }
+
       setSearchData((prev) => ({
         ...prev,
         categoryId: category?.id || '',

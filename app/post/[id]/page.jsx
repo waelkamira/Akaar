@@ -12,6 +12,7 @@ import {
   FaPhone,
 } from 'react-icons/fa';
 import { motion } from 'framer-motion';
+import LoginButton from '../../../components/Buttons/LoginButton';
 
 // تحميل المكونات بشكل ديناميكي
 const ImageSlider = dynamic(
@@ -44,7 +45,7 @@ export default function Page() {
     if (typeof window !== 'undefined') {
       const item = JSON.parse(localStorage.getItem('item'));
       setPost(item);
-      console.log('item', item);
+      // console.log('item', item);
     }
   }, []);
 
@@ -63,7 +64,7 @@ export default function Page() {
 
   const getFieldValue = (field, value) => {
     if (field.options && field.options[value]) {
-      console.log('field.options[value]', field.options[value]);
+      // console.log('field.options[value]', field.options[value]);
       return field.options[value];
     }
     return value;
@@ -166,8 +167,8 @@ export default function Page() {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center w-full bg-gray-50 min-h-screen p-6 sm:p-12">
-      {post && (
+    <div className="flex flex-col justify-start items-center w-full bg-gray-50 min-h-screen p-6 sm:p-12 mt-32 sm:mt-2">
+      {session.status === 'authenticated' && post ? (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -316,6 +317,8 @@ export default function Page() {
             </div>
           )}
         </motion.div>
+      ) : (
+        <LoginButton />
       )}
     </div>
   );

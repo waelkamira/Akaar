@@ -11,7 +11,7 @@ generator client {
 // 🟢 جدول المستخدمين
 model User {
   id            String         @id @default(uuid())
-  username      String?        @unique
+  username      String?        
   email         String         @unique
   googleId      String?        @unique
   password      String?        
@@ -32,14 +32,14 @@ model User {
 // 🟢 جدول المنتجات
 model Product {
   id              String               @id @default(uuid())
-  title           String?
-  userId          String?
+  title           String
+  userId          String
   // categoryId      String?            
   // supplierId      String?
   // countryId       String?
   // cityId          String?              
   categoryId      Int    @default(1) // قم بتغيير 1 إلى أي قيمة منطقية
-  categoryName    String @default("عقارات") // قم بتغيير "غير مصنف" إلى قيمة افتراضية مناسبة   
+  categoryName    String  
   image1          String?
   image2          String?
   image3          String?
