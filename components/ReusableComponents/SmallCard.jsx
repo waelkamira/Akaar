@@ -42,8 +42,18 @@ export default function SmallCard({ item, category }) {
   // جلب معرف المستخدم
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const user = JSON.parse(localStorage.getItem('CurrentUser'));
-      setUserId(user?.id);
+      const userData = localStorage.getItem('CurrentUser'); // جلب البيانات من localStorage
+      if (userData) {
+        // التحقق من وجود البيانات
+        try {
+          const user = JSON.parse(userData); // تحليل البيانات إلى JSON
+          setUserId(user?.id); // تعيين معرف المستخدم
+        } catch (error) {
+          console.error('Failed to parse user data:', error);
+        }
+      } else {
+        console.warn('No user data found in localStorage.');
+      }
     }
   }, []);
 

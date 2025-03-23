@@ -42,7 +42,7 @@ const NoResults = () => (
     className="h-[300px] flex flex-col items-center justify-center text-center px-4"
   >
     <div className="bg-white/10 p-6 rounded-lg backdrop-blur-sm">
-      <h3 className="text-two text-sm sm:text-lg text-xl font-bold mb-3">
+      <h3 className="text-two text-sm sm:text-lg lg:text-xl font-bold mb-3">
         عذراً، لم نتمكن من العثور على نتائج
       </h3>
       <p className="text-gray-300 text-sm mb-4">

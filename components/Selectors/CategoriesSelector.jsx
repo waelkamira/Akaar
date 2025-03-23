@@ -43,7 +43,7 @@ const CategoriesNavBar = () => {
       <select
         value={selectedCategory}
         onChange={handleCategoryChange}
-        className=" w-full sm:w-28 h-full bg-transparent text-sm rounded cursor-pointer focus:outline-none"
+        className=" w-full min-w-24 h-full bg-transparent text-sm rounded cursor-pointer focus:outline-none"
       >
         <option value="">اختر الفئة </option>
         {categories.map((category) => (

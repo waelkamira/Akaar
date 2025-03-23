@@ -65,44 +65,49 @@ const Home = () => {
     <main className="relative flex flex-row-reverse items-start justify-between overflow-hidden z-[40] h-fit w-full bg-five rounded-b">
       <div className="relative flex-col justify-between items-start w-full h-full">
         <div className="flex flex-col items-center justify-center overflow-hidden z-50 h-fit w-full bg-five rounded-b ">
-          {categories
-            .filter((category) => productsByCategory[category.id]?.length > 0) // فلترة الفئات التي تحتوي على منتجات
-            .map((category) => (
-              <motion.div
-                key={category.id}
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                className="flex flex-col justify-center items-center w-full h-full"
-              >
-                <div className="flex flex-col justify-center items-center w-full h-full gap-8 py-8 my-8">
-                  <div
-                    className="flex justify-center items-center w-1/8 hover:scale-105 mb-8 transition-transform duration-300 ease-in-out cursor-pointer"
-                    onClick={() => handleCategoryClick(category)}
-                  >
-                    <ColoredCards number={category.id} text={category.name} />
-                  </div>
-                  <div className="flex flex-wrap justify-center items-center gap-4 w-full 2xl:w-[80%] h-full p-4 mb-4">
-                    {renderProducts(category)}
-                    {/* زر "المزيد" */}
+          {loading ? (
+            <Loading /> // ✅ عرض التحميل بشكل صحيح
+          ) : (
+            categories
+              .filter((category) => productsByCategory[category.id]?.length > 0)
+              .map((category) => (
+                <motion.div
+                  key={category.id}
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                  className="flex flex-col justify-center items-center w-full h-full"
+                >
+                  <div className="flex flex-col justify-center items-center w-full h-full gap-8 py-8 my-8">
                     <div
-                      className="flex justify-center items-center gap-2 cursor-pointer text-lg hover:scale-105 transition-transform ease-in-out duration-200 mt-8 sm:mt-20"
+                      className="flex justify-center items-center w-1/8 hover:scale-105 mb-8 transition-transform duration-300 ease-in-out cursor-pointer"
                       onClick={() => handleCategoryClick(category)}
                     >
-                      <FaAngleDoubleLeft className="text-one" />
-                      <motion.span
-                        whileHover={{ scale: 1.05 }}
-                        className="text-xl xl:text-2xl font-medium text-three"
-                        style={{ textShadow: '1px 1px 4px rgba(0, 0, 0, 0.3)' }}
+                      <ColoredCards number={category.id} text={category.name} />
+                    </div>
+                    <div className="flex flex-wrap justify-center items-center gap-4 w-full 2xl:w-[80%] h-full p-4 mb-4">
+                      {loading ? <Loading /> : renderProducts(category)}
+                      <div
+                        className="flex justify-center items-center gap-2 cursor-pointer text-lg hover:scale-105 transition-transform ease-in-out duration-200 mt-8 sm:mt-20"
+                        onClick={() => handleCategoryClick(category)}
                       >
-                        المزيد من ال{category.name}
-                      </motion.span>
-                      <FaAngleDoubleRight className="text-one" />
+                        <FaAngleDoubleLeft className="text-one" />
+                        <motion.span
+                          whileHover={{ scale: 1.05 }}
+                          className="text-xl xl:text-2xl font-medium text-three"
+                          style={{
+                            textShadow: '1px 1px 4px rgba(0, 0, 0, 0.3)',
+                          }}
+                        >
+                          المزيد من ال{category.name}
+                        </motion.span>
+                        <FaAngleDoubleRight className="text-one" />
+                      </div>
                     </div>
                   </div>
-                </div>
-              </motion.div>
-            ))}
+                </motion.div>
+              ))
+          )}
         </div>
         <div className="flex justify-end w-full">
           <Footer />

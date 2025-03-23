@@ -14,7 +14,8 @@ const CategoryPage = () => {
   const searchParams = useSearchParams();
   const category = searchParams.get('category'); // استخراج قيمة "category"
   const { id } = useParams();
-  // console.log('category', category);
+  console.log('id', id);
+  console.log('category', category);
 
   useEffect(() => {
     fetchCategoryProducts();
