@@ -78,16 +78,27 @@ export default function NewPost() {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const user = JSON.parse(localStorage.getItem('CurrentUser'));
-      setFormState((prev) => ({
-        ...prev,
-        userId: user?.id || '',
-        categoryId: selectedCategory?.id || '',
-        categoryName: selectedCategory?.name || '',
-        images: addImages.length ? addImages : prev.images,
-        lng: location?.[1] || prev.lng,
-        lat: location?.[0] || prev.lat,
-      }));
+      const userData = localStorage.getItem('CurrentUser'); // جلب البيانات من localStorage
+      if (userData) {
+        // التحقق من وجود البيانات
+        try {
+          const user = JSON.parse(userData); // تحليل البيانات إلى JSON
+          setUserId(user?.id); // تعيين معرف المستخدم
+          setFormState((prev) => ({
+            ...prev,
+            userId: user?.id || '',
+            categoryId: selectedCategory?.id || '',
+            categoryName: selectedCategory?.name || '',
+            images: addImages.length ? addImages : prev.images,
+            lng: location?.[1] || prev.lng,
+            lat: location?.[0] || prev.lat,
+          }));
+        } catch (error) {
+          console.error('Failed to parse user data:', error);
+        }
+      } else {
+        console.warn('No user data found in localStorage.');
+      }
     }
   }, [selectedCategory, location, addImages]);
 
