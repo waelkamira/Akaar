@@ -85,7 +85,7 @@ export default function CategoryComponent({ check }) {
       <div className="w-full">
         <div className="flex items-center gap-2 w-full justify-start my-2">
           <h1 className={`flex text-right text-md select-none text-nowrap `}>
-            <span className="text-one text-lg xl:text-2xl ml-2">
+            <span className="text-primary-500 text-lg xl:text-2xl ml-2">
               {!category && check ? '❌' : <FaDharmachakra />}
             </span>
             بيع/أجار :
@@ -105,7 +105,7 @@ export default function CategoryComponent({ check }) {
           classNames={{
             control: (state) =>
               `${
-                state.isFocused ? 'border-one' : 'border-gray-300'
+                state.isFocused ? 'border-primary-500' : 'border-gray-300'
               } sm:h-12 h-9 w-full`, // ارتفاع مختلف بناءً على عرض النافذة
           }}
         />

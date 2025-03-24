@@ -10,7 +10,7 @@ const realEstate = [
   {
     name: 'brand', // المفتاح الإنجليزي
     label: 'الماركة', // الاسم العربي
-    icon: <FaCar className="text-one text-lg sm:text-xl" />,
+    icon: <FaCar className="text-primary-500 text-lg sm:text-xl" />,
     placeholder: 'تويوتا',
     options: {
       1: 'تويوتا Toyota',
@@ -135,13 +135,13 @@ const realEstate = [
   {
     name: 'model', // المفتاح الإنجليزي
     label: 'الموديل', // الاسم العربي
-    icon: <FaTools className="text-one text-lg sm:text-xl" />,
+    icon: <FaTools className="text-primary-500 text-lg sm:text-xl" />,
     placeholder: 'الموديل',
   },
   {
     name: 'year', // المفتاح الإنجليزي
     label: 'السنة', // الاسم العربي
-    icon: <FaCalendarAlt className="text-one text-lg sm:text-xl" />,
+    icon: <FaCalendarAlt className="text-primary-500 text-lg sm:text-xl" />,
     placeholder: 'السنة',
     options: {
       1: '2026',
@@ -226,7 +226,7 @@ const realEstate = [
   {
     name: 'condition', // المفتاح الإنجليزي
     label: 'الحالة', // الاسم العربي
-    icon: <GiCarWheel className="text-one text-lg sm:text-xl" />,
+    icon: <GiCarWheel className="text-primary-500 text-lg sm:text-xl" />,
     placeholder: 'الحالة',
     options: {
       1: 'جديدة',
@@ -236,7 +236,7 @@ const realEstate = [
   {
     name: 'adType', // المفتاح الإنجليزي
     label: 'بيع/أجار', // الاسم العربي
-    icon: <FaCarSide className="text-one text-lg sm:text-xl" />,
+    icon: <FaCarSide className="text-primary-500 text-lg sm:text-xl" />,
     placeholder: 'بيع/أجار',
     options: {
       1: 'بيع',
@@ -246,7 +246,9 @@ const realEstate = [
   {
     name: 'fuelType', // المفتاح الإنجليزي
     label: 'الوقود', // الاسم العربي
-    icon: <BsFillFuelPumpDieselFill className="text-one text-lg sm:text-xl" />,
+    icon: (
+      <BsFillFuelPumpDieselFill className="text-primary-500 text-lg sm:text-xl" />
+    ),
     placeholder: 'الوقود',
     options: {
       1: 'بنزين',
@@ -259,7 +261,9 @@ const realEstate = [
   {
     name: 'mileage', // المفتاح الإنجليزي
     label: 'الكيلومترات', // الاسم العربي
-    icon: <IoSpeedometerOutline className="text-one text-lg sm:text-xl" />,
+    icon: (
+      <IoSpeedometerOutline className="text-primary-500 text-lg sm:text-xl" />
+    ),
     placeholder: 'الكيلومترات',
     options: {
       1: '0',

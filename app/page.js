@@ -69,7 +69,9 @@ const Home = () => {
             <Loading /> // ✅ عرض التحميل بشكل صحيح
           ) : (
             categories
-              .filter((category) => productsByCategory[category.id]?.length > 0)
+              .filter(
+                (category) => productsByCategory[category?.id]?.length > 0
+              )
               .map((category) => (
                 <motion.div
                   key={category.id}
@@ -91,7 +93,7 @@ const Home = () => {
                         className="flex justify-center items-center gap-2 cursor-pointer text-lg hover:scale-105 transition-transform ease-in-out duration-200 mt-8 sm:mt-20"
                         onClick={() => handleCategoryClick(category)}
                       >
-                        <FaAngleDoubleLeft className="text-one" />
+                        <FaAngleDoubleLeft className="text-primary-500" />
                         <motion.span
                           whileHover={{ scale: 1.05 }}
                           className="text-xl xl:text-2xl font-medium text-three"
@@ -101,7 +103,7 @@ const Home = () => {
                         >
                           المزيد من ال{category.name}
                         </motion.span>
-                        <FaAngleDoubleRight className="text-one" />
+                        <FaAngleDoubleRight className="text-primary-500" />
                       </div>
                     </div>
                   </div>

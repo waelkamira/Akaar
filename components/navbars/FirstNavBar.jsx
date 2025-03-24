@@ -13,9 +13,12 @@ export default function FirstNavBar() {
             <Link
               href={button?.path}
               key={button?.title}
-              className="flex items-center justify-center gap-2 border-one hover:border-t-4 shadow-one hover:shadow-lg rounded-lg  hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-12 transition-all duration-300"
+              className="flex items-center justify-center gap-2 border-primary-500 hover:border-t-4 shadow-primary-500 hover:shadow-lg rounded-lg  hover:scale-105 hover:cursor-pointer  px-2 lg:px-4 h-12 transition-all duration-300"
             >
-              <span className="text-one text-2xl"> {button?.emoji}</span>
+              <span className="text-primary-500 text-2xl">
+                {' '}
+                {button?.emoji}
+              </span>
               <li className=" text-lg select-none">{button?.title}</li>
             </Link>
           ))}

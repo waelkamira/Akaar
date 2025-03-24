@@ -20,7 +20,7 @@ const FormTextarea = ({
       <textarea
         {...register(name)}
         placeholder={placeholder}
-        className={`w-full p-1 sm:p-2 lg:p-3 border rounded focus:outline-2 focus:outline-one ${
+        className={`w-full p-1 sm:p-2 lg:p-3 border rounded focus:outline-2 focus:outline-primary-500 ${
           errors.includes(name) ? 'outline-2 outline-red-500' : ''
         }`}
         onChange={onChange}

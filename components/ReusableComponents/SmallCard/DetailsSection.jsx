@@ -6,7 +6,7 @@ function DetailsSection({ item }) {
   return (
     <div className="flex flex-col justify-between gap-2 w-full p-4 bg-white text-black rounded-b-lg">
       <h5 className="flex items-center justify-start gap-1 font-thin text-sm text-gray-700">
-        <IoLocationOutline className="text-one" />
+        <IoLocationOutline className="text-primary-500" />
         {item?.city || 'غير محدد'}
       </h5>
 

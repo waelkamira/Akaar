@@ -39,7 +39,7 @@ export default function Item({ fields }) {
       {session?.status === 'authenticated' && (
         <div className="flex flex-col justify-center items-center w-full h-full sm:px-16 pt-2 overflow-y-auto z-10 px-2">
           <div className="flex justify-center w-full ">
-            <div className="flex flex-col w-full p-2 sm:p-8 my-2 bg-white border-t-[10px] border-one rounded-t-lg">
+            <div className="flex flex-col w-full p-2 sm:p-8 my-2 bg-white border-t-[10px] border-primary-500 rounded-t-lg">
               <UserNameAndPhoto
                 post={{
                   createdAt: fields?.createdAt,
@@ -47,7 +47,7 @@ export default function Item({ fields }) {
               />
 
               <div className="flex justify-center w-full">
-                <h1 className="sm:my-4 text-xl sm:text-3xl text-one font-medium select-none text-wrap line-clamp-1 max-w-[20ch] lg:max-w-[40ch] text-center">
+                <h1 className="sm:my-4 text-xl sm:text-3xl text-primary-500 font-medium select-none text-wrap line-clamp-1 max-w-[20ch] lg:max-w-[40ch] text-center">
                   {fields[0]?.title}
                 </h1>
               </div>
@@ -64,8 +64,8 @@ export default function Item({ fields }) {
 
               <div className=" mt-4 sm:mt-16">
                 <div className="flex justify-between items-center my-4 lg:my-8  h-10 sm:h-16  w-full overflow-visible">
-                  <h1 className="text-one font-bold text-lg sm:text-xl w-full mb-2 select-none">
-                    <span className="text-one text-2xl mx-2 select-none">
+                  <h1 className="text-primary-500 font-bold text-lg sm:text-xl w-full mb-2 select-none">
+                    <span className="text-primary-500 text-2xl mx-2 select-none">
                       #
                     </span>
                     مواصفات الإعلان:
@@ -86,8 +86,8 @@ export default function Item({ fields }) {
                   </div>
 
                   <div className="flex justify-between items-center my-4 lg:my-8  h-10 sm:h-16  w-full overflow-visible">
-                    <h1 className="text-one font-bold text-lg sm:text-xl w-full mb-2 select-none">
-                      <span className="text-one text-2xl mx-2 select-none">
+                    <h1 className="text-primary-500 font-bold text-lg sm:text-xl w-full mb-2 select-none">
+                      <span className="text-primary-500 text-2xl mx-2 select-none">
                         #
                       </span>
                       وصف الإعلان:
@@ -104,8 +104,8 @@ export default function Item({ fields }) {
                 {fields?.lng !== '' && fields?.lat !== '' && (
                   <div>
                     <div className="flex justify-between items-center my-4 lg:my-8  h-10 sm:h-16  w-full overflow-visible">
-                      <h1 className="text-one font-bold text-lg sm:text-xl w-full mb-2 select-none">
-                        <span className="text-one text-2xl mx-2 select-none">
+                      <h1 className="text-primary-500 font-bold text-lg sm:text-xl w-full mb-2 select-none">
+                        <span className="text-primary-500 text-2xl mx-2 select-none">
                           #
                         </span>
                         الموقع على الخريطة:
@@ -119,8 +119,8 @@ export default function Item({ fields }) {
 
                 {(fields?.link || iframeSrc) && (
                   <div className="flex justify-between items-center my-4 sm:my-4 h-10 sm:h-16  w-full overflow-visible">
-                    <h1 className="text-one font-bold text-lg sm:text-xl w-full mb-2 select-none">
-                      <span className="text-one text-2xl mx-2 select-none">
+                    <h1 className="text-primary-500 font-bold text-lg sm:text-xl w-full mb-2 select-none">
+                      <span className="text-primary-500 text-2xl mx-2 select-none">
                         #
                       </span>
                       فيديو للإعلان:

@@ -7,7 +7,7 @@ export default function Button({ style, title, onClick, path = '', emoji }) {
   return (
     <Link
       href={path}
-      className="flex justify-center items-center gap-1 w-full text-three hover:text-one"
+      className="flex justify-center items-center gap-1 w-full text-three hover:text-primary-500"
     >
       <button
         type="submit"

@@ -10,10 +10,10 @@ export default function BackButton() {
       className=" sm:left-16 rounded-[5px] overflow-hidden bg-white"
     >
       <div className="flex items-center justify-center overflow-hidden cursor-pointer xl:w-full border border-white">
-        {/* <button className="flex items-center justify-center  text-sm lg:text-xl bg-one p-1 pb-2 lg:p-2">
+        {/* <button className="flex items-center justify-center  text-sm lg:text-xl bg-primary-500 p-1 pb-2 lg:p-2">
           رجوع
         </button> */}
-        <HiMiniArrowSmallLeft className=" text-one white text-3xl xl:text-[40px]   transition-all duration-300  rounded-l-lg" />
+        <HiMiniArrowSmallLeft className=" text-primary-500 white text-3xl xl:text-[40px]   transition-all duration-300  rounded-l-lg" />
       </div>
     </Link>
   );

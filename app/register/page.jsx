@@ -89,7 +89,7 @@ export default function RegisterPage() {
     <div className="flex justify-center items-center w-full h-screen  text-lg md:text-xl text-end">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="w-full lg:w-1/2  p-8  border border-one"
+        className="w-full lg:w-1/2  p-8  border border-primary-500"
       >
         <h1 className="w-full my-2 text-xl sm:text-2xl md:text-3xl xl:text-4xl  text-center select-none">
           التسجيل 🧀
@@ -103,11 +103,11 @@ export default function RegisterPage() {
             name={'name'}
             placeholder="الإسم"
             {...register('name')}
-            className=" placeholder-gray-400 transition-all duration-300 placeholder:text-sm placeholder:sm:text-lg grow py-2 border border-gray-300 border-solid focus:border focus:outline-one outline-none rounded-[5px] px-2 w-full caret-one  text-start"
+            className=" placeholder-gray-400 transition-all duration-300 placeholder:text-sm placeholder:sm:text-lg grow py-2 border border-gray-300 border-solid focus:border focus:outline-primary-500 outline-none rounded-[5px] px-2 w-full caret-primary-500  text-start"
           />
         </div>
         {errors?.name && (
-          <h1 className="text-one text-md my-2 text-start">
+          <h1 className="text-primary-500 text-md my-2 text-start">
             {errors?.name?.message}
           </h1>
         )}
@@ -120,11 +120,11 @@ export default function RegisterPage() {
             name={'email'}
             placeholder="الإيميل"
             {...register('email')}
-            className=" placeholder-gray-400 transition-all duration-300 placeholder:text-sm placeholder:sm:text-lg grow py-2 border border-gray-300 border-solid focus:border focus:outline-one outline-none rounded-[5px] px-2 w-full caret-one  text-start"
+            className=" placeholder-gray-400 transition-all duration-300 placeholder:text-sm placeholder:sm:text-lg grow py-2 border border-gray-300 border-solid focus:border focus:outline-primary-500 outline-none rounded-[5px] px-2 w-full caret-primary-500  text-start"
           />
         </div>
         {errors?.email && (
-          <h1 className="text-one text-md my-2 text-start">
+          <h1 className="text-primary-500 text-md my-2 text-start">
             {errors?.email?.message}
           </h1>
         )}
@@ -137,11 +137,11 @@ export default function RegisterPage() {
             name={'password'}
             placeholder="كلمة السر"
             {...register('password')}
-            className=" placeholder-gray-400 transition-all duration-300 placeholder:text-sm placeholder:sm:text-lg grow py-2 border border-gray-300 border-solid focus:border focus:outline-one outline-none rounded-[5px] px-2 w-full caret-one  text-start"
+            className=" placeholder-gray-400 transition-all duration-300 placeholder:text-sm placeholder:sm:text-lg grow py-2 border border-gray-300 border-solid focus:border focus:outline-primary-500 outline-none rounded-[5px] px-2 w-full caret-primary-500  text-start"
           />
         </div>
         {errors?.password && (
-          <h1 className="text-one text-md my-2 text-start">
+          <h1 className="text-primary-500 text-md my-2 text-start">
             {errors?.password?.message}
           </h1>
         )}
@@ -165,7 +165,7 @@ export default function RegisterPage() {
         <div className="flex flex-col sm:flex-row justify-between gap-8 items-center mt-4 w-full">
           <button
             type="submit"
-            className=" text-lg p-2  my-3  text-nowrap bg-five hover:bg-one  hover:scale-[101%] w-full "
+            className=" text-lg p-2  my-3  text-nowrap bg-five hover:bg-primary-500  hover:scale-[101%] w-full "
           >
             تسجيل
           </button>
@@ -174,7 +174,7 @@ export default function RegisterPage() {
             <Link href={'/'}>
               <button
                 type="submit"
-                className=" text-lg p-2  my-3  text-nowrap bg-five hover:bg-one  hover:scale-[101%] w-full "
+                className=" text-lg p-2  my-3  text-nowrap bg-five hover:bg-primary-500  hover:scale-[101%] w-full "
               >
                 إغلاق
               </button>
@@ -184,7 +184,7 @@ export default function RegisterPage() {
         <Link href={'/login'}>
           <h1 className="mt-4 text-start text-sm sm:text-lg">
             هل لديك حساب بالفعل ؟ قم بتسجيل الدخول
-            <span className="text-one text-lg sm:text-xl hover:scale-105">
+            <span className="text-primary-500 text-lg sm:text-xl hover:scale-105">
               🧀 هنا
             </span>
           </h1>

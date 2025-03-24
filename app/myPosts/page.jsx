@@ -47,8 +47,9 @@ const MyPostsContent = () => {
           <div className="flex flex-col justify-center items-center w-full">
             <div className="flex flex-col justify-center items-center w-full gap-4 py-4 mt-16">
               <h1 className="grow text-lg lg:text-2xl w-full">
-                <span className="text-one text-2xl ml-2">#</span>
-                إعلاناتي <span className="text-one"> {userPostsCount}</span>
+                <span className="text-primary-500 text-2xl ml-2">#</span>
+                إعلاناتي{' '}
+                <span className="text-primary-500"> {userPostsCount}</span>
               </h1>
             </div>
             {myPosts?.length === 0 && (
@@ -63,7 +64,7 @@ const MyPostsContent = () => {
                 {myPosts?.length > 0 &&
                   myPosts.map((post, index) => (
                     <div
-                      className="relative flex flex-col border-2 items-start h-full justify-start bg-one hover:scale-[101%] transition-transform duration-300 ease-in-out cursor-pointer rounded-[10px] overflow-hidden"
+                      className="relative flex flex-col border-2 items-start h-full justify-start bg-primary-500 hover:scale-[101%] transition-transform duration-300 ease-in-out cursor-pointer rounded-[10px] overflow-hidden"
                       key={index}
                       onClick={() => {
                         if (typeof window !== 'undefined') {

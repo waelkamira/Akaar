@@ -20,7 +20,7 @@ const FormSelect = ({
       </label>
       <select
         {...register(name)}
-        className={`w-full p-1 sm:p-2 lg:p-3 h-[32px] sm:h-[40px] xl:h-[48px] border rounded focus:outline-2 cursor-pointer focus:outline-one ${
+        className={`w-full p-1 sm:p-2 lg:p-3 h-[32px] sm:h-[40px] xl:h-[48px] border rounded focus:outline-2 cursor-pointer focus:outline-primary-500 ${
           errors.includes(name) ? 'outline-2 outline-red-500' : ''
         }`}
         onChange={onChange}

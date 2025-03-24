@@ -91,7 +91,7 @@ export default function Users() {
       <BackButton />
       <div className="absolute flex flex-col items-start gap-2 z-50 top-2 right-2 sm:top-4 sm:right-4">
         <TfiMenuAlt
-          className="p-1  text-4xl lg:text-5xl text-one cursor-pointer z-50 "
+          className="p-1  text-4xl lg:text-5xl text-primary-500 cursor-pointer z-50 "
           onClick={() => {
             setIsOpen(!isOpen);
           }}
@@ -108,11 +108,11 @@ export default function Users() {
           name="user"
           placeholder="ابحث عن اسم مستخدم ..."
           autoFocus
-          className="text-right w-full p-2  text-lg outline-none focus:outline-one h-10 "
+          className="text-right w-full p-2  text-lg outline-none focus:outline-primary-500 h-10 "
         />
         <button
           onClick={handleSearch}
-          className="flex items-center justify-center p-2  bg-one "
+          className="flex items-center justify-center p-2  bg-primary-500 "
         >
           <IoIosSearch className="text-2xl" />
         </button>
@@ -126,7 +126,7 @@ export default function Users() {
           {users.length > 0 ? (
             users.map((user, index) => (
               <div
-                className="flex justify-between items-center bg-gray-700 my-2  w-full h-24 border-[3px] border-one p-2  shadow-sm shadow-gray-300 hover:shadow-sm shadow-gray-300  transition-shadow duration-300"
+                className="flex justify-between items-center bg-gray-700 my-2  w-full h-24 border-[3px] border-primary-500 p-2  shadow-sm shadow-gray-300 hover:shadow-sm shadow-gray-300  transition-shadow duration-300"
                 key={index}
               >
                 <div>
@@ -162,7 +162,7 @@ export default function Users() {
                 onClick={() => setPageNumber(pageNumber + 1)}
               >
                 <h1 className=" ">الصفحة التالية</h1>
-                <MdKeyboardDoubleArrowRight className="text-2xl  text-one select-none" />
+                <MdKeyboardDoubleArrowRight className="text-2xl  text-primary-500 select-none" />
               </div>
             </Link>
           )}
@@ -172,7 +172,7 @@ export default function Users() {
                 className="flex items-center justify-around cursor-pointer"
                 onClick={() => setPageNumber(pageNumber - 1)}
               >
-                <MdKeyboardDoubleArrowLeft className="text-2xl  text-one select-none" />
+                <MdKeyboardDoubleArrowLeft className="text-2xl  text-primary-500 select-none" />
                 <h1 className=" ">الصفحة السابقة</h1>
               </div>
             </Link>

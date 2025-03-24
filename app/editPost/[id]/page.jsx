@@ -135,31 +135,35 @@ export default function EditePost() {
       {
         name: 'title',
         label: 'العنوان',
-        icon: <FaTag className="text-one text-lg sm:text-xl" />,
+        icon: <FaTag className="text-primary-500 text-lg sm:text-xl" />,
         value: fields?.title,
       },
       {
         name: 'basePrice',
         label: 'السعر',
-        icon: <FaDollarSign className="text-one text-lg sm:text-xl" />,
+        icon: <FaDollarSign className="text-primary-500 text-lg sm:text-xl" />,
         value: toInteger(fields?.basePrice) || 0,
       },
       {
         name: 'city',
         label: 'المدينة',
-        icon: <FaMapMarkerAlt className="text-one text-lg sm:text-xl" />,
+        icon: (
+          <FaMapMarkerAlt className="text-primary-500 text-lg sm:text-xl" />
+        ),
         value: fields?.city,
       },
       {
         name: 'town',
         label: 'المنطقة',
-        icon: <FaMapMarkerAlt className="text-one text-lg sm:text-xl" />,
+        icon: (
+          <FaMapMarkerAlt className="text-primary-500 text-lg sm:text-xl" />
+        ),
         value: fields?.town,
       },
       {
         name: 'phoneNumber',
         label: 'رقم الهاتف',
-        icon: <FaPhone className="text-one text-lg sm:text-xl" />,
+        icon: <FaPhone className="text-primary-500 text-lg sm:text-xl" />,
         value: fields?.phoneNumber,
       },
     ],

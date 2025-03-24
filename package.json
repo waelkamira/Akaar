@@ -83,6 +83,7 @@
     "sqlite3": "^5.1.7",
     "swiper": "^11.2.4",
     "tailwind-merge": "^3.0.2",
+    "tailwindcss-animate": "^1.0.7",
     "uuid": "^10.0.0",
     "video.js": "^8.17.2",
     "yup": "^1.6.1",

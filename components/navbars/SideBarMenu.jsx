@@ -120,7 +120,9 @@ export default function SideBarMenu() {
                     href={category.path}
                     className="flex items-center gap-3 p-3 rounded-lg border bg-gray-100 hover:bg-blue-100 hover:text-gray-700 transition-all duration-300"
                   >
-                    <span className="text-2xl text-one">{category?.icon}</span>
+                    <span className="text-2xl text-primary-500">
+                      {category?.icon}
+                    </span>
                     <span className="text-sm font-medium">
                       {category?.name}
                     </span>

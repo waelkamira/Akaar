@@ -28,7 +28,7 @@ export default function NavegationPages({
           onClick={() => setPageNumber(pageNumber + 1)}
         >
           الصفحة التالية
-          <MdKeyboardDoubleArrowRight className="text-xl text-one" />
+          <MdKeyboardDoubleArrowRight className="text-xl text-primary-500" />
         </motion.button>
       )}
 
@@ -39,7 +39,7 @@ export default function NavegationPages({
           className="flex items-center justify-center text-sm sm:text-lg gap-2 py-2 px-2 sm:py-3 sm:px-8 bg-three rounded-[5px] text-white"
           onClick={() => setPageNumber(pageNumber - 1)}
         >
-          <MdKeyboardDoubleArrowLeft className="text-xl text-one " />
+          <MdKeyboardDoubleArrowLeft className="text-xl text-primary-500 " />
           الصفحة السابقة
         </motion.button>
       )}
@@ -55,15 +55,15 @@ export default function NavegationPages({
     //       whileTap={{ scale: 0.95 }}
     //       className="flex items-center justify-center text-sm sm:text-lg gap-2 py-2 px-2 sm:py-3 sm:px-8
     //   bg-transparent
-    //   hover:bg-one/10
+    //   hover:bg-primary-500/10
     //   rounded-xl shadow-lg hover:shadow-xl
     //   text-white font-semibold
-    //   border-2 border-one/20 hover:border-one/50
+    //   border-2 border-primary-500/20 hover:border-primary-500/50
     //   transition-all duration-300"
     //       onClick={() => setPageNumber(pageNumber + 1)}
     //     >
     //       الصفحة التالية
-    //       <MdKeyboardDoubleArrowRight className="text-xl text-one animate-pulse" />
+    //       <MdKeyboardDoubleArrowRight className="text-xl text-primary-500 animate-pulse" />
     //     </motion.button>
     //   )}
 
@@ -73,14 +73,14 @@ export default function NavegationPages({
     //       whileTap={{ scale: 0.95 }}
     //       className="flex items-center justify-center text-sm sm:text-lg gap-2 py-2 px-2 sm:py-3 sm:px-8
     //   bg-transparent
-    //   hover:bg-one/10
+    //   hover:bg-primary-500/10
     //   rounded-xl shadow-lg hover:shadow-xl
     //   text-white font-semibold
-    //   border-2 border-one/20 hover:border-one/50
+    //   border-2 border-primary-500/20 hover:border-primary-500/50
     //   transition-all duration-300"
     //       onClick={() => setPageNumber(pageNumber - 1)}
     //     >
-    //       <MdKeyboardDoubleArrowLeft className="text-xl text-one animate-pulse" />
+    //       <MdKeyboardDoubleArrowLeft className="text-xl text-primary-500 animate-pulse" />
     //       الصفحة السابقة
     //     </motion.button>
     //   )}

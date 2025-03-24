@@ -68,7 +68,7 @@ export async function GET(req) {
 }
 export async function POST(req) {
   const { id, userId } = await req.json();
-  // console.log('id', id, 'userId', userId);
+  console.log('id', id, 'userId', userId);
 
   try {
     if (!id || !userId) {

@@ -188,19 +188,19 @@ const SmallCard = React.memo(function SmallCard({ item, category }) {
                   </div>
                 )}
                 {item?.details?.propertyType && (
-                  <div className="absolute top-2 right-2 z-0 flex justify-center items-center bg-one rounded-full px-3 py-1 shadow-sm text-xs text-white">
+                  <div className="absolute top-2 right-2 z-0 flex justify-center items-center bg-primary-500 rounded-full px-3 py-1 shadow-sm text-xs text-white">
                     {item?.details?.propertyType === '1' ? 'بيع' : 'إجار'}
                   </div>
                 )}
               </div>
             )}
             {/* الطبقة البرتقالية عند الهوفر */}
-            <div className="absolute inset-0 bg-one/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div className="absolute inset-0 bg-primary-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           </div>
 
           <div className="flex flex-col justify-between gap-2 w-full p-4 bg-white text-black rounded-b-lg">
             <h5 className="flex items-center justify-start gap-1 font-thin text-sm text-gray-700">
-              <IoLocationOutline className="text-one" />
+              <IoLocationOutline className="text-primary-500" />
               {item?.city || 'غير محدد'}
             </h5>
 
@@ -236,9 +236,9 @@ const SmallCard = React.memo(function SmallCard({ item, category }) {
               </div>
             ))}
           </div>
-          <h1 className="flex justify-between items-center text-start w-full text-md font-bold text-one p-4">
-            <span className="text-one"> {item?.basePrice} $</span>
-            <button className="bg-one text-white p-2 rounded-full text-sm font-thin">
+          <h1 className="flex justify-between items-center text-start w-full text-md font-bold text-primary-500 p-4">
+            <span className="text-primary-500"> {item?.basePrice} $</span>
+            <button className="bg-primary-500 text-white p-2 rounded-full text-sm font-thin">
               عرض التفاصيل
             </button>
           </h1>

@@ -73,36 +73,38 @@ export default function Page() {
     () => [
       {
         name: 'العنوان',
-        icon: <FaTag className="text-primary-500 text-lg sm:text-xl" />,
+        icon: <FaTag className="text-primary-500-500 text-lg sm:text-xl" />,
         value: post?.title,
       },
       {
         name: 'تاريخ الإعلان',
-        icon: <FaClock className="text-primary-500 text-lg sm:text-xl" />,
+        icon: <FaClock className="text-primary-500-500 text-lg sm:text-xl" />,
         value: post?.createdAt,
       },
       {
         name: 'السعر',
-        icon: <FaDollarSign className="text-primary-500 text-lg sm:text-xl" />,
+        icon: (
+          <FaDollarSign className="text-primary-500-500 text-lg sm:text-xl" />
+        ),
         value: post?.basePrice,
       },
       {
         name: 'المدينة',
         icon: (
-          <FaMapMarkerAlt className="text-primary-500 text-lg sm:text-xl" />
+          <FaMapMarkerAlt className="text-primary-500-500 text-lg sm:text-xl" />
         ),
         value: post?.city,
       },
       {
         name: 'المنطقة',
         icon: (
-          <FaMapMarkerAlt className="text-primary-500 text-lg sm:text-xl" />
+          <FaMapMarkerAlt className="text-primary-500-500 text-lg sm:text-xl" />
         ),
         value: post?.town,
       },
       {
         name: 'رقم الهاتف',
-        icon: <FaPhone className="text-primary-500 text-lg sm:text-xl" />,
+        icon: <FaPhone className="text-primary-500-500 text-lg sm:text-xl" />,
         value: post?.phoneNumber,
       },
     ],
@@ -188,7 +190,7 @@ export default function Page() {
                   {/* عرض العنوان إذا كان موجودًا */}
                   {post?.title && (
                     <div className="flex justify-center w-full">
-                      <h1 className="sm:my-4 text-xl sm:text-3xl text-primary-500 font-semibold select-none text-wrap line-clamp-1 max-w-[20ch] lg:max-w-[40ch] text-center">
+                      <h1 className="sm:my-4 text-xl sm:text-3xl text-primary-500-500 font-semibold select-none text-wrap line-clamp-1 max-w-[20ch] lg:max-w-[40ch] text-center">
                         {post?.title}
                       </h1>
                     </div>
@@ -217,8 +219,8 @@ export default function Page() {
                     {post?.details && (
                       <div>
                         <div className="flex justify-between items-center my-4 lg:my-8 h-10 sm:h-16 w-full overflow-visible">
-                          <h1 className="text-primary-500 font-bold text-lg sm:text-xl w-full mb-2 select-none">
-                            <span className="text-primary-500 text-2xl mx-2 select-none">
+                          <h1 className="text-primary-500-500 font-bold text-lg sm:text-xl w-full mb-2 select-none">
+                            <span className="text-primary-500-500 text-2xl mx-2 select-none">
                               #
                             </span>
                             مواصفات الإعلان:
@@ -252,8 +254,8 @@ export default function Page() {
                     {post?.description && (
                       <div>
                         <div className="flex justify-between items-center my-4 lg:my-8 h-10 sm:h-16 w-full overflow-visible">
-                          <h1 className="text-primary-500 font-bold text-lg sm:text-xl w-full mb-2 select-none">
-                            <span className="text-primary-500 text-2xl mx-2 select-none">
+                          <h1 className="text-primary-500-500 font-bold text-lg sm:text-xl w-full mb-2 select-none">
+                            <span className="text-primary-500-500 text-2xl mx-2 select-none">
                               #
                             </span>
                             وصف الإعلان:
@@ -272,8 +274,8 @@ export default function Page() {
                     {post?.lng && post?.lat && (
                       <div>
                         <div className="flex justify-between items-center my-4 lg:my-8 h-10 sm:h-16 w-full overflow-visible">
-                          <h1 className="text-primary-500 font-bold text-lg sm:text-xl w-full mb-2 select-none">
-                            <span className="text-primary-500 text-2xl mx-2 select-none">
+                          <h1 className="text-primary-500-500 font-bold text-lg sm:text-xl w-full mb-2 select-none">
+                            <span className="text-primary-500-500 text-2xl mx-2 select-none">
                               #
                             </span>
                             الموقع على الخريطة:
@@ -289,8 +291,8 @@ export default function Page() {
                     {post?.link && iframeSrc && (
                       <div>
                         <div className="flex justify-between items-center my-4 sm:my-4 h-10 sm:h-16 w-full overflow-visible">
-                          <h1 className="text-primary-500 font-bold text-lg sm:text-xl w-full mb-2 select-none">
-                            <span className="text-primary-500 text-2xl mx-2 select-none">
+                          <h1 className="text-primary-500-500 font-bold text-lg sm:text-xl w-full mb-2 select-none">
+                            <span className="text-primary-500-500 text-2xl mx-2 select-none">
                               #
                             </span>
                             الفيديو :
