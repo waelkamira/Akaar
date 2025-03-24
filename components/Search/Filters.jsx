@@ -228,7 +228,7 @@ const useDynamicFields = (setSearchData) => {
 
   return { selectedValues, handleChange };
 };
-console.log('تم اعادة الريندر');
+// console.log('تم اعادة الريندر');
 // فصل تحميل الحقول الديناميكية
 const useCategoryFields = (category) => {
   const [fields, setFields] = useState([]);

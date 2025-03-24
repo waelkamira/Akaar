@@ -6,7 +6,7 @@ import toast from 'react-hot-toast';
 import CustomToast from '../../components/ReusableComponents/CustomToast';
 import Loading from '../../components/ReusableComponents/Loading';
 import { useRouter } from 'next/navigation';
-import SmallCard from '../../components/ReusableComponents/SmallCard';
+import SmallCard from '../../components/ReusableComponents/SmallCard/SmallCard';
 import { MdKeyboardDoubleArrowRight } from 'react-icons/md';
 import LoginButton from '../../components/Buttons/LoginButton';
 

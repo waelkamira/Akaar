@@ -1,33 +1,41 @@
 'use client';
-import { useEffect, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useState,
+  useRef,
+  useMemo,
+} from 'react'; // استيراد الأدوات المطلوبة
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import LoadingPhoto from '../photos/LoadingPhoto';
 import FormatDate from './FormatDate';
-import { TbHeartFilled } from 'react-icons/tb'; // أيقونة القلب
-import { useSession } from 'next-auth/react';
+import { TbHeartFilled } from 'react-icons/tb'; // أيقونة القلب المملوء
 import toast from 'react-hot-toast';
-import { FaRegHeart } from 'react-icons/fa6';
-import { IoLocationOutline } from 'react-icons/io5';
+import { FaRegHeart } from 'react-icons/fa6'; // أيقونة القلب الفارغ
+import { IoLocationOutline } from 'react-icons/io5'; // أيقونة الموقع
 
-export default function SmallCard({ item, category }) {
+// استخدام React.memo لتجنب إعادة التصيير غير الضروري
+const SmallCard = React.memo(function SmallCard({ item, category }) {
   const router = useRouter();
   const [isFavorited, setIsFavorited] = useState(false); // حالة المفضلة
-  const [categoryFields, setCategoryFields] = useState([]);
-  const [userId, setUserId] = useState(null);
-  const [favoriteProductIds, setFavoriteProductIds] = useState([]); // قائمة المفضلات
-  const session = useSession();
+  const [categoryFields, setCategoryFields] = useState([]); // الحقول الخاصة بالفئة
+  const [userId, setUserId] = useState(null); // معرف المستخدم
+  const [favoriteIds, setFavoriteIds] = useState([]); // قائمة معرفات المفضلة
+  const isMounted = useRef(false); // استخدام useRef لتتبع حالة المونت
 
   // دالة لتحويل القيم إلى النصوص المقابلة
-  const getFieldValue = (field, value) => {
+  const getFieldValue = useCallback((field, value) => {
     if (field?.options && field.options[value]) {
       return field.options[value]; // إرجاع النص المقابل للقيمة
     }
     return value; // إذا لم يكن هناك خيارات، إرجاع القيمة كما هي
-  };
+  }, []);
 
   // جلب الحقول بناءً على الفئة
   useEffect(() => {
+    console.log('جلب الحقول بناءً على الفئة');
+
     if (item?.categoryName) {
       import(`../categoryFields/${item?.categoryName}.jsx`)
         .then((module) => {
@@ -37,62 +45,80 @@ export default function SmallCard({ item, category }) {
           console.error('Failed to load fields:', err);
         });
     }
-  }, [item]);
+  }, [item?.categoryName]); // الاعتماد على item?.categoryName فقط
 
-  // جلب معرف المستخدم
+  // جلب معرف المستخدم من localStorage
   useEffect(() => {
+    console.log('جلب معرف المستخدم من localStorage');
+
     if (typeof window !== 'undefined') {
-      const userData = localStorage.getItem('CurrentUser'); // جلب البيانات من localStorage
+      const userData = localStorage.getItem('CurrentUser');
       if (userData) {
-        // التحقق من وجود البيانات
         try {
-          const user = JSON.parse(userData); // تحليل البيانات إلى JSON
+          const user = JSON.parse(userData);
           setUserId(user?.id); // تعيين معرف المستخدم
         } catch (error) {
           console.error('Failed to parse user data:', error);
         }
-      } else {
-        console.warn('No user data found in localStorage.');
       }
     }
   }, []);
 
-  // جلب قائمة المفضلات
-  useEffect(() => {
-    checkFavoriteStatus();
-  }, [userId]);
+  // جلب قائمة معرفات المفضلة
+  const fetchAndStoreUserFavoriteIds = useCallback(async (userId) => {
+    console.log(' جلب قائمة معرفات المفضلة');
 
-  // التحقق مما إذا كان المنتج مضافًا إلى المفضلة
-  async function checkFavoriteStatus() {
-    if (userId) {
-      const response = await fetch(`/api/favorite/check`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ userId }),
-      });
-      if (response.ok) {
-        const json = await response.json();
-        console.log('المفضلات:', json); // تسجيل البيانات للتحقق
-        setFavoriteProductIds(json?.favoriteProductIds || []); // تخزين قائمة المفضلات
-      } else {
-        console.error('حدث خطأ أثناء التحقق من المفضلة:', json?.error);
+    if (!userId) return;
+
+    try {
+      const response = await fetch(`/api/favorite/ids?userId=${userId}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
+      const json = await response.json();
+      const productIds = json?.productIds || [];
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('favoriteIds', JSON.stringify(productIds));
+        setFavoriteIds(productIds); // تحديث الحالة المحلية
+      }
+    } catch (error) {
+      console.error('Failed to fetch or store favorites data:', error);
+      toast.error('فشل في جلب بيانات المفضلة');
     }
-  }
+  }, []);
 
-  // تحديث حالة المفضلة بناءً على قائمة المفضلات
+  // جلب المفضلات عند تغيير userId
   useEffect(() => {
-    if (item?.id && favoriteProductIds.includes(String(item?.id))) {
-      setIsFavorited(true);
+    if (userId) {
+      fetchAndStoreUserFavoriteIds(userId);
+    }
+  }, [userId, fetchAndStoreUserFavoriteIds]);
+
+  // دالة التحقق من حالة المفضلة
+  const checkFavoriteStatus = useCallback(() => {
+    console.log('دالة التحقق من حالة المفضلة');
+
+    if (item?.id && Array.isArray(favoriteIds)) {
+      const favorited = favoriteIds.includes(item?.id);
+      setIsFavorited(favorited);
     } else {
       setIsFavorited(false);
     }
-  }, [item?.id, favoriteProductIds]);
+  }, [item?.id, favoriteIds]);
+
+  // تحديث حالة المفضلة عند تغيير item?.id أو favoriteIds
+  useEffect(() => {
+    if (isMounted.current) {
+      checkFavoriteStatus();
+    } else {
+      isMounted.current = true; // تجنب التشغيل الأولي
+    }
+  }, [checkFavoriteStatus]);
 
   // إضافة أو إزالة المنتج من المفضلة
-  const handleFavorite = async () => {
+  const handleFavorite = useCallback(async () => {
+    console.log('إضافة أو إزالة المنتج من المفضلة');
+
     if (!item?.id || !userId) return;
 
     try {
@@ -107,25 +133,27 @@ export default function SmallCard({ item, category }) {
       const data = await response.json();
 
       if (response.ok) {
-        setIsFavorited(data.favorited); // تحديث حالة المفضلة بناءً على الاستجابة
-
-        // تحديث قائمة المفضلات محليًا
-        if (data.favorited) {
-          setFavoriteProductIds((prev) => [...prev, String(item.id)]); // إضافة المنتج إلى القائمة
-        } else {
-          setFavoriteProductIds((prev) =>
-            prev.filter((id) => id !== String(item.id))
-          ); // إزالة المنتج من القائمة
-        }
-
-        toast.success(data.message);
+        setIsFavorited(data?.favorited);
+        fetchAndStoreUserFavoriteIds(userId); // تحديث قائمة المفضلات
+        toast.success(data?.message);
       } else {
         toast.error('حدث خطأ أثناء إضافته إلى المفضلة');
       }
     } catch (error) {
       console.error('Error handling favorite:', error);
+      toast.error('حدث خطأ أثناء إضافته إلى المفضلة');
     }
-  };
+  }, [item?.id, userId, fetchAndStoreUserFavoriteIds]);
+
+  // استخدام useMemo لحساب القيم المعروضة
+  const displayValues = useMemo(() => {
+    console.log(' استخدام useMemo لحساب القيم المعروضة');
+
+    return categoryFields?.slice(0, 3)?.map((field, index) => {
+      const value = item.details[field.name];
+      return getFieldValue(field, value);
+    });
+  }, [categoryFields, item.details, getFieldValue]);
 
   return (
     <>
@@ -136,7 +164,6 @@ export default function SmallCard({ item, category }) {
           onClick={() => {
             if (typeof window !== 'undefined') {
               localStorage.setItem('item', JSON.stringify(item));
-              console.log('category', category);
               localStorage.setItem('category', JSON.stringify(category));
             }
             router.push(`/post/${item?.id}`);
@@ -161,8 +188,8 @@ export default function SmallCard({ item, category }) {
                   </div>
                 )}
                 {item?.details?.propertyType && (
-                  <div className="absolute top-2 right-2 z-0 flex justify-center items-center bg-one  rounded-full px-3 py-1 shadow-sm text-xs text-white">
-                    {item?.details?.propertyType === '1' ? 'بيع' : 'إجار'}{' '}
+                  <div className="absolute top-2 right-2 z-0 flex justify-center items-center bg-one rounded-full px-3 py-1 shadow-sm text-xs text-white">
+                    {item?.details?.propertyType === '1' ? 'بيع' : 'إجار'}
                   </div>
                 )}
               </div>
@@ -194,28 +221,20 @@ export default function SmallCard({ item, category }) {
 
           {/* الحقول الإضافية */}
           <div className="flex justify-start items-center gap-1 w-full p-4 border-t border-gray-200 font-serif">
-            {categoryFields
-              ?.slice(0, 3) // أخذ أول حقلين فقط
-              ?.map((field, index) => {
-                const value = item.details[field.name];
-                const displayValue = getFieldValue(field, value);
-
-                return (
-                  <div
-                    key={index} // مفتاح فريد لكل عنصر
-                    className="flex items-center gap-2 mb-2 text-sm text-gray-700"
-                  >
-                    {/* {field?.icon}{' '} */}
-                    <h6 className="flex items-center gap-1 font-thin">
-                      <span className="text-gray-500 text-nowrap">
-                        {field?.label || field.name}
-                      </span>
-                      :{' '}
-                      <span className="font-bold"> {displayValue || '?'}</span>
-                    </h6>
-                  </div>
-                );
-              })}
+            {displayValues?.map((displayValue, index) => (
+              <div
+                key={index}
+                className="flex items-center gap-2 mb-2 text-sm text-gray-700"
+              >
+                <h6 className="flex items-center gap-1 font-thin">
+                  <span className="text-gray-500 text-nowrap">
+                    {categoryFields[index]?.label ||
+                      categoryFields[index]?.name}
+                  </span>
+                  : <span className="font-bold"> {displayValue || '?'}</span>
+                </h6>
+              </div>
+            ))}
           </div>
           <h1 className="flex justify-between items-center text-start w-full text-md font-bold text-one p-4">
             <span className="text-one"> {item?.basePrice} $</span>
@@ -228,24 +247,24 @@ export default function SmallCard({ item, category }) {
           <div
             className="absolute top-0 left-2 z-10 size-10 p-2"
             onClick={(e) => {
-              e.stopPropagation(); // منع انتشار الحدث إلى البطاقة الرئيسية
-              handleFavorite(); // إضافة/إزالة من المفضلة
+              e.stopPropagation();
+              handleFavorite();
             }}
           >
             <div
               className={`bg-white backdrop-blur-sm rounded-full size-8 p-2 shadow-md shadow-gray-500 transition-all duration-300 hover:scale-110 cursor-pointer`}
             >
-              <FaRegHeart
-                className={`size-4 ${
-                  isFavorited
-                    ? 'text-red-500'
-                    : 'text-gray-400 hover:text-red-500 '
-                } transition-colors duration-300`}
-              />
+              {isFavorited ? (
+                <TbHeartFilled className="size-4 text-red-500 transition-colors duration-300" />
+              ) : (
+                <FaRegHeart className="size-4 text-gray-400 hover:text-red-500 transition-colors duration-300" />
+              )}
             </div>
           </div>
         </div>
       )}
     </>
   );
-}
+});
+
+export default SmallCard;

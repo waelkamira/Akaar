@@ -38,7 +38,6 @@ export default function Page() {
   const [iframeSrc, setIframeSrc] = useState(null);
   const session = useSession();
   const [categoryFields, setCategoryFields] = useState([]);
-  const [category, setCategory] = useState('');
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -168,6 +167,7 @@ export default function Page() {
 
   return (
     <div className="flex flex-col justify-start items-center w-full bg-gray-50 min-h-screen p-6 sm:p-12 mt-32 sm:mt-2">
+      {session.status === 'unauthenticated' && <LoginButton />}
       {session.status === 'authenticated' && post ? (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -318,7 +318,7 @@ export default function Page() {
           )}
         </motion.div>
       ) : (
-        <LoginButton />
+        <Loading />
       )}
     </div>
   );

@@ -2,7 +2,7 @@
 import Footer from '../components/ReusableComponents/Footer';
 import { useRouter } from 'next/navigation';
 import Loading from '../components/ReusableComponents/Loading';
-import SmallCard from '../components/ReusableComponents/SmallCard';
+import SmallCard from '../components/ReusableComponents/SmallCard/SmallCard';
 import { motion } from 'framer-motion';
 import ColoredCards from '../components/ReusableComponents/ColoredCards';
 import categories from '../components/Categories/categories';
@@ -14,7 +14,7 @@ const Home = () => {
   const [productsByCategory, setProductsByCategory] = useState({});
   const [loading, setLoading] = useState(true); // حالة التحميل
   const router = useRouter();
-  console.log('productsByCategory', productsByCategory);
+  // console.log('productsByCategory', productsByCategory);
 
   useEffect(() => {
     fetchProductsByCategory();

@@ -9,6 +9,7 @@ export async function GET(req) {
   const userId = searchParams.get('userId');
   const page = parseInt(searchParams.get('page')) || 0;
   const limit = parseInt(searchParams.get('limit')) || 8;
+
   // التأكد من أن قيمة page لا تكون أقل من 0
   const currentPage = Math.max(0, page);
   // حساب الصفحات مع التأكد من أن skip تكون موجبة
@@ -67,7 +68,7 @@ export async function GET(req) {
 }
 export async function POST(req) {
   const { id, userId } = await req.json();
-  console.log('id', id, 'userId', userId);
+  // console.log('id', id, 'userId', userId);
 
   try {
     if (!id || !userId) {
