@@ -38,9 +38,9 @@ export async function GET(req) {
 export async function PUT(req) {
   try {
     const { id, userImage, username } = await req.json();
-    console.log('id', id);
-    console.log('userImage', userImage);
-    console.log('username', username);
+    // console.log('id', id);
+    // console.log('userImage', userImage);
+    // console.log('username', username);
 
     const updatedUser = await prisma.user.update({
       where: { id },

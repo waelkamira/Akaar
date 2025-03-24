@@ -17,25 +17,24 @@ export default function LogInPage() {
   const session = useSession();
   const router = useRouter();
   const [loggedIn, setLoggedIn] = useState(false);
-  const { profileImage } = useContext(inputsContext);
+  const { profileImage, favorite } = useContext(inputsContext);
+  console.log('favorite', favorite);
+  const userId = session?.data?.user?.id;
   // Schema for form validation
   const schema = z.object({
     email: z.string().email(),
     password: z.string().min(5),
   });
 
-  const {
-    register,
-    getValues,
-    handleSubmit,
-    setError,
-    formState: { errors },
-  } = useForm({ resolver: zodResolver(schema) });
+  const { getValues, handleSubmit, setError } = useForm({
+    resolver: zodResolver(schema),
+  });
 
   // Check if user is logged in and redirect to home page
   useEffect(() => {
     if (session?.data?.user) {
       fetchAndStoreUserData(session?.data?.user?.email);
+      fetchAndStoreUserFavoriteIds(session?.data?.user?.id);
       toast.success('تم تسجيل الدخول بنجاح أهلا وسهلا');
       // router.push('/');
       setLoggedIn(true);
@@ -61,6 +60,23 @@ export default function LogInPage() {
     },
     [router, profileImage]
   );
+
+  // Function to fetch and favorite user data in localStorage
+  const fetchAndStoreUserFavoriteIds = async (userId) => {
+    console.log('userId', userId);
+    try {
+      const response = await fetch(`/api/favorite/ids?userId=${userId}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const favoriteIds = await response.json();
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('favoriteIds', JSON.stringify(favoriteIds));
+      }
+    } catch (error) {
+      console.error('Failed to fetch or store favorites data:', error);
+    }
+  };
 
   // Handle form submission for email/password login
   async function onSubmit() {

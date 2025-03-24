@@ -119,6 +119,11 @@ function inputsReducer(currentState, action) {
         ...currentState,
         categoryType: action?.payload,
       };
+    case 'FAVORITE':
+      return {
+        ...currentState,
+        favorite: action?.payload,
+      };
 
     default:
       return currentState;
@@ -144,8 +149,9 @@ export function InputsContextProvider({ children }) {
     usedNew: '',
     brand: '',
     categoryType: '',
+    favorite: '',
   });
-  console.log('from Context', state);
+  // console.log('from Context', state);
 
   return (
     <inputsContext.Provider value={{ ...state, dispatch }}>

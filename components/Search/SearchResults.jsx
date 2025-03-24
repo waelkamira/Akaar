@@ -1,7 +1,7 @@
 'use client';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
-import SmallCard from '../ReusableComponents/SmallCard';
+import SmallCard from '../ReusableComponents/SmallCard/SmallCard';
 import Loading from '../ReusableComponents/Loading';
 import NavegationPages from '../ReusableComponents/NavegationPages';
 

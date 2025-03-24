@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
-import SmallCard from '../../../components/ReusableComponents/SmallCard';
+import SmallCard from '../../../components/ReusableComponents/SmallCard/SmallCard';
 import { MdKeyboardDoubleArrowRight } from 'react-icons/md';
 import Loading from '../../../components/ReusableComponents/Loading';
 
@@ -14,8 +14,8 @@ const CategoryPage = () => {
   const searchParams = useSearchParams();
   const category = searchParams.get('category'); // استخراج قيمة "category"
   const { id } = useParams();
-  console.log('id', id);
-  console.log('category', category);
+  // console.log('id', id);
+  // console.log('category', category);
 
   useEffect(() => {
     fetchCategoryProducts();

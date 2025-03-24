@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { inputsContext } from '../../components/authContext/Context';
 import { useRouter } from 'next/navigation';
-import SmallCard from '../../components/ReusableComponents/SmallCard';
+import SmallCard from '../../components/ReusableComponents/SmallCard/SmallCard';
 import NavegationPages from '../../components/ReusableComponents/NavegationPages';
 import Loading from '../../components/ReusableComponents/Loading';
 import Button from '../../components/Buttons/Button';
