@@ -81,7 +81,7 @@ const CategoriesNavBar = () => {
   };
 
   return (
-    <div className="relative w-full overflow-hidden">
+    <div className="hidden sm:block relative w-full overflow-hidden">
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
