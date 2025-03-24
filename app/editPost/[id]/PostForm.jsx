@@ -46,7 +46,7 @@ const PostForm = ({
 
       {/* وصف الإعلان */}
       <label className="flex justify-start items-center gap-1 text-gray-700 text-nowrap">
-        <TbFileDescription className="text-one text-lg sm:text-xl" />
+        <TbFileDescription className="text-primary-500 text-lg sm:text-xl" />
         وصف الإعلان
       </label>
       <textarea

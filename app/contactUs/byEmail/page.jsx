@@ -57,7 +57,7 @@ export default function ContactUs() {
       >
         <div className=" w-full flex flex-col sm:flex-row justify-between items-center lg:gap-16 sm:gap-8">
           <div className="flex flex-col grow w-full my-2">
-            <label className="text-sm sm:text-lg lg:text-xl text-primary my-1 ">
+            <label className="text-sm sm:text-lg lg:text-xl text-primary-500 my-1 ">
               الإسم:{' '}
             </label>
             <input
@@ -69,11 +69,11 @@ export default function ContactUs() {
               type="text"
               name="user_name"
               placeholder="your name"
-              className="w-full text-sm sm:text-lg rounded text-start text-black z-40 h-9  sm:h-12 text-nowrap px-2 border border-gray-300 focus:outline-one"
+              className="w-full text-sm sm:text-lg rounded text-start text-black z-40 h-9  sm:h-12 text-nowrap px-2 border border-gray-300 focus:outline-primary-500"
             />
           </div>
           <div className="flex flex-col grow w-full my-2">
-            <label className="text-sm sm:text-lg lg:text-xl text-primary my-1 ">
+            <label className="text-sm sm:text-lg lg:text-xl text-primary-500 my-1 ">
               الإيميل:{' '}
             </label>
             <input
@@ -85,12 +85,12 @@ export default function ContactUs() {
               type="email"
               name="user_email"
               placeholder="your email"
-              className="w-full text-sm sm:text-lg rounded text-start text-black z-40 h-9  sm:h-12 text-nowrap px-2 border border-gray-300 focus:outline-one"
+              className="w-full text-sm sm:text-lg rounded text-start text-black z-40 h-9  sm:h-12 text-nowrap px-2 border border-gray-300 focus:outline-primary-500"
             />
           </div>
         </div>
         <div className="flex flex-col items-center w-full my-2">
-          <label className="text-sm sm:text-lg lg:text-xl text-primary w-full text-start my-1">
+          <label className="text-sm sm:text-lg lg:text-xl text-primary-500 w-full text-start my-1">
             الرسالة:
           </label>
           <textarea
@@ -101,7 +101,7 @@ export default function ContactUs() {
             }
             required
             name="message"
-            className="w-full rounded-[5px] outline-none border border-gray-300 focus:border-primary p-2 border-secondary text-sm sm:text-lg lg:text-xl min-h-[200px]"
+            className="w-full rounded-[5px] outline-none border border-gray-300 focus:border-primary-500 p-2 border-secondary text-sm sm:text-lg lg:text-xl min-h-[200px]"
           />
         </div>
 

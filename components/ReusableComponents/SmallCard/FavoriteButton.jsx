@@ -13,10 +13,12 @@ function FavoriteButton({ item }) {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const userData = localStorage.getItem('CurrentUser');
+      const favoriteIds = localStorage.getItem('favoriteIds');
       if (userData) {
         try {
           const user = JSON.parse(userData);
           setUserId(user?.id);
+          setFavoriteIds(favoriteIds);
         } catch (error) {
           console.error('Failed to parse user data:', error);
         }
@@ -50,11 +52,18 @@ function FavoriteButton({ item }) {
   );
 
   const checkFavoriteStatus = useCallback(() => {
-    if (item?.id && Array.isArray(favoriteIds)) {
+    console.log('checkFavoriteStatus تم الاستدعاء ');
+
+    if (item?.id) {
       const favorited = favoriteIds.includes(item?.id);
-      setIsFavorited(favorited);
-    } else {
-      setIsFavorited(false);
+      console.log('favoriteIds', favoriteIds);
+      if (favorited) {
+        console.log('favorited', favorited);
+        console.log('item?.id', item?.id);
+        setIsFavorited(true);
+      } else {
+        setIsFavorited(false);
+      }
     }
   }, [item?.id, favoriteIds]);
 
@@ -68,6 +77,7 @@ function FavoriteButton({ item }) {
 
   const handleFavorite = useCallback(async () => {
     if (!item?.id || !userId) return;
+    console.log('item?.id', item?.id);
 
     try {
       const response = await fetch('/api/favorite', {

@@ -183,7 +183,7 @@
 //       <>
 //         <div className="flex flex-col justify-start items-start gap-2 w-full my-3">
 //           <div className="flex">
-//             <span className="flex text-one text-lg xl:text-2xl ml-2">
+//             <span className="flex text-primary-500 text-lg xl:text-2xl ml-2">
 //               <FaMapMarkedAlt />
 //             </span>
 //             <span className="flex text-sm sm:text-lg select-none text-nowrap ">
@@ -197,7 +197,7 @@
 //         </div>
 //         <div className="mb-4 relative z-50">
 //           <label className="flex text-right mb-2 text-lg sm:text-md select-none text-nowrap">
-//             <span className="text-one text-lg xl:text-2xl ml-2">
+//             <span className="text-primary-500 text-lg xl:text-2xl ml-2">
 //               <GiModernCity />
 //             </span>
 //             اختر المدينة:
@@ -218,7 +218,7 @@
 //             classNames={{
 //               control: (state) =>
 //                 `${
-//                   state.isFocused ? 'border-one' : 'border-gray-300'
+//                   state.isFocused ? 'border-primary-500' : 'border-gray-300'
 //                 } sm:h-12 h-9 w-full`,
 //             }}
 //           />
@@ -226,7 +226,7 @@
 //         {selectedCity && (
 //           <div className="mb-4 relative z-40">
 //             <label className="flex text-right mb-2 text-lg sm:text-md select-none text-nowrap">
-//               <span className="text-one text-lg xl:text-2xl ml-2">
+//               <span className="text-primary-500 text-lg xl:text-2xl ml-2">
 //                 <FaTreeCity />
 //               </span>
 //               اختر البلدة:
@@ -247,7 +247,7 @@
 //               classNames={{
 //                 control: (state) =>
 //                   `${
-//                     state.isFocused ? 'border-one' : 'border-gray-300'
+//                     state.isFocused ? 'border-primary-500' : 'border-gray-300'
 //                   } sm:h-12 h-9 w-full`,
 //               }}
 //             />

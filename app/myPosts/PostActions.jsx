@@ -86,7 +86,7 @@ const PostActions = ({ post, session, fetchMyPosts }) => {
       )}
 
       {/* أزرار التعديل والحذف */}
-      <div className="flex justify-between items-center w-full p-2 bg-one h-24 text-white">
+      <div className="flex justify-between items-center w-full p-2 bg-primary-500 h-24 text-white">
         <div
           className="flex flex-col items-center justify-center cursor-pointer rounded p-1 md:text-xl hover:bg-three hover:scale-[105%] transition-transform duration-150 ease-in-out"
           onClick={(e) => {

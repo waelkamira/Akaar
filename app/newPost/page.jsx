@@ -224,7 +224,9 @@ export default function NewPost() {
 
           <FormSelect
             label="الفئة"
-            icon={<MdCategory className="text-one text-lg sm:text-xl" />}
+            icon={
+              <MdCategory className="text-primary-500 text-lg sm:text-xl" />
+            }
             name="category"
             options={categories.map((cat) => ({
               value: cat.id,
@@ -238,7 +240,7 @@ export default function NewPost() {
 
           <FormInput
             label="عنوان الإعلان"
-            icon={<MdTitle className="text-one text-lg sm:text-xl" />}
+            icon={<MdTitle className="text-primary-500 text-lg sm:text-xl" />}
             name="title"
             placeholder="ضع عنوان مناسب للإعلان"
             register={register}
@@ -248,7 +250,7 @@ export default function NewPost() {
           <FormInput
             label="المدينة"
             icon={
-              <PiBuildingsDuotone className="text-one text-lg sm:text-xl" />
+              <PiBuildingsDuotone className="text-primary-500 text-lg sm:text-xl" />
             }
             name="city"
             placeholder="دمشق"
@@ -258,7 +260,9 @@ export default function NewPost() {
           />
           <FormInput
             label="المنطقة"
-            icon={<FaTreeCity className="text-one text-lg sm:text-xl" />}
+            icon={
+              <FaTreeCity className="text-primary-500 text-lg sm:text-xl" />
+            }
             name="town"
             placeholder="المزة"
             register={register}
@@ -268,7 +272,7 @@ export default function NewPost() {
 
           <FormInput
             label="رقم الهاتف"
-            icon={<MdPhone className="text-one text-lg sm:text-xl" />}
+            icon={<MdPhone className="text-primary-500 text-lg sm:text-xl" />}
             name="phoneNumber"
             placeholder="+963 955555555"
             type="number"
@@ -285,7 +289,7 @@ export default function NewPost() {
                 </label>
                 {field?.options ? (
                   <select
-                    className={`w-full p-1 sm:p-2 lg:p-3 border rounded focus:outline-2 focus:outline-one ${
+                    className={`w-full p-1 sm:p-2 lg:p-3 border rounded focus:outline-2 focus:outline-primary-500 ${
                       emptyFields.includes(field?.name)
                         ? 'outline-2 outline-red-500'
                         : ''
@@ -307,7 +311,7 @@ export default function NewPost() {
                 ) : (
                   <input
                     placeholder={field?.placeholder}
-                    className={`w-full p-1 sm:p-2 lg:p-3 border rounded focus:outline-2 focus:outline-one ${
+                    className={`w-full p-1 sm:p-2 lg:p-3 border rounded focus:outline-2 focus:outline-primary-500 ${
                       emptyFields.includes(field?.name)
                         ? 'outline-2 outline-red-500'
                         : ''
@@ -326,7 +330,9 @@ export default function NewPost() {
 
           <FormInput
             label="السعر"
-            icon={<MdAttachMoney className="text-one text-lg sm:text-xl" />}
+            icon={
+              <MdAttachMoney className="text-primary-500 text-lg sm:text-xl" />
+            }
             name="basePrice"
             placeholder="500 $"
             type="number"
@@ -337,7 +343,9 @@ export default function NewPost() {
 
           <FormTextarea
             label="وصف الإعلان"
-            icon={<MdDescription className="text-one text-lg sm:text-xl" />}
+            icon={
+              <MdDescription className="text-primary-500 text-lg sm:text-xl" />
+            }
             name="description"
             placeholder="اكتب وصف للشيء الذي تريد بيعه ..."
             register={register}
@@ -348,7 +356,9 @@ export default function NewPost() {
           <OnClickMap />
           <FormInput
             label="رابط الفيديو من يوتيوب أو تيك توك"
-            icon={<MdAttachMoney className="text-one text-lg sm:text-xl" />}
+            icon={
+              <MdAttachMoney className="text-primary-500 text-lg sm:text-xl" />
+            }
             name="link"
             placeholder="رابط الفيديو"
             register={register}

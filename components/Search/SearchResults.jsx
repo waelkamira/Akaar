@@ -110,7 +110,7 @@ export default function SearchResults({
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={onReset}
-              className="border border-one hover:bg-one text-two text-sm sm:text-lg px-4 py-1 rounded-[5px] transition-all"
+              className="border border-primary-500 hover:bg-primary-500 text-two text-sm sm:text-lg px-4 py-1 rounded-[5px] transition-all"
             >
               إغلاق ❌
             </motion.button>
@@ -119,8 +119,10 @@ export default function SearchResults({
               className="w-full text-center text-two text-sm sm:text-lg"
             >
               تم العثور على
-              <span className="text-one font-bold">{totalCount}</span> نتيجة
-              مطابقة للبحث
+              <span className="text-primary-500 font-bold">
+                {totalCount}
+              </span>{' '}
+              نتيجة مطابقة للبحث
             </motion.h2>
           </div>
 

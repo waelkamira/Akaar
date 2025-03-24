@@ -52,7 +52,7 @@ const CategoryPage = () => {
   return (
     <div className=" mx-auto w-full lg:max-w-[90%] mt-40 sm:mt-2 p-4 sm:p-0">
       <div className="flex flex-col items-center">
-        <h1 className="text-lg sm:text-3xl font-bold text-three mb-8 border-b-2 border-one pb-2 select-none">
+        <h1 className="text-lg sm:text-3xl font-bold text-three mb-8 border-b-2 border-primary-500 pb-2 select-none">
           أحدث إعلانات ال{category}
         </h1>
 
@@ -90,12 +90,12 @@ const CategoryPage = () => {
         {hasMore && (
           <div className="mt-12 mb-8">
             <button
-              className="group flex items-center gap-3 bg-three hover:bg-two px-8 py-3 rounded-lg text-white font-medium transition-all duration-300 shadow-lg hover:shadow-xl"
+              className="group flex items-center gap-3 bg-three hover:bg-two px-8 py-3 rounded-lg text-two font-medium transition-all duration-300 shadow-lg hover:shadow-xl"
               onClick={handleNextPage}
               disabled={loading}
             >
               <span>المزيد من النتائج</span>
-              <MdKeyboardDoubleArrowRight className="text-xl group-hover:translate-x-1 transition-transform text-one" />
+              <MdKeyboardDoubleArrowRight className="text-xl group-hover:translate-x-1 transition-transform text-primary-500" />
             </button>
           </div>
         )}

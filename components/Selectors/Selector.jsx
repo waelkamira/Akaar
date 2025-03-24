@@ -63,7 +63,7 @@ export default function Selector({
           classNames={{
             control: (state) =>
               `${
-                state.isFocused ? 'border-one' : 'border-gray-300'
+                state.isFocused ? 'border-primary-500' : 'border-gray-300'
               } sm:h-12 h-8`,
           }}
           components={{ Placeholder: CustomPlaceholder }}

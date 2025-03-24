@@ -157,7 +157,7 @@ export default function UploadingAndDisplayingImage({ images = [] }) {
             htmlFor="file-upload"
             className="flex flex-col items-center justify-center h-full cursor-pointer bg-white"
           >
-            <MdOutlineAddPhotoAlternate className="text-one text-3xl" />
+            <MdOutlineAddPhotoAlternate className="text-primary-500 text-3xl" />
             <h1 className="text-sm sm:text-lg">أضف صورة رئيسية</h1>
           </label>
         )}
@@ -201,7 +201,7 @@ export default function UploadingAndDisplayingImage({ images = [] }) {
                 htmlFor="file-upload"
                 className="flex flex-col items-center cursor-pointer"
               >
-                <MdOutlineAddPhotoAlternate className="text-one text-xl sm:text-2xl lg:text-3xl" />
+                <MdOutlineAddPhotoAlternate className="text-primary-500 text-xl sm:text-2xl lg:text-3xl" />
                 <h1 className="text-[8px] sm:text-sm lg:text-lg">أضف صورة</h1>
               </label>
             )}

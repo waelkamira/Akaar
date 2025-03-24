@@ -1,0 +1,381 @@
+
+tailwind.config.js
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: [
+    './pages/**/*.{js,ts,jsx,tsx,mdx}',
+    './components/**/*.{js,ts,jsx,tsx,mdx}',
+    './app/**/*.{js,ts,jsx,tsx,mdx}',
+  ],
+  theme: {
+    extend: {
+      colors: {
+        one: '#FF7C34',
+        two: '#4C4D4F',
+        three: '#7E7F81',
+        four: '#A1A5AD',
+        five: '#F2F4F7',
+      },
+      backgroundImage: {
+        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+        'gradient-conic':
+          'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+      },
+      screens: {
+        xs: '1px',
+      },
+    },
+  },
+  plugins: [],
+};
+
+package.json
+{
+  "name": "my-app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "prisma": "prisma",
+    "postinstall": "prisma generate"
+  },
+  "dependencies": {
+    "@auth/mongodb-adapter": "^3.1.0",
+    "@capacitor/android": "^6.1.0",
+    "@capacitor/core": "^6.1.0",
+    "@capacitor/ios": "^6.1.0",
+    "@emailjs/browser": "^4.4.1",
+    "@headlessui/react": "^2.2.0",
+    "@hookform/resolvers": "^3.4.2",
+    "@libsql/client": "^0.6.2",
+    "@prisma/adapter-libsql": "^5.17.0",
+    "@prisma/client": "^6.4.1",
+    "@radix-ui/react-slider": "^1.2.3",
+    "@radix-ui/react-slot": "^1.1.2",
+    "@supabase/ssr": "^0.4.0",
+    "@supabase/supabase-js": "^2.45.0",
+    "@types/lodash.debounce": "^4.0.9",
+    "autoprefixer": "^10.4.19",
+    "axios": "^1.7.9",
+    "babel-preset-es2015": "^6.24.1",
+    "bcrypt": "^5.1.1",
+    "canvas-confetti": "^1.9.3",
+    "class-variance-authority": "^0.7.1",
+    "cloudinary": "^2.2.0",
+    "clsx": "^2.1.1",
+    "csv-parser": "^3.0.0",
+    "csv-writer": "^1.6.0",
+    "date-fns": "^3.6.0",
+    "debounce": "^2.1.0",
+    "dotenv": "^16.4.5",
+    "drizzle-orm": "^0.32.0",
+    "flatted": "^3.3.3",
+    "formik": "^2.4.6",
+    "framer-motion": "^12.4.2",
+    "imagekit": "^6.0.0",
+    "imagekitio-react": "^4.2.0",
+    "ioredis": "^5.4.1",
+    "json2csv": "^6.0.0-alpha.2",
+    "jsonp": "^0.2.1",
+    "keen-slider": "^6.8.6",
+    "leaflet": "^1.9.4",
+    "libsql-stateless-easy": "^1.7.0",
+    "lodash": "^4.17.21",
+    "lodash.debounce": "^4.0.8",
+    "lru-cache": "^11.0.2",
+    "lucide-react": "^0.475.0",
+    "maplibre-gl": "^5.0.1",
+    "mongodb": "^6.6.2",
+    "mongodb-data-api": "^0.4.0",
+    "mongoose": "^8.4.0",
+    "next": "^14.2.5",
+    "next-auth": "^4.24.7",
+    "next-cloudinary": "^6.6.0",
+    "node-cache": "^5.1.2",
+    "ol": "^10.3.1",
+    "papaparse": "^5.4.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-hook-form": "^7.51.5",
+    "react-hot-toast": "^2.4.1",
+    "react-icons": "^5.2.1",
+    "react-leaflet": "^4.2.1",
+    "react-responsive": "^10.0.0",
+    "react-router-dom": "^7.4.0",
+    "react-select": "^5.8.0",
+    "react-slick": "^0.30.3",
+    "react-spinners": "^0.15.0",
+    "redis": "^4.7.0",
+    "slick-carousel": "^1.8.1",
+    "sonner": "^2.0.1",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^5.1.7",
+    "swiper": "^11.2.4",
+    "tailwind-merge": "^3.0.2",
+    "uuid": "^10.0.0",
+    "video.js": "^8.17.2",
+    "yup": "^1.6.1",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.1.0",
+    "drizzle-kit": "^0.23.0",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.3",
+    "html-loader": "^5.0.0",
+    "postcss": "^8.4.38",
+    "prisma": "^6.4.1",
+    "supabase": "^1.187.10",
+    "tailwindcss": "^3.4.4"
+  }
+}
+
+app
+Folder PATH listing
+Volume serial number is 0000003C E458:0050
+J:\AKAAR\APP
+|   favicon.png
+|   globals.css
+|   layout.js
+|   page.js
+|   
++---api
+|   +---allUsers
+|   |       route.js
+|   |       
+|   +---auth
+|   |   \---[...nextauth]
+|   |           route.js
+|   |           
+|   +---authOptions
+|   |       route.js
+|   |       
+|   +---categories
+|   |   +---bulk
+|   |   |       route.js
+|   |   |       
+|   |   \---[category]
+|   |           route.js
+|   |           
+|   +---favorite
+|   |   |   route.js
+|   |   |   
+|   |   +---check
+|   |   |       route.js
+|   |   |       
+|   |   \---ids
+|   |           route.js
+|   |           
+|   +---myPosts
+|   |       route.js
+|   |       
+|   +---product
+|   |       route.js
+|   |       
+|   +---register
+|   |       route.js
+|   |       
+|   +---search
+|   |       route.js
+|   |       
+|   +---showPostById
+|   |       route.js
+|   |       
+|   +---uploadImageToImageKit
+|   |       route.js
+|   |       
+|   +---uploadImageToImgbb
+|   |       route.js
+|   |       
+|   +---uploadImageToImgur
+|   |       route.js
+|   |       
+|   +---uploadImageToIPFS
+|   |       route.js
+|   |       
+|   \---user
+|           route.js
+|           
++---categories
+|   \---[id]
+|           page.jsx
+|           
++---contactUs
+|   |   page.jsx
+|   |   
+|   \---byEmail
+|           page.jsx
+|           
++---editPost
+|   \---[id]
+|           page.jsx
+|           PostForm.jsx
+|           
++---favorite
+|       page.jsx
+|       
++---login
+|       page.jsx
+|       
++---myPosts
+|       page.jsx
+|       PostActions.jsx
+|       
++---newPost
+|       FormInput.jsx
+|       FormSelect.jsx
+|       FormSubmitButton.jsx
+|       FormTextarea.jsx
+|       page.jsx
+|       
++---post
+|   \---[id]
+|           page.jsx
+|           
++---profile
+|       page.jsx
+|       
++---register
+|       page.jsx
+|       
+\---users
+        page.jsx
+        
+
+components
+Folder PATH listing
+Volume serial number is 00000031 E458:0050
+J:\AKAAR\COMPONENTS
++---authContext
+|       AuthContext.jsx
+|       Context.jsx
+|       
++---Buttons
+|       BackButton.jsx
+|       Button.jsx
+|       LoginButton.jsx
+|       
++---Categories
+|       categories.jsx
+|       categoryFields.jsx
+|       
++---categoryFields
+|       ????.jsx
+|       ?????.jsx
+|       ?????.jsx
+|       ??????????.jsx
+|       ????.jsx
+|       ??????.jsx
+|       ?????.jsx
+|       ?????.jsx
+|       ?????.jsx
+|       ??????.jsx
+|       ????.jsx
+|       ??????.jsx
+|       ???.jsx
+|       ?????????.jsx
+|       ????.jsx
+|       ????.jsx
+|       ?????.jsx
+|       ?????.jsx
+|       
++---lib
+|       utils.jsx
+|       
++---lists
+|       CarsBrandsList.jsx
+|       Cities.jsx
+|       mainButtons.jsx
+|       Years.jsx
+|       
++---map
+|       onClickMap.jsx
+|       SyriaMap.jsx
+|       
++---navbars
+|       CategoriesNavBar.jsx
+|       CategoriesSideBar.jsx
+|       FirstNavBar.jsx
+|       MainNavBar.jsx
+|       SideBar.jsx
+|       SideBarMenu.jsx
+|       
++---photos
+|       Hero.jsx
+|       imageSlider.jsx
+|       ImgurClientManager.jsx
+|       LoadingPhoto.jsx
+|       PostGallery.jsx
+|       UploadingAndDisplayingImage.jsx
+|       
++---ReusableComponents
+|   |   Card.jsx
+|   |   ColoredCards.jsx
+|   |   CustomToast.jsx
+|   |   DeletePost.jsx
+|   |   Footer.jsx
+|   |   FormatDate.jsx
+|   |   Item.jsx
+|   |   ItemSmallItem.jsx
+|   |   Loading.jsx
+|   |   NavegationPages.jsx
+|   |   SmallCard.jsx
+|   |   SmallItem.jsx
+|   |   SuccessComponent.tsx
+|   |   TextArea.jsx
+|   |   userNameAndPhoto.jsx
+|   |   youtubeUtils.jsx
+|   |   
+|   \---SmallCard
+|           AdditionalFields.jsx
+|           DetailsSection.jsx
+|           FavoriteButton.jsx
+|           ImageComponent.jsx
+|           SmallCard.jsx
+|           
++---Search
+|   |   DynamicField.jsx
+|   |   Filters.jsx
+|   |   PriceInput.jsx
+|   |   Search.jsx
+|   |   SearchControls.jsx
+|   |   SearchInput.jsx
+|   |   SearchResults.jsx
+|   |   useSearchLogic.jsx
+|   |   
+|   \---Filters
+|           FilterContent.jsx
+|           Filters.jsx
+|           MobileFilterMenu.jsx
+|           Search.jsx
+|           
++---Selectors
+|       CarsBrandSelector.jsx
+|       CategoriesSelector.jsx
+|       CategoryComponent.jsx
+|       CategorySelector.jsx
+|       CitySelector.jsx
+|       PropertyTypeSelector.jsx
+|       Selector.jsx
+|       yearSelector.jsx
+|       
+\---ui
+        button.tsx
+        skeleton.tsx
+        slider.tsx
+        
+
+lib
+Folder PATH listing
+Volume serial number is 00000081 E458:0050
+J:\AKAAR\LIB
+    cacheUtils.js
+    favoritesClient.js
+    propertiesClient.js
+    supabaseClient.js
+    
+No subfolders exist 
+

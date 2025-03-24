@@ -78,7 +78,7 @@
 //   };
 
 //   const FilterContent = () => (
-//     <div className="flex flex-col sm:flex-row items-start justify-start gap-2 w-full py-2 overflow-x-auto whitespace-nowrap scrollbar-thin scrollbar-thumb-one scrollbar-track-three 2xl:mr-[203px]">
+//     <div className="flex flex-col sm:flex-row items-start justify-start gap-2 w-full py-2 overflow-x-auto whitespace-nowrap scrollbar-thin scrollbar-thumb-primary-500 scrollbar-track-three 2xl:mr-[203px]">
 //       <div className="flex flex-col sm:flex-row justify-start items-start gap-2 w-full sm:w-fit">
 //         <SearchControls
 //           onSearch={onSearch}
@@ -132,7 +132,7 @@
 //       >
 //         <button
 //           onClick={() => setIsMenuOpen(!isMenuOpen)}
-//           className="bg-white rounded-full px-2 py-1 text-one flex items-center gap-2"
+//           className="bg-white rounded-full px-2 py-1 text-primary-500 flex items-center gap-2"
 //         >
 //           {isMenuOpen ? <FaTimes size={15} /> : <FaFilter size={15} />}
 //           <span className="text-gray-400 text-sm">الفلاتر</span>
@@ -142,7 +142,7 @@
 //       {/* Desktop View */}
 //       <div
 //         className={
-//           path === '/' ? 'hidden' : '' + ' hidden sm:block sm:bg-one px-2'
+//           path === '/' ? 'hidden' : '' + ' hidden sm:block sm:bg-primary-500 px-2'
 //         }
 //       >
 //         <FilterContent />
@@ -165,14 +165,14 @@
 //                   onSearch();
 //                   setIsMenuOpen(false);
 //                 }}
-//                 className="flex-1 bg-one text-white py-2 rounded-[5px] flex items-center justify-center gap-2 shadow-lg"
+//                 className="flex-1 bg-primary-500 text-white py-2 rounded-[5px] flex items-center justify-center gap-2 shadow-lg"
 //               >
 //                 <FaSearch size={20} />
 //                 <span>بحث</span>
 //               </button>
 //               <button
 //                 onClick={() => setIsMenuOpen(false)}
-//                 className="flex-1 bg-one text-white py-2 rounded-[5px] flex items-center justify-center gap-2 shadow-lg"
+//                 className="flex-1 bg-primary-500 text-white py-2 rounded-[5px] flex items-center justify-center gap-2 shadow-lg"
 //               >
 //                 <FaTimes size={20} />
 //                 <span>إغلاق</span>
@@ -275,7 +275,7 @@ const FilterContent = React.memo(
     );
 
     return (
-      <div className="flex flex-col sm:flex-row items-start justify-start gap-2 w-full py-2 overflow-x-auto whitespace-nowrap scrollbar-thin scrollbar-thumb-one scrollbar-track-three 2xl:mr-[203px]">
+      <div className="flex flex-col sm:flex-row items-start justify-start gap-2 w-full py-2 overflow-x-auto whitespace-nowrap scrollbar-thin scrollbar-thumb-primary-500 scrollbar-track-three 2xl:mr-[203px]">
         <div className="flex flex-col sm:flex-row justify-start items-start gap-2 w-full sm:w-fit">
           <SearchControls
             onSearch={onSearch}
@@ -349,7 +349,7 @@ function Filters({ searchData, setSearchData, onSearch, onReset }) {
       >
         <button
           onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className="bg-white rounded-full px-2 py-1 text-one flex items-center gap-2"
+          className="bg-white rounded-full px-2 py-1 text-primary-500 flex items-center gap-2"
         >
           {isMenuOpen ? <FaTimes size={15} /> : <FaFilter size={15} />}
           <span className="text-gray-400 text-sm">الفلاتر</span>
@@ -358,7 +358,8 @@ function Filters({ searchData, setSearchData, onSearch, onReset }) {
 
       <div
         className={
-          (path === '/' ? 'hidden' : '') + ' hidden sm:block sm:bg-one px-2'
+          (path === '/' ? 'hidden' : '') +
+          ' hidden sm:block sm:bg-primary-500 px-2'
         }
       >
         <FilterContent
@@ -392,14 +393,14 @@ function Filters({ searchData, setSearchData, onSearch, onReset }) {
                   onSearch();
                   setIsMenuOpen(false);
                 }}
-                className="flex-1 bg-one text-white py-2 rounded-[5px] flex items-center justify-center gap-2 shadow-lg"
+                className="flex-1 bg-primary-500 text-white py-2 rounded-[5px] flex items-center justify-center gap-2 shadow-lg"
               >
                 <FaSearch size={20} />
                 <span>بحث</span>
               </button>
               <button
                 onClick={() => setIsMenuOpen(false)}
-                className="flex-1 bg-one text-white py-2 rounded-[5px] flex items-center justify-center gap-2 shadow-lg"
+                className="flex-1 bg-primary-500 text-white py-2 rounded-[5px] flex items-center justify-center gap-2 shadow-lg"
               >
                 <FaTimes size={20} />
                 <span>إغلاق</span>

@@ -11,7 +11,7 @@ import {
 } from 'react-icons/md'; // أيقونات من react-icons/md
 import { GiCarKey } from 'react-icons/gi'; // أيقونات من react-icons/gi
 import { useRouter } from 'next/navigation';
-import HeroSlider from '../../components/photos/HeroSlider';
+import Hero from '../../components/Home/Hero';
 import Card from '../../components/ReusableComponents/Card'; // تأكد من تعديل المسار حسب مكان المكون
 
 export default function ContactUs() {
@@ -21,29 +21,29 @@ export default function ContactUs() {
   const contactInfo = [
     {
       icon: (
-        <MdOutlineAddLocationAlt className="text-lg select-none text-one" />
+        <MdOutlineAddLocationAlt className="text-lg select-none text-primary-500" />
       ),
       text: 'سوريا - دمشق',
       link: null,
     },
     {
-      icon: <FaFacebookF className="text-lg select-none text-one" />,
+      icon: <FaFacebookF className="text-lg select-none text-primary-500" />,
       text: 'facebook',
       link: 'https://www.facebook.com/WaelKhamira/',
     },
     {
-      icon: <FiLinkedin className="text-lg select-none text-one" />,
+      icon: <FiLinkedin className="text-lg select-none text-primary-500" />,
       text: 'linkedin',
       link: null,
     },
     {
-      icon: <TbBrandGmail className="text-lg select-none text-one" />,
+      icon: <TbBrandGmail className="text-lg select-none text-primary-500" />,
       text: 'gmail',
       link: '/contactUs/byEmail',
     },
     {
       icon: (
-        <MdOutlineAlternateEmail className="text-lg select-none text-one" />
+        <MdOutlineAlternateEmail className="text-lg select-none text-primary-500" />
       ),
       text: 'hotmail',
       link: '/contactUs/byEmail',
@@ -69,7 +69,7 @@ export default function ContactUs() {
       text: 'يوفر موقع متجر إمكانية التواصل المباشر بين البائعين والمشترين أو المستأجرين والملاك. يمكن للمستخدمين الاتصال بالبائعين مباشرة عبر الهاتف لطرح أي أسئلة أو استفسارات.',
       color: 'orange',
       image: 'https://i.imgur.com/uGXmBJO.jpg',
-      emoji: <MdOutlineSell className="text-one" />,
+      emoji: <MdOutlineSell className="text-primary-500" />,
     },
     {
       cardName: 'شراء ',
@@ -100,7 +100,7 @@ export default function ContactUs() {
   return (
     <div className="absolute top-8 xl:top-16 flex flex-col justify-center items-center w-full rounded-b text-black">
       {/* <MainNavbar /> */}
-      <HeroSlider images={images} />
+      <Hero images={images} />
 
       <main className="flex flex-col justify-center items-center pb-16 w-full rounded-b">
         <div className="flex flex-col justify-center items-center w-full xl:w-[90%] 2xl:w-[70%] h-full sm:px-16 pt-2 overflow-y-auto z-10 px-2">
@@ -115,18 +115,26 @@ export default function ContactUs() {
                 والسيارات. يوفر الموقع تجربة مستخدم سلسة وممتعة مع تصميم جذاب
                 وسهل الاستخدام. سواء كنت تبحث عن منزل جديد، شقة للإيجار، أو
                 سيارة حديثة، فإن موقع متجر يقدم لك كل ما تحتاجه في مكان واحد.
-                <h1 className="text-one w-full text-center my-4">- - - -</h1>
+                <h1 className="text-primary-500 w-full text-center my-4">
+                  - - - -
+                </h1>
                 يوفر موقع متجر إمكانية التواصل المباشر بين البائعين والمشترين أو
                 المستأجرين والملاك. يمكن للمستخدمين الاتصال بالبائعين مباشرة عبر
                 الهاتف لطرح أي أسئلة أو استفسارات.
-                <h1 className="text-one w-full text-center my-4">- - - -</h1>
+                <h1 className="text-primary-500 w-full text-center my-4">
+                  - - - -
+                </h1>
                 يحتوي موقع متجر على قسم خاص للمساعدة والدعم الفني لضمان حل أي
                 استفسارات أو مشاكل قد تواجهها أثناء استخدام الموقع.
-                <h1 className="text-one w-full text-center my-4">- - - -</h1>
+                <h1 className="text-primary-500 w-full text-center my-4">
+                  - - - -
+                </h1>
                 تصميم موقع متجر يركز على توفير تجربة تصفح سلسة وسريعة. يتم تحميل
                 صفحات الموقع بسرعة عالية، مما يقلل من وقت الانتظار ويحسن رضا
                 المستخدمين.
-                <h1 className="text-one w-full text-center my-4">- - - -</h1>
+                <h1 className="text-primary-500 w-full text-center my-4">
+                  - - - -
+                </h1>
                 في النهاية، موقع متجر هو وجهة مثالية لكل من يبحث عن خدمات البيع
                 والتأجير للعقارات والسيارات.
               </div>
@@ -184,7 +192,7 @@ export default function ContactUs() {
                       className="flex items-center justify-between gap-2 w-full hover:bg-white hover:bg-opacity-20 rounded-lg hover:scale-[101%] hover:cursor-pointer px-4 py-2 transition-all duration-300"
                     >
                       <div className="flex gap-2 items-center">
-                        <FaCalendarDays className="text-lg select-none text-one" />
+                        <FaCalendarDays className="text-lg select-none text-primary-500" />
                         <li className="text-md sm:text-lg select-none text-nowrap">
                           {work.day}
                         </li>

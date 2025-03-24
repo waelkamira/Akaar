@@ -12,7 +12,7 @@ export default function CustomToast({
     <div
       className={`${
         t.visible ? 'animate-enter' : 'animate-leave'
-      } max-w-md w-full bg-white text-two shadow-sm shadow-gray-300 rounded pointer-events-auto flex-2 items-center justify-center p-4 mx-2 border-t-[10px] border-one`}
+      } max-w-md w-full bg-white text-two shadow-sm shadow-gray-300 rounded pointer-events-auto flex-2 items-center justify-center p-4 mx-2 border-t-[10px] border-primary-500`}
     >
       <div className="flex justify-between items-center my-1">
         <div className="flex-1 w-full">
@@ -34,7 +34,7 @@ export default function CustomToast({
         <div>
           <h1 className="sm:mt-4 text-[12px] sm:text-sm s:text-nowrap text-center  ">
             <span className="text-green-400 text-xl ">{greenEmoji}</span>
-            <span className="text-one text-xl mx-1 ">{redEmoji}</span>
+            <span className="text-primary-500 text-xl mx-1 ">{redEmoji}</span>
 
             {message}
             <span className="text-green-400 text-xl mx-1 ">{emoji}</span>

@@ -11,7 +11,7 @@ import { FaCarSide } from 'react-icons/fa';
 const realEstate = [
   {
     name: 'الماركة',
-    icon: <FaCar className="text-one text-lg sm:text-xl" />,
+    icon: <FaCar className="text-primary-500 text-lg sm:text-xl" />,
     placeholder: 'تويوتا',
     options: {
       1: 'تويوتا Toyota',
@@ -134,17 +134,17 @@ const realEstate = [
   },
   {
     name: 'الموديل',
-    icon: <FaTools className="text-one text-lg sm:text-xl" />,
+    icon: <FaTools className="text-primary-500 text-lg sm:text-xl" />,
     placeholder: 'كورولا',
   },
   {
     name: 'السنة',
-    icon: <FaCalendarAlt className="text-one text-lg sm:text-xl" />,
+    icon: <FaCalendarAlt className="text-primary-500 text-lg sm:text-xl" />,
     placeholder: '2021',
   },
   {
     name: 'الحالة',
-    icon: <GiCarWheel className="text-one text-lg sm:text-xl" />,
+    icon: <GiCarWheel className="text-primary-500 text-lg sm:text-xl" />,
     placeholder: '-اختر-',
     options: {
       1: 'جديدة',
@@ -153,7 +153,7 @@ const realEstate = [
   },
   {
     name: 'بيع/أجار',
-    icon: <FaCarSide className="text-one text-lg sm:text-xl" />,
+    icon: <FaCarSide className="text-primary-500 text-lg sm:text-xl" />,
     placeholder: '-اختر-',
     options: {
       1: 'بيع',
@@ -162,7 +162,9 @@ const realEstate = [
   },
   {
     name: 'نوع الوقود',
-    icon: <BsFillFuelPumpDieselFill className="text-one text-lg sm:text-xl" />,
+    icon: (
+      <BsFillFuelPumpDieselFill className="text-primary-500 text-lg sm:text-xl" />
+    ),
     placeholder: '-اختر-',
     options: {
       1: 'بنزين',
@@ -175,7 +177,9 @@ const realEstate = [
 
   {
     name: 'عدد الكيلومترات',
-    icon: <IoSpeedometerOutline className="text-one text-lg sm:text-xl" />,
+    icon: (
+      <IoSpeedometerOutline className="text-primary-500 text-lg sm:text-xl" />
+    ),
     placeholder: '20.000',
   },
 ];

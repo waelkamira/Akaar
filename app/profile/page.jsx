@@ -98,7 +98,7 @@ export default function Profile() {
                 value={userName}
                 onChange={(e) => setUserName(e.target.value)}
                 placeholder="أدخل اسمك الجديد"
-                className="px-4 py-3 text-lg text-gray-700 border rounded-lg w-full bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                className="px-4 py-3 text-lg text-gray-700 border rounded-lg w-full bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500-500 focus:border-transparent transition-all"
               />
               <div className="w-full border-t border-gray-300"></div>
             </div>
@@ -107,7 +107,7 @@ export default function Profile() {
               <Button
                 title="حفظ التغييرات"
                 onClick={saveProfileChanges}
-                style="bg-primary-500 text-white hover:bg-primary-600 transition-all py-3 rounded-lg w-full text-lg font-semibold"
+                style="bg-primary-500-500 text-white hover:bg-primary-500-600 transition-all py-3 rounded-lg w-full text-lg font-semibold"
               />
             </div>
             {/* User Email and Name Section */}
@@ -128,7 +128,7 @@ export default function Profile() {
             {/* Links to Other Pages */}
             <div className="flex flex-col items-center gap-4 w-full mt-4">
               <Link href="/myPosts">
-                <h1 className="text-lg text-gray-700 hover:text-primary-500 transition-all">
+                <h1 className="text-lg text-gray-700 hover:text-primary-500-500 transition-all">
                   إعلاناتي
                 </h1>
               </Link>

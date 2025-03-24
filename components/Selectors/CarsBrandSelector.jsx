@@ -73,7 +73,7 @@ export default function CarsBrandSelector({ check }) {
     return (
       <components.Placeholder {...props}>
         <div className="flex items-center gap-2 text-gray-400">
-          <FaCar className="text-one text-lg sm:text-xl" />
+          <FaCar className="text-primary-500 text-lg sm:text-xl" />
           <span>الماركة تويوتا</span>
         </div>
       </components.Placeholder>
@@ -95,7 +95,7 @@ export default function CarsBrandSelector({ check }) {
           classNamePrefix="select"
           classNames={{
             control: (state) =>
-              `${state.isFocused ? 'border-one' : 'border-gray-300'} `,
+              `${state.isFocused ? 'border-primary-500' : 'border-gray-300'} `,
           }}
           components={{ Placeholder: CustomPlaceholder }}
         />
