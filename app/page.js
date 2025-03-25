@@ -9,12 +9,14 @@ import categories from '../components/Categories/categories';
 import { FaAngleDoubleLeft, FaAngleDoubleRight } from 'react-icons/fa';
 import { useEffect, useState } from 'react';
 import CategoriesNavBar from '../components/navbars/CategoriesNavBar';
+import { useSession } from 'next-auth/react';
 
 const Home = () => {
   const [productsByCategory, setProductsByCategory] = useState({});
   const [loading, setLoading] = useState(true); // حالة التحميل
   const router = useRouter();
-  // console.log('productsByCategory', productsByCategory);
+  const session = useSession();
+  // console.log('session?.data?.user?.id', session?.data?.user?.id);
 
   useEffect(() => {
     fetchProductsByCategory();
@@ -24,15 +26,15 @@ const Home = () => {
     try {
       // تحويل قائمة الفئات إلى سلسلة (مثل "1,2,3")
       const categoryIds = categories.map((category) => category.id).join(',');
-
+      console.log('categoryIds', categoryIds);
       // جلب المنتجات لجميع الفئات في طلب واحد
       const response = await fetch(
         `/api/categories/bulk?categories=${categoryIds}`
       );
       const data = await response.json();
-
+      console.log('data', data);
       // تحديث الحالة بالمنتجات
-      setProductsByCategory(data.data);
+      setProductsByCategory(data?.data);
     } catch (error) {
       console.error('Error fetching products:', error);
     } finally {

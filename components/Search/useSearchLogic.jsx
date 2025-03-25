@@ -80,7 +80,7 @@ export const useSearchLogic = () => {
         setSearchState((prev) => ({
           ...prev,
           isSearchTriggered: true,
-          pageNumber: 1,
+          pageNumber: 0,
         }));
       }
     }, 500);
