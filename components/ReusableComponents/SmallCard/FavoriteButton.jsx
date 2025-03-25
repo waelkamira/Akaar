@@ -52,10 +52,10 @@ function FavoriteButton({ item }) {
   );
 
   const checkFavoriteStatus = useCallback(() => {
-    console.log('checkFavoriteStatus تم الاستدعاء ');
+    // console.log('checkFavoriteStatus تم الاستدعاء ');
 
     if (item?.id) {
-      const favorited = favoriteIds.includes(item?.id);
+      const favorited = favoriteIds?.includes(item?.id);
       console.log('favoriteIds', favoriteIds);
       if (favorited) {
         console.log('favorited', favorited);

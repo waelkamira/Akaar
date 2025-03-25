@@ -54,12 +54,17 @@ export async function GET(req) {
 }
 
 // POST: إنشاء سيارة جديدة
+
+
 export async function POST(req) {
   const session = await getServerSession(authOptions);
-  const user = session?.user;
 
-  // التحقق من وجود جلسة مستخدم
-  if (!user) {
+  // الحصول على معلومات المستخدم من الجلسة
+  const user = session?.user;
+  const userId = user?.id; // الحصول على userId من الجلسة
+
+  // التحقق من وجود جلسة مستخدم و userId
+  if (!userId) {
     return new Response(
       JSON.stringify({ error: 'يجب تسجيل الدخول لإنشاء منتج' }),
       { status: 401 }
@@ -68,27 +73,28 @@ export async function POST(req) {
 
   try {
     const data = await req.json();
-    console.log('data', data);
-    // // التحقق من صحة البيانات المطلوبة
-    // if (
-    //   !data?.title ||
-    //   !data?.basePrice ||
-    //   !data?.description ||
-    //   !data?.images ||
-    //   data?.images.length === 0
-    // ) {
-    //   return new Response(
-    //     JSON.stringify({ error: 'يرجى ملء جميع الحقول المطلوبة!' }),
-    //     { status: 400 }
-    //   );
-    // }
+    console.log('Data received from client:', data);
+    console.log('Session user info:', user); // Log session user info
+
+    // التحقق من وجود المستخدم في قاعدة البيانات
+    const existingUser = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!existingUser) {
+      console.error(`User with ID ${userId} not found in database.`);
+      return new Response(
+        JSON.stringify({ error: 'المستخدم غير موجود في قاعدة البيانات.' }),
+        { status: 400 }
+      );
+    }
 
     // إنشاء سجل جديد باستخدام Prisma
     const newProduct = await prisma.product.create({
       data: {
         id: data?.id || undefined,
         title: data?.title,
-        userId: data?.userId || null,
+        userId: userId, // استخدام userId من الجلسة (أكثر أمانًا)
         categoryId: data?.category,
         categoryName: data?.categoryName,
         city: data?.city || '',
@@ -126,6 +132,8 @@ export async function POST(req) {
     return new Response(JSON.stringify({ error: 'Internal Server Error' }), {
       status: 500,
     });
+  } finally {
+    await prisma.$disconnect();
   }
 }
 

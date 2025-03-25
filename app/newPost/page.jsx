@@ -28,71 +28,82 @@ import { PiBuildingsDuotone } from 'react-icons/pi';
 export default function NewPost() {
   const [categoryFields, setCategoryFields] = useState([]);
   const { register, handleSubmit } = useForm();
-  const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState(null);
   const [emptyFields, setEmptyFields] = useState([]);
   const router = useRouter();
   const { addImages, location, dispatch } = useContext(inputsContext);
   const session = useSession();
   const [error, setError] = useState(null);
+  const [userId, setUserId] = useState(''); // حالة لتخزين الـ userId
 
   const [formState, setFormState] = useState({
     id: '',
     userId: '',
     title: '',
-    categoryId: selectedCategory?.id || '',
-    categoryName: selectedCategory?.name || '',
-    images: addImages || [],
+    categoryId: '',
+    categoryName: '',
+    images: [],
     city: '',
     town: '',
     basePrice: '',
     phoneNumber: '',
     description: '',
     link: '',
-    lng: location?.[1] || 36.2765,
-    lat: location?.[0] || 33.5138,
+    lng: 36.2765,
+    lat: 33.5138,
     details: {},
   });
 
-  // ✅ جلب الفئة`category`
+  // ✅ جلب الفئة
   const handleCategoryChange = (catagory) => {
     if (catagory) {
-      setSelectedCategory(categories[catagory - 1]); // تخزين نص الـ option المحدد
+      const selected = categories[catagory - 1];
+      setSelectedCategory(selected);
+
+      // قم بتحديث formState مباشرةً هنا
+      setFormState(prev => ({
+        ...prev,
+        categoryId: selected?.id || '',
+        categoryName: selected?.name || '',
+      }));
+
     } else {
-      setSelectedCategory(null); // إعادة تعيين الحالة إذا لم يتم اختيار شيء
+      setSelectedCategory(null);
+      // قم بتحديث formState هنا أيضًا إذا تم إلغاء تحديد الفئة
+      setFormState(prev => ({
+        ...prev,
+        categoryId: '',
+        categoryName: '',
+      }));
     }
   };
 
-  // ✅ تحميل الحقول بناءً على الفئة عند تغيير `category`
+  // ✅ تحميل الحقول بناءً على الفئة عند تغيير الفئة
   useEffect(() => {
     if (selectedCategory) {
       import(`../../components/categoryFields/${selectedCategory?.name}.jsx`)
         .then((module) => {
           setCategoryFields(module.default);
+          setError(null); // Reset error on successful load
         })
         .catch((err) => {
           console.error('Failed to load fields:', err);
+          setCategoryFields([]); // Reset fields on error
           setError('فشل في تحميل الحقول');
         });
+    } else {
+      setCategoryFields([]); // Reset fields when category is unselected
     }
   }, [selectedCategory]);
 
+  // ✅ تحديث userId من localStorage عند تحميل المكون
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const userData = localStorage.getItem('CurrentUser'); // جلب البيانات من localStorage
+      const userData = localStorage.getItem('CurrentUser');
       if (userData) {
-        // التحقق من وجود البيانات
         try {
-          const user = JSON.parse(userData); // تحليل البيانات إلى JSON
-          setUserId(user?.id); // تعيين معرف المستخدم
-          setFormState((prev) => ({
-            ...prev,
-            userId: user?.id || '',
-            categoryId: selectedCategory?.id || '',
-            categoryName: selectedCategory?.name || '',
-            images: addImages.length ? addImages : prev.images,
-            lng: location?.[1] || prev.lng,
-            lat: location?.[0] || prev.lat,
-          }));
+          const user = JSON.parse(userData);
+          setUserId(user?.id || ''); // تحديث حالة userId
         } catch (error) {
           console.error('Failed to parse user data:', error);
         }
@@ -100,7 +111,21 @@ export default function NewPost() {
         console.warn('No user data found in localStorage.');
       }
     }
-  }, [selectedCategory, location, addImages]);
+  }, []);
+
+  // ✅ تحديث formState عند تغيير userId, selectedCategory, location, addImages
+  useEffect(() => {
+    setFormState((prev) => ({
+      ...prev,
+      userId: userId || '', // استخدام userId من الحالة
+      categoryId: selectedCategory?.id || '',
+      categoryName: selectedCategory?.name || '',
+      images: addImages.length ? addImages : prev.images,
+      lng: location?.[1] || prev.lng,
+      lat: location?.[0] || prev.lat,
+    }));
+  }, [userId, selectedCategory, location, addImages]); // الاعتماد على userId
+
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -109,7 +134,6 @@ export default function NewPost() {
       [name]: value,
     }));
 
-    // إزالة الحقل من قائمة الحقول الفارغة إذا تم ملؤه
     if (value.trim()) {
       setEmptyFields((prev) => prev.filter((item) => item !== name));
     }
@@ -124,7 +148,6 @@ export default function NewPost() {
       },
     }));
 
-    // إزالة الحقل من قائمة الحقول الفارغة إذا تم ملؤه
     if (value.trim()) {
       setEmptyFields((prev) => prev.filter((item) => item !== field));
     }
@@ -143,14 +166,18 @@ export default function NewPost() {
       'description',
     ];
 
-    const emptyFieldsList = requiredFields.filter(
-      (field) =>
-        typeof formState[field] === 'string' && !formState[field].trim()
-    );
+    let emptyFieldsList = [];
 
-    // التحقق من الحقول الإضافية
-    if (selectedCategory && categoryFields[selectedCategory]) {
-      categoryFields[selectedCategory].forEach((field) => {
+    const hasEmptyRequiredField = requiredFields.some(field => {
+      if (typeof formState[field] === 'string' && !formState[field].trim()) {
+        emptyFieldsList.push(field);
+        return true; // Stop iterating if an empty field is found
+      }
+      return false;
+    });
+
+    if (!hasEmptyRequiredField && selectedCategory && categoryFields) {
+      categoryFields.forEach(field => {
         if (!formState.details[field?.name]?.trim()) {
           emptyFieldsList.push(field?.name);
         }
@@ -161,7 +188,6 @@ export default function NewPost() {
     return emptyFieldsList.length === 0;
   };
 
-  // التحقق من الصور
   const validateImages = () => {
     if (addImages.length === 0) {
       toast.error('يرجى إضافة صورة على الأقل.');
@@ -170,7 +196,6 @@ export default function NewPost() {
     return true;
   };
 
-  // إرسال النموذج
   const onSubmit = async () => {
     if (!validateImages()) {
       return;
@@ -218,7 +243,7 @@ export default function NewPost() {
             e.preventDefault();
             onSubmit();
           }}
-          className="space-y-4 p-4 mt-40 border rounded-lg shadow-md w-full xl:w-1/2"
+          className="space-y-4 p-4 border rounded-lg shadow-md w-full xl:w-1/2"
         >
           <UploadingAndDisplayingImage />
 
@@ -281,11 +306,13 @@ export default function NewPost() {
             onChange={handleInputChange}
           />
 
-          {selectedCategory &&
+          {error && <p className="text-red-500">خطأ: {error}</p>}
+
+          {selectedCategory && Array.isArray(categoryFields) &&
             categoryFields?.map((field, index) => (
               <div key={index}>
                 <label className="font-medium mb-2 flex items-center gap-2">
-                  {field?.icon} {field?.label} {/* عرض الاسم العربي */}
+                  {field?.icon} {field?.label}
                 </label>
                 {field?.options ? (
                   <select
@@ -295,16 +322,12 @@ export default function NewPost() {
                         : ''
                     }`}
                     required
-                    onChange={
-                      (e) => handleDetailsChange(field?.name, e.target.value) // استخدام `name` لحفظ القيمة
-                    }
+                    onChange={(e) => handleDetailsChange(field?.name, e.target.value)}
                   >
                     <option value="">{field?.placeholder}</option>
                     {Object.entries(field?.options).map(([key, value]) => (
                       <option key={key} value={key}>
-                        {' '}
-                        {/* حفظ القيمة باللغة الإنجليزية */}
-                        {value} {/* عرض الاسم العربي */}
+                        {value}
                       </option>
                     ))}
                   </select>
@@ -317,9 +340,7 @@ export default function NewPost() {
                         : ''
                     }`}
                     required
-                    onChange={
-                      (e) => handleDetailsChange(field?.name, e.target.value) // استخدام `name` لحفظ القيمة
-                    }
+                    onChange={(e) => handleDetailsChange(field?.name, e.target.value)}
                   />
                 )}
                 {emptyFields.includes(field?.name) && (

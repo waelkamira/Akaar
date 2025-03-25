@@ -223,7 +223,7 @@ async function main() {
     await prisma.product.create({
       data: {
         title: caption.substring(0, 100) || 'No Title',
-        userId: '516ed8a0-52b3-4b49-8a9a-286d56c262c5',
+        userId: '408ddbae-7754-411f-897b-db19fcf4c00b',
         categoryId: categories.map((category) => category.id)[0],
         categoryName: categories.map((category) => category.name)[0],
         image1: mediaUrls[0] || defaultImage,
