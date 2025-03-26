@@ -22,7 +22,7 @@ export default function Search() {
   } = useSearchLogic();
 
   return (
-    <div className="w-full">
+    <div className="w-full z-50">
       <SearchInput
         searchData={searchData}
         setSearchData={setSearchData}

@@ -39,17 +39,17 @@ export default function Hero({
   }, [images]);
 
   return (
-    <>
-      {/* <SearchInput /> */}
+
+     
       <div
         ref={sliderRef}
-        className="hidden sm:block relative w-full h-full overflow-hidden"
+        className="hidden sm:block w-full h-full overflow-hidden sm:h-96 z-50"
       >
         <SideBarMenu />{' '}
         {images.map((image, index) => (
           <div
             key={index}
-            className={`absolute top-0 left-0 w-full h-full transition-opacity duration-500 ${
+            className={`sm:h-96 w-full transition-opacity duration-500 ${
               index === currentImageIndex ? 'opacity-100 z-10' : 'opacity-0 z-0'
             }`}
           >
@@ -57,7 +57,7 @@ export default function Hero({
               src={image}
               fill
               alt={`Slide ${index + 1}`}
-              className="object-cover w-full h-full"
+              className="object-cover w-full s"
             />
           </div>
         ))}
@@ -74,6 +74,6 @@ export default function Hero({
           <FaChevronRight />
         </button>
       </div>
-    </>
+   
   );
 }

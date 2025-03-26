@@ -15,12 +15,8 @@ export default function SearchInput({ searchData, setSearchData, onSearch }) {
   };
 
   return (
-    <div className="flex relative flex-col items-center justify-center w-full sm:h-96">
-      {/* السلايدر */}
-
-      <Hero />
-      {/* حقل البحث */}
-      <div className="sm:absolute bottom-10 z-20 w-full sm:w-2/3 p-2 sm:p-4 bg-primary-500 sm:bg-white sm:bg-opacity-75 sm:backdrop-blur-sm sm:rounded-lg shadow-lg flex justify-center items-center gap-2">
+    <div className="flex relative flex-col items-center justify-center w-full pb-16">
+      <div className=" w-full sm:w-2/3 p-2 sm:p-4 bg-primary-500 sm:bg-white sm:bg-opacity-75 sm:backdrop-blur-sm sm:rounded-lg shadow-lg flex justify-center items-center gap-2">
         <div className="sm:hidden">
           <SideBarMenu />{' '}
         </div>

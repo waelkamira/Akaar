@@ -86,7 +86,7 @@ const CategoriesNavBar = () => {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="hidden sm:flex overflow-x-auto gap-2 p-3 bg-white/70 shadow-md w-full border-b border-orange-100/500"
+        className="hidden sm:flex overflow-x-auto gap-2 p-3 bg-white shadow-md w-full border-b border-orange-100/500"
       >
         {categories?.map((category) => (
           <AnimatedCard
