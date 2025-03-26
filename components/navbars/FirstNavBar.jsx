@@ -24,7 +24,7 @@ export default function FirstNavBar() {
             >
               {/* Floating Icon */}
 
-              <motion.div whileHover={{ rotate: 10 }} className="w-full">
+              <motion.div whileHover={{ rotate: 10 }} className="w-fit">
                 <span
                   className="size-16 xl:size-14 bg-white/20 backdrop-blur-lg flex items-center justify-center rounded-full shadow-lg border border-white/40"
                   style={{ textShadow: '3px 3px 6px rgba(0, 0, 0, 0.3)' }}
@@ -33,7 +33,7 @@ export default function FirstNavBar() {
                 </span>
               </motion.div>
               {/* Button Title */}
-              <span className="select-none text-nowrap w-full text-center">
+              <span className="select-none text-nowrap w-full text-center pl-2">
                 {button?.title}
               </span>
             </Link>
