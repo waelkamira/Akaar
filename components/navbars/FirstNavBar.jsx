@@ -20,26 +20,22 @@ export default function FirstNavBar() {
             <Link
               href={button?.path}
               key={button?.title}
-              className="relative flex items-center justify-center gap-3 rounded-full bg-gradient-to-r from-primary via-orange-400 to-primary text-white font-bold text-lg shadow-lg hover:scale-105 transition-all duration-300 ease-in-out group"
+              className="relative flex items-center justify-center w-full rounded-full bg-gradient-to-r from-primary via-orange-400 to-primary text-white font-bold text-lg shadow-lg hover:scale-105 transition-all duration-300 ease-in-out h-12 group"
             >
-              {/* Button Title */}
-              <span className="select-none pr-4 text-nowrap">
-                {button?.title}
-              </span>
-
               {/* Floating Icon */}
 
-              <motion.div
-                whileHover={{ rotate: 10 }}
-                className="size-16 xl:size-10 bg-white/20 backdrop-blur-lg flex items-center justify-center rounded-full shadow-lg border border-white/40"
-              >
+              <motion.div whileHover={{ rotate: 10 }} className="w-full">
                 <span
-                  className="text-2xl text-white"
+                  className="size-16 xl:size-14 bg-white/20 backdrop-blur-lg flex items-center justify-center rounded-full shadow-lg border border-white/40"
                   style={{ textShadow: '3px 3px 6px rgba(0, 0, 0, 0.3)' }}
                 >
                   {button?.emoji}
                 </span>
               </motion.div>
+              {/* Button Title */}
+              <span className="select-none text-nowrap w-full text-center">
+                {button?.title}
+              </span>
             </Link>
           ))}
         </ul>

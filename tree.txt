@@ -142,62 +142,6 @@ J:\AKAAR\APP
 |   layout.js
 |   page.js
 |   
-+---api
-|   +---allUsers
-|   |       route.js
-|   |       
-|   +---auth
-|   |   \---[...nextauth]
-|   |           route.js
-|   |           
-|   +---authOptions
-|   |       route.js
-|   |       
-|   +---categories
-|   |   +---bulk
-|   |   |       route.js
-|   |   |       
-|   |   \---[category]
-|   |           route.js
-|   |           
-|   +---favorite
-|   |   |   route.js
-|   |   |   
-|   |   +---check
-|   |   |       route.js
-|   |   |       
-|   |   \---ids
-|   |           route.js
-|   |           
-|   +---myPosts
-|   |       route.js
-|   |       
-|   +---product
-|   |       route.js
-|   |       
-|   +---register
-|   |       route.js
-|   |       
-|   +---search
-|   |       route.js
-|   |       
-|   +---showPostById
-|   |       route.js
-|   |       
-|   +---uploadImageToImageKit
-|   |       route.js
-|   |       
-|   +---uploadImageToImgbb
-|   |       route.js
-|   |       
-|   +---uploadImageToImgur
-|   |       route.js
-|   |       
-|   +---uploadImageToIPFS
-|   |       route.js
-|   |       
-|   \---user
-|           route.js
 |           
 +---categories
 |   \---[id]
@@ -370,12 +314,12 @@ J:\AKAAR\COMPONENTS
 
 lib
 Folder PATH listing
-Volume serial number is 00000081 E458:0050
+
 J:\AKAAR\LIB
     cacheUtils.js
     favoritesClient.js
     propertiesClient.js
     supabaseClient.js
-    
+    package.json
 No subfolders exist 
 

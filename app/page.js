@@ -13,32 +13,50 @@ import { useSession } from 'next-auth/react';
 
 const Home = () => {
   const [productsByCategory, setProductsByCategory] = useState({});
-  const [loading, setLoading] = useState(true); // حالة التحميل
+  const [loading, setLoading] = useState(true);
+  const [loadedCategories, setLoadedCategories] = useState(0); // لتتبع عدد الفئات المحملة
   const router = useRouter();
   const session = useSession();
   // console.log('session?.data?.user?.id', session?.data?.user?.id);
 
   useEffect(() => {
-    fetchProductsByCategory();
+    // تحميل البيانات بشكل تدريجي
+    fetchProductsByCategoryOptimized();
   }, []);
 
-  const fetchProductsByCategory = async () => {
+  const fetchProductsByCategoryOptimized = async () => {
     try {
-      // تحويل قائمة الفئات إلى سلسلة (مثل "1,2,3")
-      const categoryIds = categories.map((category) => category.id).join(',');
-      console.log('categoryIds', categoryIds);
-      // جلب المنتجات لجميع الفئات في طلب واحد
-      const response = await fetch(
-        `/api/categories/bulk?categories=${categoryIds}`
-      );
-      const data = await response.json();
-      console.log('data', data);
-      // تحديث الحالة بالمنتجات
-      setProductsByCategory(data?.data);
+      // تقسيم الفئات إلى مجموعات صغيرة (4 فئات في كل طلب)
+      const chunkSize = 4;
+      const chunks = [];
+      
+      for (let i = 0; i < categories.length; i += chunkSize) {
+        chunks.push(categories.slice(i, i + chunkSize));
+      }
+      
+      // تحميل كل مجموعة على حدة
+      for (const chunk of chunks) {
+        const categoryIds = chunk.map(category => category.id).join(',');
+        const response = await fetch(`/api/categories/bulk?categories=${categoryIds}`);
+        const data = await response.json();
+        
+        // دمج البيانات الجديدة مع البيانات الحالية
+        setProductsByCategory(prev => ({
+          ...prev,
+          ...data?.data
+        }));
+        
+        // تحديث عدد الفئات المحملة
+        setLoadedCategories(prev => prev + chunk.length);
+        
+        // إذا تم تحميل بعض البيانات، إنهاء حالة التحميل
+        if (Object.keys(data?.data || {}).length > 0) {
+          setLoading(false);
+        }
+      }
     } catch (error) {
       console.error('Error fetching products:', error);
-    } finally {
-      setLoading(false); // إنهاء حالة التحميل
+      setLoading(false);
     }
   };
 
@@ -68,7 +86,7 @@ const Home = () => {
       <div className="relative flex-col justify-between items-start w-full h-full">
         <div className="flex flex-col items-center justify-center overflow-hidden z-50 h-fit w-full bg-five rounded-b ">
           {loading ? (
-            <Loading /> // ✅ عرض التحميل بشكل صحيح
+            <Loading />
           ) : (
             categories
               .filter(

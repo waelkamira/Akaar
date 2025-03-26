@@ -11,7 +11,6 @@ import {
 } from 'react-icons/md'; // أيقونات من react-icons/md
 import { GiCarKey } from 'react-icons/gi'; // أيقونات من react-icons/gi
 import { useRouter } from 'next/navigation';
-import Hero from '../../components/Home/Hero';
 import Card from '../../components/ReusableComponents/Card'; // تأكد من تعديل المسار حسب مكان المكون
 
 export default function ContactUs() {
@@ -89,24 +88,13 @@ export default function ContactUs() {
     },
   ];
 
-  const images = [
-    'https://i.imgur.com/wZ0aruw.jpg',
-    'https://i.imgur.com/uPsQqzu.png',
-    'https://i.imgur.com/wHyvDAD.png',
-    'https://i.imgur.com/Kc6Pcu1.png',
-    'https://i.imgur.com/rLz58YH.jpg',
-    'https://i.imgur.com/VVu5la7.png',
-  ];
-  return (
-    <div className="absolute top-8 xl:top-16 flex flex-col justify-center items-center w-full rounded-b text-black">
-      {/* <MainNavbar /> */}
-      <Hero images={images} />
 
-      <main className="flex flex-col justify-center items-center pb-16 w-full rounded-b">
+  return (
+  <main className="flex flex-col justify-center items-center sm:pb-16 w-full rounded-b">
         <div className="flex flex-col justify-center items-center w-full xl:w-[90%] 2xl:w-[70%] h-full sm:px-16 pt-2 overflow-y-auto z-10 px-2">
           <div className="flex flex-col justify-between items-center w-full h-full mt-2 cursor-pointer">
             {/* قسم وصف الموقع */}
-            <div className="p-2 h-full rounded  text-gray-100 xl:border bg-gradient-to-r from-four to-three border-gray-300/50 shadow-2xl">
+            <div className="p-2 h-full rounded   xl:border  border-gray-300/50 shadow-md">
               <h1 className="text-center text-2xl w-full select-none my-4 font-bold">
                 موقع متجر
               </h1>
@@ -157,7 +145,7 @@ export default function ContactUs() {
 
             {/* قسم معلومات الاتصال */}
             <div className="w-full h-full">
-              <div className="p-2 h-full rounded my-2  text-gray-100 xl:border bg-gradient-to-r from-four to-three border-gray-300/50 shadow-2xl">
+              <div className="p-2 h-full rounded my-2   xl:border  border-gray-300/50 shadow-md">
                 <h1 className="text-center text-2xl w-full select-none my-4 font-bold">
                   معلومات الإتصال
                 </h1>
@@ -181,7 +169,7 @@ export default function ContactUs() {
               </div>
 
               {/* قسم ساعات العمل */}
-              <div className="p-2 h-full rounded my-2  text-gray-100 xl:border bg-gradient-to-r from-four to-three border-gray-300/50 shadow-2xl">
+              <div className="p-2 h-full rounded my-2 xl:border  border-gray-300/50 shadow-md">
                 <h1 className="text-center text-2xl w-full select-none my-4 font-bold">
                   ساعات العمل
                 </h1>
@@ -206,6 +194,5 @@ export default function ContactUs() {
           </div>
         </div>
       </main>
-    </div>
   );
 }

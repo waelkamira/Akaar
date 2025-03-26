@@ -1,5 +1,12 @@
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
+import { LRUCache } from 'lru-cache';
+
+// إنشاء كائن LRU Cache للتخزين المؤقت
+const cache = new LRUCache({
+  max: 100, // الحد الأقصى للعناصر
+  ttl: 1000 * 60 * 5, // وقت انتهاء الصلاحية: 5 دقائق
+});
 
 const prisma = new PrismaClient();
 
@@ -18,6 +25,16 @@ export async function GET(req) {
 
   // تحويل قائمة الفئات إلى مصفوفة من الأرقام
   const categoryIds = categoriesParam.split(',').map(Number);
+  
+  // إنشاء مفتاح للتخزين المؤقت
+  const cacheKey = `bulk_categories_${categoriesParam}`;
+  
+  // التحقق من وجود البيانات في التخزين المؤقت
+  const cachedData = cache.get(cacheKey);
+  if (cachedData) {
+    console.log('✅ تم استرجاع البيانات من التخزين المؤقت:', cacheKey);
+    return NextResponse.json({ data: cachedData });
+  }
 
   try {
     // جلب المنتجات لجميع الفئات باستخدام Promise.all
@@ -42,6 +59,10 @@ export async function GET(req) {
       acc[categoryId] = products;
       return acc;
     }, {});
+    
+    // تخزين البيانات في التخزين المؤقت
+    cache.set(cacheKey, formattedData);
+    console.log('✅ تم تخزين البيانات في التخزين المؤقت:', cacheKey);
 
     return NextResponse.json({ data: formattedData });
   } catch (error) {
