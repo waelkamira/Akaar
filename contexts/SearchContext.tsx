@@ -1,18 +1,67 @@
-"use client";
+'use client';
 
-import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from "react";
-import { filterOptions } from "../lib/mockData";
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+} from 'react';
+import { filterOptions } from '../lib/mockData';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
-const SearchContext = createContext(undefined);
+interface Town {
+  id: string;
+  name: string;
+}
+
+interface City {
+  id: string;
+  name: string;
+  towns: Town[];
+}
+
+interface SearchContextType {
+  searchQuery: string;
+  setSearchQuery: (query: string) => void;
+  categoryId: string | null;
+  setCategoryId: (id: string | null) => void;
+  filters: {
+    city?: string | null;
+    town?: string | null;
+    priceMin?: number;
+    priceMax?: number;
+    details?: Record<string, any>;
+  };
+  setFilter: (key: string, value: any) => void;
+  removeFilter: (key: string) => void;
+  clearFilters: () => void;
+  results: any[];
+  loading: boolean;
+  error: string | null;
+  totalCount: number;
+  hasMore: boolean;
+  loadMore: () => void;
+  selectedFilters: Array<{
+    key: string;
+    value: any;
+    label: string;
+  }>;
+  availableFilters: any;
+  performSearch: () => void;
+  getTownsByCity: (cityId: string | null) => Town[];
+}
+
+const SearchContext = createContext<SearchContextType | undefined>(undefined);
 
 export function SearchProvider({ children, initialCategory = null }) {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [categoryId, setCategoryId] = useState(initialCategory);
-  const [filters, setFilters] = useState({});
+  const [searchQuery, setSearchQuery] = useState('');
+  const [categoryId, setCategoryId] = useState<string | null>(initialCategory);
+  const [filters, setFilters] = useState<SearchContextType['filters']>({});
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const [totalCount, setTotalCount] = useState(0);
   const [hasMore, setHasMore] = useState(false);
   const [page, setPage] = useState(1);
@@ -21,9 +70,20 @@ export function SearchProvider({ children, initialCategory = null }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  console.log("searchQuery", searchQuery);
 
-  // Separate search function from the debounced version
+  // دالة للحصول على المناطق بناءً على المدينة
+  const getTownsByCity = useCallback(
+    (cityId: string | null) => {
+      if (!cityId) return [];
+      const city = availableFilters?.static?.cities?.find(
+        (c) => c.id === cityId || c.name === cityId
+      );
+      return city?.towns || [];
+    },
+    [availableFilters]
+  );
+
+  // دالة البحث
   const performSearch = useCallback(async () => {
     if (!searchQuery && !categoryId && Object.keys(filters).length === 0) {
       setResults([]);
@@ -36,45 +96,43 @@ export function SearchProvider({ children, initialCategory = null }) {
     setError(null);
 
     try {
-      const response = await fetch("/api/search", {
-        method: "POST",
+      // تحضير الفلاتر للبحث
+      const searchFilters = {
+        ...filters,
+        city: filters.city || null,
+        town: filters.town || null,
+      };
+
+      const response = await fetch('/api/search', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           searchQuery,
           categoryId,
-          filters: {
-            city: filters.city,
-            priceMin: filters.priceMin,
-            priceMax: filters.priceMax,
-            details: filters.details,
-          },
+          filters: searchFilters,
           page,
           limit: 10,
         }),
       });
 
-      if (!response.ok) {
-        throw new Error("Search request failed");
-      }
+      if (!response.ok) throw new Error('Search request failed');
 
       const data = await response.json();
-      console.log("data", data);
       if (!data.products || !Array.isArray(data.products)) {
-        throw new Error("Invalid response format");
+        throw new Error('Invalid response format');
       }
 
-      if (page === 1) {
-        setResults(data.products);
-      } else {
-        setResults((prev) => [...prev, ...data.products]);
-      }
-
+      setResults((prev) =>
+        page === 1 ? data.products : [...prev, ...data.products]
+      );
       setTotalCount(data.totalCount);
       setHasMore(data.hasMore);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred while searching");
+      setError(
+        err instanceof Error ? err.message : 'An error occurred while searching'
+      );
       console.error(err);
     } finally {
       setLoading(false);
@@ -85,81 +143,117 @@ export function SearchProvider({ children, initialCategory = null }) {
     performSearch();
   }, [searchQuery, categoryId, filters, page, performSearch]);
 
-  // Remove the automatic search trigger
+  // تحديث URL عند تغيير الفلاتر
   useEffect(() => {
-    // Only update URL, don't trigger search
     const params = new URLSearchParams(searchParams.toString());
 
-    if (categoryId) {
-      params.set("category", categoryId.toString());
-    } else {
-      params.delete("category");
+    if (categoryId) params.set('category', categoryId.toString());
+    else params.delete('category');
+
+    if (filters.city) params.set('city', filters.city);
+    else params.delete('city');
+
+    if (filters.town) params.set('town', filters.town);
+    else params.delete('town');
+
+    // تنفيذ البحث عند تغيير المدينة أو المنطقة
+    if (filters.city || filters.town) {
+      performSearch();
     }
 
     router.replace(`${pathname}?${params.toString()}`, { scroll: false });
-  }, [categoryId, pathname, router, searchParams]);
+  }, [
+    categoryId,
+    pathname,
+    router,
+    searchParams,
+    filters.city,
+    filters.town,
+    performSearch,
+  ]);
 
-  // Create a list of selected filters for display
+  // إنشاء قائمة الفلاتر المختارة
   const selectedFilters = useMemo(() => {
     const selected = [];
 
-    // Add category if selected
+    // إضافة التصنيف إذا تم اختياره
     if (categoryId) {
-      const category = filterOptions.categories.find((c) => c.id === categoryId);
+      const category = filterOptions.categories.find(
+        (c) => c.id === categoryId
+      );
       if (category) {
         selected.push({
-          key: "category",
-          value: categoryId.toString(),
-          label: `Category: ${category.name}`,
+          key: 'category',
+          value: categoryId,
+          label: `التصنيف: ${category.name}`,
         });
       }
     }
 
-    // Add static filters
+    // إضافة المدينة إذا تم اختيارها
     if (filters.city) {
-      const cityOption = filterOptions.static.city.find((c) => c.id === filters.city);
-      if (cityOption) {
+      const city = availableFilters?.static?.cities?.find(
+        (c) => c.id === filters.city
+      );
+      if (city) {
         selected.push({
-          key: "city",
+          key: 'city',
           value: filters.city,
-          label: `City: ${cityOption.name}`,
+          label: `المدينة: ${city.name}`,
         });
       }
     }
 
-    // Add price range if set
+    // إضافة المنطقة إذا تم اختيارها
+    if (filters.town && filters.city) {
+      const city = availableFilters?.static?.cities?.find(
+        (c) => c.id === filters.city
+      );
+      if (city) {
+        const town = city.towns.find((t) => t.id === filters.town);
+        if (town) {
+          selected.push({
+            key: 'town',
+            value: filters.town,
+            label: `المنطقة: ${town.name}`,
+          });
+        }
+      }
+    }
+
+    // إضافة مدى السعر إذا تم تحديده
     if (filters.priceMin !== undefined || filters.priceMax !== undefined) {
-      const priceLabel = `Price: ${filters.priceMin || 0} - ${filters.priceMax || "max"}`;
       selected.push({
-        key: "price",
-        value: "price-range",
-        label: priceLabel,
+        key: 'price',
+        value: 'price-range',
+        label: `السعر: ${filters.priceMin || 0} - ${
+          filters.priceMax || 'ماكس'
+        }`,
       });
     }
 
-    // Add dynamic filters based on category
+    // إضافة الفلاتر الديناميكية حسب التصنيف
     if (categoryId && filters.details) {
       const categoryFilters = filterOptions.dynamic[categoryId];
       if (categoryFilters) {
         for (const [key, value] of Object.entries(filters.details)) {
           if (categoryFilters[key]) {
-            // Handle array-type filters (like rooms, brand, etc.)
             if (Array.isArray(categoryFilters[key])) {
-              const option = categoryFilters[key].find((opt) => opt.id === value);
+              const option = categoryFilters[key].find(
+                (opt) => opt.id === value
+              );
               if (option) {
                 selected.push({
                   key: `details.${key}`,
                   value: value,
-                  label: `${key.charAt(0).toUpperCase() + key.slice(1)}: ${option.name}`,
+                  label: `${key}: ${option.name}`,
                 });
               }
-            }
-            // Handle range-type filters (like area, mileage, etc.)
-            else if (typeof categoryFilters[key] === "object") {
+            } else if (typeof categoryFilters[key] === 'object') {
               selected.push({
                 key: `details.${key}`,
                 value: value,
-                label: `${key.charAt(0).toUpperCase() + key.slice(1)}: ${value}`,
+                label: `${key}: ${value}`,
               });
             }
           }
@@ -168,14 +262,13 @@ export function SearchProvider({ children, initialCategory = null }) {
     }
 
     return selected;
-  }, [categoryId, filters]);
+  }, [categoryId, filters, availableFilters]);
 
-  // Set a filter value
-  const setFilter = (key, value) => {
+  // تعيين قيمة الفلتر
+  const setFilter = useCallback((key: string, value: any) => {
     setFilters((prev) => {
-      // Handle nested details filters
-      if (key.startsWith("details.")) {
-        const detailKey = key.split(".")[1];
+      if (key.startsWith('details.')) {
+        const detailKey = key.split('.')[1];
         return {
           ...prev,
           details: {
@@ -184,76 +277,93 @@ export function SearchProvider({ children, initialCategory = null }) {
           },
         };
       }
-      // Handle regular filters
       return { ...prev, [key]: value };
     });
-
-    // Reset to first page when filters change
     setPage(1);
-  };
+  }, []);
 
-  // Remove a filter
-  const removeFilter = (key) => {
-    setFilters((prev) => {
-      const newFilters = { ...prev };
-
-      // Handle nested details filters
-      if (key.startsWith("details.")) {
-        const detailKey = key.split(".")[1];
-        if (newFilters.details) {
-          const newDetails = { ...newFilters.details };
-          delete newDetails[detailKey];
-          newFilters.details = Object.keys(newDetails).length > 0 ? newDetails : undefined;
-        }
-      }
-      // Handle special case for category
-      else if (key === "category") {
+  // حذف فلتر
+  const removeFilter = useCallback(
+    (key: string) => {
+      if (key === 'price') {
+        // حذف فلتر السعر
+        setFilters((prev) => ({
+          ...prev,
+          priceMin: undefined,
+          priceMax: undefined,
+        }));
+      } else if (key === 'category') {
+        // حذف التصنيف
         setCategoryId(null);
+        setFilters((prev) => ({
+          ...prev,
+          details: undefined,
+        }));
+      } else if (key === 'city') {
+        // حذف المدينة والمنطقة
+        setFilters((prev) => {
+          const { city, town, ...rest } = prev;
+          return rest;
+        });
+      } else if (key === 'town') {
+        // حذف المنطقة فقط
+        setFilters((prev) => {
+          const { town, ...rest } = prev;
+          return rest;
+        });
+      } else if (key.startsWith('details.')) {
+        // حذف فلتر تفاصيل
+        setFilters((prev) => {
+          const detailKey = key.split('.')[1];
+          if (!prev.details) return prev;
+
+          const newDetails = { ...prev.details };
+          delete newDetails[detailKey];
+
+          return {
+            ...prev,
+            details:
+              Object.keys(newDetails).length > 0 ? newDetails : undefined,
+          };
+        });
       }
-      // Handle regular filters
-      else {
-        delete newFilters[key];
-      }
 
-      return newFilters;
-    });
+      setPage(1);
+      performSearch();
+    },
+    [performSearch, setCategoryId]
+  );
 
-    // Reset to first page when filters change
-    setPage(1);
-  };
-
-  // Clear all filters
-  const clearFilters = () => {
+  // مسح جميع الفلاتر
+  const clearFilters = useCallback(() => {
     setFilters({});
     setCategoryId(null);
     setPage(1);
-  };
+    performSearch();
+  }, [performSearch, setCategoryId]);
 
-  // Load more results (pagination)
-  const loadMore = () => {
+  // تحميل المزيد من النتائج
+  const loadMore = useCallback(() => {
     if (hasMore && !loading) {
       setPage((prev) => prev + 1);
     }
-  };
+  }, [hasMore, loading]);
 
-  // Update available filters when category changes
+  // تحديث الفلاتر المتاحة عند تغيير التصنيف
   useEffect(() => {
-    // If we have a category selected, we can show its specific filters
     if (categoryId) {
       setAvailableFilters({
         ...filterOptions,
-        currentCategory: filterOptions.categories.find((c) => c.id === categoryId),
+        currentCategory: filterOptions.categories.find(
+          (c) => c.id === categoryId
+        ),
         currentDynamicFilters: filterOptions.dynamic[categoryId],
       });
     } else {
       setAvailableFilters(filterOptions);
     }
 
-    // Clear details filters when category changes
-    setFilters((prev) => ({
-      ...prev,
-      details: undefined,
-    }));
+    setFilters((prev) => ({ ...prev, details: undefined }));
   }, [categoryId]);
 
   const value = {
@@ -274,15 +384,18 @@ export function SearchProvider({ children, initialCategory = null }) {
     selectedFilters,
     availableFilters,
     performSearch,
+    getTownsByCity: getTownsByCity,
   };
 
-  return <SearchContext.Provider value={value}>{children}</SearchContext.Provider>;
+  return (
+    <SearchContext.Provider value={value}>{children}</SearchContext.Provider>
+  );
 }
 
 export function useSearch() {
   const context = useContext(SearchContext);
   if (context === undefined) {
-    throw new Error("useSearch must be used within a SearchProvider");
+    throw new Error('useSearch must be used within a SearchProvider');
   }
   return context;
 }

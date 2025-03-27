@@ -364,31 +364,43 @@ const FilterContent = ({
                 transition={{ duration: 0.3 }}
               >
                 <div className="p-3 rounded-lg border border-amber-100 shadow-inner bg-amber-50/50">
-                  <div className="px-3 py-6">
-                    <Slider
-                      defaultValue={[0, 100000]}
-                      max={100000}
-                      step={1000}
-                      value={priceRange}
-                      onValueChange={handlePriceChange}
-                      className="my-6"
-                    />
-                  </div>
-
-                  <div className="flex justify-between items-center px-2">
-                    <div className="text-sm font-medium bg-white px-3 py-1.5 rounded-full border border-amber-200 shadow-sm">
-                      <span className="text-gray-600">الحد الأدنى:</span>
-                      <span className="text-amber-600 font-bold">
-                        {' '}
-                        {priceRange[0].toLocaleString()}
-                      </span>
+                  <div className="flex items-center gap-2">
+                    <div className="text-sm font-medium text-gray-700">
+                      نطاق السعر
                     </div>
-                    <div className="text-sm font-medium bg-white px-3 py-1.5 rounded-full border border-amber-200 shadow-sm">
-                      <span className="text-gray-600">الحد الأعلى:</span>
-                      <span className="text-amber-600 font-bold">
-                        {' '}
-                        {priceRange[1].toLocaleString()}
-                      </span>
+                    <div className="flex-1 flex items-center gap-2">
+                      <span className="text-sm">من</span>
+                      <input
+                        type="number"
+                        min="0"
+                        placeholder="0"
+                        className="w-32 p-2 rounded-lg border border-amber-200 focus:ring-2 focus:ring-amber-500 focus:border-transparent text-center"
+                        value={searchData?.priceMin || ''}
+                        onChange={(e) => {
+                          if (setSearchData) {
+                            setSearchData((prev) => ({
+                              ...prev,
+                              priceMin: e.target.value,
+                            }));
+                          }
+                        }}
+                      />
+                      <span className="text-sm">إلى</span>
+                      <input
+                        type="number"
+                        min="0"
+                        placeholder="100000"
+                        className="w-32 p-2 rounded-lg border border-amber-200 focus:ring-2 focus:ring-amber-500 focus:border-transparent text-center"
+                        value={searchData?.priceMax || ''}
+                        onChange={(e) => {
+                          if (setSearchData) {
+                            setSearchData((prev) => ({
+                              ...prev,
+                              priceMax: e.target.value,
+                            }));
+                          }
+                        }}
+                      />
                     </div>
                   </div>
                 </div>

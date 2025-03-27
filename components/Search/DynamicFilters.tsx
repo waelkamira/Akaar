@@ -1,57 +1,103 @@
-"use client"
+'use client';
 
-import { useSearch } from "../../contexts/SearchContext"
+import { useSearch } from '../../contexts/SearchContext';
+import { useEffect, useState } from 'react';
 
 export default function DynamicFilters() {
-  const { categoryId, filters, setFilter, availableFilters } = useSearch()
+  const { categoryId, filters, setFilter, availableFilters } = useSearch();
+  const [categoryFields, setCategoryFields] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  // If no category is selected or no dynamic filters are available, don't render anything
-  if (!categoryId || !availableFilters.currentDynamicFilters) {
-    return null
-  }
+  useEffect(() => {
+    if (!categoryId) {
+      setCategoryFields([]);
+      return;
+    }
 
-  const dynamicFilters = availableFilters.currentDynamicFilters
+    // العثور على الفئة المحددة للحصول على اسمها
+    const selectedCategory = availableFilters.categories.find(
+      (cat: any) => cat.id.toString() === categoryId
+    );
 
-  // Handle checkbox filter change
-  const handleFilterChange = (key: string, value: string) => {
-    const currentValue = filters.details?.[key]
-    setFilter(`details.${key}`, currentValue === value ? undefined : value)
+    if (!selectedCategory) {
+      setCategoryFields([]);
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    // تحميل الفلاتر الديناميكية باستخدام اسم الفئة
+    import(`../../components/categoryFields/${selectedCategory.name}.jsx`)
+      .then((module) => {
+        setCategoryFields(module.default);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error('Failed to load fields:', err);
+        setError('فشل في تحميل الفلاتر');
+        setLoading(false);
+        setCategoryFields([]);
+      });
+  }, [categoryId, availableFilters.categories]);
+
+  if (!categoryId || loading || error) {
+    return null;
   }
 
   return (
     <div className="space-y-6">
-      {Object.entries(dynamicFilters).map(([key, options]: [string, any]) => {
-        // Skip non-array options (like range filters)
-        if (!Array.isArray(options)) {
-          return null
-        }
-
-        // Format the filter name for display
-        const filterName = key.charAt(0).toUpperCase() + key.slice(1)
+      {categoryFields.map((field) => {
+        const currentValue = filters.details?.[field.name];
 
         return (
-          <div key={key}>
-            <h3 className="text-sm font-medium text-gray-700 mb-2">{filterName}</h3>
+          <div key={field.name}>
+            <div className="flex items-center gap-2 mb-2">
+              {field.icon && <span>{field.icon}</span>}
+              <h3 className="text-sm font-medium text-gray-700">
+                {field.label || field.name}
+              </h3>
+            </div>
             <div className="space-y-2">
-              {options.map((option: any) => (
-                <div key={option.id} className="flex items-center">
-                  <input
-                    id={`${key}-${option.id}`}
-                    type="checkbox"
-                    checked={filters.details?.[key] === option.id}
-                    onChange={() => handleFilterChange(key, option.id)}
-                    className="h-4 w-4 text-one border-gray-300 rounded focus:ring-one"
-                  />
-                  <label htmlFor={`${key}-${option.id}`} className="ml-2 text-sm text-gray-700">
-                    {option.name}
-                  </label>
-                </div>
-              ))}
+              {field.options ? (
+                // إذا كان للحقل خيارات، نستخدم قائمة منسدلة
+                <select
+                  value={currentValue || ''}
+                  onChange={(e) =>
+                    setFilter(
+                      `details.${field.name}`,
+                      e.target.value || undefined
+                    )
+                  }
+                  className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-one focus:border-one"
+                >
+                  <option value="">{field.placeholder || 'اختر...'}</option>
+                  {Object.entries(field.options).map(([value, label]) => (
+                    <option key={value} value={value}>
+                      {label as string}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                // إذا لم يكن للحقل خيارات، نستخدم حقل إدخال
+                <input
+                  type="text"
+                  value={currentValue || ''}
+                  onChange={(e) =>
+                    setFilter(
+                      `details.${field.name}`,
+                      e.target.value || undefined
+                    )
+                  }
+                  placeholder={field.placeholder}
+                  className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-one focus:border-one"
+                />
+              )}
             </div>
           </div>
-        )
+        );
       })}
     </div>
-  )
+  );
 }
-
