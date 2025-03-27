@@ -7,10 +7,10 @@ import { FaHome } from 'react-icons/fa';
 import { BsBuilding } from 'react-icons/bs';
 import { motion } from 'framer-motion';
 import { cn } from '../lib/utils';
+import { useSearch } from '../../contexts/SearchContext';
 
-const AnimatedCard = ({ children, isSelected, onClick }) => (
+const AnimatedCard = ({ children, isSelected }) => (
   <motion.div
-    onClick={onClick}
     className={`relative flex flex-col items-center justify-center
       ${isSelected ? 'text-white' : 'text-gray-400'}
       p-3 rounded-xl transition-all duration-300 w-24 h-24 transform hover:scale-105 z-10 cursor-pointer
@@ -48,6 +48,7 @@ const AnimatedCard = ({ children, isSelected, onClick }) => (
 const CategoriesNavBar = () => {
   const router = useRouter();
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const { setSearchQuery } = useSearch();
 
   useEffect(() => {
     const storedCategory = localStorage.getItem('category');
@@ -66,7 +67,7 @@ const CategoriesNavBar = () => {
       const defaultValue = {
         id: 1,
         name: 'عقارات',
-        path: '/categories/1?category=عقارات',
+        path: '/search/1?category=عقارات',
         icon: <BsBuilding className="h-6 w-6" />,
       };
       setSelectedCategory(defaultValue);
@@ -77,7 +78,8 @@ const CategoriesNavBar = () => {
   const handleCategoryClick = (category) => {
     localStorage.setItem('category', JSON.stringify(category));
     setSelectedCategory(category);
-    router.push(category.path);
+    router.push('/search?category=' + category.id);
+    setSearchQuery(category.name);
   };
 
   return (

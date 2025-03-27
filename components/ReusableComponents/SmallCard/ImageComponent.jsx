@@ -11,7 +11,7 @@ function ImageComponent({ item }) {
       {item?.image1 && (
         <div className="relative w-full h-48 overflow-hidden rounded-t-lg">
           <Image
-            src={item?.image1}
+            src={item?.image1 || '/placeholder.svg?height=400&width=600'}
             fill
             priority
             objectFit="cover"

@@ -1,18 +1,18 @@
-"use client"
+'use client';
 
-import { useSearch } from "../../contexts/SearchContext"
+import { useSearch } from '../../contexts/SearchContext';
 
 export default function CategoryFilter() {
-  const { categoryId, setCategoryId, availableFilters } = useSearch()
+  const { categoryId, setCategoryId, availableFilters } = useSearch();
 
-  const handleCategoryChange = (id: number) => {
-    setCategoryId(id === categoryId ? null : id)
-  }
+  const handleCategoryChange = (id: string) => {
+    setCategoryId(id === categoryId ? null : id);
+  };
 
   return (
     <div className="mb-6">
-      <h3 className="text-sm font-medium text-gray-700 mb-2">Category</h3>
-      <div className="space-y-2">
+      <h3 className="text-sm font-medium text-gray-700 mb-2">الفئات</h3>
+      <div className="space-y-2 h-72 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 pr-2">
         <div className="flex items-center">
           <input
             id="category-all"
@@ -21,8 +21,8 @@ export default function CategoryFilter() {
             onChange={() => setCategoryId(null)}
             className="h-4 w-4 text-one border-gray-300 focus:ring-one"
           />
-          <label htmlFor="category-all" className="ml-2 text-sm text-gray-700">
-            All categories
+          <label htmlFor="category-all" className="mr-2 text-sm text-gray-700">
+            كل الفئات
           </label>
         </div>
 
@@ -31,17 +31,19 @@ export default function CategoryFilter() {
             <input
               id={`category-${category.id}`}
               type="radio"
-              checked={categoryId === category.id}
-              onChange={() => handleCategoryChange(category.id)}
+              checked={categoryId === category.id.toString()}
+              onChange={() => handleCategoryChange(category.id.toString())}
               className="h-4 w-4 text-one border-gray-300 focus:ring-one"
             />
-            <label htmlFor={`category-${category.id}`} className="ml-2 text-sm text-gray-700">
+            <label
+              htmlFor={`category-${category.id}`}
+              className="mr-2 text-sm text-gray-700"
+            >
               {category.name}
             </label>
           </div>
         ))}
       </div>
     </div>
-  )
+  );
 }
-
