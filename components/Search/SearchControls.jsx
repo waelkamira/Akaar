@@ -27,3 +27,4 @@ export default function SearchControls({ onSearch, onReset, searchData }) {
     </div>
   );
 }
+

@@ -306,19 +306,14 @@ J:\AKAAR\COMPONENTS
 |       Selector.jsx
 |       yearSelector.jsx
 |       
-\---ui
-        button.tsx
-        skeleton.tsx
-        slider.tsx
+
         
 
 lib
 Folder PATH listing
 
 J:\AKAAR\LIB
-    cacheUtils.js
-    favoritesClient.js
-    propertiesClient.js
+
     supabaseClient.js
     package.json
 No subfolders exist 

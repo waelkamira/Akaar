@@ -17,7 +17,7 @@ const Home = () => {
   const [loadedCategories, setLoadedCategories] = useState(0); // لتتبع عدد الفئات المحملة
   const router = useRouter();
   const session = useSession();
-  // console.log('session?.data?.user?.id', session?.data?.user?.id);
+  console.log('productsByCategory', productsByCategory);
 
   useEffect(() => {
     // تحميل البيانات بشكل تدريجي

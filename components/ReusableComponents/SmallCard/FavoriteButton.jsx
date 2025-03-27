@@ -56,10 +56,10 @@ function FavoriteButton({ item }) {
 
     if (item?.id) {
       const favorited = favoriteIds?.includes(item?.id);
-      console.log('favoriteIds', favoriteIds);
+      // console.log('favoriteIds', favoriteIds);
       if (favorited) {
-        console.log('favorited', favorited);
-        console.log('item?.id', item?.id);
+        // console.log('favorited', favorited);
+        // console.log('item?.id', item?.id);
         setIsFavorited(true);
       } else {
         setIsFavorited(false);
