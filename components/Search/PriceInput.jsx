@@ -15,3 +15,4 @@ export default function PriceInput({ label, name, value, onChange }) {
     </div>
   );
 }
+

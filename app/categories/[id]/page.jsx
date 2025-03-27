@@ -33,7 +33,7 @@ const CategoryPage = () => {
           pageNumber === 1 ? json.data : [...prev, ...json.data]
         ); // تحديث القائمة بشكل تراكمي أو إعادة تعيينها إذا كانت الصفحة الأولى
         setHasMore(json.hasMore);
-        console.log('json?.totalCount', json?.totalCount);
+        // console.log('json?.totalCount', json?.totalCount);
         setTotalCount(json?.totalCount);
       }
     } catch (error) {

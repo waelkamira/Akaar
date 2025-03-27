@@ -227,3 +227,4 @@ function Filters({ searchData, setSearchData, onSearch, onReset }) {
 
 Filters.displayName = 'Filters';
 export default Filters;
+
