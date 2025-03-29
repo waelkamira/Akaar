@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { useSearch } from '../../contexts/SearchContext';
-import { Slider } from '../../components/ui/slider';
+import { Slider } from '../ui/slider';
 import { X } from 'lucide-react';
 
 export default function StaticFilters() {
@@ -27,7 +27,14 @@ export default function StaticFilters() {
   // الحصول على المناطق المتاحة للمدينة المختارة
   const availableTowns = getTownsByCity(filters.city || null);
 
-  const handleCityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  /*************  ✨ Codeium Command ⭐  *************/
+  /**
+   * Handle city select change event. When the user selects a different city,
+   * reset the town filter and perform a search.
+   * @param {React.ChangeEvent<HTMLSelectElement>} e - The change event.
+   */
+  /******  23381023-67ad-4f09-a827-3efd1776fbaa  *******/
+  const handleCityChange = (e) => {
     const cityId = e.target.value || null;
     setFilter('city', cityId);
     // Reset town when city changes
@@ -36,14 +43,14 @@ export default function StaticFilters() {
     performSearch();
   };
 
-  const handleTownChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleTownChange = (e) => {
     const townId = e.target.value || null;
     setFilter('town', townId);
     // تنفيذ البحث مباشرة عند اختيار المنطقة
     performSearch();
   };
 
-  const handlePriceChange = (values: number[]) => {
+  const handlePriceChange = (values) => {
     setPriceRange(values);
   };
 

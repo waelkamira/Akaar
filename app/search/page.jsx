@@ -9,16 +9,12 @@ import SearchResults from '../../components/Search/SearchResults';
 import { useState } from 'react';
 import { FilterIcon, XIcon } from 'lucide-react';
 
-export default function SearchPage({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
+export default function SearchPage({ searchParams }) {
   const [showFilters, setShowFilters] = useState(false);
-
+  console.log('searchParams', searchParams);
   // Get category from URL if presen
   const categoryParam = searchParams.category
-    ? Number.parseInt(searchParams.category as string)
+    ? Number.parseInt(searchParams.category)
     : null;
 
   return (

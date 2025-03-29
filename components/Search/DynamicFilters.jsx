@@ -5,10 +5,10 @@ import { useEffect, useState } from 'react';
 
 export default function DynamicFilters() {
   const { categoryId, filters, setFilter, availableFilters } = useSearch();
-  const [categoryFields, setCategoryFields] = useState<any[]>([]);
+  const [categoryFields, setCategoryFields] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
+  const [error, setError] = useState(null);
+  // console.log('categoryId', categoryId);
   useEffect(() => {
     if (!categoryId) {
       setCategoryFields([]);
@@ -17,7 +17,7 @@ export default function DynamicFilters() {
 
     // العثور على الفئة المحددة للحصول على اسمها
     const selectedCategory = availableFilters.categories.find(
-      (cat: any) => cat.id.toString() === categoryId
+      (cat) => cat.id.toString() === categoryId
     );
 
     if (!selectedCategory) {
@@ -75,7 +75,7 @@ export default function DynamicFilters() {
                   <option value="">{field.placeholder || 'اختر...'}</option>
                   {Object.entries(field.options).map(([value, label]) => (
                     <option key={value} value={value}>
-                      {label as string}
+                      {label}
                     </option>
                   ))}
                 </select>

@@ -24,11 +24,11 @@ export function SearchProvider({ children, initialCategory = null }) {
   const [hasMore, setHasMore] = useState(false);
   const [page, setPage] = useState(1);
   const [availableFilters, setAvailableFilters] = useState(filterOptions);
-
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  console.log('searchQuery', searchQuery);
+  // console.log('searchQuery', searchQuery);
+
   // دالة للحصول على المناطق بناءً على المدينة
   const getTownsByCity = useCallback(
     (cityId) => {
@@ -40,6 +40,10 @@ export function SearchProvider({ children, initialCategory = null }) {
     },
     [availableFilters]
   );
+
+  // console.log('searchQuery from search context', searchQuery);
+  // console.log('categoryId from search context', categoryId);
+  // console.log('results from search context', results);
 
   // دالة البحث
   const performSearch = useCallback(async () => {
@@ -79,13 +83,14 @@ export function SearchProvider({ children, initialCategory = null }) {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Search request failed'); // عرض رسالة خطأ من الواجهة الخلفية إذا كانت موجودة
+        throw new Error(errorData.message || 'حدث خطاء ما في البحث'); // عرض رسالة خطأ من الواجهة الخلفية إذا كانت موجودة
       }
 
       const data = await response.json();
-      if (!data.products || !Array.isArray(data.products)) {
-        throw new Error('Invalid response format');
-      }
+      // console.log('data', data.products);
+      // console.log('totalCount', data.totalCount);
+      // console.log('hasMore', data.hasMore);
+      // console.log('page', data.page);
 
       setResults((prev) =>
         page === 1 ? data.products : [...prev, ...data.products]

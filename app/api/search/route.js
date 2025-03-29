@@ -1,9 +1,9 @@
-import { type NextRequest, NextResponse } from 'next/server';
-import { PrismaClient, Prisma } from '@prisma/client';
+import { NextResponse } from 'next/server';
+import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export async function POST(request: NextRequest) {
+export async function POST(request) {
   try {
     // Parse the request body
     const body = await request.json();
@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
     console.log('body تم استدعاء الراوت', body);
 
     // Build the where clause for Prisma
-    const where: Prisma.ProductWhereInput = {};
+    const where = {};
 
     // Filter by search query (title or description)
     if (searchQuery) {
@@ -94,7 +94,7 @@ export async function POST(request: NextRequest) {
 
     // Apply dynamic filters based on category
     if (categoryId && filters.details) {
-      where.AND = Object.entries(filters.details as Record<string, string>)
+      where.AND = Object.entries(filters.details)
         .filter(
           ([_, value]) => value !== undefined && value !== null && value !== ''
         )
@@ -119,6 +119,9 @@ export async function POST(request: NextRequest) {
     ]);
 
     const hasMore = page * limit < totalCount;
+    console.log('totalCount', totalCount);
+    console.log('hasMore', hasMore);
+    // console.log('products', products);
     // Return the results
     return NextResponse.json({
       products: products,
@@ -130,7 +133,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Search error:', error);
     return NextResponse.json(
-      { error: 'An error occurred while processing your search' },
+      { error: 'حدث خطأ في البحث حاول مرة اخرى' },
       { status: 500 }
     );
   } finally {

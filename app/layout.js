@@ -5,6 +5,7 @@ import { Toaster } from 'react-hot-toast';
 import { InputsContextProvider } from '../components/authContext/Context';
 import AuthContextProvider from '../components/authContext/AuthContext';
 import MainNavBar from '../components/navbars/MainNavBar';
+import { SearchProvider } from '../contexts/SearchContext';
 
 const rubik = Rubik({
   subsets: ['latin'],
@@ -26,9 +27,11 @@ export default function RootLayout({ children }) {
         <Toaster />
         <AuthContextProvider>
           <InputsContextProvider>
-            {' '}
-            <MainNavBar />
-            {children}
+            <SearchProvider>
+              {' '}
+              <MainNavBar />
+              {children}
+            </SearchProvider>
           </InputsContextProvider>
         </AuthContextProvider>
       </body>

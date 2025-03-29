@@ -1,7 +1,5 @@
 'use client';
 
-import { useEffect } from 'react';
-
 export default function DynamicField({ field, value, onChange }) {
   return (
     <div className="relative w-full sm:w-28 h-9 sm:h-[27px] bg-white rounded text-black">
@@ -37,4 +35,3 @@ export default function DynamicField({ field, value, onChange }) {
     </div>
   );
 }
-

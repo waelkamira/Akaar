@@ -1,7 +1,8 @@
+// src/navbars/CategoriesNavBar.js
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import categories from '../Categories/categories';
 import { FaHome } from 'react-icons/fa';
 import { BsBuilding } from 'react-icons/bs';
@@ -9,8 +10,7 @@ import { motion } from 'framer-motion';
 import { cn } from '../lib/utils';
 import { useSearch } from '../../contexts/SearchContext';
 
-console.log('categories', categories);
-
+// تعريف الكومبوننت AnimatedCard (تأكد من أنه يظهر قبل استخدامه)
 const AnimatedCard = ({ children, isSelected, onClick }) => (
   <motion.div
     className={`relative flex flex-col items-center justify-center
@@ -50,41 +50,34 @@ const AnimatedCard = ({ children, isSelected, onClick }) => (
 
 const CategoriesNavBar = () => {
   const router = useRouter();
-  const [selectedCategory, setSelectedCategory] = useState(null);
-  const { setSearchQuery } = useSearch();
+  const { categoryId, setCategoryId } = useSearch(); // Get categoryId from context
 
   useEffect(() => {
-    const storedCategory = localStorage.getItem('category');
-    let category;
-
-    try {
-      category = storedCategory ? JSON.parse(storedCategory) : null;
-    } catch (error) {
-      console.error('Failed to parse category from localStorage', error);
-    }
-
-    if (category) {
-      setSelectedCategory(category);
+    // Load categoryId from localStorage on component mount
+    const storedCategoryId = localStorage.getItem('categoryId');
+    if (storedCategoryId) {
+      setCategoryId(parseInt(storedCategoryId)); // Parse to number, ids are numbers
     } else {
-      const defaultValue = {
-        id: 1,
-        name: 'realEstate',
-        path: '/search/1?category=realEstate',
-        icon: <BsBuilding className="h-6 w-6" />,
-      };
-      setSelectedCategory(defaultValue);
-      localStorage.setItem('category', JSON.stringify(defaultValue));
+      // Set a default category if none is stored
+      const defaultCategoryId = 1; // Set your default category id
+      setCategoryId(defaultCategoryId);
+      localStorage.setItem('categoryId', defaultCategoryId.toString());
     }
-  }, []);
+  }, [setCategoryId]);
 
   const handleCategoryClick = (category) => {
-    console.log('Clicked category:', category); // إضافة هذا السطر
-    localStorage.setItem('category', JSON.stringify(category));
-    setSelectedCategory(category);
-    console.log('Selected category updated:', category); // إضافة هذا السطر
-    router.push('/search?category=' + category?.id);
-    setSearchQuery(category?.name);
+    // Update categoryId in context before pushing to router
+    setCategoryId(category?.id);
+    localStorage.setItem('categoryId', category?.id.toString());
+    router.push(`/search?category=${category?.id}`);
   };
+
+  // Function to get the selected category object based on categoryId
+  const getSelectedCategory = () => {
+    return categories.find((cat) => cat.id === categoryId) || null;
+  };
+
+  const selectedCategory = getSelectedCategory();
 
   return (
     <div className="hidden sm:block relative w-full overflow-hidden">
@@ -96,21 +89,21 @@ const CategoriesNavBar = () => {
       >
         {categories?.length > 0 &&
           categories?.map((category) => (
-            <AnimatedCard
+            <AnimatedCard // استخدام الكومبوننت هنا
               key={category?.id}
-              isSelected={selectedCategory?.id === category?.id}
-              onClick={() => handleCategoryClick(category)} // تمرير الدالة هنا
+              isSelected={selectedCategory?.id === category?.id} // Use selectedCategory
+              onClick={() => handleCategoryClick(category)}
               className="min-w-[96px]"
             >
               <div
                 className={`relative z-10 mb-2 flex items-center justify-center w-12 h-12 rounded-full
             ${
-              selectedCategory?.id === category?.id
+              selectedCategory?.id === category?.id // Use selectedCategory
                 ? 'bg-orange-600/50 shadow-lg shadow-orange-500/30'
                 : 'bg-white/40 border border-gray-200/50'
             } transition-all duration-300`}
               >
-                {selectedCategory?.id === category?.id && (
+                {selectedCategory?.id === category?.id && ( // Use selectedCategory
                   <div className="absolute inset-0 rounded-full bg-orange-500 opacity-40"></div>
                 )}
                 <div className="relative z-10 text-2xl">
@@ -136,7 +129,7 @@ const CategoriesNavBar = () => {
               whileTap={{ scale: 0.95 }}
               className={
                 ('flex-shrink-0 flex flex-col items-center p-1 sm:p-2 rounded-lg min-size-12  backdrop-blur-md',
-                selectedCategory?.id === category?.id
+                selectedCategory?.id === category?.id // Use selectedCategory
                   ? 'bg-gradient-to-br from-orange-500/90 via-orange-400/90 to-orange-600/90 text-white shadow-lg shadow-orange-500/30'
                   : 'bg-white/70 text-gray-600 border border-gray-100/50')
               }
@@ -144,12 +137,12 @@ const CategoriesNavBar = () => {
               <div
                 className={cn(
                   'relative flex items-center justify-center size-5 sm:size-8 rounded-full mb-1',
-                  selectedCategory?.id === category?.id
+                  selectedCategory?.id === category?.id // Use selectedCategory
                     ? 'text-white bg-orange-600/50'
                     : 'text-amber-500 bg-amber-50/50'
                 )}
               >
-                {selectedCategory?.id === category?.id && (
+                {selectedCategory?.id === category?.id && ( // Use selectedCategory
                   <div className="absolute inset-0 rounded-full bg-orange-500 blur-md opacity-30"></div>
                 )}
                 <div className="relative z-10 text-sm">{category?.icon}</div>
