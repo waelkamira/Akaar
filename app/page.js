@@ -8,7 +8,6 @@ import ColoredCards from '../components/ReusableComponents/ColoredCards';
 import categories from '../components/Categories/categories';
 import { FaAngleDoubleLeft, FaAngleDoubleRight } from 'react-icons/fa';
 import { useEffect, useState } from 'react';
-import CategoriesNavBar from '../components/navbars/CategoriesNavBar';
 import { useSession } from 'next-auth/react';
 
 const Home = () => {
@@ -29,26 +28,28 @@ const Home = () => {
       // تقسيم الفئات إلى مجموعات صغيرة (4 فئات في كل طلب)
       const chunkSize = 4;
       const chunks = [];
-      
+
       for (let i = 0; i < categories.length; i += chunkSize) {
         chunks.push(categories.slice(i, i + chunkSize));
       }
-      
+
       // تحميل كل مجموعة على حدة
       for (const chunk of chunks) {
-        const categoryIds = chunk.map(category => category.id).join(',');
-        const response = await fetch(`/api/categories/bulk?categories=${categoryIds}`);
+        const categoryIds = chunk.map((category) => category.id).join(',');
+        const response = await fetch(
+          `/api/categories/bulk?categories=${categoryIds}`
+        );
         const data = await response.json();
-        
+
         // دمج البيانات الجديدة مع البيانات الحالية
-        setProductsByCategory(prev => ({
+        setProductsByCategory((prev) => ({
           ...prev,
-          ...data?.data
+          ...data?.data,
         }));
-        
+
         // تحديث عدد الفئات المحملة
-        setLoadedCategories(prev => prev + chunk.length);
-        
+        setLoadedCategories((prev) => prev + chunk.length);
+
         // إذا تم تحميل بعض البيانات، إنهاء حالة التحميل
         if (Object.keys(data?.data || {}).length > 0) {
           setLoading(false);
