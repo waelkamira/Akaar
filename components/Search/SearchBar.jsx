@@ -1,7 +1,5 @@
 'use client';
 
-import type React from 'react';
-
 import { useState, useEffect, useRef } from 'react';
 import { useSearch } from '../../contexts/SearchContext';
 import { SearchIcon } from 'lucide-react';
@@ -12,12 +10,12 @@ export default function SearchBar() {
   const inputRef = useRef(null);
 
   // Handle input change
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e) => {
     setInputValue(e.target.value);
   };
 
   // Handle form submission
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     if (inputValue.trim() !== '') {
       setSearchQuery(inputValue);
@@ -34,7 +32,7 @@ export default function SearchBar() {
     >
       <button
         type="submit"
-        className=" bg-one px-4 py-1 rounded-md text-black z-50 bg-primary-500 px-2"
+        className=" bg-one py-1 rounded-md text-black z-50 bg-primary-500 px-2"
       >
         بحث
       </button>

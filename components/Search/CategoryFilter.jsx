@@ -5,10 +5,14 @@ import { useSearch } from '../../contexts/SearchContext';
 export default function CategoryFilter() {
   const { categoryId, setCategoryId, availableFilters } = useSearch();
 
-  const handleCategoryChange = (id: string) => {
+  const handleCategoryChange = (id) => {
     setCategoryId(id === categoryId ? null : id);
   };
-
+  console.log(
+    'availableFilters?.categories?.categoryId',
+    availableFilters?.categories?.categoryId
+  );
+  console.log('categoryId', categoryId);
   return (
     <div className="mb-6">
       <h3 className="text-sm font-medium text-gray-700 mb-2">الفئات</h3>
@@ -25,8 +29,8 @@ export default function CategoryFilter() {
             كل الفئات
           </label>
         </div>
-
-        {availableFilters.categories.map((category: any) => (
+        {availableFilters?.categories?.categoryId}
+        {/* {availableFilters?.categories?.map((category) => (
           <div key={category.id} className="flex items-center">
             <input
               id={`category-${category.id}`}
@@ -42,7 +46,7 @@ export default function CategoryFilter() {
               {category.name}
             </label>
           </div>
-        ))}
+        ))} */}
       </div>
     </div>
   );

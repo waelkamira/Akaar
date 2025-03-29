@@ -8,7 +8,8 @@ import SmallCard from '../ReusableComponents/SmallCard/SmallCard';
 export default function SearchResults() {
   const { results, loading, error, totalCount, hasMore, loadMore } =
     useSearch();
-
+  console.log('results', results);
+  console.log('totalCount from SearchResults', totalCount);
   if (error) {
     return (
       <div className="text-center py-8">
@@ -45,38 +46,11 @@ export default function SearchResults() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {results.map((product) => (
-          <SmallCard item={product} category={product.category} />
-          // <div
-          //   key={product.id}
-          //   className="bg-white rounded-lg shadow-md overflow-hidden"
-          // >
-          //   <div className="relative h-48">
-          //     {product.image1 ? (
-          //       <Image
-          //         src={product.image1 || '/placeholder.svg'}
-          //         alt={product.title}
-          //         fill
-          //         className="object-cover"
-          //       />
-          //     ) : (
-          //       <div className="absolute inset-0 bg-gray-200 flex items-center justify-center">
-          //         <span className="text-gray-400">لا يوجد صورة</span>
-          //       </div>
-          //     )}
-          //   </div>
-
-          //   <div className="p-4">
-          //     <h3 className="font-medium text-lg mb-1">{product.title}</h3>
-          //     <p className="text-one font-bold mb-2">${product.basePrice}</p>
-          //     <div className="flex justify-between text-sm text-gray-500">
-          //       <span>{product.categoryName}</span>
-          //       <span>{product.city}</span>
-          //     </div>
-          //     <p className="mt-2 text-sm text-gray-600 line-clamp-2">
-          //       {product.description}
-          //     </p>
-          //   </div>
-          // </div>
+          <SmallCard
+            key={product.id}
+            item={product}
+            category={product.category}
+          />
         ))}
       </div>
 
