@@ -11,57 +11,15 @@ import React, {
 import { filterOptions } from '../lib/mockData';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
-interface Town {
-  id: string;
-  name: string;
-}
-
-interface City {
-  id: string;
-  name: string;
-  towns: Town[];
-}
-
-interface SearchContextType {
-  searchQuery: string;
-  setSearchQuery: (query: string) => void;
-  categoryId: string | null;
-  setCategoryId: (id: string | null) => void;
-  filters: {
-    city?: string | null;
-    town?: string | null;
-    priceMin?: number;
-    priceMax?: number;
-    details?: Record<string, any>;
-  };
-  setFilter: (key: string, value: any) => void;
-  removeFilter: (key: string) => void;
-  clearFilters: () => void;
-  results: any[];
-  loading: boolean;
-  error: string | null;
-  totalCount: number;
-  hasMore: boolean;
-  loadMore: () => void;
-  selectedFilters: Array<{
-    key: string;
-    value: any;
-    label: string;
-  }>;
-  availableFilters: any;
-  performSearch: () => void;
-  getTownsByCity: (cityId: string | null) => Town[];
-}
-
-const SearchContext = createContext<SearchContextType | undefined>(undefined);
+const SearchContext = createContext(undefined);
 
 export function SearchProvider({ children, initialCategory = null }) {
   const [searchQuery, setSearchQuery] = useState('');
-  const [categoryId, setCategoryId] = useState<string | null>(initialCategory);
-  const [filters, setFilters] = useState<SearchContextType['filters']>({});
+  const [categoryId, setCategoryId] = useState(initialCategory || null);
+  const [filters, setFilters] = useState({});
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(null);
   const [totalCount, setTotalCount] = useState(0);
   const [hasMore, setHasMore] = useState(false);
   const [page, setPage] = useState(1);
@@ -70,15 +28,15 @@ export function SearchProvider({ children, initialCategory = null }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-
+  console.log('searchQuery', searchQuery);
   // دالة للحصول على المناطق بناءً على المدينة
   const getTownsByCity = useCallback(
-    (cityId: string | null) => {
+    (cityId) => {
       if (!cityId) return [];
       const city = availableFilters?.static?.cities?.find(
         (c) => c.id === cityId || c.name === cityId
       );
-      return city?.towns || [];
+      return city?.towns || []; // تأكد من وجود `city.towns`
     },
     [availableFilters]
   );
@@ -101,6 +59,8 @@ export function SearchProvider({ children, initialCategory = null }) {
         ...filters,
         city: filters.city || null,
         town: filters.town || null,
+        priceMin: filters.priceMin === undefined ? null : filters.priceMin, // التأكد من إرسال `null` بدلًا من `undefined`
+        priceMax: filters.priceMax === undefined ? null : filters.priceMax, // التأكد من إرسال `null` بدلًا من `undefined`
       };
 
       const response = await fetch('/api/search', {
@@ -117,7 +77,10 @@ export function SearchProvider({ children, initialCategory = null }) {
         }),
       });
 
-      if (!response.ok) throw new Error('Search request failed');
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Search request failed'); // عرض رسالة خطأ من الواجهة الخلفية إذا كانت موجودة
+      }
 
       const data = await response.json();
       if (!data.products || !Array.isArray(data.products)) {
@@ -265,7 +228,7 @@ export function SearchProvider({ children, initialCategory = null }) {
   }, [categoryId, filters, availableFilters]);
 
   // تعيين قيمة الفلتر
-  const setFilter = useCallback((key: string, value: any) => {
+  const setFilter = useCallback((key, value) => {
     setFilters((prev) => {
       if (key.startsWith('details.')) {
         const detailKey = key.split('.')[1];
@@ -284,50 +247,32 @@ export function SearchProvider({ children, initialCategory = null }) {
 
   // حذف فلتر
   const removeFilter = useCallback(
-    (key: string) => {
-      if (key === 'price') {
-        // حذف فلتر السعر
-        setFilters((prev) => ({
-          ...prev,
-          priceMin: undefined,
-          priceMax: undefined,
-        }));
-      } else if (key === 'category') {
-        // حذف التصنيف
-        setCategoryId(null);
-        setFilters((prev) => ({
-          ...prev,
-          details: undefined,
-        }));
-      } else if (key === 'city') {
-        // حذف المدينة والمنطقة
-        setFilters((prev) => {
-          const { city, town, ...rest } = prev;
-          return rest;
-        });
-      } else if (key === 'town') {
-        // حذف المنطقة فقط
-        setFilters((prev) => {
-          const { town, ...rest } = prev;
-          return rest;
-        });
-      } else if (key.startsWith('details.')) {
-        // حذف فلتر تفاصيل
-        setFilters((prev) => {
+    (key) => {
+      setFilters((prev) => {
+        const { [key]: removed, ...rest } = prev;
+
+        // Special handling for details
+        if (key.startsWith('details.')) {
           const detailKey = key.split('.')[1];
-          if (!prev.details) return prev;
+          if (prev.details && prev.details[detailKey]) {
+            const { [detailKey]: removedDetail, ...remainingDetails } =
+              prev.details;
+            const details =
+              Object.keys(remainingDetails).length > 0
+                ? remainingDetails
+                : undefined;
+            return { ...rest, details };
+          }
+        }
+        if (key === 'city') {
+          delete rest.town; // Remove town when city is removed
+        }
 
-          const newDetails = { ...prev.details };
-          delete newDetails[detailKey];
-
-          return {
-            ...prev,
-            details:
-              Object.keys(newDetails).length > 0 ? newDetails : undefined,
-          };
-        });
+        return rest;
+      });
+      if (key === 'category') {
+        setCategoryId(null);
       }
-
       setPage(1);
       performSearch();
     },
@@ -363,7 +308,10 @@ export function SearchProvider({ children, initialCategory = null }) {
       setAvailableFilters(filterOptions);
     }
 
-    setFilters((prev) => ({ ...prev, details: undefined }));
+    setFilters((prev) => {
+      const { details, ...rest } = prev;
+      return rest;
+    });
   }, [categoryId]);
 
   const value = {

@@ -1,16 +1,15 @@
 'use client';
-
 import { FaCalendarAlt, FaCar, FaTools } from 'react-icons/fa';
-import CarsBrandSelector from '../Selectors/CarsBrandSelector';
 import YearsSelector from '../Selectors/yearSelector';
 import { BsFillFuelPumpDieselFill } from 'react-icons/bs';
 import { IoSpeedometerOutline } from 'react-icons/io5';
 import { GiCarWheel } from 'react-icons/gi';
 import { FaCarSide } from 'react-icons/fa';
 
-const realEstate = [
+const cars = [
   {
-    name: 'الماركة',
+    name: 'brand', // المفتاح الإنجليزي
+    label: 'الماركة', // الاسم العربي
     icon: <FaCar className="text-primary-500 text-lg sm:text-xl" />,
     placeholder: 'تويوتا',
     options: {
@@ -132,40 +131,125 @@ const realEstate = [
       116: 'غير ذلك',
     },
   },
+
   {
-    name: 'الموديل',
+    name: 'model', // المفتاح الإنجليزي
+    label: 'الموديل', // الاسم العربي
     icon: <FaTools className="text-primary-500 text-lg sm:text-xl" />,
-    placeholder: 'كورولا',
+    placeholder: 'الموديل',
   },
   {
-    name: 'السنة',
+    name: 'year', // المفتاح الإنجليزي
+    label: 'السنة', // الاسم العربي
     icon: <FaCalendarAlt className="text-primary-500 text-lg sm:text-xl" />,
-    placeholder: '2021',
+    placeholder: 'السنة',
+    options: {
+      1: '2026',
+      2: '2025',
+      3: '2024',
+      4: '2023',
+      5: '2022',
+      6: '2021',
+      7: '2020',
+      8: '2019',
+      9: '2018',
+      10: '2017',
+      11: '2016',
+      12: '2015',
+      13: '2014',
+      14: '2013',
+      15: '2012',
+      16: '2011',
+      17: '2010',
+      18: '2009',
+      19: '2008',
+      20: '2007',
+      21: '2006',
+      22: '2005',
+      23: '2004',
+      24: '2003',
+      25: '2002',
+      26: '2001',
+      27: '2000',
+      28: '1999',
+      29: '1998',
+      30: '1997',
+      31: '1996',
+      32: '1995',
+      33: '1994',
+      34: '1993',
+      35: '1992',
+      36: '1991',
+      37: '1990',
+      38: '1989',
+      39: '1988',
+      40: '1987',
+      41: '1986',
+      42: '1985',
+      43: '1984',
+      44: '1983',
+      45: '1982',
+      46: '1981',
+      47: '1980',
+      48: '1979',
+      49: '1978',
+      50: '1977',
+      51: '1976',
+      52: '1975',
+      53: '1974',
+      54: '1973',
+      55: '1972',
+      56: '1971',
+      57: '1970',
+      58: '1969',
+      59: '1968',
+      60: '1967',
+      61: '1966',
+      62: '1965',
+      63: '1964',
+      64: '1963',
+      65: '1962',
+      66: '1961',
+      67: '1960',
+      68: '1959',
+      69: '1958',
+      70: '1957',
+      71: '1956',
+      72: '1955',
+      73: '1954',
+      74: '1953',
+      75: '1952',
+      76: '1951',
+      77: '1950',
+    },
   },
   {
-    name: 'الحالة',
+    name: 'condition', // المفتاح الإنجليزي
+    label: 'الحالة', // الاسم العربي
     icon: <GiCarWheel className="text-primary-500 text-lg sm:text-xl" />,
-    placeholder: '-اختر-',
+    placeholder: 'الحالة',
     options: {
       1: 'جديدة',
       2: 'مستعملة',
     },
   },
   {
-    name: 'بيع/أجار',
+    name: 'adType', // المفتاح الإنجليزي
+    label: 'بيع/أجار', // الاسم العربي
     icon: <FaCarSide className="text-primary-500 text-lg sm:text-xl" />,
-    placeholder: '-اختر-',
+    placeholder: 'بيع/أجار',
     options: {
       1: 'بيع',
       2: 'أجار',
     },
   },
   {
-    name: 'نوع الوقود',
+    name: 'fuelType', // المفتاح الإنجليزي
+    label: 'الوقود', // الاسم العربي
     icon: (
       <BsFillFuelPumpDieselFill className="text-primary-500 text-lg sm:text-xl" />
     ),
-    placeholder: '-اختر-',
+    placeholder: 'الوقود',
     options: {
       1: 'بنزين',
       2: 'ديزل',
@@ -174,13 +258,53 @@ const realEstate = [
     },
     component: <YearsSelector />,
   },
-
   {
-    name: 'عدد الكيلومترات',
+    name: 'mileage', // المفتاح الإنجليزي
+    label: 'الكيلومترات', // الاسم العربي
     icon: (
       <IoSpeedometerOutline className="text-primary-500 text-lg sm:text-xl" />
     ),
-    placeholder: '20.000',
+    placeholder: 'الكيلومترات',
+    options: {
+      1: '0',
+      2: '50',
+      3: '100',
+      4: '1000',
+      5: '5000',
+      6: '10000',
+      7: '20000',
+      8: '30000',
+      9: '40000',
+      10: '50000',
+      11: '60000',
+      12: '70000',
+      13: '80000',
+      14: '90000',
+      15: '100000',
+      16: '150000',
+      17: '200000',
+      18: '250000',
+      19: '300000',
+      20: '350000',
+      21: '400000',
+      22: '450000',
+      23: '500000',
+      24: '550000',
+      25: '600000',
+      26: '650000',
+      27: '700000',
+      28: '750000',
+      29: '800000',
+      30: '850000',
+      31: '900000',
+      32: '950000',
+      33: '1000000',
+      34: '2000000',
+      35: '3000000',
+      36: '4000000',
+      37: '5000000',
+    },
   },
 ];
-export default realEstate;
+
+export default cars;

@@ -9,7 +9,9 @@ import { motion } from 'framer-motion';
 import { cn } from '../lib/utils';
 import { useSearch } from '../../contexts/SearchContext';
 
-const AnimatedCard = ({ children, isSelected }) => (
+console.log('categories', categories);
+
+const AnimatedCard = ({ children, isSelected, onClick }) => (
   <motion.div
     className={`relative flex flex-col items-center justify-center
       ${isSelected ? 'text-white' : 'text-gray-400'}
@@ -23,6 +25,7 @@ const AnimatedCard = ({ children, isSelected }) => (
       boxShadow: '0 10px 25px -5px rgba(249, 115, 22, 0.4)',
     }}
     whileTap={{ scale: 0.95 }}
+    onClick={onClick}
   >
     {isSelected && (
       <motion.div
@@ -58,7 +61,6 @@ const CategoriesNavBar = () => {
       category = storedCategory ? JSON.parse(storedCategory) : null;
     } catch (error) {
       console.error('Failed to parse category from localStorage', error);
-      category = null;
     }
 
     if (category) {
@@ -66,8 +68,8 @@ const CategoriesNavBar = () => {
     } else {
       const defaultValue = {
         id: 1,
-        name: 'عقارات',
-        path: '/search/1?category=عقارات',
+        name: 'realEstate',
+        path: '/search/1?category=realEstate',
         icon: <BsBuilding className="h-6 w-6" />,
       };
       setSelectedCategory(defaultValue);
@@ -76,10 +78,12 @@ const CategoriesNavBar = () => {
   }, []);
 
   const handleCategoryClick = (category) => {
+    console.log('Clicked category:', category); // إضافة هذا السطر
     localStorage.setItem('category', JSON.stringify(category));
     setSelectedCategory(category);
-    router.push('/search?category=' + category.id);
-    setSearchQuery(category.name);
+    console.log('Selected category updated:', category); // إضافة هذا السطر
+    router.push('/search?category=' + category?.id);
+    setSearchQuery(category?.name);
   };
 
   return (
@@ -90,69 +94,71 @@ const CategoriesNavBar = () => {
         transition={{ duration: 0.5 }}
         className="hidden sm:flex overflow-x-auto gap-2 p-3 bg-white shadow-md w-full border-b border-orange-100/500"
       >
-        {categories?.map((category) => (
-          <AnimatedCard
-            key={category.id}
-            isSelected={selectedCategory?.id === category.id}
-            onClick={() => handleCategoryClick(category)}
-            className="min-w-[96px]" //  Added here. Adjust value as needed.
-          >
-            <div
-              className={`relative z-10 mb-2 flex items-center justify-center w-12 h-12 rounded-full
+        {categories?.length > 0 &&
+          categories?.map((category) => (
+            <AnimatedCard
+              key={category?.id}
+              isSelected={selectedCategory?.id === category?.id}
+              onClick={() => handleCategoryClick(category)} // تمرير الدالة هنا
+              className="min-w-[96px]"
+            >
+              <div
+                className={`relative z-10 mb-2 flex items-center justify-center w-12 h-12 rounded-full
             ${
-              selectedCategory?.id === category.id
+              selectedCategory?.id === category?.id
                 ? 'bg-orange-600/50 shadow-lg shadow-orange-500/30'
                 : 'bg-white/40 border border-gray-200/50'
             } transition-all duration-300`}
-            >
-              {selectedCategory?.id === category.id && (
-                <div className="absolute inset-0 rounded-full bg-orange-500 opacity-40"></div>
-              )}
-              <div className="relative z-10 text-2xl">
-                {category.icon || <FaHome className="text-2xl" />}
+              >
+                {selectedCategory?.id === category?.id && (
+                  <div className="absolute inset-0 rounded-full bg-orange-500 opacity-40"></div>
+                )}
+                <div className="relative z-10 text-2xl">
+                  {category?.icon || <FaHome className="text-2xl" />}
+                </div>
               </div>
-            </div>
 
-            <span className="relative z-10 text-xs font-bold mt-1">
-              {category.name}
-            </span>
-          </AnimatedCard>
-        ))}
+              <span className="relative z-10 text-xs font-bold mt-1">
+                {category?.name}
+              </span>
+            </AnimatedCard>
+          ))}
       </motion.div>
 
       {/* mobile view */}
       <div className="sm:hidden flex overflow-x-auto gap-2 p-3 bg-white/70 backdrop-blur-lg shadow-md w-full border-b border-orange-100/50">
-        {categories.map((category) => (
-          <motion.button
-            key={category.id}
-            onClick={() => handleCategoryClick(category)}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className={cn(
-              'flex-shrink-0 flex flex-col items-center p-1 sm:p-2 rounded-lg min-size-12  backdrop-blur-md',
-              selectedCategory?.id === category.id
-                ? 'bg-gradient-to-br from-orange-500/90 via-orange-400/90 to-orange-600/90 text-white shadow-lg shadow-orange-500/30'
-                : 'bg-white/70 text-gray-600 border border-gray-100/50'
-            )}
-          >
-            <div
-              className={cn(
-                'relative flex items-center justify-center size-5 sm:size-8 rounded-full mb-1',
-                selectedCategory?.id === category.id
-                  ? 'text-white bg-orange-600/50'
-                  : 'text-amber-500 bg-amber-50/50'
-              )}
+        {categories?.length > 0 &&
+          categories?.map((category) => (
+            <motion.button
+              key={category?.id}
+              onClick={() => handleCategoryClick(category)}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className={
+                ('flex-shrink-0 flex flex-col items-center p-1 sm:p-2 rounded-lg min-size-12  backdrop-blur-md',
+                selectedCategory?.id === category?.id
+                  ? 'bg-gradient-to-br from-orange-500/90 via-orange-400/90 to-orange-600/90 text-white shadow-lg shadow-orange-500/30'
+                  : 'bg-white/70 text-gray-600 border border-gray-100/50')
+              }
             >
-              {selectedCategory?.id === category.id && (
-                <div className="absolute inset-0 rounded-full bg-orange-500 blur-md opacity-30"></div>
-              )}
-              <div className="relative z-10 text-sm">{category.icon}</div>
-            </div>
-            <span className="text-[10px] font-medium hover:text-gray-500">
-              {category.name}
-            </span>
-          </motion.button>
-        ))}
+              <div
+                className={cn(
+                  'relative flex items-center justify-center size-5 sm:size-8 rounded-full mb-1',
+                  selectedCategory?.id === category?.id
+                    ? 'text-white bg-orange-600/50'
+                    : 'text-amber-500 bg-amber-50/50'
+                )}
+              >
+                {selectedCategory?.id === category?.id && (
+                  <div className="absolute inset-0 rounded-full bg-orange-500 blur-md opacity-30"></div>
+                )}
+                <div className="relative z-10 text-sm">{category?.icon}</div>
+              </div>
+              <span className="text-[10px] font-medium hover:text-gray-500">
+                {category?.name}
+              </span>
+            </motion.button>
+          ))}
       </div>
     </div>
   );

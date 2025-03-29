@@ -1,0 +1,121 @@
+import {
+  FaBook,
+  FaPencilAlt,
+  FaHeadphones,
+  FaLanguage,
+  FaSchool,
+  FaNewspaper,
+} from 'react-icons/fa';
+import {
+  GiBookCover,
+  GiBookshelf,
+  GiNotebook,
+  GiArchiveResearch,
+  GiSpellBook,
+} from 'react-icons/gi';
+
+const books = [
+  {
+    name: 'productType',
+    label: 'نوع المنتج',
+    icon: <GiBookshelf className="text-primary-500 text-lg sm:text-xl" />,
+    placeholder: '-اختر-',
+    options: {
+      1: 'كتب عامة',
+      2: 'كتب دراسية',
+      3: 'كتب صوتية',
+      4: 'مجلات ودوريات',
+      5: 'قصص مصورة',
+      6: 'موسوعات',
+      7: 'كتب أكاديمية',
+      8: 'أخرى',
+    },
+  },
+  {
+    name: 'genre',
+    label: 'التصنيف الأدبي',
+    icon: <GiSpellBook className="text-primary-500 text-lg sm:text-xl" />,
+    placeholder: '-اختر-',
+    options: {
+      1: 'خيال علمي',
+      2: 'فانتازيا',
+      3: 'رومانسي',
+      4: 'غموض وإثارة',
+      5: 'تاريخي',
+      6: 'سيرة ذاتية',
+      7: 'تطوير ذاتي',
+      8: 'أدب رحلات',
+      9: 'شعر',
+      10: 'أدب عالمي',
+      11: 'أخرى',
+    },
+  },
+  {
+    name: 'author',
+    label: 'المؤلف/المترجم',
+    icon: <FaPencilAlt className="text-primary-500 text-lg sm:text-xl" />,
+    placeholder: 'اسم المؤلف أو المترجم',
+  },
+  {
+    name: 'publisher',
+    label: 'دار النشر',
+    icon: <GiBookCover className="text-primary-500 text-lg sm:text-xl" />,
+    placeholder: 'اسم دار النشر',
+  },
+  {
+    name: 'language',
+    label: 'اللغة',
+    icon: <FaLanguage className="text-primary-500 text-lg sm:text-xl" />,
+    placeholder: '-اختر-',
+    options: {
+      1: 'العربية',
+      2: 'الإنجليزية',
+      3: 'الفرنسية',
+      4: 'الإسبانية',
+      5: 'الألمانية',
+      6: 'الفارسية',
+      7: 'أخرى',
+    },
+  },
+  {
+    name: 'format',
+    label: 'نوع النسخة',
+    icon: <GiNotebook className="text-primary-500 text-lg sm:text-xl" />,
+    placeholder: '-اختر-',
+    options: {
+      1: 'غلاف مقوى',
+      2: 'غلاف ورقي',
+      3: 'كتاب إلكتروني (PDF, ePub)',
+      4: 'كتاب صوتي',
+      5: 'نسخة أصلية',
+      6: 'نسخة مستعملة',
+    },
+  },
+  {
+    name: 'edition',
+    label: 'الطبعة',
+    icon: <GiArchiveResearch className="text-primary-500 text-lg sm:text-xl" />,
+    placeholder: 'رقم الطبعة وسنة النشر',
+  },
+  {
+    name: 'condition',
+    label: 'الحالة',
+    icon: <FaBook className="text-primary-500 text-lg sm:text-xl" />,
+    placeholder: '-اختر-',
+    options: {
+      1: 'جديد',
+      2: 'مستعمل - ممتازة',
+      3: 'مستعمل - جيدة',
+      4: 'مستعمل - بها علامات تآكل',
+      5: 'نادرة/قديمة',
+    },
+  },
+  {
+    name: 'isbn',
+    label: 'رقم ISBN',
+    icon: <FaBook className="text-primary-500 text-lg sm:text-xl" />,
+    placeholder: 'أدخل رقم ISBN إن وجد',
+  },
+];
+
+export default books;
