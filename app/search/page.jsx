@@ -1,6 +1,5 @@
 'use client';
-import { SearchProvider } from '../../contexts/SearchContext';
-import SearchBar from '../../components/Search/SearchBar';
+import { SearchProvider, useSearch } from '../../contexts/SearchContext';
 import SelectedFilters from '../../components/Search/SelectedFilters';
 import CategoryFilter from '../../components/Search/CategoryFilter';
 import StaticFilters from '../../components/Search/StaticFilters';
@@ -9,17 +8,38 @@ import SearchResults from '../../components/Search/SearchResults';
 import { useState } from 'react';
 import { FilterIcon, XIcon } from 'lucide-react';
 
-export default function SearchPage({ searchParams }) {
-  const [showFilters, setShowFilters] = useState(false);
-  console.log('searchParams', searchParams);
-  // Get category from URL if presen
-  const categoryParam = searchParams.category
-    ? Number.parseInt(searchParams.category)
-    : null;
+// Separate component for filters that can access context
+function FiltersContent() {
+  const { category } = useSearch();
 
   return (
-    <SearchProvider initialCategory={categoryParam}>
-      <div className=" min-h-screen bg-gray-50 relative">
+    <>
+      <SelectedFilters />
+      {!category && <CategoryFilter />}
+      <StaticFilters />
+      {category && <DynamicFilters />}
+    </>
+  );
+}
+
+export default function SearchPage({ searchParams }) {
+  const [showFilters, setShowFilters] = useState(false);
+
+  // Parse category from URL if present
+  let initialCategory = null;
+  if (searchParams.category) {
+    try {
+      const categoryId = Number.parseInt(searchParams.category);
+      // We'll pass just the ID and let the context resolve the full category
+      initialCategory = { id: categoryId };
+    } catch (e) {
+      console.error('Error parsing category:', e);
+    }
+  }
+
+  return (
+    <SearchProvider initialCategory={initialCategory}>
+      <div className="min-h-screen bg-gray-50 relative">
         {/* Mobile Filters Button */}
         <button
           onClick={() => setShowFilters(!showFilters)}
@@ -33,10 +53,10 @@ export default function SearchPage({ searchParams }) {
         </button>
 
         {/* Main Content */}
-        <main className=" container mx-auto px-4 py-6">
-          <div className=" flex flex-col lg:flex-row justify-between items-start gap-3 w-full">
+        <main className="container mx-auto px-4 py-6">
+          <div className="flex flex-col lg:flex-row justify-between items-start gap-3 w-full">
             {/* Filters Sidebar - Fixed on mobile, Sticky on desktop */}
-            <div className="relative sticky top-0 ">
+            <div className="relative sticky top-0">
               <aside
                 className={`h-full w-72 bg-white z-20 shadow-xl lg:shadow-sm transform transition-transform duration-300 ease-in-out
             ${showFilters ? 'translate-x-0' : '-translate-x-full'} 
@@ -52,10 +72,7 @@ export default function SearchPage({ searchParams }) {
                       <XIcon className="w-5 h-5" />
                     </button>
                   </div>
-                  <SelectedFilters />
-                  <CategoryFilter />
-                  <StaticFilters />
-                  <DynamicFilters />
+                  <FiltersContent />
                 </div>
               </aside>
             </div>

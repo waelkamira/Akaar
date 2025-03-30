@@ -1,14 +1,14 @@
 // src/navbars/CategoriesNavBar.js
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import categories from '../Categories/categories';
 import { FaHome } from 'react-icons/fa';
-import { BsBuilding } from 'react-icons/bs';
 import { motion } from 'framer-motion';
 import { cn } from '../lib/utils';
 import { useSearch } from '../../contexts/SearchContext';
+import { cities } from '../lists/Cities';
 
 // تعريف الكومبوننت AnimatedCard (تأكد من أنه يظهر قبل استخدامه)
 const AnimatedCard = ({ children, isSelected, onClick }) => (
@@ -30,7 +30,7 @@ const AnimatedCard = ({ children, isSelected, onClick }) => (
     {isSelected && (
       <motion.div
         className="absolute inset-0 rounded-xl bg-gradient-to-br from-orange-500/80 via-orange-400/80 to-orange-600/80 "
-        layoutId="categoryBackground"
+        layoutId="categoryIdBackground"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.2 }}
@@ -50,34 +50,65 @@ const AnimatedCard = ({ children, isSelected, onClick }) => (
 
 const CategoriesNavBar = () => {
   const router = useRouter();
-  const { categoryId, setCategoryId } = useSearch(); // Get categoryId from context
+  const searchParams = useSearchParams(); // Get search params
+  const { category, setCategory, availableFilters, setAvailableFilters } =
+    useSearch();
+
+  const handleCategoryIdClick = useCallback(
+    (categoryItem) => {
+      setCategory(categoryItem); // Update context *first*
+
+      // Update URL
+      const newParams = new URLSearchParams(searchParams.toString());
+      newParams.set('categoryId', categoryItem.id);
+      router.push(`/search?${newParams.toString()}`);
+
+      localStorage.setItem('category', JSON.stringify(categoryItem)); // Persist if needed, but context drives UI
+    },
+    [setCategory, router, searchParams]
+  );
 
   useEffect(() => {
-    // Load categoryId from localStorage on component mount
-    const storedCategoryId = localStorage.getItem('categoryId');
-    if (storedCategoryId) {
-      setCategoryId(parseInt(storedCategoryId)); // Parse to number, ids are numbers
-    } else {
-      // Set a default category if none is stored
-      const defaultCategoryId = 1; // Set your default category id
-      setCategoryId(defaultCategoryId);
-      localStorage.setItem('categoryId', defaultCategoryId.toString());
+    if (category) {
+      const categoryId = categories.find((c) => c.id === category?.id)?.id;
+
+      if (categoryId) {
+        import(`../categoryFields/${category?.enName}.jsx`)
+          .then((module) => {
+            const dynamicFilters = module?.default;
+
+            const filterOptionsUpdate = {
+              ...availableFilters,
+              static: {
+                cities: cities.map((city) => ({
+                  ...city,
+                  id: city.name, // Use name as id for compatibility
+                  towns: city.towns.map((town) => ({
+                    ...town,
+                    id: town.name, // Use name as id for compatibility
+                  })),
+                })),
+                priceRange: {
+                  min: 0,
+                  max: 150000,
+                },
+              },
+              dynamic: dynamicFilters,
+            };
+
+            setAvailableFilters(filterOptionsUpdate);
+          })
+          .catch((err) => {
+            console.error('Failed to load fields:', err);
+          });
+      }
     }
-  }, [setCategoryId]);
+  }, [category, setAvailableFilters, availableFilters]);
 
-  const handleCategoryClick = (category) => {
-    // Update categoryId in context before pushing to router
-    setCategoryId(category?.id);
-    localStorage.setItem('categoryId', category?.id.toString());
-    router.push(`/search?category=${category?.id}`);
-  };
-
-  // Function to get the selected category object based on categoryId
-  const getSelectedCategory = () => {
-    return categories.find((cat) => cat.id === categoryId) || null;
-  };
-
-  const selectedCategory = getSelectedCategory();
+  // Use useMemo to memoize the selected categoryId object to prevent unnecessary re-renders
+  const selectedCategory = useMemo(() => {
+    return categories.find((cat) => cat.id === category?.id) || null;
+  }, [category]);
 
   return (
     <div className="hidden sm:block relative w-full overflow-hidden">
@@ -88,70 +119,82 @@ const CategoriesNavBar = () => {
         className="hidden sm:flex overflow-x-auto gap-2 p-3 bg-white shadow-md w-full border-b border-orange-100/500"
       >
         {categories?.length > 0 &&
-          categories?.map((category) => (
-            <AnimatedCard // استخدام الكومبوننت هنا
-              key={category?.id}
-              isSelected={selectedCategory?.id === category?.id} // Use selectedCategory
-              onClick={() => handleCategoryClick(category)}
-              className="min-w-[96px]"
-            >
-              <div
-                className={`relative z-10 mb-2 flex items-center justify-center w-12 h-12 rounded-full
+          categories?.map(
+            (
+              categoryItem // Rename categoryId to categoryItem
+            ) => (
+              <AnimatedCard // استخدام الكومبوننت هنا
+                key={categoryItem?.id}
+                isSelected={selectedCategory?.id === categoryItem?.id} // Use selectedCategory and categoryItem
+                onClick={() => handleCategoryIdClick(categoryItem)} // Use categoryItem
+                className="min-w-[96px]"
+              >
+                <div
+                  className={`relative z-10 mb-2 flex items-center justify-center w-12 h-12 rounded-full
             ${
-              selectedCategory?.id === category?.id // Use selectedCategory
+              selectedCategory?.id === categoryItem?.id // Use selectedCategory and categoryItem
                 ? 'bg-orange-600/50 shadow-lg shadow-orange-500/30'
                 : 'bg-white/40 border border-gray-200/50'
             } transition-all duration-300`}
-              >
-                {selectedCategory?.id === category?.id && ( // Use selectedCategory
-                  <div className="absolute inset-0 rounded-full bg-orange-500 opacity-40"></div>
-                )}
-                <div className="relative z-10 text-2xl">
-                  {category?.icon || <FaHome className="text-2xl" />}
+                >
+                  {selectedCategory?.id === categoryItem?.id && ( // Use selectedCategory and categoryItem
+                    <div className="absolute inset-0 rounded-full bg-orange-500 opacity-40"></div>
+                  )}
+                  <div className="relative z-10 text-2xl">
+                    {categoryItem?.icon || <FaHome className="text-2xl" />}{' '}
+                    {/* Use categoryItem */}
+                  </div>
                 </div>
-              </div>
 
-              <span className="relative z-10 text-xs font-bold mt-1">
-                {category?.name}
-              </span>
-            </AnimatedCard>
-          ))}
+                <span className="relative z-10 text-xs font-bold mt-1">
+                  {categoryItem?.name} {/* Use categoryItem */}
+                </span>
+              </AnimatedCard>
+            )
+          )}
       </motion.div>
 
       {/* mobile view */}
       <div className="sm:hidden flex overflow-x-auto gap-2 p-3 bg-white/70 backdrop-blur-lg shadow-md w-full border-b border-orange-100/50">
         {categories?.length > 0 &&
-          categories?.map((category) => (
-            <motion.button
-              key={category?.id}
-              onClick={() => handleCategoryClick(category)}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className={
-                ('flex-shrink-0 flex flex-col items-center p-1 sm:p-2 rounded-lg min-size-12  backdrop-blur-md',
-                selectedCategory?.id === category?.id // Use selectedCategory
-                  ? 'bg-gradient-to-br from-orange-500/90 via-orange-400/90 to-orange-600/90 text-white shadow-lg shadow-orange-500/30'
-                  : 'bg-white/70 text-gray-600 border border-gray-100/50')
-              }
-            >
-              <div
-                className={cn(
-                  'relative flex items-center justify-center size-5 sm:size-8 rounded-full mb-1',
-                  selectedCategory?.id === category?.id // Use selectedCategory
-                    ? 'text-white bg-orange-600/50'
-                    : 'text-amber-500 bg-amber-50/50'
-                )}
+          categories?.map(
+            (
+              categoryItem // Rename categoryId to categoryItem
+            ) => (
+              <motion.button
+                key={categoryItem?.id}
+                onClick={() => handleCategoryIdClick(categoryItem)} // Use categoryItem
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className={
+                  ('flex-shrink-0 flex flex-col items-center p-1 sm:p-2 rounded-lg min-size-12  backdrop-blur-md',
+                  selectedCategory?.id === categoryItem?.id // Use selectedCategory and categoryItem
+                    ? 'bg-gradient-to-br from-orange-500/90 via-orange-400/90 to-orange-600/90 text-white shadow-lg shadow-orange-500/30'
+                    : 'bg-white/70 text-gray-600 border border-gray-100/50')
+                }
               >
-                {selectedCategory?.id === category?.id && ( // Use selectedCategory
-                  <div className="absolute inset-0 rounded-full bg-orange-500 blur-md opacity-30"></div>
-                )}
-                <div className="relative z-10 text-sm">{category?.icon}</div>
-              </div>
-              <span className="text-[10px] font-medium hover:text-gray-500">
-                {category?.name}
-              </span>
-            </motion.button>
-          ))}
+                <div
+                  className={cn(
+                    'relative flex items-center justify-center size-5 sm:size-8 rounded-full mb-1',
+                    selectedCategory?.id === categoryItem?.id // Use selectedCategory and categoryItem
+                      ? 'text-white bg-orange-600/50'
+                      : 'text-amber-500 bg-amber-50/50'
+                  )}
+                >
+                  {selectedCategory?.id === categoryItem?.id && ( // Use selectedCategory and categoryItem
+                    <div className="absolute inset-0 rounded-full bg-orange-500 blur-md opacity-30"></div>
+                  )}
+                  <div className="relative z-10 text-sm">
+                    {categoryItem?.icon}
+                  </div>{' '}
+                  {/* Use categoryItem */}
+                </div>
+                <span className="text-[10px] font-medium hover:text-gray-500">
+                  {categoryItem?.name} {/* Use categoryItem */}
+                </span>
+              </motion.button>
+            )
+          )}
       </div>
     </div>
   );
