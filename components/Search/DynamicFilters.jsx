@@ -1,103 +1,63 @@
 'use client';
 
 import { useSearch } from '../../contexts/SearchContext';
-import { useEffect, useState } from 'react';
+import { useCallback } from 'react';
+import DynamicField from './DynamicField';
 
 export default function DynamicFilters() {
-  const { categoryId, filters, setFilter, availableFilters } = useSearch();
-  const [categoryFields, setCategoryFields] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  // console.log('categoryId', categoryId);
-  useEffect(() => {
-    if (!categoryId) {
-      setCategoryFields([]);
-      return;
-    }
+  const { category, filters, setFilter, dynamicFilters, loading } = useSearch();
 
-    // العثور على الفئة المحددة للحصول على اسمها
-    const selectedCategory = availableFilters.categories.find(
-      (cat) => cat.id.toString() === categoryId
-    );
+  // Handle field value changes
+  const handleFieldChange = useCallback(
+    (fieldName, value) => {
+      setFilter(`details.${fieldName}`, value);
+    },
+    [setFilter]
+  );
 
-    if (!selectedCategory) {
-      setCategoryFields([]);
-      return;
-    }
-
-    setLoading(true);
-    setError(null);
-
-    // تحميل الفلاتر الديناميكية باستخدام اسم الفئة
-    import(`../../components/categoryFields/${selectedCategory.name}.jsx`)
-      .then((module) => {
-        setCategoryFields(module.default);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error('Failed to load fields:', err);
-        setError('فشل في تحميل الفلاتر');
-        setLoading(false);
-        setCategoryFields([]);
-      });
-  }, [categoryId, availableFilters.categories]);
-
-  if (!categoryId || loading || error) {
+  // Early return if no category
+  if (!category) {
     return null;
   }
 
-  return (
-    <div className="space-y-6">
-      {categoryFields.map((field) => {
-        const currentValue = filters.details?.[field.name];
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="bg-white p-4 rounded-lg shadow-sm mb-4">
+        <div className="flex justify-center items-center py-4">
+          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>
+          <span className="mr-2">جاري تحميل الخصائص...</span>
+        </div>
+      </div>
+    );
+  }
 
-        return (
-          <div key={field.name}>
-            <div className="flex items-center gap-2 mb-2">
-              {field.icon && <span>{field.icon}</span>}
-              <h3 className="text-sm font-medium text-gray-700">
-                {field.label || field.name}
-              </h3>
-            </div>
-            <div className="space-y-2">
-              {field.options ? (
-                // إذا كان للحقل خيارات، نستخدم قائمة منسدلة
-                <select
-                  value={currentValue || ''}
-                  onChange={(e) =>
-                    setFilter(
-                      `details.${field.name}`,
-                      e.target.value || undefined
-                    )
-                  }
-                  className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-one focus:border-one"
-                >
-                  <option value="">{field.placeholder || 'اختر...'}</option>
-                  {Object.entries(field.options).map(([value, label]) => (
-                    <option key={value} value={value}>
-                      {label}
-                    </option>
-                  ))}
-                </select>
-              ) : (
-                // إذا لم يكن للحقل خيارات، نستخدم حقل إدخال
-                <input
-                  type="text"
-                  value={currentValue || ''}
-                  onChange={(e) =>
-                    setFilter(
-                      `details.${field.name}`,
-                      e.target.value || undefined
-                    )
-                  }
-                  placeholder={field.placeholder}
-                  className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-one focus:border-one"
-                />
-              )}
-            </div>
+  // Show empty state if no fields available
+  if (!dynamicFilters || dynamicFilters.length === 0) {
+    return (
+      <div className="bg-white p-4 rounded-lg shadow-sm mb-4">
+        <div className="text-gray-500 text-center py-4">
+          لا توجد خصائص متاحة لهذه الفئة
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-white p-4 rounded-lg shadow-sm mb-4">
+      <h3 className="font-medium text-lg mb-3">خصائص {category.name}</h3>
+
+      <div className="space-y-4">
+        {dynamicFilters.map((field) => (
+          <div key={field.name} className="mb-4">
+            <DynamicField
+              field={field}
+              value={filters.details?.[field.name] || ''}
+              onChange={handleFieldChange}
+            />
           </div>
-        );
-      })}
+        ))}
+      </div>
     </div>
   );
 }

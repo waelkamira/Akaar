@@ -1,343 +1,280 @@
 'use client';
 
-import React, {
+import {
   createContext,
   useContext,
   useState,
   useEffect,
   useCallback,
-  useMemo,
 } from 'react';
 import { filterOptions } from '../lib/mockData';
-import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { cities } from '../components/lists/Cities';
 
 const SearchContext = createContext(undefined);
 
-export function SearchProvider({ children, initialCategory = null }) {
+export function SearchProvider({ children }) {
+  // Core state
   const [searchQuery, setSearchQuery] = useState('');
-  const [categoryId, setCategoryId] = useState(initialCategory || null);
+  const [category, setCategory] = useState(null);
   const [filters, setFilters] = useState({});
+  const [dynamicFilters, setDynamicFilters] = useState([]);
+
+  // Static filters state
+  const [staticFilters] = useState({
+    cities: cities,
+    adTypes: [
+      { id: 1, name: 'للبيع' },
+      { id: 2, name: 'للإيجار' },
+      { id: 3, name: 'مطلوب' },
+    ],
+  });
+
+  // Results state
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [totalCount, setTotalCount] = useState(0);
-  const [hasMore, setHasMore] = useState(false);
   const [page, setPage] = useState(1);
-  const [availableFilters, setAvailableFilters] = useState(filterOptions);
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  // console.log('searchQuery', searchQuery);
 
-  // دالة للحصول على المناطق بناءً على المدينة
+  // Navigation
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // Get towns by city
   const getTownsByCity = useCallback(
     (cityId) => {
       if (!cityId) return [];
-      const city = availableFilters?.static?.cities?.find(
+      const city = staticFilters.cities.find(
         (c) => c.id === cityId || c.name === cityId
       );
-      return city?.towns || []; // تأكد من وجود `city.towns`
+      return city?.towns || [];
     },
-    [availableFilters]
+    [staticFilters.cities]
   );
 
-  // console.log('searchQuery from search context', searchQuery);
-  // console.log('categoryId from search context', categoryId);
-  // console.log('results from search context', results);
-
-  // دالة البحث
-  const performSearch = useCallback(async () => {
-    if (!searchQuery && !categoryId && Object.keys(filters).length === 0) {
-      setResults([]);
-      setTotalCount(0);
-      setHasMore(false);
-      return;
+  // Load dynamic filters when category changes
+  const loadDynamicFilters = useCallback(async (categoryObj) => {
+    if (!categoryObj?.enName) {
+      console.log('No category or enName provided');
+      return [];
     }
 
+    try {
+      console.log(`Loading filters for category: ${categoryObj.enName}`);
+      const module = await import(
+        `../components/categoryFields/${categoryObj.enName}.jsx`
+      );
+      const filters = Array.isArray(module.default) ? module.default : [];
+      console.log('Loaded filters:', filters);
+      return filters;
+    } catch (err) {
+      console.error(`Failed to load filters for ${categoryObj.enName}:`, err);
+      return [];
+    }
+  }, []);
+
+  // Handle category changes from URL
+  useEffect(() => {
+    const handleUrlCategory = async () => {
+      const categoryId = searchParams.get('categoryId');
+      console.log('URL Category ID:', categoryId);
+
+      if (!categoryId) {
+        if (category) {
+          setCategory(null);
+          setDynamicFilters([]);
+          setFilters((prev) => {
+            const { details, ...rest } = prev;
+            return rest;
+          });
+          setPage(1);
+        }
+        return;
+      }
+
+      const categoryObj = filterOptions.categories.find(
+        (cat) => cat.id.toString() === categoryId
+      );
+
+      if (!categoryObj) {
+        console.log('Category not found:', categoryId);
+        return;
+      }
+
+      if (category?.id.toString() === categoryId) {
+        console.log('Category already selected');
+        return;
+      }
+
+      console.log('Loading category:', categoryObj);
+      setLoading(true);
+
+      try {
+        // Load dynamic filters first
+        const filters = await loadDynamicFilters(categoryObj);
+
+        // Then update state
+        setCategory(categoryObj);
+        setDynamicFilters(filters);
+        setFilters((prev) => {
+          const { details, ...rest } = prev;
+          return rest;
+        });
+        setPage(1);
+
+        console.log('Category and filters loaded successfully');
+      } catch (err) {
+        console.error('Error loading category:', err);
+        setDynamicFilters([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    handleUrlCategory();
+  }, [searchParams, loadDynamicFilters]);
+
+  // Update URL when category changes
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams.toString());
+
+    if (category) {
+      params.set('categoryId', category.id.toString());
+    } else {
+      params.delete('categoryId');
+    }
+
+    router.push(`/search?${params.toString()}`, { scroll: false });
+  }, [category, router, searchParams]);
+
+  // Perform search
+  const performSearch = useCallback(async () => {
     setLoading(true);
     setError(null);
 
     try {
-      // تحضير الفلاتر للبحث
-      const searchFilters = {
-        ...filters,
-        city: filters.city || null,
-        town: filters.town || null,
-        priceMin: filters.priceMin === undefined ? null : filters.priceMin, // التأكد من إرسال `null` بدلًا من `undefined`
-        priceMax: filters.priceMax === undefined ? null : filters.priceMax, // التأكد من إرسال `null` بدلًا من `undefined`
+      const searchBody = {
+        query: searchQuery,
+        categoryId: category?.id,
+        filters: {
+          ...filters,
+          details: filters.details || {},
+        },
+        page,
+        limit: 12,
       };
+
+      console.log('Search request:', searchBody);
 
       const response = await fetch('/api/search', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          searchQuery,
-          categoryId,
-          filters: searchFilters,
-          page,
-          limit: 10,
-        }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(searchBody),
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'حدث خطاء ما في البحث'); // عرض رسالة خطأ من الواجهة الخلفية إذا كانت موجودة
+        throw new Error('Search failed');
       }
 
       const data = await response.json();
-      // console.log('data', data.products);
-      // console.log('totalCount', data.totalCount);
-      // console.log('hasMore', data.hasMore);
-      // console.log('page', data.page);
+      console.log('Search response:', data);
 
-      setResults((prev) =>
-        page === 1 ? data.products : [...prev, ...data.products]
-      );
+      setResults(page === 1 ? data.products : [...results, ...data.products]);
       setTotalCount(data.totalCount);
-      setHasMore(data.hasMore);
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'An error occurred while searching'
-      );
-      console.error(err);
+      console.error('Search error:', err);
+      setError('Failed to fetch results');
+      setResults([]);
+      setTotalCount(0);
     } finally {
       setLoading(false);
     }
-  }, [searchQuery, categoryId, filters, page]);
+  }, [searchQuery, category, filters, page]);
 
+  // Trigger search on relevant changes
   useEffect(() => {
-    performSearch();
-  }, [searchQuery, categoryId, filters, page, performSearch]);
-
-  // تحديث URL عند تغيير الفلاتر
-  useEffect(() => {
-    const params = new URLSearchParams(searchParams.toString());
-
-    if (categoryId) params.set('category', categoryId.toString());
-    else params.delete('category');
-
-    if (filters.city) params.set('city', filters.city);
-    else params.delete('city');
-
-    if (filters.town) params.set('town', filters.town);
-    else params.delete('town');
-
-    // تنفيذ البحث عند تغيير المدينة أو المنطقة
-    if (filters.city || filters.town) {
-      performSearch();
+    if (!searchQuery && !category && Object.keys(filters).length === 0) {
+      return;
     }
 
-    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
-  }, [
-    categoryId,
-    pathname,
-    router,
-    searchParams,
-    filters.city,
-    filters.town,
-    performSearch,
-  ]);
+    const timer = setTimeout(performSearch, 300);
+    return () => clearTimeout(timer);
+  }, [searchQuery, category?.id, JSON.stringify(filters), page, performSearch]);
 
-  // إنشاء قائمة الفلاتر المختارة
-  const selectedFilters = useMemo(() => {
-    const selected = [];
-
-    // إضافة التصنيف إذا تم اختياره
-    if (categoryId) {
-      const category = filterOptions.categories.find(
-        (c) => c.id === categoryId
-      );
-      if (category) {
-        selected.push({
-          key: 'category',
-          value: categoryId,
-          label: `التصنيف: ${category.name}`,
-        });
-      }
-    }
-
-    // إضافة المدينة إذا تم اختيارها
-    if (filters.city) {
-      const city = availableFilters?.static?.cities?.find(
-        (c) => c.id === filters.city
-      );
-      if (city) {
-        selected.push({
-          key: 'city',
-          value: filters.city,
-          label: `المدينة: ${city.name}`,
-        });
-      }
-    }
-
-    // إضافة المنطقة إذا تم اختيارها
-    if (filters.town && filters.city) {
-      const city = availableFilters?.static?.cities?.find(
-        (c) => c.id === filters.city
-      );
-      if (city) {
-        const town = city.towns.find((t) => t.id === filters.town);
-        if (town) {
-          selected.push({
-            key: 'town',
-            value: filters.town,
-            label: `المنطقة: ${town.name}`,
-          });
-        }
-      }
-    }
-
-    // إضافة مدى السعر إذا تم تحديده
-    if (filters.priceMin !== undefined || filters.priceMax !== undefined) {
-      selected.push({
-        key: 'price',
-        value: 'price-range',
-        label: `السعر: ${filters.priceMin || 0} - ${
-          filters.priceMax || 'ماكس'
-        }`,
-      });
-    }
-
-    // إضافة الفلاتر الديناميكية حسب التصنيف
-    if (categoryId && filters.details) {
-      const categoryFilters = filterOptions.dynamic[categoryId];
-      if (categoryFilters) {
-        for (const [key, value] of Object.entries(filters.details)) {
-          if (categoryFilters[key]) {
-            if (Array.isArray(categoryFilters[key])) {
-              const option = categoryFilters[key].find(
-                (opt) => opt.id === value
-              );
-              if (option) {
-                selected.push({
-                  key: `details.${key}`,
-                  value: value,
-                  label: `${key}: ${option.name}`,
-                });
-              }
-            } else if (typeof categoryFilters[key] === 'object') {
-              selected.push({
-                key: `details.${key}`,
-                value: value,
-                label: `${key}: ${value}`,
-              });
-            }
-          }
-        }
-      }
-    }
-
-    return selected;
-  }, [categoryId, filters, availableFilters]);
-
-  // تعيين قيمة الفلتر
+  // Filter management
   const setFilter = useCallback((key, value) => {
     setFilters((prev) => {
+      const newFilters = { ...prev };
+
       if (key.startsWith('details.')) {
-        const detailKey = key.split('.')[1];
-        return {
-          ...prev,
-          details: {
-            ...(prev.details || {}),
-            [detailKey]: value,
-          },
-        };
+        const fieldName = key.split('.')[1];
+        newFilters.details = { ...prev.details, [fieldName]: value };
+      } else {
+        // Clear town when city changes
+        if (key === 'city' && prev.town) {
+          delete newFilters.town;
+        }
+        newFilters[key] = value;
       }
-      return { ...prev, [key]: value };
+
+      return newFilters;
     });
     setPage(1);
   }, []);
 
-  // حذف فلتر
-  const removeFilter = useCallback(
-    (key) => {
-      setFilters((prev) => {
-        const { [key]: removed, ...rest } = prev;
+  const removeFilter = useCallback((key) => {
+    setFilters((prev) => {
+      const newFilters = { ...prev };
 
-        // Special handling for details
-        if (key.startsWith('details.')) {
-          const detailKey = key.split('.')[1];
-          if (prev.details && prev.details[detailKey]) {
-            const { [detailKey]: removedDetail, ...remainingDetails } =
-              prev.details;
-            const details =
-              Object.keys(remainingDetails).length > 0
-                ? remainingDetails
-                : undefined;
-            return { ...rest, details };
-          }
-        }
-        if (key === 'city') {
-          delete rest.town; // Remove town when city is removed
-        }
-
-        return rest;
-      });
-      if (key === 'category') {
-        setCategoryId(null);
+      if (key.startsWith('details.')) {
+        const fieldName = key.split('.')[1];
+        const { [fieldName]: removed, ...rest } = newFilters.details || {};
+        newFilters.details = rest;
+      } else if (key === 'city') {
+        // Remove both city and town
+        delete newFilters.city;
+        delete newFilters.town;
+      } else {
+        delete newFilters[key];
       }
-      setPage(1);
-      performSearch();
-    },
-    [performSearch, setCategoryId]
-  );
 
-  // مسح جميع الفلاتر
+      return newFilters;
+    });
+    setPage(1);
+  }, []);
+
   const clearFilters = useCallback(() => {
     setFilters({});
-    setCategoryId(null);
+    setCategory(null);
     setPage(1);
-    performSearch();
-  }, [performSearch, setCategoryId]);
-
-  // تحميل المزيد من النتائج
-  const loadMore = useCallback(() => {
-    if (hasMore && !loading) {
-      setPage((prev) => prev + 1);
-    }
-  }, [hasMore, loading]);
-
-  // تحديث الفلاتر المتاحة عند تغيير التصنيف
-  useEffect(() => {
-    if (categoryId) {
-      setAvailableFilters({
-        ...filterOptions,
-        currentCategory: filterOptions.categories.find(
-          (c) => c.id === categoryId
-        ),
-        currentDynamicFilters: filterOptions.dynamic[categoryId],
-      });
-    } else {
-      setAvailableFilters(filterOptions);
-    }
-
-    setFilters((prev) => {
-      const { details, ...rest } = prev;
-      return rest;
-    });
-  }, [categoryId]);
+  }, []);
 
   const value = {
+    // Search state
     searchQuery,
     setSearchQuery,
-    categoryId,
-    setCategoryId,
+    category,
+    setCategory,
     filters,
     setFilter,
     removeFilter,
     clearFilters,
+    dynamicFilters,
+
+    // Results
     results,
     loading,
     error,
     totalCount,
-    hasMore,
-    loadMore,
-    selectedFilters,
-    availableFilters,
-    performSearch,
-    getTownsByCity: getTownsByCity,
+
+    // Pagination
+    page,
+    setPage,
+
+    // Static filters
+    staticFilters,
+    getTownsByCity,
   };
 
   return (
@@ -347,8 +284,8 @@ export function SearchProvider({ children, initialCategory = null }) {
 
 export function useSearch() {
   const context = useContext(SearchContext);
-  if (context === undefined) {
-    throw new Error('useSearch must be used within a SearchProvider');
+  if (!context) {
+    throw new Error('useSearch must be used within SearchProvider');
   }
   return context;
 }

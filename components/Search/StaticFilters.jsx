@@ -1,7 +1,6 @@
-// components/StaticFilters.tsx
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useSearch } from '../../contexts/SearchContext';
 import { Slider } from '../ui/slider';
 import { X } from 'lucide-react';
@@ -13,180 +12,215 @@ export default function StaticFilters() {
     availableFilters,
     getTownsByCity,
     performSearch,
+    staticFilters,
   } = useSearch();
 
+  // Set price range defaults
   const priceRangeDefault = availableFilters?.static?.priceRange || {
     min: 0,
     max: 150000,
   };
+
+  // State for price slider
   const [priceRange, setPriceRange] = useState([
     filters.priceMin || priceRangeDefault.min,
     filters.priceMax || priceRangeDefault.max,
   ]);
 
-  // الحصول على المناطق المتاحة للمدينة المختارة
+  // Update price range when filters change
+  useEffect(() => {
+    setPriceRange([
+      filters.priceMin || priceRangeDefault.min,
+      filters.priceMax || priceRangeDefault.max,
+    ]);
+  }, [
+    filters.priceMin,
+    filters.priceMax,
+    priceRangeDefault.min,
+    priceRangeDefault.max,
+  ]);
+
+  // Get towns for selected city
   const availableTowns = getTownsByCity(filters.city || null);
 
-  /*************  ✨ Codeium Command ⭐  *************/
-  /**
-   * Handle city select change event. When the user selects a different city,
-   * reset the town filter and perform a search.
-   * @param {React.ChangeEvent<HTMLSelectElement>} e - The change event.
-   */
-  /******  23381023-67ad-4f09-a827-3efd1776fbaa  *******/
-  const handleCityChange = (e) => {
-    const cityId = e.target.value || null;
-    setFilter('city', cityId);
-    // Reset town when city changes
-    setFilter('town', null);
-    // تنفيذ البحث مباشرة عند اختيار المدينة
-    performSearch();
-  };
+  // Handle city selection
+  const handleCityChange = useCallback(
+    (e) => {
+      const cityName = e.target.value;
+      setFilter('city', cityName || null);
+    },
+    [setFilter]
+  );
 
-  const handleTownChange = (e) => {
-    const townId = e.target.value || null;
-    setFilter('town', townId);
-    // تنفيذ البحث مباشرة عند اختيار المنطقة
-    performSearch();
-  };
+  // Handle town selection
+  const handleTownChange = useCallback(
+    (e) => {
+      const townName = e.target.value;
+      setFilter('town', townName || null);
+    },
+    [setFilter]
+  );
 
+  // Handle price slider change
   const handlePriceChange = (values) => {
     setPriceRange(values);
   };
 
+  // Apply price filter when slider is released
   const handlePriceChangeEnd = () => {
     setFilter('priceMin', priceRange[0]);
     setFilter('priceMax', priceRange[1]);
-    // تنفيذ البحث عند تغيير السعر
-    performSearch();
+
+    // Perform search with updated price
+    setTimeout(() => performSearch(), 0);
   };
 
+  // Clear price filter
   const handlePriceFilterClose = () => {
-    // إعادة تعيين قيم السعر
+    // Clear price filters
     setFilter('priceMin', undefined);
     setFilter('priceMax', undefined);
+
+    // Reset price range slider
     setPriceRange([priceRangeDefault.min, priceRangeDefault.max]);
-    performSearch();
+
+    // Perform search without price filter
+    setTimeout(() => performSearch(), 0);
   };
 
-  return (
-    <div className="space-y-6">
-      {/* فلتر المدينة */}
-      <div>
-        <label
-          htmlFor="city"
-          className="block text-sm font-medium text-gray-700 mb-2"
-        >
-          المدينة
-        </label>
-        <select
-          id="city"
-          value={filters.city || ''}
-          onChange={handleCityChange}
-          className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-one focus:border-one"
-        >
-          <option value="">اختر المدينة...</option>
-          {availableFilters?.static?.cities?.map((city) => (
-            <option key={city.name} value={city.name}>
-              {city.name}
-            </option>
-          ))}
-        </select>
-      </div>
+  // Handle ad type selection
+  const handleAdTypeChange = useCallback(
+    (e) => {
+      const adTypeId = Number(e.target.value);
+      setFilter('adType', adTypeId || null);
+    },
+    [setFilter]
+  );
 
-      {/* فلتر المنطقة (يظهر فقط عند اختيار مدينة) */}
-      {filters.city && (
-        <div>
-          <label
-            htmlFor="town"
-            className="block text-sm font-medium text-gray-700 mb-2"
-          >
-            المنطقة
+  return (
+    <div className="bg-white p-4 rounded-lg shadow-sm mb-4">
+      <h3 className="font-medium text-lg mb-3">الفلاتر الثابتة</h3>
+
+      <div className="space-y-4">
+        {/* City Filter */}
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            المدينة
           </label>
           <select
-            id="town"
-            value={filters.town || ''}
-            onChange={handleTownChange}
-            className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-one focus:border-one"
+            value={filters.city || ''}
+            onChange={handleCityChange}
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
           >
-            <option value="">اختر المنطقة...</option>
-            {availableTowns.map((town) => (
-              <option key={town.name} value={town.name}>
-                {town.name}
+            <option value="">اختر المدينة</option>
+            {staticFilters.cities.map((city) => (
+              <option key={city.name} value={city.name}>
+                {city.name}
               </option>
             ))}
           </select>
         </div>
-      )}
 
-      {/* فلتر مدى السعر */}
-      <div>
-        <div className="flex justify-between items-center mb-2">
-          <h3 className="text-sm font-medium text-gray-700">مدى السعر</h3>
-          {(filters.priceMin !== undefined ||
-            filters.priceMax !== undefined) && (
-            <button
-              onClick={handlePriceFilterClose}
-              className="p-1 hover:bg-gray-100 rounded-full"
-              title="حذف فلتر السعر"
+        {/* Town Filter - Only show if city is selected */}
+        {filters.city && availableTowns.length > 0 && (
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              المنطقة
+            </label>
+            <select
+              value={filters.town || ''}
+              onChange={handleTownChange}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
             >
-              <X className="h-4 w-4 text-gray-500" />
-            </button>
-          )}
-        </div>
-        <div className="px-2">
-          {/* حقول إدخال السعر */}
-          <div className="flex items-center gap-2 mb-4">
-            <span className="text-sm text-gray-600">من</span>
+              <option value="">اختر المنطقة</option>
+              {availableTowns.map((town) => (
+                <option key={town.name} value={town.name}>
+                  {town.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+
+        {/* Price Range Filter */}
+        <div>
+          <div className="flex justify-between items-center mb-2">
+            <label className="block text-sm font-medium">نطاق السعر</label>
+            {(filters.priceMin !== undefined ||
+              filters.priceMax !== undefined) && (
+              <button
+                onClick={handlePriceFilterClose}
+                className="text-xs text-red-600 hover:text-red-800 flex items-center"
+              >
+                <X size={14} className="mr-1" />
+                مسح
+              </button>
+            )}
+          </div>
+
+          <div className="flex items-center gap-2 mb-3">
             <input
               type="number"
-              min="0"
-              value={filters.priceMin || ''}
+              min={priceRangeDefault.min}
+              max={priceRangeDefault.max}
+              value={priceRange[0]}
               onChange={(e) => {
-                const value = e.target.value;
-                setFilter('priceMin', value ? Number(value) : undefined);
-                // تحديث شريط التمرير
-                setPriceRange([
-                  value ? Number(value) : priceRangeDefault.min,
-                  priceRange[1],
-                ]);
+                const value =
+                  Number.parseInt(e.target.value) || priceRangeDefault.min;
+                setPriceRange([Math.min(value, priceRange[1]), priceRange[1]]);
               }}
-              className="w-28 p-2 rounded-lg border border-gray-300 focus:ring-one focus:border-one text-center"
-              placeholder="0"
+              onBlur={handlePriceChangeEnd}
+              className="w-24 p-1 text-center border border-gray-300 rounded"
             />
-            <span className="text-sm text-gray-600">إلى</span>
+            <span>-</span>
             <input
               type="number"
-              min="0"
-              value={filters.priceMax || ''}
+              min={priceRangeDefault.min}
+              max={priceRangeDefault.max}
+              value={priceRange[1]}
               onChange={(e) => {
-                const value = e.target.value;
-                setFilter('priceMax', value ? Number(value) : undefined);
-                // تحديث شريط التمرير
-                setPriceRange([
-                  priceRange[0],
-                  value ? Number(value) : priceRangeDefault.max,
-                ]);
+                const value =
+                  Number.parseInt(e.target.value) || priceRangeDefault.max;
+                setPriceRange([priceRange[0], Math.max(value, priceRange[0])]);
               }}
-              className="w-28 p-2 rounded-lg border border-gray-300 focus:ring-one focus:border-one text-center"
-              placeholder="100000"
+              onBlur={handlePriceChangeEnd}
+              className="w-24 p-1 text-center border border-gray-300 rounded"
             />
           </div>
 
           <Slider
-            defaultValue={priceRange}
+            value={priceRange}
             min={priceRangeDefault.min}
             max={priceRangeDefault.max}
             step={100}
-            value={priceRange}
             onValueChange={handlePriceChange}
             onValueCommit={handlePriceChangeEnd}
-            className="my-6"
+            className="my-4"
           />
-          <div className="flex justify-between text-sm text-gray-500">
+
+          <div className="flex justify-between text-xs text-gray-500">
             <span>{priceRange[0]}</span>
             <span>{priceRange[1]}</span>
           </div>
+        </div>
+
+        {/* Ad Type Filter */}
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            نوع الإعلان
+          </label>
+          <select
+            value={filters.adType || ''}
+            onChange={handleAdTypeChange}
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+          >
+            <option value="">اختر نوع الإعلان</option>
+            {staticFilters.adTypes.map((type) => (
+              <option key={type.id} value={type.id}>
+                {type.name}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
     </div>

@@ -1,37 +1,51 @@
-'use client';
+"use client"
 
 export default function DynamicField({ field, value, onChange }) {
-  return (
-    <div className="relative w-full sm:w-28 h-9 sm:h-[27px] bg-white rounded text-black">
-      {field?.options ? (
+  if (!field) return null
+
+  const handleChange = (e) => {
+    onChange(field.name, e.target.value)
+  }
+
+  // Render select for fields with options
+  if (field.options && Object.keys(field.options).length > 0) {
+    return (
+      <div className="space-y-2">
+        <label className="block text-sm font-medium">
+          {field.icon && <span className="mr-2">{field.icon}</span>}
+          {field.label}
+        </label>
         <select
-          onChange={(e) => onChange(field?.name, e.target.value)}
-          className="w-full sm:w-28 bg-transparent focus:outline-none text-black h-9 sm:h-6 text-sm px-2 sm:p-0 border sm:border-none"
+          value={value}
+          onChange={handleChange}
+          className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
         >
-          <option value="" disabled selected className="text-sm">
-            <div className="flex items-center gap-2 text-black">
-              <span className="text-primary-500">{field?.icon}</span>
-              <span className="text-sm">{field?.label}</span>
-            </div>
-          </option>
-          {Object.entries(field?.options).map(([key, value]) => (
-            <option key={key} value={key} className="text-sm">
-              <div className="flex items-center gap-2 text-black text-sm">
-                <span className="text-primary-500">{field?.icon}</span>
-                <span className="text-black text-sm">{value}</span>
-              </div>
+          <option value="">{field.placeholder || "اختر..."}</option>
+          {Object.entries(field.options).map(([optionValue, optionLabel]) => (
+            <option key={optionValue} value={optionValue}>
+              {optionLabel}
             </option>
           ))}
         </select>
-      ) : (
-        <div className="relative flex items-center w-full border rounded focus:outline-2 focus:outline-primary-500 text-sm bg-white text-nowrap h-9 sm:h-6 px-2 sm:p-0">
-          <input
-            placeholder={field?.placeholder}
-            className="w-full sm:w-28 bg-transparent focus:outline-none h-9 sm:h-6 bg-white rounded-[5px] text-black"
-            onChange={(e) => onChange(field?.name, e.target.value)}
-          />
-        </div>
-      )}
+      </div>
+    )
+  }
+
+  // Render input for fields without options
+  return (
+    <div className="space-y-2">
+      <label className="block text-sm font-medium">
+        {field.icon && <span className="mr-2">{field.icon}</span>}
+        {field.label}
+      </label>
+      <input
+        type="text"
+        value={value}
+        onChange={handleChange}
+        placeholder={field.placeholder}
+        className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+      />
     </div>
-  );
+  )
 }
+
