@@ -45,6 +45,8 @@ export function SearchProvider({ children }) {
   const [error, setError] = useState(null);
   const [totalCount, setTotalCount] = useState(0);
   const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(false);
+  const [shouldScrollTop, setShouldScrollTop] = useState(false);
 
   // Load dynamic filters when category changes
   const loadDynamicFilters = useCallback(async (categoryObj) => {
@@ -126,50 +128,71 @@ export function SearchProvider({ children }) {
   }, [searchParams, loadDynamicFilters, isSearchPage]); // Removed category from dependencies
 
   // Perform search
-  const performSearch = useCallback(async () => {
-    if (!isSearchPage) return;
+  const performSearch = useCallback(
+    async (pageNum = 1, isLoadMore = false) => {
+      if (!isSearchPage) return;
 
-    setLoading(true);
-    setError(null);
+      setLoading(true);
+      setError(null);
 
-    try {
-      const searchBody = {
-        query: searchQuery,
-        categoryId: category?.id,
-        filters: {
-          ...filters,
-          details: filters.details || {},
-        },
-        page,
-        limit: 12,
-      };
+      try {
+        const searchBody = {
+          query: searchQuery,
+          categoryId: category?.id,
+          filters: {
+            ...filters,
+            details: filters.details || {},
+          },
+          page: pageNum,
+          limit: 8,
+        };
 
-      console.log('Search request:', searchBody);
+        console.log('Search request:', searchBody);
 
-      const response = await fetch('/api/search', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(searchBody),
-      });
+        const response = await fetch('/api/search', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(searchBody),
+        });
 
-      if (!response.ok) {
-        throw new Error('Search failed');
+        if (!response.ok) {
+          throw new Error('Search failed');
+        }
+
+        const data = await response.json();
+        console.log('Search response:', data);
+
+        // Only update results based on whether it's a new search or load more
+        if (!isLoadMore) {
+          setResults(data.products);
+          setShouldScrollTop(true); // Signal that we want to scroll to top
+        } else {
+          setResults((prev) => [...prev, ...data.products]);
+        }
+
+        setTotalCount(data.totalCount);
+        setHasMore(data.hasMore);
+      } catch (err) {
+        console.error('Search error:', err);
+        setError('Failed to fetch results');
+        if (!isLoadMore) {
+          setResults([]);
+          setTotalCount(0);
+        }
+      } finally {
+        setLoading(false);
       }
+    },
+    [searchQuery, category, filters, isSearchPage]
+  );
 
-      const data = await response.json();
-      console.log('Search response:', data);
-
-      setResults(page === 1 ? data.products : [...results, ...data.products]);
-      setTotalCount(data.totalCount);
-    } catch (err) {
-      console.error('Search error:', err);
-      setError('Failed to fetch results');
-      setResults([]);
-      setTotalCount(0);
-    } finally {
-      setLoading(false);
+  // Handle scrolling separately
+  useEffect(() => {
+    if (shouldScrollTop && !loading) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setShouldScrollTop(false);
     }
-  }, [searchQuery, category, filters, page, isSearchPage, results]);
+  }, [shouldScrollTop, loading]);
 
   // Get towns by city
   const getTownsByCity = useCallback(
@@ -186,7 +209,8 @@ export function SearchProvider({ children }) {
   // Perform initial search when category is loaded
   useEffect(() => {
     if (shouldSearchOnLoad && !loading) {
-      performSearch();
+      setPage(1);
+      performSearch(1, false);
       setShouldSearchOnLoad(false);
     }
   }, [shouldSearchOnLoad, loading, performSearch]);
@@ -203,8 +227,11 @@ export function SearchProvider({ children }) {
       params.delete('categoryId');
     }
 
-    router.push(`/search?${params.toString()}`, { scroll: false });
-  }, [category, router, searchParams, isSearchPage]);
+    // Only update URL for category changes, not for pagination
+    if (page === 1) {
+      router.replace(`/search?${params.toString()}`, { scroll: false }); // Changed push to replace
+    }
+  }, [category, router, searchParams, isSearchPage, page]);
 
   // Trigger search on relevant changes (only on search page)
   useEffect(() => {
@@ -214,12 +241,10 @@ export function SearchProvider({ children }) {
       return;
     }
 
-    // Only perform automatic search for search query changes
-    if (searchQuery) {
-      const timer = setTimeout(performSearch, 300);
-      return () => clearTimeout(timer);
-    }
-  }, [searchQuery, performSearch, isSearchPage]);
+    // Reset page and perform new search
+    setPage(1);
+    performSearch(1, false);
+  }, [searchQuery, category, filters, performSearch, isSearchPage]);
 
   // Filter management functions
   const setFilter = useCallback((key, value) => {
@@ -282,13 +307,13 @@ export function SearchProvider({ children }) {
     setShouldSearchOnLoad(true);
   }, []);
 
-  // Perform initial search when filters change or on load
-  useEffect(() => {
-    if (shouldSearchOnLoad && !loading) {
-      performSearch();
-      setShouldSearchOnLoad(false);
+  const loadMore = useCallback(() => {
+    if (!loading && hasMore) {
+      const nextPage = page + 1;
+      setPage(nextPage);
+      performSearch(nextPage, true);
     }
-  }, [shouldSearchOnLoad, loading, performSearch]);
+  }, [loading, hasMore, page, performSearch]);
 
   const value = {
     // Search state
@@ -309,6 +334,8 @@ export function SearchProvider({ children }) {
     loading,
     error,
     totalCount,
+    hasMore,
+    loadMore,
 
     // Pagination
     page,
