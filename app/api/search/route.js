@@ -12,7 +12,7 @@ export async function POST(request) {
       categoryId = null,
       filters = {},
       page = 1,
-      limit = 10,
+      limit = 8,
     } = body;
     console.log('body تم استدعاء الراوت', body);
 
@@ -114,14 +114,22 @@ export async function POST(request) {
         where,
         skip: (page - 1) * limit,
         take: limit,
+        orderBy: {
+          createdAt: 'desc',
+        },
       }),
       prisma.product.count({ where }),
     ]);
 
-    const hasMore = page * limit < totalCount;
-    console.log('totalCount', totalCount);
-    console.log('hasMore', hasMore);
-    // console.log('products', products);
+    // Calculate if there are more results after the current page
+    const remainingCount = totalCount - page * limit;
+    const hasMore = remainingCount > 0;
+
+    console.log('totalCount:', totalCount);
+    console.log('currentPage:', page);
+    console.log('remainingCount:', remainingCount);
+    console.log('hasMore:', hasMore);
+
     // Return the results
     return NextResponse.json({
       products: products,
@@ -129,6 +137,7 @@ export async function POST(request) {
       hasMore,
       page,
       limit,
+      remainingCount,
     });
   } catch (error) {
     console.error('Search error:', error);

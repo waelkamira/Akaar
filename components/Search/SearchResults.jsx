@@ -66,7 +66,7 @@ export default function SearchResults() {
       </div>
 
       {/* Load more button */}
-      {hasMore && (
+      {results.length >= 8 && hasMore && (
         <div className="mt-8 text-center">
           <button
             onClick={loadMore}
