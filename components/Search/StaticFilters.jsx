@@ -13,18 +13,28 @@ export default function StaticFilters() {
     max: 150000,
   };
 
-  // State for price slider
+  // State for price slider and inputs
   const [priceRange, setPriceRange] = useState([
     filters.priceMin || priceRangeDefault.min,
     filters.priceMax || priceRangeDefault.max,
   ]);
 
-  // Update price range when filters change
+  // Separate state for input values to prevent immediate filtering
+  const [inputValues, setInputValues] = useState({
+    min: filters.priceMin || '',
+    max: filters.priceMax || '',
+  });
+
+  // Update states when filters change externally
   useEffect(() => {
     setPriceRange([
       filters.priceMin || priceRangeDefault.min,
       filters.priceMax || priceRangeDefault.max,
     ]);
+    setInputValues({
+      min: filters.priceMin || '',
+      max: filters.priceMax || '',
+    });
   }, [filters.priceMin, filters.priceMax]);
 
   // Get towns for selected city
@@ -48,15 +58,67 @@ export default function StaticFilters() {
     [setFilter]
   );
 
-  // Handle price slider change
-  const handlePriceChange = (values) => {
-    setPriceRange(values);
+  // Handle price input change
+  const handlePriceInputChange = (type, value) => {
+    // Update only the input value without filtering
+    setInputValues((prev) => ({
+      ...prev,
+      [type]: value,
+    }));
   };
 
-  // Apply price filter when slider is released
-  const handlePriceChangeEnd = () => {
-    setFilter('priceMin', priceRange[0]);
-    setFilter('priceMax', priceRange[1]);
+  // Validate and apply price filter
+  const applyPriceFilter = useCallback(() => {
+    let minPrice = parseInt(inputValues.min) || priceRangeDefault.min;
+    let maxPrice = parseInt(inputValues.max) || priceRangeDefault.max;
+
+    // Ensure min is not greater than max
+    if (minPrice > maxPrice) {
+      [minPrice, maxPrice] = [maxPrice, minPrice];
+    }
+
+    // Ensure values are within bounds
+    minPrice = Math.max(
+      priceRangeDefault.min,
+      Math.min(minPrice, priceRangeDefault.max)
+    );
+    maxPrice = Math.max(
+      priceRangeDefault.min,
+      Math.min(maxPrice, priceRangeDefault.max)
+    );
+
+    // Update price range state
+    setPriceRange([minPrice, maxPrice]);
+
+    // Update input values with validated numbers
+    setInputValues({
+      min: minPrice.toString(),
+      max: maxPrice.toString(),
+    });
+
+    // Apply filter
+    setFilter('priceMin', minPrice);
+    setFilter('priceMax', maxPrice);
+  }, [inputValues, setFilter]);
+
+  // Handle input blur (when user finishes typing)
+  const handleInputBlur = () => {
+    applyPriceFilter();
+  };
+
+  // Handle slider change
+  const handleSliderChange = (values) => {
+    setPriceRange(values);
+    setInputValues({
+      min: values[0].toString(),
+      max: values[1].toString(),
+    });
+  };
+
+  // Handle slider release
+  const handleSliderCommit = (values) => {
+    setFilter('priceMin', values[0]);
+    setFilter('priceMax', values[1]);
   };
 
   // Handle ad type selection
@@ -124,13 +186,10 @@ export default function StaticFilters() {
               type="number"
               min={priceRangeDefault.min}
               max={priceRangeDefault.max}
-              value={priceRange[0]}
-              onChange={(e) => {
-                const value =
-                  Number.parseInt(e.target.value) || priceRangeDefault.min;
-                setPriceRange([Math.min(value, priceRange[1]), priceRange[1]]);
-              }}
-              onBlur={handlePriceChangeEnd}
+              value={inputValues.min}
+              onChange={(e) => handlePriceInputChange('min', e.target.value)}
+              onBlur={handleInputBlur}
+              placeholder="السعر الأدنى"
               className="w-24 p-1 text-center border border-gray-300 rounded"
             />
             <span>-</span>
@@ -138,13 +197,10 @@ export default function StaticFilters() {
               type="number"
               min={priceRangeDefault.min}
               max={priceRangeDefault.max}
-              value={priceRange[1]}
-              onChange={(e) => {
-                const value =
-                  Number.parseInt(e.target.value) || priceRangeDefault.max;
-                setPriceRange([priceRange[0], Math.max(value, priceRange[0])]);
-              }}
-              onBlur={handlePriceChangeEnd}
+              value={inputValues.max}
+              onChange={(e) => handlePriceInputChange('max', e.target.value)}
+              onBlur={handleInputBlur}
+              placeholder="السعر الأعلى"
               className="w-24 p-1 text-center border border-gray-300 rounded"
             />
           </div>
@@ -154,8 +210,8 @@ export default function StaticFilters() {
             min={priceRangeDefault.min}
             max={priceRangeDefault.max}
             step={100}
-            onValueChange={handlePriceChange}
-            onValueCommit={handlePriceChangeEnd}
+            onValueChange={handleSliderChange}
+            onValueCommit={handleSliderCommit}
             className="my-4"
           />
 

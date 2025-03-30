@@ -1,19 +1,66 @@
 'use client';
 
 import { useSearch } from '../../contexts/SearchContext';
-import { useCallback } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import DynamicField from './DynamicField';
+import { ImSearch } from 'react-icons/im';
 
 export default function DynamicFilters() {
-  const { category, filters, setFilter, dynamicFilters, loading } = useSearch();
+  const {
+    category,
+    filters,
+    setFilter,
+    dynamicFilters,
+    loading,
+    performSearch,
+  } = useSearch();
 
-  // Handle field value changes
-  const handleFieldChange = useCallback(
+  // Local state for field values
+  const [localValues, setLocalValues] = useState({});
+  const [isSearching, setIsSearching] = useState(false);
+
+  // Initialize local values from filters
+  useEffect(() => {
+    if (filters.details) {
+      setLocalValues(filters.details);
+    }
+  }, [filters.details]);
+
+  // Handle field value changes (updates local state only)
+  const handleFieldChange = useCallback((fieldName, value) => {
+    setLocalValues((prev) => ({
+      ...prev,
+      [fieldName]: value,
+    }));
+  }, []);
+
+  // Apply filter when user finishes typing/selecting
+  const handleFieldBlur = useCallback(
     (fieldName, value) => {
-      setFilter(`details.${fieldName}`, value);
+      // If value is empty string or null, remove the filter
+      if (value === '' || value === null) {
+        const newDetails = { ...filters.details };
+        delete newDetails[fieldName];
+        setFilter('details', newDetails);
+      } else {
+        setFilter('details', {
+          ...filters.details,
+          [fieldName]: value,
+        });
+      }
     },
-    [setFilter]
+    [filters.details, setFilter]
   );
+
+  // Handle search button click
+  const handleSearch = useCallback(async () => {
+    setIsSearching(true);
+    try {
+      await performSearch();
+    } finally {
+      setIsSearching(false);
+    }
+  }, [performSearch]);
 
   // Early return if no category
   if (!category) {
@@ -52,11 +99,24 @@ export default function DynamicFilters() {
           <div key={field.name} className="mb-4">
             <DynamicField
               field={field}
-              value={filters.details?.[field.name] || ''}
+              value={localValues[field.name] || ''}
               onChange={handleFieldChange}
+              onBlur={handleFieldBlur}
             />
           </div>
         ))}
+
+        {/* Search Button */}
+        <div className="pt-4">
+          <button
+            onClick={handleSearch}
+            disabled={isSearching}
+            className="w-full flex items-center justify-center gap-2 bg-primary-500 hover:bg-primary-600 text-white py-2 px-4 rounded-md transition-colors duration-200"
+          >
+            <ImSearch className={isSearching ? 'animate-spin' : ''} />
+            <span>{isSearching ? 'جاري البحث...' : 'بحث'}</span>
+          </button>
+        </div>
       </div>
     </div>
   );

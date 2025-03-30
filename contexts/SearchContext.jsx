@@ -8,7 +8,7 @@ import {
   useCallback,
 } from 'react';
 import { filterOptions } from '../lib/mockData';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { cities } from '../components/lists/Cities';
 
 const SearchContext = createContext(undefined);
@@ -19,6 +19,15 @@ export function SearchProvider({ children }) {
   const [category, setCategory] = useState(null);
   const [filters, setFilters] = useState({});
   const [dynamicFilters, setDynamicFilters] = useState([]);
+  const [shouldSearchOnLoad, setShouldSearchOnLoad] = useState(false);
+
+  // Navigation
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+
+  // Check if we're on the search page
+  const isSearchPage = pathname === '/search';
 
   // Static filters state
   const [staticFilters] = useState({
@@ -36,22 +45,6 @@ export function SearchProvider({ children }) {
   const [error, setError] = useState(null);
   const [totalCount, setTotalCount] = useState(0);
   const [page, setPage] = useState(1);
-
-  // Navigation
-  const router = useRouter();
-  const searchParams = useSearchParams();
-
-  // Get towns by city
-  const getTownsByCity = useCallback(
-    (cityId) => {
-      if (!cityId) return [];
-      const city = staticFilters.cities.find(
-        (c) => c.id === cityId || c.name === cityId
-      );
-      return city?.towns || [];
-    },
-    [staticFilters.cities]
-  );
 
   // Load dynamic filters when category changes
   const loadDynamicFilters = useCallback(async (categoryObj) => {
@@ -74,14 +67,17 @@ export function SearchProvider({ children }) {
     }
   }, []);
 
-  // Handle category changes from URL
+  // Handle category changes from URL (only on search page)
   useEffect(() => {
+    if (!isSearchPage) return;
+
     const handleUrlCategory = async () => {
       const categoryId = searchParams.get('categoryId');
       console.log('URL Category ID:', categoryId);
 
-      if (!categoryId) {
-        if (category) {
+      setLoading(true);
+      try {
+        if (!categoryId) {
           setCategory(null);
           setDynamicFilters([]);
           setFilters((prev) => {
@@ -89,28 +85,21 @@ export function SearchProvider({ children }) {
             return rest;
           });
           setPage(1);
+          setShouldSearchOnLoad(true);
+          return;
         }
-        return;
-      }
 
-      const categoryObj = filterOptions.categories.find(
-        (cat) => cat.id.toString() === categoryId
-      );
+        const categoryObj = filterOptions.categories.find(
+          (cat) => cat.id.toString() === categoryId
+        );
 
-      if (!categoryObj) {
-        console.log('Category not found:', categoryId);
-        return;
-      }
+        if (!categoryObj) {
+          console.log('Category not found:', categoryId);
+          return;
+        }
 
-      if (category?.id.toString() === categoryId) {
-        console.log('Category already selected');
-        return;
-      }
+        console.log('Loading category:', categoryObj);
 
-      console.log('Loading category:', categoryObj);
-      setLoading(true);
-
-      try {
         // Load dynamic filters first
         const filters = await loadDynamicFilters(categoryObj);
 
@@ -122,6 +111,7 @@ export function SearchProvider({ children }) {
           return rest;
         });
         setPage(1);
+        setShouldSearchOnLoad(true);
 
         console.log('Category and filters loaded successfully');
       } catch (err) {
@@ -133,23 +123,12 @@ export function SearchProvider({ children }) {
     };
 
     handleUrlCategory();
-  }, [searchParams, loadDynamicFilters]);
-
-  // Update URL when category changes
-  useEffect(() => {
-    const params = new URLSearchParams(searchParams.toString());
-
-    if (category) {
-      params.set('categoryId', category.id.toString());
-    } else {
-      params.delete('categoryId');
-    }
-
-    router.push(`/search?${params.toString()}`, { scroll: false });
-  }, [category, router, searchParams]);
+  }, [searchParams, loadDynamicFilters, isSearchPage]); // Removed category from dependencies
 
   // Perform search
   const performSearch = useCallback(async () => {
+    if (!isSearchPage) return;
+
     setLoading(true);
     setError(null);
 
@@ -190,19 +169,59 @@ export function SearchProvider({ children }) {
     } finally {
       setLoading(false);
     }
-  }, [searchQuery, category, filters, page]);
+  }, [searchQuery, category, filters, page, isSearchPage, results]);
 
-  // Trigger search on relevant changes
+  // Get towns by city
+  const getTownsByCity = useCallback(
+    (cityId) => {
+      if (!cityId) return [];
+      const city = staticFilters.cities.find(
+        (c) => c.id === cityId || c.name === cityId
+      );
+      return city?.towns || [];
+    },
+    [staticFilters.cities]
+  );
+
+  // Perform initial search when category is loaded
   useEffect(() => {
+    if (shouldSearchOnLoad && !loading) {
+      performSearch();
+      setShouldSearchOnLoad(false);
+    }
+  }, [shouldSearchOnLoad, loading, performSearch]);
+
+  // Update URL when category changes (only on search page)
+  useEffect(() => {
+    if (!isSearchPage) return;
+
+    const params = new URLSearchParams(searchParams.toString());
+
+    if (category) {
+      params.set('categoryId', category.id.toString());
+    } else {
+      params.delete('categoryId');
+    }
+
+    router.push(`/search?${params.toString()}`, { scroll: false });
+  }, [category, router, searchParams, isSearchPage]);
+
+  // Trigger search on relevant changes (only on search page)
+  useEffect(() => {
+    if (!isSearchPage) return;
+
     if (!searchQuery && !category && Object.keys(filters).length === 0) {
       return;
     }
 
-    const timer = setTimeout(performSearch, 300);
-    return () => clearTimeout(timer);
-  }, [searchQuery, category?.id, JSON.stringify(filters), page, performSearch]);
+    // Only perform automatic search for search query changes
+    if (searchQuery) {
+      const timer = setTimeout(performSearch, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [searchQuery, performSearch, isSearchPage]);
 
-  // Filter management
+  // Filter management functions
   const setFilter = useCallback((key, value) => {
     setFilters((prev) => {
       const newFilters = { ...prev };
@@ -242,13 +261,34 @@ export function SearchProvider({ children }) {
       return newFilters;
     });
     setPage(1);
+    // Trigger search after removing filter
+    setShouldSearchOnLoad(true);
   }, []);
 
   const clearFilters = useCallback(() => {
+    // Keep the category but clear all other filters
+    setFilters({});
+    setPage(1);
+    // Trigger search after clearing filters
+    setShouldSearchOnLoad(true);
+  }, []);
+
+  const clearAll = useCallback(() => {
+    // Clear everything including category
     setFilters({});
     setCategory(null);
     setPage(1);
+    // Trigger search after clearing everything
+    setShouldSearchOnLoad(true);
   }, []);
+
+  // Perform initial search when filters change or on load
+  useEffect(() => {
+    if (shouldSearchOnLoad && !loading) {
+      performSearch();
+      setShouldSearchOnLoad(false);
+    }
+  }, [shouldSearchOnLoad, loading, performSearch]);
 
   const value = {
     // Search state
@@ -260,7 +300,9 @@ export function SearchProvider({ children }) {
     setFilter,
     removeFilter,
     clearFilters,
+    clearAll,
     dynamicFilters,
+    performSearch,
 
     // Results
     results,

@@ -50,22 +50,31 @@ const AnimatedCard = ({ children, isSelected, onClick }) => (
 
 const CategoriesNavBar = () => {
   const router = useRouter();
-  const searchParams = useSearchParams(); // Get search params
-  const { category, setCategory, availableFilters, setAvailableFilters } =
-    useSearch();
+  const searchParams = useSearchParams();
+  const {
+    category,
+    setCategory,
+    availableFilters,
+    setAvailableFilters,
+    performSearch,
+  } = useSearch();
 
   const handleCategoryIdClick = useCallback(
-    (categoryItem) => {
-      setCategory(categoryItem); // Update context *first*
+    async (categoryItem) => {
+      setCategory(categoryItem); // Update context first
 
-      // Update URL
+      // Update URL and navigate to search page
       const newParams = new URLSearchParams(searchParams.toString());
       newParams.set('categoryId', categoryItem.id);
-      router.push(`/search?${newParams.toString()}`);
+      await router.push(`/search?${newParams.toString()}`);
 
-      localStorage.setItem('category', JSON.stringify(categoryItem)); // Persist if needed, but context drives UI
+      // Store category in localStorage
+      localStorage.setItem('category', JSON.stringify(categoryItem));
+
+      // Perform search with the selected category
+      performSearch();
     },
-    [setCategory, router, searchParams]
+    [setCategory, router, searchParams, performSearch]
   );
 
   useEffect(() => {
