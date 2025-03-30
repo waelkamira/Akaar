@@ -72,7 +72,7 @@ export default function DynamicFilters() {
     return (
       <div className="bg-white p-4 rounded-lg shadow-sm mb-4">
         <div className="flex justify-center items-center py-4">
-          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>
+          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary-500"></div>
           <span className="mr-2">جاري تحميل الخصائص...</span>
         </div>
       </div>

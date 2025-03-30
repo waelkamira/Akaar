@@ -56,7 +56,7 @@ export default function CategoryFilter() {
             type="radio"
             checked={!category}
             onChange={() => handleCategoryChange(null)}
-            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+            className="h-4 w-4 text-primary-500 focus:ring-primary-500 border-gray-300"
           />
           <label htmlFor="category-all" className="mr-2 text-sm">
             كل الفئات
@@ -71,7 +71,7 @@ export default function CategoryFilter() {
               type="radio"
               checked={true}
               onChange={() => {}} // No need to handle change here
-              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+              className="h-4 w-4 text-primary-500 focus:ring-primary-500 border-gray-300"
             />
             <label
               htmlFor={`category-${selectedCategory.id}`}
@@ -90,7 +90,7 @@ export default function CategoryFilter() {
                 type="radio"
                 checked={category && category.id === cat.id}
                 onChange={() => handleCategoryChange(cat)}
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                className="h-4 w-4 text-primary-500 focus:ring-primary-500 border-gray-300"
               />
               <label
                 htmlFor={`category-${cat.id}`}
@@ -107,7 +107,7 @@ export default function CategoryFilter() {
         {selectedCategory && (
           <button
             onClick={() => handleCategoryChange(null)}
-            className="text-sm text-blue-600 hover:text-blue-800 flex items-center mt-2"
+            className="text-sm text-primary-500 hover:text-blue-800 flex items-center mt-2"
           >
             <ChevronLeft size={16} className="mr-1" />
             عرض جميع الفئات
