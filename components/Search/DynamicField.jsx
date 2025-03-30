@@ -1,11 +1,15 @@
-"use client"
+'use client';
 
-export default function DynamicField({ field, value, onChange }) {
-  if (!field) return null
+export default function DynamicField({ field, value, onChange, onBlur }) {
+  if (!field) return null;
 
   const handleChange = (e) => {
-    onChange(field.name, e.target.value)
-  }
+    onChange(field.name, e.target.value);
+  };
+
+  const handleBlur = (e) => {
+    onBlur(field.name, e.target.value);
+  };
 
   // Render select for fields with options
   if (field.options && Object.keys(field.options).length > 0) {
@@ -18,9 +22,10 @@ export default function DynamicField({ field, value, onChange }) {
         <select
           value={value}
           onChange={handleChange}
+          onBlur={handleBlur}
           className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
         >
-          <option value="">{field.placeholder || "اختر..."}</option>
+          <option value="">{field.placeholder || 'اختر...'}</option>
           {Object.entries(field.options).map(([optionValue, optionLabel]) => (
             <option key={optionValue} value={optionValue}>
               {optionLabel}
@@ -28,7 +33,7 @@ export default function DynamicField({ field, value, onChange }) {
           ))}
         </select>
       </div>
-    )
+    );
   }
 
   // Render input for fields without options
@@ -42,10 +47,10 @@ export default function DynamicField({ field, value, onChange }) {
         type="text"
         value={value}
         onChange={handleChange}
+        onBlur={handleBlur}
         placeholder={field.placeholder}
         className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
       />
     </div>
-  )
+  );
 }
-
