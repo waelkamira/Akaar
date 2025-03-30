@@ -21,7 +21,7 @@ export default function SearchResults() {
   if (loading) {
     return (
       <div className="flex justify-center items-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-500 mr-2" />
+        <Loader2 className="h-8 w-8 animate-spin text-primary-500 mr-2" />
         <span className="text-gray-600">جاري البحث...</span>
       </div>
     );
@@ -71,7 +71,7 @@ export default function SearchResults() {
           <button
             onClick={loadMore}
             disabled={loading}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-blue-300 disabled:cursor-not-allowed"
+            className="px-4 py-2 bg-primary-500 text-white rounded-md hover:bg-blue-700 disabled:bg-blue-300 disabled:cursor-not-allowed"
           >
             {loading ? (
               <>
