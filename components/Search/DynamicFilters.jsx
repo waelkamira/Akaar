@@ -91,12 +91,14 @@ export default function DynamicFilters() {
   }
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow-sm mb-4">
-      <h3 className="font-medium text-lg mb-3">خصائص {category.name}</h3>
+    <div className="bg-white rounded-lg shadow-sm p-6 space-y-6">
+      <h3 className="text-lg font-semibold text-gray-900">
+        خصائص {category.name}
+      </h3>
 
-      <div className="space-y-4">
+      <div className="space-y-6">
         {dynamicFilters.map((field) => (
-          <div key={field.name} className="mb-4">
+          <div key={field.name}>
             <DynamicField
               field={field}
               value={localValues[field.name] || ''}
@@ -105,18 +107,6 @@ export default function DynamicFilters() {
             />
           </div>
         ))}
-
-        {/* Search Button */}
-        <div className="pt-4">
-          <button
-            onClick={handleSearch}
-            disabled={isSearching}
-            className="w-full flex items-center justify-center gap-2 bg-primary-500 hover:bg-primary-600 text-white py-2 px-4 rounded-md transition-colors duration-200"
-          >
-            <ImSearch className={isSearching ? 'animate-spin' : ''} />
-            <span>{isSearching ? 'جاري البحث...' : 'بحث'}</span>
-          </button>
-        </div>
       </div>
     </div>
   );

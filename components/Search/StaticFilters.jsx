@@ -123,27 +123,26 @@ export default function StaticFilters() {
 
   // Handle ad type selection
   const handleAdTypeChange = useCallback(
-    (e) => {
-      const adTypeId = Number(e.target.value);
+    (adTypeId) => {
       setFilter('adType', adTypeId || null);
     },
     [setFilter]
   );
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow-sm mb-4">
-      <h3 className="font-medium text-lg mb-3">الفلاتر الثابتة</h3>
+    <div className="bg-white rounded-lg shadow-sm p-6 space-y-6">
+      <h3 className="text-lg font-semibold text-gray-900">الفلاتر الثابتة</h3>
 
-      <div className="space-y-4">
+      <div className="space-y-6">
         {/* City Filter */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
             المدينة
           </label>
           <select
             value={filters.city || ''}
             onChange={handleCityChange}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            className="w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors duration-200"
           >
             <option value="">اختر المدينة</option>
             {staticFilters.cities.map((city) => (
@@ -156,14 +155,14 @@ export default function StaticFilters() {
 
         {/* Town Filter - Only show if city is selected */}
         {filters.city && availableTowns.length > 0 && (
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
               المنطقة
             </label>
             <select
               value={filters.town || ''}
               onChange={handleTownChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              className="w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors duration-200"
             >
               <option value="">اختر المنطقة</option>
               {availableTowns.map((town) => (
@@ -176,12 +175,12 @@ export default function StaticFilters() {
         )}
 
         {/* Price Range Filter */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-3">
             نطاق السعر
           </label>
 
-          <div className="flex items-center gap-2 mb-3">
+          <div className="flex items-center gap-3 mb-4">
             <input
               type="number"
               min={priceRangeDefault.min}
@@ -190,9 +189,9 @@ export default function StaticFilters() {
               onChange={(e) => handlePriceInputChange('min', e.target.value)}
               onBlur={handleInputBlur}
               placeholder="السعر الأدنى"
-              className="w-24 p-1 text-center border border-gray-300 rounded"
+              className="flex-1 rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors duration-200 text-center"
             />
-            <span>-</span>
+            <span className="text-gray-400">-</span>
             <input
               type="number"
               min={priceRangeDefault.min}
@@ -201,7 +200,7 @@ export default function StaticFilters() {
               onChange={(e) => handlePriceInputChange('max', e.target.value)}
               onBlur={handleInputBlur}
               placeholder="السعر الأعلى"
-              className="w-24 p-1 text-center border border-gray-300 rounded"
+              className="flex-1 rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors duration-200 text-center"
             />
           </div>
 
@@ -212,32 +211,36 @@ export default function StaticFilters() {
             step={100}
             onValueChange={handleSliderChange}
             onValueCommit={handleSliderCommit}
-            className="my-4"
+            className="my-6"
           />
 
-          <div className="flex justify-between text-xs text-gray-500">
-            <span>{priceRange[0]}</span>
-            <span>{priceRange[1]}</span>
+          <div className="flex justify-between text-sm text-gray-500">
+            <span>{priceRange[0].toLocaleString()} ريال</span>
+            <span>{priceRange[1].toLocaleString()} ريال</span>
           </div>
         </div>
 
         {/* Ad Type Filter */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
             نوع الإعلان
           </label>
-          <select
-            value={filters.adType || ''}
-            onChange={handleAdTypeChange}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-          >
-            <option value="">اختر نوع الإعلان</option>
+          <div className="grid grid-cols-3 gap-2">
             {staticFilters.adTypes.map((type) => (
-              <option key={type.id} value={type.id}>
+              <button
+                key={type.id}
+                onClick={() => handleAdTypeChange(type.id)}
+                className={`py-2 px-3 rounded-lg text-sm font-medium transition-all duration-200
+                  ${
+                    filters.adType === type.id
+                      ? 'bg-primary text-white shadow-sm'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+              >
                 {type.name}
-              </option>
+              </button>
             ))}
-          </select>
+          </div>
         </div>
       </div>
     </div>

@@ -97,15 +97,17 @@ export default function SelectedFilters() {
   }
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow-sm mb-4">
-      <div className="flex justify-between items-center mb-3">
-        <h3 className="font-medium text-lg">الفلاتر المختارة</h3>
+    <div className="bg-white rounded-lg shadow-sm p-6">
+      <div className="flex justify-between items-center mb-4">
+        <h3 className="text-lg font-semibold text-gray-900">
+          الفلاتر المختارة
+        </h3>
         <button
           onClick={clearFilters}
-          className="text-sm text-red-600 hover:text-red-800 flex items-center"
+          className="text-sm text-red-600 hover:text-red-700 flex items-center gap-1 px-3 py-1.5 rounded-lg hover:bg-red-50 transition-colors duration-200"
         >
-          <X size={16} className="ml-1" />
-          حذف الكل
+          <X size={16} />
+          <span>حذف الكل</span>
         </button>
       </div>
 
@@ -113,12 +115,13 @@ export default function SelectedFilters() {
         {selectedFilters.map((filter) => (
           <div
             key={filter.key}
-            className="flex items-center bg-gray-100 rounded-full px-3 py-1 text-sm"
+            className="flex items-center bg-gray-100 hover:bg-gray-200 rounded-lg px-3 py-1.5 text-sm text-gray-700 transition-colors duration-200 group"
           >
             <span>{filter.label}</span>
             <button
               onClick={() => removeFilter(filter.key)}
-              className="mr-2 text-gray-500 hover:text-red-600"
+              className="mr-2 text-gray-400 hover:text-red-500 transition-colors duration-200"
+              aria-label={`Remove ${filter.label} filter`}
             >
               <X size={14} />
             </button>
