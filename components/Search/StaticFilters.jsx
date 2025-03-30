@@ -3,20 +3,12 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useSearch } from '../../contexts/SearchContext';
 import { Slider } from '../ui/slider';
-import { X } from 'lucide-react';
 
 export default function StaticFilters() {
-  const {
-    filters,
-    setFilter,
-    availableFilters,
-    getTownsByCity,
-    performSearch,
-    staticFilters,
-  } = useSearch();
+  const { filters, setFilter, staticFilters, getTownsByCity } = useSearch();
 
   // Set price range defaults
-  const priceRangeDefault = availableFilters?.static?.priceRange || {
+  const priceRangeDefault = {
     min: 0,
     max: 150000,
   };
@@ -33,12 +25,7 @@ export default function StaticFilters() {
       filters.priceMin || priceRangeDefault.min,
       filters.priceMax || priceRangeDefault.max,
     ]);
-  }, [
-    filters.priceMin,
-    filters.priceMax,
-    priceRangeDefault.min,
-    priceRangeDefault.max,
-  ]);
+  }, [filters.priceMin, filters.priceMax]);
 
   // Get towns for selected city
   const availableTowns = getTownsByCity(filters.city || null);
@@ -70,22 +57,6 @@ export default function StaticFilters() {
   const handlePriceChangeEnd = () => {
     setFilter('priceMin', priceRange[0]);
     setFilter('priceMax', priceRange[1]);
-
-    // Perform search with updated price
-    setTimeout(() => performSearch(), 0);
-  };
-
-  // Clear price filter
-  const handlePriceFilterClose = () => {
-    // Clear price filters
-    setFilter('priceMin', undefined);
-    setFilter('priceMax', undefined);
-
-    // Reset price range slider
-    setPriceRange([priceRangeDefault.min, priceRangeDefault.max]);
-
-    // Perform search without price filter
-    setTimeout(() => performSearch(), 0);
   };
 
   // Handle ad type selection
@@ -143,20 +114,10 @@ export default function StaticFilters() {
         )}
 
         {/* Price Range Filter */}
-        <div>
-          <div className="flex justify-between items-center mb-2">
-            <label className="block text-sm font-medium">نطاق السعر</label>
-            {(filters.priceMin !== undefined ||
-              filters.priceMax !== undefined) && (
-              <button
-                onClick={handlePriceFilterClose}
-                className="text-xs text-red-600 hover:text-red-800 flex items-center"
-              >
-                <X size={14} className="mr-1" />
-                مسح
-              </button>
-            )}
-          </div>
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            نطاق السعر
+          </label>
 
           <div className="flex items-center gap-2 mb-3">
             <input

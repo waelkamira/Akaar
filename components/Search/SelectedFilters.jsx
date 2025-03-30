@@ -1,41 +1,124 @@
-"use client"
+'use client';
 
-import { useSearch } from "../../contexts/SearchContext"
-import { X } from "lucide-react"
+import { useSearch } from '../../contexts/SearchContext';
+import { X } from 'lucide-react';
 
 export default function SelectedFilters() {
-  const { selectedFilters, removeFilter, clearFilters } = useSearch()
+  const {
+    filters,
+    category,
+    removeFilter,
+    clearFilters,
+    staticFilters,
+    dynamicFilters,
+  } = useSearch();
 
-  if (!selectedFilters || selectedFilters.length === 0) {
-    return null
+  // Get all selected filters
+  const getSelectedFilters = () => {
+    const selected = [];
+
+    // Add category if selected
+    if (category) {
+      selected.push({
+        key: 'category',
+        label: `الفئة: ${category.name}`,
+      });
+    }
+
+    // Add city if selected
+    if (filters.city) {
+      selected.push({
+        key: 'city',
+        label: `المدينة: ${filters.city}`,
+      });
+    }
+
+    // Add town if selected
+    if (filters.town) {
+      selected.push({
+        key: 'town',
+        label: `المنطقة: ${filters.town}`,
+      });
+    }
+
+    // Add price range if selected
+    if (filters.priceMin !== undefined || filters.priceMax !== undefined) {
+      selected.push({
+        key: 'price',
+        label: `السعر: ${filters.priceMin || 0} - ${
+          filters.priceMax || 'الأعلى'
+        }`,
+      });
+    }
+
+    // Add ad type if selected
+    if (filters.adType) {
+      const adType = staticFilters.adTypes.find(
+        (type) => type.id === filters.adType
+      );
+      if (adType) {
+        selected.push({
+          key: 'adType',
+          label: `نوع الإعلان: ${adType.name}`,
+        });
+      }
+    }
+
+    // Add dynamic filters if any
+    if (filters.details && dynamicFilters) {
+      Object.entries(filters.details).forEach(([key, value]) => {
+        const field = dynamicFilters.find((f) => f.name === key);
+        if (field) {
+          let displayValue = value;
+
+          // Handle options type fields
+          if (field.type === 'select' && field.options) {
+            const option = field.options.find((opt) => opt.value === value);
+            if (option) {
+              displayValue = option.label;
+            }
+          }
+
+          selected.push({
+            key: `details.${key}`,
+            label: `${field.label}: ${displayValue}`,
+          });
+        }
+      });
+    }
+
+    return selected;
+  };
+
+  const selectedFilters = getSelectedFilters();
+
+  if (selectedFilters.length === 0) {
+    return null;
   }
 
   return (
     <div className="bg-white p-4 rounded-lg shadow-sm mb-4">
-      <div className="flex items-center justify-between mb-2">
-        <h2 className="font-medium text-sm">الفلاتر المفعلة ({selectedFilters.length})</h2>
-
-        {selectedFilters.length > 0 && (
-          <button
-            onClick={() => clearFilters()}
-            className="text-xs text-blue-600 hover:text-blue-800 px-2 py-1 bg-blue-50 rounded-md"
-          >
-            مسح الكل
-          </button>
-        )}
+      <div className="flex justify-between items-center mb-3">
+        <h3 className="font-medium text-lg">الفلاتر المختارة</h3>
+        <button
+          onClick={clearFilters}
+          className="text-sm text-red-600 hover:text-red-800 flex items-center"
+        >
+          <X size={16} className="ml-1" />
+          حذف الكل
+        </button>
       </div>
 
-      <div className="flex flex-wrap gap-2 mt-2">
+      <div className="flex flex-wrap gap-2">
         {selectedFilters.map((filter) => (
           <div
-            key={`${filter.key}-${filter.value}`}
+            key={filter.key}
             className="flex items-center bg-gray-100 rounded-full px-3 py-1 text-sm"
           >
-            <span className="truncate max-w-[150px]">{filter.label}</span>
+            <span>{filter.label}</span>
             <button
               onClick={() => removeFilter(filter.key)}
-              className="ml-1 text-gray-500 hover:text-gray-700"
-              aria-label={`Remove ${filter.label} filter`}
+              className="mr-2 text-gray-500 hover:text-red-600"
             >
               <X size={14} />
             </button>
@@ -43,6 +126,5 @@ export default function SelectedFilters() {
         ))}
       </div>
     </div>
-  )
+  );
 }
-
