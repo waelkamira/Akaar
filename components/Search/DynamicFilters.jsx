@@ -1,9 +1,9 @@
 'use client';
-
 import { useSearch } from '../../contexts/SearchContext';
 import { useCallback, useState, useEffect } from 'react';
 import DynamicField from './DynamicField';
-import { ImSearch } from 'react-icons/im';
+import { ImSearch, ImSpinner8 } from 'react-icons/im';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function DynamicFilters() {
   const {
@@ -15,18 +15,15 @@ export default function DynamicFilters() {
     performSearch,
   } = useSearch();
 
-  // Local state for field values
   const [localValues, setLocalValues] = useState({});
   const [isSearching, setIsSearching] = useState(false);
 
-  // Initialize local values from filters
   useEffect(() => {
     if (filters.details) {
       setLocalValues(filters.details);
     }
   }, [filters.details]);
 
-  // Handle field value changes (updates local state only)
   const handleFieldChange = useCallback((fieldName, value) => {
     setLocalValues((prev) => ({
       ...prev,
@@ -34,10 +31,8 @@ export default function DynamicFilters() {
     }));
   }, []);
 
-  // Apply filter when user finishes typing/selecting
   const handleFieldBlur = useCallback(
     (fieldName, value) => {
-      // If value is empty string or null, remove the filter
       if (
         value === '' ||
         value === null ||
@@ -47,9 +42,7 @@ export default function DynamicFilters() {
         delete newDetails[fieldName];
         setFilter('details', newDetails);
       } else {
-        // Ensure we have a details object to work with
         const currentDetails = filters.details || {};
-
         setFilter('details', {
           ...currentDetails,
           [fieldName]: value,
@@ -59,52 +52,137 @@ export default function DynamicFilters() {
     [filters.details, setFilter]
   );
 
-  // Early return if no category
+  const handleSearch = async () => {
+    setIsSearching(true);
+    try {
+      await performSearch();
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
   if (!category) {
     return null;
   }
 
-  // Show loading state
   if (loading) {
     return (
-      <div className="bg-white p-4 rounded-lg shadow-sm mb-4">
-        <div className="flex justify-center items-center py-4">
-          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary-500"></div>
-          <span className="mr-2">جاري تحميل الخصائص...</span>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="bg-white p-6 rounded-xl shadow-md border border-gray-100 mb-4"
+      >
+        <div className="flex justify-center items-center py-4 space-x-2">
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+          >
+            <ImSpinner8 className="text-primary-500 text-xl" />
+          </motion.div>
+          <span className="text-gray-600">جاري تحميل الخصائص...</span>
         </div>
-      </div>
+      </motion.div>
     );
   }
 
-  // Show empty state if no fields available
   if (!dynamicFilters || dynamicFilters.length === 0) {
     return (
-      <div className="bg-white p-4 rounded-lg shadow-sm mb-4">
-        <div className="text-gray-500 text-center py-4">
-          لا توجد خصائص متاحة لهذه الفئة
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="bg-white p-6 rounded-xl shadow-md border border-gray-100 mb-4"
+      >
+        <div className="text-gray-500 text-center py-4 flex flex-col items-center">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-10 w-10 text-gray-300 mb-2"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={1.5}
+              d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+          <p>لا توجد خصائص متاحة لهذه الفئة</p>
         </div>
-      </div>
+      </motion.div>
     );
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-sm p-6 space-y-6">
-      <h3 className="text-lg font-semibold text-gray-900">
-        خصائص {category.name}
-      </h3>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      className="bg-white rounded-xl shadow-lg p-6 space-y-6 border border-gray-100"
+    >
+      <div className="flex items-center justify-between">
+        <motion.h3
+          whileHover={{ scale: 1.02 }}
+          className="text-lg font-semibold text-gray-900 flex items-center gap-2"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-5 w-5 text-primary"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fillRule="evenodd"
+              d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z"
+              clipRule="evenodd"
+            />
+          </svg>
+          خصائص {category.name}
+        </motion.h3>
+
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={handleSearch}
+          disabled={isSearching}
+          className="flex items-center gap-2 bg-gradient-to-r from-primary to-primary-dark text-white py-2 px-4 rounded-lg shadow-sm hover:shadow-md transition-all"
+        >
+          {isSearching ? (
+            <>
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+              >
+                <ImSpinner8 className="text-white" />
+              </motion.div>
+              <span>جاري البحث...</span>
+            </>
+          ) : (
+            <>
+              <ImSearch className="text-white" />
+              <span>بحث</span>
+            </>
+          )}
+        </motion.button>
+      </div>
 
       <div className="space-y-6">
-        {dynamicFilters.map((field) => (
-          <div key={field.name}>
+        {dynamicFilters.map((field, index) => (
+          <motion.div
+            key={field.name}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: index * 0.05 }}
+          >
             <DynamicField
               field={field}
               value={localValues[field.name] || ''}
               onChange={handleFieldChange}
               onBlur={handleFieldBlur}
             />
-          </div>
+          </motion.div>
         ))}
       </div>
-    </div>
+    </motion.div>
   );
 }
