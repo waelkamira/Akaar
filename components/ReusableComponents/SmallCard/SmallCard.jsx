@@ -25,54 +25,65 @@ const SmallCard = React.memo(function SmallCard({ item, category }) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       whileHover={{
-        y: -5,
-        boxShadow:
-          '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+        y: -8,
+        scale: 1.02,
       }}
-      transition={{ duration: 0.3, ease: 'easeOut' }}
-      className="flex flex-col w-full cursor-pointer bg-white rounded-xl overflow-hidden relative group border border-gray-100"
+      transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
+      className="flex flex-col w-full cursor-pointer bg-white rounded-2xl overflow-hidden relative group border border-gray-100/50 hover:border-primary/20 shadow-sm"
       onClick={handleClick}
     >
       {/* شريط التظليل العلوي */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 z-10 pointer-events-none" />
 
       {/* زر المفضلة */}
       <FavoriteButton item={item} className="top-4 right-4 z-20" />
 
       {/* شارة جديدة إذا كان المنتج حديث */}
       {item.isNew && (
-        <div className="absolute top-4 left-4 bg-gradient-to-r from-green-400 to-green-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md z-20">
+        <motion.div
+          initial={{ x: -50, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ delay: 0.2 }}
+          className="absolute top-4 left-4 bg-gradient-to-r from-emerald-400 to-green-500 text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-lg z-20 backdrop-blur-sm"
+        >
           جديد
-        </div>
+        </motion.div>
       )}
 
       {/* الصورة الرئيسية */}
-      <div className="relative h-60 w-full overflow-hidden">
+      <div className="relative h-64 w-full overflow-hidden">
         <ImageComponent
           item={item}
-          className="group-hover:scale-105 transition-transform duration-500 ease-in-out"
+          className="group-hover:scale-110 transition-transform duration-700 ease-out"
         />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       </div>
 
       {/* محتوى البطاقة */}
-      <div className="p-5 space-y-3">
+      <div className="p-6 pt-0 space-y-4 relative">
+        <div className="absolute inset-0 bg-gradient-to-b from-white/0 via-white to-white -top-10 z-10 pointer-events-none" />
+
         {/* العنوان والموقع */}
-        <DetailsSection item={item} />
+        <div className="relative z-20">
+          <DetailsSection item={item} />
+        </div>
 
         {/* الحقول الإضافية */}
-        <AdditionalFields
-          item={item}
-          category={category}
-          className="border-t border-gray-100 pt-3 mt-3"
-        />
+        <div className="relative z-20">
+          <AdditionalFields
+            item={item}
+            category={category}
+            className="border-t border-gray-100/75"
+          />
+        </div>
 
         {/* السعر وزر التفاصيل */}
         <motion.div
-          className="flex justify-between items-center pt-3"
+          className="flex flex-col justify-between items-center relative z-20 text-nowrap"
           whileHover={{ scale: 1.01 }}
         >
           <div className="flex items-baseline gap-2">
-            <span className="text-xl font-bold text-primary">
+            <span className="text-2xl font-bold bg-gradient-to-r from-primary to-primary-600 bg-clip-text text-transparent">
               {item.basePrice?.toLocaleString()} $
             </span>
             {item.oldPrice && (
@@ -85,16 +96,30 @@ const SmallCard = React.memo(function SmallCard({ item, category }) {
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="border border-primary-500 text-white px-4 py-2 rounded-full text-sm font-medium shadow-sm hover:shadow-md transition-all"
+            className="bg-gradient-to-r from-primary-500 to-primary-400 hover:bg-primary-600 text-white px-6 py-1 rounded-full text-sm font-medium shadow-md hover:shadow-xl transition-all duration-300 flex items-center gap-2"
             onClick={(e) => e.stopPropagation()}
           >
             عرض التفاصيل
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-4 w-4 rtl:rotate-180"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 5l7 7-7 7"
+              />
+            </svg>
           </motion.button>
         </motion.div>
       </div>
 
       {/* تأثير تحويم خلفي */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 pointer-events-none" />
     </motion.div>
   );
 });

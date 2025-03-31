@@ -145,7 +145,7 @@ export default function DynamicFilters() {
           whileTap={{ scale: 0.95 }}
           onClick={handleSearch}
           disabled={isSearching}
-          className="flex items-center gap-2 bg-gradient-to-r from-primary to-primary-dark text-white py-2 px-4 rounded-lg shadow-sm hover:shadow-md transition-all"
+          className="flex items-center gap-2 bg-gradient-to-r from-primary-500 to-primary-400 text-white py-1 px-4 rounded-full shadow-sm hover:shadow-md transition-all"
         >
           {isSearching ? (
             <>
