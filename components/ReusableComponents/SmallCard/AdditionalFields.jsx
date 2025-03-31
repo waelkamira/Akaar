@@ -1,5 +1,6 @@
 // AdditionalFields.jsx
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { motion } from 'framer-motion';
 
 function AdditionalFields({ item, category }) {
   const [categoryFields, setCategoryFields] = useState([]);
@@ -31,21 +32,36 @@ function AdditionalFields({ item, category }) {
   }, [categoryFields, item.details, getFieldValue]);
 
   return (
-    <div className="flex justify-start items-center gap-1 w-full p-4 border-t border-gray-200 font-serif">
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, delay: 0.2 }}
+      className="flex flex-wrap items-center gap-3 w-full border-t border-gray-100/75 pt-4"
+    >
       {displayValues?.map((displayValue, index) => (
-        <div
+        <motion.div
           key={index}
-          className="flex items-center gap-2 mb-2 text-sm text-gray-700"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.3, delay: index * 0.1 }}
+          className="flex items-center gap-2 text-sm"
         >
-          <h6 className="flex items-center gap-1 font-thin">
-            <span className="text-gray-500 text-nowrap">
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gray-50/80 hover:bg-gray-50 border border-gray-100 hover:border-primary/20 transition-all duration-200">
+            <span className="text-gray-500 whitespace-nowrap">
               {categoryFields[index]?.label || categoryFields[index]?.name}
             </span>
-            : <span className="font-bold"> {displayValue || '?'}</span>
-          </h6>
-        </div>
+            <span className="text-gray-900 font-medium">
+              {displayValue || '—'}
+            </span>
+          </div>
+
+          {/* فاصل عمودي */}
+          {index < displayValues.length - 1 && (
+            <div className="w-1 h-1 rounded-full bg-gray-300" />
+          )}
+        </motion.div>
       ))}
-    </div>
+    </motion.div>
   );
 }
 
