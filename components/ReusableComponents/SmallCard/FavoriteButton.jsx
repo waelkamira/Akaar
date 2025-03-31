@@ -14,6 +14,7 @@ function FavoriteButton({ item }) {
     if (typeof window !== 'undefined') {
       const userData = localStorage.getItem('CurrentUser');
       const favoriteIds = localStorage.getItem('favoriteIds');
+
       if (userData) {
         try {
           const user = JSON.parse(userData);
@@ -52,14 +53,14 @@ function FavoriteButton({ item }) {
   );
 
   const checkFavoriteStatus = useCallback(() => {
-    // console.log('checkFavoriteStatus تم الاستدعاء ');
+    console.log('checkFavoriteStatus تم الاستدعاء ');
 
     if (item?.id) {
-      const favorited = favoriteIds?.includes(item?.id);
-      // console.log('favoriteIds', favoriteIds);
+      const favorited = favoriteIds.includes(item?.id);
+      console.log('favoriteIds', favoriteIds);
       if (favorited) {
-        // console.log('favorited', favorited);
-        // console.log('item?.id', item?.id);
+        console.log('favorited', favorited);
+        console.log('item?.id', item?.id);
         setIsFavorited(true);
       } else {
         setIsFavorited(false);
@@ -112,12 +113,12 @@ function FavoriteButton({ item }) {
       }}
     >
       <div
-        className={`bg-white backdrop-blur-sm rounded-full size-8 p-2 shadow-md shadow-gray-500 transition-all duration-300 hover:scale-110 cursor-pointer`}
+        className={`bg-white/20 backdrop-blur-sm rounded-full size-8 p-2 shadow-sm shadow-gray-500 transition-all duration-300 hover:scale-110 cursor-pointer`}
       >
         {isFavorited ? (
-          <TbHeartFilled className="size-4 text-red-500 transition-colors duration-300" />
+          <TbHeartFilled className="size-4 text-red-600 transition-colors duration-300" />
         ) : (
-          <FaRegHeart className="size-4 text-gray-400 hover:text-red-500 transition-colors duration-300" />
+          <FaRegHeart className="size-4 text-gray-600 hover:text-red-500 transition-colors duration-300" />
         )}
       </div>
     </div>
