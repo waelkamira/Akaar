@@ -89,22 +89,32 @@ export default function StaticFilters() {
     applyPriceFilter();
   };
 
-  const handleSliderChange = (values) => {
-    setPriceRange(values);
-    setInputValues({
-      min: values[0].toString(),
-      max: values[1].toString(),
-    });
-  };
+  const handlePriceRangeChange = useCallback(
+    (values) => {
+      setPriceRange(values);
+      setInputValues({
+        min: values[0].toString(),
+        max: values[1].toString(),
+      });
+      setFilter('priceMin', values[0]);
+      setFilter('priceMax', values[1]);
+    },
+    [setFilter]
+  );
 
-  const handleSliderCommit = (values) => {
-    setFilter('priceMin', values[0]);
-    setFilter('priceMax', values[1]);
-  };
+  const handlePriceInputBlur = useCallback(() => {
+    const min = parseInt(inputValues.min) || priceRangeDefault.min;
+    const max = parseInt(inputValues.max) || priceRangeDefault.max;
+
+    setPriceRange([min, max]);
+    setFilter('priceMin', min);
+    setFilter('priceMax', max);
+  }, [inputValues, setFilter]);
 
   const handleAdTypeChange = useCallback(
-    (adTypeId) => {
-      setFilter('adType', adTypeId || null);
+    (e) => {
+      const value = parseInt(e.target.value) || null;
+      setFilter('adType', value);
     },
     [setFilter]
   );
@@ -257,8 +267,8 @@ export default function StaticFilters() {
               min={priceRangeDefault.min}
               max={priceRangeDefault.max}
               step={100}
-              onValueChange={handleSliderChange}
-              onValueCommit={handleSliderCommit}
+              onValueChange={handlePriceRangeChange}
+              onValueCommit={handlePriceInputBlur}
               className="[&>.range]:bg-gradient-to-r [&>.range]:from-primary/30 [&>.range]:to-primary [&>.thumb]:bg-white [&>.thumb]:border-2 [&>.thumb]:border-primary [&>.thumb]:w-5 [&>.thumb]:h-5"
             />
           </div>

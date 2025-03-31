@@ -38,29 +38,26 @@ export default function DynamicFilters() {
   const handleFieldBlur = useCallback(
     (fieldName, value) => {
       // If value is empty string or null, remove the filter
-      if (value === '' || value === null) {
+      if (
+        value === '' ||
+        value === null ||
+        (Array.isArray(value) && value.length === 0)
+      ) {
         const newDetails = { ...filters.details };
         delete newDetails[fieldName];
         setFilter('details', newDetails);
       } else {
+        // Ensure we have a details object to work with
+        const currentDetails = filters.details || {};
+
         setFilter('details', {
-          ...filters.details,
+          ...currentDetails,
           [fieldName]: value,
         });
       }
     },
     [filters.details, setFilter]
   );
-
-  // Handle search button click
-  const handleSearch = useCallback(async () => {
-    setIsSearching(true);
-    try {
-      await performSearch();
-    } finally {
-      setIsSearching(false);
-    }
-  }, [performSearch]);
 
   // Early return if no category
   if (!category) {

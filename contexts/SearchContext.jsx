@@ -206,14 +206,16 @@ export function SearchProvider({ children }) {
     [staticFilters.cities]
   );
 
-  // Perform initial search when category is loaded
+  // Remove automatic search trigger
   useEffect(() => {
-    if (shouldSearchOnLoad && !loading) {
+    if (!isSearchPage) return;
+
+    if (shouldSearchOnLoad) {
       setPage(1);
       performSearch(1, false);
       setShouldSearchOnLoad(false);
     }
-  }, [shouldSearchOnLoad, loading, performSearch]);
+  }, [shouldSearchOnLoad, loading, performSearch, isSearchPage]);
 
   // Update URL when category changes (only on search page)
   useEffect(() => {
@@ -232,19 +234,6 @@ export function SearchProvider({ children }) {
       router.replace(`/search?${params.toString()}`, { scroll: false }); // Changed push to replace
     }
   }, [category, router, searchParams, isSearchPage, page]);
-
-  // Trigger search on relevant changes (only on search page)
-  useEffect(() => {
-    if (!isSearchPage) return;
-
-    if (!searchQuery && !category && Object.keys(filters).length === 0) {
-      return;
-    }
-
-    // Reset page and perform new search
-    setPage(1);
-    performSearch(1, false);
-  }, [searchQuery, category, filters, performSearch, isSearchPage]);
 
   // Filter management functions
   const setFilter = useCallback((key, value) => {
