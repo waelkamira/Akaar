@@ -22,13 +22,13 @@ html {
 
 /* ✅ تغيير لون المسار (الخلفية) */
 ::-webkit-scrollbar-track {
-  background-color: #7e7f81; /* لون خلفية شريط التمرير */
+  background-color: #949494; /* لون خلفية شريط التمرير */
   border-radius: 20px; /* زوايا دائرية */
 }
 
 /* ✅ تغيير لون شريط التمرير */
 ::-webkit-scrollbar-thumb {
-  background: #9a9c9e; /* لون شريط التمرير */
+  background: #b8b8b8; /* لون شريط التمرير */
   border-radius: 20px; /* زوايا دائرية */
 }
 

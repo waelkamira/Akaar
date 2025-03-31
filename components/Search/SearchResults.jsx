@@ -71,7 +71,7 @@ export default function SearchResults() {
           <button
             onClick={loadMore}
             disabled={loading}
-            className="px-4 py-2 bg-primary-500 text-white rounded-md hover:bg-blue-700 disabled:bg-blue-300 disabled:cursor-not-allowed"
+            className="px-4 py-2 bg-primary-500 text-white rounded-md hover:bg-primary-400 disabled:bg-primary-300 disabled:cursor-not-allowed"
           >
             {loading ? (
               <>
