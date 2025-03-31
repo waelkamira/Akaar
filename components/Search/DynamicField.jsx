@@ -15,7 +15,7 @@ export default function DynamicField({ field, value, onChange, onBlur }) {
   if (field.options && Object.keys(field.options).length > 0) {
     return (
       <div className="space-y-2">
-        <label className="block text-sm font-medium">
+        <label className="flex gap-1 block text-sm font-medium ">
           {field.icon && <span className="mr-2">{field.icon}</span>}
           {field.label}
         </label>
@@ -39,7 +39,7 @@ export default function DynamicField({ field, value, onChange, onBlur }) {
   // Render input for fields without options
   return (
     <div className="space-y-2">
-      <label className="block text-sm font-medium">
+      <label className="flex gap-1 block text-sm font-medium">
         {field.icon && <span className="mr-2">{field.icon}</span>}
         {field.label}
       </label>
