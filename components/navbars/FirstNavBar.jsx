@@ -1,8 +1,8 @@
 'use client';
-import Image from 'next/image';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
 import mainButtons from '../lists/mainButtons';
-import Link from 'next/link';
+import Image from 'next/image';
 
 export default function FirstNavBar() {
   return (
@@ -10,57 +10,61 @@ export default function FirstNavBar() {
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: 'easeOut', delay: 0.2 }}
-      className="hidden xl:flex xl:flex-col xl:justify-start w-full overflow-hidden z-[1000] shadow-2xl"
+      className="hidden xl:flex xl:flex-col xl:justify-start w-full overflow-hidden z-[1000]"
     >
-      {/* Main Navigation Bar */}
-      <div className="flex justify-between items-center w-full px-6 py-4">
-        {/* Left Side Buttons */}
-        <ul className="flex justify-evenly gap-6 items-center h-16 w-full 2xl:w-[60%]">
+      {/* شريط التنقل الرئيسي */}
+      <div className="flex justify-between items-center w-full px-4 py-2">
+        {/* الأزرار الجانبية */}
+        <ul className="flex justify-evenly gap-8 items-center h-20 w-full 2xl:w-[60%]">
           {mainButtons?.map((button) => (
-            <Link
-              href={button?.path}
+            <li
               key={button?.title}
-              className="relative flex items-center justify-center w-full rounded-full bg-gradient-to-r from-primary via-orange-400 to-primary text-white font-bold text-lg shadow-lg hover:scale-105 transition-all duration-300 ease-in-out h-12 group"
+              className="relative flex justify-center w-full"
             >
-              {/* Floating Icon */}
+              <Link
+                href={button?.path}
+                className="relative flex items-center justify-center gap-1 w-full text-white font-bold text-lg transition-all duration-300 ease-in-out group hover:scale-105"
+              >
+                {/* أيقونة الزر */}
+                <span className="mb-2">{button?.icon}</span>
 
-              <motion.div whileHover={{ rotate: 10 }} className="w-fit">
-                <span
-                  className="size-16 xl:size-14 bg-white/20 backdrop-blur-lg flex items-center justify-center rounded-full shadow-lg border border-white/40"
-                  style={{ textShadow: '3px 3px 6px rgba(0, 0, 0, 0.3)' }}
-                >
-                  {button?.emoji}
+                {/* نص الزر */}
+                <span className="relative text-center">{button?.title}</span>
+                {/* خط أسفل الزر - تصميم جديد */}
+                <span className="absolute inset-x-0 bottom-0 h-[2px] bg-transparent group-hover:bg-gradient-to-r group-hover:from-transparent group-hover:via-primary group-hover:to-transparent transition-transform duration-500">
+                  <motion.span
+                    className="absolute inset-0 bg-primary"
+                    initial={{ scaleX: 0, originX: 0.5 }}
+                    whileHover={{
+                      scaleX: 1,
+                      opacity: [0, 1, 0],
+                      originX: 0.5,
+                      transition: {
+                        duration: 0.6,
+                        ease: [0.43, 0.13, 0.23, 0.96],
+                      },
+                    }}
+                  />
                 </span>
-              </motion.div>
-              {/* Button Title */}
-              <span className="select-none text-nowrap w-full text-center pl-2">
-                {button?.title}
-              </span>
-            </Link>
+              </Link>
+            </li>
           ))}
         </ul>
 
-        {/* Right Side Logo */}
+        {/* الشعار الجانبي */}
         <div className="flex items-center justify-center">
-          <Link
-            href={'/'}
-            className="relative flex justify-end w-full min-w-[218px] cursor-pointer"
-          >
+          <Link href={'/'} className="relative flex justify-end cursor-pointer">
             <motion.div
-              whileHover={{
-                scale: 1.08,
-                boxShadow: '0px 15px 25px rgba(0, 0, 0, 0.25)',
-              }}
-              transition={{ duration: 0.3, ease: 'easeOut' }}
-              className="relative h-12 w-56 my-2 hover:scale-[103%] transition-transform duration-300 ease-in-out"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+              className="relative h-16 w-64 my-2"
             >
               <Image
                 src="/logo.png"
+                alt="luxury_logo"
                 fill
-                objectFit="contain"
-                alt="home_photo"
-                objectPosition="center"
-                className="object-cover"
+                className="object-contain drop-shadow-xl"
               />
             </motion.div>
           </Link>
