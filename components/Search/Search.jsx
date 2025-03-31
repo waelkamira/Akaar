@@ -12,7 +12,10 @@ export default function Search() {
 
   const handleSearch = () => {
     if (inputValue.trim()) {
-      router.push(`/search?q=${encodeURIComponent(inputValue.trim())}`);
+      console.log('Searching for:', inputValue.trim());
+      router.push(
+        `/keyword-search?keyword=${encodeURIComponent(inputValue.trim())}`
+      );
     }
   };
 
@@ -28,11 +31,10 @@ export default function Search() {
         <div className="w-full sm:w-2/3 p-2 sm:p-4 bg-white sm:bg-white/90 backdrop-blur-sm rounded-lg shadow-lg flex justify-center items-center gap-2">
           <button
             onClick={handleSearch}
-            className="flex justify-center items-center bg-primary-500 text-white text-nowrap rounded-md h-10 px-4 hover:bg-primary-500 transition-all"
+            className="flex justify-center items-center bg-primary-500 text-white text-nowrap rounded-md h-10 px-6 hover:bg-primary-600 transition-all cursor-pointer min-w-[100px]"
           >
-            <ImSearch className="mr-1" /> بحث
+            <ImSearch className="ml-2" /> بحث
           </button>
-
           <input
             type="text"
             value={inputValue}
