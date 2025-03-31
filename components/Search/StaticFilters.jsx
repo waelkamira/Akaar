@@ -1,31 +1,27 @@
 'use client';
-
 import { useState, useEffect, useCallback } from 'react';
 import { useSearch } from '../../contexts/SearchContext';
 import { Slider } from '../ui/slider';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function StaticFilters() {
   const { filters, setFilter, staticFilters, getTownsByCity } = useSearch();
 
-  // Set price range defaults
   const priceRangeDefault = {
     min: 0,
     max: 150000,
   };
 
-  // State for price slider and inputs
   const [priceRange, setPriceRange] = useState([
     filters.priceMin || priceRangeDefault.min,
     filters.priceMax || priceRangeDefault.max,
   ]);
 
-  // Separate state for input values to prevent immediate filtering
   const [inputValues, setInputValues] = useState({
     min: filters.priceMin || '',
     max: filters.priceMax || '',
   });
 
-  // Update states when filters change externally
   useEffect(() => {
     setPriceRange([
       filters.priceMin || priceRangeDefault.min,
@@ -37,10 +33,8 @@ export default function StaticFilters() {
     });
   }, [filters.priceMin, filters.priceMax]);
 
-  // Get towns for selected city
   const availableTowns = getTownsByCity(filters.city || null);
 
-  // Handle city selection
   const handleCityChange = useCallback(
     (e) => {
       const cityName = e.target.value;
@@ -49,7 +43,6 @@ export default function StaticFilters() {
     [setFilter]
   );
 
-  // Handle town selection
   const handleTownChange = useCallback(
     (e) => {
       const townName = e.target.value;
@@ -58,26 +51,21 @@ export default function StaticFilters() {
     [setFilter]
   );
 
-  // Handle price input change
   const handlePriceInputChange = (type, value) => {
-    // Update only the input value without filtering
     setInputValues((prev) => ({
       ...prev,
       [type]: value,
     }));
   };
 
-  // Validate and apply price filter
   const applyPriceFilter = useCallback(() => {
     let minPrice = parseInt(inputValues.min) || priceRangeDefault.min;
     let maxPrice = parseInt(inputValues.max) || priceRangeDefault.max;
 
-    // Ensure min is not greater than max
     if (minPrice > maxPrice) {
       [minPrice, maxPrice] = [maxPrice, minPrice];
     }
 
-    // Ensure values are within bounds
     minPrice = Math.max(
       priceRangeDefault.min,
       Math.min(minPrice, priceRangeDefault.max)
@@ -87,26 +75,20 @@ export default function StaticFilters() {
       Math.min(maxPrice, priceRangeDefault.max)
     );
 
-    // Update price range state
     setPriceRange([minPrice, maxPrice]);
-
-    // Update input values with validated numbers
     setInputValues({
       min: minPrice.toString(),
       max: maxPrice.toString(),
     });
 
-    // Apply filter
     setFilter('priceMin', minPrice);
     setFilter('priceMax', maxPrice);
   }, [inputValues, setFilter]);
 
-  // Handle input blur (when user finishes typing)
   const handleInputBlur = () => {
     applyPriceFilter();
   };
 
-  // Handle slider change
   const handleSliderChange = (values) => {
     setPriceRange(values);
     setInputValues({
@@ -115,13 +97,11 @@ export default function StaticFilters() {
     });
   };
 
-  // Handle slider release
   const handleSliderCommit = (values) => {
     setFilter('priceMin', values[0]);
     setFilter('priceMax', values[1]);
   };
 
-  // Handle ad type selection
   const handleAdTypeChange = useCallback(
     (adTypeId) => {
       setFilter('adType', adTypeId || null);
@@ -130,19 +110,40 @@ export default function StaticFilters() {
   );
 
   return (
-    <div className="bg-white rounded-lg shadow-sm p-6 space-y-6">
-      <h3 className="text-lg font-semibold text-gray-900">الفلاتر الثابتة</h3>
-
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      className="bg-white rounded-xl shadow-sm p-6 space-y-6 border border-gray-100"
+    >
       <div className="space-y-6">
         {/* City Filter */}
-        <div>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3, delay: 0.1 }}
+        >
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            المدينة
+            <span className="flex items-center gap-1">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4 text-primary"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              المدينة
+            </span>
           </label>
           <select
             value={filters.city || ''}
             onChange={handleCityChange}
-            className="w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors duration-200"
+            className="w-full rounded-lg border-gray-200 shadow-sm focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all duration-300 py-2 px-3 bg-gray-50 hover:bg-gray-100"
           >
             <option value="">اختر المدينة</option>
             {staticFilters.cities.map((city) => (
@@ -151,98 +152,133 @@ export default function StaticFilters() {
               </option>
             ))}
           </select>
-        </div>
+        </motion.div>
 
-        {/* Town Filter - Only show if city is selected */}
-        {filters.city && availableTowns.length > 0 && (
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              المنطقة
-            </label>
-            <select
-              value={filters.town || ''}
-              onChange={handleTownChange}
-              className="w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors duration-200"
+        {/* Town Filter */}
+        <AnimatePresence>
+          {filters.city && availableTowns.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
             >
-              <option value="">اختر المنطقة</option>
-              {availableTowns.map((town) => (
-                <option key={town.name} value={town.name}>
-                  {town.name}
-                </option>
-              ))}
-            </select>
-          </div>
-        )}
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                <span className="flex items-center gap-1">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4 text-primary"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  المنطقة
+                </span>
+              </label>
+              <select
+                value={filters.town || ''}
+                onChange={handleTownChange}
+                className="w-full rounded-lg border-gray-200 shadow-sm focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all duration-300 py-2 px-3 bg-gray-50 hover:bg-gray-100"
+              >
+                <option value="">اختر المنطقة</option>
+                {availableTowns.map((town) => (
+                  <option key={town.name} value={town.name}>
+                    {town.name}
+                  </option>
+                ))}
+              </select>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Price Range Filter */}
-        <div>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3, delay: 0.2 }}
+        >
           <label className="block text-sm font-medium text-gray-700 mb-3">
-            نطاق السعر
+            <span className="flex items-center gap-1">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4 text-primary"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z" />
+                <path
+                  fillRule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              نطاق السعر
+            </span>
           </label>
 
           <div className="flex items-center gap-3 mb-4">
-            <input
-              type="number"
-              min={priceRangeDefault.min}
-              max={priceRangeDefault.max}
-              value={inputValues.min}
-              onChange={(e) => handlePriceInputChange('min', e.target.value)}
-              onBlur={handleInputBlur}
-              placeholder="السعر الأدنى"
-              className="flex-1 rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors duration-200 text-center"
-            />
+            <motion.div whileHover={{ scale: 1.02 }} className="flex-1">
+              <input
+                type="number"
+                min={priceRangeDefault.min}
+                max={priceRangeDefault.max}
+                value={inputValues.min}
+                onChange={(e) => handlePriceInputChange('min', e.target.value)}
+                onBlur={handleInputBlur}
+                placeholder="السعر الأدنى"
+                className="w-full rounded-lg border-gray-200 shadow-sm focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all duration-300 py-2 px-3 bg-gray-50 hover:bg-gray-100 text-center"
+              />
+            </motion.div>
+
             <span className="text-gray-400">-</span>
-            <input
-              type="number"
+
+            <motion.div whileHover={{ scale: 1.02 }} className="flex-1">
+              <input
+                type="number"
+                min={priceRangeDefault.min}
+                max={priceRangeDefault.max}
+                value={inputValues.max}
+                onChange={(e) => handlePriceInputChange('max', e.target.value)}
+                onBlur={handleInputBlur}
+                placeholder="السعر الأعلى"
+                className="w-full rounded-lg border-gray-200 shadow-sm focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all duration-300 py-2 px-3 bg-gray-50 hover:bg-gray-100 text-center"
+              />
+            </motion.div>
+          </div>
+
+          <div className="px-2 mb-1">
+            <Slider
+              value={priceRange}
               min={priceRangeDefault.min}
               max={priceRangeDefault.max}
-              value={inputValues.max}
-              onChange={(e) => handlePriceInputChange('max', e.target.value)}
-              onBlur={handleInputBlur}
-              placeholder="السعر الأعلى"
-              className="flex-1 rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors duration-200 text-center"
+              step={100}
+              onValueChange={handleSliderChange}
+              onValueCommit={handleSliderCommit}
+              className="[&>.range]:bg-gradient-to-r [&>.range]:from-primary/30 [&>.range]:to-primary [&>.thumb]:bg-white [&>.thumb]:border-2 [&>.thumb]:border-primary [&>.thumb]:w-5 [&>.thumb]:h-5"
             />
           </div>
 
-          <Slider
-            value={priceRange}
-            min={priceRangeDefault.min}
-            max={priceRangeDefault.max}
-            step={100}
-            onValueChange={handleSliderChange}
-            onValueCommit={handleSliderCommit}
-            className="my-6"
-          />
-
-          <div className="flex justify-between text-sm text-gray-500">
-            <span>{priceRange[0].toLocaleString()} ريال</span>
-            <span>{priceRange[1].toLocaleString()} ريال</span>
+          <div className="flex justify-between text-sm text-gray-500 mt-2">
+            <motion.span
+              whileHover={{ scale: 1.05 }}
+              className="bg-gray-100 px-2 py-1 rounded"
+            >
+              {priceRange[0].toLocaleString()} $
+            </motion.span>
+            <motion.span
+              whileHover={{ scale: 1.05 }}
+              className="bg-gray-100 px-2 py-1 rounded"
+            >
+              {priceRange[1].toLocaleString()} $
+            </motion.span>
           </div>
-        </div>
-
-        {/* Ad Type Filter */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            نوع الإعلان
-          </label>
-          <div className="grid grid-cols-3 gap-2">
-            {staticFilters.adTypes.map((type) => (
-              <button
-                key={type.id}
-                onClick={() => handleAdTypeChange(type.id)}
-                className={`py-2 px-3 rounded-lg text-sm font-medium transition-all duration-200
-                  ${
-                    filters.adType === type.id
-                      ? 'bg-primary text-white shadow-sm'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-              >
-                {type.name}
-              </button>
-            ))}
-          </div>
-        </div>
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 }

@@ -49,7 +49,7 @@ export default function SearchResults() {
   }
 
   return (
-    <div>
+    <div className="w-full">
       {/* Results count and category */}
       <div className="mb-4 flex justify-between items-center">
         <p className="text-sm text-gray-500">
