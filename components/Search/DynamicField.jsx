@@ -4,11 +4,30 @@ export default function DynamicField({ field, value, onChange, onBlur }) {
   if (!field) return null;
 
   const handleChange = (e) => {
-    onChange(field.name, e.target.value);
+    let newValue = e.target.value;
+
+    // Convert to number if the field type expects numeric values
+    if (field.type === 'select' || field.options) {
+      newValue = Number(newValue) || newValue;
+    }
+
+    onChange(field.name, newValue);
+
+    // For select fields, trigger onBlur immediately
+    if (field.options) {
+      onBlur(field.name, newValue);
+    }
   };
 
   const handleBlur = (e) => {
-    onBlur(field.name, e.target.value);
+    let finalValue = e.target.value;
+
+    // Convert to number if the field type expects numeric values
+    if (field.type === 'select' || field.options) {
+      finalValue = Number(finalValue) || finalValue;
+    }
+
+    onBlur(field.name, finalValue);
   };
 
   // Render select for fields with options
@@ -20,9 +39,8 @@ export default function DynamicField({ field, value, onChange, onBlur }) {
           {field.label}
         </label>
         <select
-          value={value}
+          value={value?.toString() || ''}
           onChange={handleChange}
-          onBlur={handleBlur}
           className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
         >
           <option value="">{field.placeholder || 'اختر...'}</option>
@@ -44,8 +62,8 @@ export default function DynamicField({ field, value, onChange, onBlur }) {
         {field.label}
       </label>
       <input
-        type="text"
-        value={value}
+        type={field.type || 'text'}
+        value={value || ''}
         onChange={handleChange}
         onBlur={handleBlur}
         placeholder={field.placeholder}

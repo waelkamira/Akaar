@@ -71,12 +71,10 @@ export default function SelectedFilters() {
         if (field) {
           let displayValue = value;
 
-          // Handle options type fields
-          if (field.type === 'select' && field.options) {
-            const option = field.options.find((opt) => opt.value === value);
-            if (option) {
-              displayValue = option.label;
-            }
+          // Handle fields with options
+          if (field.options) {
+            // Get the label from the options object
+            displayValue = field.options[value] || value;
           }
 
           selected.push({

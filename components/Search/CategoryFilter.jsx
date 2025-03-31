@@ -25,6 +25,8 @@ export default function CategoryFilter() {
         localStorage.removeItem('category');
       }
     }
+    // Remove automatic search trigger
+    // performSearch();
   };
 
   // Load category from localStorage on mount
