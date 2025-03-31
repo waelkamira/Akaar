@@ -126,6 +126,7 @@ export async function POST(request) {
     const hasMore = remainingCount > 0;
 
     console.log('totalCount:', totalCount);
+    console.log('products:', products);
     console.log('currentPage:', page);
     console.log('remainingCount:', remainingCount);
     console.log('hasMore:', hasMore);

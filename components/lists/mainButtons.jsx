@@ -11,32 +11,32 @@ const mainButtons = [
   {
     title: 'الرئيسية',
     path: '/',
-    icon: <FaHome />,
+    emoji: <FaHome />,
   },
   {
     title: 'بروفايل',
     path: '/profile',
-    icon: <ImProfile />,
+    emoji: <ImProfile />,
   },
   {
     title: 'متجري',
     path: '/myPosts',
-    icon: <FaCanadianMapleLeaf />,
+    emoji: <FaCanadianMapleLeaf />,
   },
   {
     title: 'المفضلة',
     path: '/favorite',
-    icon: <TbTargetArrow />,
+    emoji: <TbTargetArrow />,
   },
   {
     title: 'إنشاء إعلان',
     path: '/newPost',
-    icon: <MdOutlineMapsHomeWork />,
+    emoji: <MdOutlineMapsHomeWork />,
   },
   {
     title: 'اتصل بنا',
     path: '/contactUs',
-    icon: <IoIosContacts />,
+    emoji: <IoIosContacts />,
   },
 ];
 

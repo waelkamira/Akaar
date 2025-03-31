@@ -26,7 +26,7 @@ function FiltersContent({ setShowFilters }) {
   }, [performSearch, setShowFilters]);
 
   return (
-    <div className="space-y-6 px-2">
+    <div className="space-y-6">
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -72,7 +72,7 @@ function FiltersContent({ setShowFilters }) {
         <button
           onClick={handleSearch}
           disabled={isSearching}
-          className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-primary-500 to-primary-400 text-white py-3 px-4 rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-primary/30 disabled:opacity-50"
+          className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-primary-500 to-primary-400 hover:bg-primary-600 text-white py-3 px-4 rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-primary/30 disabled:opacity-50"
         >
           {isSearching ? (
             <>
@@ -127,7 +127,7 @@ export default function SearchPage({ searchParams }) {
         {isMobile && (
           <motion.button
             onClick={() => setShowFilters(!showFilters)}
-            className="fixed bottom-6 right-6 z-50 bg-gradient-to-r from-primary-500 to-primary-400 text-white p-4 rounded-full shadow-xl hover:shadow-2xl transition-all"
+            className="fixed bottom-6 right-6 z-50 bg-gradient-to-r from-primary-500 to-primary-400 hover:bg-primary-600 text-white p-4 rounded-full shadow-xl hover:shadow-2xl transition-all"
             aria-label="Toggle Filters"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}

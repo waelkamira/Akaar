@@ -128,7 +128,7 @@ export default function SearchResults() {
             whileTap={{ scale: 0.95 }}
             onClick={loadMore}
             disabled={loading}
-            className="relative px-6 py-3 bg-gradient-to-r from-primary-500 to-primary-400 text-white rounded-full shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden"
+            className="relative px-6 py-3 bg-gradient-to-r from-primary-500 to-primary-400 hover:bg-primary-600 text-white rounded-full shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden"
           >
             {loading && (
               <motion.div
