@@ -1,30 +1,75 @@
-// DetailsSection.jsx
+'use client';
 import React from 'react';
-import { IoLocationOutline } from 'react-icons/io5';
+import { motion } from 'framer-motion';
+import { MapPin, ChevronRight } from 'lucide-react';
+import { cn } from '../../../lib/utils';
 
-function DetailsSection({ item }) {
+const DetailsSection = ({ item, className }) => {
   return (
-    <div className="flex flex-col justify-between gap-2 w-full p-4 bg-white text-black rounded-b-lg">
-      <h5 className="flex items-center justify-start gap-1 font-thin text-sm text-gray-700">
-        <IoLocationOutline className="text-primary-500" />
-        {item?.city || 'غير محدد'}
-      </h5>
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      className={cn(
+        'flex flex-col gap-3 w-full p-4 bg-white',
+        'rounded-b-xl text-gray-800',
+        className
+      )}
+    >
+      {/* الموقع */}
+      <motion.div
+        whileHover={{ x: 3 }}
+        className="flex items-center gap-2 text-sm text-gray-600"
+      >
+        <MapPin className="w-4 h-4 text-primary" />
+        <span>{item?.city || 'غير محدد'}</span>
+        {item?.town && (
+          <>
+            <ChevronRight className="w-3 h-3 text-gray-400" />
+            <span>{item.town}</span>
+          </>
+        )}
+      </motion.div>
 
+      {/* العنوان */}
       {item?.title && (
-        <h1 className="text-lg text-gray-800 line-clamp-1 font-serif font-medium">
-          {item?.title?.split(' ').slice(0, 5).join(' ')}
-        </h1>
+        <motion.h1
+          whileHover={{ scale: 1.01 }}
+          className="text-lg font-medium text-gray-900 line-clamp-2 leading-tight"
+        >
+          {item.title}
+        </motion.h1>
       )}
 
-      <div className="flex flex-col justify-between items-start">
-        {item?.description && (
-          <h1 className="text-sm line-clamp-2 font-thin text-gray-700">
-            {item?.description}
-          </h1>
-        )}
-      </div>
-    </div>
-  );
-}
+      {/* الوصف */}
+      {item?.description && (
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.1 }}
+          className="text-sm text-gray-600 line-clamp-3 leading-relaxed"
+        >
+          {item.description}
+        </motion.p>
+      )}
 
-export default DetailsSection;
+      {/* معلومات إضافية */}
+      {(item?.area || item?.rooms) && (
+        <div className="flex flex-wrap gap-2 mt-2">
+          {item?.area && (
+            <span className="text-xs bg-gray-100 text-gray-700 px-2.5 py-1 rounded-full">
+              {item.area} م²
+            </span>
+          )}
+          {item?.rooms && (
+            <span className="text-xs bg-gray-100 text-gray-700 px-2.5 py-1 rounded-full">
+              {item.rooms} غرف
+            </span>
+          )}
+        </div>
+      )}
+    </motion.div>
+  );
+};
+
+export default React.memo(DetailsSection);
