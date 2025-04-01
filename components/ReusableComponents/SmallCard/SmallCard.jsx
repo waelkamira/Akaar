@@ -69,7 +69,7 @@ const SmallCard = React.memo(function SmallCard({ item, category }) {
         </div>
 
         {/* الحقول الإضافية */}
-        <div className="relative z-20">
+        <div className="relative flex justify-center items-center z-20">
           <AdditionalFields
             item={item}
             category={category}
@@ -82,7 +82,7 @@ const SmallCard = React.memo(function SmallCard({ item, category }) {
           className="flex flex-col justify-between items-center relative z-20 text-nowrap"
           whileHover={{ scale: 1.01 }}
         >
-          <div className="flex items-baseline gap-2">
+          <div className="flex items-baseline gap-2 font-serif">
             <span className="text-2xl font-bold bg-gradient-to-r from-primary to-primary-600 bg-clip-text text-transparent">
               {item.basePrice?.toLocaleString()} $
             </span>
