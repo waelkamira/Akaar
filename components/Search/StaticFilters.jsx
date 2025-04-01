@@ -241,7 +241,7 @@ export default function StaticFilters() {
                 onChange={(e) => handlePriceInputChange('min', e.target.value)}
                 onBlur={handleInputBlur}
                 placeholder="السعر الأدنى"
-                className="w-full rounded-lg border-gray-200 shadow-sm focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all duration-300 py-2 px-3 bg-gray-50 hover:bg-gray-100 text-center"
+                className="w-full rounded-lg border-gray-200 placeholder:text-sm shadow-sm focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all duration-300 py-2 px-3 bg-gray-50 hover:bg-gray-100 text-center"
               />
             </motion.div>
 
@@ -256,7 +256,7 @@ export default function StaticFilters() {
                 onChange={(e) => handlePriceInputChange('max', e.target.value)}
                 onBlur={handleInputBlur}
                 placeholder="السعر الأعلى"
-                className="w-full rounded-lg border-gray-200 shadow-sm focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all duration-300 py-2 px-3 bg-gray-50 hover:bg-gray-100 text-center"
+                className="w-full rounded-lg border-gray-200 placeholder:text-sm shadow-sm focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all duration-300 py-2 px-3 bg-gray-50 hover:bg-gray-100 text-center"
               />
             </motion.div>
           </div>
