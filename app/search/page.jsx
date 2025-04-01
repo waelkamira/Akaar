@@ -64,7 +64,6 @@ function FiltersContent({ setShowFilters }) {
       )}
 
       <motion.div
-        className="p-2"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, delay: 0.4 }}
@@ -97,7 +96,6 @@ function FiltersContent({ setShowFilters }) {
 
 export default function SearchPage({ searchParams }) {
   const [showFilters, setShowFilters] = useState(false);
-  const { performSearch } = useSearch();
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {

@@ -47,37 +47,10 @@ const DetailsSection = ({ item, className }) => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="text-sm text-gray-600 line-clamp-1 leading-relaxed hover:line-clamp-none transition-all duration-300"
+          className="text-sm text-gray-600 line-clamp-1 leading-relaxed hover:line-clamp-5 transition-all duration-300"
         >
           {item.description}
         </motion.p>
-      )}
-
-      {/* معلومات إضافية */}
-      {(item?.area || item?.rooms) && (
-        <motion.div
-          initial={{ opacity: 0, y: 5 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="flex flex-wrap gap-2"
-        >
-          {item?.area && (
-            <span className="text-sm bg-gray-50 text-gray-700 px-3 py-1.5 rounded-lg border border-gray-100 hover:border-primary/20 hover:bg-primary/5 transition-colors duration-200">
-              <span className="font-medium">{item.area}</span> م²
-            </span>
-          )}
-          {item?.rooms && (
-            <span className="text-sm bg-gray-50 text-gray-700 px-3 py-1.5 rounded-lg border border-gray-100 hover:border-primary/20 hover:bg-primary/5 transition-colors duration-200">
-              <span className="font-medium">{item.rooms}</span> غرف
-            </span>
-          )}
-          {item?.rating && (
-            <div className="flex items-center gap-1 text-sm bg-yellow-50 text-yellow-700 px-3 py-1.5 rounded-lg border border-yellow-100">
-              <Star className="w-4 h-4 fill-yellow-400 stroke-yellow-400" />
-              <span className="font-medium">{item.rating}</span>
-            </div>
-          )}
-        </motion.div>
       )}
     </motion.div>
   );
