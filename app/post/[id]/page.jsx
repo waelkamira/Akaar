@@ -13,7 +13,7 @@ import {
 } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import LoginButton from '../../../components/Buttons/LoginButton';
-
+import categories from '../../../components/Categories/categories';
 // تحميل المكونات بشكل ديناميكي
 const ImageSlider = dynamic(
   () => import('../../../components/photos/imageSlider'),
@@ -50,6 +50,10 @@ export default function Page() {
 
   useEffect(() => {
     if (post?.categoryName) {
+      console.log('categories[post?.categoryId]', categories[post?.categoryId]);
+      console.log('post?.categoryId', post?.categoryId);
+      console.log('categories', categories);
+      console.log('post', post);
       import(`../../../components/categoryFields/${post?.categoryName}.jsx`)
         .then((module) => {
           setCategoryFields(module.default);

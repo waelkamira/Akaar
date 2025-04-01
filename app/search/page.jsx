@@ -146,7 +146,7 @@ export default function SearchPage({ searchParams }) {
         <main className="container mx-auto px-4 py-8 w-full">
           <div className="flex flex-col lg:flex-row gap-6 w-full">
             {/* Filters Sidebar */}
-            <div className="lg:sticky lg:top-4 lg:self-start lg:h-[calc(100vh-2rem)] lg:overflow-y-auto lg:z-0 pb-16">
+            <div className="lg:sticky lg:top-4 lg:self-start lg:h-[calc(100vh-2rem)] lg:overflow-y-auto lg:z-0 pb-16 p-2">
               <AnimatePresence>
                 {(showFilters || !isMobile) && (
                   <>

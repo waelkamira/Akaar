@@ -50,21 +50,21 @@ export function SearchProvider({ children }) {
 
   // Load dynamic filters when category changes
   const loadDynamicFilters = useCallback(async (categoryObj) => {
-    if (!categoryObj?.enName) {
-      console.log('No category or enName provided');
+    if (!categoryObj?.name) {
+      console.log('No category or name provided');
       return [];
     }
 
     try {
-      console.log(`Loading filters for category: ${categoryObj.enName}`);
+      console.log(`Loading filters for category: ${categoryObj.name}`);
       const module = await import(
-        `../components/categoryFields/${categoryObj.enName}.jsx`
+        `../components/categoryFields/${categoryObj.name}.jsx`
       );
       const filters = Array.isArray(module.default) ? module.default : [];
       console.log('Loaded filters:', filters);
       return filters;
     } catch (err) {
-      console.error(`Failed to load filters for ${categoryObj.enName}:`, err);
+      console.error(`Failed to load filters for ${categoryObj.name}:`, err);
       return [];
     }
   }, []);

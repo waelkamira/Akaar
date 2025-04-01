@@ -82,7 +82,7 @@ const CategoriesNavBar = () => {
       const categoryId = categories.find((c) => c.id === category?.id)?.id;
 
       if (categoryId) {
-        import(`../categoryFields/${category?.enName}.jsx`)
+        import(`../categoryFields/${category?.name}.jsx`)
           .then((module) => {
             const dynamicFilters = module?.default;
 

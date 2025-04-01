@@ -27,7 +27,7 @@ const categories = [
   // Real Estate and Cars - Main Categories
   {
     id: 1,
-    name: 'العقارات',
+    name: 'عقارات',
     enName: 'realEstate',
     path: '/categories/1?category=realEstate',
     icon: <BsFillHouseFill />,
@@ -35,7 +35,7 @@ const categories = [
   },
   {
     id: 2,
-    name: 'السيارات',
+    name: 'سيارات',
     enName: 'cars',
     path: '/categories/2?category=cars',
     icon: <FaCar />,
@@ -53,7 +53,7 @@ const categories = [
   },
   {
     id: 4,
-    name: 'أجهزة الكمبيوتر',
+    name: 'كمبيوتر',
     enName: 'computers',
     path: '/categories/4?category=computers',
     icon: <FaLaptop />,
@@ -89,7 +89,7 @@ const categories = [
   // Fashion and Beauty
   {
     id: 8,
-    name: 'الموضة',
+    name: 'موضة',
     enName: 'fashion',
     path: '/categories/8?category=fashion',
     icon: <FaTshirt />,
@@ -97,7 +97,7 @@ const categories = [
   },
   {
     id: 9,
-    name: 'الجمال',
+    name: 'جمال',
     enName: 'beauty',
     path: '/categories/12?category=beauty',
     icon: <FaSmile />,
@@ -195,7 +195,7 @@ const categories = [
   },
   {
     id: 21,
-    name: 'مستلزمات الأطفال',
+    name: 'طفلك',
     enName: 'babySupplies',
     path: '/categories/21?category=babySupplies',
     icon: <PiBabyDuotone />,
