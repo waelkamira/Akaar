@@ -11,7 +11,7 @@ export default function CategoryFilter() {
   // Handle category selection
   const handleCategoryChange = (selectedCategory) => {
     // If clicking the already selected category, deselect it
-    if (category && selectedCategory && category.id === selectedCategory.id) {
+    if (category && selectedCategory && category.id === selectedCategory?.id) {
       setCategory(null);
       localStorage.removeItem('category');
     } else {
@@ -69,37 +69,37 @@ export default function CategoryFilter() {
         {selectedCategory ? (
           <div className="flex items-center">
             <input
-              id={`category-${selectedCategory.id}`}
+              id={`category-${selectedCategory?.id}`}
               type="radio"
               checked={true}
               onChange={() => {}} // No need to handle change here
               className="h-4 w-4 text-primary-500 focus:ring-primary-500 border-gray-300"
             />
             <label
-              htmlFor={`category-${selectedCategory.id}`}
+              htmlFor={`category-${selectedCategory?.id}`}
               className="mr-2 text-sm flex items-center"
             >
-              <span className="mr-1">{selectedCategory.icon}</span>
-              {selectedCategory.name}
+              <span className="mr-1">{selectedCategory?.icon}</span>
+              {selectedCategory?.name}
             </label>
           </div>
         ) : (
           // If no category is selected, show all categories
-          categories.map((cat) => (
-            <div key={cat.id} className="flex items-center">
+          categories?.map((cat) => (
+            <div key={cat?.id} className="flex items-center text-2xl">
               <input
-                id={`category-${cat.id}`}
+                id={`category-${cat?.id}`}
                 type="radio"
-                checked={category && category.id === cat.id}
+                checked={category && category.id === cat?.id}
                 onChange={() => handleCategoryChange(cat)}
                 className="h-4 w-4 text-primary-500 focus:ring-primary-500 border-gray-300"
               />
               <label
-                htmlFor={`category-${cat.id}`}
-                className="mr-2 text-sm flex items-center"
+                htmlFor={`category-${cat?.id}`}
+                className="mr-2 text-xl flex items-center"
               >
-                <span className="mr-1">{cat.icon}</span>
-                {cat.name}
+                <span className="mx-1 text-primary-400">{cat?.icon}</span>
+                {cat?.name}
               </label>
             </div>
           ))
