@@ -44,12 +44,18 @@ export default function SelectedFilters() {
 
     // Add price range if selected
     if (filters.priceMin !== undefined || filters.priceMax !== undefined) {
-      selected.push({
-        key: 'price',
-        label: `السعر: ${filters.priceMin || 0} - ${
-          filters.priceMax || 'الأعلى'
-        }`,
-      });
+      if (filters.priceMin !== undefined) {
+        selected.push({
+          key: 'priceMin',
+          label: `السعر الأدنى: ${filters.priceMin}`,
+        });
+      }
+      if (filters.priceMax !== undefined) {
+        selected.push({
+          key: 'priceMax',
+          label: `السعر الأقصى: ${filters.priceMax}`,
+        });
+      }
     }
 
     // Add ad type if selected

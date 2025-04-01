@@ -256,28 +256,39 @@ export function SearchProvider({ children }) {
     setPage(1);
   }, []);
 
-  const removeFilter = useCallback((key) => {
-    setFilters((prev) => {
-      const newFilters = { ...prev };
+  const removeFilter = useCallback(
+    (key) => {
+      setFilters((prev) => {
+        const newFilters = { ...prev };
 
-      if (key.startsWith('details.')) {
-        const fieldName = key.split('.')[1];
-        const { [fieldName]: removed, ...rest } = newFilters.details || {};
-        newFilters.details = rest;
-      } else if (key === 'city') {
-        // Remove both city and town
-        delete newFilters.city;
-        delete newFilters.town;
-      } else {
-        delete newFilters[key];
-      }
+        if (key.startsWith('details.')) {
+          const fieldName = key.split('.')[1];
+          if (newFilters.details) {
+            const { [fieldName]: removed, ...rest } = newFilters.details;
+            newFilters.details =
+              Object.keys(rest).length > 0 ? rest : undefined;
+          }
+        } else if (key === 'city') {
+          // Remove both city and town
+          delete newFilters.city;
+          delete newFilters.town;
+        } else if (key === 'category') {
+          setCategory(null);
+        } else if (key === 'priceMin' || key === 'priceMax') {
+          // Handle price filters separately
+          delete newFilters[key];
+        } else {
+          delete newFilters[key];
+        }
 
-      return newFilters;
-    });
-    setPage(1);
-    // Trigger search after removing filter
-    setShouldSearchOnLoad(true);
-  }, []);
+        return newFilters;
+      });
+      setPage(1);
+      // Trigger search after removing filter
+      setShouldSearchOnLoad(true);
+    },
+    [setCategory]
+  );
 
   const clearFilters = useCallback(() => {
     // Keep the category but clear all other filters

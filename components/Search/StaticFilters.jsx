@@ -269,23 +269,26 @@ export default function StaticFilters() {
               step={100}
               onValueChange={handlePriceRangeChange}
               onValueCommit={handlePriceInputBlur}
-              className="[&>.range]:bg-gradient-to-r [&>.range]:from-primary/30 [&>.range]:to-primary [&>.thumb]:bg-white [&>.thumb]:border-2 [&>.thumb]:border-primary [&>.thumb]:w-5 [&>.thumb]:h-5"
+              className="relative flex items-center h-8 w-full"
+              thumbClassName="
+    absolute w-6 h-6
+    bg-white border-3 border-primary-500
+    rounded-full shadow-lg
+    focus:outline-none focus:ring-2 focus:ring-primary-300
+    hover:scale-110 transition-transform duration-150
+    cursor-pointer
+    z-10
+  "
+              trackClassName="
+    absolute h-2.5 w-full
+    bg-gray-200 rounded-full
+    overflow-hidden
+  "
+              rangeClassName="
+    absolute h-full
+    
+  "
             />
-          </div>
-
-          <div className="flex justify-between text-sm text-gray-500 mt-2">
-            <motion.span
-              whileHover={{ scale: 1.05 }}
-              className="bg-gray-100 px-2 py-1 rounded"
-            >
-              {priceRange[0].toLocaleString()} $
-            </motion.span>
-            <motion.span
-              whileHover={{ scale: 1.05 }}
-              className="bg-gray-100 px-2 py-1 rounded"
-            >
-              {priceRange[1].toLocaleString()} $
-            </motion.span>
           </div>
         </motion.div>
       </div>
