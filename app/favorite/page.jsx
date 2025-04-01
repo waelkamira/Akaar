@@ -118,7 +118,7 @@ export default function Favorites() {
             {hasMore && (
               <div className="mt-12 mb-8 flex justify-center">
                 <button
-                  className="group flex items-center gap-3 bg-three hover:bg-two px-8 py-3 rounded-lg text-white font-medium transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+                  className="group flex items-center gap-3 bg-three hover:bg-two px-8 py-3 rounded-full text-white font-medium transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
                   onClick={handleNextPage}
                   disabled={loading}
                 >

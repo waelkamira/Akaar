@@ -12,7 +12,9 @@ export default function Search() {
 
   const handleSearch = () => {
     if (inputValue.trim()) {
-      router.push(`/post?keyword=${encodeURIComponent(inputValue.trim())}`);
+      router.push(
+        `/keyword-search?keyword=${encodeURIComponent(inputValue.trim())}`
+      );
     }
   };
 

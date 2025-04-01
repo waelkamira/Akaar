@@ -127,7 +127,7 @@ export default function KeywordSearchResults({ keyword }) {
           نتائج البحث عن "{keyword}"
         </h2>
         <p className="text-gray-600">
-          تم العثور على {totalCount} منتج{totalCount !== 1 ? 'ات' : ''}
+          تم العثور على {totalCount} نتائج{totalCount !== 1 ? 'ات' : ''}
         </p>
       </div>
 
@@ -135,7 +135,7 @@ export default function KeywordSearchResults({ keyword }) {
       {results.products.length > 0 ? (
         <div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {results.products.map((product) => (
+            {results?.products?.map((product) => (
               <SmallCard key={product.id} item={product} />
             ))}
           </div>
@@ -146,7 +146,7 @@ export default function KeywordSearchResults({ keyword }) {
               <button
                 onClick={handleLoadMore}
                 disabled={loadingMore}
-                className="bg-primary-500 text-white px-8 py-3 rounded-lg hover:bg-primary-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center mx-auto"
+                className="bg-primary-500 text-white px-8 py-3 rounded-full hover:bg-primary-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center mx-auto"
               >
                 {loadingMore ? (
                   <>

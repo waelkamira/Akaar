@@ -90,7 +90,7 @@ const CategoryPage = () => {
         {hasMore && (
           <div className="mt-12 mb-8">
             <button
-              className="group flex items-center gap-3 bg-three hover:bg-two px-8 py-3 rounded-lg text-two font-medium transition-all duration-300 shadow-lg hover:shadow-xl"
+              className="group flex items-center gap-3 bg-three hover:bg-two px-8 py-3 rounded-full text-two font-medium transition-all duration-300 shadow-lg hover:shadow-xl"
               onClick={handleNextPage}
               disabled={loading}
             >

@@ -32,11 +32,6 @@ export function SearchProvider({ children }) {
   // Static filters state
   const [staticFilters] = useState({
     cities: cities,
-    adTypes: [
-      { id: 1, name: 'للبيع' },
-      { id: 2, name: 'للإيجار' },
-      { id: 3, name: 'مطلوب' },
-    ],
   });
 
   // Results state
