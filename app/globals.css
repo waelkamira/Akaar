@@ -22,13 +22,13 @@ html {
 
 /* ✅ تغيير لون المسار (الخلفية) */
 ::-webkit-scrollbar-track {
-  background-color: #949494; /* لون خلفية شريط التمرير */
+  background-color: #d8d8d8; /* لون خلفية شريط التمرير */
   border-radius: 20px; /* زوايا دائرية */
 }
 
 /* ✅ تغيير لون شريط التمرير */
 ::-webkit-scrollbar-thumb {
-  background: #b8b8b8; /* لون شريط التمرير */
+  background: #afafaf; /* لون شريط التمرير */
   border-radius: 20px; /* زوايا دائرية */
 }
 
@@ -497,26 +497,6 @@ html {
 
 .rubik {
   font-family: var(--font-rubik);
-}
-
-/* Scrollbar styling */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background-color: var(--color-neutral-200);
-  border-radius: var(--border-radius-full);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--color-neutral-400);
-  border-radius: var(--border-radius-full);
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--color-neutral-500);
 }
 
 /* Button styling */

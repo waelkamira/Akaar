@@ -19,15 +19,6 @@ export async function POST(request) {
     // Build the where clause for Prisma
     const where = {};
 
-    // Filter by search query (title or description)
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase();
-      where.OR = [
-        { title: { contains: query, mode: 'insensitive' } },
-        { description: { contains: query, mode: 'insensitive' } },
-      ];
-    }
-
     // Filter by category
     if (categoryId) {
       where.categoryId = Number(categoryId);
@@ -101,7 +92,7 @@ export async function POST(request) {
         .map(([key, value]) => ({
           details: {
             path: [key],
-            equals: value,
+            equals: String(value), // تحويل القيم إلى نصوص
           },
         }));
     }
