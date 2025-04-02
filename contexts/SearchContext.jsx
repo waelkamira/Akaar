@@ -153,6 +153,11 @@ export function SearchProvider({ children }) {
           limit: 8,
         };
 
+        // Remove query from filters if it exists to avoid duplication
+        if (searchBody.filters.query) {
+          delete searchBody.filters.query;
+        }
+
         console.log('Search request:', searchBody);
 
         const response = await fetch('/api/search', {
@@ -167,29 +172,6 @@ export function SearchProvider({ children }) {
 
         const data = await response.json();
         console.log('Search response:', data);
-
-        // Handle automatic category and filters loading from first result
-        if (!isLoadMore && data.products.length > 0 && !category) {
-          const firstResult = data.products[0];
-          const categoryName = firstResult.categoryName;
-
-          if (categoryName) {
-            const categoryObj = filterOptions.categories.find(
-              (cat) => cat.name === categoryName
-            );
-
-            if (categoryObj) {
-              // Load dynamic filters for the category
-              const filters = await loadDynamicFilters(categoryObj);
-              setCategory(categoryObj);
-              setDynamicFilters(filters);
-              setFilters((prev) => {
-                const { details, ...rest } = prev;
-                return rest;
-              });
-            }
-          }
-        }
 
         // Only update results based on whether it's a new search or load more
         if (!isLoadMore) {
@@ -212,7 +194,7 @@ export function SearchProvider({ children }) {
         setLoading(false);
       }
     },
-    [searchQuery, category, filters, isSearchPage, loadDynamicFilters]
+    [searchQuery, category, filters, isSearchPage]
   );
 
   // Handle scrolling separately
@@ -265,25 +247,33 @@ export function SearchProvider({ children }) {
   }, [category, router, searchParams, isSearchPage, page]);
 
   // Filter management functions
-  const setFilter = useCallback((key, value) => {
-    setFilters((prev) => {
-      const newFilters = { ...prev };
+  const setFilter = useCallback(
+    (key, value) => {
+      setFilters((prev) => {
+        const newFilters = { ...prev };
 
-      if (key.startsWith('details.')) {
-        const fieldName = key.split('.')[1];
-        newFilters.details = { ...prev.details, [fieldName]: value };
-      } else {
-        // Clear town when city changes
-        if (key === 'city' && prev.town) {
-          delete newFilters.town;
+        if (key.startsWith('details.')) {
+          const fieldName = key.split('.')[1];
+          newFilters.details = { ...prev.details, [fieldName]: value };
+        } else {
+          // Clear town when city changes
+          if (key === 'city' && prev.town) {
+            delete newFilters.town;
+          }
+          newFilters[key] = value;
         }
-        newFilters[key] = value;
-      }
 
-      return newFilters;
-    });
-    setPage(1);
-  }, []);
+        // Add search query to filters if it exists
+        if (searchQuery) {
+          newFilters.query = searchQuery;
+        }
+
+        return newFilters;
+      });
+      setPage(1);
+    },
+    [searchQuery]
+  );
 
   const removeFilter = useCallback(
     (key) => {
@@ -320,17 +310,19 @@ export function SearchProvider({ children }) {
   );
 
   const clearFilters = useCallback(() => {
-    // Keep the category but clear all other filters
+    // Keep the category but clear all other filters and search query
     setFilters({});
+    setSearchQuery('');
     setPage(1);
     // Trigger search after clearing filters
     setShouldSearchOnLoad(true);
   }, []);
 
   const clearAll = useCallback(() => {
-    // Clear everything including category
+    // Clear everything including category and search query
     setFilters({});
     setCategory(null);
+    setSearchQuery('');
     setPage(1);
     // Trigger search after clearing everything
     setShouldSearchOnLoad(true);
