@@ -16,6 +16,7 @@ import {
   GiRaceCar,
   GiRollingSuitcase,
 } from 'react-icons/gi';
+import { FaBatteryThreeQuarters } from 'react-icons/fa6';
 
 const bikes = [
   {
@@ -80,7 +81,9 @@ const bikes = [
   {
     name: 'batteryRange',
     label: 'مدى البطارية (للدراجات الكهربائية)',
-    icon: <FaBattery className="text-primary-500 text-lg sm:text-xl" />,
+    icon: (
+      <FaBatteryThreeQuarters className="text-primary-500 text-lg sm:text-xl" />
+    ),
     placeholder: '-اختر-',
     options: {
       1: 'أقل من 50 كم',
