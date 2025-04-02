@@ -43,6 +43,17 @@ export function SearchProvider({ children }) {
   const [hasMore, setHasMore] = useState(false);
   const [shouldScrollTop, setShouldScrollTop] = useState(false);
 
+  // Handle URL query changes
+  useEffect(() => {
+    if (!isSearchPage) return;
+
+    const query = searchParams.get('query');
+    if (query !== null) {
+      setSearchQuery(query);
+      setShouldSearchOnLoad(true);
+    }
+  }, [searchParams, isSearchPage]);
+
   // Load dynamic filters when category changes
   const loadDynamicFilters = useCallback(async (categoryObj) => {
     if (!categoryObj?.name) {
@@ -66,7 +77,7 @@ export function SearchProvider({ children }) {
 
   // Handle category changes from URL (only on search page)
   useEffect(() => {
-    if (!isSearchPage) return;
+    // if (!isSearchPage) return;
 
     const handleUrlCategory = async () => {
       const categoryId = searchParams.get('categoryId');
