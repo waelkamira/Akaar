@@ -168,6 +168,29 @@ export function SearchProvider({ children }) {
         const data = await response.json();
         console.log('Search response:', data);
 
+        // Handle automatic category and filters loading from first result
+        if (!isLoadMore && data.products.length > 0 && !category) {
+          const firstResult = data.products[0];
+          const categoryName = firstResult.categoryName;
+
+          if (categoryName) {
+            const categoryObj = filterOptions.categories.find(
+              (cat) => cat.name === categoryName
+            );
+
+            if (categoryObj) {
+              // Load dynamic filters for the category
+              const filters = await loadDynamicFilters(categoryObj);
+              setCategory(categoryObj);
+              setDynamicFilters(filters);
+              setFilters((prev) => {
+                const { details, ...rest } = prev;
+                return rest;
+              });
+            }
+          }
+        }
+
         // Only update results based on whether it's a new search or load more
         if (!isLoadMore) {
           setResults(data.products);
@@ -189,7 +212,7 @@ export function SearchProvider({ children }) {
         setLoading(false);
       }
     },
-    [searchQuery, category, filters, isSearchPage]
+    [searchQuery, category, filters, isSearchPage, loadDynamicFilters]
   );
 
   // Handle scrolling separately
