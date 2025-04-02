@@ -13,13 +13,15 @@ import { cities } from '../components/lists/Cities';
 
 const SearchContext = createContext(undefined);
 
-export function SearchProvider({ children }) {
+export function SearchProvider({ children, initialCategory }) {
   // Core state
   const [searchQuery, setSearchQuery] = useState('');
-  const [category, setCategory] = useState(null);
+  const [category, setCategory] = useState(initialCategory || null);
   const [filters, setFilters] = useState({});
   const [dynamicFilters, setDynamicFilters] = useState([]);
-  const [shouldSearchOnLoad, setShouldSearchOnLoad] = useState(false);
+  const [shouldSearchOnLoad, setShouldSearchOnLoad] = useState(
+    !!initialCategory
+  );
 
   // Navigation
   const router = useRouter();
@@ -27,7 +29,7 @@ export function SearchProvider({ children }) {
   const pathname = usePathname();
 
   // Check if we're on the search page
-  const isSearchPage = pathname === '/search';
+  const isSearchPage = pathname.startsWith('/search');
 
   // Static filters state
   const [staticFilters] = useState({
@@ -75,12 +77,27 @@ export function SearchProvider({ children }) {
     }
   }, []);
 
+  // Handle initial category
+  useEffect(() => {
+    if (initialCategory) {
+      const categoryObj = filterOptions.categories.find(
+        (cat) => cat.id === initialCategory.id
+      );
+      if (categoryObj) {
+        setCategory(categoryObj);
+        loadDynamicFilters(categoryObj).then((filters) => {
+          setDynamicFilters(filters);
+        });
+      }
+    }
+  }, [initialCategory, loadDynamicFilters]);
+
   // Handle category changes from URL (only on search page)
   useEffect(() => {
-    // if (!isSearchPage) return;
-
     const handleUrlCategory = async () => {
-      const categoryId = searchParams.get('categoryId');
+      // Extract categoryId from pathname
+      const categoryIdMatch = pathname.match(/\/search\/categoryId=(\d+)/);
+      const categoryId = categoryIdMatch ? categoryIdMatch[1] : null;
       console.log('URL Category ID:', categoryId);
 
       setLoading(true);
@@ -131,7 +148,7 @@ export function SearchProvider({ children }) {
     };
 
     handleUrlCategory();
-  }, [searchParams, loadDynamicFilters, isSearchPage]);
+  }, [pathname, loadDynamicFilters]);
 
   // Perform search
   const performSearch = useCallback(
@@ -232,19 +249,15 @@ export function SearchProvider({ children }) {
   useEffect(() => {
     if (!isSearchPage) return;
 
-    const params = new URLSearchParams(searchParams.toString());
-
-    if (category) {
-      params.set('categoryId', category.id.toString());
-    } else {
-      params.delete('categoryId');
-    }
-
     // Only update URL for category changes, not for pagination
     if (page === 1) {
-      router.replace(`/search?${params.toString()}`, { scroll: false }); // Changed push to replace
+      if (category) {
+        router.replace(`/search/categoryId=${category.id}`, { scroll: false });
+      } else {
+        router.replace('/search', { scroll: false });
+      }
     }
-  }, [category, router, searchParams, isSearchPage, page]);
+  }, [category, router, isSearchPage, page]);
 
   // Filter management functions
   const setFilter = useCallback(

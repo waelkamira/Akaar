@@ -6,14 +6,12 @@ import { SearchProvider } from '../../contexts/SearchContext';
 
 export default function MainNavbar() {
   return (
-    <div className="relative flex flex-col justify-center items-center w-full inset-0 mb-20 z-50">
+    <div className="relative flex flex-col justify-center items-center w-full inset-0 mb-20">
       <FirstNavBar />
       <div className="w-full sm:h-96">
         <Hero />
       </div>
-      <SearchProvider>
-        <Search />
-      </SearchProvider>
+      <Search />
     </div>
   );
 }

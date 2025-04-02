@@ -3,7 +3,6 @@ import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import SideBarMenu from '../navbars/SideBarMenu';
-import SearchInput from '../Search/SearchInput';
 
 export default function Hero({
   images = [
@@ -39,41 +38,38 @@ export default function Hero({
   }, [images]);
 
   return (
-
-     
-      <div
-        ref={sliderRef}
-        className="hidden sm:block w-full h-full overflow-hidden sm:h-96 z-50"
+    <div
+      ref={sliderRef}
+      className="hidden sm:block w-full h-full overflow-hidden sm:h-96 z-50"
+    >
+      <SideBarMenu />{' '}
+      {images.map((image, index) => (
+        <div
+          key={index}
+          className={`sm:h-96 w-full transition-opacity duration-500 ${
+            index === currentImageIndex ? 'opacity-100 z-10' : 'opacity-0 z-0'
+          }`}
+        >
+          <Image
+            src={image}
+            fill
+            alt={`Slide ${index + 1}`}
+            className="object-cover w-full s"
+          />
+        </div>
+      ))}
+      <button
+        onClick={goToPreviousSlide}
+        className="absolute top-1/2 transform -translate-y-1/2 left-4 bg-black bg-opacity-50 text-white rounded-full p-2 z-20"
       >
-        <SideBarMenu />{' '}
-        {images.map((image, index) => (
-          <div
-            key={index}
-            className={`sm:h-96 w-full transition-opacity duration-500 ${
-              index === currentImageIndex ? 'opacity-100 z-10' : 'opacity-0 z-0'
-            }`}
-          >
-            <Image
-              src={image}
-              fill
-              alt={`Slide ${index + 1}`}
-              className="object-cover w-full s"
-            />
-          </div>
-        ))}
-        <button
-          onClick={goToPreviousSlide}
-          className="absolute top-1/2 transform -translate-y-1/2 left-4 bg-black bg-opacity-50 text-white rounded-full p-2 z-20"
-        >
-          <FaChevronLeft />
-        </button>
-        <button
-          onClick={goToNextSlide}
-          className="absolute top-1/2 transform -translate-y-1/2 right-4 bg-black bg-opacity-50 text-white rounded-full p-2 z-20"
-        >
-          <FaChevronRight />
-        </button>
-      </div>
-   
+        <FaChevronLeft />
+      </button>
+      <button
+        onClick={goToNextSlide}
+        className="absolute top-1/2 transform -translate-y-1/2 right-4 bg-black bg-opacity-50 text-white rounded-full p-2 z-20"
+      >
+        <FaChevronRight />
+      </button>
+    </div>
   );
 }
