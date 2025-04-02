@@ -21,18 +21,15 @@ export async function POST(request) {
       AND: [],
     };
 
-    // Filter by category
-    if (categoryId) {
+    // Filter by category only if there's no search query
+    if (categoryId && !query) {
       where.AND.push({ categoryId: Number(categoryId) });
     }
 
     // Apply keyword search
     if (query) {
       where.AND.push({
-        OR: [
-          { title: { contains: query, mode: 'insensitive' } },
-          { description: { contains: query, mode: 'insensitive' } },
-        ],
+        OR: [{ title: { contains: query, mode: 'insensitive' } }],
       });
     }
 

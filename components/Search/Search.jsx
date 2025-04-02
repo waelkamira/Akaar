@@ -58,7 +58,7 @@ export default function Search() {
   };
 
   return (
-    <div className="w-full z-50">
+    <div className="w-full sm:pb-32 z-50">
       <div className="flex flex-col items-center justify-center w-full pb-8">
         <div className="w-full sm:w-2/3 p-2 sm:p-4 bg-white sm:bg-white/90 backdrop-blur-sm rounded-lg shadow-lg flex justify-center items-center gap-2 relative">
           <button
@@ -78,7 +78,7 @@ export default function Search() {
               className="flex-grow text-gray-800 w-full rounded-md h-10 p-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-500"
             />
             {showSuggestions && suggestions.length > 0 && (
-              <div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto">
+              <div className="absolute z-[60] w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto">
                 {suggestions.map((suggestion, index) => (
                   <div
                     key={index}
