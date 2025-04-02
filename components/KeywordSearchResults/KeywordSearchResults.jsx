@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import SmallCard from '../ReusableComponents/SmallCard/SmallCard';
+import { useSearch } from '../../contexts/SearchContext';
+import categories from '../Categories/categories';
 
 export default function KeywordSearchResults({ keyword }) {
   const [results, setResults] = useState({ products: [] });
@@ -13,6 +15,8 @@ export default function KeywordSearchResults({ keyword }) {
   const [hasMore, setHasMore] = useState(false);
   const [totalCount, setTotalCount] = useState(0);
   const [loadingMore, setLoadingMore] = useState(false);
+  const { category, filters, setCategory } = useSearch();
+  const [categoryId, setCategoryId] = useState(null);
 
   const fetchResults = async (currentPage = 1) => {
     if (!keyword) {
@@ -27,7 +31,9 @@ export default function KeywordSearchResults({ keyword }) {
         'Fetching results for keyword:',
         keyword,
         'page:',
-        currentPage
+        currentPage,
+        'filters:',
+        filters
       );
 
       const response = await fetch('/api/keyword-search', {
@@ -39,6 +45,11 @@ export default function KeywordSearchResults({ keyword }) {
           keyword,
           page: currentPage,
           limit: 8,
+          categoryId: category?.id,
+          filters: {
+            ...filters,
+            details: filters.details || {},
+          },
         }),
       });
 
@@ -48,7 +59,7 @@ export default function KeywordSearchResults({ keyword }) {
       }
 
       const data = await response.json();
-      console.log('Search results:', data);
+      // console.log('Search results:', data);
 
       if (!data || typeof data !== 'object') {
         throw new Error('Invalid response format');
@@ -61,7 +72,13 @@ export default function KeywordSearchResults({ keyword }) {
           products: [...prev.products, ...data.products],
         }));
       }
+      setCategoryId(data?.products[0]?.categoryId);
+      console.log('data.products', data.products);
+      console.log('categoryId', data?.products[0]?.categoryId);
 
+      setCategory(
+        categories.find((c) => c.id === data?.products[0]?.categoryId)
+      );
       setHasMore(data.hasMore);
       setTotalCount(data.totalCount);
       setPage(data.currentPage);
@@ -77,7 +94,7 @@ export default function KeywordSearchResults({ keyword }) {
   useEffect(() => {
     setPage(1);
     fetchResults(1);
-  }, [keyword]);
+  }, [keyword, filters]);
 
   const handleLoadMore = () => {
     setLoadingMore(true);
@@ -132,11 +149,11 @@ export default function KeywordSearchResults({ keyword }) {
       </div>
 
       {/* Products Grid */}
-      {results.products.length > 0 ? (
+      {results?.products.length > 0 ? (
         <div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {results?.products?.map((product) => (
-              <SmallCard key={product.id} item={product} />
+              <SmallCard key={product?.id} item={product} />
             ))}
           </div>
 

@@ -14,7 +14,7 @@ export default function DynamicFilters() {
     loading,
     performSearch,
   } = useSearch();
-
+  console.log('category from dynamic filters', category);
   const [localValues, setLocalValues] = useState({});
   const [isSearching, setIsSearching] = useState(false);
 

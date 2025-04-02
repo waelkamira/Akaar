@@ -29,7 +29,7 @@ function FavoriteButton({ item }) {
 
   const fetchAndStoreUserFavoriteIds = useCallback(
     async (userId) => {
-      console.log('fetchAndStoreUserFavoriteIds من داخل ');
+      // console.log('fetchAndStoreUserFavoriteIds من داخل ');
 
       if (!userId) return;
 
@@ -53,14 +53,14 @@ function FavoriteButton({ item }) {
   );
 
   const checkFavoriteStatus = useCallback(() => {
-    console.log('checkFavoriteStatus تم الاستدعاء ');
+    // console.log('checkFavoriteStatus تم الاستدعاء ');
 
     if (item?.id) {
       const favorited = favoriteIds.includes(item?.id);
-      console.log('favoriteIds', favoriteIds);
+      // console.log('favoriteIds', favoriteIds);
       if (favorited) {
-        console.log('favorited', favorited);
-        console.log('item?.id', item?.id);
+        // console.log('favorited', favorited);
+        // console.log('item?.id', item?.id);
         setIsFavorited(true);
       } else {
         setIsFavorited(false);

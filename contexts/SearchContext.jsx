@@ -120,7 +120,7 @@ export function SearchProvider({ children }) {
     };
 
     handleUrlCategory();
-  }, [searchParams, loadDynamicFilters, isSearchPage]); // Removed category from dependencies
+  }, [searchParams, loadDynamicFilters, isSearchPage]);
 
   // Perform search
   const performSearch = useCallback(
