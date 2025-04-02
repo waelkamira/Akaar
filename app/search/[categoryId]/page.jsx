@@ -27,14 +27,14 @@ function SearchCategoryContent({ params }) {
     >
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Filters Sidebar */}
-        <div className="lg:col-span-1">
+        <div className="flex flex-col gap-4 lg:col-span-1">
+          <SelectedFilters />
           <StaticFilters />
           <DynamicFilters />
         </div>
 
         {/* Search Results */}
         <div className="lg:col-span-3">
-          <SelectedFilters />
           <SearchResults />
         </div>
       </div>
