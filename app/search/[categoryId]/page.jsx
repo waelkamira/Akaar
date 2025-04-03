@@ -27,7 +27,7 @@ function SearchCategoryContent({ params }) {
     >
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 min-h-screen">
         {/* Filters Sidebar */}
-        <div className="lg:sticky lg:top-8 lg:self-start lg:h-[calc(100vh-4rem)] lg:overflow-y-auto flex flex-col gap-4 lg:col-span-1">
+        <div className="lg:sticky lg:top-8 lg:self-start lg:h-[calc(100vh-4rem)] lg:overflow-y-auto flex flex-col gap-4 lg:col-span-1 px-2">
           <SelectedFilters />
           <StaticFilters />
           <DynamicFilters />

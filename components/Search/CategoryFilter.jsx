@@ -47,8 +47,8 @@ export default function CategoryFilter() {
   const selectedCategory = category;
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow-sm mb-4">
-      <h2 className="font-medium text-lg mb-3">الفئات</h2>
+    <div className="bg-white p-2 rounded-lg shadow-sm mb-4 text-lg">
+      <h2 className="font-medium mb-3">الفئات</h2>
 
       <div className="space-y-2">
         {/* Always show the "All Categories" option */}
@@ -60,7 +60,7 @@ export default function CategoryFilter() {
             onChange={() => handleCategoryChange(null)}
             className="h-4 w-4 text-primary-500 focus:ring-primary-500 border-gray-300"
           />
-          <label htmlFor="category-all" className="mr-2 text-sm">
+          <label htmlFor="category-all" className="mr-2">
             كل الفئات
           </label>
         </div>
@@ -77,7 +77,7 @@ export default function CategoryFilter() {
             />
             <label
               htmlFor={`category-${selectedCategory?.id}`}
-              className="mr-2 text-sm flex items-center"
+              className="mr-2 flex items-center"
             >
               <span className="mr-1">{selectedCategory?.icon}</span>
               {selectedCategory?.name}
@@ -86,7 +86,7 @@ export default function CategoryFilter() {
         ) : (
           // If no category is selected, show all categories
           categories?.map((cat) => (
-            <div key={cat?.id} className="flex items-center text-2xl">
+            <div key={cat?.id} className="flex items-center">
               <input
                 id={`category-${cat?.id}`}
                 type="radio"
@@ -96,7 +96,7 @@ export default function CategoryFilter() {
               />
               <label
                 htmlFor={`category-${cat?.id}`}
-                className="mr-2 text-xl flex items-center"
+                className="mr-2 flex items-center text-sm"
               >
                 <span className="mx-1 text-primary-400">{cat?.icon}</span>
                 {cat?.name}
@@ -109,7 +109,7 @@ export default function CategoryFilter() {
         {selectedCategory && (
           <button
             onClick={() => handleCategoryChange(null)}
-            className="text-sm text-primary-500 hover:text-blue-800 flex items-center mt-2"
+            className="text-primary-500 hover:text-blue-800 flex items-center mt-2"
           >
             <ChevronLeft size={16} className="mr-1" />
             عرض جميع الفئات

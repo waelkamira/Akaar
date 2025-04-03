@@ -38,7 +38,7 @@ function FiltersContent({ setShowFilters }) {
   }, [performSearch, setShowFilters]);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 px-2">
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -52,7 +52,7 @@ function FiltersContent({ setShowFilters }) {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.1 }}
-          className=" rounded-xl p-4 border border-gray-100"
+          className=" rounded-xl border border-gray-100"
         >
           <button
             onClick={() => toggleSection('category')}
@@ -248,7 +248,7 @@ export default function SearchPage({ searchParams }) {
         <main className="container mx-auto px-4 py-8 w-full">
           <div className="flex flex-col lg:flex-row gap-6 w-full">
             {/* Filters Sidebar - Always visible on desktop */}
-            <div className="lg:sticky lg:top-4 lg:self-start lg:h-[calc(100vh-2rem)] lg:overflow-y-auto lg:z-0 pb-16 lg:pb-4">
+            <div className="lg:sticky lg:top-4 lg:self-start lg:h-[calc(100vh-2rem)] lg:overflow-y-auto lg:z-0 pb-16 lg:pb-4 px-2">
               <AnimatePresence>
                 {(showFilters || !isMobile) && (
                   <>
@@ -265,10 +265,10 @@ export default function SearchPage({ searchParams }) {
                       className={`
                         fixed lg:relative inset-0 lg:inset-auto w-full sm:w-96 lg:w-80
                         h-screen lg:h-auto bg-white lg:bg-transparent z-40
-                        shadow-2xl lg:shadow-md rounded-xl lg:border lg:border-gray-200 overflow-y-auto
+                        rounded-xl lg:border lg:border-gray-200 overflow-y-auto
                       `}
                     >
-                      <div className="p-6 lg:p-4 space-y-4">
+                      <div className="p-2 space-y-4">
                         {/* Mobile Header */}
                         {isMobile && (
                           <div className="flex justify-between items-center pb-4 border-b border-gray-200">
