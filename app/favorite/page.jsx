@@ -5,7 +5,6 @@ import { IoMdClose } from 'react-icons/io';
 import toast from 'react-hot-toast';
 import CustomToast from '../../components/ReusableComponents/CustomToast';
 import Loading from '../../components/ReusableComponents/Loading';
-import { useRouter } from 'next/navigation';
 import SmallCard from '../../components/ReusableComponents/SmallCard/SmallCard';
 import { MdKeyboardDoubleArrowRight } from 'react-icons/md';
 import LoginButton from '../../components/Buttons/LoginButton';
@@ -21,7 +20,6 @@ export default function Favorites() {
   const [totalCount, setTotalCount] = useState(0);
 
   const session = useSession();
-  const router = useRouter();
 
   // جلب معرف المستخدم
   useEffect(() => {
@@ -90,23 +88,6 @@ export default function Favorites() {
                     key={index}
                     className="relative flex flex-col border border-gray-200 items-start h-full justify-start bg-white hover:shadow-lg transition-all duration-300 ease-in-out cursor-pointer rounded-lg overflow-hidden"
                   >
-                    {/* زر الحذف */}
-                    <div className="absolute top-2 right-2">
-                      <div
-                        className="flex flex-col items-center justify-center cursor-pointer rounded-full p-2 bg-white/80 backdrop-blur-sm hover:bg-gray-100 transition-colors duration-150 shadow-sm"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setFavoriteId(favorite.id);
-                          setIsVisible(true);
-                        }}
-                      >
-                        <IoMdClose className="text-red-500 text-xl" />
-                        <h6 className="text-xs text-red-500 select-none">
-                          حذف
-                        </h6>
-                      </div>
-                    </div>
-
                     {/* عرض المنتج */}
                     <SmallCard item={favorite} />
                   </div>
@@ -118,7 +99,7 @@ export default function Favorites() {
             {hasMore && (
               <div className="mt-12 mb-8 flex justify-center">
                 <button
-                  className="group flex items-center gap-3 bg-three hover:bg-two px-8 py-3 rounded-full text-white font-medium transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+                  className="group flex items-center gap-3 bg-three hover:bg-two px-8 py-3 rounded-full font-medium transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
                   onClick={handleNextPage}
                   disabled={loading}
                 >
@@ -129,18 +110,6 @@ export default function Favorites() {
             )}
           </>
         ) : (
-          // <div className="flex flex-col items-center justify-center w-full mt-16">
-          //   <h1 className="text-center text-lg sm:text-xl font-semibold">
-          //     يجب عليك تسجيل الدخول أولاً
-          //   </h1>
-          //   <Button
-          //     title={'تسجيل الدخول'}
-          //     path="/login"
-          //     style={
-          //       'mt-4 bg-three hover:bg-two text-white px-6 py-2 rounded-lg transition-all duration-300 transform hover:scale-105'
-          //     }
-          //   />
-          // </div>
           <LoginButton />
         )}
       </div>

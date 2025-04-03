@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation';
 import SmallCard from '../../components/ReusableComponents/SmallCard/SmallCard';
 import NavegationPages from '../../components/ReusableComponents/NavegationPages';
 import Loading from '../../components/ReusableComponents/Loading';
-import Button from '../../components/Buttons/Button';
 import PostActions from './PostActions';
 import LoginButton from '../../components/Buttons/LoginButton';
 
@@ -85,12 +84,12 @@ const MyPostsContent = () => {
             </div>
           </div>
         )}
-
+        {/* 
         <NavegationPages
           hasMore={hasMore}
           setPageNumber={setPageNumber}
           pageNumber={pageNumber}
-        />
+        /> */}
       </div>
       {session?.status === 'unauthenticated' && <LoginButton />}
     </div>

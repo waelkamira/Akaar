@@ -123,13 +123,6 @@ input[type='file'] {
   font-size: 24px;
 }
 
-/*body {
-  margin: 0;
-  font-family: 'Inter', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}*/
-
 .keen-slider__slide {
   border-radius: 0px;
 }
