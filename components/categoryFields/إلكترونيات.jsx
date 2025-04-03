@@ -1,27 +1,44 @@
+import React from 'react';
+import { FaVolumeUp, FaExpand } from 'react-icons/fa';
+import { GiSmartphone, GiPowerLightning } from 'react-icons/gi';
 import {
-  FaTv,
-  FaVolumeUp,
-  FaPlug,
-  FaExpand,
-  FaCamera,
-  FaHeadphones,
-  FaMobileAlt,
-  FaGamepad,
-  FaLaptop,
-  FaMicrochip,
-} from 'react-icons/fa';
-import {
-  GiConsoleController,
-  GiWashingMachine,
-  GiRefrigerator,
-  GiVacuumCleaner,
-} from 'react-icons/gi';
+  MdBrandingWatermark,
+  MdHighQuality,
+  MdDevicesOther,
+} from 'react-icons/md';
+import { GrConnectivity } from 'react-icons/gr';
+
+import { BiCategory } from 'react-icons/bi';
+
+let Icons = {};
+
+try {
+  Icons = {
+    Type: MdDevicesOther,
+    Brand: MdBrandingWatermark,
+    ScreenSize: FaExpand,
+    Resolution: MdHighQuality,
+    AudioOutput: FaVolumeUp,
+    SmartFeatures: GiSmartphone,
+    Connectivity: GrConnectivity,
+    Condition: BiCategory,
+    Power: GiPowerLightning,
+  };
+} catch (error) {
+  console.warn(
+    '⚠️ بعض أيقونات الأجهزة الإلكترونية غير متاحة في react-icons. تحقق من المكتبة!',
+    error
+  );
+  Icons = {};
+}
 
 const electronics = [
   {
     name: 'type',
     label: 'نوع الجهاز',
-    icon: <FaTv className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Type ? (
+      <Icons.Type className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'تلفزيون',
@@ -38,7 +55,9 @@ const electronics = [
   {
     name: 'brand',
     label: 'الماركة',
-    icon: <FaTv className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Brand ? (
+      <Icons.Brand className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'سامسونج',
@@ -54,7 +73,9 @@ const electronics = [
   {
     name: 'screenSize',
     label: 'حجم الشاشة',
-    icon: <FaExpand className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.ScreenSize ? (
+      <Icons.ScreenSize className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: '24 بوصة',
@@ -72,7 +93,9 @@ const electronics = [
   {
     name: 'resolution',
     label: 'دقة العرض',
-    icon: <FaTv className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Resolution ? (
+      <Icons.Resolution className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'HD',
@@ -87,7 +110,9 @@ const electronics = [
   {
     name: 'audioOutput',
     label: 'قوة الصوت',
-    icon: <FaVolumeUp className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.AudioOutput ? (
+      <Icons.AudioOutput className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: '20 واط',
@@ -101,7 +126,9 @@ const electronics = [
   {
     name: 'smartFeatures',
     label: 'الميزات الذكية',
-    icon: <FaMobileAlt className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.SmartFeatures ? (
+      <Icons.SmartFeatures className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'ذكي (Smart TV)',
@@ -114,7 +141,9 @@ const electronics = [
   {
     name: 'connectivity',
     label: 'إمكانيات الاتصال',
-    icon: <FaMicrochip className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Connectivity ? (
+      <Icons.Connectivity className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'واي فاي',
@@ -128,7 +157,9 @@ const electronics = [
   {
     name: 'condition',
     label: 'الحالة',
-    icon: <FaTv className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Condition ? (
+      <Icons.Condition className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'جديد',
@@ -141,7 +172,9 @@ const electronics = [
   {
     name: 'power',
     label: 'الجهد الكهربائي',
-    icon: <FaPlug className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Power ? (
+      <Icons.Power className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: '110 فولت',

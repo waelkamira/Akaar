@@ -1,32 +1,47 @@
-import {
-  FaTools,
-  FaHammer,
-  FaScrewdriver,
-  FaWrench,
-  FaPaintBrush,
-  FaLightbulb,
-  FaHome,
-  FaPlug,
-  FaRulerCombined,
-  FaPalette,
-  FaBolt,
-  FaTape,
-} from 'react-icons/fa';
+import React from 'react';
+import { FaLightbulb, FaRuler, FaBatteryFull } from 'react-icons/fa';
 import {
   GiDrill,
-  GiSawBlade,
-  GiScrew,
-  GiWoodBeam,
-  GiBrickWall,
-  GiFloorPolisher,
-  GiPaintRoller,
+  GiPowerLightning,
+  GiScrewdriver,
+  GiMetalBar,
 } from 'react-icons/gi';
+import {
+  MdPrecisionManufacturing,
+  MdOutlineSafetyDivider,
+} from 'react-icons/md';
+import { BiSolidFactory } from 'react-icons/bi';
+
+let Icons = {};
+
+try {
+  Icons = {
+    ProductType: MdPrecisionManufacturing,
+    ToolCategory: GiScrewdriver,
+    PowerSource: GiPowerLightning,
+    PowerToolType: GiDrill,
+    Voltage: FaBatteryFull,
+    LightingType: FaLightbulb,
+    Material: GiMetalBar,
+    Measurement: FaRuler,
+    Brand: BiSolidFactory,
+    SafetyRating: MdOutlineSafetyDivider,
+  };
+} catch (error) {
+  console.warn(
+    '⚠️ بعض الأيقونات غير متاحة في react-icons. تحقق من المكتبة!',
+    error
+  );
+  Icons = {}; // تأكد من أن Icons يبقى كائنًا حتى في حالة حدوث خطأ
+}
 
 const tools = [
   {
     name: 'productType',
     label: 'نوع المنتج',
-    icon: <FaTools className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.ProductType ? (
+      <Icons.ProductType className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'أدوات يدوية',
@@ -43,7 +58,9 @@ const tools = [
   {
     name: 'toolCategory',
     label: 'تصنيف الأداة',
-    icon: <GiDrill className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.ToolCategory ? (
+      <Icons.ToolCategory className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'أدوات قياس',
@@ -59,7 +76,9 @@ const tools = [
   {
     name: 'powerSource',
     label: 'مصدر الطاقة',
-    icon: <FaBolt className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.PowerSource ? (
+      <Icons.PowerSource className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'سلكي (كهرباء)',
@@ -72,7 +91,9 @@ const tools = [
   {
     name: 'powerToolType',
     label: 'نوع الأداة الكهربائية',
-    icon: <GiSawBlade className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.PowerToolType ? (
+      <Icons.PowerToolType className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'مثقاب',
@@ -87,7 +108,9 @@ const tools = [
   {
     name: 'voltage',
     label: 'الجهد الكهربائي',
-    icon: <FaPlug className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Voltage ? (
+      <Icons.Voltage className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: '110 فولت',
@@ -100,7 +123,9 @@ const tools = [
   {
     name: 'lightingType',
     label: 'نوع الإضاءة',
-    icon: <FaLightbulb className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.LightingType ? (
+      <Icons.LightingType className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'LED',
@@ -114,7 +139,9 @@ const tools = [
   {
     name: 'material',
     label: 'المادة المصنوعة',
-    icon: <GiWoodBeam className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Material ? (
+      <Icons.Material className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'فولاذ',
@@ -128,7 +155,9 @@ const tools = [
   {
     name: 'measurement',
     label: 'القياسات',
-    icon: <FaTape className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Measurement ? (
+      <Icons.Measurement className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'صغير (أقل من 30 سم)',
@@ -141,7 +170,9 @@ const tools = [
   {
     name: 'brand',
     label: 'الماركة',
-    icon: <FaTools className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Brand ? (
+      <Icons.Brand className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'بوش',
@@ -155,7 +186,9 @@ const tools = [
   {
     name: 'safetyRating',
     label: 'تصنيف السلامة',
-    icon: <FaHome className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.SafetyRating ? (
+      <Icons.SafetyRating className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'CE معتمد',

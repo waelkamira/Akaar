@@ -1,29 +1,42 @@
+import React from 'react';
+import { FaExpand, FaPalette, FaPlane } from 'react-icons/fa';
 import {
-  FaHandbag,
-  FaSuitcaseRolling,
-  FaShoppingBag,
-  FaBriefcase,
-  FaWallet,
-  FaExpand,
-  FaPalette,
-  FaLaptop,
-  FaTshirt,
-  FaPlane,
-} from 'react-icons/fa';
-import {
-  GiBackpack,
-  GiSchoolBag,
   GiTravelDress,
   GiLargeDress,
   GiSuitcase,
   GiLockedBox,
 } from 'react-icons/gi';
+import { BsFillHandbagFill } from 'react-icons/bs';
+
+let Icons = {};
+
+try {
+  Icons = {
+    ProductType: GiSuitcase,
+    Style: GiLargeDress,
+    Material: GiTravelDress,
+    Color: FaPalette,
+    Size: FaExpand,
+    Capacity: GiLockedBox,
+    Features: FaPlane,
+    Brand: BsFillHandbagFill,
+    Condition: GiSuitcase,
+  };
+} catch (error) {
+  console.warn(
+    '⚠️ بعض أيقونات الحقائب غير متاحة في react-icons. تحقق من المكتبة!',
+    error
+  );
+  Icons = {};
+}
 
 const bags = [
   {
     name: 'productType',
     label: 'نوع الحقيبة',
-    icon: <GiSuitcase className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.ProductType ? (
+      <Icons.ProductType className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'حقيبة يد',
@@ -41,7 +54,9 @@ const bags = [
   {
     name: 'style',
     label: 'النمط التصميمي',
-    icon: <GiLargeDress className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Style ? (
+      <Icons.Style className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'كاجوال',
@@ -58,7 +73,9 @@ const bags = [
   {
     name: 'material',
     label: 'المادة المصنوعة',
-    icon: <GiTravelDress className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Material ? (
+      <Icons.Material className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'جلد طبيعي',
@@ -73,7 +90,9 @@ const bags = [
   {
     name: 'color',
     label: 'اللون',
-    icon: <FaPalette className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Color ? (
+      <Icons.Color className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'أسود',
@@ -92,7 +111,9 @@ const bags = [
   {
     name: 'size',
     label: 'الحجم',
-    icon: <FaExpand className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Size ? (
+      <Icons.Size className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'صغير (أقل من 30 سم)',
@@ -105,7 +126,9 @@ const bags = [
   {
     name: 'capacity',
     label: 'السعة',
-    icon: <GiLockedBox className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Capacity ? (
+      <Icons.Capacity className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'أقل من 20 لتر',
@@ -118,7 +141,9 @@ const bags = [
   {
     name: 'features',
     label: 'المميزات',
-    icon: <FaPlane className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Features ? (
+      <Icons.Features className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'مقاوم للماء',
@@ -132,7 +157,9 @@ const bags = [
   {
     name: 'brand',
     label: 'الماركة',
-    icon: <FaHandbag className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Brand ? (
+      <Icons.Brand className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'لويس فويتون',
@@ -147,7 +174,9 @@ const bags = [
   {
     name: 'condition',
     label: 'الحالة',
-    icon: <GiSuitcase className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Condition ? (
+      <Icons.Condition className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'جديد',

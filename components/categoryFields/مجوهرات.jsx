@@ -1,12 +1,4 @@
-import {
-  FaRing,
-  FaGem,
-  FaClock,
-  FaNecklace,
-  FaBracelet,
-  FaEarrings,
-  FaCrown,
-} from 'react-icons/fa';
+import { FaCrown } from 'react-icons/fa';
 import {
   GiDiamondRing,
   GiGemNecklace,
@@ -15,12 +7,37 @@ import {
   GiPearlNecklace,
   GiBrokenHeart,
 } from 'react-icons/gi';
+import { CgArrowsExpandUpLeft } from 'react-icons/cg';
+
+let Icons = {};
+
+try {
+  Icons = {
+    ProductType: GiDiamondRing,
+    MetalType: GiGoldBar,
+    Karat: GiGoldBar,
+    Gemstone: GiGemNecklace,
+    Style: GiBrokenHeart,
+    Brand: FaCrown,
+    Gender: CgArrowsExpandUpLeft,
+    Occasion: GiPearlNecklace,
+    Condition: GiSilverBullet,
+  };
+} catch (error) {
+  console.warn(
+    '⚠️ بعض أيقونات المجوهرات غير متاحة في react-icons. تحقق من المكتبة!',
+    error
+  );
+  Icons = {};
+}
 
 const jewelry = [
   {
     name: 'productType',
     label: 'نوع المجوهرات',
-    icon: <GiDiamondRing className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.ProductType ? (
+      <Icons.ProductType className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'خواتم',
@@ -37,7 +54,9 @@ const jewelry = [
   {
     name: 'metalType',
     label: 'نوع المعدن',
-    icon: <GiGoldBar className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.MetalType ? (
+      <Icons.MetalType className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'ذهب أصفر',
@@ -53,7 +72,9 @@ const jewelry = [
   {
     name: 'karat',
     label: 'العيار',
-    icon: <GiGoldBar className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Karat ? (
+      <Icons.Karat className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: '24 قيراط',
@@ -69,7 +90,9 @@ const jewelry = [
   {
     name: 'gemstone',
     label: 'الحجر الكريم',
-    icon: <GiGemNecklace className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Gemstone ? (
+      <Icons.Gemstone className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'ألماس',
@@ -86,7 +109,9 @@ const jewelry = [
   {
     name: 'style',
     label: 'النمط التصميمي',
-    icon: <GiBrokenHeart className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Style ? (
+      <Icons.Style className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'كلاسيكي',
@@ -101,7 +126,9 @@ const jewelry = [
   {
     name: 'brand',
     label: 'الماركة',
-    icon: <FaCrown className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Brand ? (
+      <Icons.Brand className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'تيفاني',
@@ -116,7 +143,9 @@ const jewelry = [
   {
     name: 'gender',
     label: 'الجنس',
-    icon: <FaNecklace className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Gender ? (
+      <Icons.Gender className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'رجالي',
@@ -128,7 +157,9 @@ const jewelry = [
   {
     name: 'occasion',
     label: 'المناسبة',
-    icon: <GiPearlNecklace className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Occasion ? (
+      <Icons.Occasion className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'خطوبة',
@@ -142,7 +173,9 @@ const jewelry = [
   {
     name: 'condition',
     label: 'الحالة',
-    icon: <GiSilverBullet className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Condition ? (
+      <Icons.Condition className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'جديد',

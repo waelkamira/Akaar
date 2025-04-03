@@ -1,32 +1,39 @@
+import React from 'react';
 import {
   FaBasketballBall,
   FaRunning,
   FaWeight,
-  FaBicycle,
   FaTshirt,
-  FaShoePrints,
-  FaTableTennis,
-  FaSwimmer,
-  FaHockeyPuck,
-  FaVolleyballBall,
-  FaFootballBall,
-  FaBaseballBall,
-  FaGolfBall,
 } from 'react-icons/fa';
-import {
-  GiBoxingGlove,
-  GiTennisRacket,
-  GiSoccerBall,
-  GiWeightLiftingUp,
-  GiClimbing,
-  GiArcheryTarget,
-} from 'react-icons/gi';
+
+let Icons = {};
+
+try {
+  Icons = {
+    Type: FaBasketballBall,
+    Sport: FaRunning,
+    EquipmentType: FaWeight,
+    ClothingType: FaTshirt,
+    Size: FaTshirt,
+    Brand: FaBasketballBall,
+    Material: FaBasketballBall,
+    Condition: FaBasketballBall,
+  };
+} catch (error) {
+  console.warn(
+    '⚠️ بعض أيقونات الأدوات الرياضية غير متاحة في react-icons. تحقق من المكتبة!',
+    error
+  );
+  Icons = {};
+}
 
 const sports = [
   {
     name: 'type',
     label: 'نوع المنتج',
-    icon: <FaBasketballBall className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Type ? (
+      <Icons.Type className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'معدات رياضية',
@@ -40,7 +47,9 @@ const sports = [
   {
     name: 'sport',
     label: 'الرياضة',
-    icon: <FaRunning className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Sport ? (
+      <Icons.Sport className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'كرة سلة',
@@ -61,7 +70,9 @@ const sports = [
   {
     name: 'equipmentType',
     label: 'نوع المعدات',
-    icon: <FaWeight className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.EquipmentType ? (
+      <Icons.EquipmentType className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'كرات رياضية',
@@ -77,7 +88,9 @@ const sports = [
   {
     name: 'clothingType',
     label: 'نوع الملابس',
-    icon: <FaTshirt className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.ClothingType ? (
+      <Icons.ClothingType className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'تيشرت رياضية',
@@ -92,7 +105,9 @@ const sports = [
   {
     name: 'size',
     label: 'المقاس',
-    icon: <FaTshirt className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Size ? (
+      <Icons.Size className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'XS',
@@ -109,7 +124,9 @@ const sports = [
   {
     name: 'brand',
     label: 'الماركة',
-    icon: <FaBasketballBall className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Brand ? (
+      <Icons.Brand className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'نايكي',
@@ -123,7 +140,9 @@ const sports = [
   {
     name: 'material',
     label: 'المادة المصنوعة منها',
-    icon: <FaBasketballBall className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Material ? (
+      <Icons.Material className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'بوليستر',
@@ -137,7 +156,9 @@ const sports = [
   {
     name: 'condition',
     label: 'الحالة',
-    icon: <FaBasketballBall className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Condition ? (
+      <Icons.Condition className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'جديد',

@@ -1,29 +1,42 @@
+import React from 'react';
+import { FaUsers } from 'react-icons/fa';
 import {
-  FaGamepad,
-  FaDice,
-  FaPuzzlePiece,
-  FaBook,
-  FaRobot,
-  FaChess,
-  FaHeadset,
-  FaMobileAlt,
-  FaLaptop,
-  FaChild,
-} from 'react-icons/fa';
-import {
-  GiCardPlay,
   GiConsoleController,
   GiCardboardBox,
-  GiPistolGun,
-  GiSwordman,
-  GiRaceCar,
+  GiBoardGame,
+  GiFamilyHouse,
 } from 'react-icons/gi';
+import { MdOutlineGames, MdSportsEsports } from 'react-icons/md';
+import { BiCategory } from 'react-icons/bi'; // استيراد BiCategory
+
+let Icons = {};
+
+try {
+  Icons = {
+    Type: MdOutlineGames,
+    Platform: GiConsoleController,
+    Genre: BiCategory,
+    BoardGameType: GiBoardGame,
+    MinAge: GiFamilyHouse,
+    Players: FaUsers,
+    Brand: MdSportsEsports,
+    Condition: GiCardboardBox,
+  };
+} catch (error) {
+  console.warn(
+    '⚠️ بعض أيقونات الألعاب غير متاحة في react-icons. تحقق من المكتبة!',
+    error
+  );
+  Icons = {};
+}
 
 const games = [
   {
     name: 'type',
     label: 'نوع اللعبة',
-    icon: <FaGamepad className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Type ? (
+      <Icons.Type className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'لعبة فيديو',
@@ -39,9 +52,9 @@ const games = [
   {
     name: 'platform',
     label: 'المنصة',
-    icon: (
-      <GiConsoleController className="text-primary-500 text-lg sm:text-xl" />
-    ),
+    icon: Icons.Platform ? (
+      <Icons.Platform className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'بلاي ستيشن 5',
@@ -57,7 +70,9 @@ const games = [
   {
     name: 'genre',
     label: 'النوع',
-    icon: <FaGamepad className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Genre ? (
+      <Icons.Genre className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'أكشن',
@@ -75,7 +90,9 @@ const games = [
   {
     name: 'boardGameType',
     label: 'نوع اللعبة اللوحية',
-    icon: <FaDice className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.BoardGameType ? (
+      <Icons.BoardGameType className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'إستراتيجية',
@@ -89,7 +106,9 @@ const games = [
   {
     name: 'minAge',
     label: 'الحد الأدنى للعمر',
-    icon: <FaChild className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.MinAge ? (
+      <Icons.MinAge className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: '3 سنوات+',
@@ -103,7 +122,9 @@ const games = [
   {
     name: 'players',
     label: 'عدد اللاعبين',
-    icon: <GiCardPlay className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Players ? (
+      <Icons.Players className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'لاعب واحد',
@@ -117,9 +138,9 @@ const games = [
   {
     name: 'brand',
     label: 'الماركة',
-    icon: (
-      <GiConsoleController className="text-primary-500 text-lg sm:text-xl" />
-    ),
+    icon: Icons.Brand ? (
+      <Icons.Brand className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'سوني',
@@ -133,7 +154,9 @@ const games = [
   {
     name: 'condition',
     label: 'الحالة',
-    icon: <GiCardboardBox className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Condition ? (
+      <Icons.Condition className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'جديد',

@@ -1,15 +1,33 @@
 import { FaBed, FaHome, FaRulerCombined } from 'react-icons/fa';
 import { FaShower } from 'react-icons/fa6';
-import { MdOutlineBedroomParent } from 'react-icons/md';
-import { MdOutlineLiving } from 'react-icons/md';
+import { MdOutlineBedroomParent, MdOutlineLiving } from 'react-icons/md';
+
+let Icons = {};
+
+try {
+  Icons = {
+    AdType: MdOutlineBedroomParent,
+    Rooms: FaBed,
+    Livingrooms: MdOutlineLiving,
+    Area: FaRulerCombined,
+    PropertyType: FaHome,
+    Bathrooms: FaShower,
+  };
+} catch (error) {
+  console.warn(
+    '⚠️ بعض أيقونات العقارات غير متاحة في react-icons. تحقق من المكتبة!',
+    error
+  );
+  Icons = {};
+}
 
 const realEstate = [
   {
-    name: 'adType', // المفتاح الإنجليزي
-    label: 'بيع/أجار', // الاسم العربي
-    icon: (
-      <MdOutlineBedroomParent className="text-primary-500 text-lg sm:text-xl" />
-    ),
+    name: 'adType',
+    label: 'بيع/أجار',
+    icon: Icons.AdType ? (
+      <Icons.AdType className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'بيع',
@@ -17,9 +35,11 @@ const realEstate = [
     },
   },
   {
-    name: 'rooms', // المفتاح الإنجليزي
-    label: ' الغرف', // الاسم العربي
-    icon: <FaBed className="text-primary-500 text-lg sm:text-xl" />,
+    name: 'rooms',
+    label: 'الغرف',
+    icon: Icons.Rooms ? (
+      <Icons.Rooms className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: '1',
@@ -31,9 +51,11 @@ const realEstate = [
     },
   },
   {
-    name: 'livingrooms', // المفتاح الإنجليزي
-    label: ' الصالونات', // الاسم العربي
-    icon: <MdOutlineLiving className="text-primary-500 text-lg sm:text-xl" />,
+    name: 'livingrooms',
+    label: 'الصالونات',
+    icon: Icons.Livingrooms ? (
+      <Icons.Livingrooms className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: '1',
@@ -45,16 +67,19 @@ const realEstate = [
     },
   },
   {
-    name: 'area', // المفتاح الإنجليزي
-    label: 'المساحة', // الاسم العربي
-    icon: <FaRulerCombined className="text-primary-500 text-lg sm:text-xl" />,
+    name: 'area',
+    label: 'المساحة',
+    icon: Icons.Area ? (
+      <Icons.Area className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '200 م²',
   },
-
   {
-    name: 'propertyType', // المفتاح الإنجليزي
-    label: 'نوع العقار', // الاسم العربي
-    icon: <FaHome className="text-primary-500 text-lg sm:text-xl" />,
+    name: 'propertyType',
+    label: 'نوع العقار',
+    icon: Icons.PropertyType ? (
+      <Icons.PropertyType className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'بيت',
@@ -66,11 +91,12 @@ const realEstate = [
       7: 'غير ذلك',
     },
   },
-
   {
-    name: 'bathrooms', // المفتاح الإنجليزي
-    label: ' الحمامات', // الاسم العربي
-    icon: <FaShower className="text-primary-500 text-lg sm:text-xl" />,
+    name: 'bathrooms',
+    label: 'الحمامات',
+    icon: Icons.Bathrooms ? (
+      <Icons.Bathrooms className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: '1',

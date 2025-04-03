@@ -1,16 +1,36 @@
 'use client';
-import { FaCalendarAlt, FaCar, FaTools } from 'react-icons/fa';
-import YearsSelector from '../Selectors/yearSelector';
+import { FaCalendarAlt, FaCar, FaTools, FaCarSide } from 'react-icons/fa';
 import { BsFillFuelPumpDieselFill } from 'react-icons/bs';
 import { IoSpeedometerOutline } from 'react-icons/io5';
 import { GiCarWheel } from 'react-icons/gi';
-import { FaCarSide } from 'react-icons/fa';
+
+let Icons = {};
+
+try {
+  Icons = {
+    AdType: FaCarSide,
+    Brand: FaCar,
+    Model: FaTools,
+    Year: FaCalendarAlt,
+    Condition: GiCarWheel,
+    FuelType: BsFillFuelPumpDieselFill,
+    Mileage: IoSpeedometerOutline,
+  };
+} catch (error) {
+  console.warn(
+    '⚠️ بعض أيقونات السيارات غير متاحة في react-icons. تحقق من المكتبة!',
+    error
+  );
+  Icons = {};
+}
 
 const cars = [
   {
-    name: 'adType', // المفتاح الإنجليزي
-    label: 'بيع/أجار', // الاسم العربي
-    icon: <FaCarSide className="text-primary-500 text-lg sm:text-xl" />,
+    name: 'adType',
+    label: 'بيع/أجار',
+    icon: Icons.AdType ? (
+      <Icons.AdType className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: 'بيع/أجار',
     options: {
       1: 'بيع',
@@ -18,9 +38,11 @@ const cars = [
     },
   },
   {
-    name: 'brand', // المفتاح الإنجليزي
-    label: 'الماركة', // الاسم العربي
-    icon: <FaCar className="text-primary-500 text-lg sm:text-xl" />,
+    name: 'brand',
+    label: 'الماركة',
+    icon: Icons.Brand ? (
+      <Icons.Brand className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: 'تويوتا',
     options: {
       1: 'تويوتا Toyota',
@@ -141,17 +163,20 @@ const cars = [
       116: 'غير ذلك',
     },
   },
-
   {
-    name: 'model', // المفتاح الإنجليزي
-    label: 'الموديل', // الاسم العربي
-    icon: <FaTools className="text-primary-500 text-lg sm:text-xl" />,
+    name: 'model',
+    label: 'الموديل',
+    icon: Icons.Model ? (
+      <Icons.Model className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: 'الموديل',
   },
   {
-    name: 'year', // المفتاح الإنجليزي
-    label: 'السنة', // الاسم العربي
-    icon: <FaCalendarAlt className="text-primary-500 text-lg sm:text-xl" />,
+    name: 'year',
+    label: 'السنة',
+    icon: Icons.Year ? (
+      <Icons.Year className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: 'السنة',
     options: {
       1: '2026',
@@ -234,22 +259,23 @@ const cars = [
     },
   },
   {
-    name: 'condition', // المفتاح الإنجليزي
-    label: 'الحالة', // الاسم العربي
-    icon: <GiCarWheel className="text-primary-500 text-lg sm:text-xl" />,
+    name: 'condition',
+    label: 'الحالة',
+    icon: Icons.Condition ? (
+      <Icons.Condition className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: 'الحالة',
     options: {
       1: 'جديدة',
       2: 'مستعملة',
     },
   },
-
   {
-    name: 'fuelType', // المفتاح الإنجليزي
-    label: 'الوقود', // الاسم العربي
-    icon: (
-      <BsFillFuelPumpDieselFill className="text-primary-500 text-lg sm:text-xl" />
-    ),
+    name: 'fuelType',
+    label: 'الوقود',
+    icon: Icons.FuelType ? (
+      <Icons.FuelType className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: 'الوقود',
     options: {
       1: 'بنزين',
@@ -257,14 +283,13 @@ const cars = [
       3: 'كهرباء',
       4: 'هجين',
     },
-    component: <YearsSelector />,
   },
   {
-    name: 'mileage', // المفتاح الإنجليزي
-    label: 'الكيلومترات', // الاسم العربي
-    icon: (
-      <IoSpeedometerOutline className="text-primary-500 text-lg sm:text-xl" />
-    ),
+    name: 'mileage',
+    label: 'الكيلومترات',
+    icon: Icons.Mileage ? (
+      <Icons.Mileage className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: 'الكيلومترات',
     options: {
       1: '0',
