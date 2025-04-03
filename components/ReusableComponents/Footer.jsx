@@ -1,7 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
@@ -23,17 +22,19 @@ import {
 } from 'lucide-react';
 
 export default function Footer() {
-  const router = useRouter();
   const session = useSession();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const images = [
-    '/photos/image (1).jpg',
-    '/photos/image (2).jpg',
-    '/photos/image (3).jpg',
-    '/photos/image (4).jpg',
-    '/photos/image (5).jpg',
-    '/photos/image (6).jpg',
+    '/images/image (1).jpg',
+    '/images/image (2).jpg',
+    '/images/image (3).jpg',
+    '/images/image (4).jpg',
+    '/images/image (5).jpg',
+    '/images/image (6).jpg',
+    '/images/image (7).jpg',
+    '/images/image (8).jpg',
+    '/images/image (9).jpg',
   ];
 
   useEffect(() => {
