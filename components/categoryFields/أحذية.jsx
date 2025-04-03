@@ -1,26 +1,38 @@
-import {
-  FaShoes,
-  FaPalette,
-  FaExpand,
-  FaUser,
-  FaWalking,
-  FaRunning,
-  FaSnowflake,
-} from 'react-icons/fa';
-import {
-  GiConverseShoe,
-  GiHighHeel,
-  GiSandal,
-  GiArmoredBoot,
-  GiSoccerShoe,
-  GiBasketballShoe,
-} from 'react-icons/gi';
+import React from 'react';
+
+let Icons = {};
+
+try {
+  const { FaExpand } = require('react-icons/fa');
+  const { GiSandal, GiRunningShoe, GiSportMedal } = require('react-icons/gi');
+  const {
+    MdOutlineSportsHandball,
+    MdOutlineCleaningServices,
+  } = require('react-icons/md');
+  const { BiSolidColor } = require('react-icons/bi');
+  const { IoShirtOutline } = require('react-icons/io5');
+
+  Icons = {
+    Expand: FaExpand || null,
+    Sandal: GiSandal || null,
+    RunningShoe: GiRunningShoe || null,
+    SportMedal: GiSportMedal || null,
+    SportsHandball: MdOutlineSportsHandball || null,
+    CleaningServices: MdOutlineCleaningServices || null,
+    Color: BiSolidColor || null,
+    ShirtOutline: IoShirtOutline || null,
+  };
+} catch (error) {
+  console.warn('⚠️ حدث خطأ أثناء تحميل بعض الأيقونات من react-icons.');
+}
 
 const shoes = [
   {
     name: 'type',
     label: 'نوع الحذاء',
-    icon: <GiConverseShoe className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.RunningShoe ? (
+      <Icons.RunningShoe className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'حذاء رياضي',
@@ -37,7 +49,9 @@ const shoes = [
   {
     name: 'category',
     label: 'التصنيف',
-    icon: <FaUser className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.ShirtOutline ? (
+      <Icons.ShirtOutline className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'رجالي',
@@ -49,7 +63,9 @@ const shoes = [
   {
     name: 'size',
     label: 'المقاس',
-    icon: <FaExpand className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Expand ? (
+      <Icons.Expand className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: '18',
@@ -89,7 +105,9 @@ const shoes = [
   {
     name: 'color',
     label: 'اللون',
-    icon: <FaPalette className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Color ? (
+      <Icons.Color className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'أسود',
@@ -109,7 +127,9 @@ const shoes = [
   {
     name: 'material',
     label: 'المادة',
-    icon: <GiSandal className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Sandal ? (
+      <Icons.Sandal className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'جلد طبيعي',
@@ -124,7 +144,9 @@ const shoes = [
   {
     name: 'brand',
     label: 'الماركة',
-    icon: <GiBasketballShoe className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.SportMedal ? (
+      <Icons.SportMedal className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'نايكي',
@@ -140,7 +162,9 @@ const shoes = [
   {
     name: 'usage',
     label: 'الاستخدام',
-    icon: <FaRunning className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.SportsHandball ? (
+      <Icons.SportsHandball className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'رياضة',
@@ -154,7 +178,9 @@ const shoes = [
   {
     name: 'condition',
     label: 'الحالة',
-    icon: <GiArmoredBoot className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.CleaningServices ? (
+      <Icons.CleaningServices className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'جديد',

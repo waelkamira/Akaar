@@ -1,22 +1,51 @@
+import { FaTshirt, FaPalette, FaExpand } from 'react-icons/fa';
 import {
-  FaTshirt,
-  FaShoes,
-  FaHandbag,
-  FaPalette,
-  FaExpand,
-  FaGlasses,
-  FaRing,
-  FaHatCowboy,
-  FaScarf,
-  FaWatch,
-} from 'react-icons/fa';
-import { GiClothes, GiTie, GiUnderwearShorts } from 'react-icons/gi';
+  GiClothes,
+  GiTie,
+  GiRunningShoe,
+  GiHandBag,
+  GiUnderwearShorts,
+  GiArmoredBelt,
+  GiEyeglasses,
+  GiPocketWatch,
+} from 'react-icons/gi';
+
+let Icons = {};
+
+try {
+  Icons = {
+    Type: GiClothes,
+    ClothingType: FaTshirt,
+    Gender: GiTie,
+    Size: FaExpand,
+    Color: FaPalette,
+    Brand: FaTshirt,
+    Material: FaTshirt,
+    Condition: FaTshirt,
+    Season: FaTshirt,
+    // Additional icons for better representation
+    Shoes: GiRunningShoe,
+    Bags: GiHandBag,
+    Underwear: GiUnderwearShorts,
+    Belts: GiArmoredBelt,
+    Glasses: GiEyeglasses,
+    Watches: GiPocketWatch,
+  };
+} catch (error) {
+  console.warn(
+    '⚠️ بعض أيقونات الأزياء غير متاحة في react-icons. تحقق من المكتبة!',
+    error
+  );
+  Icons = {};
+}
 
 const fashion = [
   {
     name: 'type',
     label: 'نوع المنتج',
-    icon: <GiClothes className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Type ? (
+      <Icons.Type className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'ملابس',
@@ -33,7 +62,9 @@ const fashion = [
   {
     name: 'clothingType',
     label: 'نوع الملابس',
-    icon: <FaTshirt className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.ClothingType ? (
+      <Icons.ClothingType className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'تيشرت',
@@ -50,7 +81,9 @@ const fashion = [
   {
     name: 'gender',
     label: 'الجنس',
-    icon: <GiTie className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Gender ? (
+      <Icons.Gender className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'رجالي',
@@ -63,7 +96,9 @@ const fashion = [
   {
     name: 'size',
     label: 'المقاس',
-    icon: <FaExpand className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Size ? (
+      <Icons.Size className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'XS',
@@ -80,7 +115,9 @@ const fashion = [
   {
     name: 'color',
     label: 'اللون',
-    icon: <FaPalette className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Color ? (
+      <Icons.Color className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'أسود',
@@ -99,7 +136,9 @@ const fashion = [
   {
     name: 'brand',
     label: 'الماركة',
-    icon: <FaTshirt className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Brand ? (
+      <Icons.Brand className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'نايكي',
@@ -116,7 +155,9 @@ const fashion = [
   {
     name: 'material',
     label: 'المادة المصنوعة منها',
-    icon: <FaTshirt className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Material ? (
+      <Icons.Material className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'قطن',
@@ -132,7 +173,9 @@ const fashion = [
   {
     name: 'condition',
     label: 'الحالة',
-    icon: <FaTshirt className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Condition ? (
+      <Icons.Condition className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'جديد',
@@ -145,7 +188,9 @@ const fashion = [
   {
     name: 'season',
     label: 'الموسم',
-    icon: <FaTshirt className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Season ? (
+      <Icons.Season className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'شتوي',

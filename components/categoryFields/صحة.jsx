@@ -1,19 +1,5 @@
+import { FaStethoscope, FaHome, FaHandHoldingHeart } from 'react-icons/fa';
 import {
-  FaStethoscope,
-  FaPills,
-  FaBandAid,
-  FaWeight,
-  FaShower,
-  FaHome,
-  FaTooth,
-  FaHandHoldingHeart,
-  FaSun,
-  FaBroom,
-  FaTeeth,
-  FaLungs,
-} from 'react-icons/fa';
-import {
-  GiBodyMassIndex,
   GiMedicinePills,
   GiSoap,
   GiToothbrush,
@@ -21,11 +7,35 @@ import {
   GiSpray,
 } from 'react-icons/gi';
 
+let Icons = {};
+
+try {
+  Icons = {
+    ProductType: GiMedicinePills,
+    HealthCategory: FaHandHoldingHeart,
+    ProductForm: GiMedicinePills,
+    PersonalCareType: GiSoap,
+    CleaningType: GiSpray,
+    OralCareType: GiToothbrush,
+    SizeVolume: GiWaterBottle,
+    Brand: FaHome,
+    SpecialFeatures: FaStethoscope,
+  };
+} catch (error) {
+  console.warn(
+    '⚠️ بعض أيقونات المنتجات الصحية غير متاحة في react-icons. تحقق من المكتبة!',
+    error
+  );
+  Icons = {};
+}
+
 const health = [
   {
     name: 'productType',
     label: 'نوع المنتج',
-    icon: <GiMedicinePills className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.ProductType ? (
+      <Icons.ProductType className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'فيتامينات ومكملات',
@@ -42,9 +52,9 @@ const health = [
   {
     name: 'healthCategory',
     label: 'التصنيف الصحي',
-    icon: (
-      <FaHandHoldingHeart className="text-primary-500 text-lg sm:text-xl" />
-    ),
+    icon: Icons.HealthCategory ? (
+      <Icons.HealthCategory className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'دعم المناعة',
@@ -61,7 +71,9 @@ const health = [
   {
     name: 'productForm',
     label: 'شكل المنتج',
-    icon: <GiMedicinePills className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.ProductForm ? (
+      <Icons.ProductForm className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'أقراص',
@@ -77,7 +89,9 @@ const health = [
   {
     name: 'personalCareType',
     label: 'نوع العناية الشخصية',
-    icon: <GiSoap className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.PersonalCareType ? (
+      <Icons.PersonalCareType className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'صابون',
@@ -92,7 +106,9 @@ const health = [
   {
     name: 'cleaningType',
     label: 'نوع المنظفات',
-    icon: <GiSpray className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.CleaningType ? (
+      <Icons.CleaningType className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'منظفات أرضيات',
@@ -107,7 +123,9 @@ const health = [
   {
     name: 'oralCareType',
     label: 'نوع العناية بالفم',
-    icon: <GiToothbrush className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.OralCareType ? (
+      <Icons.OralCareType className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'معجون أسنان',
@@ -121,7 +139,9 @@ const health = [
   {
     name: 'sizeVolume',
     label: 'الحجم/الكمية',
-    icon: <GiWaterBottle className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.SizeVolume ? (
+      <Icons.SizeVolume className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: '50 مل',
@@ -135,7 +155,9 @@ const health = [
   {
     name: 'brand',
     label: 'الماركة',
-    icon: <FaHome className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Brand ? (
+      <Icons.Brand className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'ديتول',
@@ -150,7 +172,9 @@ const health = [
   {
     name: 'specialFeatures',
     label: 'مميزات خاصة',
-    icon: <FaStethoscope className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.SpecialFeatures ? (
+      <Icons.SpecialFeatures className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'عضوي',

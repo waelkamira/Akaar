@@ -1,23 +1,35 @@
-import {
-  FaLaptop,
-  FaMicrochip,
-  FaHdd,
-  FaMemory,
-  FaDesktop,
-  FaExpand,
-  FaKeyboard,
-  FaMouse,
-  FaServer,
-  FaNetworkWired,
-  FaTabletAlt,
-} from 'react-icons/fa';
-import { GiComputerFan, GiProcessor, GiPowerButton } from 'react-icons/gi';
+import { FaLaptop, FaHdd, FaMemory, FaDesktop, FaExpand } from 'react-icons/fa';
+import { GiProcessor, GiPowerButton } from 'react-icons/gi';
+
+let Icons = {};
+
+try {
+  Icons = {
+    Type: FaLaptop,
+    Brand: FaLaptop,
+    Processor: GiProcessor,
+    RAM: FaMemory,
+    Storage: FaHdd,
+    GraphicsCard: FaDesktop,
+    ScreenSize: FaExpand,
+    OperatingSystem: GiPowerButton,
+    Condition: FaLaptop,
+  };
+} catch (error) {
+  console.warn(
+    '⚠️ بعض أيقونات أجهزة الكمبيوتر غير متاحة في react-icons. تحقق من المكتبة!',
+    error
+  );
+  Icons = {};
+}
 
 const computers = [
   {
     name: 'type',
     label: 'نوع الجهاز',
-    icon: <FaLaptop className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Type ? (
+      <Icons.Type className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'لابتوب',
@@ -32,7 +44,9 @@ const computers = [
   {
     name: 'brand',
     label: 'الماركة',
-    icon: <FaLaptop className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Brand ? (
+      <Icons.Brand className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'ديل',
@@ -48,7 +62,9 @@ const computers = [
   {
     name: 'processor',
     label: 'المعالج',
-    icon: <GiProcessor className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Processor ? (
+      <Icons.Processor className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'Intel Core i3',
@@ -65,7 +81,9 @@ const computers = [
   {
     name: 'ram',
     label: 'الذاكرة العشوائية (RAM)',
-    icon: <FaMemory className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.RAM ? (
+      <Icons.RAM className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: '4 جيجابايت',
@@ -79,7 +97,9 @@ const computers = [
   {
     name: 'storage',
     label: 'وحدة التخزين',
-    icon: <FaHdd className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Storage ? (
+      <Icons.Storage className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: '128 جيجابايت SSD',
@@ -94,7 +114,9 @@ const computers = [
   {
     name: 'graphicsCard',
     label: 'كرت الشاشة',
-    icon: <FaDesktop className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.GraphicsCard ? (
+      <Icons.GraphicsCard className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'Intel UHD Graphics',
@@ -109,7 +131,9 @@ const computers = [
   {
     name: 'screenSize',
     label: 'حجم الشاشة (بالبوصة)',
-    icon: <FaExpand className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.ScreenSize ? (
+      <Icons.ScreenSize className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: '13 بوصة',
@@ -126,7 +150,9 @@ const computers = [
   {
     name: 'operatingSystem',
     label: 'نظام التشغيل',
-    icon: <GiPowerButton className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.OperatingSystem ? (
+      <Icons.OperatingSystem className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'Windows 10',
@@ -140,7 +166,9 @@ const computers = [
   {
     name: 'condition',
     label: 'الحالة',
-    icon: <FaLaptop className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Condition ? (
+      <Icons.Condition className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'جديد',

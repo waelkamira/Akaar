@@ -1,29 +1,37 @@
-import {
-  FaBaby,
-  FaCarSeat,
-  FaStroller,
-  FaTshirt,
-  FaBath,
-  FaBed,
-  FaBottle,
-  FaPuzzlePiece,
-  FaShoppingCart,
-  FaBabyCarriage,
-} from 'react-icons/fa';
-import {
-  GiBabyBottle,
-  GiClothes,
-  GiCradle,
-  GiRockingChair,
-  GiFeather,
-  GiTeddyBear,
-} from 'react-icons/gi';
+import { FaBaby, FaShoppingCart, FaBabyCarriage } from 'react-icons/fa';
+import { GiClothes, GiFeather } from 'react-icons/gi';
+import { DiMaterializecss } from 'react-icons/di';
+import { PiCertificateBold } from 'react-icons/pi';
+import { TbStatusChange } from 'react-icons/tb';
+
+let Icons = {};
+
+try {
+  Icons = {
+    Type: FaBabyCarriage,
+    SubType: GiClothes,
+    AgeRange: FaBaby,
+    Gender: GiFeather,
+    Material: DiMaterializecss,
+    SafetyCertification: PiCertificateBold,
+    Condition: TbStatusChange,
+    Brand: FaShoppingCart,
+  };
+} catch (error) {
+  console.warn(
+    '⚠️ بعض أيقونات مستلزمات الأطفال غير متاحة في react-icons. تحقق من المكتبة!',
+    error
+  );
+  Icons = {};
+}
 
 const babySupplies = [
   {
     name: 'type',
     label: 'نوع المنتج',
-    icon: <FaBabyCarriage className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Type ? (
+      <Icons.Type className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'مقاعد سيارات',
@@ -41,7 +49,9 @@ const babySupplies = [
   {
     name: 'subType',
     label: 'التفاصيل',
-    icon: <GiClothes className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.SubType ? (
+      <Icons.SubType className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'كرسي سيارة أمامي',
@@ -58,7 +68,9 @@ const babySupplies = [
   {
     name: 'ageRange',
     label: 'الفئة العمرية',
-    icon: <FaBaby className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.AgeRange ? (
+      <Icons.AgeRange className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'حديثي الولادة (0-3 أشهر)',
@@ -72,7 +84,9 @@ const babySupplies = [
   {
     name: 'gender',
     label: 'الجنس',
-    icon: <GiFeather className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Gender ? (
+      <Icons.Gender className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'ذكر',
@@ -83,7 +97,9 @@ const babySupplies = [
   {
     name: 'material',
     label: 'المادة',
-    icon: <GiTeddyBear className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Material ? (
+      <Icons.Material className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'قطن',
@@ -98,7 +114,9 @@ const babySupplies = [
   {
     name: 'safetyCertification',
     label: 'شهادات السلامة',
-    icon: <FaCarSeat className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.SafetyCertification ? (
+      <Icons.SafetyCertification className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'مطابق لمعايير السلامة',
@@ -110,7 +128,9 @@ const babySupplies = [
   {
     name: 'condition',
     label: 'الحالة',
-    icon: <GiCradle className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Condition ? (
+      <Icons.Condition className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'جديد',
@@ -123,17 +143,9 @@ const babySupplies = [
   {
     name: 'brand',
     label: 'الماركة',
-    icon: <FaShoppingCart className="text-primary-500 text-lg sm:text-xl" />,
-    placeholder: '-اختر-',
-    options: {
-      1: 'Chicco',
-      2: 'Graco',
-      3: 'Fisher-Price',
-      4: 'Pampers',
-      5: 'Huggies',
-      6: 'Mothercare',
-      7: 'أخرى',
-    },
+    icon: Icons.Brand ? (
+      <Icons.Brand className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
   },
 ];
 

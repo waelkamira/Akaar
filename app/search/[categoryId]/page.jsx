@@ -25,9 +25,9 @@ function SearchCategoryContent({ params }) {
       transition={{ duration: 0.5 }}
       className="container mx-auto px-4 py-8"
     >
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 min-h-screen">
         {/* Filters Sidebar */}
-        <div className="flex flex-col gap-4 lg:col-span-1">
+        <div className="lg:sticky lg:top-8 lg:self-start lg:h-[calc(100vh-4rem)] lg:overflow-y-auto flex flex-col gap-4 lg:col-span-1">
           <SelectedFilters />
           <StaticFilters />
           <DynamicFilters />

@@ -1,27 +1,31 @@
-import {
-  FaCouch,
-  FaChair,
-  FaTable,
-  FaBed,
-  FaPalette,
-  FaExpand,
-  FaRulerCombined,
-  FaHome,
-  FaWarehouse,
-} from 'react-icons/fa';
-import {
-  GiDesk,
-  GiWardrobe,
-  GiWoodenChair,
-  GiSofa,
-  GiOfficeChair,
-} from 'react-icons/gi';
+let Icons = {};
+
+try {
+  const { FaRulerCombined, FaBoxes } = require('react-icons/fa');
+  const { GiWoodenChair, GiSofa, GiOfficeChair } = require('react-icons/gi');
+  const { MdOutlineMeetingRoom } = require('react-icons/md');
+  const { BiSolidColorFill } = require('react-icons/bi');
+
+  Icons = {
+    Ruler: FaRulerCombined || null,
+    Boxes: FaBoxes || null,
+    WoodenChair: GiWoodenChair || null,
+    Sofa: GiSofa || null,
+    OfficeChair: GiOfficeChair || null,
+    MeetingRoom: MdOutlineMeetingRoom || null,
+    ColorFill: BiSolidColorFill || null,
+  };
+} catch (error) {
+  console.warn('⚠️ بعض الأيقونات غير متاحة في react-icons. تحقق من المكتبة!');
+}
 
 const furniture = [
   {
     name: 'type',
     label: 'نوع الأثاث',
-    icon: <GiSofa className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Sofa ? (
+      <Icons.Sofa className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'كنبة',
@@ -39,7 +43,9 @@ const furniture = [
   {
     name: 'material',
     label: 'المادة المصنوعة',
-    icon: <GiWoodenChair className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.WoodenChair ? (
+      <Icons.WoodenChair className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'خشب طبيعي',
@@ -57,7 +63,9 @@ const furniture = [
   {
     name: 'color',
     label: 'اللون',
-    icon: <FaPalette className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.ColorFill ? (
+      <Icons.ColorFill className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'أسود',
@@ -76,7 +84,9 @@ const furniture = [
   {
     name: 'dimensions',
     label: 'الأبعاد',
-    icon: <FaRulerCombined className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Ruler ? (
+      <Icons.Ruler className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'صغير',
@@ -89,7 +99,9 @@ const furniture = [
   {
     name: 'style',
     label: 'النمط التصميمي',
-    icon: <FaHome className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.MeetingRoom ? (
+      <Icons.MeetingRoom className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'حديث',
@@ -106,7 +118,9 @@ const furniture = [
   {
     name: 'condition',
     label: 'الحالة',
-    icon: <FaWarehouse className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Boxes ? (
+      <Icons.Boxes className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'جديد',
@@ -119,7 +133,9 @@ const furniture = [
   {
     name: 'assembly',
     label: 'التجميع',
-    icon: <GiOfficeChair className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.OfficeChair ? (
+      <Icons.OfficeChair className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'مجمّع بالكامل',

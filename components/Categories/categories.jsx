@@ -1,4 +1,4 @@
-'use client';
+import React from 'react';
 import {
   FaCar,
   FaMobileAlt,
@@ -17,11 +17,45 @@ import {
 } from 'react-icons/fa';
 import { BsFillHouseFill } from 'react-icons/bs';
 import { FaKitchenSet } from 'react-icons/fa6';
-import { GiJewelCrown } from 'react-icons/gi';
+import { GiJewelCrown, GiConverseShoe } from 'react-icons/gi';
 import { FaBagShopping } from 'react-icons/fa6';
-import { GiConverseShoe } from 'react-icons/gi';
-import { MdWork } from 'react-icons/md';
+import { MdWork, MdOutlineSportsSoccer } from 'react-icons/md';
 import { PiBabyDuotone } from 'react-icons/pi';
+
+let Icons = {};
+
+try {
+  Icons = {
+    RealEstate: BsFillHouseFill,
+    Cars: FaCar,
+    Phones: FaMobileAlt,
+    Computers: FaLaptop,
+    Electronics: FaTv,
+    Furniture: FaCouch,
+    Kitchen: FaKitchenSet,
+    Fashion: FaTshirt,
+    Beauty: FaSmile,
+    Sports: MdOutlineSportsSoccer,
+    Games: FaGamepad,
+    Tools: FaTools,
+    Books: FaBook,
+    Gifts: FaGift,
+    Agriculture: FaSeedling,
+    Bikes: FaBicycle,
+    Health: FaStethoscope,
+    Shoes: GiConverseShoe,
+    Bags: FaBagShopping,
+    Jewelry: GiJewelCrown,
+    BabySupplies: PiBabyDuotone,
+    Jobs: MdWork,
+  };
+} catch (error) {
+  console.warn(
+    '⚠️ بعض الأيقونات غير متاحة في react-icons. تحقق من المكتبة!',
+    error
+  );
+  Icons = {};
+}
 
 const categories = [
   // Real Estate and Cars - Main Categories
@@ -30,7 +64,7 @@ const categories = [
     name: 'عقارات',
     enName: 'realEstate',
     path: '/categories/1?category=realEstate',
-    icon: <BsFillHouseFill />,
+    icon: Icons.RealEstate ? <Icons.RealEstate /> : null,
     description: 'شقق، فلل، أراضي، مكاتب تجارية وعقارات للبيع والإيجار',
   },
   {
@@ -38,7 +72,7 @@ const categories = [
     name: 'سيارات',
     enName: 'cars',
     path: '/categories/2?category=cars',
-    icon: <FaCar />,
+    icon: Icons.Cars ? <Icons.Cars /> : null,
     description: 'سيارات جديدة ومستعملة، قطع غيار، وخدمات السيارات',
   },
 
@@ -48,7 +82,7 @@ const categories = [
     name: 'هواتف',
     enName: 'phones',
     path: '/categories/3?category=phones',
-    icon: <FaMobileAlt />,
+    icon: Icons.Phones ? <Icons.Phones /> : null,
     description: 'هواتف ذكية، أجهزة لوحية، وملحقاتها',
   },
   {
@@ -56,7 +90,7 @@ const categories = [
     name: 'كمبيوتر',
     enName: 'computers',
     path: '/categories/4?category=computers',
-    icon: <FaLaptop />,
+    icon: Icons.Computers ? <Icons.Computers /> : null,
     description: 'أجهزة كمبيوتر، لابتوب، وملحقاتها',
   },
   {
@@ -64,7 +98,7 @@ const categories = [
     name: 'إلكترونيات',
     enName: 'electronics',
     path: '/categories/5?category=electronics',
-    icon: <FaTv />,
+    icon: Icons.Electronics ? <Icons.Electronics /> : null,
     description: 'تلفزيونات، أجهزة صوت، وإلكترونيات منزلية',
   },
 
@@ -74,7 +108,7 @@ const categories = [
     name: 'أثاث',
     enName: 'furniture',
     path: '/categories/7?category=furniture',
-    icon: <FaCouch />,
+    icon: Icons.Furniture ? <Icons.Furniture /> : null,
     description: 'أثاث غرف، مفروشات، وديكورات منزلية',
   },
   {
@@ -82,7 +116,7 @@ const categories = [
     name: 'مطبخ',
     enName: 'kitchen',
     path: '/categories/6?category=kitchen',
-    icon: <FaKitchenSet />,
+    icon: Icons.Kitchen ? <Icons.Kitchen /> : null,
     description: 'أدوات مطبخ، أجهزة منزلية، ومستلزمات المنزل',
   },
 
@@ -92,7 +126,7 @@ const categories = [
     name: 'موضة',
     enName: 'fashion',
     path: '/categories/8?category=fashion',
-    icon: <FaTshirt />,
+    icon: Icons.Fashion ? <Icons.Fashion /> : null,
     description: 'ملابس، أحذية، حقائب، واكسسوارات',
   },
   {
@@ -100,7 +134,7 @@ const categories = [
     name: 'جمال',
     enName: 'beauty',
     path: '/categories/12?category=beauty',
-    icon: <FaSmile />,
+    icon: Icons.Beauty ? <Icons.Beauty /> : null,
     description: 'مستحضرات تجميل، عطور، ومنتجات العناية',
   },
 
@@ -110,7 +144,7 @@ const categories = [
     name: 'رياضة',
     enName: 'sports',
     path: '/categories/9?category=sports',
-    icon: <MdWork />,
+    icon: Icons.Sports ? <Icons.Sports /> : null,
     description: 'معدات رياضية، ملابس رياضية، وأدوات تمارين',
   },
   {
@@ -118,7 +152,7 @@ const categories = [
     name: 'ألعاب',
     enName: 'games',
     path: '/categories/10?category=games',
-    icon: <FaGamepad />,
+    icon: Icons.Games ? <Icons.Games /> : null,
     description: 'ألعاب فيديو، ألعاب أطفال، وهوايات',
   },
   {
@@ -126,7 +160,7 @@ const categories = [
     name: 'أدوات',
     enName: 'tools',
     path: '/categories/11?category=tools',
-    icon: <FaTools />,
+    icon: Icons.Tools ? <Icons.Tools /> : null,
     description: 'أدوات يدوية، معدات، وأدوات مهنية',
   },
   {
@@ -134,7 +168,7 @@ const categories = [
     name: 'كتب',
     enName: 'books',
     path: '/categories/13?category=books',
-    icon: <FaBook />,
+    icon: Icons.Books ? <Icons.Books /> : null,
     description: 'كتب، مجلات، وأدوات مكتبية',
   },
   {
@@ -142,7 +176,7 @@ const categories = [
     name: 'هدايا',
     enName: 'gifts',
     path: '/categories/14?category=gifts',
-    icon: <FaGift />,
+    icon: Icons.Gifts ? <Icons.Gifts /> : null,
     description: 'هدايا، مناسبات خاصة، وتغليف',
   },
   {
@@ -150,7 +184,7 @@ const categories = [
     name: 'زراعة',
     enName: 'agriculture',
     path: '/categories/15?category=agriculture',
-    icon: <FaSeedling />,
+    icon: Icons.Agriculture ? <Icons.Agriculture /> : null,
     description: 'نباتات، بذور، معدات زراعية، ومستلزمات',
   },
   {
@@ -158,7 +192,7 @@ const categories = [
     name: 'دراجات',
     enName: 'bikes',
     path: '/categories/16?category=bikes',
-    icon: <FaBicycle />,
+    icon: Icons.Bikes ? <Icons.Bikes /> : null,
     description: 'دراجات هوائية، دراجات نارية، وملحقاتها',
   },
   {
@@ -166,7 +200,7 @@ const categories = [
     name: 'صحة',
     enName: 'health',
     path: '/categories/17?category=health',
-    icon: <FaStethoscope />,
+    icon: Icons.Health ? <Icons.Health /> : null,
     description: 'مستلزمات طبية، أجهزة طبية، وأدوية',
   },
   {
@@ -174,7 +208,7 @@ const categories = [
     name: 'أحذية',
     enName: 'shoes',
     path: '/categories/18?category=shoes',
-    icon: <GiConverseShoe />,
+    icon: Icons.Shoes ? <Icons.Shoes /> : null,
     description: 'أحذية رجالية، أحذية نسائية، وأحذية أطفال',
   },
   {
@@ -182,7 +216,7 @@ const categories = [
     name: 'حقائب',
     enName: 'bags',
     path: '/categories/19?category=bags',
-    icon: <FaBagShopping />,
+    icon: Icons.Bags ? <Icons.Bags /> : null,
     description: 'حقائب يد، حقائب سفر، وحقائب مدرسية',
   },
   {
@@ -190,7 +224,7 @@ const categories = [
     name: 'مجوهرات',
     enName: 'jewelry',
     path: '/categories/20?category=jewelry',
-    icon: <GiJewelCrown />,
+    icon: Icons.Jewelry ? <Icons.Jewelry /> : null,
     description: 'مجوهرات ذهبية، مجوهرات فضية، واكسسوارات',
   },
   {
@@ -198,7 +232,7 @@ const categories = [
     name: 'طفلك',
     enName: 'babySupplies',
     path: '/categories/21?category=babySupplies',
-    icon: <PiBabyDuotone />,
+    icon: Icons.BabySupplies ? <Icons.BabySupplies /> : null,
     description: 'ملابس أطفال، ألعاب أطفال، ومستلزمات الرعاية',
   },
   {
@@ -206,7 +240,7 @@ const categories = [
     name: 'وظائف',
     enName: 'jobs',
     path: '/categories/22?category=jobs',
-    icon: <MdWork />,
+    icon: Icons.Jobs ? <Icons.Jobs /> : null,
     description: 'فرص عمل، وظائف شاغرة، وتوظيف',
   },
 ];

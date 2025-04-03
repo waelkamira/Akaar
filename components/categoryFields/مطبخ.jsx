@@ -1,28 +1,46 @@
 import {
   FaCouch,
-  FaChair,
-  FaTable,
-  FaBed,
   FaPalette,
-  FaUtensils,
   FaBlender,
   FaFire,
-  FaThermometerHalf,
-  FaLightbulb,
-  FaExpand,
   FaRulerCombined,
   FaHome,
 } from 'react-icons/fa';
 import { FaKitchenSet } from 'react-icons/fa6';
-import { GiSofa, GiWardrobe, GiDesk } from 'react-icons/gi';
+import { GiSofa } from 'react-icons/gi';
 import { LuTable2 } from 'react-icons/lu';
-import { MdMicrowave, MdCoffeeMaker, MdDishwasher } from 'react-icons/md';
+
+let Icons = {};
+
+try {
+  Icons = {
+    ProductType: FaHome,
+    FurnitureType: GiSofa,
+    TableShape: LuTable2,
+    ApplianceType: FaBlender,
+    CooktopType: FaFire,
+    Capacity: FaKitchenSet,
+    Material: FaCouch,
+    Color: FaPalette,
+    Style: FaHome,
+    Dimensions: FaRulerCombined,
+    Condition: FaHome,
+  };
+} catch (error) {
+  console.warn(
+    '⚠️ بعض أيقونات أدوات المطبخ غير متاحة في react-icons. تحقق من المكتبة!',
+    error
+  );
+  Icons = {};
+}
 
 const kitchen = [
   {
     name: 'productType',
     label: 'نوع المنتج',
-    icon: <FaHome className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.ProductType ? (
+      <Icons.ProductType className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'أثاث',
@@ -38,7 +56,9 @@ const kitchen = [
   {
     name: 'furnitureType',
     label: 'نوع الأثاث',
-    icon: <GiSofa className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.FurnitureType ? (
+      <Icons.FurnitureType className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'كنبة',
@@ -54,7 +74,9 @@ const kitchen = [
   {
     name: 'tableShape',
     label: 'شكل الطاولة',
-    icon: <LuTable2 className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.TableShape ? (
+      <Icons.TableShape className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'دائري',
@@ -67,7 +89,9 @@ const kitchen = [
   {
     name: 'applianceType',
     label: 'نوع الجهاز',
-    icon: <FaBlender className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.ApplianceType ? (
+      <Icons.ApplianceType className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'ثلاجة',
@@ -85,7 +109,9 @@ const kitchen = [
   {
     name: 'cooktopType',
     label: 'نوع الموقد',
-    icon: <FaFire className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.CooktopType ? (
+      <Icons.CooktopType className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'غاز',
@@ -97,7 +123,9 @@ const kitchen = [
   {
     name: 'capacity',
     label: 'السعة',
-    icon: <FaKitchenSet className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Capacity ? (
+      <Icons.Capacity className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: 'باللتر أو القدم المكعب',
     options: {
       1: 'صغير (أقل من 50 لتر)',
@@ -109,7 +137,9 @@ const kitchen = [
   {
     name: 'material',
     label: 'المادة',
-    icon: <FaCouch className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Material ? (
+      <Icons.Material className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'خشب',
@@ -125,7 +155,9 @@ const kitchen = [
   {
     name: 'color',
     label: 'اللون',
-    icon: <FaPalette className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Color ? (
+      <Icons.Color className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'أسود',
@@ -144,7 +176,9 @@ const kitchen = [
   {
     name: 'style',
     label: 'النمط',
-    icon: <FaHome className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Style ? (
+      <Icons.Style className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'حديث',
@@ -160,13 +194,17 @@ const kitchen = [
   {
     name: 'dimensions',
     label: 'الأبعاد',
-    icon: <FaRulerCombined className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Dimensions ? (
+      <Icons.Dimensions className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: 'الطول x العرض x الارتفاع',
   },
   {
     name: 'condition',
     label: 'الحالة',
-    icon: <FaHome className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Condition ? (
+      <Icons.Condition className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'جديد',

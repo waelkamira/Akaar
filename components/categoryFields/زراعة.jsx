@@ -1,27 +1,36 @@
-import {
-  FaSeedling,
-  FaTree,
-  FaWater,
-  FaSun,
-  FaTractor,
-  FaShovel,
-  FaBug,
-  FaTemperatureHigh,
-} from 'react-icons/fa';
-import {
-  GiFarmer,
-  GiFertilizerBag,
-  GiFruitBowl,
-  GiCorn,
-  GiWheat,
-  GiPlantWatering,
-} from 'react-icons/gi';
+import React from 'react';
+import { FaSeedling, FaTree, FaSun, FaTemperatureHigh } from 'react-icons/fa';
+import { GiFruitBowl, GiCorn, GiWheat, GiPlantWatering } from 'react-icons/gi';
+
+let Icons = {};
+
+try {
+  Icons = {
+    Type: FaSeedling,
+    PlantType: FaTree,
+    FruitType: GiFruitBowl,
+    VegetableType: GiCorn,
+    GrowthCondition: FaSun,
+    WateringNeeds: GiPlantWatering,
+    SoilType: FaSeedling,
+    Season: FaTemperatureHigh,
+    HarvestTime: GiWheat,
+  };
+} catch (error) {
+  console.warn(
+    '⚠️ بعض أيقونات مستلزمات الزراعة غير متاحة في react-icons. تحقق من المكتبة!',
+    error
+  );
+  Icons = {};
+}
 
 const agriculture = [
   {
     name: 'type',
     label: 'نوع المنتج',
-    icon: <FaSeedling className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Type ? (
+      <Icons.Type className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'نباتات',
@@ -36,7 +45,9 @@ const agriculture = [
   {
     name: 'plantType',
     label: 'نوع النبات',
-    icon: <FaTree className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.PlantType ? (
+      <Icons.PlantType className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'نباتات زينة',
@@ -51,7 +62,9 @@ const agriculture = [
   {
     name: 'fruitType',
     label: 'نوع الفاكهة (إن وجدت)',
-    icon: <GiFruitBowl className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.FruitType ? (
+      <Icons.FruitType className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'تفاح',
@@ -67,7 +80,9 @@ const agriculture = [
   {
     name: 'vegetableType',
     label: 'نوع الخضار (إن وجدت)',
-    icon: <GiCorn className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.VegetableType ? (
+      <Icons.VegetableType className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'طماطم',
@@ -83,7 +98,9 @@ const agriculture = [
   {
     name: 'growthCondition',
     label: 'ظروف النمو',
-    icon: <FaSun className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.GrowthCondition ? (
+      <Icons.GrowthCondition className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'شمس كاملة',
@@ -97,7 +114,9 @@ const agriculture = [
   {
     name: 'wateringNeeds',
     label: 'احتياجات الري',
-    icon: <GiPlantWatering className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.WateringNeeds ? (
+      <Icons.WateringNeeds className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'ري يومي',
@@ -111,7 +130,9 @@ const agriculture = [
   {
     name: 'soilType',
     label: 'نوع التربة المناسبة',
-    icon: <FaSeedling className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.SoilType ? (
+      <Icons.SoilType className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'تربة طينية',
@@ -125,7 +146,9 @@ const agriculture = [
   {
     name: 'season',
     label: 'الموسم المناسب',
-    icon: <FaTemperatureHigh className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Season ? (
+      <Icons.Season className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'شتوي',
@@ -139,7 +162,9 @@ const agriculture = [
   {
     name: 'harvestTime',
     label: 'وقت الحصاد',
-    icon: <GiWheat className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.HarvestTime ? (
+      <Icons.HarvestTime className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: '30 يوم',

@@ -1,27 +1,44 @@
+import React from 'react';
+import { GiHairStrands, GiLipstick, GiPerfumeBottle } from 'react-icons/gi';
+import { PiHairDryerFill } from 'react-icons/pi';
+
 import {
-  FaSmile,
-  FaSprayCan,
-  FaTint,
-  FaSun,
-  FaPalette,
-  FaLipstick,
-  FaEye,
-  FaHaircut,
-  FaSoap,
-  FaTooth,
-  FaBrush,
-  FaBath,
-  FaHandSparkles,
-  FaLotionBottle,
-} from 'react-icons/fa';
-import { GiRazor, GiPerfumeBottle } from 'react-icons/gi';
-import { MdFaceRetouchingNatural, MdOutlineShower } from 'react-icons/md';
+  MdFaceRetouchingNatural,
+  MdOutlineSpa,
+  MdOutlineCleanHands,
+  MdOutlineColorLens,
+} from 'react-icons/md';
+import { BiCategory } from 'react-icons/bi';
+
+let Icons = {};
+
+try {
+  Icons = {
+    ProductType: MdOutlineSpa,
+    MakeupType: GiLipstick,
+    SkinCareType: MdFaceRetouchingNatural,
+    SkinType: MdOutlineCleanHands,
+    HairType: GiHairStrands,
+    HairCareType: PiHairDryerFill,
+    FragranceType: GiPerfumeBottle,
+    Color: MdOutlineColorLens,
+    Condition: BiCategory,
+  };
+} catch (error) {
+  console.warn(
+    '⚠️ بعض أيقونات مستحضرات التجميل غير متاحة في react-icons. تحقق من المكتبة!',
+    error
+  );
+  Icons = {};
+}
 
 const beauty = [
   {
     name: 'productType',
     label: 'نوع المنتج',
-    icon: <FaSmile className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.ProductType ? (
+      <Icons.ProductType className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'مكياج',
@@ -39,7 +56,9 @@ const beauty = [
   {
     name: 'makeupType',
     label: 'نوع المكياج',
-    icon: <FaLipstick className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.MakeupType ? (
+      <Icons.MakeupType className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'وجه (أساس، كونسيلر، بودرة)',
@@ -53,9 +72,9 @@ const beauty = [
   {
     name: 'skinCareType',
     label: 'نوع العناية بالبشرة',
-    icon: (
-      <MdFaceRetouchingNatural className="text-primary-500 text-lg sm:text-xl" />
-    ),
+    icon: Icons.SkinCareType ? (
+      <Icons.SkinCareType className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'مرطب',
@@ -71,7 +90,9 @@ const beauty = [
   {
     name: 'skinType',
     label: 'نوع البشرة',
-    icon: <FaSmile className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.SkinType ? (
+      <Icons.SkinType className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'عادية',
@@ -87,7 +108,9 @@ const beauty = [
   {
     name: 'hairType',
     label: 'نوع الشعر',
-    icon: <FaHaircut className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.HairType ? (
+      <Icons.HairType className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'عادي',
@@ -105,7 +128,9 @@ const beauty = [
   {
     name: 'hairCareType',
     label: 'نوع العناية بالشعر',
-    icon: <FaHaircut className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.HairCareType ? (
+      <Icons.HairCareType className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'شامبو',
@@ -121,7 +146,9 @@ const beauty = [
   {
     name: 'fragranceType',
     label: 'نوع العطر',
-    icon: <GiPerfumeBottle className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.FragranceType ? (
+      <Icons.FragranceType className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'بارفان',
@@ -135,7 +162,9 @@ const beauty = [
   {
     name: 'color',
     label: 'اللون',
-    icon: <FaPalette className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Color ? (
+      <Icons.Color className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'أسود',
@@ -151,7 +180,9 @@ const beauty = [
   {
     name: 'condition',
     label: 'الحالة',
-    icon: <FaSmile className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Condition ? (
+      <Icons.Condition className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'جديد',

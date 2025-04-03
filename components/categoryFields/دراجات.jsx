@@ -1,28 +1,47 @@
+import React from 'react';
 import {
-  FaMotorcycle,
-  FaBicycle,
   FaGasPump,
-  FaBattery,
   FaTachometerAlt,
   FaWeight,
   FaPalette,
   FaCog,
 } from 'react-icons/fa';
-import {
-  GiBicycle,
-  GiMotorcycle,
-  GiScooter,
-  GiMountainRoad,
-  GiRaceCar,
-  GiRollingSuitcase,
-} from 'react-icons/gi';
 import { FaBatteryThreeQuarters } from 'react-icons/fa6';
+import { FaBicycle } from 'react-icons/fa';
+import { FaMotorcycle } from 'react-icons/fa';
+
+let Icons = {};
+
+try {
+  Icons = {
+    BikeType: FaBicycle,
+    MotorcycleType: FaMotorcycle,
+    EngineType: FaGasPump,
+    EngineSize: FaTachometerAlt,
+    BatteryRange: FaBatteryThreeQuarters,
+    FrameMaterial: FaWeight,
+    SuspensionType: FaCog,
+    BrakeType: FaCog,
+    Color: FaPalette,
+    Condition: FaMotorcycle,
+    Brand: FaMotorcycle,
+    Year: FaMotorcycle, // يمكنك اختيار أيقونة مناسبة للسنة أو تركها بدون أيقونة
+  };
+} catch (error) {
+  console.warn(
+    '⚠️ بعض أيقونات الدراجات (الهوائية والنارية) غير متاحة في react-icons. تحقق من المكتبة!',
+    error
+  );
+  Icons = {};
+}
 
 const bikes = [
   {
     name: 'bikeType',
     label: 'نوع الدراجة',
-    icon: <GiBicycle className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.BikeType ? (
+      <Icons.BikeType className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'دراجة جبلية',
@@ -40,7 +59,9 @@ const bikes = [
   {
     name: 'motorcycleType',
     label: 'نوع الدراجة النارية',
-    icon: <GiMotorcycle className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.MotorcycleType ? (
+      <Icons.MotorcycleType className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'رياضية',
@@ -55,7 +76,9 @@ const bikes = [
   {
     name: 'engineType',
     label: 'نوع المحرك',
-    icon: <FaGasPump className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.EngineType ? (
+      <Icons.EngineType className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'بنزين',
@@ -67,7 +90,9 @@ const bikes = [
   {
     name: 'engineSize',
     label: 'سعة المحرك (للنارية)',
-    icon: <FaTachometerAlt className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.EngineSize ? (
+      <Icons.EngineSize className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: '50-125 سي سي',
@@ -81,9 +106,9 @@ const bikes = [
   {
     name: 'batteryRange',
     label: 'مدى البطارية (للدراجات الكهربائية)',
-    icon: (
-      <FaBatteryThreeQuarters className="text-primary-500 text-lg sm:text-xl" />
-    ),
+    icon: Icons.BatteryRange ? (
+      <Icons.BatteryRange className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'أقل من 50 كم',
@@ -95,7 +120,9 @@ const bikes = [
   {
     name: 'frameMaterial',
     label: 'مادة الهيكل',
-    icon: <FaWeight className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.FrameMaterial ? (
+      <Icons.FrameMaterial className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'ألومنيوم',
@@ -108,7 +135,9 @@ const bikes = [
   {
     name: 'suspensionType',
     label: 'نوع التعليق',
-    icon: <FaCog className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.SuspensionType ? (
+      <Icons.SuspensionType className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'أمامي فقط',
@@ -119,7 +148,9 @@ const bikes = [
   {
     name: 'brakeType',
     label: 'نوع الفرامل',
-    icon: <FaCog className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.BrakeType ? (
+      <Icons.BrakeType className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'قرصية أمامية',
@@ -130,7 +161,9 @@ const bikes = [
   {
     name: 'color',
     label: 'اللون',
-    icon: <FaPalette className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Color ? (
+      <Icons.Color className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'أسود',
@@ -146,7 +179,9 @@ const bikes = [
   {
     name: 'condition',
     label: 'الحالة',
-    icon: <GiMotorcycle className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Condition ? (
+      <Icons.Condition className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'جديد',
@@ -158,7 +193,9 @@ const bikes = [
   {
     name: 'brand',
     label: 'الماركة',
-    icon: <GiMotorcycle className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Brand ? (
+      <Icons.Brand className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'هارلي ديفيدسون',
@@ -173,7 +210,9 @@ const bikes = [
   {
     name: 'year',
     label: 'سنة الصنع',
-    icon: <GiMotorcycle className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Year ? (
+      <Icons.Year className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: 'أدخل سنة الصنع',
   },
 ];

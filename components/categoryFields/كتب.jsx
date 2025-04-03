@@ -1,11 +1,4 @@
-import {
-  FaBook,
-  FaPencilAlt,
-  FaHeadphones,
-  FaLanguage,
-  FaSchool,
-  FaNewspaper,
-} from 'react-icons/fa';
+import { FaBook, FaPencilAlt, FaLanguage } from 'react-icons/fa';
 import {
   GiBookCover,
   GiBookshelf,
@@ -14,11 +7,35 @@ import {
   GiSpellBook,
 } from 'react-icons/gi';
 
+let Icons = {};
+
+try {
+  Icons = {
+    ProductType: GiBookshelf,
+    Genre: GiSpellBook,
+    Author: FaPencilAlt,
+    Publisher: GiBookCover,
+    Language: FaLanguage,
+    Format: GiNotebook,
+    Edition: GiArchiveResearch,
+    Condition: FaBook,
+    ISBN: FaBook,
+  };
+} catch (error) {
+  console.warn(
+    '⚠️ بعض أيقونات الكتب غير متاحة في react-icons. تحقق من المكتبة!',
+    error
+  );
+  Icons = {};
+}
+
 const books = [
   {
     name: 'productType',
     label: 'نوع المنتج',
-    icon: <GiBookshelf className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.ProductType ? (
+      <Icons.ProductType className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'كتب عامة',
@@ -34,7 +51,9 @@ const books = [
   {
     name: 'genre',
     label: 'التصنيف الأدبي',
-    icon: <GiSpellBook className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Genre ? (
+      <Icons.Genre className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'خيال علمي',
@@ -53,19 +72,25 @@ const books = [
   {
     name: 'author',
     label: 'المؤلف/المترجم',
-    icon: <FaPencilAlt className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Author ? (
+      <Icons.Author className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: 'اسم المؤلف أو المترجم',
   },
   {
     name: 'publisher',
     label: 'دار النشر',
-    icon: <GiBookCover className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Publisher ? (
+      <Icons.Publisher className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: 'اسم دار النشر',
   },
   {
     name: 'language',
     label: 'اللغة',
-    icon: <FaLanguage className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Language ? (
+      <Icons.Language className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'العربية',
@@ -80,7 +105,9 @@ const books = [
   {
     name: 'format',
     label: 'نوع النسخة',
-    icon: <GiNotebook className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Format ? (
+      <Icons.Format className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'غلاف مقوى',
@@ -94,13 +121,17 @@ const books = [
   {
     name: 'edition',
     label: 'الطبعة',
-    icon: <GiArchiveResearch className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Edition ? (
+      <Icons.Edition className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: 'رقم الطبعة وسنة النشر',
   },
   {
     name: 'condition',
     label: 'الحالة',
-    icon: <FaBook className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.Condition ? (
+      <Icons.Condition className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: '-اختر-',
     options: {
       1: 'جديد',
@@ -113,7 +144,9 @@ const books = [
   {
     name: 'isbn',
     label: 'رقم ISBN',
-    icon: <FaBook className="text-primary-500 text-lg sm:text-xl" />,
+    icon: Icons.ISBN ? (
+      <Icons.ISBN className="text-primary-500 text-lg sm:text-xl" />
+    ) : null,
     placeholder: 'أدخل رقم ISBN إن وجد',
   },
 ];
