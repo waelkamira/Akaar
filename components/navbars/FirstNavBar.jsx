@@ -23,7 +23,7 @@ export default function FirstNavBar() {
             >
               <Link
                 href={button?.path}
-                className="relative flex items-center justify-center gap-1 w-full text-white font-bold text-lg transition-all duration-300 ease-in-out group hover:scale-105"
+                className="relative flex items-center justify-center gap-1 w-full font-bold text-lg transition-all duration-300 ease-in-out group hover:scale-105"
               >
                 {/* أيقونة الزر */}
                 <span className="mb-2 text-primary">{button?.icon}</span>
