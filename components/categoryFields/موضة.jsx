@@ -5,10 +5,10 @@ import {
   GiRunningShoe,
   GiHandBag,
   GiUnderwearShorts,
-  GiArmoredBelt,
-  GiEyeglasses,
+  GiArmoredPants,
   GiPocketWatch,
 } from 'react-icons/gi';
+import { PiEyeglassesLight } from 'react-icons/pi';
 
 let Icons = {};
 
@@ -27,8 +27,8 @@ try {
     Shoes: GiRunningShoe,
     Bags: GiHandBag,
     Underwear: GiUnderwearShorts,
-    Belts: GiArmoredBelt,
-    Glasses: GiEyeglasses,
+    Belts: GiArmoredPants,
+    Glasses: PiEyeglassesLight,
     Watches: GiPocketWatch,
   };
 } catch (error) {

@@ -184,7 +184,7 @@ export default function Footer() {
                     src="/logo.png"
                     fill
                     className="object-contain"
-                    alt="AKAAR Logo"
+                    alt="Matjar Logo"
                   />
                 </div>
               </Link>
@@ -264,7 +264,7 @@ export default function Footer() {
                 </li>
                 <li className="flex items-center text-neutral-400">
                   <Mail size={16} className="ml-2 text-primary-300" />
-                  <span>info@akaar.com</span>
+                  <span>info@Matjar.com</span>
                 </li>
 
                 {/* Social Media */}
@@ -319,7 +319,7 @@ export default function Footer() {
           {/* Bottom Section */}
           <div className="pt-8 border-t border-neutral-800 text-center">
             <p className="text-neutral-500 text-sm">
-              Copyright © {new Date().getFullYear()} AKAAR. جميع الحقوق محفوظة
+              Copyright © {new Date().getFullYear()} Matjar. جميع الحقوق محفوظة
             </p>
           </div>
         </div>

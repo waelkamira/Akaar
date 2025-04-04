@@ -13,6 +13,7 @@ import { GiCarKey } from 'react-icons/gi'; // أيقونات من react-icons/gi
 import { useRouter } from 'next/navigation';
 import Card from '../../components/ReusableComponents/Card'; // تأكد من تعديل المسار حسب مكان المكون
 import Image from 'next/image';
+import LoadingPhoto from '../../components/photos/LoadingPhoto';
 
 export default function ContactUs() {
   const router = useRouter();
@@ -93,6 +94,7 @@ export default function ContactUs() {
     <main className="flex flex-col justify-center items-center sm:pb-16 w-full rounded-b">
       <div className="flex flex-col justify-center items-center w-full xl:w-[90%] 2xl:w-[70%] h-full sm:px-16 pt-2 overflow-y-auto z-10 px-2">
         <div className="flex flex-col justify-between items-center w-full h-full mt-2 cursor-pointer">
+          LoadingPhoto
           {/* قسم البطاقات */}
           <div className="flex flex-col md:flex-row justify-center items-center w-full p-4 gap-6">
             <div className="flex flex-col justify-center items-center w-full p-4 gap-6">
@@ -162,7 +164,6 @@ export default function ContactUs() {
               .والتأجير للعقارات والسيارات ,و بيع المنتجات بمختلف أنواعها
             </div>
           </div>
-
           {/* قسم معلومات الاتصال */}
           <div className="w-full h-full">
             {/* قسم معلومات الاتصال */}
