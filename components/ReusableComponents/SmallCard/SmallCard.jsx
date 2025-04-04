@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import ImageComponent from './ImageComponent';
 import DetailsSection from './DetailsSection';
 import AdditionalFields from './AdditionalFields';
@@ -18,27 +18,30 @@ const SmallCard = React.memo(function SmallCard({ item, category }) {
     router.push(`/post/${item?.id}`);
   };
 
-  if (!item) return null;
+  if (!item) {
+    return (
+      <div className="flex flex-col w-full bg-white rounded-2xl border border-gray-100 shadow-sm animate-pulse p-6">
+        <div className="w-full h-64 bg-gray-300 rounded-lg" />
+        <div className="mt-4 h-6 w-3/4 bg-gray-300 rounded" />
+        <div className="mt-2 h-4 w-1/2 bg-gray-300 rounded" />
+        <div className="mt-6 h-10 w-full bg-gray-300 rounded" />
+      </div>
+    );
+  }
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      whileHover={{
-        y: -8,
-        scale: 1.02,
-      }}
+      whileHover={{ y: -8, scale: 1.02 }}
       transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
       className="flex flex-col w-full cursor-pointer bg-white rounded-2xl overflow-hidden relative group border border-gray-100/50 hover:border-primary/20 shadow-sm"
       onClick={handleClick}
     >
-      {/* شريط التظليل العلوي */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 z-10 pointer-events-none" />
 
-      {/* زر المفضلة */}
       <FavoriteButton item={item} className="top-4 right-4 z-20" />
 
-      {/* شارة جديدة إذا كان المنتج حديث */}
       {item.isNew && (
         <motion.div
           initial={{ x: -50, opacity: 0 }}
@@ -50,7 +53,6 @@ const SmallCard = React.memo(function SmallCard({ item, category }) {
         </motion.div>
       )}
 
-      {/* الصورة الرئيسية */}
       <div className="relative h-64 w-full overflow-hidden">
         <ImageComponent
           item={item}
@@ -59,16 +61,13 @@ const SmallCard = React.memo(function SmallCard({ item, category }) {
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       </div>
 
-      {/* محتوى البطاقة */}
       <div className="p-6 pt-0 space-y-4 relative">
         <div className="absolute inset-0 bg-gradient-to-b from-white/0 via-white to-white -top-10 z-10 pointer-events-none" />
 
-        {/* العنوان والموقع */}
         <div className="relative z-20">
           <DetailsSection item={item} />
         </div>
 
-        {/* الحقول الإضافية */}
         <div className="relative flex justify-center items-center z-20">
           <AdditionalFields
             item={item}
@@ -77,7 +76,6 @@ const SmallCard = React.memo(function SmallCard({ item, category }) {
           />
         </div>
 
-        {/* السعر وزر التفاصيل */}
         <motion.div
           className="flex flex-col justify-between items-center relative z-20 text-nowrap"
           whileHover={{ scale: 1.01 }}
@@ -118,7 +116,6 @@ const SmallCard = React.memo(function SmallCard({ item, category }) {
         </motion.div>
       </div>
 
-      {/* تأثير تحويم خلفي */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 pointer-events-none" />
     </motion.div>
   );

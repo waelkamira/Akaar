@@ -1065,7 +1065,7 @@ async function main() {
       const district = extractDistrict(caption);
 
       // إعداد الصور
-      const defaultImage = 'https://i.imgur.com/vGpGUAj.png';
+      const defaultImage = 'https://i.imgur.com/gbtd9PE.jpg';
       const mediaUrls = post.media_url || [];
 
       // معالجة التاريخ
@@ -1086,39 +1086,42 @@ async function main() {
       }
 
       try {
-        await prisma.product.create({
-          data: {
-            title: caption.substring(0, 100) || 'No Title',
-            userId: userId, // استخدم userId الذي تم التحقق منه
-            categoryId: categories.map((category) => category.id)[0],
-            categoryName: categories.map((category) => category.name)[1],
-            image1: mediaUrls[0] || defaultImage,
-            image2: mediaUrls[1] || null,
-            image3: mediaUrls[2] || null,
-            image4: mediaUrls[3] || null,
-            image5: mediaUrls[4] || null,
-            basePrice: 0, // يمكن تفعيل استخراج السعر إذا لزم
-            city: city,
-            town: district,
-            phoneNumber: phone,
-            lng: null,
-            lat: null,
-            link: post.video_url || '',
-            details: {
-              adType: adType?.toString(),
-              rooms: rooms?.toString(),
-              livingrooms: livingRooms?.toString(),
-              area: area?.toString(),
-              propertyType: '1', // نوع العقار يمكن استخراجه مستقبلًا
+        // حلقة على جميع الفئات في المصفوفة
+        for (const category of categories) {
+          await prisma.product.create({
+            data: {
+              title: caption.substring(0, 100) || 'No Title',
+              userId: userId,
+              categoryId: category.id, // استخدام معرف الفئة الحالية
+              categoryName: category.name, // استخدام اسم الفئة الحالية
+              image1: mediaUrls[0] || defaultImage,
+              image2: mediaUrls[1] || null,
+              image3: mediaUrls[2] || null,
+              image4: mediaUrls[3] || null,
+              image5: mediaUrls[4] || null,
+              basePrice: 0,
+              city: city,
+              town: district,
+              phoneNumber: phone,
+              lng: null,
+              lat: null,
+              link: post.video_url || '',
+              details: {
+                adType: adType?.toString(),
+                rooms: rooms?.toString(),
+                livingrooms: livingRooms?.toString(),
+                area: area?.toString(),
+                propertyType: '1',
+              },
+              description: caption,
+              stockQuantity: 1,
+              isDeleted: false,
+              createdAt: createdAtDate,
+              updatedAt: new Date(),
             },
-            description: caption,
-            stockQuantity: 1,
-            isDeleted: false,
-            createdAt: createdAtDate,
-            updatedAt: new Date(),
-          },
-        });
-
+          });
+          console.log(`تم إنشاء منتج للفئة: ${category.name}`);
+        }
         console.log(`تمت معالجة الإعلان: ${post.post_id}`);
       } catch (error) {
         console.error(`Error processing post ${post.post_id}:`, error);
