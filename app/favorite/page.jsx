@@ -1,7 +1,6 @@
 'use client';
 import { useSession } from 'next-auth/react';
-import React, { useEffect, useState } from 'react';
-import { IoMdClose } from 'react-icons/io';
+import React, { useEffect, useState, useCallback } from 'react';
 import toast from 'react-hot-toast';
 import CustomToast from '../../components/ReusableComponents/CustomToast';
 import Loading from '../../components/ReusableComponents/Loading';
@@ -10,14 +9,13 @@ import { MdKeyboardDoubleArrowRight } from 'react-icons/md';
 import LoginButton from '../../components/Buttons/LoginButton';
 
 export default function Favorites() {
-  const [favoriteId, setFavoriteId] = useState(null); // ID للعنصر المراد حذفه
-  const [isVisible, setIsVisible] = useState(false); // حالة نافذة التأكيد
-  const [myFavorites, setMyFavorites] = useState([]); // قائمة المفضلة
+  const [myFavorites, setMyFavorites] = useState([]);
   const [userId, setUserId] = useState(null);
   const [pageNumber, setPageNumber] = useState(0);
   const [hasMore, setHasMore] = useState(false);
   const [loading, setLoading] = useState(false);
   const [totalCount, setTotalCount] = useState(0);
+  const [initialLoad, setInitialLoad] = useState(true);
 
   const session = useSession();
 
@@ -29,29 +27,32 @@ export default function Favorites() {
     }
   }, []);
 
-  // جلب المفضلة عند تحميل الصفحة
-  useEffect(() => {
-    if (userId) {
-      fetchMyFavorites();
-    }
-  }, [userId, pageNumber]);
-
-  // دالة لجلب المفضلة
-  async function fetchMyFavorites() {
+  // دالة محسنة لجلب المفضلة مع التخزين المؤقت
+  const fetchMyFavorites = useCallback(async () => {
     try {
       if (!userId) return;
 
       setLoading(true);
       const response = await fetch(
-        `/api/favorite?userId=${userId}&page=${pageNumber}&limit=8`
+        `/api/favorite?userId=${userId}&page=${pageNumber}&limit=8`,
+        {
+          next: { revalidate: 1800 }, // إعادة التحقق بعد 30 دقيقة
+        }
       );
+
+      if (!response.ok) throw new Error('Failed to fetch');
+
       const json = await response.json();
 
       if (json.favorites) {
-        setMyFavorites([...myFavorites, ...json?.favorites]);
-        setTotalCount(json?.totalCount);
-        setHasMore(json?.hasMore);
+        setMyFavorites((prev) =>
+          pageNumber === 0 ? json.favorites : [...prev, ...json.favorites]
+        );
+        setTotalCount(json.totalCount);
+        setHasMore(json.hasMore);
       }
+
+      if (initialLoad) setInitialLoad(false);
     } catch (error) {
       console.error('Error fetching favorites:', error);
       toast.custom((t) => (
@@ -60,7 +61,11 @@ export default function Favorites() {
     } finally {
       setLoading(false);
     }
-  }
+  }, [userId, pageNumber, initialLoad]);
+
+  useEffect(() => {
+    fetchMyFavorites();
+  }, [fetchMyFavorites]);
 
   const handleNextPage = () => {
     if (hasMore && !loading) {
@@ -77,24 +82,25 @@ export default function Favorites() {
             <span className="text-green-600 font-bold mx-2">{totalCount}</span>
           </h2>
         </div>
+
         {session?.data?.user ? (
           <>
-            {myFavorites.length === 0 ? (
+            {initialLoad ? (
+              <Loading />
+            ) : myFavorites.length === 0 ? (
               <Loading myMessage={'لم تقم بالإعجاب بأي إعلان بعد 😉'} />
             ) : (
               <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 gap-6">
                 {myFavorites.map((favorite, index) => (
                   <div
-                    key={index}
+                    key={`${favorite.id}-${index}`}
                     className="relative flex flex-col border border-gray-200 items-start h-full justify-start bg-white hover:shadow-lg transition-all duration-300 ease-in-out cursor-pointer rounded-lg overflow-hidden"
                   >
-                    {/* عرض المنتج */}
                     <SmallCard item={favorite} />
                   </div>
                 ))}
               </div>
             )}
-            {/* زر التنقل */}
 
             {hasMore && (
               <div className="mt-12 mb-8 flex justify-center">

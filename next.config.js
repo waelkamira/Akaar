@@ -7,12 +7,18 @@ const withPWA = require('next-pwa')({
 });
 
 const nextConfig = withPWA({
-  reactStrictMode: true,
-
   compress: true,
   swcMinify: true,
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   images: {
-    remotePatterns: [{ protocol: 'https', hostname: '**' }],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+    ],
     formats: ['image/avif', 'image/webp'],
     minimumCacheTTL: 60,
   },

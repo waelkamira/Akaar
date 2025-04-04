@@ -1,65 +1,73 @@
 'use client';
-import Footer from '../components/ReusableComponents/Footer';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
+import { motion } from 'framer-motion';
+import { FaAngleDoubleLeft, FaAngleDoubleRight } from 'react-icons/fa';
+import Footer from '../components/ReusableComponents/Footer';
 import Loading from '../components/ReusableComponents/Loading';
 import SmallCard from '../components/ReusableComponents/SmallCard/SmallCard';
-import { motion } from 'framer-motion';
 import ColoredCards from '../components/ReusableComponents/ColoredCards';
 import categories from '../components/Categories/categories';
-import { FaAngleDoubleLeft, FaAngleDoubleRight } from 'react-icons/fa';
-import { useEffect, useState } from 'react';
-import { useSession } from 'next-auth/react';
 
-const Home = () => {
+// حجم الدفعة الأمثل (يمكن تعديله حسب الاختبار)
+const OPTIMAL_BATCH_SIZE = 6;
+
+export default function Home() {
   const [productsByCategory, setProductsByCategory] = useState({});
   const [loading, setLoading] = useState(true);
-  const [loadedCategories, setLoadedCategories] = useState(0); // لتتبع عدد الفئات المحملة
+  const [loadedCategories, setLoadedCategories] = useState(0);
   const router = useRouter();
   const session = useSession();
-  console.log('productsByCategory', productsByCategory);
 
-  useEffect(() => {
-    // تحميل البيانات بشكل تدريجي
-    fetchProductsByCategoryOptimized();
-  }, []);
+  // دالة محسنة لجلب البيانات مع التخزين المؤقت
+  const fetchProductsByCategory = useCallback(async () => {
+    setLoading(true);
 
-  const fetchProductsByCategoryOptimized = async () => {
     try {
-      // تقسيم الفئات إلى مجموعات صغيرة (4 فئات في كل طلب)
-      const chunkSize = 4;
-      const chunks = [];
-
-      for (let i = 0; i < categories.length; i += chunkSize) {
-        chunks.push(categories.slice(i, i + chunkSize));
+      // تقسيم الفئات إلى دفعات
+      const batches = [];
+      for (let i = 0; i < categories.length; i += OPTIMAL_BATCH_SIZE) {
+        batches.push(categories.slice(i, i + OPTIMAL_BATCH_SIZE));
       }
 
-      // تحميل كل مجموعة على حدة
-      for (const chunk of chunks) {
-        const categoryIds = chunk.map((category) => category.id).join(',');
-        const response = await fetch(
-          `/api/categories/bulk?categories=${categoryIds}`
-        );
-        const data = await response.json();
+      // جلب كل دفعة مع التعامل مع الأخطاء
+      for (const batch of batches) {
+        try {
+          const categoryIds = batch.map((c) => c.id).join(',');
+          const response = await fetch(
+            `/api/categories/bulk?categories=${categoryIds}`,
+            {
+              next: { revalidate: 3600 }, // إعادة التحقق بعد ساعة (ISR)
+            }
+          );
 
-        // دمج البيانات الجديدة مع البيانات الحالية
-        setProductsByCategory((prev) => ({
-          ...prev,
-          ...data?.data,
-        }));
+          if (!response.ok)
+            throw new Error(`HTTP error! status: ${response.status}`);
 
-        // تحديث عدد الفئات المحملة
-        setLoadedCategories((prev) => prev + chunk.length);
+          const { data } = await response.json();
 
-        // إذا تم تحميل بعض البيانات، إنهاء حالة التحميل
-        if (Object.keys(data?.data || {}).length > 0) {
-          setLoading(false);
+          setProductsByCategory((prev) => ({
+            ...prev,
+            ...data,
+          }));
+
+          setLoadedCategories((prev) => prev + batch.length);
+        } catch (error) {
+          console.error('خطأ في جلب دفعة الفئات:', error);
+          // يمكنك هنا إضافة منطق لإعادة المحاولة أو التعامل مع الخطأ
         }
       }
     } catch (error) {
-      console.error('Error fetching products:', error);
+      console.error('خطأ عام في جلب البيانات:', error);
+    } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchProductsByCategory();
+  }, [fetchProductsByCategory]);
 
   const handleCategoryClick = (category) => {
     localStorage.setItem('category', JSON.stringify(category));
@@ -67,9 +75,12 @@ const Home = () => {
   };
 
   const renderProducts = (category) => {
-    if (!productsByCategory[category.id]) return <Loading />;
+    const products = productsByCategory[category.id];
 
-    return productsByCategory[category.id].map((item) => (
+    if (!products) return <Loading small />;
+    if (products.length === 0) return <p>لا توجد منتجات في هذه الفئة</p>;
+
+    return products.map((item) => (
       <motion.div
         key={item.id}
         whileHover={{ scale: 1.03 }}
@@ -85,20 +96,19 @@ const Home = () => {
   return (
     <main className="relative flex flex-row-reverse items-start justify-between overflow-hidden z-[40] h-fit w-full bg-five rounded-b">
       <div className="relative flex-col justify-between items-start w-full h-full">
-        <div className="flex flex-col items-center justify-center overflow-hidden z-50 h-fit w-full bg-five rounded-b ">
-          {loading ? (
-            <Loading />
+        <div className="flex flex-col items-center justify-center overflow-hidden z-50 h-fit w-full bg-five rounded-b">
+          {loading && loadedCategories === 0 ? (
+            <Loading fullPage />
           ) : (
             categories
-              .filter(
-                (category) => productsByCategory[category?.id]?.length > 0
-              )
+              .filter((category) => productsByCategory[category.id]?.length > 0)
               .map((category) => (
                 <motion.div
                   key={category.id}
                   initial={{ opacity: 0, y: 50 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5 }}
+                  viewport={{ once: true, margin: '0px 0px -100px 0px' }}
                   className="flex flex-col justify-center items-center w-full h-full"
                 >
                   <div className="flex flex-col justify-center items-center w-full h-full gap-8 py-8 my-8">
@@ -109,7 +119,7 @@ const Home = () => {
                       <ColoredCards number={category.id} text={category.name} />
                     </div>
                     <div className="flex flex-wrap justify-center items-center gap-4 w-full 2xl:w-[80%] h-full p-4 mb-4">
-                      {loading ? <Loading /> : renderProducts(category)}
+                      {renderProducts(category)}
                       <div
                         className="flex justify-center items-center gap-2 cursor-pointer text-lg hover:scale-105 transition-transform ease-in-out duration-200 mt-8 sm:mt-20"
                         onClick={() => handleCategoryClick(category)}
@@ -122,7 +132,7 @@ const Home = () => {
                             textShadow: '1px 1px 4px rgba(0, 0, 0, 0.3)',
                           }}
                         >
-                          المزيد من ال{category.name}
+                          المزيد من {category.name}
                         </motion.span>
                         <FaAngleDoubleRight className="text-primary-500" />
                       </div>
@@ -136,11 +146,9 @@ const Home = () => {
           <Footer />
         </div>
         <h1 className="w-full text-sm select-none text-center pt-8 pb-4 border uppercase text-gray-600">
-          Copyright © 2025 Matjar web site. All Rights Reserved
+          حقوق النشر © 2025 موقع متجر. جميع الحقوق محفوظة
         </h1>
       </div>
     </main>
   );
-};
-
-export default Home;
+}
