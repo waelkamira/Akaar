@@ -21,7 +21,7 @@ export default function NavegationPages({
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          className="flex items-center justify-center text-sm sm:text-lg gap-2 py-2 px-2 sm:py-3 sm:px-8 bg-three rounded-[5px] text-white"
+          className="flex items-center justify-center text-sm sm:text-lg gap-2 py-2 px-2 sm:py-3 sm:px-8 bg-three rounded-[5px]"
           onClick={() => setPageNumber(pageNumber + 1)}
         >
           الصفحة التالية
@@ -33,7 +33,7 @@ export default function NavegationPages({
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          className="flex items-center justify-center text-sm sm:text-lg gap-2 py-2 px-2 sm:py-3 sm:px-8 bg-three rounded-[5px] text-white"
+          className="flex items-center justify-center text-sm sm:text-lg gap-2 py-2 px-2 sm:py-3 sm:px-8 bg-three rounded-[5px]"
           onClick={() => setPageNumber(pageNumber - 1)}
         >
           <MdKeyboardDoubleArrowLeft className="text-xl text-primary-500 " />

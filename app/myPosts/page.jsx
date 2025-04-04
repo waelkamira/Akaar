@@ -1,5 +1,5 @@
 'use client';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
 import { inputsContext } from '../../components/authContext/Context';
 import { useRouter } from 'next/navigation';
@@ -16,7 +16,39 @@ const MyPostsContent = () => {
   const [hasMore, setHasMore] = useState(false);
   const session = useSession();
   const [myPosts, setMyPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
+
+  // دالة محسنة لجلب الإعلانات مع التخزين المؤقت
+  const fetchMyPosts = useCallback(
+    async (userId) => {
+      if (!userId) return;
+
+      setLoading(true);
+      try {
+        const response = await fetch(
+          `/api/myPosts?page=${pageNumber}&userId=${userId}&limit=8`,
+          {
+            next: { revalidate: 1800 }, // إعادة التحقق بعد 30 دقيقة
+          }
+        );
+
+        if (!response.ok) throw new Error('Failed to fetch');
+
+        const json = await response.json();
+
+        setHasMore(json.hasMore);
+        setMyPosts(json?.data || []);
+        setUserPostsCount(json?.count || 0);
+        dispatch({ type: 'MY_POSTS', payload: json });
+      } catch (error) {
+        console.error('Error fetching posts:', error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [pageNumber, dispatch]
+  );
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -24,20 +56,7 @@ const MyPostsContent = () => {
       const userId = data?.id;
       fetchMyPosts(userId);
     }
-  }, [pageNumber, session]);
-
-  const fetchMyPosts = async (userId) => {
-    const response = await fetch(
-      `/api/myPosts?page=${pageNumber}&userId=${userId}&limit=8`
-    );
-    if (response.ok) {
-      const json = await response.json();
-      setHasMore(json.hasMore);
-      setMyPosts(json?.data);
-      setUserPostsCount(json?.count);
-      dispatch({ type: 'MY_POSTS', payload: json });
-    }
-  };
+  }, [fetchMyPosts, session]);
 
   return (
     <div className="flex flex-col justify-center items-center w-full">
@@ -51,45 +70,53 @@ const MyPostsContent = () => {
                 <span className="text-primary-500"> {userPostsCount}</span>
               </h1>
             </div>
-            {myPosts?.length === 0 && (
+
+            {loading ? (
+              <Loading />
+            ) : myPosts.length === 0 ? (
               <Loading
                 myMessage={
                   '😉 لا يوجد نتائج لعرضها ,لم تقم بإنشاء أي إعلان بعد'
                 }
               />
-            )}
-            <div className="w-full">
-              <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 gap-4 justify-start items-start w-full">
-                {myPosts?.length > 0 &&
-                  myPosts.map((post, index) => (
+            ) : (
+              <div className="w-full">
+                <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 gap-4 justify-start items-start w-full">
+                  {myPosts.map((post) => (
                     <div
                       className="relative flex flex-col border-2 items-start h-full justify-start bg-primary-500 hover:scale-[101%] transition-transform duration-300 ease-in-out cursor-pointer rounded-[10px] overflow-hidden"
-                      key={index}
+                      key={post.id}
                       onClick={() => {
-                        if (typeof window !== 'undefined') {
-                          localStorage.setItem('item', JSON.stringify(post));
-                        }
-                        router.push(`/post/${post?.id}`);
+                        localStorage.setItem('item', JSON.stringify(post));
+                        router.push(`/post/${post.id}`);
                       }}
                     >
                       <PostActions
                         post={post}
                         session={session}
-                        fetchMyPosts={fetchMyPosts}
+                        onDelete={() => {
+                          const userId = JSON.parse(
+                            localStorage.getItem('CurrentUser')
+                          )?.id;
+                          fetchMyPosts(userId);
+                        }}
                       />
                       <SmallCard item={post} category={post?.categoryName} />
                     </div>
                   ))}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         )}
-        {/* 
-        <NavegationPages
-          hasMore={hasMore}
-          setPageNumber={setPageNumber}
-          pageNumber={pageNumber}
-        /> */}
+
+        {!loading && (
+          <NavegationPages
+            hasMore={hasMore}
+            setPageNumber={setPageNumber}
+            pageNumber={pageNumber}
+          />
+        )}
       </div>
       {session?.status === 'unauthenticated' && <LoginButton />}
     </div>

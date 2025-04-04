@@ -2,7 +2,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, ChevronRight, Star } from 'lucide-react';
-import { cn } from '../../../lib/utils';
+import { cn } from '../../../lib/utils.js';
 
 const DetailsSection = ({ item, className }) => {
   return (
