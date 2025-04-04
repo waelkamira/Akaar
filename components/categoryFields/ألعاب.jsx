@@ -3,11 +3,11 @@ import { FaUsers } from 'react-icons/fa';
 import {
   GiConsoleController,
   GiCardboardBox,
-  GiBoardGame,
   GiFamilyHouse,
 } from 'react-icons/gi';
 import { MdOutlineGames, MdSportsEsports } from 'react-icons/md';
 import { BiCategory } from 'react-icons/bi'; // استيراد BiCategory
+import { SiGamemaker } from 'react-icons/si';
 
 let Icons = {};
 
@@ -16,7 +16,7 @@ try {
     Type: MdOutlineGames,
     Platform: GiConsoleController,
     Genre: BiCategory,
-    BoardGameType: GiBoardGame,
+    BoardGameType: SiGamemaker,
     MinAge: GiFamilyHouse,
     Players: FaUsers,
     Brand: MdSportsEsports,

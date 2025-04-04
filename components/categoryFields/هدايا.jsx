@@ -17,8 +17,9 @@ import {
   FaSuitcase,
   FaGlasses, // تم التأكد من وجودها واستخدامها
 } from 'react-icons/fa';
+import { FcFrame } from 'react-icons/fc';
+
 import {
-  GiWoodenFrame,
   GiCrystalBall,
   GiJewelCrown,
   // الأيقونات التي تم استبدالها أو غير مستخدمة تم حذفها من هنا
@@ -50,7 +51,7 @@ try {
 
   Icons = {
     GiftCategory: FaGift,
-    Wrapping: GiWoodenFrame,
+    Wrapping: FcFrame,
     Personalization: GiCrystalBall,
     Delivery: FaPlane,
     // يمكنك الإبقاء على المفاتيح القديمة إذا كانت مستخدمة في مكان آخر،

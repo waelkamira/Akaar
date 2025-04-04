@@ -1,23 +1,23 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
+const withPWA = require('next-pwa')({
+  dest: 'public',
+  register: true,
+  skipWaiting: true,
+  disable: process.env.NODE_ENV === 'development',
+});
+
+const nextConfig = withPWA({
+  reactStrictMode: true,
+
   compress: true,
-  swcMinify: true, // تمكين minification باستخدام SWC
-  typescript: {
-    ignoreBuildErrors: true, // تجاهل أخطاء TypeScript أثناء البناء
-  },
+  swcMinify: true,
   images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: '**', // السماح بجميع النطاقات
-      },
-    ],
-    formats: ['image/avif', 'image/webp'], // تحسين الصور
-    minimumCacheTTL: 60, // وقت التخزين المؤقت للصور (بالثواني)
+    remotePatterns: [{ protocol: 'https', hostname: '**' }],
+    formats: ['image/avif', 'image/webp'],
+    minimumCacheTTL: 60,
   },
-  productionBrowserSourceMaps: false, // تعطيل source maps في الإنتاج لتحسين الأداء
-  // تحسين التخزين المؤقت للصفحات الثابتة
-  staticPageGenerationTimeout: 120, // زيادة مهلة إنشاء الصفحات الثابتة (بالثواني)
-};
+  productionBrowserSourceMaps: false,
+  staticPageGenerationTimeout: 120,
+});
 
 module.exports = nextConfig;
