@@ -1,5 +1,4 @@
 import './globals.css';
-import { Inter } from 'next/font/google';
 import { Rubik } from 'next/font/google';
 import { Toaster } from 'react-hot-toast';
 import { InputsContextProvider } from '../components/authContext/Context';
@@ -15,35 +14,12 @@ const rubik = Rubik({
   variable: '--font-rubik',
 });
 
-export const metadata = {
-  title: 'Matjar - Your Online Store',
-  description: 'Matjar is your one-stop shop for all your needs',
-  manifest: '/manifest.json',
-  themeColor: '#000000',
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: 'default',
-    title: 'Matjar',
-  },
-  formatDetection: {
-    telephone: false,
-  },
-};
-
-export const viewport = 'width=device-width, initial-scale=1, maximum-scale=1';
-
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className="!scroll-smooth" dir="rtl">
       <head>
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#000000" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="Matjar" />
-        <meta name="format-detection" content="telephone=no" />
-        <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="viewport" content={viewport} />
+        {/* يمكن إزالة هذه الإعدادات المكررة لأنها معرفة في viewport و metadata */}
       </head>
       <body className={rubik.className}>
         <Toaster />
