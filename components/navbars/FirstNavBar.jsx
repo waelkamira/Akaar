@@ -10,7 +10,7 @@ export default function FirstNavBar() {
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: 'easeOut', delay: 0.2 }}
-      className="hidden xl:flex xl:flex-col xl:justify-start w-full overflow-hidden z-[1000] shadow-lg"
+      className="hidden xl:flex xl:justify-start w-full overflow-hidden z-50 shadow-lg"
     >
       {/* شريط التنقل الرئيسي */}
       <div className="flex justify-between items-center w-full px-4 py-2">
