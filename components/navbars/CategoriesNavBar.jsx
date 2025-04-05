@@ -118,7 +118,7 @@ const CategoriesNavBar = () => {
   }, [category]);
 
   return (
-    <div className="hidden sm:block  w-full -z-10 absolute bottom-0">
+    <div className="hidden sm:block w-full z-50 absolute bottom-0">
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
