@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { Suspense } from 'react';
 import { FaCalendarDays, FaFacebookF } from 'react-icons/fa6'; // أيقونات من react-icons/fa6
 import { FiLinkedin } from 'react-icons/fi'; // أيقونات من react-icons/fi
 import { TbBrandGmail } from 'react-icons/tb'; // أيقونات من react-icons/tb
@@ -40,14 +40,14 @@ export default function ContactUs() {
     {
       icon: <TbBrandGmail className="text-lg select-none text-primary-500" />,
       text: 'gmail',
-      link: '/contactUs/byEmail',
+      link: '/byEmail',
     },
     {
       icon: (
         <MdOutlineAlternateEmail className="text-lg select-none text-primary-500" />
       ),
       text: 'hotmail',
-      link: '/contactUs/byEmail',
+      link: '/byEmail',
     },
   ];
 
@@ -91,7 +91,7 @@ export default function ContactUs() {
   ];
   const image = '/logo.png';
   return (
-    <main className="flex flex-col justify-center items-center sm:pb-16 w-full rounded-b">
+    <Suspense className="flex flex-col justify-center items-center sm:pb-16 w-full rounded-b">
       <div className="flex flex-col justify-center items-center w-full xl:w-[90%] 2xl:w-[70%] h-full sm:px-16 pt-2 overflow-y-auto z-10 px-2">
         <div className="flex flex-col justify-between items-center w-full h-full mt-2 cursor-pointer">
           LoadingPhoto
@@ -233,6 +233,6 @@ export default function ContactUs() {
           </div>
         </div>
       </div>
-    </main>
+    </Suspense>
   );
 }

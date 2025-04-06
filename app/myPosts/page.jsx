@@ -1,5 +1,11 @@
 'use client';
-import React, { useContext, useEffect, useState, useCallback } from 'react';
+import React, {
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+  Suspense,
+} from 'react';
 import { useSession } from 'next-auth/react';
 import { inputsContext } from '../../components/authContext/Context';
 import { useRouter } from 'next/navigation';
@@ -59,7 +65,7 @@ const MyPostsContent = () => {
   }, [fetchMyPosts, session]);
 
   return (
-    <div className="flex flex-col justify-center items-center w-full">
+    <Suspense className="flex flex-col justify-center items-center w-full">
       <div className="flex flex-col w-full xl:w-[90%] 2xl:w-[80%] h-fit px-2 sm:px-16 overflow-y-auto z-10 border-2 my-4">
         {session?.status === 'authenticated' && (
           <div className="flex flex-col justify-center items-center w-full">
@@ -119,7 +125,7 @@ const MyPostsContent = () => {
         )}
       </div>
       {session?.status === 'unauthenticated' && <LoginButton />}
-    </div>
+    </Suspense>
   );
 };
 

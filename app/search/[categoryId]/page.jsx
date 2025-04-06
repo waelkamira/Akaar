@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, use } from 'react';
 import { useSearch } from '../../../contexts/SearchContext';
 import SearchResults from '../../../components/Search/SearchResults';
 import StaticFilters from '../../../components/Search/StaticFilters';
@@ -42,7 +42,8 @@ function SearchCategoryContent({ params }) {
   );
 }
 
-export default function SearchCategoryPage({ params }) {
+export default function SearchCategoryPage(props) {
+  const params = use(props.params);
   // Extract categoryId from params
   const categoryId = params.categoryId?.split('=')[1];
 

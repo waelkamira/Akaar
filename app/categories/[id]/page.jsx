@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
 import SmallCard from '../../../components/ReusableComponents/SmallCard/SmallCard';
 import { MdKeyboardDoubleArrowRight } from 'react-icons/md';
@@ -50,7 +50,7 @@ const CategoryPage = () => {
   };
 
   return (
-    <div className=" mx-auto w-full lg:max-w-[90%] mt-40 sm:mt-2 p-4 sm:p-0">
+    <Suspense className=" mx-auto w-full lg:max-w-[90%] mt-40 sm:mt-2 p-4 sm:p-0">
       <div className="flex flex-col items-center">
         <h1 className="text-lg sm:text-3xl font-bold text-three mb-8 border-b-2 border-primary-500 pb-2 select-none">
           أحدث إعلانات ال{category}
@@ -100,7 +100,7 @@ const CategoryPage = () => {
           </div>
         )}
       </div>
-    </div>
+    </Suspense>
   );
 };
 

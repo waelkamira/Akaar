@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { motion } from 'framer-motion';
@@ -75,7 +75,7 @@ export default function Home() {
   };
 
   return (
-    <main className="relative flex flex-row-reverse items-start justify-between overflow-hidden z-[40] h-fit w-full bg-five rounded-b">
+    <Suspense className="relative flex flex-row-reverse items-start justify-between overflow-hidden z-[40] h-fit w-full bg-five rounded-b">
       <div className="relative flex-col justify-between items-start w-full h-full">
         <div className="flex flex-col items-center justify-center overflow-hidden z-50 h-fit w-full bg-five rounded-b">
           {loading ? (
@@ -131,6 +131,6 @@ export default function Home() {
           حقوق النشر © 2025 موقع متجر. جميع الحقوق محفوظة
         </h1>
       </div>
-    </main>
+    </Suspense>
   );
 }
