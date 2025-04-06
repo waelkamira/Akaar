@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // output: 'export',
+  trailingSlash: true, // جرب تشغيل هذه الميزة
   compress: true,
   swcMinify: true, // تمكين minification باستخدام SWC
   typescript: {

@@ -12,14 +12,15 @@ import { useEffect, useCallback, useContext, useState } from 'react';
 import { GiExitDoor } from 'react-icons/gi';
 import { inputsContext } from '../../components/authContext/Context';
 import Loading from '../../components/ReusableComponents/Loading';
+import SearchParamsWrapper from '../../components/ReusableComponents/SearchParamsWrapper';
 
-export default function LogInPage() {
+function LoginContent() {
   const session = useSession();
   const router = useRouter();
   const [loggedIn, setLoggedIn] = useState(false);
   const { profileImage, favorite } = useContext(inputsContext);
-  console.log('favorite', favorite);
   const userId = session?.data?.user?.id;
+
   // Schema for form validation
   const schema = z.object({
     email: z.string().email(),
@@ -33,13 +34,19 @@ export default function LogInPage() {
   // Check if user is logged in and redirect to home page
   useEffect(() => {
     if (session?.data?.user) {
-      fetchAndStoreUserData(session?.data?.user?.email);
-      fetchAndStoreUserFavoriteIds(session?.data?.user?.id);
-      toast.success('تم تسجيل الدخول بنجاح أهلا وسهلا');
-      // router.push('/');
-      setLoggedIn(true);
+      const fetchData = async () => {
+        await fetchAndStoreUserData(session?.data?.user?.email);
+        await fetchAndStoreUserFavoriteIds(session?.data?.user?.id);
+        toast.success('تم تسجيل الدخول بنجاح أهلا وسهلا');
+        setLoggedIn(true);
+      };
+      fetchData();
     }
-  }, [router, session?.data?.user]);
+  }, [
+    session?.data?.user,
+    fetchAndStoreUserData,
+    fetchAndStoreUserFavoriteIds,
+  ]);
 
   // Function to fetch and store user data in localStorage
   const fetchAndStoreUserData = useCallback(
@@ -53,17 +60,16 @@ export default function LogInPage() {
         if (typeof window !== 'undefined') {
           localStorage.setItem('CurrentUser', JSON.stringify(user));
         }
-        router.push('/'); // Redirect only after successful data fetch
+        router.push('/');
       } catch (error) {
         console.error('Failed to fetch or store user data:', error);
       }
     },
-    [router, profileImage]
+    [router]
   );
 
   // Function to fetch and favorite user data in localStorage
-  const fetchAndStoreUserFavoriteIds = async (userId) => {
-    console.log('userId', userId);
+  const fetchAndStoreUserFavoriteIds = useCallback(async (userId) => {
     try {
       const response = await fetch(`/api/favorite/ids?userId=${userId}`);
       if (!response.ok) {
@@ -76,7 +82,7 @@ export default function LogInPage() {
     } catch (error) {
       console.error('Failed to fetch or store favorites data:', error);
     }
-  };
+  }, []);
 
   // Handle form submission for email/password login
   async function onSubmit() {
@@ -103,7 +109,7 @@ export default function LogInPage() {
 
     if (signInResult?.ok) {
       toast.success('تم تسجيل الدخول بنجاح أهلا وسهلا');
-      fetchAndStoreUserData(getValues().email); // Call the function to fetch and store user data
+      fetchAndStoreUserData(getValues().email);
     } else {
       setError(signInResult?.error);
       toast.custom((t) => (
@@ -148,5 +154,13 @@ export default function LogInPage() {
         </form>
       )}
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <SearchParamsWrapper>
+      <LoginContent />
+    </SearchParamsWrapper>
   );
 }

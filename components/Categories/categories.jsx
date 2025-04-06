@@ -201,7 +201,7 @@ const categories = [
     enName: 'health',
     path: '/categories/17?category=health',
     icon: Icons.Health ? <Icons.Health /> : null,
-    description: 'مستلزمات طبية، أجهزة طبية، وأدوية',
+    description: 'مستلزمات صحة، أجهزة صحة، وأدوية',
   },
   {
     id: 18,

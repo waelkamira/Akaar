@@ -5,9 +5,11 @@ import CategoryFilter from '../../components/Search/CategoryFilter';
 import StaticFilters from '../../components/Search/StaticFilters';
 import DynamicFilters from '../../components/Search/DynamicFilters';
 import SearchResults from '../../components/Search/SearchResults';
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, Suspense } from 'react';
 import { FilterIcon, XIcon, SearchIcon, ChevronDownIcon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import SearchParamsWrapper from '../../components/ReusableComponents/SearchParamsWrapper';
+import { useSearchParams } from 'next/navigation';
 
 function FiltersContent({ setShowFilters }) {
   const { category, performSearch } = useSearch();
@@ -38,7 +40,7 @@ function FiltersContent({ setShowFilters }) {
   }, [performSearch, setShowFilters]);
 
   return (
-    <div className="space-y-4 px-2">
+    <Suspense className="space-y-4 px-2">
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -181,13 +183,15 @@ function FiltersContent({ setShowFilters }) {
           )}
         </button>
       </motion.div>
-    </div>
+    </Suspense>
   );
 }
 
-export default function SearchPage({ searchParams }) {
+export default function SearchPage() {
+  const searchParams = useSearchParams();
   const [showFilters, setShowFilters] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [initialCategory, setInitialCategory] = useState(null);
 
   useEffect(() => {
     const handleResize = () => {
@@ -202,141 +206,144 @@ export default function SearchPage({ searchParams }) {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  let initialCategory = null;
-  if (searchParams.category) {
-    try {
-      const categoryId = Number.parseInt(searchParams.category);
-      initialCategory = { id: categoryId };
-    } catch (e) {
-      console.error('Error parsing category:', e);
+  useEffect(() => {
+    if (searchParams?.get('category')) {
+      try {
+        const categoryId = Number.parseInt(searchParams.get('category'));
+        setInitialCategory({ id: categoryId });
+      } catch (e) {
+        console.error('Error parsing category:', e);
+      }
     }
-  }
+  }, [searchParams]);
 
   return (
-    <SearchProvider initialCategory={initialCategory}>
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 relative">
-        {/* Floating Action Button for Mobile Filters */}
-        {isMobile && (
-          <motion.button
-            onClick={() => setShowFilters(!showFilters)}
-            className="fixed bottom-6 right-6 z-50 bg-gradient-to-r from-primary-500 to-primary-400 hover:from-primary-600 hover:to-primary-500 text-white p-4 rounded-full shadow-2xl hover:shadow-3xl transition-all"
-            aria-label="Toggle Filters"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-          >
-            {showFilters ? (
-              <XIcon className="w-6 h-6" />
-            ) : (
-              <div className="relative">
-                <FilterIcon className="w-6 h-6" />
-                <motion.span
-                  className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ type: 'spring' }}
-                >
-                  3
-                </motion.span>
-              </div>
-            )}
-          </motion.button>
-        )}
-
-        <main className="container mx-auto px-4 py-8 w-full">
-          <div className="flex flex-col lg:flex-row gap-6 w-full">
-            {/* Filters Sidebar - Always visible on desktop */}
-            <div className="lg:sticky lg:top-4 lg:self-start lg:h-[calc(100vh-2rem)] lg:overflow-y-auto lg:z-0 pb-16 lg:pb-4 px-2">
-              <AnimatePresence>
-                {(showFilters || !isMobile) && (
-                  <>
-                    <motion.aside
-                      key="filters-sidebar"
-                      initial={{ x: isMobile ? '100%' : '0%' }}
-                      animate={{ x: 0 }}
-                      exit={{ x: isMobile ? '100%' : '0%' }}
-                      transition={{
-                        type: 'spring',
-                        damping: 25,
-                        stiffness: 300,
-                      }}
-                      className={`
-                        fixed lg:relative inset-0 lg:inset-auto w-full sm:w-96 lg:w-80
-                        h-screen lg:h-auto bg-white lg:bg-transparent z-40
-                        rounded-xl lg:border lg:border-gray-200 overflow-y-auto
-                      `}
-                    >
-                      <div className="p-2 space-y-4">
-                        {/* Mobile Header */}
-                        {isMobile && (
-                          <div className="flex justify-between items-center pb-4 border-b border-gray-200">
-                            <h2 className="text-xl font-bold text-gray-900">
-                              <span className="bg-primary-100 text-primary-800 py-1 px-3 rounded-full text-sm mr-2">
-                                3
-                              </span>
-                              الفلاتر المحددة
-                            </h2>
-                            <button
-                              onClick={() => setShowFilters(false)}
-                              className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200"
-                            >
-                              <XIcon className="w-6 h-6 text-gray-600" />
-                            </button>
-                          </div>
-                        )}
-
-                        <FiltersContent setShowFilters={setShowFilters} />
-                      </div>
-                    </motion.aside>
-
-                    {/* Overlay for mobile */}
-                    {isMobile && showFilters && (
-                      <motion.div
-                        key="filters-overlay"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="fixed inset-0 bg-black/30 backdrop-blur-sm z-30 lg:hidden"
-                        onClick={() => setShowFilters(false)}
-                      />
-                    )}
-                  </>
-                )}
-              </AnimatePresence>
-            </div>
-
-            {/* Search Results */}
-            <section className="flex-1 min-w-0">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden"
-              >
-                <div className="p-6 lg:p-8">
-                  <div className="flex justify-between items-center mb-6">
-                    <h1 className="text-2xl font-bold text-gray-900">
-                      نتائج البحث
-                    </h1>
-                    {!isMobile && (
-                      <button
-                        onClick={() => setShowFilters(!showFilters)}
-                        className="lg:hidden flex items-center gap-2 text-gray-600 hover:text-primary-600"
-                      >
-                        <FilterIcon className="h-5 w-5" />
-                        <span>الفلاتر</span>
-                      </button>
-                    )}
-                  </div>
-                  <SearchResults />
+    <SearchParamsWrapper>
+      <SearchProvider initialCategory={initialCategory}>
+        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 relative">
+          {/* Floating Action Button for Mobile Filters */}
+          {isMobile && (
+            <motion.button
+              onClick={() => setShowFilters(!showFilters)}
+              className="fixed bottom-6 right-6 z-50 bg-gradient-to-r from-primary-500 to-primary-400 hover:from-primary-600 hover:to-primary-500 text-white p-4 rounded-full shadow-2xl hover:shadow-3xl transition-all"
+              aria-label="Toggle Filters"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+            >
+              {showFilters ? (
+                <XIcon className="w-6 h-6" />
+              ) : (
+                <div className="relative">
+                  <FilterIcon className="w-6 h-6" />
+                  <motion.span
+                    className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ type: 'spring' }}
+                  >
+                    3
+                  </motion.span>
                 </div>
-              </motion.div>
-            </section>
-          </div>
-        </main>
-      </div>
-    </SearchProvider>
+              )}
+            </motion.button>
+          )}
+
+          <main className="container mx-auto px-4 py-8 w-full">
+            <div className="flex flex-col lg:flex-row gap-6 w-full">
+              {/* Filters Sidebar - Always visible on desktop */}
+              <div className="lg:sticky lg:top-4 lg:self-start lg:h-[calc(100vh-2rem)] lg:overflow-y-auto lg:z-0 pb-16 lg:pb-4 px-2">
+                <AnimatePresence>
+                  {(showFilters || !isMobile) && (
+                    <>
+                      <motion.aside
+                        key="filters-sidebar"
+                        initial={{ x: isMobile ? '100%' : '0%' }}
+                        animate={{ x: 0 }}
+                        exit={{ x: isMobile ? '100%' : '0%' }}
+                        transition={{
+                          type: 'spring',
+                          damping: 25,
+                          stiffness: 300,
+                        }}
+                        className={`
+                          fixed lg:relative inset-0 lg:inset-auto w-full sm:w-96 lg:w-80
+                          h-screen lg:h-auto bg-white lg:bg-transparent z-40
+                          rounded-xl lg:border lg:border-gray-200 overflow-y-auto
+                        `}
+                      >
+                        <div className="p-2 space-y-4">
+                          {/* Mobile Header */}
+                          {isMobile && (
+                            <div className="flex justify-between items-center pb-4 border-b border-gray-200">
+                              <h2 className="text-xl font-bold text-gray-900">
+                                <span className="bg-primary-100 text-primary-800 py-1 px-3 rounded-full text-sm mr-2">
+                                  3
+                                </span>
+                                الفلاتر المحددة
+                              </h2>
+                              <button
+                                onClick={() => setShowFilters(false)}
+                                className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200"
+                              >
+                                <XIcon className="w-6 h-6 text-gray-600" />
+                              </button>
+                            </div>
+                          )}
+
+                          <FiltersContent setShowFilters={setShowFilters} />
+                        </div>
+                      </motion.aside>
+
+                      {/* Overlay for mobile */}
+                      {isMobile && showFilters && (
+                        <motion.div
+                          key="filters-overlay"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          className="fixed inset-0 bg-black/30 backdrop-blur-sm z-30 lg:hidden"
+                          onClick={() => setShowFilters(false)}
+                        />
+                      )}
+                    </>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              {/* Search Results */}
+              <section className="flex-1 min-w-0">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                  className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden"
+                >
+                  <div className="p-6 lg:p-8">
+                    <div className="flex justify-between items-center mb-6">
+                      <h1 className="text-2xl font-bold text-gray-900">
+                        نتائج البحث
+                      </h1>
+                      {!isMobile && (
+                        <button
+                          onClick={() => setShowFilters(!showFilters)}
+                          className="lg:hidden flex items-center gap-2 text-gray-600 hover:text-primary-600"
+                        >
+                          <FilterIcon className="h-5 w-5" />
+                          <span>الفلاتر</span>
+                        </button>
+                      )}
+                    </div>
+                    <SearchResults />
+                  </div>
+                </motion.div>
+              </section>
+            </div>
+          </main>
+        </div>
+      </SearchProvider>
+    </SearchParamsWrapper>
   );
 }

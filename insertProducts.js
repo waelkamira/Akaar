@@ -175,8 +175,8 @@
 //   },
 //   {
 //     id: 14,
-//     name: 'طبية',
-//     path: '/categories/14?category=طبية',
+//     name: 'صحة',
+//     path: '/categories/14?category=صحة',
 //     icon: '<FaStethoscope className="text-2xl" />',
 //   },
 //   {
@@ -348,7 +348,7 @@
 // //     enName: 'health',
 // //     path: '/categories/17?category=health',
 // //     icon: <FaStethoscope />,
-// //     description: 'مستلزمات طبية، أجهزة طبية، وأدوية',
+// //     description: 'مستلزمات صحة، أجهزة صحة، وأدوية',
 // //   },
 // //   {
 // //     id: 18,
@@ -634,8 +634,8 @@ const categories = [
   },
   {
     id: 14,
-    name: 'طبية',
-    path: '/categories/14?category=طبية',
+    name: 'صحة',
+    path: '/categories/14?category=صحة',
     icon: '<FaStethoscope className="text-2xl" />',
   },
   {

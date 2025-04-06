@@ -11,7 +11,8 @@ const cache = new LRUCache({
 
 const prisma = new PrismaClient();
 
-export async function GET(req, { params }) {
+export async function GET(req, props) {
+  const params = await props.params;
   const { category } = params;
   const url = new URL(req.url);
   const searchParams = url.searchParams;
@@ -24,7 +25,7 @@ export async function GET(req, { params }) {
 
   // إنشاء مفتاح للتخزين المؤقت
   const cacheKey = `category_${category}_page_${page}_limit_${limit}`;
-  
+
   // التحقق من وجود البيانات في التخزين المؤقت
   const cachedData = cache.get(cacheKey);
   if (cachedData) {

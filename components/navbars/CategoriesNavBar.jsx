@@ -2,7 +2,7 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState, useCallback, useMemo } from 'react';
+import { useEffect, useState, useCallback, useMemo, Suspense } from 'react';
 import categories from '../Categories/categories';
 import { FaHome } from 'react-icons/fa';
 import { motion } from 'framer-motion';
@@ -118,7 +118,7 @@ const CategoriesNavBar = () => {
   }, [category]);
 
   return (
-    <div className="hidden sm:block w-full z-50 absolute bottom-0">
+    <Suspense className="hidden sm:block w-full z-50 absolute bottom-0">
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -191,7 +191,7 @@ const CategoriesNavBar = () => {
             </motion.button>
           ))}
       </div>
-    </div>
+    </Suspense>
   );
 };
 

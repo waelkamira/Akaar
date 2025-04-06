@@ -24,8 +24,9 @@ import OnClickMap from '../../components/map/onClickMap';
 import { useSession } from 'next-auth/react';
 import { FaTreeCity } from 'react-icons/fa6';
 import { PiBuildingsDuotone } from 'react-icons/pi';
+import SearchParamsWrapper from '../../components/ReusableComponents/SearchParamsWrapper';
 
-export default function NewPost() {
+function NewPostContent() {
   const [categoryFields, setCategoryFields] = useState([]);
   const { register, handleSubmit } = useForm();
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -61,16 +62,15 @@ export default function NewPost() {
       setSelectedCategory(selected);
 
       // قم بتحديث formState مباشرةً هنا
-      setFormState(prev => ({
+      setFormState((prev) => ({
         ...prev,
         categoryId: selected?.id || '',
         categoryName: selected?.name || '',
       }));
-
     } else {
       setSelectedCategory(null);
       // قم بتحديث formState هنا أيضًا إذا تم إلغاء تحديد الفئة
-      setFormState(prev => ({
+      setFormState((prev) => ({
         ...prev,
         categoryId: '',
         categoryName: '',
@@ -98,34 +98,37 @@ export default function NewPost() {
 
   // ✅ تحديث userId من localStorage عند تحميل المكون
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const userData = localStorage.getItem('CurrentUser');
-      if (userData) {
+    const updateUserId = () => {
+      if (typeof window !== 'undefined') {
         try {
-          const user = JSON.parse(userData);
-          setUserId(user?.id || ''); // تحديث حالة userId
+          const userData = localStorage.getItem('CurrentUser');
+          if (userData) {
+            const user = JSON.parse(userData);
+            setUserId(user?.id || '');
+          }
         } catch (error) {
-          console.error('Failed to parse user data:', error);
+          console.error('Error accessing localStorage:', error);
         }
-      } else {
-        console.warn('No user data found in localStorage.');
       }
-    }
+    };
+
+    updateUserId();
   }, []);
 
   // ✅ تحديث formState عند تغيير userId, selectedCategory, location, addImages
   useEffect(() => {
-    setFormState((prev) => ({
-      ...prev,
-      userId: userId || '', // استخدام userId من الحالة
-      categoryId: selectedCategory?.id || '',
-      categoryName: selectedCategory?.name || '',
-      images: addImages.length ? addImages : prev.images,
-      lng: location?.[1] || prev.lng,
-      lat: location?.[0] || prev.lat,
-    }));
-  }, [userId, selectedCategory, location, addImages]); // الاعتماد على userId
-
+    if (typeof window !== 'undefined') {
+      setFormState((prev) => ({
+        ...prev,
+        userId: userId || '',
+        categoryId: selectedCategory?.id || '',
+        categoryName: selectedCategory?.name || '',
+        images: addImages.length ? addImages : prev.images,
+        lng: location?.[1] || prev.lng,
+        lat: location?.[0] || prev.lat,
+      }));
+    }
+  }, [userId, selectedCategory, location, addImages]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -168,7 +171,7 @@ export default function NewPost() {
 
     let emptyFieldsList = [];
 
-    const hasEmptyRequiredField = requiredFields.some(field => {
+    const hasEmptyRequiredField = requiredFields.some((field) => {
       if (typeof formState[field] === 'string' && !formState[field].trim()) {
         emptyFieldsList.push(field);
         return true; // Stop iterating if an empty field is found
@@ -177,7 +180,7 @@ export default function NewPost() {
     });
 
     if (!hasEmptyRequiredField && selectedCategory && categoryFields) {
-      categoryFields.forEach(field => {
+      categoryFields.forEach((field) => {
         if (!formState.details[field?.name]?.trim()) {
           emptyFieldsList.push(field?.name);
         }
@@ -308,7 +311,8 @@ export default function NewPost() {
 
           {error && <p className="text-red-500">خطأ: {error}</p>}
 
-          {selectedCategory && Array.isArray(categoryFields) &&
+          {selectedCategory &&
+            Array.isArray(categoryFields) &&
             categoryFields?.map((field, index) => (
               <div key={index}>
                 <label className="font-medium mb-2 flex items-center gap-2">
@@ -322,7 +326,9 @@ export default function NewPost() {
                         : ''
                     }`}
                     required
-                    onChange={(e) => handleDetailsChange(field?.name, e.target.value)}
+                    onChange={(e) =>
+                      handleDetailsChange(field?.name, e.target.value)
+                    }
                   >
                     <option value="">{field?.placeholder}</option>
                     {Object.entries(field?.options).map(([key, value]) => (
@@ -340,7 +346,9 @@ export default function NewPost() {
                         : ''
                     }`}
                     required
-                    onChange={(e) => handleDetailsChange(field?.name, e.target.value)}
+                    onChange={(e) =>
+                      handleDetailsChange(field?.name, e.target.value)
+                    }
                   />
                 )}
                 {emptyFields.includes(field?.name) && (
@@ -390,8 +398,21 @@ export default function NewPost() {
           <FormSubmitButton />
         </form>
       ) : (
-        <LoginButton />
+        <div className="flex flex-col items-center justify-center gap-4 p-8">
+          <h2 className="text-xl font-semibold text-gray-800">
+            يجب تسجيل الدخول لإضافة إعلان جديد
+          </h2>
+          <LoginButton />
+        </div>
       )}
     </div>
+  );
+}
+
+export default function NewPost() {
+  return (
+    <SearchParamsWrapper>
+      <NewPostContent />
+    </SearchParamsWrapper>
   );
 }

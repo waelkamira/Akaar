@@ -1,8 +1,7 @@
 'use client';
-import React, { useRef, useState } from 'react';
+import React, { Suspense, useRef, useState } from 'react';
 import emailjs from '@emailjs/browser';
 import toast from 'react-hot-toast';
-import Button from '../../../components/Buttons/Button';
 
 export default function ContactUs() {
   const [userInfo, setUserInfo] = useState({
@@ -49,7 +48,7 @@ export default function ContactUs() {
   };
 
   return (
-    <div className="flex justify-center items-center w-full ">
+    <Suspense className="flex justify-center items-center w-full ">
       <form
         className="flex flex-col items-center gap-4 mt-16 xl:mt-52 w-full xl:w-[70%] border border-gray-300 rounded-[5px] p-4 m-2 xl:p-16"
         ref={form}
@@ -112,6 +111,6 @@ export default function ContactUs() {
           ارسال
         </button>
       </form>
-    </div>
+    </Suspense>
   );
 }
