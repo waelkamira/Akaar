@@ -1,56 +1,95 @@
 'use client';
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+
+import { useEffect, useRef, useState } from 'react';
 import 'leaflet/dist/leaflet.css';
-import { icon } from 'leaflet';
-import { useEffect, useState } from 'react';
-
-// أيقونة مخصصة للدبابيس
-const customIcon = icon({
-  iconUrl:
-    'https://images.vexels.com/media/users/3/131261/isolated/lists/b2e48580147ca0ed3f970f30bf8bb009-map-location-marker.png',
-  iconSize: [40, 40],
-  iconAnchor: [20, 40],
-  popupAnchor: [0, -40],
-});
-
-// مكون لضبط الزووم والانتقال
-function SetZoomAndCenter({ latitude, longitude }) {
-  const map = useMap();
-  useEffect(() => {
-    map.setView([latitude, longitude], 16);
-  }, [latitude, longitude]); // إزالة `map` من التبعيات لتجنب الأخطاء
-
-  return null;
-}
 
 export default function SyriaMap({ lng = '', lat = '' }) {
+  // Refs
+  const mapContainerRef = useRef(null);
+  const mapInstanceRef = useRef(null);
+  const markerRef = useRef(null);
+
+  // State
   const [coords, setCoords] = useState({ lat: 33.5138, lng: 36.2765 });
 
+  // Update coordinates when props change
   useEffect(() => {
     setCoords({
-      lat: parseFloat(lat) || 33.5138,
-      lng: parseFloat(lng) || 36.2765,
+      lat: Number.parseFloat(lat) || 33.5138,
+      lng: Number.parseFloat(lng) || 36.2765,
     });
-  }, [lat, lng]); // ✅ تأخير التحديث حتى يتم التأكد من تغيير القيم
+  }, [lat, lng]);
+
+  // Initialize and update map
+  useEffect(() => {
+    // Make sure we're on the client side
+    if (typeof window === 'undefined') return;
+
+    // Dynamically import Leaflet
+    const loadLeaflet = async () => {
+      const L = (await import('leaflet')).default;
+
+      // Clean up any existing map
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.remove();
+        mapInstanceRef.current = null;
+      }
+
+      // Create map instance
+      const map = L.map(mapContainerRef.current).setView(
+        [coords.lat, coords.lng],
+        13
+      );
+      mapInstanceRef.current = map;
+
+      // Add tile layer
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      }).addTo(map);
+
+      // Create custom icon
+      const customIcon = L.icon({
+        iconUrl:
+          'https://images.vexels.com/media/users/3/131261/isolated/lists/b2e48580147ca0ed3f970f30bf8bb009-map-location-marker.png',
+        iconSize: [40, 40],
+        iconAnchor: [20, 40],
+        popupAnchor: [0, -40],
+      });
+
+      // Add marker
+      const marker = L.marker([coords.lat, coords.lng], { icon: customIcon })
+        .addTo(map)
+        .bindPopup('موقع العقار هنا');
+
+      markerRef.current = marker;
+
+      // Force a map redraw after mounting
+      setTimeout(() => {
+        map.invalidateSize();
+      }, 100);
+    };
+
+    loadLeaflet();
+
+    // Cleanup function
+    return () => {
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.remove();
+        mapInstanceRef.current = null;
+      }
+    };
+  }, [coords.lat, coords.lng]);
 
   return (
-    <div key={`${coords.lat}-${coords.lng}`} className="w-full z-40">
+    <div className="w-full z-40">
       <div className="w-full h-72 sm:h-[500px] rounded-[5px] overflow-hidden">
-        <MapContainer
-          key={`${coords.lat}-${coords.lng}`}
-          center={[coords.lat, coords.lng]}
-          zoom={13}
+        {/* Map container div */}
+        <div
+          ref={mapContainerRef}
           className="w-full h-full"
-        >
-          <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url={'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'}
-          />
-          <Marker position={[coords.lat, coords.lng]} icon={customIcon}>
-            <Popup closeButton={false}>موقع العقار هنا</Popup>
-          </Marker>
-          <SetZoomAndCenter latitude={coords.lat} longitude={coords.lng} />
-        </MapContainer>
+          style={{ position: 'relative' }}
+        />
       </div>
     </div>
   );

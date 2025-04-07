@@ -51,68 +51,26 @@ const AnimatedCard = ({ children, isSelected, onClick }) => (
 const CategoriesNavBar = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const {
-    category,
-    setCategory,
-    availableFilters,
-    setAvailableFilters,
-    performSearch,
-  } = useSearch();
+  const { category, setCategory, performSearch, loadDynamicFilters } =
+    useSearch();
 
   const handleCategoryIdClick = useCallback(
     async (categoryItem) => {
-      setCategory(categoryItem); // Update context first
-
-      // Update URL and navigate to search page with new URL structure
+      setCategory(categoryItem);
       await router.push(`/search/categoryId=${categoryItem.id}`);
-
-      // Store category in localStorage
       localStorage.setItem('category', JSON.stringify(categoryItem));
-
-      // Perform search with the selected category
       performSearch();
     },
     [setCategory, router, performSearch]
   );
 
+  // Load dynamic filters when category changes
   useEffect(() => {
     if (category) {
-      const categoryId = categories.find((c) => c.id === category?.id)?.id;
-
-      if (categoryId) {
-        import(`../categoryFields/${category?.name}.jsx`)
-          .then((module) => {
-            const dynamicFilters = module?.default;
-
-            const filterOptionsUpdate = {
-              ...availableFilters,
-              static: {
-                cities: cities.map((city) => ({
-                  ...city,
-                  id: city.name, // Use name as id for compatibility
-                  towns: city.towns.map((town) => ({
-                    ...town,
-                    id: town.name, // Use name as id for compatibility
-                  })),
-                })),
-                priceRange: {
-                  min: 0,
-                  max: 150000,
-                },
-              },
-              dynamic: dynamicFilters,
-            };
-
-            setAvailableFilters(filterOptionsUpdate);
-          })
-          .catch((err) => {
-            console.error('Failed to load fields:', err);
-          });
-      }
+      loadDynamicFilters(category);
     }
-  }, [category, setAvailableFilters, availableFilters]);
+  }, [category, loadDynamicFilters]);
 
-  // Use useMemo to memoize the selected categoryId object to prevent unnecessary re-renders
   const selectedCategory = useMemo(() => {
     return categories.find((cat) => cat.id === category?.id) || null;
   }, [category]);

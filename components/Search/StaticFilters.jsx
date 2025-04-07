@@ -1,8 +1,8 @@
 'use client';
 import { useState, useEffect, useCallback } from 'react';
 import { useSearch } from '../../contexts/SearchContext';
-import { Slider } from '../ui/slider';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Input } from '../ui/input';
 
 export default function StaticFilters() {
   const { filters, setFilter, staticFilters, getTownsByCity } = useSearch();
@@ -233,7 +233,7 @@ export default function StaticFilters() {
 
           <div className="flex items-center gap-3 mb-4">
             <motion.div whileHover={{ scale: 1.02 }} className="flex-1">
-              <input
+              <Input
                 type="number"
                 min={priceRangeDefault.min}
                 max={priceRangeDefault.max}
@@ -241,14 +241,14 @@ export default function StaticFilters() {
                 onChange={(e) => handlePriceInputChange('min', e.target.value)}
                 onBlur={handleInputBlur}
                 placeholder="السعر الأدنى"
-                className="w-full rounded-lg border-gray-200 placeholder:text-sm shadow-sm focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all duration-300 py-2 px-3 bg-gray-50 hover:bg-gray-100 text-center"
+                className="w-full"
               />
             </motion.div>
 
             <span className="text-gray-400">-</span>
 
             <motion.div whileHover={{ scale: 1.02 }} className="flex-1">
-              <input
+              <Input
                 type="number"
                 min={priceRangeDefault.min}
                 max={priceRangeDefault.max}
@@ -256,39 +256,9 @@ export default function StaticFilters() {
                 onChange={(e) => handlePriceInputChange('max', e.target.value)}
                 onBlur={handleInputBlur}
                 placeholder="السعر الأعلى"
-                className="w-full rounded-lg border-gray-200 placeholder:text-sm shadow-sm focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all duration-300 py-2 px-3 bg-gray-50 hover:bg-gray-100 text-center"
+                className="w-full"
               />
             </motion.div>
-          </div>
-
-          <div className="px-2 mb-1">
-            <Slider
-              value={priceRange}
-              min={priceRangeDefault.min}
-              max={priceRangeDefault.max}
-              step={100}
-              onValueChange={handlePriceRangeChange}
-              onValueCommit={handlePriceInputBlur}
-              className="relative flex items-center h-8 w-full"
-              thumbClassName="
-    absolute w-6 h-6
-    bg-white border-3 border-primary-500
-    rounded-full shadow-lg
-    focus:outline-none focus:ring-2 focus:ring-primary-300
-    hover:scale-110 transition-transform duration-150
-    cursor-pointer
-    z-10
-  "
-              trackClassName="
-    absolute h-2.5 w-full
-    bg-gray-200 rounded-full
-    overflow-hidden
-  "
-              rangeClassName="
-    absolute h-full
-    
-  "
-            />
           </div>
         </motion.div>
       </div>
