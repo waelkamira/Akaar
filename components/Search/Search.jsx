@@ -5,7 +5,6 @@ import { useState, useEffect } from 'react';
 import { ImSearch } from 'react-icons/im';
 import CategoriesNavBar from '../navbars/CategoriesNavBar';
 import SideBarMenu from '../navbars/SideBarMenu';
-import Hero from '../Home/Hero';
 
 export default function Search() {
   const [inputValue, setInputValue] = useState('');
@@ -93,6 +92,7 @@ export default function Search() {
           )}
         </div>
       </div>
+      <CategoriesNavBar />
     </div>
   );
 }

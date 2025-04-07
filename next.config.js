@@ -1,9 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // output: 'export',
   trailingSlash: true, // جرب تشغيل هذه الميزة
   compress: true,
-  swcMinify: true, // تمكين minification باستخدام SWC
   typescript: {
     ignoreBuildErrors: true, // تجاهل أخطاء TypeScript أثناء البناء
   },
@@ -18,7 +16,6 @@ const nextConfig = {
     minimumCacheTTL: 60, // وقت التخزين المؤقت للصور (بالثواني)
   },
   productionBrowserSourceMaps: false, // تعطيل source maps في الإنتاج لتحسين الأداء
-  // تحسين التخزين المؤقت للصفحات الثابتة
   staticPageGenerationTimeout: 120, // زيادة مهلة إنشاء الصفحات الثابتة (بالثواني)
 };
 
