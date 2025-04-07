@@ -10,6 +10,22 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Custom tooltip styles */
+.leaflet-tooltip {
+  background-color: rgba(255, 255, 255, 0.9);
+  border: 1px solid #ff7c34;
+  border-radius: 4px;
+  color: #333;
+  font-weight: bold;
+  padding: 4px 8px;
+}
+
+/* Make sure the map container takes full height */
+.leaflet-container {
+  height: 100%;
+  width: 100%;
+}
+
 .rubik {
   font-family: var(--font-rubik); /* استخدم المتغير هنا */
 }

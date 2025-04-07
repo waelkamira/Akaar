@@ -67,7 +67,10 @@ export function SearchProvider({ children, initialCategory }) {
       console.log(`Loading filters for category: ${categoryObj.name}`);
       const module = await import(
         `../components/categoryFields/${categoryObj.name}.jsx`
-      );
+      ).catch(() => {
+        console.log(`No filters found for category: ${categoryObj.name}`);
+        return { default: [] };
+      });
       const filters = Array.isArray(module.default) ? module.default : [];
       console.log('Loaded filters:', filters);
       return filters;
@@ -362,6 +365,7 @@ export function SearchProvider({ children, initialCategory }) {
     clearAll,
     dynamicFilters,
     performSearch,
+    loadDynamicFilters,
 
     // Results
     results,

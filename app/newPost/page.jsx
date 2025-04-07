@@ -6,6 +6,7 @@ import UploadingAndDisplayingImage from '../../components/photos/UploadingAndDis
 import { inputsContext } from '../../components/authContext/Context';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
+import Loading from '../../components/ReusableComponents/Loading';
 import LoginButton from '../../components/Buttons/LoginButton';
 import {
   MdCategory,
@@ -20,12 +21,20 @@ import FormInput from './FormInput';
 import FormSelect from './FormSelect';
 import FormTextarea from './FormTextarea';
 import FormSubmitButton from './FormSubmitButton';
-import OnClickMap from '../../components/map/onClickMap';
+// import OnClickMap from '../../components/map/onClickMap';
 import { useSession } from 'next-auth/react';
 import { FaTreeCity } from 'react-icons/fa6';
 import { PiBuildingsDuotone } from 'react-icons/pi';
 import SearchParamsWrapper from '../../components/ReusableComponents/SearchParamsWrapper';
-
+import dynamic from 'next/dynamic';
+// استيراد OnClickMap ديناميكياً مع تعطيل SSR
+const OnClickMap = dynamic(
+  () => import('../../components/map/onClickMap'), // <-- تأكد من صحة المسار هنا
+  {
+    ssr: false, // <--- هذا هو الجزء الأهم لمنع الخطأ
+    loading: () => <p className="text-center p-10">جارٍ تحميل الخريطة...</p>, // اختياري: عرض مؤشر تحميل
+  }
+);
 function NewPostContent() {
   const [categoryFields, setCategoryFields] = useState([]);
   const { register, handleSubmit } = useForm();
@@ -383,6 +392,7 @@ function NewPostContent() {
           />
 
           <OnClickMap />
+
           <FormInput
             label="رابط الفيديو من يوتيوب أو تيك توك"
             icon={
@@ -402,9 +412,10 @@ function NewPostContent() {
           <h2 className="text-xl font-semibold text-gray-800">
             يجب تسجيل الدخول لإضافة إعلان جديد
           </h2>
-          <LoginButton />
+          <Loading />
         </div>
       )}
+      {session?.status === 'authenticated' && <LoginButton />}
     </div>
   );
 }
