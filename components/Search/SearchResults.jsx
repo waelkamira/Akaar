@@ -54,7 +54,7 @@ export default function SearchResults() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="w-full"
+      className="w-full "
     >
       {/* Results header with count and category */}
       <motion.div

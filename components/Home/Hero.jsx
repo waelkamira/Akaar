@@ -58,6 +58,7 @@ export default function Hero({
               <Image
                 src={image}
                 fill
+                sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 100vw, (max-width: 1280px) 100vw, 100vw"
                 alt={`Slide ${index + 1}`}
                 className="object-cover w-full h-full"
                 loading="lazy"
