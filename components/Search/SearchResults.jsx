@@ -60,7 +60,7 @@ export default function SearchResults() {
       <motion.div
         initial={{ y: -20 }}
         animate={{ y: 0 }}
-        className="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3"
+        className="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-white rounded-xl shadow-sm p-4 border border-gray-100"
       >
         <motion.p
           whileHover={{ scale: 1.02 }}
