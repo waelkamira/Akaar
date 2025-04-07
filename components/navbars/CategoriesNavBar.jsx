@@ -1,14 +1,13 @@
 // src/navbars/CategoriesNavBar.js
 'use client';
 
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState, useCallback, useMemo, Suspense } from 'react';
 import categories from '../Categories/categories';
 import { FaHome } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import { cn } from '../lib/utils';
 import { useSearch } from '../../contexts/SearchContext';
-import { cities } from '../lists/Cities';
 
 // تعريف الكومبوننت AnimatedCard (تأكد من أنه يظهر قبل استخدامه)
 const AnimatedCard = ({ children, isSelected, onClick }) => (
@@ -50,7 +49,6 @@ const AnimatedCard = ({ children, isSelected, onClick }) => (
 
 const CategoriesNavBar = () => {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const { category, setCategory, performSearch, loadDynamicFilters } =
     useSearch();
 
@@ -76,80 +74,97 @@ const CategoriesNavBar = () => {
   }, [category]);
 
   return (
-    <Suspense className="hidden sm:block w-full z-50 absolute bottom-0">
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="hidden sm:flex overflow-x-auto gap-2 p-3 bg-white shadow-md w-full border-b border-orange-100/500"
-      >
-        {categories?.length > 0 &&
-          categories?.map((categoryItem) => (
-            <AnimatedCard
-              key={categoryItem?.id}
-              isSelected={selectedCategory?.id === categoryItem?.id}
-              onClick={() => handleCategoryIdClick(categoryItem)}
-              className="min-w-[96px]"
-            >
-              <div
-                className={`relative mb-2 flex items-center justify-center w-12 h-12 rounded-full
+    // Suspense might not be needed directly here unless child components use it heavily.
+    // Also, className on Suspense itself doesn't usually have visual effects.
+    <div className="relative w-full h-full mt-12 md:mt-16 xl:mt-0">
+      {' '}
+      {/* Changed from Suspense, adjust if needed */}
+      {/* Remove hidden sm:block from this outer div */}
+      <motion.div className="w-full z-50 absolute top-0">
+        {' '}
+        {/* <--- CHANGE HERE */}
+        {/* Large Screen View (sm and up) */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          // This div is hidden by default, shown as flex on sm screens and larger
+          className="hidden sm:flex overflow-x-auto gap-2 p-3 bg-white shadow-md w-full border-b border-orange-100/500"
+        >
+          {categories?.length > 0 &&
+            categories?.map((categoryItem) => (
+              <AnimatedCard
+                key={categoryItem?.id}
+                isSelected={selectedCategory?.id === categoryItem?.id}
+                onClick={() => handleCategoryIdClick(categoryItem)}
+                className="min-w-[96px]" // Ensure consistent naming if needed later
+              >
+                <div
+                  className={`relative mb-2 flex items-center justify-center w-12 h-12 rounded-full
                   ${
                     selectedCategory?.id === categoryItem?.id
                       ? 'bg-orange-600/50 shadow-lg shadow-orange-500/30'
                       : 'bg-white/40 border border-gray-200/50'
                   } transition-all duration-300`}
-              >
-                {selectedCategory?.id === categoryItem?.id && (
-                  <div className="absolute inset-0 rounded-full bg-orange-500 opacity-40"></div>
-                )}
-                <div className="relative text-2xl">
-                  {categoryItem?.icon || <FaHome className="text-2xl" />}
+                >
+                  {selectedCategory?.id === categoryItem?.id && (
+                    <div className="absolute inset-0 rounded-full bg-orange-500 opacity-40"></div>
+                  )}
+                  <div className="relative text-2xl">
+                    {categoryItem?.icon || <FaHome className="text-2xl" />}
+                  </div>
                 </div>
-              </div>
 
-              <span className="relative text-xs font-bold mt-1">
-                {categoryItem?.name}
-              </span>
-            </AnimatedCard>
-          ))}
-      </motion.div>
-
-      {/* mobile view */}
-      <div className="sm:hidden flex overflow-x-auto gap-2 p-3 bg-white/70 backdrop-blur-lg shadow-md w-full border-b border-orange-100/50">
-        {categories?.length > 0 &&
-          categories?.map((categoryItem) => (
-            <motion.button
-              key={categoryItem?.id}
-              onClick={() => handleCategoryIdClick(categoryItem)}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className={
-                ('flex-shrink-0 flex flex-col items-center p-1 sm:p-2 rounded-lg min-size-12 backdrop-blur-md',
-                selectedCategory?.id === categoryItem?.id
-                  ? 'bg-gradient-to-br from-orange-500/90 via-orange-400/90 to-orange-600/90 text-white shadow-lg shadow-orange-500/30'
-                  : 'bg-white/70 text-gray-600 border border-gray-100/50')
-              }
-            >
-              <div
+                <span className="relative text-xs font-bold mt-1">
+                  {categoryItem?.name}
+                </span>
+              </AnimatedCard>
+            ))}
+        </motion.div>
+        {/* Small Screen View (below sm) */}
+        {/* This div is shown by default (as flex), hidden on sm screens and larger */}
+        <div className="sm:hidden flex overflow-x-auto gap-2 p-3 bg-white/70 backdrop-blur-lg shadow-md w-full border-b border-orange-100/50">
+          {categories?.length > 0 &&
+            categories?.map((categoryItem) => (
+              <motion.button
+                key={categoryItem?.id}
+                onClick={() => handleCategoryIdClick(categoryItem)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                // Simplified className logic for clarity
                 className={cn(
-                  'relative flex items-center justify-center size-5 sm:size-8 rounded-full mb-1',
+                  'flex-shrink-0 flex flex-col items-center p-1 rounded-lg min-w-[60px] backdrop-blur-md transition-colors duration-200', // Added min-w for consistency, adjust as needed
                   selectedCategory?.id === categoryItem?.id
-                    ? 'text-white bg-orange-600/50'
-                    : 'text-amber-500 bg-amber-50/50'
+                    ? 'bg-gradient-to-br from-orange-500/90 via-orange-400/90 to-orange-600/90 text-white shadow-lg shadow-orange-500/30'
+                    : 'bg-white/70 text-gray-600 border border-gray-100/50'
                 )}
               >
-                {selectedCategory?.id === categoryItem?.id && (
-                  <div className="absolute inset-0 rounded-full bg-orange-500 blur-md opacity-30"></div>
-                )}
-                <div className="relative text-sm">{categoryItem?.icon}</div>
-              </div>
-              <span className="text-[10px] font-medium hover:text-gray-500">
-                {categoryItem?.name}
-              </span>
-            </motion.button>
-          ))}
-      </div>
-    </Suspense>
+                <div
+                  className={cn(
+                    'relative flex items-center justify-center size-5 rounded-full mb-1 transition-colors duration-200', // Removed sm:size-8 as this view is only for small screens
+                    selectedCategory?.id === categoryItem?.id
+                      ? 'text-white bg-orange-600/50'
+                      : 'text-amber-500 bg-amber-50/50'
+                  )}
+                >
+                  {selectedCategory?.id === categoryItem?.id && (
+                    <div className="absolute inset-0 rounded-full bg-orange-500 blur-md opacity-30"></div>
+                  )}
+                  <div className="relative text-sm">
+                    {categoryItem?.icon || <FaHome />}
+                  </div>{' '}
+                  {/* Added fallback icon */}
+                </div>
+                <span className="text-[10px] font-medium text-center line-clamp-1">
+                  {' '}
+                  {/* Added text-center and line-clamp */}
+                  {categoryItem?.name}
+                </span>
+              </motion.button>
+            ))}
+        </div>
+      </motion.div>
+    </div> // Closing the outer div
   );
 };
 

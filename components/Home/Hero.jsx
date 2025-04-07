@@ -2,15 +2,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
-import dynamic from 'next/dynamic';
-import FirstNavBar from '../navbars/FirstNavBar';
 import Search from '../Search/Search';
-import CategoriesNavBar from '../navbars/CategoriesNavBar';
-
-// تحميل القائمة الجانبية فقط عند الحاجة
-const SideBarMenu = dynamic(() => import('../navbars/SideBarMenu'), {
-  ssr: false,
-});
 
 export default function Hero({
   images = [
@@ -49,7 +41,7 @@ export default function Hero({
   return (
     <div className="relative w-full h-full">
       <Search />
-      <CategoriesNavBar />
+
       <div
         ref={sliderRef}
         className="hidden xl:block w-full overflow-hidden h-[200px] sm:h-[300px] md:h-[400px] lg:h-[500px] xl:h-[600px] z-10 relative"
