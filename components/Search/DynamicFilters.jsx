@@ -2,10 +2,14 @@
 import { useSearch } from '../../contexts/SearchContext';
 import { useCallback, useState, useEffect } from 'react';
 import DynamicField from './DynamicField';
+// استورد FiX بجانب ImSearch و ImSpinner8
 import { ImSearch, ImSpinner8 } from 'react-icons/im';
-import { motion, AnimatePresence } from 'framer-motion';
+import { FiX } from 'react-icons/fi'; // <--- إضافة استيراد FiX
+import { motion } from 'framer-motion';
+import { SearchIcon } from 'lucide-react';
 
-export default function DynamicFilters() {
+// أضف isMobile كـ prop إذا أردت التحكم في إظهار/إخفاء الزر العلوي
+export default function DynamicFilters({ onShowFilters }) {
   const {
     category,
     filters,
@@ -14,9 +18,19 @@ export default function DynamicFilters() {
     loading,
     performSearch,
   } = useSearch();
-  console.log('category from dynamic filters', category);
   const [localValues, setLocalValues] = useState({});
   const [isSearching, setIsSearching] = useState(false);
+  const [isMobileView, setIsMobileView] = useState(false); // حالة لتتبع عرض الموبايل
+
+  // كشف عرض الموبايل داخل المكون (بديل لتمريرها كـ prop)
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobileView(window.innerWidth < 1024); // استخدم نفس نقطة التوقف مثل المكون الأب
+    };
+    checkIfMobile();
+    window.addEventListener('resize', checkIfMobile);
+    return () => window.removeEventListener('resize', checkIfMobile);
+  }, []);
 
   useEffect(() => {
     if (filters.details) {
@@ -52,7 +66,9 @@ export default function DynamicFilters() {
     [filters.details, setFilter]
   );
 
-  const handleSearch = async () => {
+  const handleSearchAndClose = async () => {
+    onShowFilters(false); // أغلق الفلاتر أولاً
+    // هذه الدالة ستُستخدم للزر السفلي في الموبايل
     setIsSearching(true);
     try {
       await performSearch();
@@ -65,14 +81,18 @@ export default function DynamicFilters() {
     return null;
   }
 
+  // ... (كود التحميل وعدم وجود فلاتر يبقى كما هو)
   if (loading) {
+    // ... كود التحميل
     return (
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         className="bg-white p-6 rounded-xl shadow-md border border-gray-100 mb-4"
       >
-        <div className="flex justify-center items-center py-4 space-x-2">
+        <div className="flex justify-center items-center py-4 space-x-2 space-x-reverse">
+          {' '}
+          {/* Added space-x-reverse for RTL */}
           <motion.div
             animate={{ rotate: 360 }}
             transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
@@ -120,14 +140,16 @@ export default function DynamicFilters() {
       transition={{ duration: 0.3 }}
       className="bg-white rounded-xl shadow-sm p-4 space-y-6 border border-gray-100"
     >
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between pb-4 border-b border-gray-200">
+        {' '}
+        {/* Added border */}
         <motion.h3
           whileHover={{ scale: 1.02 }}
           className="text-lg font-semibold text-gray-900 flex items-center gap-2"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5 text-primary"
+            className="h-5 w-5 text-primary" // Assuming primary is defined in Tailwind config
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -139,31 +161,6 @@ export default function DynamicFilters() {
           </svg>
           خصائص {category.name}
         </motion.h3>
-
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={handleSearch}
-          disabled={isSearching}
-          className="flex items-center gap-2 bg-gradient-to-r from-primary-500 to-primary-400 hover:bg-primary-600 text-white py-2 px-4 rounded-lg shadow-sm hover:shadow-md transition-all"
-        >
-          {isSearching ? (
-            <>
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-              >
-                <ImSpinner8 className="text-white" />
-              </motion.div>
-              <span>جاري البحث...</span>
-            </>
-          ) : (
-            <>
-              <ImSearch className="text-white" />
-              <span>بحث</span>
-            </>
-          )}
-        </motion.button>
       </div>
 
       <div className="space-y-6">
@@ -183,6 +180,36 @@ export default function DynamicFilters() {
           </motion.div>
         ))}
       </div>
+
+      {/* --- زر البحث/الإغلاق السفلي --- */}
+      <motion.button
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        // استخدم الدالة الجديدة التي تغلق الفلاتر أيضاً
+        onClick={handleSearchAndClose}
+        disabled={isSearching}
+        // تعديل الـ className ليشمل التدرج اللوني والخصائص الأخرى
+        className="flex items-center justify-center gap-2 bg-gradient-to-r from-orange-500 to-orange-400 hover:from-orange-600 hover:to-orange-500 text-white py-3 px-4 rounded-lg shadow-md hover:shadow-lg transition-all w-full font-medium" // Adjusted styles to match floating button/common mobile patterns
+      >
+        {isSearching ? (
+          <>
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+            >
+              <ImSpinner8 className="text-white" />
+            </motion.div>
+            <span>جاري العرض...</span>
+          </>
+        ) : (
+          <>
+            {/* استخدم أيقونة FiX هنا */}
+            <SearchIcon className="w-5 h-5 text-white" />
+            {/* تغيير النص ليعكس الإجراء */}
+            <span> بحث</span>
+          </>
+        )}
+      </motion.button>
     </motion.div>
   );
 }

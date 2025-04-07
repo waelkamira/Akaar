@@ -80,7 +80,7 @@ const CategoriesNavBar = () => {
       {' '}
       {/* Changed from Suspense, adjust if needed */}
       {/* Remove hidden sm:block from this outer div */}
-      <motion.div className="w-full z-50 absolute top-0">
+      <motion.div className="w-full z-10 absolute top-0">
         {' '}
         {/* <--- CHANGE HERE */}
         {/* Large Screen View (sm and up) */}
