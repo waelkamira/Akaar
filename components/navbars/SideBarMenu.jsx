@@ -36,7 +36,7 @@ export default function SideBarMenu() {
     <div className="xl:hidden relative flex flex-col justify-start items-start gap-3 w-fit">
       {/* زر فتح القائمة */}
       <TfiMenuAlt
-        className=" w-fit p-1 text-4xl lg:text-5xl text-primary-500 cursor-pointer z-[1005] transition-transform duration-300 hover:scale-110"
+        className=" w-fit p-1 text-4xl sm:text-5xl text-primary-500 cursor-pointer z-[1005] transition-transform duration-300 hover:scale-110"
         onClick={() => setIsOpen(!isOpen)}
       />
 
@@ -48,7 +48,7 @@ export default function SideBarMenu() {
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', stiffness: 120, damping: 15 }}
-            className="fixed top-0 right-0 h-screen w-64 backdrop-blur-md shadow-xl z-[1006] p-6 overflow-y-auto flex flex-col items-center"
+            className="fixed top-0 right-0 h-screen w-64 backdrop-blur-md shadow-xl z-[2000] p-6 overflow-y-auto flex flex-col items-center"
             style={{ backgroundColor: backgroundColor, color: secondaryColor }}
           >
             {/* زر الإغلاق */}

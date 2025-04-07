@@ -63,7 +63,7 @@ export default function Search() {
         <SideBarMenu />
         <button
           onClick={handleSearch}
-          className="flex justify-center items-center bg-primary-500 text-white text-nowrap rounded-md px-2 h-8 md:h-10 sm:px-6 hover:bg-primary-600 transition-all cursor-pointer"
+          className="flex justify-center items-center bg-primary-500 text-white text-nowrap rounded-md px-2 h-8 sm:h-10 sm:px-6 hover:bg-primary-600 transition-all cursor-pointer"
         >
           <ImSearch className="ml-2" /> بحث
         </button>

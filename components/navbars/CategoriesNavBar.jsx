@@ -76,7 +76,7 @@ const CategoriesNavBar = () => {
   return (
     // Suspense might not be needed directly here unless child components use it heavily.
     // Also, className on Suspense itself doesn't usually have visual effects.
-    <div className="relative w-full h-full mt-12 md:mt-16 xl:mt-0">
+    <div className="relative w-full h-full mt-[50px] sm:mt-[70px] md:mt-[75px] lg:mt-[80px] xl:mt-0">
       {' '}
       {/* Changed from Suspense, adjust if needed */}
       {/* Remove hidden sm:block from this outer div */}
@@ -89,7 +89,7 @@ const CategoriesNavBar = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           // This div is hidden by default, shown as flex on sm screens and larger
-          className="hidden sm:flex overflow-x-auto gap-2 p-3 bg-white shadow-md w-full border-b border-orange-100/500"
+          className="hidden lg:flex overflow-x-auto gap-2 p-3 bg-white shadow-md w-full border-b border-orange-100/500"
         >
           {categories?.length > 0 &&
             categories?.map((categoryItem) => (
@@ -123,7 +123,7 @@ const CategoriesNavBar = () => {
         </motion.div>
         {/* Small Screen View (below sm) */}
         {/* This div is shown by default (as flex), hidden on sm screens and larger */}
-        <div className="sm:hidden flex overflow-x-auto gap-2 p-3 bg-white/70 backdrop-blur-lg shadow-md w-full border-b border-orange-100/50">
+        <div className="lg:hidden flex overflow-x-auto gap-2 p-3 bg-white/70 backdrop-blur-lg shadow-md w-full border-b border-orange-100/50">
           {categories?.length > 0 &&
             categories?.map((categoryItem) => (
               <motion.button

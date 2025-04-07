@@ -59,20 +59,20 @@ export function SearchProvider({ children, initialCategory }) {
   // Load dynamic filters when category changes
   const loadDynamicFilters = useCallback(async (categoryObj) => {
     if (!categoryObj?.name) {
-      console.log('No category or name provided');
+      // console.log('No category or name provided');
       return [];
     }
 
     try {
-      console.log(`Loading filters for category: ${categoryObj.name}`);
+      // console.log(`Loading filters for category: ${categoryObj.name}`);
       const module = await import(
         `../components/categoryFields/${categoryObj.name}.jsx`
       ).catch(() => {
-        console.log(`No filters found for category: ${categoryObj.name}`);
+        // console.log(`No filters found for category: ${categoryObj.name}`);
         return { default: [] };
       });
       const filters = Array.isArray(module.default) ? module.default : [];
-      console.log('Loaded filters:', filters);
+      // console.log('Loaded filters:', filters);
       return filters;
     } catch (err) {
       console.error(`Failed to load filters for ${categoryObj.name}:`, err);
@@ -101,7 +101,7 @@ export function SearchProvider({ children, initialCategory }) {
       // Extract categoryId from pathname
       const categoryIdMatch = pathname.match(/\/search\/categoryId=(\d+)/);
       const categoryId = categoryIdMatch ? categoryIdMatch[1] : null;
-      console.log('URL Category ID:', categoryId);
+      // console.log('URL Category ID:', categoryId);
 
       setLoading(true);
       try {
@@ -126,7 +126,7 @@ export function SearchProvider({ children, initialCategory }) {
           return;
         }
 
-        console.log('Loading category:', categoryObj);
+        // console.log('Loading category:', categoryObj);
 
         // Load dynamic filters first
         const filters = await loadDynamicFilters(categoryObj);
@@ -141,7 +141,7 @@ export function SearchProvider({ children, initialCategory }) {
         setPage(1);
         setShouldSearchOnLoad(true);
 
-        console.log('Category and filters loaded successfully');
+        // console.log('Category and filters loaded successfully');
       } catch (err) {
         console.error('Error loading category:', err);
         setDynamicFilters([]);
@@ -178,7 +178,7 @@ export function SearchProvider({ children, initialCategory }) {
           delete searchBody.filters.query;
         }
 
-        console.log('Search request:', searchBody);
+        // console.log('Search request:', searchBody);
 
         const response = await fetch('/api/search', {
           method: 'POST',
@@ -191,7 +191,7 @@ export function SearchProvider({ children, initialCategory }) {
         }
 
         const data = await response.json();
-        console.log('Search response:', data);
+        // console.log('Search response:', data);
 
         // Only update results based on whether it's a new search or load more
         if (!isLoadMore) {
