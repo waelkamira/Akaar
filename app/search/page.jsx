@@ -40,7 +40,7 @@ function FiltersContent({ setShowFilters }) {
   }, [performSearch, setShowFilters]);
 
   return (
-    <Suspense className="space-y-4 px-2">
+    <div className="space-y-4 px-2">
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -54,7 +54,7 @@ function FiltersContent({ setShowFilters }) {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.1 }}
-          className=" rounded-xl border border-gray-100"
+          className="rounded-xl border border-gray-100"
         >
           <button
             onClick={() => toggleSection('category')}
@@ -183,7 +183,7 @@ function FiltersContent({ setShowFilters }) {
           )}
         </button>
       </motion.div>
-    </Suspense>
+    </div>
   );
 }
 
@@ -192,6 +192,7 @@ export default function SearchPage() {
   const [showFilters, setShowFilters] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [initialCategory, setInitialCategory] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const handleResize = () => {
@@ -215,7 +216,16 @@ export default function SearchPage() {
         console.error('Error parsing category:', e);
       }
     }
+    setIsLoading(false);
   }, [searchParams]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500"></div>
+      </div>
+    );
+  }
 
   return (
     <SearchParamsWrapper>

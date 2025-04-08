@@ -4,7 +4,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { motion } from 'framer-motion';
 
-function AdditionalFields({ item, category }) {
+function AdditionalFields({ item }) {
   const [categoryFields, setCategoryFields] = useState([]);
 
   const getFieldValue = useCallback((field, value) => {
@@ -13,11 +13,12 @@ function AdditionalFields({ item, category }) {
     }
     return value;
   }, []);
-
+  // console.log('item', item);
   useEffect(() => {
     if (item?.categoryName) {
       import(`../../categoryFields/${item?.categoryName}.jsx`)
         .then((module) => {
+          // console.log('module', module.default);
           setCategoryFields(module.default);
         })
         .catch((err) => {
