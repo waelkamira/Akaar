@@ -2,7 +2,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useEffect, useState, useCallback, useMemo, Suspense } from 'react';
+import { useEffect, useCallback, useMemo } from 'react';
 import categories from '../Categories/categories';
 import { FaHome } from 'react-icons/fa';
 import { motion } from 'framer-motion';
@@ -28,7 +28,7 @@ const AnimatedCard = ({ children, isSelected, onClick }) => (
   >
     {isSelected && (
       <motion.div
-        className="absolute inset-0 rounded-xl bg-gradient-to-br from-orange-500/80 via-orange-400/80 to-orange-600/80 "
+        className="absolute inset-0 rounded-xl bg-gradient-to-br text-white from-orange-500/80 via-orange-400/80 to-orange-600/80 "
         layoutId="categoryIdBackground"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -74,15 +74,8 @@ const CategoriesNavBar = () => {
   }, [category]);
 
   return (
-    // Suspense might not be needed directly here unless child components use it heavily.
-    // Also, className on Suspense itself doesn't usually have visual effects.
     <div className="relative w-full h-full mt-[50px] sm:mt-[70px] md:mt-[75px] lg:mt-[80px] xl:mt-0">
-      {' '}
-      {/* Changed from Suspense, adjust if needed */}
-      {/* Remove hidden sm:block from this outer div */}
       <motion.div className="w-full z-10 absolute top-0">
-        {' '}
-        {/* <--- CHANGE HERE */}
         {/* Large Screen View (sm and up) */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -122,7 +115,6 @@ const CategoriesNavBar = () => {
             ))}
         </motion.div>
         {/* Small Screen View (below sm) */}
-        {/* This div is shown by default (as flex), hidden on sm screens and larger */}
         <div className="lg:hidden flex overflow-x-auto gap-2 p-3 bg-white/70 backdrop-blur-lg shadow-md w-full border-b border-orange-100/50">
           {categories?.length > 0 &&
             categories?.map((categoryItem) => (
@@ -131,40 +123,35 @@ const CategoriesNavBar = () => {
                 onClick={() => handleCategoryIdClick(categoryItem)}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                // Simplified className logic for clarity
                 className={cn(
-                  'flex-shrink-0 flex flex-col items-center p-1 rounded-lg min-w-[60px] backdrop-blur-md transition-colors duration-200', // Added min-w for consistency, adjust as needed
+                  'flex-shrink-0 flex flex-col items-center p-1 rounded-lg min-w-[50px] backdrop-blur-sm transition-all duration-200',
                   selectedCategory?.id === categoryItem?.id
-                    ? 'bg-gradient-to-br from-orange-500/90 via-orange-400/90 to-orange-600/90 text-white shadow-lg shadow-orange-500/30'
-                    : 'bg-white/70 text-gray-600 border border-gray-100/50'
+                    ? 'bg-gray-100 shadow-md shadow-orange-400/20 border border-primary-600'
+                    : 'bg-white/30 border border-gray-200/40 text-gray-400'
                 )}
               >
                 <div
-                  className={cn(
-                    'relative flex items-center justify-center size-5 rounded-full mb-1 transition-colors duration-200', // Removed sm:size-8 as this view is only for small screens
+                  className={`relative mb-1 flex items-center justify-center w-10 h-10 rounded-full ${
                     selectedCategory?.id === categoryItem?.id
-                      ? 'text-white bg-orange-600/50'
-                      : 'text-amber-500 bg-amber-50/50'
-                  )}
+                      ? 'bg-orange-500 shadow-inner text-white'
+                      : 'bg-white/20'
+                  } transition-all duration-200`}
                 >
                   {selectedCategory?.id === categoryItem?.id && (
-                    <div className="absolute inset-0 rounded-full bg-orange-500 blur-md opacity-30"></div>
+                    <div className="absolute inset-0 rounded-full bg-orange-400/30 animate-pulse"></div>
                   )}
-                  <div className="relative text-sm">
-                    {categoryItem?.icon || <FaHome />}
-                  </div>{' '}
-                  {/* Added fallback icon */}
+                  <div className="relative text-xl">
+                    {categoryItem?.icon || <FaHome className="text-xl" />}
+                  </div>
                 </div>
-                <span className="text-[10px] font-medium text-center line-clamp-1">
-                  {' '}
-                  {/* Added text-center and line-clamp */}
+                <span className="text-[9px] font-medium text-center line-clamp-1 px-0.5">
                   {categoryItem?.name}
                 </span>
               </motion.button>
             ))}
         </div>
       </motion.div>
-    </div> // Closing the outer div
+    </div>
   );
 };
 

@@ -17,10 +17,6 @@ const rubik = Rubik({
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className="!scroll-smooth" dir="rtl">
-      <head>
-        <link rel="manifest" href="/manifest.json" />
-        {/* يمكن إزالة هذه الإعدادات المكررة لأنها معرفة في viewport و metadata */}
-      </head>
       <body className={rubik.className}>
         <Toaster />
         <AuthContextProvider>
@@ -31,7 +27,6 @@ export default function RootLayout({ children }) {
             </SearchProvider>
           </InputsContextProvider>
         </AuthContextProvider>
-        <Script src="/register-sw.js" strategy="afterInteractive" />
       </body>
     </html>
   );
