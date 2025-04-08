@@ -44,7 +44,7 @@ export default function Hero({
 
       <div
         ref={sliderRef}
-        className="hidden xl:block w-full overflow-hidden h-[200px] sm:h-[300px] md:h-[400px] lg:h-[500px] xl:h-[600px] -z-10 relative"
+        className="hidden xl:block w-full overflow-hidden h-[400px] -z-10 relative"
       >
         <div className="relative w-full h-full">
           {images.map((image, index) => (

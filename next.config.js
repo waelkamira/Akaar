@@ -11,6 +11,24 @@ const nextConfig = {
         protocol: 'https',
         hostname: '**', // السماح بجميع النطاقات
       },
+      {
+        protocol: 'https',
+        hostname: 'scontent-lga3-2.xx.fbcdn.net',
+        // You can optionally specify port and pathname if needed, but often not required
+        // port: '',
+        // pathname: '/v/**', // Example if paths always start with /v/
+      },
+      // --- IMPORTANT ---
+      // Consider adding a more general pattern if you expect images
+      // from other Facebook CDN subdomains:
+      {
+        protocol: 'https',
+        hostname: '**.fbcdn.net', // Allows any subdomain of fbcdn.net
+      },
+      {
+        protocol: 'https',
+        hostname: '**.xx.fbcdn.net', // Allows subdomains like xx.fbcdn.net
+      },
     ],
     formats: ['image/avif', 'image/webp'], // تحسين الصور
     minimumCacheTTL: 60, // وقت التخزين المؤقت للصور (بالثواني)

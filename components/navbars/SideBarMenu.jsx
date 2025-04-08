@@ -163,15 +163,12 @@ export default function SideBarMenu() {
                     </div>
                   )}
                   {status === 'authenticated' && session.user && (
-                    // استخدم Link لجعل منطقة المستخدم قابلة للنقر للانتقال إلى الملف الشخصي مثلاً
                     <Link href="/profile" passHref legacyBehavior>
                       <a
                         onClick={closeMenu}
                         className="flex flex-col items-center gap-2 cursor-pointer group"
                       >
-                        <UserNameAndPhoto size={'size-20'} /> {/* حجم مناسب */}
-                        {/* يمكنك عرض اسم المستخدم هنا إذا لم يكن ضمن UserNameAndPhoto */}
-                        {/* <span className="text-sm font-medium text-gray-700 group-hover:text-primary-600">{session.user.name}</span> */}
+                        <UserNameAndPhoto size={'size-20'} />
                       </a>
                     </Link>
                   )}

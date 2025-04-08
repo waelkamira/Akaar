@@ -48,9 +48,9 @@ function SearchCategoryContent({ params }) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="container mx-auto px-4 pb-8 relative"
+      className="container mx-auto px-4 relative"
     >
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 min-h-screen mt-14 xl:mt-24">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 min-h-screen mt-14">
         {/* Desktop Filters Sidebar - تظهر فقط على الشاشات الكبيرة */}
         {!isMobile && (
           <div className="hidden lg:flex flex-col gap-4 sticky top-8 self-start h-[calc(100vh-4rem)] overflow-y-auto  col-span-1 px-2">
