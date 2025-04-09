@@ -1,5 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'standalone',
+  experimental: {
+    missingSuspenseWithCSRBailout: false,
+  },
   trailingSlash: true, // جرب تشغيل هذه الميزة
   compress: true,
   typescript: {

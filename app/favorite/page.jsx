@@ -1,6 +1,6 @@
 'use client';
 import { useSession } from 'next-auth/react';
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, Suspense } from 'react';
 import toast from 'react-hot-toast';
 import CustomToast from '../../components/ReusableComponents/CustomToast';
 import Loading from '../../components/ReusableComponents/Loading';
@@ -8,7 +8,7 @@ import SmallCard from '../../components/ReusableComponents/SmallCard/SmallCard';
 import { MdKeyboardDoubleArrowRight } from 'react-icons/md';
 import LoginButton from '../../components/Buttons/LoginButton';
 
-export default function Favorites() {
+function FavoritesContent() {
   const [myFavorites, setMyFavorites] = useState([]);
   const [userId, setUserId] = useState(null);
   const [pageNumber, setPageNumber] = useState(0);
@@ -19,7 +19,6 @@ export default function Favorites() {
 
   const session = useSession();
 
-  // جلب معرف المستخدم
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const user = JSON.parse(localStorage.getItem('CurrentUser'));
@@ -27,7 +26,6 @@ export default function Favorites() {
     }
   }, []);
 
-  // دالة محسنة لجلب المفضلة مع التخزين المؤقت
   const fetchMyFavorites = useCallback(async () => {
     try {
       if (!userId) return;
@@ -36,7 +34,7 @@ export default function Favorites() {
       const response = await fetch(
         `/api/favorite?userId=${userId}&page=${pageNumber}&limit=8`,
         {
-          next: { revalidate: 1800 }, // إعادة التحقق بعد 30 دقيقة
+          cache: 'no-store', // استخدام no-store بدلاً من revalidate
         }
       );
 
@@ -56,7 +54,7 @@ export default function Favorites() {
     } catch (error) {
       console.error('Error fetching favorites:', error);
       toast.custom((t) => (
-        <CustomToast t={t} message={'حدث خطأ أثناء جلب المفضلة 😐'} />
+        <CustomToast t={t} message={'حدث خطأ أثناء جلب المفضلة'} type="error" />
       ));
     } finally {
       setLoading(false);
@@ -116,9 +114,26 @@ export default function Favorites() {
             )}
           </>
         ) : (
-          <LoginButton />
+          <div className="flex flex-col items-center justify-center min-h-[300px]">
+            <p className="mb-4 text-lg">يجب تسجيل الدخول لعرض المفضلة</p>
+            <LoginButton />
+          </div>
         )}
       </div>
     </div>
+  );
+}
+
+export default function Favorites() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex justify-center items-center min-h-screen">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-500"></div>
+        </div>
+      }
+    >
+      <FavoritesContent />
+    </Suspense>
   );
 }
