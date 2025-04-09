@@ -1,24 +1,23 @@
 'use client';
-import React, { Suspense } from 'react';
-import { FaCalendarDays, FaFacebookF } from 'react-icons/fa6'; // أيقونات من react-icons/fa6
-import { FiLinkedin } from 'react-icons/fi'; // أيقونات من react-icons/fi
-import { TbBrandGmail } from 'react-icons/tb'; // أيقونات من react-icons/tb
+import { Suspense } from 'react';
+import { FaCalendarDays, FaFacebookF } from 'react-icons/fa6';
+import { FiLinkedin } from 'react-icons/fi';
+import { TbBrandGmail } from 'react-icons/tb';
 import {
   MdOutlineAddLocationAlt,
   MdOutlineAlternateEmail,
   MdOutlineSell,
   MdCarRental,
-} from 'react-icons/md'; // أيقونات من react-icons/md
-import { GiCarKey } from 'react-icons/gi'; // أيقونات من react-icons/gi
+} from 'react-icons/md';
+import { GiCarKey } from 'react-icons/gi';
 import { useRouter } from 'next/navigation';
-import Card from '../../components/ReusableComponents/Card'; // تأكد من تعديل المسار حسب مكان المكون
+import Card from '../../components/ReusableComponents/Card';
 import Image from 'next/image';
 import LoadingPhoto from '../../components/photos/LoadingPhoto';
 
-export default function ContactUs() {
+function ContactUsContent() {
   const router = useRouter();
 
-  // مصفوفة معلومات الاتصال
   const contactInfo = [
     {
       icon: (
@@ -51,7 +50,6 @@ export default function ContactUs() {
     },
   ];
 
-  // مصفوفة ساعات العمل
   const workingHours = [
     { day: 'الإثنين', hours: '09:00 - 18:00' },
     { day: 'الثلاثاء', hours: '09:00 - 18:00' },
@@ -62,20 +60,19 @@ export default function ContactUs() {
     { day: 'الأحد', hours: '09:00 - 18:00' },
   ];
 
-  // مصفوفة البطاقات
   const cardsData = [
     {
       cardName: 'بيع',
       path: '/newPost',
-      text: 'يوفر موقع متجر إمكانية التواصل المباشر بين البائعين والمشترين أو المستأجرين والملاك. يمكن للمستخدمين الاتصال بالبائعين مباشرة عبر الهاتف لطرح أي أسئلة أو استفسارات.',
+      text: 'يوفر موقع متجر إمكانية التواصل المباشر بين البائعين والمشترين أو المستأجرين والملاك.',
       color: 'orange',
       image: 'https://i.imgur.com/uGXmBJO.jpg',
       emoji: <MdOutlineSell className="text-primary-500" />,
     },
     {
-      cardName: 'شراء ',
+      cardName: 'شراء',
       path: '/categories/1',
-      text: 'يحتوي موقع متجر على قسم خاص للمساعدة والدعم الفني لضمان حل أي استفسارات أو مشاكل قد تواجهها أثناء استخدام الموقع 24 ساعة على مدار الإسبوع.',
+      text: 'يحتوي موقع متجر على قسم خاص للمساعدة والدعم الفني لضمان حل أي استفسارات.',
       color: 'purple',
       image: 'https://i.imgur.com/qnZeVQk.jpg',
       emoji: <GiCarKey className="text-[#803084]" />,
@@ -83,33 +80,30 @@ export default function ContactUs() {
     {
       cardName: 'استأجار',
       path: '/categories/2',
-      text: 'تصميم موقع متجر يركز على توفير تجربة تصفح سلسة وسريعة. يتم تحميل صفحات الموقع بسرعة عالية، مما يقلل من وقت الانتظار ويحسن رضا المستخدمين.',
+      text: 'تصميم موقع متجر يركز على توفير تجربة تصفح سلسة وسريعة.',
       color: 'green',
       image: 'https://i.imgur.com/sZoXjKz.png',
       emoji: <MdCarRental className="text-[#119530]" />,
     },
   ];
+
   const image = '/logo.png';
+
   return (
-    <Suspense className="flex flex-col justify-center items-center sm:pb-16 w-full rounded-b">
+    <div className="flex flex-col justify-center items-center sm:pb-16 w-full rounded-b">
       <div className="flex flex-col justify-center items-center w-full xl:w-[90%] 2xl:w-[70%] h-full sm:px-16 pt-2 overflow-y-auto z-10 px-2">
         <div className="flex flex-col justify-between items-center w-full h-full mt-2 cursor-pointer">
-          LoadingPhoto
-          {/* قسم البطاقات */}
           <div className="flex flex-col md:flex-row justify-center items-center w-full p-4 gap-6">
             <div className="flex flex-col justify-center items-center w-full p-4 gap-6">
               <h1 className="text-center text-2xl w-full select-none my-4 font-bold">
-                <div
-                  onClick={() => router.push('/')}
-                  className={`relative w-full h-[100px] overflow-visible`}
-                >
+                <div className="relative w-full h-[100px] overflow-visible">
                   {!image && <LoadingPhoto />}
-                  {Image && (
+                  {image && (
                     <Image
                       src={image}
                       layout="fill"
                       objectFit="contain"
-                      alt={'image'}
+                      alt={'logo'}
                       priority={false}
                     />
                   )}
@@ -130,43 +124,29 @@ export default function ContactUs() {
               </div>
             </div>
           </div>
-          {/* قسم وصف الموقع */}
-          <div className="p-2 h-full rounded   xl:border  border-gray-300/50 shadow-md">
+
+          <div className="p-2 h-full rounded xl:border border-gray-300/50 shadow-md">
             <h1 className="text-center text-2xl w-full select-none my-4 font-bold">
               موقع متجر
             </h1>
             <div className="text-start w-full select-none my-2 text-sm xl:text-lg leading-loose p-4">
               موقع متجر هو منصة شاملة للبيع والتأجير لكل من العقارات والسيارات.
-              يوفر الموقع تجربة مستخدم سلسة وممتعة مع تصميم جذاب وسهل الاستخدام.
-              سواء كنت تبحث عن منزل جديد، شقة للإيجار، أو سيارة حديثة، فإن موقع
-              متجر يقدم لك كل ما تحتاجه في مكان واحد.
               <h1 className="text-primary-500 w-full text-center my-4">
                 - - - -
               </h1>
-              يوفر موقع متجر إمكانية التواصل المباشر بين البائعين والمشترين أو
-              المستأجرين والملاك. يمكن للمستخدمين الاتصال بالبائعين مباشرة عبر
-              الهاتف لطرح أي أسئلة أو استفسارات.
+              يوفر موقع متجر إمكانية التواصل المباشر بين البائعين والمشترين.
               <h1 className="text-primary-500 w-full text-center my-4">
                 - - - -
               </h1>
-              يحتوي موقع متجر على قسم خاص للمساعدة والدعم الفني لضمان حل أي
-              استفسارات أو مشاكل قد تواجهها أثناء استخدام الموقع.
+              يحتوي موقع متجر على قسم خاص للمساعدة والدعم الفني.
               <h1 className="text-primary-500 w-full text-center my-4">
                 - - - -
               </h1>
-              تصميم موقع متجر يركز على توفير تجربة تصفح سلسة وسريعة. يتم تحميل
-              صفحات الموقع بسرعة عالية، مما يقلل من وقت الانتظار ويحسن رضا
-              المستخدمين.
-              <h1 className="text-primary-500 w-full text-center my-4">
-                - - - -
-              </h1>
-              في النهاية، موقع متجر هو وجهة مثالية لكل من يبحث عن خدمات البيع
-              .والتأجير للعقارات والسيارات ,و بيع المنتجات بمختلف أنواعها
+              تصميم موقع متجر يركز على توفير تجربة تصفح سلسة وسريعة.
             </div>
           </div>
-          {/* قسم معلومات الاتصال */}
+
           <div className="w-full h-full">
-            {/* قسم معلومات الاتصال */}
             <div className="p-2 h-full rounded my-2 xl:border border-gray-300/50 shadow-md">
               <h1 className="text-center text-2xl w-full select-none my-4 font-bold">
                 معلومات الإتصال
@@ -174,7 +154,6 @@ export default function ContactUs() {
               <ul className="flex flex-col justify-start gap-4 items-start h-full w-full p-4">
                 {contactInfo.map((info, index) =>
                   info.link ? (
-                    // للروابط الخارجية التي تفتح في نافذة جديدة
                     <a
                       key={index}
                       href={info.link}
@@ -190,10 +169,8 @@ export default function ContactUs() {
                       </div>
                     </a>
                   ) : (
-                    // للروابط الداخلية
                     <div
                       key={index}
-                      onClick={() => router.push(info.internalLink)}
                       className="flex items-center justify-between gap-2 w-full hover:bg-white hover:bg-opacity-20 rounded-lg hover:scale-[101%] hover:cursor-pointer px-4 py-2 transition-all duration-300"
                     >
                       <div className="flex gap-2 items-center">
@@ -208,7 +185,6 @@ export default function ContactUs() {
               </ul>
             </div>
 
-            {/* قسم ساعات العمل */}
             <div className="p-2 h-full rounded my-2 xl:border border-gray-300/50 shadow-md">
               <h1 className="text-center text-2xl w-full select-none my-4 font-bold">
                 ساعات العمل
@@ -233,6 +209,20 @@ export default function ContactUs() {
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+export default function ContactUs() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex justify-center items-center min-h-screen">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-500"></div>
+        </div>
+      }
+    >
+      <ContactUsContent />
     </Suspense>
   );
 }

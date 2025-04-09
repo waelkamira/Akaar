@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, Suspense } from 'react';
 import { useForm } from 'react-hook-form';
 import categories from '../../components/Categories/categories';
 import UploadingAndDisplayingImage from '../../components/photos/UploadingAndDisplayingImage';
@@ -11,8 +11,6 @@ import LoginButton from '../../components/Buttons/LoginButton';
 import {
   MdCategory,
   MdTitle,
-  MdLocationCity,
-  MdLocationOn,
   MdPhone,
   MdDescription,
   MdAttachMoney,
@@ -21,20 +19,17 @@ import FormInput from './FormInput';
 import FormSelect from './FormSelect';
 import FormTextarea from './FormTextarea';
 import FormSubmitButton from './FormSubmitButton';
-// import OnClickMap from '../../components/map/onClickMap';
 import { useSession } from 'next-auth/react';
 import { FaTreeCity } from 'react-icons/fa6';
 import { PiBuildingsDuotone } from 'react-icons/pi';
-import SearchParamsWrapper from '../../components/ReusableComponents/SearchParamsWrapper';
 import dynamic from 'next/dynamic';
+
 // استيراد OnClickMap ديناميكياً مع تعطيل SSR
-const OnClickMap = dynamic(
-  () => import('../../components/map/onClickMap'), // <-- تأكد من صحة المسار هنا
-  {
-    ssr: false, // <--- هذا هو الجزء الأهم لمنع الخطأ
-    loading: () => <p className="text-center p-10">جارٍ تحميل الخريطة...</p>, // اختياري: عرض مؤشر تحميل
-  }
-);
+const OnClickMap = dynamic(() => import('../../components/map/onClickMap'), {
+  ssr: false,
+  loading: () => <p className="text-center p-10">جارٍ تحميل الخريطة...</p>,
+});
+
 function NewPostContent() {
   const [categoryFields, setCategoryFields] = useState([]);
   const { register, handleSubmit } = useForm();
@@ -44,7 +39,7 @@ function NewPostContent() {
   const { addImages, location, dispatch } = useContext(inputsContext);
   const session = useSession();
   const [error, setError] = useState(null);
-  const [userId, setUserId] = useState(''); // حالة لتخزين الـ userId
+  const [userId, setUserId] = useState('');
 
   const [formState, setFormState] = useState({
     id: '',
@@ -64,13 +59,11 @@ function NewPostContent() {
     details: {},
   });
 
-  // ✅ جلب الفئة
   const handleCategoryChange = (catagory) => {
     if (catagory) {
       const selected = categories[catagory - 1];
       setSelectedCategory(selected);
 
-      // قم بتحديث formState مباشرةً هنا
       setFormState((prev) => ({
         ...prev,
         categoryId: selected?.id || '',
@@ -78,7 +71,6 @@ function NewPostContent() {
       }));
     } else {
       setSelectedCategory(null);
-      // قم بتحديث formState هنا أيضًا إذا تم إلغاء تحديد الفئة
       setFormState((prev) => ({
         ...prev,
         categoryId: '',
@@ -87,25 +79,23 @@ function NewPostContent() {
     }
   };
 
-  // ✅ تحميل الحقول بناءً على الفئة عند تغيير الفئة
   useEffect(() => {
     if (selectedCategory) {
       import(`../../components/categoryFields/${selectedCategory?.name}.jsx`)
         .then((module) => {
           setCategoryFields(module.default);
-          setError(null); // Reset error on successful load
+          setError(null);
         })
         .catch((err) => {
           console.error('Failed to load fields:', err);
-          setCategoryFields([]); // Reset fields on error
+          setCategoryFields([]);
           setError('فشل في تحميل الحقول');
         });
     } else {
-      setCategoryFields([]); // Reset fields when category is unselected
+      setCategoryFields([]);
     }
   }, [selectedCategory]);
 
-  // ✅ تحديث userId من localStorage عند تحميل المكون
   useEffect(() => {
     const updateUserId = () => {
       if (typeof window !== 'undefined') {
@@ -124,7 +114,6 @@ function NewPostContent() {
     updateUserId();
   }, []);
 
-  // ✅ تحديث formState عند تغيير userId, selectedCategory, location, addImages
   useEffect(() => {
     if (typeof window !== 'undefined') {
       setFormState((prev) => ({
@@ -183,7 +172,7 @@ function NewPostContent() {
     const hasEmptyRequiredField = requiredFields.some((field) => {
       if (typeof formState[field] === 'string' && !formState[field].trim()) {
         emptyFieldsList.push(field);
-        return true; // Stop iterating if an empty field is found
+        return true;
       }
       return false;
     });
@@ -267,11 +256,11 @@ function NewPostContent() {
             name="category"
             options={categories.map((cat) => ({
               value: cat.id,
-              label: cat.name, // النص المعروض في القائمة
+              label: cat.name,
             }))}
             register={register}
             errors={emptyFields}
-            onChange={(e) => handleCategoryChange(e.target.value)} // تمرير الدالة المعدلة
+            onChange={(e) => handleCategoryChange(e.target.value)}
             placeholder="-اختر-"
           />
 
@@ -422,8 +411,14 @@ function NewPostContent() {
 
 export default function NewPost() {
   return (
-    <SearchParamsWrapper>
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center">
+          جار التحميل...
+        </div>
+      }
+    >
       <NewPostContent />
-    </SearchParamsWrapper>
+    </Suspense>
   );
 }

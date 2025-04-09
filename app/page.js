@@ -11,7 +11,7 @@ import SmallCard from '../components/ReusableComponents/SmallCard/SmallCard';
 import ColoredCards from '../components/ReusableComponents/ColoredCards';
 import categories from '../components/Categories/categories';
 
-export default function Home() {
+function HomeContent() {
   const [productsByCategory, setProductsByCategory] = useState({});
   const [loading, setLoading] = useState(true);
   const router = useRouter();
@@ -75,7 +75,7 @@ export default function Home() {
   };
 
   return (
-    <Suspense className="relative flex flex-row-reverse items-start justify-between overflow-hidden z-[40] h-fit w-full bg-five rounded-b">
+    <div className="relative flex flex-row-reverse items-start justify-between overflow-hidden z-[40] h-fit w-full bg-five rounded-b">
       <div className="relative flex-col justify-between items-start w-full h-full">
         <div className="flex flex-col items-center justify-center overflow-hidden z-50 h-fit w-full bg-five rounded-b">
           {loading ? (
@@ -131,6 +131,20 @@ export default function Home() {
           حقوق النشر © 2025 موقع متجر. جميع الحقوق محفوظة
         </h1>
       </div>
+    </div>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center">
+          جار التحميل...
+        </div>
+      }
+    >
+      <HomeContent />
     </Suspense>
   );
 }

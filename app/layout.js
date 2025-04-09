@@ -18,7 +18,33 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className="!scroll-smooth" dir="rtl">
       <body className={rubik.className}>
-        <Toaster />
+        <Toaster
+          position="top-center"
+          toastOptions={{
+            className: 'rtl:text-right',
+            duration: 5000,
+            style: {
+              background: '#fff',
+              color: '#333',
+              border: '1px solid #eee',
+              padding: '16px',
+            },
+            success: {
+              duration: 3000,
+              iconTheme: {
+                primary: 'green',
+                secondary: 'white',
+              },
+            },
+            error: {
+              duration: 4000,
+              iconTheme: {
+                primary: 'red',
+                secondary: 'white',
+              },
+            },
+          }}
+        />
         <AuthContextProvider>
           <InputsContextProvider>
             <SearchProvider>
