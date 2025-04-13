@@ -11,6 +11,7 @@ import { SearchProvider } from '../../../contexts/SearchContext';
 import { filterOptions } from '../../../lib/mockData';
 import { FiFilter, FiX } from 'react-icons/fi';
 import { ImSearch } from 'react-icons/im';
+import { useParams } from 'next/navigation';
 
 function SearchCategoryContent({ params }) {
   const { performSearch, loading, selectedFilters } = useSearch();
@@ -149,8 +150,8 @@ function SearchCategoryContent({ params }) {
   );
 }
 
-export default function SearchCategoryPage(props) {
-  const params = use(props.params);
+export default function SearchCategoryPage() {
+  const params = useParams();
   const categoryId = params.categoryId?.split('=')[1];
   const category = filterOptions.categories.find(
     (cat) => cat.id.toString() === categoryId
