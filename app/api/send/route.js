@@ -7,9 +7,17 @@ export async function POST(request) {
   try {
     const { name, email, message } = await request.json();
 
+    // التحقق من صحة البيانات المدخلة
+    if (!name || !email || !message) {
+      return NextResponse.json(
+        { error: 'الرجاء ملء جميع الحقول' },
+        { status: 400 }
+      );
+    }
+
     const { data, error } = await resend.emails.send({
       from: `Contact Form <${process.env.NEXT_PUBLIC_RESEND_FROM_EMAIL}>`,
-      to: [process.env.NEXT_PUBLIC_RESEND_FROM_EMAIL], // أرسل إلى نفسك أو أي بريد آخر
+      to: [process.env.NEXT_PUBLIC_RESEND_FROM_EMAIL],
       subject: 'رسالة جديدة من نموذج الاتصال',
       html: `
         <div dir="rtl">
@@ -23,7 +31,10 @@ export async function POST(request) {
     });
 
     if (error) {
-      return NextResponse.json({ error }, { status: 500 });
+      return NextResponse.json(
+        { error: 'فشل إرسال البريد الإلكتروني' },
+        { status: 500 }
+      );
     }
 
     return NextResponse.json({ success: true, data });
