@@ -6,9 +6,6 @@ export async function GET(req) {
   const { searchParams } = new URL(req.url);
   const email = searchParams.get('email') || '';
 
-  // console.log('Full Query String:', req.url);
-  // console.log('email************************:', email);
-
   try {
     if (email) {
       const user = await prisma.user.findUnique({
@@ -38,9 +35,6 @@ export async function GET(req) {
 export async function PUT(req) {
   try {
     const { id, userImage, username } = await req.json();
-    // console.log('id', id);
-    // console.log('userImage', userImage);
-    // console.log('username', username);
 
     const updatedUser = await prisma.user.update({
       where: { id },

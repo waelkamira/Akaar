@@ -21,7 +21,6 @@ export default function Profile() {
     if (typeof window !== 'undefined') {
       try {
         const getUser = JSON.parse(localStorage.getItem('CurrentUser'));
-        console.log(getUser);
         setUser(getUser);
       } catch (error) {
         console.error('Error parsing CurrentUser from localStorage:', error);
@@ -32,7 +31,6 @@ export default function Profile() {
   // Save changes (name)
   async function saveProfileChanges() {
     if (user) {
-      console.log(user);
       const formData = {
         id: user?.id,
         username: userName || user?.username,

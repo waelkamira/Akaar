@@ -29,8 +29,6 @@ export async function POST(req) {
       fileName: file.name, // اسم الملف
     });
 
-    console.log('ImageKit Response:', response);
-
     return NextResponse.json({
       success: true,
       data: {

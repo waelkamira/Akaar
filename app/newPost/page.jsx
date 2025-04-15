@@ -212,7 +212,6 @@ function NewPostContent() {
     }
 
     const formData = { ...formState, category: selectedCategory?.id };
-    console.log('formData to be sent:', formData);
 
     try {
       const response = await fetch('/api/product', {
@@ -222,7 +221,6 @@ function NewPostContent() {
       });
 
       if (response.ok) {
-        console.log('Product added successfully:', await response.json());
         toast.success('تم إنشاء الإعلان بنجاح');
         dispatch({ type: 'ADD_IMAGE', payload: [] });
         router.push('/myPosts');

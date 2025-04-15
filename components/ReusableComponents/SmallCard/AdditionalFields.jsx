@@ -13,12 +13,10 @@ function AdditionalFields({ item }) {
     }
     return value;
   }, []);
-  // console.log('item', item);
   useEffect(() => {
     if (item?.categoryName) {
       import(`../../categoryFields/${item?.categoryName}.jsx`)
         .then((module) => {
-          // console.log('module', module.default);
           setCategoryFields(module.default);
         })
         .catch((err) => {

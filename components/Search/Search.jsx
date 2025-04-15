@@ -40,7 +40,6 @@ export default function Search() {
 
   const handleSearch = () => {
     if (inputValue.trim()) {
-      console.log('inputValue.trim()', inputValue.trim());
       router.push(`/search?query=${encodeURIComponent(inputValue.trim())}`);
       setShowSuggestions(false);
     }
@@ -77,9 +76,9 @@ export default function Search() {
             placeholder="ابحث عن عقار أو سيارة..."
             className="flex-grow text-gray-800 w-full rounded-md h-8 sm:h-10 p-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-500"
           />
-          {showSuggestions && suggestions.length > 0 && (
+          {showSuggestions && suggestions?.length > 0 && (
             <div className="absolute z-[60] w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto">
-              {suggestions.map((suggestion, index) => (
+              {suggestions?.map((suggestion, index) => (
                 <div
                   key={index}
                   onClick={() => handleSuggestionClick(suggestion)}

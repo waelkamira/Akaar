@@ -47,7 +47,7 @@ export async function GET(req) {
   // التحقق من الذاكرة المؤقتة
   const cachedData = cache.get(cacheKey);
   if (cachedData) {
-    console.log('📦 [Cache Hit]', cacheKey);
+    // console.log('📦 [Cache Hit]', cacheKey);
     return NextResponse.json({
       data: cachedData,
       meta: { source: 'cache', cachedAt: new Date().toISOString() },
@@ -55,7 +55,7 @@ export async function GET(req) {
   }
 
   try {
-    console.log('🔄 [Cache Miss] جلب البيانات من قاعدة البيانات', cacheKey);
+    // console.log('🔄 [Cache Miss] جلب البيانات من قاعدة البيانات', cacheKey);
 
     // جلب جميع المنتجات للفئات المطلوبة في استعلام واحد
     const products = await prisma.product.findMany({
@@ -75,7 +75,7 @@ export async function GET(req) {
 
     // تخزين في الذاكرة المؤقتة
     cache.set(cacheKey, formattedData);
-    console.log('💾 [Cache Set]', cacheKey);
+    // console.log('💾 [Cache Set]', cacheKey);
 
     return NextResponse.json({
       data: formattedData,

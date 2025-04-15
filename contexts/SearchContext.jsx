@@ -19,9 +19,8 @@ export function SearchProvider({ children, initialCategory }) {
   const [category, setCategory] = useState(initialCategory || null);
   const [filters, setFilters] = useState({});
   const [dynamicFilters, setDynamicFilters] = useState([]);
-  const [shouldSearchOnLoad, setShouldSearchOnLoad] = useState(
-    !!initialCategory
-  );
+  const [shouldSearchOnLoad, setShouldSearchOnLoad] =
+    useState(!!initialCategory);
 
   // Navigation
   const router = useRouter();
@@ -58,15 +57,12 @@ export function SearchProvider({ children, initialCategory }) {
 
   // Load dynamic filters when category changes
   const loadDynamicFilters = useCallback(async (categoryObj) => {
-    console.log('category name', categoryObj);
-
     if (!categoryObj?.name) {
-      // console.log('No category or name provided');
       return [];
     }
 
     try {
-      console.log(`Loading filters for category: ${categoryObj.name}`);
+      // console.log(`Loading filters for category: ${categoryObj.name}`);
       const module = await import(
         `../components/categoryFields/${categoryObj.name}.jsx`
       ).catch(() => {
@@ -74,7 +70,7 @@ export function SearchProvider({ children, initialCategory }) {
         return { default: [] };
       });
       const filters = Array.isArray(module.default) ? module.default : [];
-      console.log('Loaded filters:', filters);
+      // console.log('Loaded filters:', filters);
       return filters;
     } catch (err) {
       console.error(`Failed to load filters for ${categoryObj.name}:`, err);
@@ -123,7 +119,7 @@ export function SearchProvider({ children, initialCategory }) {
         );
 
         if (!categoryObj) {
-          console.log('Category not found:', categoryId);
+          // console.log('Category not found:', categoryId);
           return;
         }
 

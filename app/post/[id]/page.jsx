@@ -44,16 +44,11 @@ export default function Page() {
     if (typeof window !== 'undefined') {
       const item = JSON.parse(localStorage.getItem('item'));
       setPost(item);
-      // console.log('item', item);
     }
   }, []);
 
   useEffect(() => {
     if (post?.categoryName) {
-      console.log('categories[post?.categoryId]', categories[post?.categoryId]);
-      console.log('post?.categoryId', post?.categoryId);
-      console.log('categories', categories);
-      console.log('post', post);
       import(`../../../components/categoryFields/${post?.categoryName}.jsx`)
         .then((module) => {
           setCategoryFields(module.default);
@@ -67,7 +62,6 @@ export default function Page() {
 
   const getFieldValue = (field, value) => {
     if (field.options && field.options[value]) {
-      // console.log('field.options[value]', field.options[value]);
       return field.options[value];
     }
     return value;
@@ -237,7 +231,6 @@ export default function Page() {
                               const value =
                                 post?.details?.[field?.name] || field?.value;
                               const displayValue = getFieldValue(field, value);
-                              // console.log('displayValue', displayValue);
 
                               // عرض الحقل فقط إذا كانت القيمة موجودة
                               return displayValue ? (

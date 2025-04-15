@@ -6,7 +6,6 @@ const prisma = new PrismaClient();
 export async function GET(req) {
   const { searchParams } = new URL(req.url);
   const userId = searchParams.get('userId');
-  console.log('userId', userId);
   try {
     if (!userId) {
       return NextResponse.json(
@@ -38,7 +37,6 @@ export async function GET(req) {
 
     // استخراج المعرّفات فقط من النتائج
     const productIds = favorites.map((fav) => fav.product.id);
-    console.log('productIds:', productIds);
 
     return NextResponse.json(
       {

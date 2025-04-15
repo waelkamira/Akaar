@@ -16,7 +16,6 @@ export async function GET(req, props) {
   const { category } = params;
   const url = new URL(req.url);
   const searchParams = url.searchParams;
-  // console.log('category من داخل الدالة', category);
 
   // الحصول على قيم الصفحة والحد الأقصى مع قيم افتراضية
   const page = parseInt(searchParams.get('page')) || 1;
@@ -29,7 +28,7 @@ export async function GET(req, props) {
   // التحقق من وجود البيانات في التخزين المؤقت
   const cachedData = cache.get(cacheKey);
   if (cachedData) {
-    console.log('✅ تم استرجاع البيانات من التخزين المؤقت:', cacheKey);
+    // console.log('✅ تم استرجاع البيانات من التخزين المؤقت:', cacheKey);
     return NextResponse.json(cachedData);
   }
 
@@ -56,7 +55,7 @@ export async function GET(req, props) {
 
     // تخزين البيانات في التخزين المؤقت
     cache.set(cacheKey, response);
-    console.log('✅ تم تخزين البيانات في التخزين المؤقت:', cacheKey);
+    // console.log('✅ تم تخزين البيانات في التخزين المؤقت:', cacheKey);
 
     // إرجاع البيانات مع العدد الإجمالي
     return NextResponse.json(response);

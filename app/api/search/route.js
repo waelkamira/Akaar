@@ -1,7 +1,32 @@
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Prisma } from '@prisma/client';
 
-const prisma = new PrismaClient();
+// Create a singleton Prisma client instance
+const prisma = new PrismaClient({
+  log: ['error', 'warn'],
+  errorFormat: 'pretty',
+});
+
+// Helper function to handle retries
+async function withRetry(operation, maxRetries = 3) {
+  let lastError;
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      return await operation();
+    } catch (error) {
+      lastError = error;
+      if (error.code === 'ECONNRESET' || error.code === 'P1001') {
+        // Wait before retrying (exponential backoff)
+        await new Promise((resolve) =>
+          setTimeout(resolve, Math.pow(2, i) * 1000)
+        );
+        continue;
+      }
+      throw error;
+    }
+  }
+  throw lastError;
+}
 
 export async function POST(request) {
   try {
@@ -14,7 +39,6 @@ export async function POST(request) {
       page = 1,
       limit = 8,
     } = body;
-    console.log('body تم استدعاء الراوت', body);
 
     // Build the where clause for Prisma
     const where = {
@@ -120,30 +144,24 @@ export async function POST(request) {
       delete where.AND;
     }
 
-    console.log('Search conditions:', JSON.stringify(where, null, 2));
-
-    // Fetch the products and total count from Prisma
-    const [products, totalCount] = await Promise.all([
-      prisma.product.findMany({
-        where,
-        skip: (page - 1) * limit,
-        take: limit,
-        orderBy: {
-          createdAt: 'desc',
-        },
-      }),
-      prisma.product.count({ where }),
-    ]);
+    // Fetch the products and total count from Prisma with retry logic
+    const [products, totalCount] = await withRetry(async () => {
+      return await Promise.all([
+        prisma.product.findMany({
+          where,
+          skip: (page - 1) * limit,
+          take: limit,
+          orderBy: {
+            createdAt: 'desc',
+          },
+        }),
+        prisma.product.count({ where }),
+      ]);
+    });
 
     // Calculate if there are more results after the current page
     const remainingCount = totalCount - page * limit;
     const hasMore = remainingCount > 0;
-
-    console.log('totalCount:', totalCount);
-    // console.log('products:', products);
-    // console.log('currentPage:', page);
-    // console.log('remainingCount:', remainingCount);
-    // console.log('hasMore:', hasMore);
 
     // Return the results
     return NextResponse.json({
@@ -156,11 +174,23 @@ export async function POST(request) {
     });
   } catch (error) {
     console.error('Search error:', error);
+
+    // Handle specific Prisma errors
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === 'P1001') {
+        return NextResponse.json(
+          {
+            error:
+              'تعذر الاتصال بقاعدة البيانات. يرجى المحاولة مرة أخرى لاحقاً',
+          },
+          { status: 503 }
+        );
+      }
+    }
+
     return NextResponse.json(
-      { error: 'حدث خطأ في البحث حاول مرة اخرى' },
+      { error: 'حدث خطأ في البحث. يرجى المحاولة مرة أخرى' },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect(); // Disconnect Prisma client after operation.
   }
 }

@@ -9,18 +9,6 @@ export async function GET(req) {
   const searchQuery = searchParams.get('searchQuery') || '';
   const isAdmin = searchParams.get('isAdmin') === 'true';
 
-  console.log('Full Query String:', req.url);
-  console.log(
-    'searchQuery:',
-    searchQuery,
-    'limit:',
-    limit,
-    'pageNumber:',
-    pageNumber,
-    'isAdmin:',
-    isAdmin
-  );
-
   try {
     let users;
 
@@ -39,7 +27,6 @@ export async function GET(req) {
       });
     }
 
-    console.log('Users:', users);
     return new Response(JSON.stringify(users), { status: 200 });
   } catch (error) {
     console.error('Error fetching users:', error);

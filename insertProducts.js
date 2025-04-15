@@ -98,7 +98,7 @@ const categories = [
   },
   {
     id: 4,
-    name: 'كمبيوتر',
+    name: 'كمبيوترات',
     enName: 'computers',
     path: '/categories/4?category=computers',
     icon: Icons.Computers ? <Icons.Computers /> : null,
@@ -632,7 +632,6 @@ async function main() {
       await prisma.product.create({
         data: car,
       });
-      console.log(`تمت إضافة سيارة: ${car.title}`);
     } catch (error) {
       console.error(`Error adding car ${car.title}:`, error);
     }
@@ -712,9 +711,7 @@ async function main() {
               updatedAt: new Date(),
             },
           });
-          console.log(`تم إنشاء منتج للفئة: ${category.name}`);
         }
-        console.log(`تمت معالجة الإعلان: ${post.post_id}`);
       } catch (error) {
         console.error(`Error processing post ${post.post_id}:`, error);
       }
