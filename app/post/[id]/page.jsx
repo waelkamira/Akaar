@@ -232,7 +232,6 @@ export default function Page() {
                                 post?.details?.[field?.name] || field?.value;
                               const displayValue = getFieldValue(field, value);
 
-                              // عرض الحقل فقط إذا كانت القيمة موجودة
                               return displayValue ? (
                                 <ItemSmallItem
                                   key={index}
