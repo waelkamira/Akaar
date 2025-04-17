@@ -4,7 +4,7 @@ const nextConfig = {
   experimental: {
     missingSuspenseWithCSRBailout: false,
   },
-  trailingSlash: true, // جرب تشغيل هذه الميزة
+  // trailingSlash: true, // جرب تشغيل هذه الميزة
   compress: true,
   typescript: {
     ignoreBuildErrors: true, // تجاهل أخطاء TypeScript أثناء البناء

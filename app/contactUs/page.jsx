@@ -157,7 +157,6 @@ function ContactUsContent() {
                     <a
                       key={index}
                       href={info.link}
-                      target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center justify-between gap-2 w-full hover:bg-white hover:bg-opacity-20 rounded-lg hover:scale-[101%] hover:cursor-pointer px-4 py-2 transition-all duration-300"
                     >

@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { ImSearch } from 'react-icons/im';
 import CategoriesNavBar from '../navbars/CategoriesNavBar';
@@ -11,6 +11,15 @@ export default function Search() {
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // Initialize input value from URL query parameter
+  useEffect(() => {
+    const query = searchParams.get('query');
+    if (query) {
+      setInputValue(decodeURIComponent(query));
+    }
+  }, [searchParams]);
 
   // Fetch search suggestions
   useEffect(() => {
@@ -40,7 +49,8 @@ export default function Search() {
 
   const handleSearch = () => {
     if (inputValue.trim()) {
-      router.push(`/search?query=${encodeURIComponent(inputValue.trim())}`);
+      const query = encodeURIComponent(inputValue.trim());
+      router.push(`/search?query=${query}`);
       setShowSuggestions(false);
     }
   };
@@ -48,11 +58,18 @@ export default function Search() {
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
       handleSearch();
+      setShowSuggestions(false);
     }
+  };
+
+  const handleInputChange = (e) => {
+    setInputValue(e.target.value);
+    setShowSuggestions(true);
   };
 
   const handleSuggestionClick = (suggestion) => {
     setInputValue(suggestion);
+    setShowSuggestions(false);
     handleSearch();
   };
 
@@ -70,9 +87,8 @@ export default function Search() {
           <input
             type="text"
             value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
+            onChange={handleInputChange}
             onKeyDown={handleKeyDown}
-            onFocus={() => setShowSuggestions(true)}
             placeholder="ابحث عن عقار أو سيارة..."
             className="flex-grow text-gray-800 w-full rounded-md h-8 sm:h-10 p-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-500"
           />

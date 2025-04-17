@@ -1,30 +1,23 @@
-import { Resend } from 'resend';
 import { NextResponse } from 'next/server';
-
-// Ensure the API key is properly loaded
-if (!process.env.RESEND_API_KEY) {
-  console.error(
-    'Resend API key is missing. Please check your environment variables.'
-  );
-}
-
-const resend = new Resend(process.env.RESEND_API_KEY);
+import nodemailer from 'nodemailer';
 
 export async function POST(request) {
   try {
     const { name, email, message } = await request.json();
 
-    // التحقق من صحة البيانات المدخلة
-    if (!name || !email || !message) {
-      return NextResponse.json(
-        { error: 'الرجاء ملء جميع الحقول' },
-        { status: 400 }
-      );
-    }
+    // 1. إنشاء "ناقل" (Transporter) باستخدام Gmail
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.GMAIL_EMAIL, // ايميلك (مثل: yourname@gmail.com)
+        pass: process.env.GMAIL_APP_PASSWORD, // كلمة مرور التطبيق (ليس كلمة السر العادية!)
+      },
+    });
 
-    const { data, error } = await resend.emails.send({
-      from: `Contact Form <${process.env.NEXT_PUBLIC_RESEND_FROM_EMAIL}>`,
-      to: [process.env.NEXT_PUBLIC_RESEND_FROM_EMAIL],
+    // 2. إعداد محتوى الإيميل
+    const mailOptions = {
+      from: `"Contact Form" <${process.env.GMAIL_EMAIL}>`,
+      to: process.env.GMAIL_EMAIL, // إرسال إلى نفسك (أو أي إيميل آخر)
       subject: 'رسالة جديدة من نموذج الاتصال',
       html: `
         <div dir="rtl">
@@ -35,19 +28,19 @@ export async function POST(request) {
           <p>${message}</p>
         </div>
       `,
-    });
+    };
 
-    if (error) {
-      return NextResponse.json(
-        { error: 'فشل إرسال البريد الإلكتروني' },
-        { status: 500 }
-      );
-    }
+    // 3. إرسال الإيميل
+    await transporter.sendMail(mailOptions);
 
-    return NextResponse.json({ success: true, data });
-  } catch (error) {
     return NextResponse.json(
-      { error: 'حدث خطأ أثناء إرسال الرسالة' },
+      { success: true, message: 'تم إرسال الرسالة بنجاح!' },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error('Error sending email:', error);
+    return NextResponse.json(
+      { success: false, error: 'فشل إرسال الرسالة' },
       { status: 500 }
     );
   }
