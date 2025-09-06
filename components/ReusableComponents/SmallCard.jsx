@@ -34,6 +34,8 @@ const SmallCard = React.memo(function SmallCard({ item, category }) {
 
   // جلب الحقول بناءً على الفئة
   useEffect(() => {
+    console.log('جلب الحقول بناءً على الفئة');
+
     if (item?.categoryName) {
       import(`../categoryFields/${item?.categoryName}.jsx`)
         .then((module) => {
@@ -47,6 +49,8 @@ const SmallCard = React.memo(function SmallCard({ item, category }) {
 
   // جلب معرف المستخدم من localStorage
   useEffect(() => {
+    console.log('جلب معرف المستخدم من localStorage');
+
     if (typeof window !== 'undefined') {
       const userData = localStorage.getItem('CurrentUser');
       if (userData) {
@@ -62,6 +66,8 @@ const SmallCard = React.memo(function SmallCard({ item, category }) {
 
   // جلب قائمة معرفات المفضلة
   const fetchAndStoreUserFavoriteIds = useCallback(async (userId) => {
+    console.log(' جلب قائمة معرفات المفضلة');
+
     if (!userId) return;
 
     try {
@@ -90,6 +96,8 @@ const SmallCard = React.memo(function SmallCard({ item, category }) {
 
   // دالة التحقق من حالة المفضلة
   const checkFavoriteStatus = useCallback(() => {
+    console.log('دالة التحقق من حالة المفضلة');
+
     if (item?.id && Array.isArray(favoriteIds)) {
       const favorited = favoriteIds.includes(item?.id);
       setIsFavorited(favorited);
@@ -109,6 +117,8 @@ const SmallCard = React.memo(function SmallCard({ item, category }) {
 
   // إضافة أو إزالة المنتج من المفضلة
   const handleFavorite = useCallback(async () => {
+    console.log('إضافة أو إزالة المنتج من المفضلة');
+
     if (!item?.id || !userId) return;
 
     try {
@@ -137,6 +147,8 @@ const SmallCard = React.memo(function SmallCard({ item, category }) {
 
   // استخدام useMemo لحساب القيم المعروضة
   const displayValues = useMemo(() => {
+    console.log(' استخدام useMemo لحساب القيم المعروضة');
+
     return categoryFields?.slice(0, 3)?.map((field, index) => {
       const value = item.details[field.name];
       return getFieldValue(field, value);
@@ -224,7 +236,7 @@ const SmallCard = React.memo(function SmallCard({ item, category }) {
               </div>
             ))}
           </div>
-          <h1 className="flex justify-between items-center text-start w-full text-md font-bold text-primary-500 p-4">
+          <h1 className="flex justify-between items-center text-start w-full text-md font-bold text-primary-500 p-4 border-t border-gray-100 pt-4">
             <span className="text-primary-500"> {item?.basePrice} $</span>
             <button className="bg-primary-500 text-white p-2 rounded-full text-sm font-thin">
               عرض التفاصيل

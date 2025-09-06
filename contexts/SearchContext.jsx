@@ -58,18 +58,18 @@ export function SearchProvider({ children, initialCategory }) {
   // Load dynamic filters when category changes
   const loadDynamicFilters = useCallback(async (categoryObj) => {
     if (!categoryObj?.name) {
+      console.log('No category or name provided');
       return [];
     }
 
     try {
       // console.log(`Loading filters for category: ${categoryObj.name}`);
-      const module = await import(
+      const selectedModule = await import(
         `../components/categoryFields/${categoryObj.name}.jsx`
-      ).catch(() => {
-        // console.log(`No filters found for category: ${categoryObj.name}`);
-        return { default: [] };
-      });
-      const filters = Array.isArray(module.default) ? module.default : [];
+      );
+      const filters = Array.isArray(selectedModule.default)
+        ? selectedModule.default
+        : [];
       // console.log('Loaded filters:', filters);
       return filters;
     } catch (err) {
@@ -99,6 +99,7 @@ export function SearchProvider({ children, initialCategory }) {
       // Extract categoryId from pathname
       const categoryIdMatch = pathname.match(/\/search\/categoryId=(\d+)/);
       const categoryId = categoryIdMatch ? categoryIdMatch[1] : null;
+      // console.log('URL Category ID:', categoryId);
 
       setLoading(true);
       try {
@@ -119,9 +120,11 @@ export function SearchProvider({ children, initialCategory }) {
         );
 
         if (!categoryObj) {
-          // console.log('Category not found:', categoryId);
+          console.log('Category not found:', categoryId);
           return;
         }
+
+        // console.log('Loading category:', categoryObj);
 
         // Load dynamic filters first
         const filters = await loadDynamicFilters(categoryObj);
@@ -135,6 +138,8 @@ export function SearchProvider({ children, initialCategory }) {
         });
         setPage(1);
         setShouldSearchOnLoad(true);
+
+        // console.log('Category and filters loaded successfully');
       } catch (err) {
         console.error('Error loading category:', err);
         setDynamicFilters([]);
@@ -171,6 +176,8 @@ export function SearchProvider({ children, initialCategory }) {
           delete searchBody.filters.query;
         }
 
+        // console.log('Search request:', searchBody);
+
         const response = await fetch('/api/search', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -182,22 +189,7 @@ export function SearchProvider({ children, initialCategory }) {
         }
 
         const data = await response.json();
-
-        // تحميل الفلاتر الديناميكية من أول نتيجة بحث إذا كانت موجودة ولم تكن هناك فئة محددة
-        if (searchQuery && !category && data?.products?.length > 0) {
-          const firstProduct = data.products[0];
-          if (firstProduct.categoryId) {
-            const categoryObj = filterOptions.categories.find(
-              (cat) => cat.id === firstProduct.categoryId
-            );
-            if (categoryObj) {
-              // تحديث الفئة والفلاتر الديناميكية
-              setCategory(categoryObj);
-              const newFilters = await loadDynamicFilters(categoryObj);
-              setDynamicFilters(newFilters);
-            }
-          }
-        }
+        // console.log('Search response:', data)
 
         // Only update results based on whether it's a new search or load more
         if (!isLoadMore) {
@@ -220,7 +212,7 @@ export function SearchProvider({ children, initialCategory }) {
         setLoading(false);
       }
     },
-    [searchQuery, category, filters, isSearchPage, loadDynamicFilters]
+    [searchQuery, category, filters, isSearchPage]
   );
 
   // Handle scrolling separately
@@ -371,7 +363,6 @@ export function SearchProvider({ children, initialCategory }) {
     clearAll,
     dynamicFilters,
     performSearch,
-    loadDynamicFilters,
 
     // Results
     results,

@@ -5,63 +5,49 @@ import { MdEdit } from 'react-icons/md';
 import toast from 'react-hot-toast';
 import CustomToast from '../../components/ReusableComponents/CustomToast';
 import { useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react';
 
-const PostActions = ({ post, onDelete }) => {
-  // تغيير من fetchMyPosts إلى onDelete
+const PostActions = ({ post, session, fetchMyPosts }) => {
   const [isVisible, setIsVisible] = useState(false);
   const router = useRouter();
-  const { data: session, status } = useSession();
 
   const handleDeletePost = async (postId) => {
-    if (status !== 'authenticated') {
+    const data = JSON.parse(localStorage.getItem('CurrentUser'));
+    const userId = data?.id;
+
+    if (!userId) {
       toast.custom((t) => (
         <CustomToast t={t} message={'يجب تسجيل الدخول أولاً'} />
       ));
       return;
     }
 
-    try {
-      const response = await fetch(`/api/product`, {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          id: postId,
-          userId: session.user.id,
-        }),
-      });
+    const response = await fetch(`/api/product`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: postId, userId }),
+    });
 
-      if (response.ok) {
-        toast.custom((t) => (
-          <CustomToast
-            t={t}
-            message={'تم حذف الإعلان بنجاح ✅'}
-            greenEmoji={'✔'}
-          />
-        ));
-      } else {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'حدث خطأ أثناء الحذف');
-      }
-    } catch (error) {
+    if (response.ok) {
+      fetchMyPosts(userId); // تحديث القائمة بعد الحذف
       toast.custom((t) => (
         <CustomToast
           t={t}
-          message={error.message || 'حدث خطأ أثناء الحذف 😐'}
+          message={'تم حذف الإعلان بنجاح ✅'}
+          greenEmoji={'✔'}
         />
       ));
-    } finally {
-      setIsVisible(false);
+    } else {
+      const errorData = await response.json();
+      toast.custom((t) => (
+        <CustomToast
+          t={t}
+          message={errorData.error || 'حدث خطأ أثناء الحذف 😐'}
+        />
+      ));
     }
   };
 
-  const handleEditPost = () => {
-    if (status !== 'authenticated') {
-      toast.custom((t) => (
-        <CustomToast t={t} message={'يجب تسجيل الدخول أولاً'} />
-      ));
-      return;
-    }
+  const handleEditPost = (post) => {
     router.push(`/editPost/${post?.id}`);
   };
 
@@ -69,18 +55,19 @@ const PostActions = ({ post, onDelete }) => {
     <>
       {/* نافذة تأكيد الحذف */}
       {isVisible && (
-        <div className="absolute flex flex-col items-center p-4 z-50 inset-0 bg-black bg-opacity-70 text-white">
-          <div className="sticky top-44 w-full max-w-md border border-white rounded-lg bg-white text-black p-6">
-            <h1 className="text-center text-lg sm:text-xl mb-6">
-              هل تريد حذف هذا الإعلان نهائياً؟
+        <div className="absolute flex flex-col items-center p-4 z-50 inset-0 bg-five/70 text-white">
+          <div className="sticky top-44 w-full sm:w-3/4/2 border border-white rounded bg-three">
+            <h1 className="text-center text-lg sm:text-xl mt-4">
+              هل تريد حذف هذه الإعلان نهائيا؟
             </h1>
-            <div className="flex justify-between gap-4">
+            <div className="flex justify-between items-center w-full h-24 sm:h-28 z-50 gap-8 p-8">
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   handleDeletePost(post?.id);
+                  setIsVisible(false);
                 }}
-                className="flex-1 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                className="btn rounded-[5px] w-full h-full border border-white hover:border-0"
               >
                 حذف
               </button>
@@ -89,7 +76,7 @@ const PostActions = ({ post, onDelete }) => {
                   e.stopPropagation();
                   setIsVisible(false);
                 }}
-                className="flex-1 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
+                className="btn rounded-[5px] w-full h-full border border-white hover:border-0"
               >
                 تراجع
               </button>
@@ -99,27 +86,39 @@ const PostActions = ({ post, onDelete }) => {
       )}
 
       {/* أزرار التعديل والحذف */}
-      <div className="flex justify-between items-center w-full p-3 bg-gray-100">
-        <button
+      <div className="flex justify-between items-center w-full p-2 bg-primary-500 h-24 text-white">
+        <div
+          className="flex flex-col items-center justify-center cursor-pointer rounded p-1 md:text-xl hover:bg-three hover:scale-[105%] transition-transform duration-150 ease-in-out"
           onClick={(e) => {
             e.stopPropagation();
-            handleEditPost();
+            if (session?.status === 'authenticated') {
+              handleEditPost(post);
+            } else {
+              toast.custom((t) => (
+                <CustomToast t={t} message={'يجب تسجيل الدخول أولاً'} />
+              ));
+            }
           }}
-          className="flex flex-col items-center justify-center p-2 text-gray-600 hover:text-gray-800"
         >
-          <MdEdit size={20} />
-          <span className="text-xs mt-1">تعديل</span>
-        </button>
-        <button
+          <MdEdit />
+          <h6 className="text-sm select-none">تعديل</h6>
+        </div>
+        <div
+          className="flex flex-col items-center justify-center cursor-pointer rounded p-1 md:text-xl hover:bg-three hover:scale-[105%] transition-transform duration-150 ease-in-out"
           onClick={(e) => {
             e.stopPropagation();
-            setIsVisible(true);
+            if (session?.status === 'authenticated') {
+              setIsVisible(true);
+            } else {
+              toast.custom((t) => (
+                <CustomToast t={t} message={'يجب تسجيل الدخول أولاً'} />
+              ));
+            }
           }}
-          className="flex flex-col items-center justify-center p-2 text-red-600 hover:text-red-800"
         >
-          <IoMdClose size={20} />
-          <span className="text-xs mt-1">حذف</span>
-        </button>
+          <IoMdClose />
+          <h6 className="text-sm select-none">حذف</h6>
+        </div>
       </div>
     </>
   );

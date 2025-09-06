@@ -52,7 +52,9 @@ export default function UploadingAndDisplayingImage({ images = [] }) {
         if (data.success) {
           uploadedLink =
             data?.data?.url || data?.image?.url || data?.data?.link;
-
+          console.log(
+            `تم الرفع بنجاح إلى: ${service} - الرابط: ${uploadedLink}`
+          );
           toast.success('تم رفع الصورة بنجاح');
           break;
         }

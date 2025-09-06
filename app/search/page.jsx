@@ -5,10 +5,9 @@ import CategoryFilter from '../../components/Search/CategoryFilter';
 import StaticFilters from '../../components/Search/StaticFilters';
 import DynamicFilters from '../../components/Search/DynamicFilters';
 import SearchResults from '../../components/Search/SearchResults';
-import { useState, useCallback, useEffect, Suspense } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { FilterIcon, XIcon, SearchIcon, ChevronDownIcon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useSearchParams } from 'next/navigation';
 
 function FiltersContent({ setShowFilters }) {
   const { category, performSearch } = useSearch();
@@ -53,11 +52,11 @@ function FiltersContent({ setShowFilters }) {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.1 }}
-          className="rounded-xl border border-gray-100"
+          className=" rounded-xl border border-gray-100"
         >
           <button
             onClick={() => toggleSection('category')}
-            className="w-full flex justify-between items-center mb-2"
+            className="w-full flex justify-between items-center mb-2 ml-2"
           >
             <h3 className="text-lg font-semibold text-gray-800 px-4">
               التصنيفات
@@ -92,7 +91,7 @@ function FiltersContent({ setShowFilters }) {
       >
         <button
           onClick={() => toggleSection('static')}
-          className="w-full flex justify-between items-center mb-2"
+          className="w-full flex justify-between items-center mb-2 ml-2"
         >
           <h3 className="text-lg font-semibold text-gray-800 px-4">
             الفلاتر الأساسية
@@ -127,7 +126,7 @@ function FiltersContent({ setShowFilters }) {
         >
           <button
             onClick={() => toggleSection('dynamic')}
-            className="w-full flex justify-between items-center mb-2"
+            className="w-full flex justify-between items-center mb-2 ml-2"
           >
             <h3 className="text-lg font-semibold text-gray-800 px-4">
               فلاتر إضافية
@@ -186,16 +185,15 @@ function FiltersContent({ setShowFilters }) {
   );
 }
 
-export default function SearchPage() {
-  const searchParams = useSearchParams();
+export default function SearchPage({ searchParams }) {
   const [showFilters, setShowFilters] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [initialCategory, setInitialCategory] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const { searchQuery } = useSearch();
 
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 1024);
+      // console.log('window.innerWidth', window.innerWidth);
       if (window.innerWidth >= 1024) {
         setShowFilters(true);
       }
@@ -206,24 +204,14 @@ export default function SearchPage() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  useEffect(() => {
-    if (searchParams?.get('category')) {
-      try {
-        const categoryId = Number.parseInt(searchParams.get('category'));
-        setInitialCategory({ id: categoryId });
-      } catch (e) {
-        console.error('Error parsing category:', e);
-      }
+  let initialCategory = null;
+  if (searchParams.category) {
+    try {
+      const categoryId = Number.parseInt(searchParams.category);
+      initialCategory = { id: categoryId };
+    } catch (e) {
+      console.error('Error parsing category:', e);
     }
-    setIsLoading(false);
-  }, [searchParams]);
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500"></div>
-      </div>
-    );
   }
 
   return (
@@ -277,19 +265,16 @@ export default function SearchPage() {
                         stiffness: 300,
                       }}
                       className={`
-                          fixed lg:relative inset-0 lg:inset-auto w-full sm:w-96 lg:w-80
-                          h-screen lg:h-auto bg-white lg:bg-transparent z-40
-                          rounded-xl lg:border lg:border-gray-200 overflow-y-auto
-                        `}
+                        fixed lg:relative inset-0 lg:inset-auto w-full sm:w-96 lg:w-80
+                        h-screen lg:h-auto bg-white lg:bg-transparent z-40
+                        rounded-xl lg:border lg:border-gray-200 overflow-y-auto
+                      `}
                     >
                       <div className="p-2 space-y-4">
                         {/* Mobile Header */}
                         {isMobile && (
                           <div className="flex justify-between items-center pb-4 border-b border-gray-200">
                             <h2 className="text-xl font-bold text-gray-900">
-                              <span className="bg-primary-100 text-primary-800 py-1 px-3 rounded-full text-sm mr-2">
-                                3
-                              </span>
                               الفلاتر المحددة
                             </h2>
                             <button
@@ -331,8 +316,9 @@ export default function SearchPage() {
               >
                 <div className="p-6 lg:p-8">
                   <div className="flex justify-between items-center mb-6">
-                    <h1 className="text-2xl font-bold text-gray-900">
-                      نتائج البحث
+                    <h1 className="text-2xl font-bold text-gray-400">
+                      نتائج البحث عن (
+                      <span className="text-black">{searchQuery}</span>)
                     </h1>
                     {!isMobile && (
                       <button

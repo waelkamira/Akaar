@@ -58,7 +58,7 @@ export async function GET(req) {
     // التحقق من الذاكرة المؤقتة
     const cachedData = cache.get(cacheKey);
     if (cachedData) {
-      // console.log('📦 [Cache Hit] User Posts', cacheKey);
+      console.log('📦 [Cache Hit] User Posts', cacheKey);
       return new Response(JSON.stringify(cachedData), { status: 200 });
     }
 
@@ -95,7 +95,7 @@ export async function GET(req) {
 
     // تخزين في الذاكرة المؤقتة
     cache.set(cacheKey, result);
-    // console.log('💾 [Cache Set] User Posts', cacheKey);
+    console.log('💾 [Cache Set] User Posts', cacheKey);
 
     return new Response(JSON.stringify(result), { status: 200 });
   } catch (error) {

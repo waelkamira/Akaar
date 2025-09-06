@@ -4,7 +4,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { motion } from 'framer-motion';
 
-function AdditionalFields({ item }) {
+function AdditionalFields({ item, category }) {
   const [categoryFields, setCategoryFields] = useState([]);
 
   const getFieldValue = useCallback((field, value) => {
@@ -13,6 +13,7 @@ function AdditionalFields({ item }) {
     }
     return value;
   }, []);
+
   useEffect(() => {
     if (item?.categoryName) {
       import(`../../categoryFields/${item?.categoryName}.jsx`)
@@ -37,7 +38,7 @@ function AdditionalFields({ item }) {
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: 0.2 }}
-      className="flex items-center gap-3 w-full border-t border-gray-100/75 font-serif"
+      className="flex items-center gap-3 w-full"
     >
       {displayValues?.map((displayValue, index) => (
         <motion.div
@@ -48,7 +49,7 @@ function AdditionalFields({ item }) {
           className="flex items-center gap-2 text-sm"
         >
           <div className="flex items-center gap-2 transition-all">
-            <span className="text-gray-500 whitespace-nowrap">
+            <span className="text-gray-500 whitespace-nowrap line-clamp-1">
               {categoryFields[index]?.label || categoryFields[index]?.name}
             </span>
             <span className="text-gray-900 font-medium font-serif">

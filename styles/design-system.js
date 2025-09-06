@@ -1,7 +1,7 @@
 /**
- * Matjar Design System
+ * Bayya Design System
  *
- * This file defines the core design tokens and variables for the Matjar project.
+ * This file defines the core design tokens and variables for the Bayya project.
  * Use these values consistently across the application to maintain a cohesive design.
  */
 

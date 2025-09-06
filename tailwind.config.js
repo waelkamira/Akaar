@@ -1,3 +1,31 @@
+// /** @type {import('tailwindcss').Config} */
+// module.exports = {
+//   content: [
+//     './pages/**/*.{js,ts,jsx,tsx,mdx}',
+//     './components/**/*.{js,ts,jsx,tsx,mdx}',
+//     './app/**/*.{js,ts,jsx,tsx,mdx}',
+//   ],
+//   theme: {
+//     extend: {
+//       colors: {
+//         one: '#FF7C34',
+//         two: '#4C4D4F',
+//         three: '#7E7F81',
+//         four: '#A1A5AD',
+//         five: '#F2F4F7',
+//       },
+//       backgroundImage: {
+//         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+//         'gradient-conic':
+//           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+//       },
+//       screens: {
+//         xs: '1px',
+//       },
+//     },
+//   },
+//   plugins: [],
+// };
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ['class'],
@@ -29,7 +57,7 @@ module.exports = {
           200: '#fed7aa',
           300: '#fdba74',
           400: '#fb923c',
-          500: '#f97316',
+          500: '#FF5733',
           600: '#ea580c',
           700: '#c2410c',
           800: '#9a3412',

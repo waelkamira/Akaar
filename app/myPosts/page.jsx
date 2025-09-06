@@ -5,208 +5,351 @@ import { inputsContext } from '../../components/authContext/Context';
 import { useRouter } from 'next/navigation';
 import SmallCard from '../../components/ReusableComponents/SmallCard/SmallCard';
 import NavegationPages from '../../components/ReusableComponents/NavegationPages';
-// استبدل Loading بمكونات تحميل هيكلية (Skeleton) إذا أمكن
 import Loading from '../../components/ReusableComponents/Loading';
 import PostActions from './PostActions';
 import LoginButton from '../../components/Buttons/LoginButton';
-import { AlertTriangle, FileText } from 'lucide-react'; // مثال لاستخدام أيقونات
-
-// مكون بسيط للتحميل الهيكلي (يمكنك تخصيصه أو استخدام مكتبة)
-const SkeletonCard = () => (
-  <div className="border border-gray-200 rounded-2xl p-4 animate-pulse">
-    <div className="h-40 bg-gray-300 rounded mb-4"></div>
-    <div className="h-4 bg-gray-300 rounded w-3/4 mb-2"></div>
-    <div className="h-4 bg-gray-300 rounded w-1/2"></div>
-  </div>
-);
-
+const fakeData = [
+  {
+    id: '96a5b419-2513-4a13-ac15-4663f81e295c',
+    title:
+      'للبيع منزل في دمشق حي الميدان تنظيم شرقي الميدان طابق سابع  مصعد طاقة مساحة 110متر طابو اخضر كسوة مم',
+    userId: 'b2a4f3fa-2bb7-4f97-95db-4fa53c581bb4',
+    categoryId: 20,
+    categoryName: 'زراعة',
+    image1: 'https://i.imgur.com/vGpGUAj.png',
+    image2: 'https://i.imgur.com/vGpGUAj.png',
+    image3: 'https://i.imgur.com/vGpGUAj.png',
+    image4: 'https://i.imgur.com/vGpGUAj.png',
+    image5: null,
+    basePrice: 0,
+    adCategory: null,
+    city: 'دمشق',
+    town: null,
+    phoneNumber: '0938089837',
+    lng: null,
+    lat: null,
+    link: '',
+    details: [Object],
+    description:
+      'للبيع منزل في دمشق حي الميدان تنظيم شرقي الميدان طابق سابع  مصعد طاقة مساحة 110متر طابو اخضر كسوة ممتازة اتجاه قبلي كامل مشمس اطلالات مفتوحة. للسعر والصور واتس 0938089837',
+    stockQuantity: 1,
+    isDeleted: false,
+    deletedAt: null,
+    createdAt: ' 2025-03-11T09:27:23.000Z',
+    updatedAt: '2025-08-01T11:51:08.335Z',
+  },
+  {
+    id: '96a5b419-2513-4a13-ac15-4663f81e295c',
+    title:
+      'للبيع منزل في دمشق حي الميدان تنظيم شرقي الميدان طابق سابع  مصعد طاقة مساحة 110متر طابو اخضر كسوة مم',
+    userId: 'b2a4f3fa-2bb7-4f97-95db-4fa53c581bb4',
+    categoryId: 20,
+    categoryName: 'زراعة',
+    image1: 'https://i.imgur.com/vGpGUAj.png',
+    image2: null,
+    image3: null,
+    image4: null,
+    image5: null,
+    basePrice: 0,
+    adCategory: null,
+    city: 'دمشق',
+    town: null,
+    phoneNumber: '0938089837',
+    lng: null,
+    lat: null,
+    link: '',
+    details: [Object],
+    description:
+      'للبيع منزل في دمشق حي الميدان تنظيم شرقي الميدان طابق سابع  مصعد طاقة مساحة 110متر طابو اخضر كسوة ممتازة اتجاه قبلي كامل مشمس اطلالات مفتوحة. للسعر والصور واتس 0938089837',
+    stockQuantity: 1,
+    isDeleted: false,
+    deletedAt: null,
+    createdAt: ' 2025-03-11T09:27:23.000Z',
+    updatedAt: '2025-08-01T11:51:08.335Z',
+  },
+  {
+    id: '96a5b419-2513-4a13-ac15-4663f81e295c',
+    title:
+      'للبيع منزل في دمشق حي الميدان تنظيم شرقي الميدان طابق سابع  مصعد طاقة مساحة 110متر طابو اخضر كسوة مم',
+    userId: 'b2a4f3fa-2bb7-4f97-95db-4fa53c581bb4',
+    categoryId: 20,
+    categoryName: 'زراعة',
+    image1: 'https://i.imgur.com/vGpGUAj.png',
+    image2: null,
+    image3: null,
+    image4: null,
+    image5: null,
+    basePrice: 0,
+    adCategory: null,
+    city: 'دمشق',
+    town: null,
+    phoneNumber: '0938089837',
+    lng: null,
+    lat: null,
+    link: '',
+    details: [Object],
+    description:
+      'للبيع منزل في دمشق حي الميدان تنظيم شرقي الميدان طابق سابع  مصعد طاقة مساحة 110متر طابو اخضر كسوة ممتازة اتجاه قبلي كامل مشمس اطلالات مفتوحة. للسعر والصور واتس 0938089837',
+    stockQuantity: 1,
+    isDeleted: false,
+    deletedAt: null,
+    createdAt: ' 2025-03-11T09:27:23.000Z',
+    updatedAt: '2025-08-01T11:51:08.335Z',
+  },
+  {
+    id: '96a5b419-2513-4a13-ac15-4663f81e295c',
+    title:
+      'للبيع منزل في دمشق حي الميدان تنظيم شرقي الميدان طابق سابع  مصعد طاقة مساحة 110متر طابو اخضر كسوة مم',
+    userId: 'b2a4f3fa-2bb7-4f97-95db-4fa53c581bb4',
+    categoryId: 20,
+    categoryName: 'زراعة',
+    image1: 'https://i.imgur.com/vGpGUAj.png',
+    image2: null,
+    image3: null,
+    image4: null,
+    image5: null,
+    basePrice: 0,
+    adCategory: null,
+    city: 'دمشق',
+    town: null,
+    phoneNumber: '0938089837',
+    lng: null,
+    lat: null,
+    link: '',
+    details: [Object],
+    description:
+      'للبيع منزل في دمشق حي الميدان تنظيم شرقي الميدان طابق سابع  مصعد طاقة مساحة 110متر طابو اخضر كسوة ممتازة اتجاه قبلي كامل مشمس اطلالات مفتوحة. للسعر والصور واتس 0938089837',
+    stockQuantity: 1,
+    isDeleted: false,
+    deletedAt: null,
+    createdAt: ' 2025-03-11T09:27:23.000Z',
+    updatedAt: '2025-08-01T11:51:08.335Z',
+  },
+  {
+    id: '96a5b419-2513-4a13-ac15-4663f81e295c',
+    title:
+      'للبيع منزل في دمشق حي الميدان تنظيم شرقي الميدان طابق سابع  مصعد طاقة مساحة 110متر طابو اخضر كسوة مم',
+    userId: 'b2a4f3fa-2bb7-4f97-95db-4fa53c581bb4',
+    categoryId: 20,
+    categoryName: 'زراعة',
+    image1: 'https://i.imgur.com/vGpGUAj.png',
+    image2: null,
+    image3: null,
+    image4: null,
+    image5: null,
+    basePrice: 0,
+    adCategory: null,
+    city: 'دمشق',
+    town: null,
+    phoneNumber: '0938089837',
+    lng: null,
+    lat: null,
+    link: '',
+    details: [Object],
+    description:
+      'للبيع منزل في دمشق حي الميدان تنظيم شرقي الميدان طابق سابع  مصعد طاقة مساحة 110متر طابو اخضر كسوة ممتازة اتجاه قبلي كامل مشمس اطلالات مفتوحة. للسعر والصور واتس 0938089837',
+    stockQuantity: 1,
+    isDeleted: false,
+    deletedAt: null,
+    createdAt: ' 2025-03-11T09:27:23.000Z',
+    updatedAt: '2025-08-01T11:51:08.335Z',
+  },
+  {
+    id: '96a5b419-2513-4a13-ac15-4663f81e295c',
+    title:
+      'للبيع منزل في دمشق حي الميدان تنظيم شرقي الميدان طابق سابع  مصعد طاقة مساحة 110متر طابو اخضر كسوة مم',
+    userId: 'b2a4f3fa-2bb7-4f97-95db-4fa53c581bb4',
+    categoryId: 20,
+    categoryName: 'زراعة',
+    image1: 'https://i.imgur.com/vGpGUAj.png',
+    image2: null,
+    image3: null,
+    image4: null,
+    image5: null,
+    basePrice: 0,
+    adCategory: null,
+    city: 'دمشق',
+    town: null,
+    phoneNumber: '0938089837',
+    lng: null,
+    lat: null,
+    link: '',
+    details: [Object],
+    description:
+      'للبيع منزل في دمشق حي الميدان تنظيم شرقي الميدان طابق سابع  مصعد طاقة مساحة 110متر طابو اخضر كسوة ممتازة اتجاه قبلي كامل مشمس اطلالات مفتوحة. للسعر والصور واتس 0938089837',
+    stockQuantity: 1,
+    isDeleted: false,
+    deletedAt: null,
+    createdAt: ' 2025-03-11T09:27:23.000Z',
+    updatedAt: '2025-08-01T11:51:08.335Z',
+  },
+  {
+    id: '96a5b419-2513-4a13-ac15-4663f81e295c',
+    title:
+      'للبيع منزل في دمشق حي الميدان تنظيم شرقي الميدان طابق سابع  مصعد طاقة مساحة 110متر طابو اخضر كسوة مم',
+    userId: 'b2a4f3fa-2bb7-4f97-95db-4fa53c581bb4',
+    categoryId: 20,
+    categoryName: 'زراعة',
+    image1: 'https://i.imgur.com/vGpGUAj.png',
+    image2: null,
+    image3: null,
+    image4: null,
+    image5: null,
+    basePrice: 0,
+    adCategory: null,
+    city: 'دمشق',
+    town: null,
+    phoneNumber: '0938089837',
+    lng: null,
+    lat: null,
+    link: '',
+    details: [Object],
+    description:
+      'للبيع منزل في دمشق حي الميدان تنظيم شرقي الميدان طابق سابع  مصعد طاقة مساحة 110متر طابو اخضر كسوة ممتازة اتجاه قبلي كامل مشمس اطلالات مفتوحة. للسعر والصور واتس 0938089837',
+    stockQuantity: 1,
+    isDeleted: false,
+    deletedAt: null,
+    createdAt: ' 2025-03-11T09:27:23.000Z',
+    updatedAt: '2025-08-01T11:51:08.335Z',
+  },
+  {
+    id: '96a5b419-2513-4a13-ac15-4663f81e295c',
+    title:
+      'للبيع منزل في دمشق حي الميدان تنظيم شرقي الميدان طابق سابع  مصعد طاقة مساحة 110متر طابو اخضر كسوة مم',
+    userId: 'b2a4f3fa-2bb7-4f97-95db-4fa53c581bb4',
+    categoryId: 20,
+    categoryName: 'زراعة',
+    image1: 'https://i.imgur.com/vGpGUAj.png',
+    image2: null,
+    image3: null,
+    image4: null,
+    image5: null,
+    basePrice: 0,
+    adCategory: null,
+    city: 'دمشق',
+    town: null,
+    phoneNumber: '0938089837',
+    lng: null,
+    lat: null,
+    link: '',
+    details: [Object],
+    description:
+      'للبيع منزل في دمشق حي الميدان تنظيم شرقي الميدان طابق سابع  مصعد طاقة مساحة 110متر طابو اخضر كسوة ممتازة اتجاه قبلي كامل مشمس اطلالات مفتوحة. للسعر والصور واتس 0938089837',
+    stockQuantity: 1,
+    isDeleted: false,
+    deletedAt: null,
+    createdAt: ' 2025-03-11T09:27:23.000Z',
+    updatedAt: '2025-08-01T11:51:08.335Z',
+  },
+];
 const MyPostsContent = () => {
   const { dispatch } = useContext(inputsContext);
   const [pageNumber, setPageNumber] = useState(1);
   const [userPostsCount, setUserPostsCount] = useState(0);
   const [hasMore, setHasMore] = useState(false);
-  const { data: session, status } = useSession(); // استخدام status و data مباشرة
-  const [myPosts, setMyPosts] = useState([]);
+  const session = useSession();
+  const [myPosts, setMyPosts] = useState(fakeData);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null); // حالة لتخزين الأخطاء
   const router = useRouter();
 
-  // دالة محسنة لجلب الإعلانات
+  // دالة محسنة لجلب الإعلانات مع التخزين المؤقت
   const fetchMyPosts = useCallback(
     async (userId) => {
-      if (!userId || status !== 'authenticated') {
-        // لا تقم بالجلب إذا لم يكن هناك ID أو المستخدم غير مسجل الدخول
-        setLoading(false);
-        setMyPosts([]);
-        setUserPostsCount(0);
-        return;
-      }
+      if (!userId) return;
 
       setLoading(true);
-      setError(null); // إعادة تعيين الخطأ عند بدء الجلب
       try {
         const response = await fetch(
-          `/api/myPosts?page=${pageNumber}&userId=${userId}&limit=8`
-          // لا تحتاج لإعادة التحقق هنا، هذا خاص بـ fetch في مكونات السيرفر أو API Routes
+          `/api/myPosts?page=${pageNumber}&userId=${userId}&limit=8`,
+          {
+            next: { revalidate: 1800 }, // إعادة التحقق بعد 30 دقيقة
+          }
         );
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
+        if (!response.ok) throw new Error('Failed to fetch');
 
         const json = await response.json();
 
-        setHasMore(json.hasMore);
+        setHasMore(json?.hasMore);
         setMyPosts(json?.data || []);
         setUserPostsCount(json?.count || 0);
-        // لا أعتقد أنك بحاجة لتحديث الـ context هنا بكل البيانات، ربما فقط العدد؟
-        // dispatch({ type: 'MY_POSTS', payload: { count: json?.count } });
+        dispatch({ type: 'MY_POSTS', payload: json });
       } catch (error) {
         console.error('Error fetching posts:', error);
-        setError('حدث خطأ أثناء جلب الإعلانات. الرجاء المحاولة مرة أخرى.'); // تعيين رسالة خطأ للمستخدم
-        setMyPosts([]); // مسح البيانات القديمة عند حدوث خطأ
-        setUserPostsCount(0);
       } finally {
         setLoading(false);
       }
     },
-    [pageNumber, dispatch, status] // أضف status كـ dependency
+    [pageNumber, dispatch]
   );
 
-  // التأثير لجلب البيانات عند تغير رقم الصفحة أو حالة الجلسة
   useEffect(() => {
-    // استخدم ID المستخدم مباشرة من الجلسة إذا كانت متاحة
-    const userId = session?.user?.id;
-    if (status === 'authenticated' && userId) {
+    if (typeof window !== 'undefined') {
+      const data = JSON.parse(localStorage.getItem('CurrentUser'));
+      const userId = data?.id;
       fetchMyPosts(userId);
-    } else if (status === 'unauthenticated') {
-      // إذا كان المستخدم غير مسجل، قم بمسح البيانات وإيقاف التحميل
-      setLoading(false);
-      setMyPosts([]);
-      setUserPostsCount(0);
-      setError(null);
     }
-    // لا نعتمد على LocalStorage هنا لزيادة الموثوقية
-  }, [fetchMyPosts, session, status, pageNumber]); // أضف pageNumber هنا أيضاً
+  }, [fetchMyPosts, session]);
 
-  // ==================
-  // طرق العرض الفرعية لتحسين القراءة
-  // ==================
-
-  // عرض حالة التحميل
-  const renderLoading = () => (
-    <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 gap-6 w-full">
-      {/* عرض عدد مناسب من هياكل التحميل */}
-      {[...Array(4)].map((_, index) => (
-        <SkeletonCard key={index} />
-      ))}
-    </div>
-  );
-
-  // عرض رسالة الخطأ
-  const renderError = () => (
-    <div className="flex flex-col items-center justify-center text-center text-red-600 bg-red-100 p-6 rounded-lg border border-red-300 my-8">
-      <AlertTriangle className="w-12 h-12 mb-4" />
-      <p className="text-lg font-semibold">حدث خطأ!</p>
-      <p>{error}</p>
-    </div>
-  );
-
-  // عرض رسالة عدم وجود إعلانات
-  const renderEmptyState = () => (
-    <div className="flex flex-col items-center justify-center text-center text-gray-500 bg-gray-50 p-8 rounded-lg border border-gray-200 my-8">
-      <FileText className="w-16 h-16 mb-4 text-gray-400" />
-      <p className="text-xl font-semibold mb-2">لا توجد إعلانات لعرضها</p>
-      <p>لم تقم بإنشاء أي إعلان بعد. ابدأ الآن!</p>
-    </div>
-  );
-
-  // عرض قائمة الإعلانات
-  const renderPosts = () => (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 md:gap-6 w-full">
-      {myPosts.map((post) => (
-        <div
-          className="relative flex flex-col items-start h-full bg-gray-100 w-full justify-start group cursor-pointer rounded-2xl overflow-hidden transition-all duration-300 ease-in-out"
-          key={post.id}
-          onClick={(e) => {
-            // تأكد من أن النقر لم يكن على زر الإجراءات
-            if (e.target.closest('.post-actions-container')) return;
-            localStorage.setItem('item', JSON.stringify(post));
-            router.push(`/post/${post.id}`);
-          }}
-        >
-          {/* إضافة حاوية للإجراءات لمنع التضارب */}
-          <div className="post-actions-container w-full">
-            <PostActions post={post} />
-          </div>
-          {/* تأكد أن SmallCard لا يأخذ العرض/الارتفاع الكامل بنفسه إذا كان هذا غير مرغوب */}
-          <SmallCard item={post} category={post?.categoryName} />
-        </div>
-      ))}
-    </div>
-  );
-
-  // ==================
-  // العرض الرئيسي للمكون
-  // ==================
+  if (session?.status === 'unauthenticated') {
+    // return <LoginButton />;
+  }
   return (
-    // استخدام max-w-* للتحكم في العرض الأقصى وتحسين التجاوب
-    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
-      {status === 'authenticated' && (
-        <div className="flex flex-col w-full">
-          {/* تعديل العنوان */}
-          <div className="mb-6 md:mb-8 pb-4 border-b border-gray-200 dark:border-gray-700">
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-gray-100 flex items-center gap-2">
-              <span className="text-primary-500">#</span>
-              إعلاناتي
-              <span className="text-sm font-medium bg-primary-100 text-primary-700 rounded-full px-2.5 py-0.5 ml-2">
-                {/* عرض العدد فقط إذا لم يكن هناك تحميل أو خطأ */}
-                {!loading && !error ? userPostsCount : '-'}
-              </span>
+    <div className="flex flex-col justify-center items-center w-full p-4">
+      <div className="flex flex-col w-full xl:w-[90%] 2xl:w-[80%] h-fit px-2 sm:px-16 overflow-y-auto z-10 border-2 rounded-xl my-4">
+        <div className="flex flex-col justify-center items-center w-full">
+          <div className="flex flex-col justify-center items-center lg:items-start w-full gap-4 py-4 sm:mt-16">
+            <h1 className=" text-lg lg:text-2xl w-fit p-2 rounded-lg shadow-md">
+              <span className="text-primary-500 text-2xl ml-2">#</span>
+              إعلاناتي{' '}
+              <span className="text-primary-500"> {userPostsCount}</span>
             </h1>
           </div>
 
-          {/* منطق العرض بناءً على الحالات */}
-          {
-            loading
-              ? renderLoading() // عرض هياكل التحميل
-              : error
-              ? renderError() // عرض رسالة الخطأ
-              : myPosts.length === 0
-              ? renderEmptyState() // عرض رسالة عدم وجود نتائج
-              : renderPosts() // عرض الإعلانات
-          }
-
-          {/* عرض التنقل بين الصفحات فقط إذا كان هناك بيانات ولم يكن هناك خطأ */}
-          {!loading && !error && userPostsCount > 0 && (
-            <div className="mt-8 md:mt-12">
-              <NavegationPages
-                hasMore={hasMore}
-                setPageNumber={setPageNumber}
-                pageNumber={pageNumber}
-                // يمكنك إضافة العدد الإجمالي للصفحات إذا كان متاحاً
-              />
+          {loading ? (
+            <Loading />
+          ) : myPosts.length === 0 ? (
+            <Loading
+              myMessage={'😉 لا يوجد نتائج لعرضها ,لم تقم بإنشاء أي إعلان بعد'}
+            />
+          ) : (
+            <div className="w-full">
+              <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 gap-4 justify-start items-start w-full">
+                {myPosts.map((post) => (
+                  <div
+                    className="relative flex flex-col border-2 items-start h-full justify-start hover:scale-[101%] transition-transform duration-300 ease-in-out cursor-pointer rounded-[10px] overflow-hidden"
+                    key={post.id}
+                    onClick={() => {
+                      localStorage.setItem('item', JSON.stringify(post));
+                      router.push(`/post/${post.id}`);
+                    }}
+                  >
+                    <PostActions
+                      post={post}
+                      session={session}
+                      onDelete={() => {
+                        const userId = JSON.parse(
+                          localStorage.getItem('CurrentUser')
+                        )?.id;
+                        fetchMyPosts(userId);
+                      }}
+                    />
+                    <SmallCard item={post} category={post?.categoryName} />
+                  </div>
+                ))}
+              </div>
             </div>
           )}
         </div>
-      )}
 
-      {/* عرض زر تسجيل الدخول إذا لم يكن المستخدم مسجلاً */}
-      {status === 'unauthenticated' && (
-        <div className="flex flex-col items-center justify-center min-h-[400px] text-center">
-          <h2 className="text-xl font-semibold mb-4">
-            يجب تسجيل الدخول لعرض إعلاناتك
-          </h2>
-          <LoginButton />
-        </div>
-      )}
-
-      {/* يمكنك عرض رسالة إذا كانت الجلسة قيد التحقق */}
-      {status === 'loading' && (
-        <div className="flex justify-center items-center min-h-[400px]">
-          <Loading />
-        </div>
-      )}
+        {!loading && (
+          <NavegationPages
+            hasMore={hasMore}
+            setPageNumber={setPageNumber}
+            pageNumber={pageNumber}
+          />
+        )}
+      </div>
     </div>
   );
 };

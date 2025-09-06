@@ -4,7 +4,7 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Image from 'next/image';
-import LoadingPhoto from './LoadingPhoto';
+import LoadingPhoto from './LoadingPhoto'; // تأكد من استيراد مكون التحميل
 import { MdKeyboardArrowRight, MdKeyboardArrowLeft } from 'react-icons/md';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
@@ -63,6 +63,7 @@ const CustomNextArrow = (props) => {
 
 const PostGallery = ({ post }) => {
   const path = usePathname();
+  // console.log('post ********', post);
   // جمع الصور من الحقول المختلفة في مصفوفة واحدة
   const images = [
     post?.image1,

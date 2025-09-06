@@ -24,14 +24,14 @@ export async function GET(req) {
 
   // التحقق مما إذا كانت البيانات مخزنة مسبقًا
   if (cache.has(cacheKey)) {
-    // console.log('📌 إعادة البيانات من الكاش');
+    console.log('📌 إعادة البيانات من الكاش');
     return new Response(JSON.stringify(cache.get(cacheKey)), {
       headers: { 'Content-Type': 'application/json' },
     });
   }
 
   try {
-    // console.log('🗄️ جلب البيانات من قاعدة البيانات...');
+    console.log('🗄️ جلب البيانات من قاعدة البيانات...');
     const products = await prisma.product.findMany({
       skip,
       take: limit,
@@ -72,6 +72,8 @@ export async function POST(req) {
 
   try {
     const data = await req.json();
+    console.log('Data received from client:', data);
+    console.log('Session user info:', user); // Log session user info
 
     // التحقق من وجود المستخدم في قاعدة البيانات
     const existingUser = await prisma.user.findUnique({
@@ -137,6 +139,8 @@ export async function POST(req) {
 export async function PUT(req) {
   try {
     const { id, ...data } = await req.json(); // استخراج `id` والبيانات الأخرى
+    console.log('Received ID:', id);
+    console.log('Received Data:', data);
 
     if (!id) {
       return new Response(JSON.stringify({ error: 'رقم المنتج مطلوب' }), {

@@ -51,6 +51,7 @@ export default function EditePost() {
     });
     if (response.ok) {
       const json = await response.json();
+      // console.log('json', json);
       setPost(json);
     } else {
       setError(response.statusText);
@@ -100,6 +101,7 @@ export default function EditePost() {
       details: post?.details || {},
     }));
   }, [addImages, post]);
+  console.log('location', location);
 
   // تم فصل تحديث الموقع عن التحديث الأخر حتى لايقوم بحذف قيم الحالة الاخرى
   useEffect(() => {
@@ -187,6 +189,8 @@ export default function EditePost() {
         id: post?.id,
         ...fields,
       };
+
+      console.log('updatedPost:', updatedPost);
 
       const response = await fetch('/api/product', {
         method: 'PUT',

@@ -106,7 +106,7 @@ export default function ImageSlider({
             )}
           </div>
         </div>
-        <div className="keen-slider__slide number-slide4">
+        <div className="keen-slider_slide number-slide4">
           <div className="relative w-full aspect-[4/3] rounded-[5px] overflow-hidden">
             {image4 && (
               <Image
@@ -120,7 +120,7 @@ export default function ImageSlider({
             )}
           </div>
         </div>
-        <div className="keen-slider__slide number-slide5">
+        <div className="keen-slider_slide number-slide5">
           <div className="relative w-full aspect-[4/3] rounded-[5px] overflow-hidden">
             {image5 && (
               <Image

@@ -1,12 +1,11 @@
 'use client';
-import { useState, useEffect, useContext, Suspense } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import categories from '../../components/Categories/categories';
 import UploadingAndDisplayingImage from '../../components/photos/UploadingAndDisplayingImage';
 import { inputsContext } from '../../components/authContext/Context';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
-import Loading from '../../components/ReusableComponents/Loading';
 import LoginButton from '../../components/Buttons/LoginButton';
 import {
   MdCategory,
@@ -19,18 +18,12 @@ import FormInput from './FormInput';
 import FormSelect from './FormSelect';
 import FormTextarea from './FormTextarea';
 import FormSubmitButton from './FormSubmitButton';
+import OnClickMap from '../../components/map/onClickMap';
 import { useSession } from 'next-auth/react';
 import { FaTreeCity } from 'react-icons/fa6';
 import { PiBuildingsDuotone } from 'react-icons/pi';
-import dynamic from 'next/dynamic';
 
-// استيراد OnClickMap ديناميكياً مع تعطيل SSR
-const OnClickMap = dynamic(() => import('../../components/map/onClickMap'), {
-  ssr: false,
-  loading: () => <p className="text-center p-10">جارٍ تحميل الخريطة...</p>,
-});
-
-function NewPostContent() {
+export default function NewPost() {
   const [categoryFields, setCategoryFields] = useState([]);
   const { register, handleSubmit } = useForm();
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -39,7 +32,7 @@ function NewPostContent() {
   const { addImages, location, dispatch } = useContext(inputsContext);
   const session = useSession();
   const [error, setError] = useState(null);
-  const [userId, setUserId] = useState('');
+  const [userId, setUserId] = useState(''); // حالة لتخزين الـ userId
 
   const [formState, setFormState] = useState({
     id: '',
@@ -59,11 +52,13 @@ function NewPostContent() {
     details: {},
   });
 
-  const handleCategoryChange = (catagory) => {
-    if (catagory) {
-      const selected = categories[catagory - 1];
+  // ✅ جلب الفئة
+  const handleCategoryChange = (category) => {
+    if (category) {
+      const selected = categories[category - 1];
       setSelectedCategory(selected);
 
+      // قم بتحديث formState مباشرةً هنا
       setFormState((prev) => ({
         ...prev,
         categoryId: selected?.id || '',
@@ -71,6 +66,7 @@ function NewPostContent() {
       }));
     } else {
       setSelectedCategory(null);
+      // قم بتحديث formState هنا أيضًا إذا تم إلغاء تحديد الفئة
       setFormState((prev) => ({
         ...prev,
         categoryId: '',
@@ -79,54 +75,53 @@ function NewPostContent() {
     }
   };
 
+  // ✅ تحميل الحقول بناءً على الفئة عند تغيير الفئة
   useEffect(() => {
     if (selectedCategory) {
       import(`../../components/categoryFields/${selectedCategory?.name}.jsx`)
         .then((module) => {
           setCategoryFields(module.default);
-          setError(null);
+          setError(null); // Reset error on successful load
         })
         .catch((err) => {
           console.error('Failed to load fields:', err);
-          setCategoryFields([]);
+          setCategoryFields([]); // Reset fields on error
           setError('فشل في تحميل الحقول');
         });
     } else {
-      setCategoryFields([]);
+      setCategoryFields([]); // Reset fields when category is unselected
     }
   }, [selectedCategory]);
 
-  useEffect(() => {
-    const updateUserId = () => {
-      if (typeof window !== 'undefined') {
-        try {
-          const userData = localStorage.getItem('CurrentUser');
-          if (userData) {
-            const user = JSON.parse(userData);
-            setUserId(user?.id || '');
-          }
-        } catch (error) {
-          console.error('Error accessing localStorage:', error);
-        }
-      }
-    };
-
-    updateUserId();
-  }, []);
-
+  // ✅ تحديث userId من localStorage عند تحميل المكون
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      setFormState((prev) => ({
-        ...prev,
-        userId: userId || '',
-        categoryId: selectedCategory?.id || '',
-        categoryName: selectedCategory?.name || '',
-        images: addImages.length ? addImages : prev.images,
-        lng: location?.[1] || prev.lng,
-        lat: location?.[0] || prev.lat,
-      }));
+      const userData = localStorage.getItem('CurrentUser');
+      if (userData) {
+        try {
+          const user = JSON.parse(userData);
+          setUserId(user?.id || ''); // تحديث حالة userId
+        } catch (error) {
+          console.error('Failed to parse user data:', error);
+        }
+      } else {
+        console.warn('No user data found in localStorage.');
+      }
     }
-  }, [userId, selectedCategory, location, addImages]);
+  }, []);
+
+  // ✅ تحديث formState عند تغيير userId, selectedCategory, location, addImages
+  useEffect(() => {
+    setFormState((prev) => ({
+      ...prev,
+      userId: userId || '', // استخدام userId من الحالة
+      categoryId: selectedCategory?.id || '',
+      categoryName: selectedCategory?.name || '',
+      images: addImages.length ? addImages : prev.images,
+      lng: location?.[1] || prev.lng,
+      lat: location?.[0] || prev.lat,
+    }));
+  }, [userId, selectedCategory, location, addImages]); // الاعتماد على userId
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -172,7 +167,7 @@ function NewPostContent() {
     const hasEmptyRequiredField = requiredFields.some((field) => {
       if (typeof formState[field] === 'string' && !formState[field].trim()) {
         emptyFieldsList.push(field);
-        return true;
+        return true; // Stop iterating if an empty field is found
       }
       return false;
     });
@@ -212,6 +207,7 @@ function NewPostContent() {
     }
 
     const formData = { ...formState, category: selectedCategory?.id };
+    console.log('formData to be sent:', formData);
 
     try {
       const response = await fetch('/api/product', {
@@ -221,6 +217,7 @@ function NewPostContent() {
       });
 
       if (response.ok) {
+        console.log('Product added successfully:', await response.json());
         toast.success('تم إنشاء الإعلان بنجاح');
         dispatch({ type: 'ADD_IMAGE', payload: [] });
         router.push('/myPosts');
@@ -233,190 +230,316 @@ function NewPostContent() {
       toast.error('حدث خطأ ما، حاول مرة أخرى');
     }
   };
-
+  if (session?.status === 'unauthenticated') {
+    // return <LoginButton />;
+  }
   return (
     <div className="flex flex-col justify-center items-center w-full bg-five text-sm sm:text-lg ">
-      {session?.status === 'authenticated' ? (
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            onSubmit();
-          }}
-          className="space-y-4 p-4 border rounded-lg shadow-md w-full xl:w-1/2"
-        >
-          <UploadingAndDisplayingImage />
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          onSubmit();
+        }}
+        className="space-y-4 p-4 border rounded-lg shadow-md w-full xl:w-1/2"
+      >
+        <UploadingAndDisplayingImage />
 
-          <FormSelect
-            label="الفئة"
-            icon={
-              <MdCategory className="text-primary-500 text-lg sm:text-xl" />
-            }
-            name="category"
-            options={categories.map((cat) => ({
-              value: cat.id,
-              label: cat.name,
-            }))}
-            register={register}
-            errors={emptyFields}
-            onChange={(e) => handleCategoryChange(e.target.value)}
-            placeholder="-اختر-"
-          />
+        <FormSelect
+          label="الفئة"
+          icon={<MdCategory className="text-primary-500 text-lg sm:text-xl" />}
+          name="category"
+          options={categories.map((cat) => ({
+            value: cat.id,
+            label: cat.name, // النص المعروض في القائمة
+          }))}
+          register={register}
+          errors={emptyFields}
+          onChange={(e) => handleCategoryChange(e.target.value)} // تمرير الدالة المعدلة
+          placeholder="-اختر-"
+        />
 
-          <FormInput
-            label="عنوان الإعلان"
-            icon={<MdTitle className="text-primary-500 text-lg sm:text-xl" />}
-            name="title"
-            placeholder="ضع عنوان مناسب للإعلان"
-            register={register}
-            errors={emptyFields}
-            onChange={handleInputChange}
-          />
-          <FormInput
-            label="المدينة"
-            icon={
-              <PiBuildingsDuotone className="text-primary-500 text-lg sm:text-xl" />
-            }
-            name="city"
-            placeholder="دمشق"
-            register={register}
-            errors={emptyFields}
-            onChange={handleInputChange}
-          />
-          <FormInput
-            label="المنطقة"
-            icon={
-              <FaTreeCity className="text-primary-500 text-lg sm:text-xl" />
-            }
-            name="town"
-            placeholder="المزة"
-            register={register}
-            errors={emptyFields}
-            onChange={handleInputChange}
-          />
+        <FormInput
+          label="عنوان الإعلان"
+          icon={<MdTitle className="text-primary-500 text-lg sm:text-xl" />}
+          name="title"
+          placeholder="ضع عنوان مناسب للإعلان"
+          register={register}
+          errors={emptyFields}
+          onChange={handleInputChange}
+        />
+        <FormInput
+          label="المدينة"
+          icon={
+            <PiBuildingsDuotone className="text-primary-500 text-lg sm:text-xl" />
+          }
+          name="city"
+          placeholder="دمشق"
+          register={register}
+          errors={emptyFields}
+          onChange={handleInputChange}
+        />
+        <FormInput
+          label="المنطقة"
+          icon={<FaTreeCity className="text-primary-500 text-lg sm:text-xl" />}
+          name="town"
+          placeholder="المزة"
+          register={register}
+          errors={emptyFields}
+          onChange={handleInputChange}
+        />
 
-          <FormInput
-            label="رقم الهاتف"
-            icon={<MdPhone className="text-primary-500 text-lg sm:text-xl" />}
-            name="phoneNumber"
-            placeholder="+963 955555555"
-            type="number"
-            register={register}
-            errors={emptyFields}
-            onChange={handleInputChange}
-          />
+        <FormInput
+          label="رقم الهاتف"
+          icon={<MdPhone className="text-primary-500 text-lg sm:text-xl" />}
+          name="phoneNumber"
+          placeholder="+963 955555555"
+          type="number"
+          register={register}
+          errors={emptyFields}
+          onChange={handleInputChange}
+        />
 
-          {error && <p className="text-red-500">خطأ: {error}</p>}
+        {error && <p className="text-red-500">خطأ: {error}</p>}
 
-          {selectedCategory &&
-            Array.isArray(categoryFields) &&
-            categoryFields?.map((field, index) => (
-              <div key={index}>
-                <label className="font-medium mb-2 flex items-center gap-2">
-                  {field?.icon} {field?.label}
-                </label>
-                {field?.options ? (
-                  <select
-                    className={`w-full p-1 sm:p-2 lg:p-3 border rounded focus:outline-2 focus:outline-primary-500 ${
-                      emptyFields.includes(field?.name)
-                        ? 'outline-2 outline-red-500'
-                        : ''
-                    }`}
-                    required
-                    onChange={(e) =>
-                      handleDetailsChange(field?.name, e.target.value)
-                    }
-                  >
-                    <option value="">{field?.placeholder}</option>
-                    {Object.entries(field?.options).map(([key, value]) => (
-                      <option key={key} value={key}>
-                        {value}
-                      </option>
-                    ))}
-                  </select>
-                ) : (
-                  <input
-                    placeholder={field?.placeholder}
-                    className={`w-full p-1 sm:p-2 lg:p-3 border rounded focus:outline-2 focus:outline-primary-500 ${
-                      emptyFields.includes(field?.name)
-                        ? 'outline-2 outline-red-500'
-                        : ''
-                    }`}
-                    required
-                    onChange={(e) =>
-                      handleDetailsChange(field?.name, e.target.value)
-                    }
-                  />
-                )}
-                {emptyFields.includes(field?.name) && (
-                  <p className="text-red-500 text-sm mt-1">هذا الحقل مطلوب</p>
-                )}
-              </div>
-            ))}
+        {selectedCategory &&
+          Array.isArray(categoryFields) &&
+          categoryFields?.map((field, index) => (
+            <div key={index}>
+              <label className="font-medium mb-2 flex items-center gap-2">
+                {field?.icon} {field?.label}
+              </label>
+              {field?.options ? (
+                <select
+                  className={`w-full p-1 sm:p-2 lg:p-3 border rounded focus:outline-2 focus:outline-primary-500 ${
+                    emptyFields.includes(field?.name)
+                      ? 'outline-2 outline-red-500'
+                      : ''
+                  }`}
+                  required
+                  onChange={(e) =>
+                    handleDetailsChange(field?.name, e.target.value)
+                  }
+                >
+                  <option value="">{field?.placeholder}</option>
+                  {Object.entries(field?.options).map(([key, value]) => (
+                    <option key={key} value={key}>
+                      {value}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <input
+                  placeholder={field?.placeholder}
+                  className={`w-full p-1 sm:p-2 lg:p-3 border rounded focus:outline-2 focus:outline-primary-500 ${
+                    emptyFields.includes(field?.name)
+                      ? 'outline-2 outline-red-500'
+                      : ''
+                  }`}
+                  required
+                  onChange={(e) =>
+                    handleDetailsChange(field?.name, e.target.value)
+                  }
+                />
+              )}
+              {emptyFields.includes(field?.name) && (
+                <p className="text-red-500 text-sm mt-1">هذا الحقل مطلوب</p>
+              )}
+            </div>
+          ))}
 
-          <FormInput
-            label="السعر"
-            icon={
-              <MdAttachMoney className="text-primary-500 text-lg sm:text-xl" />
-            }
-            name="basePrice"
-            placeholder="500 $"
-            type="number"
-            register={register}
-            errors={emptyFields}
-            onChange={handleInputChange}
-          />
+        <FormInput
+          label="السعر"
+          icon={
+            <MdAttachMoney className="text-primary-500 text-lg sm:text-xl" />
+          }
+          name="basePrice"
+          placeholder="500 $"
+          type="number"
+          register={register}
+          errors={emptyFields}
+          onChange={handleInputChange}
+        />
 
-          <FormTextarea
-            label="وصف الإعلان"
-            icon={
-              <MdDescription className="text-primary-500 text-lg sm:text-xl" />
-            }
-            name="description"
-            placeholder="اكتب وصف للشيء الذي تريد بيعه ..."
-            register={register}
-            errors={emptyFields}
-            onChange={handleInputChange}
-          />
+        <FormTextarea
+          label="وصف الإعلان"
+          icon={
+            <MdDescription className="text-primary-500 text-lg sm:text-xl" />
+          }
+          name="description"
+          placeholder="اكتب وصف للشيء الذي تريد بيعه ..."
+          register={register}
+          errors={emptyFields}
+          onChange={handleInputChange}
+        />
 
-          <OnClickMap />
+        <OnClickMap />
+        <FormInput
+          label="رابط الفيديو من يوتيوب أو تيك توك"
+          icon={
+            <MdAttachMoney className="text-primary-500 text-lg sm:text-xl" />
+          }
+          name="link"
+          placeholder="رابط الفيديو"
+          register={register}
+          errors={emptyFields}
+          onChange={handleInputChange}
+        />
 
-          <FormInput
-            label="رابط الفيديو من يوتيوب أو تيك توك"
-            icon={
-              <MdAttachMoney className="text-primary-500 text-lg sm:text-xl" />
-            }
-            name="link"
-            placeholder="رابط الفيديو"
-            register={register}
-            errors={emptyFields}
-            onChange={handleInputChange}
-          />
+        <FormSubmitButton />
+      </form>
 
-          <FormSubmitButton />
-        </form>
-      ) : (
-        <div className="flex flex-col items-center justify-center gap-4 p-8">
-          <h2 className="text-xl font-semibold text-gray-800">
-            يجب تسجيل الدخول لإضافة إعلان جديد
-          </h2>
-          <Loading />
-        </div>
-      )}
-      {session?.status === 'authenticated' && <LoginButton />}
+      {/* <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          onSubmit();
+        }}
+        className="space-y-4 p-4 border rounded-lg shadow-md w-full xl:w-1/2"
+      >
+        <UploadingAndDisplayingImage />
+
+        <FormSelect
+          label="الفئة"
+          icon={<MdCategory className="text-primary-500 text-lg sm:text-xl" />}
+          name="category"
+          options={categories.map((cat) => ({
+            value: cat.id,
+            label: cat.name, // النص المعروض في القائمة
+          }))}
+          register={register}
+          errors={emptyFields}
+          onChange={(e) => handleCategoryChange(e.target.value)} // تمرير الدالة المعدلة
+          placeholder="-اختر-"
+        />
+
+        <FormInput
+          label="عنوان الإعلان"
+          icon={<MdTitle className="text-primary-500 text-lg sm:text-xl" />}
+          name="title"
+          placeholder="ضع عنوان مناسب للإعلان"
+          register={register}
+          errors={emptyFields}
+          onChange={handleInputChange}
+        />
+        <FormInput
+          label="المدينة"
+          icon={
+            <PiBuildingsDuotone className="text-primary-500 text-lg sm:text-xl" />
+          }
+          name="city"
+          placeholder="دمشق"
+          register={register}
+          errors={emptyFields}
+          onChange={handleInputChange}
+        />
+        <FormInput
+          label="المنطقة"
+          icon={<FaTreeCity className="text-primary-500 text-lg sm:text-xl" />}
+          name="town"
+          placeholder="المزة"
+          register={register}
+          errors={emptyFields}
+          onChange={handleInputChange}
+        />
+
+        <FormInput
+          label="رقم الهاتف"
+          icon={<MdPhone className="text-primary-500 text-lg sm:text-xl" />}
+          name="phoneNumber"
+          placeholder="+963 955555555"
+          type="number"
+          register={register}
+          errors={emptyFields}
+          onChange={handleInputChange}
+        />
+
+        {error && <p className="text-red-500">خطأ: {error}</p>}
+
+        {selectedCategory &&
+          Array.isArray(categoryFields) &&
+          categoryFields?.map((field, index) => (
+            <div key={index}>
+              <label className="font-medium mb-2 flex items-center gap-2">
+                {field?.icon} {field?.label}
+              </label>
+              {field?.options ? (
+                <select
+                  className={`w-full p-1 sm:p-2 lg:p-3 border rounded focus:outline-2 focus:outline-primary-500 ${
+                    emptyFields.includes(field?.name)
+                      ? 'outline-2 outline-red-500'
+                      : ''
+                  }`}
+                  required
+                  onChange={(e) =>
+                    handleDetailsChange(field?.name, e.target.value)
+                  }
+                >
+                  <option value="">{field?.placeholder}</option>
+                  {Object.entries(field?.options).map(([key, value]) => (
+                    <option key={key} value={key}>
+                      {value}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <input
+                  placeholder={field?.placeholder}
+                  className={`w-full p-1 sm:p-2 lg:p-3 border rounded focus:outline-2 focus:outline-primary-500 ${
+                    emptyFields.includes(field?.name)
+                      ? 'outline-2 outline-red-500'
+                      : ''
+                  }`}
+                  required
+                  onChange={(e) =>
+                    handleDetailsChange(field?.name, e.target.value)
+                  }
+                />
+              )}
+              {emptyFields.includes(field?.name) && (
+                <p className="text-red-500 text-sm mt-1">هذا الحقل مطلوب</p>
+              )}
+            </div>
+          ))}
+
+        <FormInput
+          label="السعر"
+          icon={
+            <MdAttachMoney className="text-primary-500 text-lg sm:text-xl" />
+          }
+          name="basePrice"
+          placeholder="500 $"
+          type="number"
+          register={register}
+          errors={emptyFields}
+          onChange={handleInputChange}
+        />
+
+        <FormTextarea
+          label="وصف الإعلان"
+          icon={
+            <MdDescription className="text-primary-500 text-lg sm:text-xl" />
+          }
+          name="description"
+          placeholder="اكتب وصف للشيء الذي تريد بيعه ..."
+          register={register}
+          errors={emptyFields}
+          onChange={handleInputChange}
+        />
+
+        <OnClickMap />
+        <FormInput
+          label="رابط الفيديو من يوتيوب أو تيك توك"
+          icon={
+            <MdAttachMoney className="text-primary-500 text-lg sm:text-xl" />
+          }
+          name="link"
+          placeholder="رابط الفيديو"
+          register={register}
+          errors={emptyFields}
+          onChange={handleInputChange}
+        />
+
+        <FormSubmitButton />
+      </form> */}
     </div>
-  );
-}
-
-export default function NewPost() {
-  return (
-    <Suspense
-      fallback={
-        <div className="min-h-screen flex items-center justify-center">
-          جار التحميل...
-        </div>
-      }
-    >
-      <NewPostContent />
-    </Suspense>
   );
 }

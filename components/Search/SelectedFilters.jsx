@@ -106,7 +106,7 @@ export default function SelectedFilters() {
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="bg-white rounded-xl shadow-sm p-4 border border-gray-100 mb-4"
+      className="bg-white rounded-xl shadow-sm p-4 border border-gray-100"
     >
       <div className="flex justify-between items-center mb-4">
         <motion.h3
@@ -125,7 +125,7 @@ export default function SelectedFilters() {
               clipRule="evenodd"
             />
           </svg>
-          الفلاتر المختارة
+          الفلاتر المختارة {selectedFilters?.length}
         </motion.h3>
 
         <motion.button
@@ -141,7 +141,7 @@ export default function SelectedFilters() {
 
       <div className="flex flex-wrap gap-3">
         <AnimatePresence>
-          {selectedFilters.map((filter) => (
+          {selectedFilters?.map((filter) => (
             <motion.div
               key={filter.key}
               initial={{ opacity: 0, scale: 0.8 }}
@@ -164,7 +164,7 @@ export default function SelectedFilters() {
           ))}
         </AnimatePresence>
 
-        {selectedFilters.length === 0 && (
+        {selectedFilters?.length === 0 && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

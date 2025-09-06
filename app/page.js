@@ -1,6 +1,5 @@
 'use client';
-
-import { useEffect, useState, useCallback, Suspense } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { motion } from 'framer-motion';
@@ -11,38 +10,64 @@ import SmallCard from '../components/ReusableComponents/SmallCard/SmallCard';
 import ColoredCards from '../components/ReusableComponents/ColoredCards';
 import categories from '../components/Categories/categories';
 
-function HomeContent() {
+// حجم الدفعة الأمثل (يمكن تعديله حسب الاختبار)
+const OPTIMAL_BATCH_SIZE = 6;
+
+export default function Home() {
   const [productsByCategory, setProductsByCategory] = useState({});
   const [loading, setLoading] = useState(true);
+  const [loadedCategories, setLoadedCategories] = useState(0);
   const router = useRouter();
   const session = useSession();
 
-  const fetchAllProductsByCategory = useCallback(async () => {
-    try {
-      setLoading(true);
-      const allCategoryIds = categories
-        .map((category) => category.id)
-        .join(',');
-      const response = await fetch(
-        `/api/categories/bulk?categories=${allCategoryIds}`,
-        {
-          next: { revalidate: 3600 },
-        }
-      );
+  // دالة محسنة لجلب البيانات مع التخزين المؤقت
+  const fetchProductsByCategory = useCallback(async () => {
+    setLoading(true);
 
-      if (!response.ok) throw new Error('Failed to fetch');
-      const { data } = await response.json();
-      setProductsByCategory(data || {});
+    try {
+      // تقسيم الفئات إلى دفعات
+      const batches = [];
+      for (let i = 0; i < categories.length; i += OPTIMAL_BATCH_SIZE) {
+        batches.push(categories.slice(i, i + OPTIMAL_BATCH_SIZE));
+      }
+
+      // جلب كل دفعة مع التعامل مع الأخطاء
+      for (const batch of batches) {
+        try {
+          const categoryIds = batch.map((c) => c.id).join(',');
+          const response = await fetch(
+            `/api/categories/bulk?categories=${categoryIds}`,
+            {
+              next: { revalidate: 3600 }, // إعادة التحقق بعد ساعة (ISR)
+            }
+          );
+
+          if (!response.ok)
+            throw new Error(`HTTP error! status: ${response.status}`);
+
+          const { data } = await response.json();
+
+          setProductsByCategory((prev) => ({
+            ...prev,
+            ...data,
+          }));
+
+          setLoadedCategories((prev) => prev + batch.length);
+        } catch (error) {
+          console.error('خطأ في جلب دفعة الفئات:', error);
+          // يمكنك هنا إضافة منطق لإعادة المحاولة أو التعامل مع الخطأ
+        }
+      }
     } catch (error) {
-      console.error('Error fetching products:', error);
+      console.error('خطأ عام في جلب البيانات:', error);
     } finally {
       setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    fetchAllProductsByCategory();
-  }, [fetchAllProductsByCategory]);
+    fetchProductsByCategory();
+  }, [fetchProductsByCategory]);
 
   const handleCategoryClick = (category) => {
     localStorage.setItem('category', JSON.stringify(category));
@@ -52,22 +77,16 @@ function HomeContent() {
   const renderProducts = (category) => {
     const products = productsByCategory[category.id];
 
-    if (!products)
-      return (
-        <div className="min-h-[250px] w-full flex justify-center items-center">
-          <Loading myMessage="جاري تحميل المنتجات..." />
-        </div>
-      );
+    if (!products) return <Loading small />;
     if (products.length === 0) return <p>لا توجد منتجات في هذه الفئة</p>;
 
     return products.map((item) => (
       <motion.div
-        layout
         key={item.id}
-        whileHover={{ scale: 1.03 }}
+        // whileHover={{ scale: 1.03 }}
         whileTap={{ scale: 0.95 }}
-        className="flex flex-col justify-center items-center w-full sm:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1rem)] xl:w-[calc(25%-1rem)] border cursor-pointer bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out rounded-[10px] overflow-hidden shadow-lg relative"
         onClick={() => router.push(`/post/${item.id}`)}
+        className="flex flex-col justify-center items-center w-full sm:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1rem)] xl:w-[calc(25%-1rem)] border cursor-pointer bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out rounded-[10px] overflow-hidden shadow-lg relative"
       >
         <SmallCard item={item} category={category} />
       </motion.div>
@@ -75,17 +94,16 @@ function HomeContent() {
   };
 
   return (
-    <div className="relative flex flex-row-reverse items-start justify-between overflow-hidden z-[40] h-fit w-full bg-five rounded-b">
+    <main className="relative flex flex-row-reverse items-start justify-between overflow-hidden z-[30] h-fit w-full bg-five rounded-b">
       <div className="relative flex-col justify-between items-start w-full h-full">
         <div className="flex flex-col items-center justify-center overflow-hidden z-50 h-fit w-full bg-five rounded-b">
-          {loading ? (
+          {loading && loadedCategories === 0 ? (
             <Loading fullPage />
           ) : (
             categories
               .filter((category) => productsByCategory[category.id]?.length > 0)
               .map((category) => (
                 <motion.div
-                  layout
                   key={category.id}
                   initial={{ opacity: 0, y: 50 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -95,7 +113,7 @@ function HomeContent() {
                 >
                   <div className="flex flex-col justify-center items-center w-full h-full gap-8 py-8 my-8">
                     <div
-                      className="flex justify-center items-center w-1/8 hover:scale-105 mb-8 transition-transform duration-300 ease-in-out cursor-pointer"
+                      className="flex justify-center items-center w-1/8 mb-8 transition-transform duration-300 ease-in-out cursor-pointer"
                       onClick={() => handleCategoryClick(category)}
                     >
                       <ColoredCards number={category.id} text={category.name} />
@@ -103,7 +121,7 @@ function HomeContent() {
                     <div className="flex flex-wrap justify-center items-center gap-4 w-full 2xl:w-[80%] h-full p-4 mb-4">
                       {renderProducts(category)}
                       <div
-                        className="flex justify-center items-center gap-2 cursor-pointer text-lg hover:scale-105 transition-transform ease-in-out duration-200 mt-8 sm:mt-20"
+                        className="flex justify-center items-center gap-2 cursor-pointer text-lg transition-transform ease-in-out duration-200 mt-8 sm:mt-20"
                         onClick={() => handleCategoryClick(category)}
                       >
                         <FaAngleDoubleLeft className="text-primary-500" />
@@ -127,24 +145,10 @@ function HomeContent() {
         <div className="flex justify-end w-full">
           <Footer />
         </div>
-        <h1 className="w-full text-sm select-none text-center pt-8 pb-4 border uppercase text-gray-600">
-          حقوق النشر © 2025 موقع متجر. جميع الحقوق محفوظة
-        </h1>
+        {/* <h1 className="w-full text-sm select-none text-center pt-8 pb-4 border uppercase text-gray-600">
+          حقوق النشر © 2025 موقع بياع. جميع الحقوق محفوظة
+        </h1> */}
       </div>
-    </div>
-  );
-}
-
-export default function Home() {
-  return (
-    <Suspense
-      fallback={
-        <div className="min-h-screen flex items-center justify-center">
-          جار التحميل...
-        </div>
-      }
-    >
-      <HomeContent />
-    </Suspense>
+    </main>
   );
 }

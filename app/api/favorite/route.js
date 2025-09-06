@@ -54,7 +54,7 @@ export async function GET(req) {
     // التحقق من الذاكرة المؤقتة
     const cachedData = cache.get(cacheKey);
     if (cachedData) {
-      // console.log('📦 [Cache Hit] Favorites', cacheKey);
+      console.log('📦 [Cache Hit] Favorites', cacheKey);
       return NextResponse.json(cachedData);
     }
 
@@ -90,7 +90,7 @@ export async function GET(req) {
 
     // تخزين في الذاكرة المؤقتة
     cache.set(cacheKey, result);
-    // console.log('💾 [Cache Set] Favorites', cacheKey);
+    console.log('💾 [Cache Set] Favorites', cacheKey);
 
     return NextResponse.json(result, { status: 200 });
   } catch (error) {

@@ -181,10 +181,10 @@ export default function Footer() {
               <Link href="/" className="inline-block mb-4">
                 <div className="relative h-16 w-48 hover:scale-105 transition-transform duration-300">
                   <Image
-                    src="/logo.png"
+                    src="/logo1.png"
                     fill
                     className="object-contain"
-                    alt="Matjar Logo"
+                    alt="Bayya Logo"
                   />
                 </div>
               </Link>
@@ -264,7 +264,7 @@ export default function Footer() {
                 </li>
                 <li className="flex items-center text-neutral-400">
                   <Mail size={16} className="ml-2 text-primary-300" />
-                  <span>info@Matjar.com</span>
+                  <span>info@Bayya.com</span>
                 </li>
 
                 {/* Social Media */}
@@ -319,7 +319,7 @@ export default function Footer() {
           {/* Bottom Section */}
           <div className="pt-8 border-t border-neutral-800 text-center">
             <p className="text-neutral-500 text-sm">
-              Copyright © {new Date().getFullYear()} Matjar. جميع الحقوق محفوظة
+              Copyright © {new Date().getFullYear()} Bayya. جميع الحقوق محفوظة
             </p>
           </div>
         </div>

@@ -54,13 +54,13 @@ export default function SearchResults() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="w-full "
+      className="w-full"
     >
       {/* Results header with count and category */}
       <motion.div
         initial={{ y: -20 }}
         animate={{ y: 0 }}
-        className="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-white rounded-xl shadow-sm p-4 border border-gray-100"
+        className="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3"
       >
         <motion.p
           whileHover={{ scale: 1.02 }}
@@ -92,7 +92,7 @@ export default function SearchResults() {
           whileHover={{ scale: 1.05 }}
           className="text-xs text-gray-500 bg-gray-50 px-3 py-1.5 rounded-full"
         >
-          عرض {results.length} من {totalCount}
+          عرض {results?.length} من {totalCount}
         </motion.div>
       </motion.div>
 
@@ -102,7 +102,7 @@ export default function SearchResults() {
         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
       >
         <AnimatePresence>
-          {results.map((product, index) => (
+          {results?.map((product, index) => (
             <motion.div
               key={product.id}
               initial={{ opacity: 0, y: 20 }}

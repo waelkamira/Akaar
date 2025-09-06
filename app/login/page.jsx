@@ -18,6 +18,7 @@ export default function LogInPage() {
   const router = useRouter();
   const [loggedIn, setLoggedIn] = useState(false);
   const { profileImage, favorite } = useContext(inputsContext);
+  console.log('favorite', favorite);
   const userId = session?.data?.user?.id;
   // Schema for form validation
   const schema = z.object({
@@ -62,6 +63,7 @@ export default function LogInPage() {
 
   // Function to fetch and favorite user data in localStorage
   const fetchAndStoreUserFavoriteIds = async (userId) => {
+    console.log('userId', userId);
     try {
       const response = await fetch(`/api/favorite/ids?userId=${userId}`);
       if (!response.ok) {

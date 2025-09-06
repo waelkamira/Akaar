@@ -29,6 +29,8 @@ function FavoriteButton({ item }) {
 
   const fetchAndStoreUserFavoriteIds = useCallback(
     async (userId) => {
+      // console.log('fetchAndStoreUserFavoriteIds من داخل ');
+
       if (!userId) return;
 
       try {
@@ -51,9 +53,14 @@ function FavoriteButton({ item }) {
   );
 
   const checkFavoriteStatus = useCallback(() => {
+    // console.log('checkFavoriteStatus تم الاستدعاء ');
+
     if (item?.id) {
       const favorited = favoriteIds.includes(item?.id);
+      // console.log('favoriteIds', favoriteIds);
       if (favorited) {
+        // console.log('favorited', favorited);
+        // console.log('item?.id', item?.id);
         setIsFavorited(true);
       } else {
         setIsFavorited(false);
@@ -71,6 +78,7 @@ function FavoriteButton({ item }) {
 
   const handleFavorite = useCallback(async () => {
     if (!item?.id || !userId) return;
+    console.log('item?.id', item?.id);
 
     try {
       const response = await fetch('/api/favorite', {

@@ -1,5 +1,5 @@
 'use client';
-import { FaCanadianMapleLeaf, FaHome } from 'react-icons/fa';
+import { FaCanadianMapleLeaf, FaHome, FaSignOutAlt } from 'react-icons/fa';
 import { ImProfile } from 'react-icons/im';
 import { TbTargetArrow } from 'react-icons/tb';
 import { MdOutlineMapsHomeWork } from 'react-icons/md';

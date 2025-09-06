@@ -19,7 +19,7 @@ export default function CustomToast({
           <div className="flex justify-center items-center gap-2">
             <div className="relative h-16 w-56 my-2 hover:scale-[103%] z-20">
               <Image
-                src="/logo.png"
+                src="/logo1.png"
                 fill
                 objectFit="contain"
                 alt="home_photo"

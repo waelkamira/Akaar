@@ -14,6 +14,7 @@ import {
 import { motion } from 'framer-motion';
 import LoginButton from '../../../components/Buttons/LoginButton';
 import categories from '../../../components/Categories/categories';
+import Button from '../../../components/Buttons/Button';
 // تحميل المكونات بشكل ديناميكي
 const ImageSlider = dynamic(
   () => import('../../../components/photos/imageSlider'),
@@ -44,11 +45,16 @@ export default function Page() {
     if (typeof window !== 'undefined') {
       const item = JSON.parse(localStorage.getItem('item'));
       setPost(item);
+      // console.log('item', item);
     }
   }, []);
 
   useEffect(() => {
     if (post?.categoryName) {
+      // console.log('categories[post?.categoryId]', categories[post?.categoryId]);
+      // console.log('post?.categoryId', post?.categoryId);
+      // console.log('categories', categories);
+      // console.log('post', post);
       import(`../../../components/categoryFields/${post?.categoryName}.jsx`)
         .then((module) => {
           setCategoryFields(module.default);
@@ -62,6 +68,7 @@ export default function Page() {
 
   const getFieldValue = (field, value) => {
     if (field.options && field.options[value]) {
+      // console.log('field.options[value]', field.options[value]);
       return field.options[value];
     }
     return value;
@@ -71,38 +78,36 @@ export default function Page() {
     () => [
       {
         name: 'العنوان',
-        icon: <FaTag className="text-primary-500-500 text-lg sm:text-xl" />,
+        icon: <FaTag className="text-primary-500 text-lg sm:text-xl" />,
         value: post?.title,
       },
       {
         name: 'تاريخ الإعلان',
-        icon: <FaClock className="text-primary-500-500 text-lg sm:text-xl" />,
+        icon: <FaClock className="text-primary-500 text-lg sm:text-xl" />,
         value: post?.createdAt,
       },
       {
         name: 'السعر',
-        icon: (
-          <FaDollarSign className="text-primary-500-500 text-lg sm:text-xl" />
-        ),
+        icon: <FaDollarSign className="text-primary-500 text-lg sm:text-xl" />,
         value: post?.basePrice,
       },
       {
         name: 'المدينة',
         icon: (
-          <FaMapMarkerAlt className="text-primary-500-500 text-lg sm:text-xl" />
+          <FaMapMarkerAlt className="text-primary-500 text-lg sm:text-xl" />
         ),
         value: post?.city,
       },
       {
         name: 'المنطقة',
         icon: (
-          <FaMapMarkerAlt className="text-primary-500-500 text-lg sm:text-xl" />
+          <FaMapMarkerAlt className="text-primary-500 text-lg sm:text-xl" />
         ),
         value: post?.town,
       },
       {
         name: 'رقم الهاتف',
-        icon: <FaPhone className="text-primary-500-500 text-lg sm:text-xl" />,
+        icon: <FaPhone className="text-primary-500 text-lg sm:text-xl" />,
         value: post?.phoneNumber,
       },
     ],
@@ -132,7 +137,7 @@ export default function Page() {
     if (!url) return null;
 
     // رابط يوتيوب
-    if (url.includes('youtube.com') || url.includes('youtu.be')) {
+    if (url.includes('youtube.com') || url.includes('youtube')) {
       const videoId = url.match(
         /(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
       );
@@ -166,158 +171,158 @@ export default function Page() {
   };
 
   return (
-    <div className="flex flex-col justify-start items-center w-full bg-gray-50 min-h-screen p-6 sm:p-12 mt-32 sm:mt-2">
-      {session.status === 'unauthenticated' && <LoginButton />}
-      {session.status === 'authenticated' && post ? (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="w-full xl:w-[80%] 2xl:w-[70%] bg-white shadow-2xl rounded-2xl overflow-hidden"
-        >
-          {session?.status === 'authenticated' && (
-            <div className="flex flex-col justify-center items-center w-full h-full sm:px-16 pt-2 overflow-y-auto z-10 px-2">
-              <div className="flex justify-center w-full">
-                <div className="flex flex-col w-full p-2 sm:p-8 my-2 bg-white">
-                  <UserNameAndPhoto
-                    post={{
-                      createdAt: post?.createdAt,
-                    }}
-                  />
+    <div className="flex flex-col justify-start items-center w-full bg-gray-50 min-h-screen p-2 sm:p-12 sm:mt-2">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="w-full xl:w-[80%] 2xl:w-[70%] bg-white shadow-2xl rounded-2xl overflow-hidden"
+      >
+        <div className="flex flex-col justify-center items-center w-full h-full sm:px-16 pt-2 overflow-y-auto z-10 px-2">
+          <div className="flex justify-center w-full">
+            <div className="flex flex-col w-full p-2 sm:p-8 my-2 bg-white">
+              <UserNameAndPhoto
+                post={{
+                  createdAt: post?.createdAt,
+                }}
+              />
 
-                  {/* عرض العنوان إذا كان موجودًا */}
-                  {post?.title && (
-                    <div className="flex justify-center w-full">
-                      <h1 className="sm:my-4 text-xl sm:text-3xl text-primary-500-500 font-semibold select-none text-wrap line-clamp-1 max-w-[20ch] lg:max-w-[40ch] text-center">
-                        {post?.title}
+              {/* عرض العنوان إذا كان موجودًا */}
+              {post?.title && (
+                <div className="flex justify-center w-full">
+                  <h1 className="my-4 text-sm sm:text-3xl select-none text-wrap line-clamp-1 max-w-[20ch] lg:max-w-[40ch] text-center">
+                    {post?.title}
+                  </h1>
+                </div>
+              )}
+
+              {/* عرض Loading إذا لم توجد صورة */}
+              {!post?.image1 && <Loading myMessage={'جاري تحميل الصورة'} />}
+
+              {/* عرض ImageSlider إذا كانت هناك صور */}
+              {(post?.image1 ||
+                post?.image2 ||
+                post?.image3 ||
+                post?.image4 ||
+                post?.image5) && (
+                <ImageSlider
+                  image1={post?.image1}
+                  image2={post?.image2}
+                  image3={post?.image3}
+                  image4={post?.image4}
+                  image5={post?.image5}
+                />
+              )}
+
+              <div className="mt-4 sm:mt-16">
+                {/* عرض مواصفات الإعلان إذا كانت هناك تفاصيل */}
+                {post?.details && (
+                  <div>
+                    <div className="flex justify-between items-center my-4 lg:my-8 h-10 sm:h-16 w-full overflow-visible">
+                      <h1 className="text-primary-500 text-lg sm:text-xl w-full mb-2 select-none">
+                        <span className="text-primary-500 text-lg sm:text-2xl mx-2 select-none">
+                          #
+                        </span>
+                        مواصفات الإعلان:
                       </h1>
                     </div>
-                  )}
 
-                  {/* عرض Loading إذا لم توجد صورة */}
-                  {!post?.image1 && <Loading myMessage={'جاري تحميل الصورة'} />}
+                    <div className="flex flex-col w-full">
+                      <div className="flex flex-col sm:grid md:grid-cols-2 sm:gap-x-4 w-full">
+                        {fields.map((field, index) => {
+                          const value =
+                            post?.details?.[field?.name] || field?.value;
+                          const displayValue = getFieldValue(field, value);
+                          // console.log('displayValue', displayValue);
 
-                  {/* عرض ImageSlider إذا كانت هناك صور */}
-                  {(post?.image1 ||
-                    post?.image2 ||
-                    post?.image3 ||
-                    post?.image4 ||
-                    post?.image5) && (
-                    <ImageSlider
-                      image1={post?.image1}
-                      image2={post?.image2}
-                      image3={post?.image3}
-                      image4={post?.image4}
-                      image5={post?.image5}
-                    />
-                  )}
-
-                  <div className="mt-4 sm:mt-16">
-                    {/* عرض مواصفات الإعلان إذا كانت هناك تفاصيل */}
-                    {post?.details && (
-                      <div>
-                        <div className="flex justify-between items-center my-4 lg:my-8 h-10 sm:h-16 w-full overflow-visible">
-                          <h1 className="text-primary-500-500 font-bold text-lg sm:text-xl w-full mb-2 select-none">
-                            <span className="text-primary-500-500 text-2xl mx-2 select-none">
-                              #
-                            </span>
-                            مواصفات الإعلان:
-                          </h1>
-                        </div>
-
-                        <div className="flex flex-col w-full">
-                          <div className="flex flex-col sm:grid md:grid-cols-2 sm:gap-x-4 w-full">
-                            {fields.map((field, index) => {
-                              const value =
-                                post?.details?.[field?.name] || field?.value;
-                              const displayValue = getFieldValue(field, value);
-
-                              return displayValue ? (
-                                <ItemSmallItem
-                                  key={index}
-                                  icon={field?.icon}
-                                  text={field?.label || field?.name}
-                                  value={displayValue}
-                                />
-                              ) : null;
-                            })}
-                          </div>
-                        </div>
+                          // عرض الحقل فقط إذا كانت القيمة موجودة
+                          return displayValue ? (
+                            <ItemSmallItem
+                              key={index}
+                              icon={field?.icon}
+                              text={field?.label || field?.name}
+                              value={displayValue}
+                            />
+                          ) : null;
+                        })}
                       </div>
-                    )}
-
-                    {/* عرض وصف الإعلان إذا كان موجودًا */}
-                    {post?.description && (
-                      <div>
-                        <div className="flex justify-between items-center my-4 lg:my-8 h-10 sm:h-16 w-full overflow-visible">
-                          <h1 className="text-primary-500-500 font-bold text-lg sm:text-xl w-full mb-2 select-none">
-                            <span className="text-primary-500-500 text-2xl mx-2 select-none">
-                              #
-                            </span>
-                            وصف الإعلان:
-                          </h1>
-                        </div>
-
-                        <div className="bg-gray-50 p-4 w-full rounded-lg">
-                          <pre className="flex justify-start items-start bg-white rounded-lg h-72 overflow-y-auto text-md sm:text-xl w-full shadow-sm shadow-gray-300 min-h-20 my-2 p-2 select-none">
-                            {post?.description}
-                          </pre>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* عرض الخريطة إذا كانت الإحداثيات موجودة */}
-                    {post?.lng && post?.lat && (
-                      <div>
-                        <div className="flex justify-between items-center my-4 lg:my-8 h-10 sm:h-16 w-full overflow-visible">
-                          <h1 className="text-primary-500-500 font-bold text-lg sm:text-xl w-full mb-2 select-none">
-                            <span className="text-primary-500-500 text-2xl mx-2 select-none">
-                              #
-                            </span>
-                            الموقع على الخريطة:
-                          </h1>
-                        </div>
-                        <div>
-                          <SyriaMap lng={post?.lng} lat={post?.lat} />
-                        </div>
-                      </div>
-                    )}
-
-                    {/* عرض الفيديو إذا كان الرابط موجودًا */}
-                    {post?.link && iframeSrc && (
-                      <div>
-                        <div className="flex justify-between items-center my-4 sm:my-4 h-10 sm:h-16 w-full overflow-visible">
-                          <h1 className="text-primary-500-500 font-bold text-lg sm:text-xl w-full mb-2 select-none">
-                            <span className="text-primary-500-500 text-2xl mx-2 select-none">
-                              #
-                            </span>
-                            الفيديو :
-                          </h1>
-                        </div>
-                        <div className="flex justify-center items-center w-full">
-                          <div className="flex flex-col w-full">
-                            {iframeSrc && (
-                              <iframe
-                                src={iframeSrc}
-                                className="w-full h-44 sm:h-96"
-                                title="Property Video"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowFullScreen
-                              />
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    )}
+                    </div>
                   </div>
-                </div>
+                )}
+
+                {/* عرض وصف الإعلان إذا كان موجودًا */}
+                {post?.description && (
+                  <div>
+                    <div className="flex justify-between items-center my-4 lg:my-8 h-10 sm:h-16 w-full overflow-visible">
+                      <h1 className="text-primary-500 text-lg sm:text-xl w-full mb-2 select-none">
+                        <span className="text-primary-500 text-lg lg:text-2xl mx-2 select-none">
+                          #
+                        </span>
+                        وصف الإعلان:
+                      </h1>
+                    </div>
+
+                    <div className="bg-gray-50 p-4 w-full rounded-lg">
+                      <pre className="flex justify-start items-start bg-white rounded-lg h-72 overflow-y-auto text-md sm:text-xl w-full shadow-sm shadow-gray-300 min-h-20 my-2 p-2 select-none">
+                        {post?.description}
+                      </pre>
+                    </div>
+                  </div>
+                )}
+
+                {/* عرض الخريطة إذا كانت الإحداثيات موجودة */}
+                {post?.lng && post?.lat && (
+                  <div>
+                    <div className="flex justify-between items-center my-4 lg:my-8 h-10 sm:h-16 w-full overflow-visible">
+                      <h1 className="text-primary-500 text-lg sm:text-xl w-full mb-2 select-none">
+                        <span className="text-primary-500 text-2xl mx-2 select-none">
+                          #
+                        </span>
+                        الموقع على الخريطة:
+                      </h1>
+                    </div>
+                    <div>
+                      <SyriaMap lng={post?.lng} lat={post?.lat} />
+                    </div>
+                  </div>
+                )}
+
+                {/* عرض الفيديو إذا كان الرابط موجودًا */}
+                {post?.link && iframeSrc && (
+                  <div>
+                    <div className="flex justify-between items-center my-4 sm:my-4 h-10 sm:h-16 w-full overflow-visible">
+                      <h1 className="text-primary-500 text-lg sm:text-xl w-full mb-2 select-none">
+                        <span className="text-primary-500 text-2xl mx-2 select-none">
+                          #
+                        </span>
+                        الفيديو :
+                      </h1>
+                    </div>
+                    <div className="flex justify-center items-center w-full">
+                      <div className="flex flex-col w-full">
+                        {iframeSrc && (
+                          <iframe
+                            src={iframeSrc}
+                            className="w-full h-44 sm:h-96"
+                            title="Property Video"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                          />
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
-          )}
-        </motion.div>
-      ) : (
-        <Loading />
-      )}
+          </div>
+        </div>
+        <Button
+          title="عودة للصفحة الرئيسية"
+          path="/"
+          style="btn bg-primary-500 text-white hover:bg-primary-600 transition-all py-3 mb-4 rounded-lg w-1/2 text-lg font-semibold w-[80%] lg:w-1/2"
+        />
+      </motion.div>
     </div>
   );
 }

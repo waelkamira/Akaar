@@ -34,25 +34,8 @@ export default function CategoryFilter() {
     const storedCategory = localStorage.getItem('category');
     if (storedCategory && !category) {
       try {
-        // التحقق من أن البيانات ليست undefined أو null
-        if (storedCategory === 'undefined' || storedCategory === 'null') {
-          localStorage.removeItem('category');
-          return;
-        }
-
         const parsedCategory = JSON.parse(storedCategory);
-        // التحقق من أن البيانات المحللة تحتوي على الخصائص المطلوبة
-        if (
-          parsedCategory &&
-          typeof parsedCategory === 'object' &&
-          parsedCategory.id &&
-          parsedCategory.name
-        ) {
-          setCategory(parsedCategory);
-        } else {
-          console.error('Invalid category data structure');
-          localStorage.removeItem('category');
-        }
+        setCategory(parsedCategory);
       } catch (error) {
         console.error('Error parsing stored category:', error);
         localStorage.removeItem('category');
@@ -109,7 +92,7 @@ export default function CategoryFilter() {
                 type="radio"
                 checked={category && category.id === cat?.id}
                 onChange={() => handleCategoryChange(cat)}
-                className="h-4 w-4 text-primary-500 focus:ring-primary-500 border-gray-300"
+                className="h-4 w-4 text-primary-500 focus:ring-primary-500 border-gray-300 hover:cursor-pointer"
               />
               <label
                 htmlFor={`category-${cat?.id}`}

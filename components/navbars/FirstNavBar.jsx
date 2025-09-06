@@ -10,7 +10,7 @@ export default function FirstNavBar() {
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: 'easeOut', delay: 0.2 }}
-      className="hidden xl:flex xl:justify-start w-full overflow-hidden z-50 shadow-sm bg-white"
+      className="hidden xl:flex xl:flex-col xl:justify-start w-full overflow-hidden z-[1000] shadow-lg bg-black/10"
     >
       {/* شريط التنقل الرئيسي */}
       <div className="flex justify-between items-center w-full px-4 py-2">
@@ -23,10 +23,12 @@ export default function FirstNavBar() {
             >
               <Link
                 href={button?.path}
-                className="relative flex items-center justify-center gap-1 w-full font-bold text-lg transition-all duration-300 ease-in-out group hover:scale-105"
+                className="relative flex items-center justify-center gap-1 w-full text-white font-sans text-lg transition-all duration-300 ease-in-out group hover:scale-105"
               >
                 {/* أيقونة الزر */}
-                <span className="mb-2 text-primary">{button?.icon}</span>
+                <span className="mb-2 text-primary text-2xl">
+                  {button?.icon}
+                </span>
 
                 {/* نص الزر */}
                 <span className="relative text-center">{button?.title}</span>
@@ -58,10 +60,10 @@ export default function FirstNavBar() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               transition={{ type: 'spring', stiffness: 400, damping: 20 }}
-              className="relative h-16 w-64 my-2"
+              className="relative h-24 w-64 my-2"
             >
               <Image
-                src="/logo.png"
+                src="/logo1.png"
                 alt="luxury_logo"
                 fill
                 className="object-contain drop-shadow-xl"

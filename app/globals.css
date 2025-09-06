@@ -10,22 +10,6 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Custom tooltip styles */
-.leaflet-tooltip {
-  background-color: rgba(255, 255, 255, 0.9);
-  border: 1px solid #ff7c34;
-  border-radius: 4px;
-  color: #333;
-  font-weight: bold;
-  padding: 4px 8px;
-}
-
-/* Make sure the map container takes full height */
-.leaflet-container {
-  height: 100%;
-  width: 100%;
-}
-
 .rubik {
   font-family: var(--font-rubik); /* استخدم المتغير هنا */
 }
@@ -196,8 +180,7 @@ input[type='file'] {
   white-space: nowrap; /* منع التفاف النص */
   direction: rtl; /* ضبط اتجاه النص من اليمين إلى اليسار */
   text-align: right;
-  animation:
-    typing 6s steps(40, end) infinite reverse,
+  animation: typing 6s steps(40, end) infinite reverse,
     blink-caret 0.75s step-end infinite;
 }
 
@@ -297,13 +280,9 @@ input[type='file'] {
   border: 1px solid #fff; /* حد أبيض حول الطبقة */
   border-radius: inherit; /* يرث زوايا مستديرة من البطاقة */
   padding: 20px; /* مسافة داخلية */
-  box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.1),
-    0 2px 4px rgba(0, 0, 0, 0.1),
-    0 4px 8px rgba(0, 0, 0, 0.1),
-    0 8px 16px rgba(0, 0, 0, 0.1),
-    0 16px 32px rgba(0, 0, 0, 0.1),
-    0 32px 64px rgba(0, 0, 0, 0.1); /* ظل متعدد الطبقات */
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.1),
+    0 4px 8px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.1),
+    0 16px 32px rgba(0, 0, 0, 0.1), 0 32px 64px rgba(0, 0, 0, 0.1); /* ظل متعدد الطبقات */
   position: relative; /* يسمح بتحديد موقع العناصر داخلها بشكل نسبي */
   left: 10px; /* يحرك الطبقة قليلاً إلى اليمين */
   transition: left 1s; /* تأثير انتقالي عند التمرير */
@@ -315,13 +294,9 @@ input[type='file'] {
   color: #fff; /* لون النص الأبيض */
   background-color: var(--color); /* لون الخلفية باستخدام المتغير */
   border-radius: 50%; /* يجعل العنصر دائريًا */
-  box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.1),
-    0 2px 4px rgba(0, 0, 0, 0.1),
-    0 4px 8px rgba(0, 0, 0, 0.1),
-    0 8px 16px rgba(0, 0, 0, 0.1),
-    0 16px 32px rgba(0, 0, 0, 0.1),
-    0 32px 64px rgba(0, 0, 0, 0.1); /* ظل متعدد الطبقات */
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.1),
+    0 4px 8px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.1),
+    0 16px 32px rgba(0, 0, 0, 0.1), 0 32px 64px rgba(0, 0, 0, 0.1); /* ظل متعدد الطبقات */
   font-size: 14px; /* حجم الخط */
   position: absolute; /* يحدد موقع العنصر بشكل مطلق */
   right: 5px; /* المسافة من اليمين */
@@ -502,9 +477,7 @@ input[type='file'] {
 
 body {
   @apply bg-neutral-50 text-neutral-800 rubik;
-  font-feature-settings:
-    'rlig' 1,
-    'calt' 1;
+  font-feature-settings: 'rlig' 1, 'calt' 1;
 }
 
 body {
@@ -644,8 +617,7 @@ input[type='file'] {
   white-space: nowrap;
   direction: rtl;
   text-align: right;
-  animation:
-    typing 6s steps(40, end) infinite reverse,
+  animation: typing 6s steps(40, end) infinite reverse,
     blink-caret 0.75s step-end infinite;
 }
 

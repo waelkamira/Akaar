@@ -18,7 +18,7 @@ const DetailsSection = ({ item, className }) => {
           initial={{ opacity: 0, y: 5 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
-          className="text-xl font-semibold text-gray-900 line-clamp-1 leading-snug hover:text-primary transition-colors duration-200"
+          className="lg:text-xl font-bold font-sans lg:font-normal text-black line-clamp-1 leading-snug hover:text-primary transition-colors duration-200"
         >
           {item.title}
         </motion.h1>
@@ -29,7 +29,7 @@ const DetailsSection = ({ item, className }) => {
         initial={{ opacity: 0, x: -5 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.3, delay: 0.2 }}
-        className="flex items-center gap-2 text-sm text-gray-600 hover:text-primary-600 transition-colors duration-200"
+        className="flex items-center gap-2 text-sm text-gray-600 hover:text-primary-600 transition-colors duration-200 mt-4 border-t border-gray-100 pt-4"
       >
         <MapPin className="w-4 h-4 text-primary" strokeWidth={2.5} />
         <span className="font-medium">{item?.city || 'غير محدد'}</span>
@@ -47,7 +47,7 @@ const DetailsSection = ({ item, className }) => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="text-sm text-gray-600 line-clamp-1 leading-relaxed hover:line-clamp-5 transition-all duration-300"
+          className="text-sm text-gray-600 line-clamp-1 leading-relaxed hover:line-clamp-5 transition-all duration-300 border-t border-gray-100 pt-4"
         >
           {item.description}
         </motion.p>

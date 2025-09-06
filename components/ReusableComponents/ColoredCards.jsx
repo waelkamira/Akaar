@@ -1,211 +1,183 @@
 'use client';
 import { motion } from 'framer-motion';
-import dynamic from 'next/dynamic';
-import { FaHome } from 'react-icons/fa';
-import { useEffect, useState } from 'react';
 
-// مكون بديل في حالة حدوث خطأ في تحميل الأيقونة
-const DefaultIcon = () => <div className="text-4xl text-white">🏠</div>;
-
-// دالة لتحميل الأيقونات بشكل آمن مع معالجة الأخطاء
-const loadIconSafely = (iconName) => {
-  return dynamic(() =>
-    import('react-icons/fa')
-      .then((mod) => mod[iconName])
-      .catch(() => DefaultIcon)
-  );
-};
-
-// إنشاء كائن الأيقونات مع معالجة الأخطاء
-const icons = {
+import {
   FaHome,
-  FaCar: loadIconSafely('FaCar'),
-  FaMobile: loadIconSafely('FaMobile'),
-  FaLaptop: loadIconSafely('FaLaptop'),
-  FaUtensils: loadIconSafely('FaUtensils'),
-  FaCouch: loadIconSafely('FaCouch'),
-  FaTshirt: loadIconSafely('FaTshirt'),
-  FaCamera: loadIconSafely('FaCamera'),
-  FaSkating: loadIconSafely('FaSkating'),
-  FaGamepad: loadIconSafely('FaGamepad'),
-  FaBook: loadIconSafely('FaBook'),
-  FaSmile: loadIconSafely('FaSmile'),
-  FaTools: loadIconSafely('FaTools'),
-  FaBicycle: loadIconSafely('FaBicycle'),
-  FaPlane: loadIconSafely('FaPlane'),
-  FaGift: loadIconSafely('FaGift'),
-  FaSeedling: loadIconSafely('FaSeedling'),
-  FaStethoscope: loadIconSafely('FaStethoscope'),
-  FaMusic: loadIconSafely('FaMusic'),
-  FaPaintBrush: loadIconSafely('FaPaintBrush'),
-  FaFilm: loadIconSafely('FaFilm'),
-  FaDumbbell: loadIconSafely('FaDumbbell'),
-  FaMedkit: loadIconSafely('FaMedkit'),
-};
+  FaCar,
+  FaMobile,
+  FaLaptop,
+  FaUtensils,
+  FaCouch,
+  FaTshirt,
+  FaCamera,
+  FaSkating,
+  FaGamepad,
+  FaBook,
+  FaSmile,
+  FaTools,
+  FaBicycle,
+  FaPlane,
+  FaGift,
+  FaSeedling,
+  FaStethoscope,
+  FaMusic,
+  FaPaintBrush,
+  FaFilm,
+  FaDumbbell,
+  FaMedkit,
+  FaLeaf,
+  FaSunset,
+} from 'react-icons/fa';
 
 const cardStyles = {
   1: {
     gradient: 'from-orange-400 via-orange-300 to-orange-400',
-    iconName: 'FaHome',
+    icon: <FaHome />,
   },
   2: {
     gradient: 'from-red-400 via-red-300 to-red-400',
-    iconName: 'FaCar',
+    icon: <FaCar />,
   },
   3: {
     gradient: 'from-sky-400 via-sky-300 to-sky-400',
-    iconName: 'FaMobile',
+    icon: <FaMobile />,
   },
   4: {
     gradient: 'from-pink-400 via-pink-300 to-pink-400',
-    iconName: 'FaLaptop',
+    icon: <FaLaptop />,
   },
   5: {
     gradient: 'from-red-400 via-red-300 to-red-400',
-    iconName: 'FaLaptop',
+    icon: <FaLaptop />,
   },
   6: {
     gradient: 'from-amber-400 via-amber-300 to-amber-400',
-    iconName: 'FaUtensils',
+    icon: <FaUtensils />,
   },
   7: {
     gradient: 'from-green-400 via-green-300 to-green-400',
-    iconName: 'FaCouch',
+    icon: <FaCouch />,
   },
   8: {
     gradient: 'from-pink-400 via-pink-300 to-pink-400',
-    iconName: 'FaTshirt',
+    icon: <FaTshirt />,
   },
   9: {
     gradient: 'from-sky-400 via-sky-300 to-sky-400',
-    iconName: 'FaCamera',
+    icon: <FaCamera />,
   },
   10: {
     gradient: 'from-lime-400 via-lime-300 to-lime-400',
-    iconName: 'FaSkating',
+    icon: <FaSkating />,
   },
   11: {
     gradient: 'from-purple-400 via-purple-300 to-purple-400',
-    iconName: 'FaGamepad',
+    icon: <FaGamepad />,
   },
   12: {
     gradient: 'from-sky-400 via-sky-300 to-sky-400',
-    iconName: 'FaBook',
+    icon: <FaBook />,
   },
   13: {
     gradient: 'from-rose-400 via-rose-300 to-rose-400',
-    iconName: 'FaSmile',
+    icon: <FaSmile />,
   },
   14: {
     gradient: 'from-emerald-400 via-emerald-300 to-emerald-400',
-    iconName: 'FaUtensils',
+    icon: <FaUtensils />,
   },
   15: {
     gradient: 'from-cyan-400 via-cyan-300 to-cyan-400',
-    iconName: 'FaTools',
+    icon: <FaTools />,
   },
   16: {
     gradient: 'from-red-400 via-red-300 to-red-400',
-    iconName: 'FaBicycle',
+    icon: <FaBicycle />,
   },
   17: {
     gradient: 'from-teal-400 via-teal-300 to-teal-400',
-    iconName: 'FaPlane',
+    icon: <FaPlane />,
   },
   18: {
     gradient: 'from-gray-400 via-gray-300 to-gray-400',
-    iconName: 'FaTools',
+    icon: <FaTools />,
   },
   19: {
     gradient: 'from-amber-400 via-amber-300 to-amber-400',
-    iconName: 'FaGift',
+    icon: <FaGift />,
   },
   20: {
     gradient: 'from-green-400 via-green-300 to-green-400',
-    iconName: 'FaSeedling',
+    icon: <FaSeedling />,
   },
   21: {
     gradient: 'from-teal-400 via-teal-300 to-teal-400',
-    iconName: 'FaStethoscope',
+    icon: <FaStethoscope />,
   },
   22: {
     gradient: 'from-violet-400 via-violet-300 to-violet-400',
-    iconName: 'FaMusic',
+    icon: <FaMusic />,
   },
   23: {
     gradient: 'from-orange-400 via-orange-300 to-orange-400',
-    iconName: 'FaPaintBrush',
+    icon: <FaPaintBrush />,
   },
   24: {
     gradient: 'from-gray-400 via-gray-300 to-gray-400',
-    iconName: 'FaFilm',
+    icon: <FaFilm />,
   },
   25: {
     gradient: 'from-lime-400 via-lime-300 to-lime-400',
-    iconName: 'FaDumbbell',
+    icon: <FaDumbbell />,
   },
   26: {
     gradient: 'from-sky-400 via-sky-300 to-sky-400',
-    iconName: 'FaMedkit',
+    icon: <FaMedkit />,
   },
 };
 
+// ✅ مكون الكارد القابل لإعادة الاستخدام
 export default function RotatedCard({ number, text }) {
-  const [IconComponent, setIconComponent] = useState(() => DefaultIcon);
-  const { gradient, iconName } = cardStyles[number] || cardStyles[1];
-
-  useEffect(() => {
-    const loadIcon = async () => {
-      try {
-        if (icons[iconName]) {
-          if (typeof icons[iconName] === 'function') {
-            setIconComponent(() => icons[iconName]);
-          } else {
-            const Icon = await icons[iconName];
-            setIconComponent(() => Icon);
-          }
-        }
-      } catch (error) {
-        console.error(`Failed to load icon ${iconName}:`, error);
-        setIconComponent(() => DefaultIcon);
-      }
-    };
-
-    loadIcon();
-  }, [iconName]);
+  const { gradient, icon } = cardStyles[number] || cardStyles[1];
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
+      transition={{ duration: 0.5, ease: 'easeOut' }}
       whileHover={{
-        scale: 1.03, // تقليل تأثير التحويم للشاشات الأصغر
-        boxShadow: '0px 5px 10px rgba(0, 0, 0, 0.1)', // تقليل الظل
+        scale: 1.08,
+        boxShadow: '0px 15px 25px rgba(0, 0, 0, 0.25)',
       }}
-      className={`relative flex items-center justify-between w-full sm:w-64 md:w-72 lg:w-80 h-8 sm:h-10 bg-gradient-to-r ${gradient} text-white rounded-full shadow-md p-3 sm:p-4 md:p-5 cursor-pointer transition-all duration-200`}
+      className={`relative flex items-center justify-between w-full xl:w-80 h-10 xl:h-12 bg-gradient-to-r ${gradient} text-white rounded-full shadow-xl p-5 cursor-pointer hover:shadow-2xl transition-all duration-300`}
     >
-      <div className="flex items-center gap-2 sm:gap-3">
+      <div className="flex items-center gap-3">
+        {/* الأيقونة داخل دائرة بتدرج لوني */}
         <motion.div
-          whileHover={{ rotate: 3 }} // تقليل تأثير التحويم للشاشات الأصغر
-          className="size-10 sm:size-12 md:size-16 lg:size-20 bg-white/20 backdrop-blur-md flex items-center justify-center rounded-full shadow-sm border border-white/30"
+          whileHover={{ rotate: 10 }}
+          className="size-8 md:size-16 xl:size-20 bg-white/20 backdrop-blur-lg flex items-center justify-center rounded-full shadow-lg border border-white/40"
         >
-          {/* افترض أن IconComponent يقبل خاصية size لتغيير حجم الأيقونة */}
-          {IconComponent && (
-            <IconComponent className="text-2xl sm:text-3xl md:text-4xl text-white" />
-          )}
+          <span
+            className="text-xl lg:text-4xl text-white"
+            style={{ textShadow: '3px 3px 6px rgba(0, 0, 0, 0.3)' }}
+          >
+            {icon}
+          </span>
         </motion.div>
 
+        {/* النصوص مع تحسين التصميم */}
         <div className="flex items-center">
           <motion.span
-            whileHover={{ scale: 1.02 }} // تقليل تأثير التحويم للشاشات الأصغر
-            className="text-4xl sm:text-6xl md:text-8xl font-bold opacity-90 text-white leading-none"
+            whileHover={{ scale: 1.1 }}
+            className="text-7xl lg:text-8xl font-bold opacity-90 text-white leading-none"
+            style={{ textShadow: '2px 2px 5px rgba(0, 0, 0, 0.3)' }}
           >
             {number}
           </motion.span>
           <motion.span
-            whileHover={{ scale: 1.01 }} // تقليل تأثير التحويم للشاشات الأصغر
-            className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-medium text-white/90"
+            whileHover={{ scale: 1.05 }}
+            className="text-2xl xl:text-3xl font-medium text-white/90"
+            style={{ textShadow: '1px 1px 4px rgba(0, 0, 0, 0.3)' }}
           >
             {text}
           </motion.span>
