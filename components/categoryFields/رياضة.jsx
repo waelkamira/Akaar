@@ -32,7 +32,7 @@ const sports = [
     name: 'type',
     label: 'نوع المنتج',
     icon: Icons.Type ? (
-      <Icons.Type className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Type className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -48,7 +48,7 @@ const sports = [
     name: 'sport',
     label: 'الرياضة',
     icon: Icons.Sport ? (
-      <Icons.Sport className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Sport className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -71,7 +71,7 @@ const sports = [
     name: 'equipmentType',
     label: 'نوع المعدات',
     icon: Icons.EquipmentType ? (
-      <Icons.EquipmentType className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.EquipmentType className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -89,7 +89,7 @@ const sports = [
     name: 'clothingType',
     label: 'نوع الملابس',
     icon: Icons.ClothingType ? (
-      <Icons.ClothingType className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.ClothingType className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -106,7 +106,7 @@ const sports = [
     name: 'size',
     label: 'المقاس',
     icon: Icons.Size ? (
-      <Icons.Size className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Size className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -125,7 +125,7 @@ const sports = [
     name: 'brand',
     label: 'الماركة',
     icon: Icons.Brand ? (
-      <Icons.Brand className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Brand className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -141,7 +141,7 @@ const sports = [
     name: 'material',
     label: 'المادة المصنوعة منها',
     icon: Icons.Material ? (
-      <Icons.Material className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Material className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -157,7 +157,7 @@ const sports = [
     name: 'condition',
     label: 'الحالة',
     icon: Icons.Condition ? (
-      <Icons.Condition className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Condition className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {

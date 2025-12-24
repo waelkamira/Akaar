@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-  @apply rubik;
+  @apply rubik select-none;
 }
 
 html {
@@ -14,10 +14,16 @@ html {
   font-family: var(--font-rubik); /* استخدم المتغير هنا */
 }
 
+.text-stroke {
+  -webkit-text-stroke: 3px rgb(210, 210, 210);
+  text-stroke: 3px rgb(210, 210, 210);
+  paint-order: stroke fill;
+}
+
 /* ✅ التحكم في عرض شريط التمرير */
 ::-webkit-scrollbar {
-  width: 5px; /* عرض شريط التمرير العمودي */
-  height: 5px; /* ارتفاع شريط التمرير الأفقي */
+  width: 4px; /* عرض شريط التمرير العمودي */
+  height: 4px; /* ارتفاع شريط التمرير الأفقي */
 }
 
 /* ✅ تغيير لون المسار (الخلفية) */
@@ -28,7 +34,7 @@ html {
 
 /* ✅ تغيير لون شريط التمرير */
 ::-webkit-scrollbar-thumb {
-  background: #afafaf; /* لون شريط التمرير */
+  background: #fb923c; /* لون شريط التمرير */
   border-radius: 20px; /* زوايا دائرية */
 }
 
@@ -54,6 +60,8 @@ pre {
   position: relative;
   height: 100%;
   z-index: 1;
+  margin-left: 10px;
+  margin-right: 10px;
   overflow: hidden;
 }
 
@@ -180,7 +188,8 @@ input[type='file'] {
   white-space: nowrap; /* منع التفاف النص */
   direction: rtl; /* ضبط اتجاه النص من اليمين إلى اليسار */
   text-align: right;
-  animation: typing 6s steps(40, end) infinite reverse,
+  animation:
+    typing 6s steps(40, end) infinite reverse,
     blink-caret 0.75s step-end infinite;
 }
 
@@ -280,9 +289,13 @@ input[type='file'] {
   border: 1px solid #fff; /* حد أبيض حول الطبقة */
   border-radius: inherit; /* يرث زوايا مستديرة من البطاقة */
   padding: 20px; /* مسافة داخلية */
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.1),
-    0 4px 8px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.1),
-    0 16px 32px rgba(0, 0, 0, 0.1), 0 32px 64px rgba(0, 0, 0, 0.1); /* ظل متعدد الطبقات */
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.1),
+    0 2px 4px rgba(0, 0, 0, 0.1),
+    0 4px 8px rgba(0, 0, 0, 0.1),
+    0 8px 16px rgba(0, 0, 0, 0.1),
+    0 16px 32px rgba(0, 0, 0, 0.1),
+    0 32px 64px rgba(0, 0, 0, 0.1); /* ظل متعدد الطبقات */
   position: relative; /* يسمح بتحديد موقع العناصر داخلها بشكل نسبي */
   left: 10px; /* يحرك الطبقة قليلاً إلى اليمين */
   transition: left 1s; /* تأثير انتقالي عند التمرير */
@@ -294,9 +307,13 @@ input[type='file'] {
   color: #fff; /* لون النص الأبيض */
   background-color: var(--color); /* لون الخلفية باستخدام المتغير */
   border-radius: 50%; /* يجعل العنصر دائريًا */
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.1),
-    0 4px 8px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.1),
-    0 16px 32px rgba(0, 0, 0, 0.1), 0 32px 64px rgba(0, 0, 0, 0.1); /* ظل متعدد الطبقات */
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.1),
+    0 2px 4px rgba(0, 0, 0, 0.1),
+    0 4px 8px rgba(0, 0, 0, 0.1),
+    0 8px 16px rgba(0, 0, 0, 0.1),
+    0 16px 32px rgba(0, 0, 0, 0.1),
+    0 32px 64px rgba(0, 0, 0, 0.1); /* ظل متعدد الطبقات */
   font-size: 14px; /* حجم الخط */
   position: absolute; /* يحدد موقع العنصر بشكل مطلق */
   right: 5px; /* المسافة من اليمين */
@@ -477,7 +494,9 @@ input[type='file'] {
 
 body {
   @apply bg-neutral-50 text-neutral-800 rubik;
-  font-feature-settings: 'rlig' 1, 'calt' 1;
+  font-feature-settings:
+    'rlig' 1,
+    'calt' 1;
 }
 
 body {
@@ -494,7 +513,7 @@ html {
 
 /* Button styling */
 .btn {
-  @apply relative inline-flex items-center justify-center px-4 py-2 overflow-hidden font-medium transition-all rounded-md;
+  @apply relative inline-flex items-center justify-center px-4 py-2 overflow-hidden font-medium transition-all rounded-lg;
   background: var(--color-primary-500);
   color: white;
   z-index: 1;
@@ -544,7 +563,7 @@ input[type='file'] {
 }
 
 .custom-file-upload {
-  @apply inline-flex items-center justify-center px-4 py-2 font-medium text-white rounded-md cursor-pointer;
+  @apply inline-flex items-center justify-center px-4 py-2 font-medium text-white rounded-lg cursor-pointer;
   background: var(--color-primary-500);
   transition: all 0.3s ease;
 }
@@ -555,7 +574,7 @@ input[type='file'] {
 
 /* Card styling */
 .card {
-  @apply bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300;
+  @apply bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300;
 }
 
 .card:hover {
@@ -617,7 +636,8 @@ input[type='file'] {
   white-space: nowrap;
   direction: rtl;
   text-align: right;
-  animation: typing 6s steps(40, end) infinite reverse,
+  animation:
+    typing 6s steps(40, end) infinite reverse,
     blink-caret 0.75s step-end infinite;
 }
 
@@ -713,7 +733,7 @@ input[type='file'] {
 
 /* Colored cards */
 .colored-card {
-  @apply relative overflow-hidden rounded-xl transition-all duration-300;
+  @apply relative overflow-hidden rounded-lg transition-all duration-300;
   background: var(--color-primary-500);
 }
 

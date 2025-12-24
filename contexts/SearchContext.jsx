@@ -21,7 +21,7 @@ export function SearchProvider({ children, initialCategory }) {
   const [dynamicFilters, setDynamicFilters] = useState([]);
   const [shouldSearchOnLoad, setShouldSearchOnLoad] =
     useState(!!initialCategory);
-
+  console.log('filters from search context', filters);
   // Navigation
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -43,6 +43,7 @@ export function SearchProvider({ children, initialCategory }) {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
   const [shouldScrollTop, setShouldScrollTop] = useState(false);
+  const [isNewSearch, setIsNewSearch] = useState(true); // إضافة حالة لتتبع إذا كان بحث جديد
 
   // Handle URL query changes
   useEffect(() => {
@@ -63,14 +64,12 @@ export function SearchProvider({ children, initialCategory }) {
     }
 
     try {
-      // console.log(`Loading filters for category: ${categoryObj.name}`);
       const selectedModule = await import(
         `../components/categoryFields/${categoryObj.name}.jsx`
       );
       const filters = Array.isArray(selectedModule.default)
         ? selectedModule.default
         : [];
-      // console.log('Loaded filters:', filters);
       return filters;
     } catch (err) {
       console.error(`Failed to load filters for ${categoryObj.name}:`, err);
@@ -99,7 +98,6 @@ export function SearchProvider({ children, initialCategory }) {
       // Extract categoryId from pathname
       const categoryIdMatch = pathname.match(/\/search\/categoryId=(\d+)/);
       const categoryId = categoryIdMatch ? categoryIdMatch[1] : null;
-      // console.log('URL Category ID:', categoryId);
 
       setLoading(true);
       try {
@@ -124,8 +122,6 @@ export function SearchProvider({ children, initialCategory }) {
           return;
         }
 
-        // console.log('Loading category:', categoryObj);
-
         // Load dynamic filters first
         const filters = await loadDynamicFilters(categoryObj);
 
@@ -138,8 +134,6 @@ export function SearchProvider({ children, initialCategory }) {
         });
         setPage(1);
         setShouldSearchOnLoad(true);
-
-        // console.log('Category and filters loaded successfully');
       } catch (err) {
         console.error('Error loading category:', err);
         setDynamicFilters([]);
@@ -151,9 +145,9 @@ export function SearchProvider({ children, initialCategory }) {
     handleUrlCategory();
   }, [pathname, loadDynamicFilters]);
 
-  // Perform search
+  // Perform search - التعديل الرئيسي هنا
   const performSearch = useCallback(
-    async (pageNum = 1, isLoadMore = false) => {
+    async (targetPage = page, isLoadMore = false) => {
       if (!isSearchPage) return;
 
       setLoading(true);
@@ -167,16 +161,14 @@ export function SearchProvider({ children, initialCategory }) {
             ...filters,
             details: filters.details || {},
           },
-          page: pageNum,
-          limit: 8,
+          page: targetPage,
+          limit: 20,
         };
 
         // Remove query from filters if it exists to avoid duplication
         if (searchBody.filters.query) {
           delete searchBody.filters.query;
         }
-
-        // console.log('Search request:', searchBody);
 
         const response = await fetch('/api/search', {
           method: 'POST',
@@ -189,27 +181,26 @@ export function SearchProvider({ children, initialCategory }) {
         }
 
         const data = await response.json();
-        // console.log('Search response:', data)
 
-        // Only update results based on whether it's a new search or load more
-        if (!isLoadMore) {
-          setResults(data.products);
-          setShouldScrollTop(true); // Signal that we want to scroll to top
-        } else {
-          setResults((prev) => [...prev, ...data.products]);
-        }
-
+        // التعديل الرئيسي: عرض النتائج الجديدة فقط وليس إضافتها للنتائج السابقة
+        setResults(data.products); // دائماً استبدال النتائج القديمة بالجديدة
         setTotalCount(data.totalCount);
         setHasMore(data.hasMore);
+
+        // إذا كان هذا بحث جديد وليس تحميل المزيد، ننتقل للأعلى
+        if (!isLoadMore) {
+          setShouldScrollTop(true);
+        }
       } catch (err) {
         console.error('Search error:', err);
-        setError('Failed to fetch results');
-        if (!isLoadMore) {
-          setResults([]);
-          setTotalCount(0);
-        }
+        setError(
+          'لم يتم العثور على نتائج مطابقة قم بتعديل كلمات البحث للحصول على نتائج أفضل'
+        );
+        setResults([]);
+        setTotalCount(0);
       } finally {
         setLoading(false);
+        setIsNewSearch(false);
       }
     },
     [searchQuery, category, filters, isSearchPage]
@@ -217,8 +208,8 @@ export function SearchProvider({ children, initialCategory }) {
 
   // Handle scrolling separately
   useEffect(() => {
-    if (shouldScrollTop && !loading) {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (shouldScrollTop && !loading && typeof window !== 'undefined') {
+      window.scrollTo({ top: 400, behavior: 'smooth' });
       setShouldScrollTop(false);
     }
   }, [shouldScrollTop, loading]);
@@ -235,16 +226,23 @@ export function SearchProvider({ children, initialCategory }) {
     [staticFilters.cities]
   );
 
+  // إضافة useEffect جديد لإدارة طلبات البحث عند تغيير الصفحة
+  useEffect(() => {
+    if (page > 1 && !shouldSearchOnLoad && !isNewSearch) {
+      performSearch(page, false); // false يعني أن هذا ليس تحميلاً للمزيد بل صفحة جديدة
+    }
+  }, [page, performSearch, shouldSearchOnLoad, isNewSearch]);
+
   // Remove automatic search trigger
   useEffect(() => {
     if (!isSearchPage) return;
 
     if (shouldSearchOnLoad) {
-      setPage(1);
+      setIsNewSearch(true); // تمييز أن هذا بحث جديد
       performSearch(1, false);
       setShouldSearchOnLoad(false);
     }
-  }, [shouldSearchOnLoad, loading, performSearch, isSearchPage]);
+  }, [shouldSearchOnLoad, performSearch, isSearchPage]);
 
   // Update URL when category changes (only on search page)
   useEffect(() => {
@@ -285,6 +283,7 @@ export function SearchProvider({ children, initialCategory }) {
         return newFilters;
       });
       setPage(1);
+      setIsNewSearch(true); // تمييز أن هذا بحث جديد
     },
     [searchQuery]
   );
@@ -317,6 +316,7 @@ export function SearchProvider({ children, initialCategory }) {
         return newFilters;
       });
       setPage(1);
+      setIsNewSearch(true); // تمييز أن هذا بحث جديد
       // Trigger search after removing filter
       setShouldSearchOnLoad(true);
     },
@@ -328,6 +328,7 @@ export function SearchProvider({ children, initialCategory }) {
     setFilters({});
     setSearchQuery('');
     setPage(1);
+    setIsNewSearch(true); // تمييز أن هذا بحث جديد
     // Trigger search after clearing filters
     setShouldSearchOnLoad(true);
   }, []);
@@ -338,6 +339,7 @@ export function SearchProvider({ children, initialCategory }) {
     setCategory(null);
     setSearchQuery('');
     setPage(1);
+    setIsNewSearch(true); // تمييز أن هذا بحث جديد
     // Trigger search after clearing everything
     setShouldSearchOnLoad(true);
   }, []);
@@ -346,9 +348,9 @@ export function SearchProvider({ children, initialCategory }) {
     if (!loading && hasMore) {
       const nextPage = page + 1;
       setPage(nextPage);
-      performSearch(nextPage, true);
+      // سيتم التعامل مع البحث عبر useEffect الجديد
     }
-  }, [loading, hasMore, page, performSearch]);
+  }, [loading, hasMore, page]);
 
   const value = {
     // Search state

@@ -3,7 +3,7 @@ import FormatDate from './FormatDate';
 
 export default function ItemSmallItem({ icon, text, value }) {
   return (
-    <div className="flex justify-start items-center bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 w-full h-14 sm:h-16 lg:h-20 my-2 sm:my-3 select-none p-3 sm:p-4 border border-gray-100">
+    <div className="flex justify-start items-center bg-white rounded-lg hover:shadow-lg transition-shadow duration-300 w-full h-14 sm:h-16 lg:h-20 my-2 sm:my-3 select-none p-3 sm:p-4 border border-gray-200">
       <span className="flex items-center text-primary-500 text-lg sm:text-xl mx-2 sm:mx-3">
         {icon}
       </span>

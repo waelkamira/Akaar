@@ -10,7 +10,7 @@ export default function FirstNavBar() {
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: 'easeOut', delay: 0.2 }}
-      className="hidden xl:flex xl:flex-col xl:justify-start w-full overflow-hidden z-[1000] shadow-lg bg-black/10"
+      className="hidden xl:flex xl:flex-col xl:justify-start w-full overflow-hidden z-[1000] shadow-lg bg-black/20"
     >
       {/* شريط التنقل الرئيسي */}
       <div className="flex justify-between items-center w-full px-4 py-2">
@@ -25,13 +25,15 @@ export default function FirstNavBar() {
                 href={button?.path}
                 className="relative flex items-center justify-center gap-1 w-full text-white font-sans text-lg transition-all duration-300 ease-in-out group hover:scale-105"
               >
-                {/* أيقونة الزر */}
-                <span className="mb-2 text-primary text-2xl">
-                  {button?.icon}
-                </span>
+                <div className="flex justify-center items-center gap-2">
+                  {/* أيقونة الزر */}
+                  <span className="text-primary text-2xl">{button?.icon}</span>
 
-                {/* نص الزر */}
-                <span className="relative text-center">{button?.title}</span>
+                  {/* نص الزر */}
+                  <span className="relative text-center text-sm font-bold">
+                    {button?.title}
+                  </span>
+                </div>
                 {/* خط أسفل الزر - تصميم جديد */}
                 <span className="absolute inset-x-0 bottom-0 h-[2px] bg-transparent group-hover:bg-gradient-to-r group-hover:from-transparent group-hover:via-primary group-hover:to-transparent transition-transform duration-500">
                   <motion.span
@@ -60,7 +62,7 @@ export default function FirstNavBar() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               transition={{ type: 'spring', stiffness: 400, damping: 20 }}
-              className="relative h-24 w-64 my-2"
+              className="relative h-16 w-44 my-2"
             >
               <Image
                 src="/logo1.png"

@@ -21,23 +21,23 @@ let jobs = [];
 try {
   // كائن لتجميع مكونات الأيقونات المستخدمة لتجنب التكرار
   const JobIconComponents = {
-    Title: <FaUserTie className="text-primary-500 text-lg sm:text-xl" />,
-    Company: <FaBuilding className="text-primary-500 text-lg sm:text-xl" />,
-    Location: <MdLocationOn className="text-primary-500 text-lg sm:text-xl" />,
-    Salary: <MdAttachMoney className="text-primary-500 text-lg sm:text-xl" />,
+    Title: <FaUserTie className="text-primary-400 text-md sm:text-lg" />,
+    Company: <FaBuilding className="text-primary-400 text-md sm:text-lg" />,
+    Location: <MdLocationOn className="text-primary-400 text-md sm:text-lg" />,
+    Salary: <MdAttachMoney className="text-primary-400 text-md sm:text-lg" />,
     EmploymentType: (
-      <MdAccessTime className="text-primary-500 text-lg sm:text-xl" />
+      <MdAccessTime className="text-primary-400 text-md sm:text-lg" />
     ),
-    JobCategory: <MdWork className="text-primary-500 text-lg sm:text-xl" />,
+    JobCategory: <MdWork className="text-primary-400 text-md sm:text-lg" />,
     EducationLevel: (
-      <FaGraduationCap className="text-primary-500 text-lg sm:text-xl" />
+      <FaGraduationCap className="text-primary-400 text-md sm:text-lg" />
     ),
-    Experience: <FaChartLine className="text-primary-500 text-lg sm:text-xl" />,
-    Skills: <FaLaptopCode className="text-primary-500 text-lg sm:text-xl" />,
+    Experience: <FaChartLine className="text-primary-400 text-md sm:text-lg" />,
+    Skills: <FaLaptopCode className="text-primary-400 text-md sm:text-lg" />,
     Description: (
-      <MdDescription className="text-primary-500 text-lg sm:text-xl" />
+      <MdDescription className="text-primary-400 text-md sm:text-lg" />
     ),
-    Deadline: <MdDateRange className="text-primary-500 text-lg sm:text-xl" />,
+    Deadline: <MdDateRange className="text-primary-400 text-md sm:text-lg" />,
   };
 
   // تعريف مصفوفة البيانات الرئيسية باستخدام الأيقونات المُجمعة

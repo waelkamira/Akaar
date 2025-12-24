@@ -59,7 +59,7 @@ export default function Footer() {
     },
     {
       name: 'متجري',
-      path: '/myPosts',
+      path: '/posts',
       icon: <User size={16} className="ml-2" />,
     },
     {
@@ -105,7 +105,7 @@ export default function Footer() {
   return (
     <footer className="bg-neutral-900 text-white w-full">
       {/* App Download Section */}
-      <div className="bg-gradient-to-r from-primary-600 to-primary-500 py-12">
+      <div className="bg-gradient-to-br from-primary-600 to-primary-400 py-12">
         <div className="container-custom mx-auto">
           <div className="flex flex-col lg:flex-row items-center justify-between">
             {/* Image Slider */}
@@ -114,7 +114,7 @@ export default function Footer() {
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
-              className="relative w-64 h-64 md:w-80 md:h-80 rounded-xl overflow-hidden mb-8 lg:mb-0"
+              className="relative w-64 h-64 md:w-80 md:h-80 rounded-lg overflow-hidden mb-8 lg:mb-0"
             >
               <motion.div
                 key={currentImageIndex}
@@ -128,7 +128,7 @@ export default function Footer() {
                   src={images[currentImageIndex] || '/placeholder.svg'}
                   alt={`Image ${currentImageIndex + 1}`}
                   fill
-                  className="object-cover rounded-xl"
+                  className="object-cover rounded-lg"
                   priority={currentImageIndex === 0}
                 />
               </motion.div>
@@ -204,7 +204,7 @@ export default function Footer() {
               viewport={{ once: true }}
               className="mb-8 md:mb-0"
             >
-              <h3 className="text-xl font-semibold mb-6 text-primary-300">
+              <h3 className="text-xl font-semibold mb-6 text-primary-500">
                 روابط سريعة
               </h3>
               <ul className="space-y-3">
@@ -212,7 +212,7 @@ export default function Footer() {
                   <li key={index}>
                     <Link
                       href={link.path}
-                      className="flex items-center text-neutral-400 hover:text-primary-300 transition-colors duration-200"
+                      className="flex items-center text-neutral-400 hover:text-primary-500 transition-colors duration-200"
                     >
                       {link.icon}
                       <span>{link.name}</span>
@@ -223,7 +223,7 @@ export default function Footer() {
                   <li>
                     <Link
                       href="/login"
-                      className="flex items-center text-neutral-400 hover:text-primary-300 transition-colors duration-200"
+                      className="flex items-center text-neutral-400 hover:text-primary-500 transition-colors duration-200"
                     >
                       <LogIn size={16} className="ml-2" />
                       <span>تسجيل الدخول</span>
@@ -233,7 +233,7 @@ export default function Footer() {
                   <li>
                     <Link
                       href="/profile"
-                      className="flex items-center text-neutral-400 hover:text-primary-300 transition-colors duration-200"
+                      className="flex items-center text-neutral-400 hover:text-primary-500 transition-colors duration-200"
                     >
                       <User size={16} className="ml-2" />
                       <span>الملف الشخصي</span>
@@ -250,20 +250,20 @@ export default function Footer() {
               transition={{ duration: 0.6, delay: 0.4 }}
               viewport={{ once: true }}
             >
-              <h3 className="text-xl font-semibold mb-6 text-primary-300">
+              <h3 className="text-xl font-semibold mb-6 text-primary-500">
                 معلومات الاتصال
               </h3>
               <ul className="space-y-3">
                 <li className="flex items-center text-neutral-400">
-                  <MapPin size={16} className="ml-2 text-primary-300" />
+                  <MapPin size={16} className="ml-2 text-primary-500" />
                   <span>سوريا - دمشق</span>
                 </li>
                 <li className="flex items-center text-neutral-400">
-                  <Phone size={16} className="ml-2 text-primary-300" />
+                  <Phone size={16} className="ml-2 text-primary-500" />
                   <span>+963 11 123 4567</span>
                 </li>
                 <li className="flex items-center text-neutral-400">
-                  <Mail size={16} className="ml-2 text-primary-300" />
+                  <Mail size={16} className="ml-2 text-primary-500" />
                   <span>info@Bayya.com</span>
                 </li>
 
@@ -297,7 +297,7 @@ export default function Footer() {
               transition={{ duration: 0.6, delay: 0.6 }}
               viewport={{ once: true }}
             >
-              <h3 className="text-xl font-semibold mb-6 text-primary-300">
+              <h3 className="text-xl font-semibold mb-6 text-primary-500">
                 ساعات العمل
               </h3>
               <ul className="space-y-2">
@@ -307,7 +307,7 @@ export default function Footer() {
                     className="flex justify-between items-center text-sm border-b border-neutral-800 pb-2"
                   >
                     <span className="text-neutral-400">{item.day}</span>
-                    <span className="text-primary-300 font-medium">
+                    <span className="text-primary-500 font-medium">
                       {item.hours}
                     </span>
                   </li>

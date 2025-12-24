@@ -27,6 +27,7 @@ export default function Hero({
       prevIndex === images.length - 1 ? 0 : prevIndex + 1
     );
   };
+
   useEffect(() => {
     if (!sliderRef.current) return;
 
@@ -40,13 +41,13 @@ export default function Hero({
   return (
     <div
       ref={sliderRef}
-      className="hidden sm:block w-full h-full overflow-hidden sm:h-96 z-50"
+      className="hidden sm:block w-full h-full overflow-hidden sm:h-64 z-50"
     >
       <SideBarMenu />{' '}
       {images.map((image, index) => (
         <div
           key={index}
-          className={`sm:h-96 w-full transition-opacity duration-500 ${
+          className={`sm:h-40 w-full transition-opacity duration-500 ${
             index === currentImageIndex ? 'opacity-100 z-10' : 'opacity-0 z-0'
           }`}
         >

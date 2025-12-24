@@ -24,7 +24,7 @@ const furniture = [
     name: 'type',
     label: 'نوع الأثاث',
     icon: Icons.Sofa ? (
-      <Icons.Sofa className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Sofa className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -44,7 +44,7 @@ const furniture = [
     name: 'material',
     label: 'المادة المصنوعة',
     icon: Icons.WoodenChair ? (
-      <Icons.WoodenChair className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.WoodenChair className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -64,7 +64,7 @@ const furniture = [
     name: 'color',
     label: 'اللون',
     icon: Icons.ColorFill ? (
-      <Icons.ColorFill className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.ColorFill className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -85,7 +85,7 @@ const furniture = [
     name: 'dimensions',
     label: 'الأبعاد',
     icon: Icons.Ruler ? (
-      <Icons.Ruler className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Ruler className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -100,7 +100,7 @@ const furniture = [
     name: 'style',
     label: 'النمط التصميمي',
     icon: Icons.MeetingRoom ? (
-      <Icons.MeetingRoom className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.MeetingRoom className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -119,7 +119,7 @@ const furniture = [
     name: 'condition',
     label: 'الحالة',
     icon: Icons.Boxes ? (
-      <Icons.Boxes className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Boxes className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -134,7 +134,7 @@ const furniture = [
     name: 'assembly',
     label: 'التجميع',
     icon: Icons.OfficeChair ? (
-      <Icons.OfficeChair className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.OfficeChair className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {

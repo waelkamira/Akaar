@@ -94,8 +94,8 @@ export default function Item({ fields }) {
                     </h1>
                   </div>
 
-                  <div className="bg-white  p-4 w-full rounded-[5px]">
-                    <pre className="flex justify-start items-start bg-white rounded-[5px] h-72 overflow-y-auto text-md sm:text-xl w-full shadow-sm shadow-gray-300 min-h-20 my-2 p-2 select-none">
+                  <div className="bg-white  p-4 w-full rounded-lg">
+                    <pre className="flex justify-start items-start bg-white rounded-lg h-72 overflow-y-auto text-md sm:text-xl w-full shadow-sm shadow-gray-300 min-h-20 my-2 p-2 select-none">
                       {fields?.description}
                     </pre>
                   </div>

@@ -52,7 +52,7 @@ export default function ContactUs() {
     <div className="flex justify-center items-center w-full ">
       <label htmlFor=""></label>
       <form
-        className="flex flex-col items-center gap-4 mt-16 xl:mt-52 w-full xl:w-[70%] border border-gray-300 rounded-[5px] p-4 m-2 xl:p-16"
+        className="flex flex-col items-center gap-4 mt-16 xl:mt-52 w-full xl:w-[70%] border border-gray-300 rounded-lg p-4 m-2 xl:p-16"
         ref={form}
         onSubmit={sendEmail}
       >
@@ -102,12 +102,12 @@ export default function ContactUs() {
             }
             required
             name="message"
-            className="w-full rounded-[5px] outline-none border border-gray-300 focus:border-primary-500 p-2 border-secondary text-sm sm:text-lg lg:text-xl min-h-[200px]"
+            className="w-full rounded-lg outline-none border border-gray-300 focus:border-primary-500 p-2 border-secondary text-sm sm:text-lg lg:text-xl min-h-[200px]"
           />
         </div>
 
         <button
-          className=" btn flex justify-center items-center my-2 sm:text-lg text-sm p-0.5 lg:p-3 text-white text-nowrap select-none rounded-[5px] w-full max-h-12 hover:scale-[101%]"
+          className=" btn flex justify-center items-center my-2 sm:text-lg text-sm p-0.5 lg:p-3 text-white text-nowrap select-none rounded-lg w-full max-h-12 hover:scale-[101%]"
           type="submit"
         >
           ارسال

@@ -36,7 +36,7 @@ const jewelry = [
     name: 'productType',
     label: 'نوع المجوهرات',
     icon: Icons.ProductType ? (
-      <Icons.ProductType className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.ProductType className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -55,7 +55,7 @@ const jewelry = [
     name: 'metalType',
     label: 'نوع المعدن',
     icon: Icons.MetalType ? (
-      <Icons.MetalType className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.MetalType className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -73,7 +73,7 @@ const jewelry = [
     name: 'karat',
     label: 'العيار',
     icon: Icons.Karat ? (
-      <Icons.Karat className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Karat className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -91,7 +91,7 @@ const jewelry = [
     name: 'gemstone',
     label: 'الحجر الكريم',
     icon: Icons.Gemstone ? (
-      <Icons.Gemstone className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Gemstone className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -110,7 +110,7 @@ const jewelry = [
     name: 'style',
     label: 'النمط التصميمي',
     icon: Icons.Style ? (
-      <Icons.Style className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Style className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -127,7 +127,7 @@ const jewelry = [
     name: 'brand',
     label: 'الماركة',
     icon: Icons.Brand ? (
-      <Icons.Brand className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Brand className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -144,7 +144,7 @@ const jewelry = [
     name: 'gender',
     label: 'الجنس',
     icon: Icons.Gender ? (
-      <Icons.Gender className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Gender className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -158,7 +158,7 @@ const jewelry = [
     name: 'occasion',
     label: 'المناسبة',
     icon: Icons.Occasion ? (
-      <Icons.Occasion className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Occasion className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -174,7 +174,7 @@ const jewelry = [
     name: 'condition',
     label: 'الحالة',
     icon: Icons.Condition ? (
-      <Icons.Condition className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Condition className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {

@@ -29,7 +29,7 @@ const cars = [
     name: 'adType',
     label: 'بيع/أجار',
     icon: Icons.AdType ? (
-      <Icons.AdType className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.AdType className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: 'بيع/أجار',
     options: {
@@ -41,7 +41,7 @@ const cars = [
     name: 'brand',
     label: 'الماركة',
     icon: Icons.Brand ? (
-      <Icons.Brand className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Brand className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: 'تويوتا',
     options: {
@@ -167,7 +167,7 @@ const cars = [
     name: 'model',
     label: 'الموديل',
     icon: Icons.Model ? (
-      <Icons.Model className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Model className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: 'الموديل',
   },
@@ -175,7 +175,7 @@ const cars = [
     name: 'year',
     label: 'السنة',
     icon: Icons.Year ? (
-      <Icons.Year className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Year className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: 'السنة',
     options: {
@@ -262,7 +262,7 @@ const cars = [
     name: 'condition',
     label: 'الحالة',
     icon: Icons.Condition ? (
-      <Icons.Condition className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Condition className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: 'الحالة',
     options: {
@@ -274,7 +274,7 @@ const cars = [
     name: 'fuelType',
     label: 'الوقود',
     icon: Icons.FuelType ? (
-      <Icons.FuelType className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.FuelType className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: 'الوقود',
     options: {
@@ -288,7 +288,7 @@ const cars = [
     name: 'mileage',
     label: 'الكيلومترات',
     icon: Icons.Mileage ? (
-      <Icons.Mileage className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Mileage className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: 'الكيلومترات',
     options: {

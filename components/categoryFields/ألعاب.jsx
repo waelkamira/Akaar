@@ -35,7 +35,7 @@ const games = [
     name: 'type',
     label: 'نوع اللعبة',
     icon: Icons.Type ? (
-      <Icons.Type className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Type className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -53,7 +53,7 @@ const games = [
     name: 'platform',
     label: 'المنصة',
     icon: Icons.Platform ? (
-      <Icons.Platform className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Platform className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -71,7 +71,7 @@ const games = [
     name: 'genre',
     label: 'النوع',
     icon: Icons.Genre ? (
-      <Icons.Genre className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Genre className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -91,7 +91,7 @@ const games = [
     name: 'boardGameType',
     label: 'نوع اللعبة اللوحية',
     icon: Icons.BoardGameType ? (
-      <Icons.BoardGameType className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.BoardGameType className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -107,7 +107,7 @@ const games = [
     name: 'minAge',
     label: 'الحد الأدنى للعمر',
     icon: Icons.MinAge ? (
-      <Icons.MinAge className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.MinAge className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -123,7 +123,7 @@ const games = [
     name: 'players',
     label: 'عدد اللاعبين',
     icon: Icons.Players ? (
-      <Icons.Players className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Players className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -139,7 +139,7 @@ const games = [
     name: 'brand',
     label: 'الماركة',
     icon: Icons.Brand ? (
-      <Icons.Brand className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Brand className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -155,7 +155,7 @@ const games = [
     name: 'condition',
     label: 'الحالة',
     icon: Icons.Condition ? (
-      <Icons.Condition className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Condition className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {

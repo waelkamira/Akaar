@@ -208,7 +208,7 @@ export default function EditePost() {
         if (typeof window !== 'undefined') {
           localStorage.setItem('item', JSON.stringify(updatedPost));
         }
-        router.push('/myPosts');
+        router.push('/posts');
       } else {
         toast.error('حدث خطأ أثناء تحديث الإعلان');
       }

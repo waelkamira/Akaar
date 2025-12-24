@@ -1,28 +1,15 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import LoadingPhoto from '../photos/LoadingPhoto';
 import Image from 'next/image';
-import { formatDistanceToNow } from 'date-fns';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { useSession } from 'next-auth/react';
 
-export default function UserNameAndPhoto({ post, size }) {
-  const session = useSession();
-  const path = usePathname();
+export default function UserNameAndPhoto({ post, size, rounded }) {
   const [user, setUser] = useState(null);
+  const imageSize = size || 'size-10 sm:size-12 lg:size-14';
 
-  // تعيين حجم الصورة بناءً على المسار والحجم الممرر
-  const imageSize = size || 'size-12 sm:size-14 lg:size-16';
-
-  // استخدم useCallback لتجنب إعادة إنشاء الدالة في كل مرة يتم فيها إعادة عرض المكون
-  const formatDate = useCallback((dateString) => {
-    const date = new Date(dateString);
-    return isNaN(date)
-      ? 'Invalid date'
-      : formatDistanceToNow(date, { addSuffix: true });
-  }, []);
+  console.log('post', post?.userImage);
 
   useEffect(() => {
     // تحميل بيانات المستخدم من localStorage
@@ -42,49 +29,40 @@ export default function UserNameAndPhoto({ post, size }) {
   }, []);
 
   return (
-    <div className="flex justify-start items-center gap-2 w-full text-black">
+    <div
+      className={
+        (rounded ? 'rounded-lg' : '') +
+        ` absolute top-0 right-0 z-10 flex justify-start items-center gap-2 w-full p-2 h-10 mt-2`
+      }
+    >
       <Link
-        href={'/profile'}
+        href={post?.userId ? `/posts/${post?.userId}` : '/profile'}
         className={
-          size
-            ? 'flex flex-col justify-center items-center gap-4'
-            : 'flex justify-start items-center gap-2' +
-              ' w-full h-fit cursor-pointer '
+          size +
+          ' flex justify-between items-center gap-2 w-full h-fit cursor-pointer '
         }
       >
-        <div className={`relative ${imageSize} overflow-hidden rounded-full`}>
-          {/* تحقق من وجود صورة */}
-          {user?.userImage ? (
-            <Image
-              priority
-              src={user?.userImage}
-              fill
-              alt="userImage"
-              style={{ objectFit: 'cover' }}
-            />
-          ) : (
-            <LoadingPhoto />
-          )}
-        </div>
-        <div className="flex flex-col justify-center">
-          <h6
-            className={
-              size
-                ? 'text-lg '
-                : 'text-[11px] sm:text-[15px] ' +
-                  ` text-eight select-none font-medium`
-            }
-          >
-            {user?.username}
-          </h6>
-          {post && (
-            <h1
-              className={`text-[8px] sm:text-[12px] text-black/70 select-none text-end`}
-              dir="ltr"
-            >
-              {formatDate(post?.createdAt) || ''}
-            </h1>
-          )}
+        <div className="flex justify-center items-center gap-2">
+          {' '}
+          <div className={`relative ${imageSize} overflow-hidden rounded-full`}>
+            {/* تحقق من وجود صورة */}
+            {post?.userImage || user?.userImage ? (
+              <Image
+                priority
+                src={post?.userImage || user?.userImage || '/placeholder.jpg'}
+                fill
+                alt="userImage"
+                style={{ objectFit: 'cover' }}
+              />
+            ) : (
+              <LoadingPhoto />
+            )}
+          </div>
+          <div className="flex flex-col justify-center">
+            <h6 className={` text-eight select-none font-medium text-white`}>
+              {post?.userName || user?.username}
+            </h6>
+          </div>
         </div>
       </Link>
     </div>

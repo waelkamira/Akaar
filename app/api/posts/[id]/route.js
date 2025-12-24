@@ -31,14 +31,15 @@ async function clearUserPostsCache(userId) {
   });
 }
 
-export async function GET(req) {
+export async function GET(req, { params }) {
+  const { id } = await params;
   const url = new URL(req.url);
   const page = parseInt(url.searchParams.get('page')) || 1;
   const limit = parseInt(url.searchParams.get('limit')) || 5;
-  const userId = url.searchParams.get('userId') || '';
 
+  console.log('id', id);
   try {
-    if (!userId) {
+    if (!id) {
       return new Response(
         JSON.stringify({ message: 'يجب توفير معرف المستخدم' }),
         { status: 400 }
@@ -53,7 +54,7 @@ export async function GET(req) {
     }
 
     const skip = (page - 1) * limit;
-    const cacheKey = generatePostsCacheKey(userId, page, limit);
+    const cacheKey = generatePostsCacheKey(id, page, limit);
 
     // التحقق من الذاكرة المؤقتة
     const cachedData = cache.get(cacheKey);
@@ -69,15 +70,15 @@ export async function GET(req) {
 
     // جلب البيانات من قاعدة البيانات
     const [totalCount, products] = await Promise.all([
-      prisma.product.count({ where: { userId } }),
+      prisma.product.count({ where: { userId: id } }),
       prisma.product.findMany({
-        where: { userId },
+        where: { userId: id },
         skip,
         take: limit,
         orderBy: { createdAt: 'desc' },
       }),
     ]);
-
+    console.log('products', products);
     if (products.length === 0) {
       return new Response(
         JSON.stringify({ message: 'لم يتم العثور على إعلانات' }),
@@ -108,13 +109,12 @@ export async function GET(req) {
   }
 }
 
-export async function DELETE(req) {
+export async function DELETE(req, { params }) {
+  const { id } = params;
   const url = new URL(req.url);
   const searchParams = url.searchParams;
-  const id = searchParams.get('id');
-  const userId = searchParams.get('userId');
 
-  if (!id || !userId) {
+  if (!id) {
     return new Response(
       JSON.stringify({ error: 'يجب توفير معرف الإعلان ومعرف المستخدم' }),
       { status: 400 }
@@ -124,7 +124,7 @@ export async function DELETE(req) {
   try {
     // تحقق إذا كانت الإعلان موجودة
     const product = await prisma.product.findFirst({
-      where: { id, userId },
+      where: { userId: id },
     });
 
     if (!product) {
@@ -140,7 +140,7 @@ export async function DELETE(req) {
     await prisma.product.delete({ where: { id } });
 
     // تنظيف الذاكرة المؤقتة للمستخدم
-    await clearUserPostsCache(userId);
+    await clearUserPostsCache(id);
 
     return new Response(JSON.stringify({ message: 'تم الحذف بنجاح ✔' }), {
       status: 200,

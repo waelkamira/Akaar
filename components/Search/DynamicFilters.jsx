@@ -2,21 +2,12 @@
 import { useSearch } from '../../contexts/SearchContext';
 import { useCallback, useState, useEffect } from 'react';
 import DynamicField from './DynamicField';
-import { ImSearch, ImSpinner8 } from 'react-icons/im';
-import { motion, AnimatePresence } from 'framer-motion';
+import { ImSpinner8 } from 'react-icons/im';
+import { motion } from 'framer-motion';
 
 export default function DynamicFilters() {
-  const {
-    category,
-    filters,
-    setFilter,
-    dynamicFilters,
-    loading,
-    performSearch,
-  } = useSearch();
-  // console.log('category from dynamic filters', category);
+  const { category, filters, setFilter, dynamicFilters, loading } = useSearch();
   const [localValues, setLocalValues] = useState({});
-  const [isSearching, setIsSearching] = useState(false);
 
   useEffect(() => {
     if (filters.details) {
@@ -52,15 +43,6 @@ export default function DynamicFilters() {
     [filters.details, setFilter]
   );
 
-  const handleSearch = async () => {
-    setIsSearching(true);
-    try {
-      await performSearch();
-    } finally {
-      setIsSearching(false);
-    }
-  };
-
   if (!category) {
     return null;
   }
@@ -70,7 +52,7 @@ export default function DynamicFilters() {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="bg-white p-6 rounded-xl shadow-md border border-gray-100 mb-4"
+        className="bg-white p-6 rounded-lg shadow-md border border-gray-100 mb-4"
       >
         <div className="flex justify-center items-center py-4 space-x-2">
           <motion.div
@@ -90,7 +72,7 @@ export default function DynamicFilters() {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-4"
+        className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 mb-4"
       >
         <div className="text-gray-500 text-center py-4 flex flex-col items-center">
           <svg
@@ -118,7 +100,7 @@ export default function DynamicFilters() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="bg-white shadow-sm p-4 space-y-6 border border-gray-100"
+      className="bg-white shadow-sm p-4 space-y-6 border border-gray-100 rounded-lg"
     >
       <div className="flex items-center justify-between">
         <motion.h3
@@ -139,31 +121,6 @@ export default function DynamicFilters() {
           </svg>
           خصائص {category.name}
         </motion.h3>
-
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={handleSearch}
-          disabled={isSearching}
-          className="flex items-center gap-2 bg-gradient-to-r from-primary-500 to-primary-400 hover:bg-primary-600 text-white py-2 px-4 rounded-lg shadow-sm hover:shadow-md transition-all"
-        >
-          {isSearching ? (
-            <>
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-              >
-                <ImSpinner8 className="text-white" />
-              </motion.div>
-              <span>جاري البحث...</span>
-            </>
-          ) : (
-            <>
-              <ImSearch className="text-white" />
-              <span>بحث</span>
-            </>
-          )}
-        </motion.button>
       </div>
 
       <div className="space-y-6">

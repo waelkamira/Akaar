@@ -2,19 +2,16 @@
 import Button from '../../components/Buttons/Button';
 import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
-import React, { useContext, useEffect, useState } from 'react';
-import { inputsContext } from '../../components/authContext/Context';
+import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
 import CustomToast from '../../components/ReusableComponents/CustomToast';
 import LoadingPhoto from '../../components/photos/LoadingPhoto';
-import LoginButton from '../../components/Buttons/LoginButton';
 import { motion } from 'framer-motion';
 import { FaSave, FaSignOutAlt } from 'react-icons/fa';
 
 export default function Profile() {
   const session = useSession();
-  const { dispatch } = useContext(inputsContext);
   const [user, setUser] = useState('');
   const [userName, setUserName] = useState('');
 
@@ -68,12 +65,12 @@ export default function Profile() {
     // return <LoginButton />;
   }
   return (
-    <div className="flex flex-col items-center justify-start w-full min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 p-2 sm:p-12">
+    <div className="flex flex-col items-center justify-start mt-16 sm:mt-0 w-full min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 p-2 sm:p-12">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="flex flex-col w-full xl:w-[90%] 2xl:w-[70%] h-full px-6 py-8 bg-white shadow-2xl rounded-2xl border border-gray-200"
+        className="flex flex-col w-full xl:w-[90%] 2xl:w-[70%] h-full px-6 py-8 bg-white shadow-2xl rounded-lg border border-gray-200"
       >
         <div className="flex flex-col items-center gap-4 w-full">
           {/* Profile Image Section */}
@@ -110,7 +107,7 @@ export default function Profile() {
                 onChange={(e) => setUserName(e.target.value)}
                 autoFocus
                 placeholder="أدخل اسمك الجديد"
-                className="px-4 sm:py-1 text-lg text-gray-700 border rounded-sm w-full bg-gray-50 outline-none focus:border-transparent transition-all focus:outline-primary-400 placeholder:text-sm placeholder:sm:text-lg"
+                className="px-4 sm:py-1 text-lg text-gray-700 border rounded-lg w-full bg-gray-50 outline-none focus:border-transparent transition-all focus:outline-primary-400 placeholder:text-sm placeholder:sm:text-lg"
               />
             </div>
           </div>
@@ -133,7 +130,7 @@ export default function Profile() {
 
           {/* Links to Other Pages */}
           <div className="flex flex-col items-start gap-4 w-full mt-4">
-            <Link href="/myPosts">
+            <Link href="/posts">
               <h1 className="text-sm sm:text-lg text-gray-700 hover:text-primary-500 transition-all">
                 إعلاناتي
               </h1>
@@ -152,7 +149,7 @@ export default function Profile() {
                 signOut();
               }}
               emoji={<FaSignOutAlt />}
-              style=" btn text-white hover:bg-red-600 transition-all py-3 rounded-lg w-full text-lg font-semibold"
+              style=" btn font-bold text-white hover:bg-red-600 transition-all py-3 rounded-lg w-full text-lg font-semibold"
             />
           </div>
         </div>

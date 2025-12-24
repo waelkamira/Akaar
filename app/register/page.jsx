@@ -103,7 +103,7 @@ export default function RegisterPage() {
             name={'name'}
             placeholder="الإسم"
             {...register('name')}
-            className=" placeholder-gray-400 transition-all duration-300 placeholder:text-sm placeholder:sm:text-lg grow py-2 border border-gray-300 border-solid focus:border focus:outline-primary-500 outline-none rounded-[5px] px-2 w-full caret-primary-500  text-start"
+            className=" placeholder-gray-400 transition-all duration-300 placeholder:text-sm placeholder:sm:text-lg grow py-2 border border-gray-300 border-solid focus:border focus:outline-primary-500 outline-none rounded-lg px-2 w-full caret-primary-500  text-start"
           />
         </div>
         {errors?.name && (
@@ -120,7 +120,7 @@ export default function RegisterPage() {
             name={'email'}
             placeholder="الإيميل"
             {...register('email')}
-            className=" placeholder-gray-400 transition-all duration-300 placeholder:text-sm placeholder:sm:text-lg grow py-2 border border-gray-300 border-solid focus:border focus:outline-primary-500 outline-none rounded-[5px] px-2 w-full caret-primary-500  text-start"
+            className=" placeholder-gray-400 transition-all duration-300 placeholder:text-sm placeholder:sm:text-lg grow py-2 border border-gray-300 border-solid focus:border focus:outline-primary-500 outline-none rounded-lg px-2 w-full caret-primary-500  text-start"
           />
         </div>
         {errors?.email && (
@@ -137,7 +137,7 @@ export default function RegisterPage() {
             name={'password'}
             placeholder="كلمة السر"
             {...register('password')}
-            className=" placeholder-gray-400 transition-all duration-300 placeholder:text-sm placeholder:sm:text-lg grow py-2 border border-gray-300 border-solid focus:border focus:outline-primary-500 outline-none rounded-[5px] px-2 w-full caret-primary-500  text-start"
+            className=" placeholder-gray-400 transition-all duration-300 placeholder:text-sm placeholder:sm:text-lg grow py-2 border border-gray-300 border-solid focus:border focus:outline-primary-500 outline-none rounded-lg px-2 w-full caret-primary-500  text-start"
           />
         </div>
         {errors?.password && (
@@ -146,7 +146,7 @@ export default function RegisterPage() {
           </h1>
         )}
         <div
-          className="flex justify-between w-full bg-white rounded-[5px] px-4 py-2 items-center my-8 hover:shadow-sm shadow-gray-300 cursor-pointer"
+          className="flex justify-between w-full bg-white rounded-lg px-4 py-2 items-center my-8 hover:shadow-sm shadow-gray-300 cursor-pointer"
           onClick={() => signIn('google')}
         >
           <div className="relative h-9 w-8">

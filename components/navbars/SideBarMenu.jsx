@@ -22,7 +22,6 @@ export default function SideBarMenu() {
   // مجموعة ألوان أنيقة
   const primaryColor = '#ffff';
   const secondaryColor = '#374151'; // رمادي داكن
-  const backgroundColor = 'rgba(255, 255, 255, 0.2)'; // أبيض شفاف
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -45,7 +44,7 @@ export default function SideBarMenu() {
       <div className="xl:hidden relative flex flex-col justify-start items-start gap-3 w-fit ">
         {/* زر فتح القائمة */}
         <TfiMenuAlt
-          className=" w-fit p-1 sm:m-2 text-4xl lg:text-5xl text-gray-400 sm:text-white cursor-pointer z-40 transition-transform duration-300 hover:scale-110"
+          className=" w-fit sm:p-1 sm:m-2 text-4xl text-gray-400 sm:text-white cursor-pointer z-40 transition-transform duration-500 hover:scale-110 sm:bg-black/20 rounded-lg hover:rotate-180"
           onClick={() => setIsOpen(!isOpen)}
         />
 
@@ -64,7 +63,7 @@ export default function SideBarMenu() {
               <div className="w-full flex justify-end">
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="text-3xl text-gray-600 hover:text-red-500 transition duration-200"
+                  className="text-white text-2xl font-bold hover:text-red-500 transition duration-200"
                 >
                   <IoCloseOutline />
                 </button>

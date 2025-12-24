@@ -91,7 +91,7 @@ const gifts = [
     label: 'فئة الهدية',
     // استخدام أيقونة الحقل الرئيسي كما كانت
     icon: Icons.GiftCategory ? (
-      <Icons.GiftCategory className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.GiftCategory className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     // *** التغيير الرئيسي هنا ***
@@ -121,7 +121,7 @@ const gifts = [
     name: 'wrapping',
     label: 'التغليف',
     icon: Icons.Wrapping ? (
-      <Icons.Wrapping className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Wrapping className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     // الخيارات هنا كانت بالفعل سلاسل نصية وهي صحيحة
@@ -135,7 +135,7 @@ const gifts = [
     name: 'personalization',
     label: 'التخصيص',
     icon: Icons.Personalization ? (
-      <Icons.Personalization className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Personalization className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     // الخيارات هنا كانت بالفعل سلاسل نصية وهي صحيحة
@@ -151,7 +151,7 @@ const gifts = [
     name: 'delivery',
     label: 'التوصيل',
     icon: Icons.Delivery ? (
-      <Icons.Delivery className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Delivery className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     // الخيارات هنا كانت بالفعل سلاسل نصية وهي صحيحة

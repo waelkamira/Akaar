@@ -37,7 +37,7 @@ const beauty = [
     name: 'productType',
     label: 'نوع المنتج',
     icon: Icons.ProductType ? (
-      <Icons.ProductType className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.ProductType className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -57,7 +57,7 @@ const beauty = [
     name: 'makeupType',
     label: 'نوع المكياج',
     icon: Icons.MakeupType ? (
-      <Icons.MakeupType className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.MakeupType className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -73,7 +73,7 @@ const beauty = [
     name: 'skinCareType',
     label: 'نوع العناية بالبشرة',
     icon: Icons.SkinCareType ? (
-      <Icons.SkinCareType className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.SkinCareType className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -91,7 +91,7 @@ const beauty = [
     name: 'skinType',
     label: 'نوع البشرة',
     icon: Icons.SkinType ? (
-      <Icons.SkinType className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.SkinType className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -109,7 +109,7 @@ const beauty = [
     name: 'hairType',
     label: 'نوع الشعر',
     icon: Icons.HairType ? (
-      <Icons.HairType className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.HairType className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -129,7 +129,7 @@ const beauty = [
     name: 'hairCareType',
     label: 'نوع العناية بالشعر',
     icon: Icons.HairCareType ? (
-      <Icons.HairCareType className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.HairCareType className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -147,7 +147,7 @@ const beauty = [
     name: 'fragranceType',
     label: 'نوع العطر',
     icon: Icons.FragranceType ? (
-      <Icons.FragranceType className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.FragranceType className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -163,7 +163,7 @@ const beauty = [
     name: 'color',
     label: 'اللون',
     icon: Icons.Color ? (
-      <Icons.Color className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Color className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -181,7 +181,7 @@ const beauty = [
     name: 'condition',
     label: 'الحالة',
     icon: Icons.Condition ? (
-      <Icons.Condition className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Condition className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {

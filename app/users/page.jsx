@@ -13,11 +13,11 @@ import Link from 'next/link';
 import SideBarMenu from '../../components/navbars/SideBarMenu';
 import { TfiMenuAlt } from 'react-icons/tfi';
 import Loading from '../../components/ReusableComponents/Loading';
-import NavegationPages from '../../components/ReusableComponents/NavegationPages';
+import Pagination from '../../components/ReusableComponents/Pagination';
 
 export default function Users() {
   const [isOpen, setIsOpen] = useState(false);
-  const [pageNumber, setPageNumber] = useState(1);
+  const [page, setPage] = useState(1);
   const [users, setUsers] = useState([]);
   const [findUser, setFindUser] = useState('');
   const [user, setUser] = useState('');
@@ -45,7 +45,7 @@ export default function Users() {
 
   async function fetchAllUsers() {
     const response = await fetch(
-      `/api/allUsers?pageNumber=${pageNumber}&searchQuery=${findUser}&limit=5&isAdmin=true`
+      `/api/allUsers?page=${page}&searchQuery=${findUser}&limit=5&isAdmin=true`
     );
     const json = await response.json();
     if (response.ok) {
@@ -76,7 +76,7 @@ export default function Users() {
   }
 
   const handleSearch = () => {
-    setPageNumber(1);
+    setPage(1);
     fetchAllUsers();
   };
 
@@ -159,18 +159,18 @@ export default function Users() {
             <Link href="#post1">
               <div
                 className="flex items-center justify-around cursor-pointer"
-                onClick={() => setPageNumber(pageNumber + 1)}
+                onClick={() => setPage(page + 1)}
               >
                 <h1 className=" ">الصفحة التالية</h1>
                 <MdKeyboardDoubleArrowRight className="text-2xl  text-primary-500 select-none" />
               </div>
             </Link>
           )}
-          {pageNumber > 1 && (
+          {page > 1 && (
             <Link href="#post1">
               <div
                 className="flex items-center justify-around cursor-pointer"
-                onClick={() => setPageNumber(pageNumber - 1)}
+                onClick={() => setPage(page - 1)}
               >
                 <MdKeyboardDoubleArrowLeft className="text-2xl  text-primary-500 select-none" />
                 <h1 className=" ">الصفحة السابقة</h1>
@@ -178,11 +178,7 @@ export default function Users() {
             </Link>
           )}
         </div> */}
-        <NavegationPages
-          array={users}
-          setPageNumber={setPageNumber}
-          pageNumber={pageNumber}
-        />
+        <Pagination array={users} setPage={setPage} page={page} />
       </div>
     </div>
   );

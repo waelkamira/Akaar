@@ -29,7 +29,7 @@ const agriculture = [
     name: 'type',
     label: 'نوع المنتج',
     icon: Icons.Type ? (
-      <Icons.Type className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Type className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -46,7 +46,7 @@ const agriculture = [
     name: 'plantType',
     label: 'نوع النبات',
     icon: Icons.PlantType ? (
-      <Icons.PlantType className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.PlantType className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -63,7 +63,7 @@ const agriculture = [
     name: 'fruitType',
     label: 'نوع الفاكهة (إن وجدت)',
     icon: Icons.FruitType ? (
-      <Icons.FruitType className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.FruitType className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -81,7 +81,7 @@ const agriculture = [
     name: 'vegetableType',
     label: 'نوع الخضار (إن وجدت)',
     icon: Icons.VegetableType ? (
-      <Icons.VegetableType className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.VegetableType className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -99,7 +99,7 @@ const agriculture = [
     name: 'growthCondition',
     label: 'ظروف النمو',
     icon: Icons.GrowthCondition ? (
-      <Icons.GrowthCondition className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.GrowthCondition className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -115,7 +115,7 @@ const agriculture = [
     name: 'wateringNeeds',
     label: 'احتياجات الري',
     icon: Icons.WateringNeeds ? (
-      <Icons.WateringNeeds className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.WateringNeeds className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -131,7 +131,7 @@ const agriculture = [
     name: 'soilType',
     label: 'نوع التربة المناسبة',
     icon: Icons.SoilType ? (
-      <Icons.SoilType className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.SoilType className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -147,7 +147,7 @@ const agriculture = [
     name: 'season',
     label: 'الموسم المناسب',
     icon: Icons.Season ? (
-      <Icons.Season className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Season className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -163,7 +163,7 @@ const agriculture = [
     name: 'harvestTime',
     label: 'وقت الحصاد',
     icon: Icons.HarvestTime ? (
-      <Icons.HarvestTime className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.HarvestTime className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {

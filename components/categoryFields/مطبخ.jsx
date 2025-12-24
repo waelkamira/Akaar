@@ -39,7 +39,7 @@ const kitchen = [
     name: 'productType',
     label: 'نوع المنتج',
     icon: Icons.ProductType ? (
-      <Icons.ProductType className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.ProductType className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -57,7 +57,7 @@ const kitchen = [
     name: 'furnitureType',
     label: 'نوع الأثاث',
     icon: Icons.FurnitureType ? (
-      <Icons.FurnitureType className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.FurnitureType className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -75,7 +75,7 @@ const kitchen = [
     name: 'tableShape',
     label: 'شكل الطاولة',
     icon: Icons.TableShape ? (
-      <Icons.TableShape className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.TableShape className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -90,7 +90,7 @@ const kitchen = [
     name: 'applianceType',
     label: 'نوع الجهاز',
     icon: Icons.ApplianceType ? (
-      <Icons.ApplianceType className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.ApplianceType className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -110,7 +110,7 @@ const kitchen = [
     name: 'cooktopType',
     label: 'نوع الموقد',
     icon: Icons.CooktopType ? (
-      <Icons.CooktopType className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.CooktopType className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -124,7 +124,7 @@ const kitchen = [
     name: 'capacity',
     label: 'السعة',
     icon: Icons.Capacity ? (
-      <Icons.Capacity className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Capacity className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: 'باللتر أو القدم المكعب',
     options: {
@@ -138,7 +138,7 @@ const kitchen = [
     name: 'material',
     label: 'المادة',
     icon: Icons.Material ? (
-      <Icons.Material className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Material className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -156,7 +156,7 @@ const kitchen = [
     name: 'color',
     label: 'اللون',
     icon: Icons.Color ? (
-      <Icons.Color className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Color className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -177,7 +177,7 @@ const kitchen = [
     name: 'style',
     label: 'النمط',
     icon: Icons.Style ? (
-      <Icons.Style className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Style className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -195,7 +195,7 @@ const kitchen = [
     name: 'dimensions',
     label: 'الأبعاد',
     icon: Icons.Dimensions ? (
-      <Icons.Dimensions className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Dimensions className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: 'الطول x العرض x الارتفاع',
   },
@@ -203,7 +203,7 @@ const kitchen = [
     name: 'condition',
     label: 'الحالة',
     icon: Icons.Condition ? (
-      <Icons.Condition className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Condition className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {

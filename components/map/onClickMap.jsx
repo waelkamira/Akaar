@@ -255,7 +255,7 @@ export default function OnClickMap({
         )}
       </>
 
-      <div className="w-full h-72 sm:h-[500px] rounded-[5px] overflow-hidden shadow-lg relative">
+      <div className="w-full h-72 sm:h-[500px] rounded-lg overflow-hidden shadow-lg relative">
         <button
           onClick={(e) => {
             e.preventDefault();

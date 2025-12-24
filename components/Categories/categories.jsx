@@ -16,7 +16,6 @@ import {
   FaTv,
   FaHome,
 } from 'react-icons/fa';
-import { BsFillHouseFill } from 'react-icons/bs';
 import { FaKitchenSet } from 'react-icons/fa6';
 import { GiJewelCrown, GiConverseShoe } from 'react-icons/gi';
 import { FaBagShopping } from 'react-icons/fa6';

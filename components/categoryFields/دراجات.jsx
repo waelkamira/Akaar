@@ -40,7 +40,7 @@ const bikes = [
     name: 'bikeType',
     label: 'نوع الدراجة',
     icon: Icons.BikeType ? (
-      <Icons.BikeType className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.BikeType className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -60,7 +60,7 @@ const bikes = [
     name: 'motorcycleType',
     label: 'نوع الدراجة النارية',
     icon: Icons.MotorcycleType ? (
-      <Icons.MotorcycleType className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.MotorcycleType className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -77,7 +77,7 @@ const bikes = [
     name: 'engineType',
     label: 'نوع المحرك',
     icon: Icons.EngineType ? (
-      <Icons.EngineType className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.EngineType className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -91,7 +91,7 @@ const bikes = [
     name: 'engineSize',
     label: 'سعة المحرك (للنارية)',
     icon: Icons.EngineSize ? (
-      <Icons.EngineSize className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.EngineSize className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -107,7 +107,7 @@ const bikes = [
     name: 'batteryRange',
     label: 'مدى البطارية (للدراجات الكهربائية)',
     icon: Icons.BatteryRange ? (
-      <Icons.BatteryRange className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.BatteryRange className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -121,7 +121,7 @@ const bikes = [
     name: 'frameMaterial',
     label: 'مادة الهيكل',
     icon: Icons.FrameMaterial ? (
-      <Icons.FrameMaterial className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.FrameMaterial className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -136,7 +136,7 @@ const bikes = [
     name: 'suspensionType',
     label: 'نوع التعليق',
     icon: Icons.SuspensionType ? (
-      <Icons.SuspensionType className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.SuspensionType className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -149,7 +149,7 @@ const bikes = [
     name: 'brakeType',
     label: 'نوع الفرامل',
     icon: Icons.BrakeType ? (
-      <Icons.BrakeType className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.BrakeType className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -162,7 +162,7 @@ const bikes = [
     name: 'color',
     label: 'اللون',
     icon: Icons.Color ? (
-      <Icons.Color className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Color className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -180,7 +180,7 @@ const bikes = [
     name: 'condition',
     label: 'الحالة',
     icon: Icons.Condition ? (
-      <Icons.Condition className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Condition className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -194,7 +194,7 @@ const bikes = [
     name: 'brand',
     label: 'الماركة',
     icon: Icons.Brand ? (
-      <Icons.Brand className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Brand className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -211,7 +211,7 @@ const bikes = [
     name: 'year',
     label: 'سنة الصنع',
     icon: Icons.Year ? (
-      <Icons.Year className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Year className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: 'أدخل سنة الصنع',
   },

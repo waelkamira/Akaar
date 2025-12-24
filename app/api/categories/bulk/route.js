@@ -2170,7 +2170,7 @@ export async function GET(req) {
 
   try {
     // جلب البيانات من قاعدة البيانات
-    console.log('🔄 [Cache Miss] جلب البيانات من قاعدة البيانات', cacheKey);
+    // console.log('🔄 [Cache Miss] جلب البيانات من قاعدة البيانات', cacheKey);
 
     // تحسين الاستعلام باستخدام Promise.all
     const results = await Promise.all(
@@ -2194,10 +2194,10 @@ export async function GET(req) {
     // تخزين البيانات في الذاكرة المؤقتة
     cache.set(cacheKey, formattedData);
     console.log('💾 [Cache Set]', cacheKey, 'الحجم:', cache.calculatedSize);
-    console.log('formattedData', formattedData);
+    // console.log('formattedData', formattedData);
     return NextResponse.json({
-      // data: formattedData,
-      data: fakeData,
+      data: formattedData,
+      // data: fakeData,
       meta: { source: 'database', cached: false },
     });
   } catch (error) {

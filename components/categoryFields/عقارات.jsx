@@ -26,7 +26,7 @@ const realEstate = [
     name: 'adType',
     label: 'بيع/أجار',
     icon: Icons.AdType ? (
-      <Icons.AdType className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.AdType className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -38,7 +38,7 @@ const realEstate = [
     name: 'rooms',
     label: 'الغرف',
     icon: Icons.Rooms ? (
-      <Icons.Rooms className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Rooms className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -54,7 +54,7 @@ const realEstate = [
     name: 'livingrooms',
     label: 'الصالونات',
     icon: Icons.Livingrooms ? (
-      <Icons.Livingrooms className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Livingrooms className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -70,7 +70,7 @@ const realEstate = [
     name: 'area',
     label: 'المساحة',
     icon: Icons.Area ? (
-      <Icons.Area className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Area className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '200 م²',
   },
@@ -78,7 +78,7 @@ const realEstate = [
     name: 'propertyType',
     label: 'نوع العقار',
     icon: Icons.PropertyType ? (
-      <Icons.PropertyType className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.PropertyType className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -95,7 +95,7 @@ const realEstate = [
     name: 'bathrooms',
     label: 'الحمامات',
     icon: Icons.Bathrooms ? (
-      <Icons.Bathrooms className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Bathrooms className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {

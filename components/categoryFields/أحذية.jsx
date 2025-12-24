@@ -31,7 +31,7 @@ const shoes = [
     name: 'type',
     label: 'نوع الحذاء',
     icon: Icons.RunningShoe ? (
-      <Icons.RunningShoe className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.RunningShoe className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -50,7 +50,7 @@ const shoes = [
     name: 'category',
     label: 'التصنيف',
     icon: Icons.ShirtOutline ? (
-      <Icons.ShirtOutline className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.ShirtOutline className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -64,7 +64,7 @@ const shoes = [
     name: 'size',
     label: 'المقاس',
     icon: Icons.Expand ? (
-      <Icons.Expand className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Expand className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -106,7 +106,7 @@ const shoes = [
     name: 'color',
     label: 'اللون',
     icon: Icons.Color ? (
-      <Icons.Color className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Color className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -128,7 +128,7 @@ const shoes = [
     name: 'material',
     label: 'المادة',
     icon: Icons.Sandal ? (
-      <Icons.Sandal className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Sandal className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -145,7 +145,7 @@ const shoes = [
     name: 'brand',
     label: 'الماركة',
     icon: Icons.SportMedal ? (
-      <Icons.SportMedal className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.SportMedal className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -163,7 +163,7 @@ const shoes = [
     name: 'usage',
     label: 'الاستخدام',
     icon: Icons.SportsHandball ? (
-      <Icons.SportsHandball className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.SportsHandball className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -179,7 +179,7 @@ const shoes = [
     name: 'condition',
     label: 'الحالة',
     icon: Icons.CleaningServices ? (
-      <Icons.CleaningServices className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.CleaningServices className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {

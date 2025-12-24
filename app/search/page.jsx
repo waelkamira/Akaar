@@ -5,9 +5,16 @@ import CategoryFilter from '../../components/Search/CategoryFilter';
 import StaticFilters from '../../components/Search/StaticFilters';
 import DynamicFilters from '../../components/Search/DynamicFilters';
 import SearchResults from '../../components/Search/SearchResults';
-import { useState, useCallback, useEffect } from 'react';
-import { FilterIcon, XIcon, SearchIcon, ChevronDownIcon } from 'lucide-react';
+import { useState, useCallback, useEffect, useContext } from 'react';
+import {
+  FilterIcon,
+  XIcon,
+  SearchIcon,
+  ChevronDownIcon,
+  SlidersHorizontalIcon,
+} from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { inputsContext } from '../../components/authContext/Context';
 
 function FiltersContent({ setShowFilters }) {
   const { category, performSearch } = useSearch();
@@ -38,7 +45,7 @@ function FiltersContent({ setShowFilters }) {
   }, [performSearch, setShowFilters]);
 
   return (
-    <div className="space-y-4 px-2">
+    <div>
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -52,21 +59,19 @@ function FiltersContent({ setShowFilters }) {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.1 }}
-          className=" rounded-xl border border-gray-100"
+          className=" rounded-lg border border-gray-100"
         >
-          <button
+          {/* <button
             onClick={() => toggleSection('category')}
             className="w-full flex justify-between items-center mb-2 ml-2"
           >
-            <h3 className="text-lg font-semibold text-gray-800 px-4">
-              التصنيفات
-            </h3>
+            <h3 className="text-lg font-semibold px-4">التصنيفات</h3>
             <ChevronDownIcon
               className={`h-5 w-5 text-gray-500 transition-transform ${
                 expandedSections.category ? 'rotate-180' : ''
               }`}
             />
-          </button>
+          </button> */}
           <AnimatePresence>
             {expandedSections.category && (
               <motion.div
@@ -87,15 +92,13 @@ function FiltersContent({ setShowFilters }) {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, delay: 0.2 }}
-        className=" rounded-xl border border-gray-100"
+        className=" rounded-lg border border-gray-100"
       >
         <button
           onClick={() => toggleSection('static')}
           className="w-full flex justify-between items-center mb-2 ml-2"
         >
-          <h3 className="text-lg font-semibold text-gray-800 px-4">
-            الفلاتر الأساسية
-          </h3>
+          <h3 className="text-lg font-semibold px-4">الفلاتر الأساسية</h3>
           <ChevronDownIcon
             className={`h-5 w-5 text-gray-500 transition-transform ${
               expandedSections.static ? 'rotate-180' : ''
@@ -122,13 +125,13 @@ function FiltersContent({ setShowFilters }) {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.3 }}
-          className=" rounded-xl border border-gray-100"
+          className=" rounded-lg border border-gray-100"
         >
           <button
             onClick={() => toggleSection('dynamic')}
             className="w-full flex justify-between items-center mb-2 ml-2"
           >
-            <h3 className="text-lg font-semibold text-gray-800 px-4">
+            <h3 className="text-lg font-semibold text-white px-4">
               فلاتر إضافية
             </h3>
             <ChevronDownIcon
@@ -162,7 +165,7 @@ function FiltersContent({ setShowFilters }) {
         <button
           onClick={handleSearch}
           disabled={isSearching}
-          className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-primary-500 to-primary-400 hover:from-primary-600 hover:to-primary-500 text-white py-3 px-4 rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-primary/30 disabled:opacity-50 active:scale-95"
+          className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-primary-500 to-primary-400 hover:from-primary-600 hover:to-primary-500 text-white py-3 px-4 rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-primary/30 disabled:opacity-50 active:scale-95"
         >
           {isSearching ? (
             <>
@@ -176,7 +179,7 @@ function FiltersContent({ setShowFilters }) {
           ) : (
             <>
               <SearchIcon className="h-5 w-5" />
-              <span>بحث</span>
+              <span>تطبيق الفلاتر و البحث</span>
             </>
           )}
         </button>
@@ -184,11 +187,11 @@ function FiltersContent({ setShowFilters }) {
     </div>
   );
 }
-
 export default function SearchPage({ searchParams }) {
   const [showFilters, setShowFilters] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const { searchQuery } = useSearch();
+  const { selected } = useContext(inputsContext);
 
   useEffect(() => {
     const handleResize = () => {
@@ -217,40 +220,10 @@ export default function SearchPage({ searchParams }) {
   return (
     <SearchProvider initialCategory={initialCategory}>
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 relative">
-        {/* Floating Action Button for Mobile Filters */}
-        {isMobile && (
-          <motion.button
-            onClick={() => setShowFilters(!showFilters)}
-            className="fixed bottom-6 right-6 z-50 bg-gradient-to-r from-primary-500 to-primary-400 hover:from-primary-600 hover:to-primary-500 text-white p-4 rounded-full shadow-2xl hover:shadow-3xl transition-all"
-            aria-label="Toggle Filters"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-          >
-            {showFilters ? (
-              <XIcon className="w-6 h-6" />
-            ) : (
-              <div className="relative">
-                <FilterIcon className="w-6 h-6" />
-                <motion.span
-                  className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center"
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ type: 'spring' }}
-                >
-                  3
-                </motion.span>
-              </div>
-            )}
-          </motion.button>
-        )}
-
-        <main className="container mx-auto px-4 py-8 w-full">
-          <div className="flex flex-col lg:flex-row gap-6 w-full">
+        <main className=" mx-auto px-4 py-8 w-full">
+          <div className="flex flex-col lg:flex-row gap-2 w-full">
             {/* Filters Sidebar - Always visible on desktop */}
-            <div className="lg:sticky lg:top-4 lg:self-start lg:h-[calc(100vh-2rem)] lg:overflow-y-auto lg:z-0 pb-16 lg:pb-4 px-2">
+            <div className="pb-8 z-50 sticky top-0">
               <AnimatePresence>
                 {(showFilters || !isMobile) && (
                   <>
@@ -265,17 +238,17 @@ export default function SearchPage({ searchParams }) {
                         stiffness: 300,
                       }}
                       className={`
-                        fixed lg:relative inset-0 lg:inset-auto w-full sm:w-96 lg:w-80
-                        h-screen lg:h-auto bg-white lg:bg-transparent z-40
-                        rounded-xl lg:border lg:border-gray-200 overflow-y-auto
+                        fixed lg:sticky top inset-0 lg:inset-auto w-72
+                        h-screen lg:h-auto lg:bg-transparent z-40
+                        rounded-lg lg:border lg:border-gray-200 overflow-y-auto
                       `}
                     >
-                      <div className="p-2 space-y-4">
+                      <div className="z-50 sticky top-0 p-2 space-y-4 bg-white">
                         {/* Mobile Header */}
                         {isMobile && (
                           <div className="flex justify-between items-center pb-4 border-b border-gray-200">
                             <h2 className="text-xl font-bold text-gray-900">
-                              الفلاتر المحددة
+                              {selected?.length} الفلاتر المحددة
                             </h2>
                             <button
                               onClick={() => setShowFilters(false)}
@@ -307,19 +280,45 @@ export default function SearchPage({ searchParams }) {
             </div>
 
             {/* Search Results */}
-            <section className="flex-1 min-w-0">
+            <section className="relative flex flex-col w-full lg:ml-6 sm:mt-0">
+              {/* الزر العائم لفلاتر وضع الهاتف والشاشات الصغيرة */}
+              {isMobile && (
+                <motion.button
+                  onClick={() => setShowFilters(!showFilters)}
+                  className="lg:hidden sticky top-[80px] left-6 z-30 w-fit bg-gradient-to-r from-blue-500 to-indigo-500 text-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 mr-4"
+                  aria-label="Toggle Filters"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                >
+                  {showFilters ? (
+                    <XIcon className="size-6" />
+                  ) : (
+                    <div className="relative">
+                      <span className="absolute -top-2 -right-2 bg-amber-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center border border-white shadow-sm font-medium">
+                        {selected?.length || 0}
+                      </span>
+                      <SlidersHorizontalIcon className="size-6" />
+                    </div>
+                  )}
+                </motion.button>
+              )}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden"
+                className=" rounded-lg shadow-sm border border-gray-200 overflow-hidden"
               >
-                <div className="p-6 lg:p-8">
+                <div className="p-2 lg:p-4">
                   <div className="flex justify-between items-center mb-6">
-                    <h1 className="text-2xl font-bold text-gray-400">
-                      نتائج البحث عن (
-                      <span className="text-black">{searchQuery}</span>)
-                    </h1>
+                    {searchQuery && (
+                      <h1 className="text-2xl font-bold text-gray-400">
+                        نتائج البحث عن (
+                        <span className="text-black">{searchQuery}</span>)
+                      </h1>
+                    )}
                     {!isMobile && (
                       <button
                         onClick={() => setShowFilters(!showFilters)}

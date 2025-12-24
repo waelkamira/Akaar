@@ -35,7 +35,7 @@ const bags = [
     name: 'productType',
     label: 'نوع الحقيبة',
     icon: Icons.ProductType ? (
-      <Icons.ProductType className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.ProductType className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -55,7 +55,7 @@ const bags = [
     name: 'style',
     label: 'النمط التصميمي',
     icon: Icons.Style ? (
-      <Icons.Style className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Style className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -74,7 +74,7 @@ const bags = [
     name: 'material',
     label: 'المادة المصنوعة',
     icon: Icons.Material ? (
-      <Icons.Material className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Material className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -91,7 +91,7 @@ const bags = [
     name: 'color',
     label: 'اللون',
     icon: Icons.Color ? (
-      <Icons.Color className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Color className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -112,7 +112,7 @@ const bags = [
     name: 'size',
     label: 'الحجم',
     icon: Icons.Size ? (
-      <Icons.Size className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Size className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -127,7 +127,7 @@ const bags = [
     name: 'capacity',
     label: 'السعة',
     icon: Icons.Capacity ? (
-      <Icons.Capacity className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Capacity className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -142,7 +142,7 @@ const bags = [
     name: 'features',
     label: 'المميزات',
     icon: Icons.Features ? (
-      <Icons.Features className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Features className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -158,7 +158,7 @@ const bags = [
     name: 'brand',
     label: 'الماركة',
     icon: Icons.Brand ? (
-      <Icons.Brand className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Brand className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -175,7 +175,7 @@ const bags = [
     name: 'condition',
     label: 'الحالة',
     icon: Icons.Condition ? (
-      <Icons.Condition className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Condition className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {

@@ -34,7 +34,7 @@ const books = [
     name: 'productType',
     label: 'نوع المنتج',
     icon: Icons.ProductType ? (
-      <Icons.ProductType className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.ProductType className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -52,7 +52,7 @@ const books = [
     name: 'genre',
     label: 'التصنيف الأدبي',
     icon: Icons.Genre ? (
-      <Icons.Genre className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Genre className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -73,7 +73,7 @@ const books = [
     name: 'author',
     label: 'المؤلف/المترجم',
     icon: Icons.Author ? (
-      <Icons.Author className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Author className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: 'اسم المؤلف أو المترجم',
   },
@@ -81,7 +81,7 @@ const books = [
     name: 'publisher',
     label: 'دار النشر',
     icon: Icons.Publisher ? (
-      <Icons.Publisher className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Publisher className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: 'اسم دار النشر',
   },
@@ -89,7 +89,7 @@ const books = [
     name: 'language',
     label: 'اللغة',
     icon: Icons.Language ? (
-      <Icons.Language className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Language className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -106,7 +106,7 @@ const books = [
     name: 'format',
     label: 'نوع النسخة',
     icon: Icons.Format ? (
-      <Icons.Format className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Format className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -122,7 +122,7 @@ const books = [
     name: 'edition',
     label: 'الطبعة',
     icon: Icons.Edition ? (
-      <Icons.Edition className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Edition className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: 'رقم الطبعة وسنة النشر',
   },
@@ -130,7 +130,7 @@ const books = [
     name: 'condition',
     label: 'الحالة',
     icon: Icons.Condition ? (
-      <Icons.Condition className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Condition className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -145,7 +145,7 @@ const books = [
     name: 'isbn',
     label: 'رقم ISBN',
     icon: Icons.ISBN ? (
-      <Icons.ISBN className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.ISBN className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: 'أدخل رقم ISBN إن وجد',
   },

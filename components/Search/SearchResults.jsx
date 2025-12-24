@@ -1,10 +1,10 @@
 'use client';
 
-import { useEffect } from 'react';
 import { useSearch } from '../../contexts/SearchContext';
 import { Loader2 } from 'lucide-react';
 import SmallCard from '../ReusableComponents/SmallCard/SmallCard';
 import { motion, AnimatePresence } from 'framer-motion';
+import Pagination from '../ReusableComponents/Pagination';
 
 export default function SearchResults() {
   const {
@@ -13,9 +13,9 @@ export default function SearchResults() {
     error,
     totalCount,
     hasMore,
-    loadMore,
     category,
-    filters,
+    setPage,
+    page,
   } = useSearch();
 
   // Show loading state
@@ -62,10 +62,7 @@ export default function SearchResults() {
         animate={{ y: 0 }}
         className="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3"
       >
-        <motion.p
-          whileHover={{ scale: 1.02 }}
-          className="text-sm text-gray-600 bg-gray-50 px-4 py-2 rounded-full inline-flex items-center"
-        >
+        <motion.p className="text-sm text-gray-600 bg-gray-50 px-4 py-2 rounded-full inline-flex items-center">
           <span className="font-medium text-primary mx-1">{totalCount}</span>
           نتيجة متاحة
           {category && (
@@ -88,18 +85,15 @@ export default function SearchResults() {
           )}
         </motion.p>
 
-        <motion.div
-          whileHover={{ scale: 1.05 }}
-          className="text-xs text-gray-500 bg-gray-50 px-3 py-1.5 rounded-full"
-        >
-          عرض {results?.length} من {totalCount}
+        <motion.div className="text-xs text-gray-500 bg-gray-50 px-3 py-1.5 rounded-full">
+          عرض {results?.length} من {totalCount - results?.length * page}
         </motion.div>
       </motion.div>
 
       {/* Results grid with beautiful animations */}
       <motion.div
         layout
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 "
       >
         <AnimatePresence>
           {results?.map((product, index) => (
@@ -116,64 +110,7 @@ export default function SearchResults() {
         </AnimatePresence>
       </motion.div>
 
-      {/* Load more button with beautiful effects */}
-      {hasMore && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="mt-10 text-center"
-        >
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={loadMore}
-            disabled={loading}
-            className="relative px-6 py-3 bg-gradient-to-r from-primary-500 to-primary-400 hover:bg-primary-600 text-white rounded-full shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden"
-          >
-            {loading && (
-              <motion.div
-                initial={{ width: 0 }}
-                animate={{ width: '100%' }}
-                transition={{ duration: 2, repeat: Infinity }}
-                className="absolute bottom-0 left-0 h-1 bg-white/30"
-              />
-            )}
-            <span className="flex items-center justify-center gap-2">
-              {loading ? (
-                <>
-                  <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{
-                      duration: 1,
-                      repeat: Infinity,
-                      ease: 'linear',
-                    }}
-                  >
-                    <Loader2 className="h-5 w-5" />
-                  </motion.div>
-                  جاري التحميل...
-                </>
-              ) : (
-                <>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  تحميل المزيد
-                </>
-              )}
-            </span>
-          </motion.button>
-        </motion.div>
-      )}
+      <Pagination hasMore={hasMore} setPage={setPage} page={page} />
     </motion.div>
   );
 }

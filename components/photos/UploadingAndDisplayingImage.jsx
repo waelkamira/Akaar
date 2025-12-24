@@ -123,7 +123,7 @@ export default function UploadingAndDisplayingImage({ images = [] }) {
   return (
     <div className="flex flex-col justify-center items-center w-full px-2 sm:px-8 h-full my-8">
       {/* الصورة الكبيرة في الأعلى */}
-      <div className="relative w-full min-h-72 lg:h-[500px] border border-gray-300 rounded-[5px] mb-4 bg-white">
+      <div className="flex justify-center items-center relative w-full min-h-72 lg:h-[500px] border border-gray-300 rounded-lg mb-4 bg-white">
         {isLoading ? (
           <LoadingPhoto />
         ) : filteredImages[0] ? (
@@ -136,7 +136,7 @@ export default function UploadingAndDisplayingImage({ images = [] }) {
                 fill
                 style={{ objectFit: 'cover' }}
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                className="rounded-[5px]"
+                className="rounded-lg"
               />
             </Link>
             <label
@@ -168,7 +168,7 @@ export default function UploadingAndDisplayingImage({ images = [] }) {
         {Array.from({ length: 4 }).map((_, index) => (
           <div
             key={index}
-            className="relative size-16 sm:size-32 border border-gray-300 rounded-[5px] flex justify-center items-center bg-white"
+            className="relative size-16 sm:size-32 border border-gray-300 rounded-lg flex justify-center items-center bg-white"
           >
             {isLoading ? (
               <LoadingPhoto />
@@ -181,7 +181,7 @@ export default function UploadingAndDisplayingImage({ images = [] }) {
                   fill
                   style={{ objectFit: 'cover' }}
                   // sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  className="rounded-[5px]"
+                  className="rounded-lg"
                 />
                 <label
                   htmlFor="file-upload"

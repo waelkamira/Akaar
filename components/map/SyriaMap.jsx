@@ -35,7 +35,7 @@ export default function SyriaMap({ lng = '', lat = '' }) {
 
   return (
     <div key={`${coords.lat}-${coords.lng}`} className="w-full z-40">
-      <div className="w-full h-72 sm:h-[500px] rounded-[5px] overflow-hidden">
+      <div className="w-full h-72 sm:h-[500px] rounded-lg overflow-hidden">
         <MapContainer
           key={`${coords.lat}-${coords.lng}`}
           center={[coords.lat, coords.lng]}

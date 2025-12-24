@@ -151,7 +151,7 @@ export default function RotatedCard({ number, text }) {
       }}
       className={`relative flex items-center justify-between w-full xl:w-80 h-10 xl:h-12 bg-gradient-to-r ${gradient} text-white rounded-full shadow-xl p-5 cursor-pointer hover:shadow-2xl transition-all duration-300`}
     >
-      <div className="flex items-center gap-3">
+      <div className="flex items-center justify-center gap-3">
         {/* الأيقونة داخل دائرة بتدرج لوني */}
         <motion.div
           whileHover={{ rotate: 10 }}
@@ -167,9 +167,16 @@ export default function RotatedCard({ number, text }) {
 
         {/* النصوص مع تحسين التصميم */}
         <div className="flex items-center">
+          {/* <motion.span
+            whileHover={{ scale: 1.1 }}
+            className="text-7xl lg:text-8xl font-bold opacity-90 text-white leading-none ml-2"
+            style={{ textShadow: '2px 2px 5px rgba(0, 0, 0, 0.3)' }}
+          >
+            {number}
+          </motion.span> */}
           <motion.span
             whileHover={{ scale: 1.1 }}
-            className="text-7xl lg:text-8xl font-bold opacity-90 text-white leading-none"
+            className="text-7xl lg:text-8xl font-bold leading-none ml-2 text-stroke"
             style={{ textShadow: '2px 2px 5px rgba(0, 0, 0, 0.3)' }}
           >
             {number}

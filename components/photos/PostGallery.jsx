@@ -79,7 +79,7 @@ const PostGallery = ({ post }) => {
       <div
         className={`relative h-64
           ${
-            path.includes('myPosts') || path.includes('favoritePosts')
+            path.includes('posts') || path.includes('favoritePosts')
               ? ''
               : 'sm:h-64'
           }  overflow-hidden ronded-[5px] w-full`}
@@ -115,7 +115,7 @@ const PostGallery = ({ post }) => {
               key={index}
               className={`relative h-64
           ${
-            path.includes('myPosts') || path.includes('favoritePosts')
+            path.includes('posts') || path.includes('favoritePosts')
               ? ''
               : 'sm:h-64'
           }  overflow-hidden ronded-[5px] w-full`}

@@ -6,7 +6,7 @@ import toast from 'react-hot-toast';
 import CustomToast from '../../components/ReusableComponents/CustomToast';
 import { useRouter } from 'next/navigation';
 
-const PostActions = ({ post, session, fetchMyPosts }) => {
+const PostActions = ({ post, session, fetchposts }) => {
   const [isVisible, setIsVisible] = useState(false);
   const router = useRouter();
 
@@ -28,7 +28,7 @@ const PostActions = ({ post, session, fetchMyPosts }) => {
     });
 
     if (response.ok) {
-      fetchMyPosts(userId); // تحديث القائمة بعد الحذف
+      fetchposts(userId); // تحديث القائمة بعد الحذف
       toast.custom((t) => (
         <CustomToast
           t={t}
@@ -67,7 +67,7 @@ const PostActions = ({ post, session, fetchMyPosts }) => {
                   handleDeletePost(post?.id);
                   setIsVisible(false);
                 }}
-                className="btn rounded-[5px] w-full h-full border border-white hover:border-0"
+                className="btn rounded-lg w-full h-full border border-white hover:border-0"
               >
                 حذف
               </button>
@@ -76,7 +76,7 @@ const PostActions = ({ post, session, fetchMyPosts }) => {
                   e.stopPropagation();
                   setIsVisible(false);
                 }}
-                className="btn rounded-[5px] w-full h-full border border-white hover:border-0"
+                className="btn rounded-lg w-full h-full border border-white hover:border-0"
               >
                 تراجع
               </button>

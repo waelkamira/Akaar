@@ -44,7 +44,7 @@ const fashion = [
     name: 'type',
     label: 'نوع المنتج',
     icon: Icons.Type ? (
-      <Icons.Type className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Type className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -63,7 +63,7 @@ const fashion = [
     name: 'clothingType',
     label: 'نوع الملابس',
     icon: Icons.ClothingType ? (
-      <Icons.ClothingType className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.ClothingType className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -82,7 +82,7 @@ const fashion = [
     name: 'gender',
     label: 'الجنس',
     icon: Icons.Gender ? (
-      <Icons.Gender className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Gender className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -97,7 +97,7 @@ const fashion = [
     name: 'size',
     label: 'المقاس',
     icon: Icons.Size ? (
-      <Icons.Size className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Size className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -116,7 +116,7 @@ const fashion = [
     name: 'color',
     label: 'اللون',
     icon: Icons.Color ? (
-      <Icons.Color className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Color className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -137,7 +137,7 @@ const fashion = [
     name: 'brand',
     label: 'الماركة',
     icon: Icons.Brand ? (
-      <Icons.Brand className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Brand className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -156,7 +156,7 @@ const fashion = [
     name: 'material',
     label: 'المادة المصنوعة منها',
     icon: Icons.Material ? (
-      <Icons.Material className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Material className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -174,7 +174,7 @@ const fashion = [
     name: 'condition',
     label: 'الحالة',
     icon: Icons.Condition ? (
-      <Icons.Condition className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Condition className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -189,7 +189,7 @@ const fashion = [
     name: 'season',
     label: 'الموسم',
     icon: Icons.Season ? (
-      <Icons.Season className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Season className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {

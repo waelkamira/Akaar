@@ -12,7 +12,7 @@ export async function POST(request) {
       categoryId = null,
       filters = {},
       page = 1,
-      limit = 8,
+      limit = 20,
     } = body;
     console.log('body تم استدعاء الراوت', body);
 

@@ -66,7 +66,7 @@ export default function ImageSlider({
         className="keen-slider w-full max-w-[1000px] h-auto max-h-[500px] aspect-[4/3]"
       >
         <div className="keen-slider__slide number-slide1 ">
-          <div className="relative w-full size-96 rounded-[5px] overflow-hidden">
+          <div className="relative w-full size-96 rounded-lg overflow-hidden">
             {image1 && (
               <Image
                 priority
@@ -79,7 +79,7 @@ export default function ImageSlider({
           </div>
         </div>
         <div className="keen-slider__slide number-slide2">
-          <div className="relative w-full aspect-[4/3] rounded-[5px] overflow-hidden">
+          <div className="relative w-full aspect-[4/3] rounded-lg overflow-hidden">
             {image2 && (
               <Image
                 priority
@@ -93,7 +93,7 @@ export default function ImageSlider({
           </div>
         </div>
         <div className="keen-slider__slide number-slide3">
-          <div className="relative w-full aspect-[4/3] rounded-[5px] overflow-hidden">
+          <div className="relative w-full aspect-[4/3] rounded-lg overflow-hidden">
             {image3 && (
               <Image
                 priority
@@ -107,7 +107,7 @@ export default function ImageSlider({
           </div>
         </div>
         <div className="keen-slider_slide number-slide4">
-          <div className="relative w-full aspect-[4/3] rounded-[5px] overflow-hidden">
+          <div className="relative w-full aspect-[4/3] rounded-lg overflow-hidden">
             {image4 && (
               <Image
                 priority
@@ -121,7 +121,7 @@ export default function ImageSlider({
           </div>
         </div>
         <div className="keen-slider_slide number-slide5">
-          <div className="relative w-full aspect-[4/3] rounded-[5px] overflow-hidden">
+          <div className="relative w-full aspect-[4/3] rounded-lg overflow-hidden">
             {image5 && (
               <Image
                 priority
@@ -142,7 +142,7 @@ export default function ImageSlider({
         className="keen-slider thumbnail w-full h-auto max-h-[150px]"
       >
         <div className="keen-slider__slide number-slide1">
-          <div className="relative w-full aspect-[4/3] rounded-[5px] overflow-hidden ">
+          <div className="relative w-full aspect-[4/3] rounded-lg overflow-hidden ">
             {image1 && (
               <Image
                 priority
@@ -157,7 +157,7 @@ export default function ImageSlider({
         </div>
 
         <div className="keen-slider__slide number-slide2">
-          <div className="relative w-full aspect-[4/3] rounded-[5px] overflow-hidden ">
+          <div className="relative w-full aspect-[4/3] rounded-lg overflow-hidden ">
             {image2 && (
               <Image
                 priority
@@ -172,7 +172,7 @@ export default function ImageSlider({
         </div>
 
         <div className="keen-slider__slide number-slide3">
-          <div className="relative w-full aspect-[4/3] rounded-[5px] overflow-hidden ">
+          <div className="relative w-full aspect-[4/3] rounded-lg overflow-hidden ">
             {image3 && (
               <Image
                 priority
@@ -187,7 +187,7 @@ export default function ImageSlider({
         </div>
 
         <div className="keen-slider__slide number-slide4">
-          <div className="relative w-full aspect-[4/3] rounded-[5px] overflow-hidden ">
+          <div className="relative w-full aspect-[4/3] rounded-lg overflow-hidden ">
             {image4 && (
               <Image
                 priority
@@ -202,7 +202,7 @@ export default function ImageSlider({
         </div>
 
         <div className="keen-slider__slide number-slide5">
-          <div className="relative w-full aspect-[4/3] rounded-[5px] overflow-hidden ">
+          <div className="relative w-full aspect-[4/3] rounded-lg overflow-hidden ">
             {image5 && (
               <Image
                 priority

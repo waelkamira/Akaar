@@ -15,12 +15,12 @@ let phones = []; // قيمة افتراضية آمنة
 try {
   // 1. إنشاء كائن لمكونات الأيقونات المستخدمة
   PhoneIconComponents = {
-    Mobile: <FaMobileAlt className="text-primary-500 text-lg sm:text-xl" />,
-    Storage: <FaSdCard className="text-primary-500 text-lg sm:text-xl" />,
-    Memory: <FaMemory className="text-primary-500 text-lg sm:text-xl" />,
-    Camera: <FaCamera className="text-primary-500 text-lg sm:text-xl" />,
-    Battery: <FaBatteryFull className="text-primary-500 text-lg sm:text-xl" />,
-    Color: <FaPaintBrush className="text-primary-500 text-lg sm:text-xl" />,
+    Mobile: <FaMobileAlt className="text-primary-400 text-md sm:text-lg" />,
+    Storage: <FaSdCard className="text-primary-400 text-md sm:text-lg" />,
+    Memory: <FaMemory className="text-primary-400 text-md sm:text-lg" />,
+    Camera: <FaCamera className="text-primary-400 text-md sm:text-lg" />,
+    Battery: <FaBatteryFull className="text-primary-400 text-md sm:text-lg" />,
+    Color: <FaPaintBrush className="text-primary-400 text-md sm:text-lg" />,
   };
 
   // 2. تعريف مصفوفة البيانات باستخدام الأيقونات من الكائن أعلاه

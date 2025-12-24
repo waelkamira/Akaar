@@ -40,7 +40,7 @@ const tools = [
     name: 'productType',
     label: 'نوع المنتج',
     icon: Icons.ProductType ? (
-      <Icons.ProductType className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.ProductType className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -59,7 +59,7 @@ const tools = [
     name: 'toolCategory',
     label: 'تصنيف الأداة',
     icon: Icons.ToolCategory ? (
-      <Icons.ToolCategory className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.ToolCategory className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -77,7 +77,7 @@ const tools = [
     name: 'powerSource',
     label: 'مصدر الطاقة',
     icon: Icons.PowerSource ? (
-      <Icons.PowerSource className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.PowerSource className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -92,7 +92,7 @@ const tools = [
     name: 'powerToolType',
     label: 'نوع الأداة الكهربائية',
     icon: Icons.PowerToolType ? (
-      <Icons.PowerToolType className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.PowerToolType className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -109,7 +109,7 @@ const tools = [
     name: 'voltage',
     label: 'الجهد الكهربائي',
     icon: Icons.Voltage ? (
-      <Icons.Voltage className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Voltage className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -124,7 +124,7 @@ const tools = [
     name: 'lightingType',
     label: 'نوع الإضاءة',
     icon: Icons.LightingType ? (
-      <Icons.LightingType className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.LightingType className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -140,7 +140,7 @@ const tools = [
     name: 'material',
     label: 'المادة المصنوعة',
     icon: Icons.Material ? (
-      <Icons.Material className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Material className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -156,7 +156,7 @@ const tools = [
     name: 'measurement',
     label: 'القياسات',
     icon: Icons.Measurement ? (
-      <Icons.Measurement className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Measurement className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -171,7 +171,7 @@ const tools = [
     name: 'brand',
     label: 'الماركة',
     icon: Icons.Brand ? (
-      <Icons.Brand className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Brand className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -187,7 +187,7 @@ const tools = [
     name: 'safetyRating',
     label: 'تصنيف السلامة',
     icon: Icons.SafetyRating ? (
-      <Icons.SafetyRating className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.SafetyRating className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {

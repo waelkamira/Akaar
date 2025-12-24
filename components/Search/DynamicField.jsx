@@ -34,14 +34,14 @@ export default function DynamicField({ field, value, onChange, onBlur }) {
   if (field.options && Object.keys(field.options).length > 0) {
     return (
       <div className="space-y-2">
-        <label className="flex gap-1 block text-sm font-medium ">
+        <label className="flex gap-1 text-sm font-medium ">
           {field.icon && <span className="mr-2">{field.icon}</span>}
           {field.label}
         </label>
         <select
           value={value?.toString() || ''}
           onChange={handleChange}
-          className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
+          className="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
         >
           <option value="">{field.placeholder || 'اختر...'}</option>
           {Object.entries(field.options).map(([optionValue, optionLabel]) => (
@@ -57,7 +57,7 @@ export default function DynamicField({ field, value, onChange, onBlur }) {
   // Render input for fields without options
   return (
     <div className="space-y-2">
-      <label className="flex gap-1 block text-sm font-medium">
+      <label className="flex gap-1 text-sm font-medium">
         {field.icon && <span className="mr-2">{field.icon}</span>}
         {field.label}
       </label>
@@ -67,7 +67,7 @@ export default function DynamicField({ field, value, onChange, onBlur }) {
         onChange={handleChange}
         onBlur={handleBlur}
         placeholder={field.placeholder}
-        className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
+        className="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
       />
     </div>
   );

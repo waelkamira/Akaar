@@ -28,7 +28,7 @@ const computers = [
     name: 'type',
     label: 'نوع الجهاز',
     icon: Icons.Type ? (
-      <Icons.Type className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Type className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -45,7 +45,7 @@ const computers = [
     name: 'brand',
     label: 'الماركة',
     icon: Icons.Brand ? (
-      <Icons.Brand className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Brand className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -63,7 +63,7 @@ const computers = [
     name: 'processor',
     label: 'المعالج',
     icon: Icons.Processor ? (
-      <Icons.Processor className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Processor className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -82,7 +82,7 @@ const computers = [
     name: 'ram',
     label: 'الذاكرة العشوائية (RAM)',
     icon: Icons.RAM ? (
-      <Icons.RAM className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.RAM className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -98,7 +98,7 @@ const computers = [
     name: 'storage',
     label: 'وحدة التخزين',
     icon: Icons.Storage ? (
-      <Icons.Storage className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Storage className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -115,7 +115,7 @@ const computers = [
     name: 'graphicsCard',
     label: 'كرت الشاشة',
     icon: Icons.GraphicsCard ? (
-      <Icons.GraphicsCard className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.GraphicsCard className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -132,7 +132,7 @@ const computers = [
     name: 'screenSize',
     label: 'حجم الشاشة (بالبوصة)',
     icon: Icons.ScreenSize ? (
-      <Icons.ScreenSize className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.ScreenSize className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -151,7 +151,7 @@ const computers = [
     name: 'operatingSystem',
     label: 'نظام التشغيل',
     icon: Icons.OperatingSystem ? (
-      <Icons.OperatingSystem className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.OperatingSystem className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -167,7 +167,7 @@ const computers = [
     name: 'condition',
     label: 'الحالة',
     icon: Icons.Condition ? (
-      <Icons.Condition className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Condition className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {

@@ -34,7 +34,7 @@ const health = [
     name: 'productType',
     label: 'نوع المنتج',
     icon: Icons.ProductType ? (
-      <Icons.ProductType className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.ProductType className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -53,7 +53,7 @@ const health = [
     name: 'healthCategory',
     label: 'التصنيف الصحي',
     icon: Icons.HealthCategory ? (
-      <Icons.HealthCategory className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.HealthCategory className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -72,7 +72,7 @@ const health = [
     name: 'productForm',
     label: 'شكل المنتج',
     icon: Icons.ProductForm ? (
-      <Icons.ProductForm className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.ProductForm className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -90,7 +90,7 @@ const health = [
     name: 'personalCareType',
     label: 'نوع العناية الشخصية',
     icon: Icons.PersonalCareType ? (
-      <Icons.PersonalCareType className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.PersonalCareType className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -107,7 +107,7 @@ const health = [
     name: 'cleaningType',
     label: 'نوع المنظفات',
     icon: Icons.CleaningType ? (
-      <Icons.CleaningType className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.CleaningType className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -124,7 +124,7 @@ const health = [
     name: 'oralCareType',
     label: 'نوع العناية بالفم',
     icon: Icons.OralCareType ? (
-      <Icons.OralCareType className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.OralCareType className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -140,7 +140,7 @@ const health = [
     name: 'sizeVolume',
     label: 'الحجم/الكمية',
     icon: Icons.SizeVolume ? (
-      <Icons.SizeVolume className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.SizeVolume className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -156,7 +156,7 @@ const health = [
     name: 'brand',
     label: 'الماركة',
     icon: Icons.Brand ? (
-      <Icons.Brand className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Brand className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -173,7 +173,7 @@ const health = [
     name: 'specialFeatures',
     label: 'مميزات خاصة',
     icon: Icons.SpecialFeatures ? (
-      <Icons.SpecialFeatures className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.SpecialFeatures className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {

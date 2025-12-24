@@ -54,7 +54,7 @@ export default function SmallItem({ post, index }) {
   return (
     <motion.div
       whileHover={{ scale: 1.02 }}
-      className="rounded-2xl bg-gradient-to-br from-white/15 to-white/5 backdrop-blur-sm border border-white/20 
+      className="rounded-lg bg-gradient-to-br from-white/15 to-white/5 backdrop-blur-sm border border-white/20 
   shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.2)] 
   transition-all duration-500 overflow-hidden w-[95%] group"
       onClick={() => {
@@ -91,7 +91,7 @@ export default function SmallItem({ post, index }) {
         </h1>
 
         {/* Image Gallery */}
-        <div className="w-full rounded-xl overflow-hidden mb-6">
+        <div className="w-full rounded-lg overflow-hidden mb-6">
           <PostGallery post={post} />
         </div>
 
@@ -123,7 +123,7 @@ export default function SmallItem({ post, index }) {
             }
           }}
           className="w-full bg-gradient-to-r from-white/20 to-white/10 text-white py-3 px-6
-      rounded-xl font-medium hover:from-white/30 hover:to-white/20 
+      rounded-lg font-medium hover:from-white/30 hover:to-white/20 
       transition-all duration-300 transform hover:shadow-lg"
         >
           عرض الإعلان

@@ -37,7 +37,7 @@ const electronics = [
     name: 'type',
     label: 'نوع الجهاز',
     icon: Icons.Type ? (
-      <Icons.Type className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Type className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -56,7 +56,7 @@ const electronics = [
     name: 'brand',
     label: 'الماركة',
     icon: Icons.Brand ? (
-      <Icons.Brand className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Brand className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -74,7 +74,7 @@ const electronics = [
     name: 'screenSize',
     label: 'حجم الشاشة',
     icon: Icons.ScreenSize ? (
-      <Icons.ScreenSize className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.ScreenSize className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -94,7 +94,7 @@ const electronics = [
     name: 'resolution',
     label: 'دقة العرض',
     icon: Icons.Resolution ? (
-      <Icons.Resolution className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Resolution className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -111,7 +111,7 @@ const electronics = [
     name: 'audioOutput',
     label: 'قوة الصوت',
     icon: Icons.AudioOutput ? (
-      <Icons.AudioOutput className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.AudioOutput className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -127,7 +127,7 @@ const electronics = [
     name: 'smartFeatures',
     label: 'الميزات الذكية',
     icon: Icons.SmartFeatures ? (
-      <Icons.SmartFeatures className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.SmartFeatures className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -142,7 +142,7 @@ const electronics = [
     name: 'connectivity',
     label: 'إمكانيات الاتصال',
     icon: Icons.Connectivity ? (
-      <Icons.Connectivity className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Connectivity className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -158,7 +158,7 @@ const electronics = [
     name: 'condition',
     label: 'الحالة',
     icon: Icons.Condition ? (
-      <Icons.Condition className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Condition className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -173,7 +173,7 @@ const electronics = [
     name: 'power',
     label: 'الجهد الكهربائي',
     icon: Icons.Power ? (
-      <Icons.Power className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Power className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {

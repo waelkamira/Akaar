@@ -18,7 +18,7 @@ const mainButtons = [
   },
   {
     title: 'متجري',
-    path: '/myPosts',
+    path: '/posts',
     icon: <FaCanadianMapleLeaf />,
   },
   {

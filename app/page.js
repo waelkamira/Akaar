@@ -1,7 +1,6 @@
 'use client';
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react';
 import { motion } from 'framer-motion';
 import { FaAngleDoubleLeft, FaAngleDoubleRight } from 'react-icons/fa';
 import Footer from '../components/ReusableComponents/Footer';
@@ -11,14 +10,13 @@ import ColoredCards from '../components/ReusableComponents/ColoredCards';
 import categories from '../components/Categories/categories';
 
 // حجم الدفعة الأمثل (يمكن تعديله حسب الاختبار)
-const OPTIMAL_BATCH_SIZE = 6;
+const OPTIMAL_BATCH_SIZE = 20;
 
 export default function Home() {
   const [productsByCategory, setProductsByCategory] = useState({});
   const [loading, setLoading] = useState(true);
   const [loadedCategories, setLoadedCategories] = useState(0);
   const router = useRouter();
-  const session = useSession();
 
   // دالة محسنة لجلب البيانات مع التخزين المؤقت
   const fetchProductsByCategory = useCallback(async () => {
@@ -76,27 +74,24 @@ export default function Home() {
 
   const renderProducts = (category) => {
     const products = productsByCategory[category.id];
-
+    console.log('products', products);
     if (!products) return <Loading small />;
     if (products.length === 0) return <p>لا توجد منتجات في هذه الفئة</p>;
 
     return products.map((item) => (
-      <motion.div
+      <div
         key={item.id}
-        // whileHover={{ scale: 1.03 }}
-        whileTap={{ scale: 0.95 }}
-        onClick={() => router.push(`/post/${item.id}`)}
-        className="flex flex-col justify-center items-center w-full sm:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1rem)] xl:w-[calc(25%-1rem)] border cursor-pointer bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out rounded-[10px] overflow-hidden shadow-lg relative"
+        className="flex flex-col justify-center items-center w-full sm:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1rem)] xl:w-[calc(25%-1rem)] border cursor-pointer hover:shadow-xl transition-shadow duration-300 ease-in-out rounded-lg shadow-lg relative"
       >
         <SmallCard item={item} category={category} />
-      </motion.div>
+      </div>
     ));
   };
 
   return (
-    <main className="relative flex flex-row-reverse items-start justify-between overflow-hidden z-[30] h-fit w-full bg-five rounded-b">
+    <main className="relative flex flex-row-reverse items-start justify-between overflow-hidden z-[30] h-fit w-full bg-five rounded-b mt-8">
       <div className="relative flex-col justify-between items-start w-full h-full">
-        <div className="flex flex-col items-center justify-center overflow-hidden z-50 h-fit w-full bg-five rounded-b">
+        <div className="flex flex-col items-center justify-center overflow-hidden z-50 h-fit w-full bg-five rounded-b mt-8">
           {loading && loadedCategories === 0 ? (
             <Loading fullPage />
           ) : (
@@ -111,9 +106,9 @@ export default function Home() {
                   viewport={{ once: true, margin: '0px 0px -100px 0px' }}
                   className="flex flex-col justify-center items-center w-full h-full"
                 >
-                  <div className="flex flex-col justify-center items-center w-full h-full gap-8 py-8 my-8">
+                  <div className="flex flex-col justify-center items-center w-full h-full gap-2 my-8">
                     <div
-                      className="flex justify-center items-center w-1/8 mb-8 transition-transform duration-300 ease-in-out cursor-pointer"
+                      className=" rounded-2xl px-2 py-1 text-nowrap text-xs text-white font-semibold flex items-center gap-2 border border-white/20 shadow-lg"
                       onClick={() => handleCategoryClick(category)}
                     >
                       <ColoredCards number={category.id} text={category.name} />
@@ -145,9 +140,6 @@ export default function Home() {
         <div className="flex justify-end w-full">
           <Footer />
         </div>
-        {/* <h1 className="w-full text-sm select-none text-center pt-8 pb-4 border uppercase text-gray-600">
-          حقوق النشر © 2025 موقع بياع. جميع الحقوق محفوظة
-        </h1> */}
       </div>
     </main>
   );

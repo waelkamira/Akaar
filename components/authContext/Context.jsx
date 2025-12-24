@@ -87,7 +87,7 @@ function inputsReducer(currentState, action) {
     case 'MY_POSTS':
       return {
         ...currentState,
-        myPosts: action?.payload,
+        posts: action?.payload,
       };
     case 'LOCATION':
       return {
@@ -124,6 +124,11 @@ function inputsReducer(currentState, action) {
         ...currentState,
         favorite: action?.payload,
       };
+    case 'SELECTED':
+      return {
+        ...currentState,
+        selected: action?.payload,
+      };
 
     default:
       return currentState;
@@ -142,7 +147,7 @@ export function InputsContextProvider({ children }) {
     deletedRecipe: {},
     deleteFavoritePost: {},
     action: {},
-    myPosts: [],
+    posts: [],
     location: [33.5138, 36.2765],
     category: '',
     postId: '',
@@ -150,6 +155,7 @@ export function InputsContextProvider({ children }) {
     brand: '',
     categoryType: '',
     favorite: '',
+    selected: [],
   });
   // console.log('from Context', state);
 

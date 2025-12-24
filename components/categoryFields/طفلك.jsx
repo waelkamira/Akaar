@@ -30,7 +30,7 @@ const babySupplies = [
     name: 'type',
     label: 'نوع المنتج',
     icon: Icons.Type ? (
-      <Icons.Type className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Type className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -50,7 +50,7 @@ const babySupplies = [
     name: 'subType',
     label: 'التفاصيل',
     icon: Icons.SubType ? (
-      <Icons.SubType className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.SubType className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -69,7 +69,7 @@ const babySupplies = [
     name: 'ageRange',
     label: 'الفئة العمرية',
     icon: Icons.AgeRange ? (
-      <Icons.AgeRange className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.AgeRange className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -85,7 +85,7 @@ const babySupplies = [
     name: 'gender',
     label: 'الجنس',
     icon: Icons.Gender ? (
-      <Icons.Gender className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Gender className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -98,7 +98,7 @@ const babySupplies = [
     name: 'material',
     label: 'المادة',
     icon: Icons.Material ? (
-      <Icons.Material className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Material className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -115,7 +115,7 @@ const babySupplies = [
     name: 'safetyCertification',
     label: 'شهادات السلامة',
     icon: Icons.SafetyCertification ? (
-      <Icons.SafetyCertification className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.SafetyCertification className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -129,7 +129,7 @@ const babySupplies = [
     name: 'condition',
     label: 'الحالة',
     icon: Icons.Condition ? (
-      <Icons.Condition className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Condition className="text-primary-400 text-md sm:text-lg" />
     ) : null,
     placeholder: '-اختر-',
     options: {
@@ -144,7 +144,7 @@ const babySupplies = [
     name: 'brand',
     label: 'الماركة',
     icon: Icons.Brand ? (
-      <Icons.Brand className="text-primary-500 text-lg sm:text-xl" />
+      <Icons.Brand className="text-primary-400 text-md sm:text-lg" />
     ) : null,
   },
 ];

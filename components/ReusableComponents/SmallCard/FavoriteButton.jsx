@@ -113,12 +113,12 @@ function FavoriteButton({ item }) {
       }}
     >
       <div
-        className={`bg-white/20 backdrop-blur-sm rounded-full size-8 p-2 shadow-sm shadow-gray-500 transition-all duration-300 hover:scale-110 cursor-pointer`}
+        className={` backdrop-blur-sm rounded-full size-8 p-2 transition-all duration-300 hover:scale-110 cursor-pointer`}
       >
         {isFavorited ? (
           <TbHeartFilled className="size-4 text-red-600 transition-colors duration-300" />
         ) : (
-          <FaRegHeart className="size-4 text-gray-600 hover:text-red-500 transition-colors duration-300" />
+          <FaRegHeart className="size-4 bg-transparent text-clip text-gray-600 hover:text-red-500 transition-colors duration-300" />
         )}
       </div>
     </div>

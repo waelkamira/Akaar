@@ -91,8 +91,8 @@ export default function ContactUs() {
   ];
   const image = '/logo1.png';
   return (
-    <main className="flex flex-col justify-center items-center sm:pb-16 w-full rounded-b">
-      <div className="flex flex-col justify-center items-center w-full xl:w-[90%] 2xl:w-[70%] h-full sm:px-16 pt-2 overflow-y-auto z-10 px-2">
+    <main className="flex flex-col justify-center items-center sm:pb-16 w-full rounded-b mt-16 sm:mt-0">
+      <div className="flex flex-col justify-center items-center w-full xl:w-[90%]  h-full sm:px-16 pt-2 overflow-y-auto z-10 px-2">
         <div className="flex flex-col justify-between items-center w-full h-full mt-2 cursor-pointer">
           {/* قسم البطاقات */}
           <div className="flex flex-col md:flex-row justify-center items-center w-full p-4 gap-6">

@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 
 export async function GET(req) {
   const { searchParams } = new URL(req.url);
-  const pageNumber = parseInt(searchParams.get('pageNumber') || '1', 10);
+  const page = parseInt(searchParams.get('page') || '1', 10);
   const limit = parseInt(searchParams.get('limit') || '5', 10);
   const searchQuery = searchParams.get('searchQuery') || '';
   const isAdmin = searchParams.get('isAdmin') === 'true';
@@ -15,8 +15,8 @@ export async function GET(req) {
     searchQuery,
     'limit:',
     limit,
-    'pageNumber:',
-    pageNumber,
+    'page:',
+    page,
     'isAdmin:',
     isAdmin
   );
@@ -27,14 +27,14 @@ export async function GET(req) {
     if (searchQuery && isAdmin) {
       users = await prisma.user.findMany({
         where: { email: { contains: searchQuery } },
-        skip: (pageNumber - 1) * limit,
+        skip: (page - 1) * limit,
         take: limit,
       });
     } else if (isAdmin) {
       users = await prisma.user.findMany({
         select: { email: true },
         orderBy: { createdAt: 'desc' },
-        skip: (pageNumber - 1) * limit,
+        skip: (page - 1) * limit,
         take: limit,
       });
     }

@@ -123,13 +123,13 @@ export default function LogInPage() {
       {!loggedIn && (
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="w-full lg:w-1/2 p-2 sm:p-8 rounded-[5px] border bg-white"
+          className="w-full lg:w-1/2 p-2 sm:p-8 rounded-lg border bg-white"
         >
           <h1 className="flex justify-center items-center w-full my-2 text-xl sm:text-2xl md:text-3xl xl:text-4xl  text-center select-none">
             تسجيل الدخول <GiExitDoor className="text-primary-500" />
           </h1>
           <div
-            className="flex justify-center w-full bg-white border rounded-[5px] px-4 py-2 items-center my-8 hover:shadow-sm shadow-gray-300 cursor-pointer"
+            className="flex justify-center w-full bg-white border rounded-lg px-4 py-2 items-center my-8 hover:shadow-sm shadow-gray-300 cursor-pointer"
             onClick={() => signIn('google')}
           >
             <h1 className="text-sm sm:text-lg grow text-center text-gray-500 select-none font-semibold">
