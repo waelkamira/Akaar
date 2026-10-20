@@ -1,7 +1,7 @@
 // import { PrismaClient } from '@prisma/client';
 // import { LRUCache } from 'lru-cache';
 // import { getServerSession } from 'next-auth';
-// import { authOptions } from '../authOptions/route';
+// import { authOptions } from '../../../lib/authOptions';
 
 // const prisma = new PrismaClient();
 // const cache = new LRUCache({
@@ -284,7 +284,7 @@
 import { PrismaClient } from '@prisma/client';
 import { LRUCache } from 'lru-cache';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '../authOptions/route';
+import { authOptions } from '../../../lib/authOptions';
 
 const prisma = new PrismaClient();
 const cache = new LRUCache({

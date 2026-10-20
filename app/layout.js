@@ -6,7 +6,7 @@ import { InputsContextProvider } from '../components/authContext/Context';
 import AuthContextProvider from '../components/authContext/AuthContext';
 import MainNavBar from '../components/navbars/MainNavbar';
 import { SearchProvider } from '../contexts/SearchContext';
-import Script from 'next/script';
+import ServiceWorkerCleanup from '../components/ServiceWorkerCleanup';
 import '../styles/marketplace.css';
 
 const rubik = Rubik({
@@ -58,7 +58,7 @@ export default function RootLayout({ children }) {
             </SearchProvider>
           </InputsContextProvider>
         </AuthContextProvider>
-        <Script src="/register-sw.js" strategy="afterInteractive" />
+        <ServiceWorkerCleanup />
       </body>
     </html>
   );
