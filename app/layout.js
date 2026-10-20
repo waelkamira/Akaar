@@ -7,9 +7,10 @@ import AuthContextProvider from '../components/authContext/AuthContext';
 import MainNavBar from '../components/navbars/MainNavbar';
 import { SearchProvider } from '../contexts/SearchContext';
 import Script from 'next/script';
+import '../styles/marketplace.css';
 
 const rubik = Rubik({
-  subsets: ['latin'],
+  subsets: ['arabic', 'latin'],
   weight: ['300', '400', '500', '700'],
   display: 'swap',
   variable: '--font-rubik',
@@ -34,7 +35,7 @@ export const viewport = 'width=device-width, initial-scale=1, maximum-scale=1';
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className="!scroll-smooth" dir="rtl">
+    <html lang="ar" className="!scroll-smooth" dir="rtl">
       <head>
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#000000" />
@@ -50,8 +51,10 @@ export default function RootLayout({ children }) {
         <AuthContextProvider>
           <InputsContextProvider>
             <SearchProvider>
-              <MainNavBar />
-              {children}
+              <div id="marketplace-shell">
+                <MainNavBar />
+                {children}
+              </div>
             </SearchProvider>
           </InputsContextProvider>
         </AuthContextProvider>

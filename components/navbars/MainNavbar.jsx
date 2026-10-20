@@ -1,17 +1,14 @@
 'use client';
-import FirstNavBar from './FirstNavBar';
-import Search from '../Search/Search';
-import Hero from '../Home/Hero';
+import { Heart, ShoppingBag, UserRound } from 'lucide-react';
 
 export default function MainNavbar() {
   return (
-    <div className="relative flex flex-col justify-center items-center w-full inset-0 lg:mb-5">
-      <FirstNavBar />
-
-      <div className="w-full sm:h-64">
-        <Hero />
+    <header className="market-nav">
+      <div className="market-nav-inner">
+        <a href="/" className="market-brand" aria-label="أكار الرئيسية"><span>أ</span><strong>أكار</strong></a>
+        <nav className="market-nav-links" aria-label="التنقل الرئيسي"><a href="#products">اكتشف</a><a href="#categories">التصنيفات</a><a href="/favorite">المفضلة</a></nav>
+        <div className="market-nav-actions"><button type="button" aria-label="المفضلة"><Heart /></button><button type="button" aria-label="الحساب"><UserRound /></button><button type="button" className="market-nav-cart" aria-label="السلة"><ShoppingBag /></button></div>
       </div>
-      <Search />
-    </div>
+    </header>
   );
 }
