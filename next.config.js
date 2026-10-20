@@ -1,12 +1,5 @@
 /** @type {import('next').NextConfig} */
-const withPWA = require('next-pwa')({
-  dest: 'public',
-  register: true,
-  skipWaiting: true,
-  disable: process.env.NODE_ENV === 'development',
-});
-
-const nextConfig = withPWA({
+const nextConfig = {
   compress: true,
   swcMinify: true,
   typescript: {
@@ -24,6 +17,6 @@ const nextConfig = withPWA({
   },
   productionBrowserSourceMaps: false,
   staticPageGenerationTimeout: 120,
-});
+};
 
 module.exports = nextConfig;
