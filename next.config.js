@@ -1,5 +1,13 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
+const withPWA = require('next-pwa')({
+  dest: 'public',
+  register: true,
+  skipWaiting: true,
+  disable: process.env.NODE_ENV === 'development',
+});
+
+const nextConfig = withPWA({
+  turbopack: {}, // 🟢 تم إضافة هذا السطر هنا لمنع تعارض Next-PWA مع محرّك البناء
   compress: true,
   swcMinify: true,
   typescript: {
@@ -17,6 +25,7 @@ const nextConfig = {
   },
   productionBrowserSourceMaps: false,
   staticPageGenerationTimeout: 120,
-};
+});
 
 module.exports = nextConfig;
+
