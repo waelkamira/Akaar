@@ -81,7 +81,7 @@ export function SearchProvider({ children, initialCategory }) {
   useEffect(() => {
     if (initialCategory) {
       const categoryObj = filterOptions.categories.find(
-        (cat) => cat.id === initialCategory.id
+        (cat) => cat.id === initialCategory.id,
       );
       if (categoryObj) {
         setCategory(categoryObj);
@@ -114,7 +114,7 @@ export function SearchProvider({ children, initialCategory }) {
         }
 
         const categoryObj = filterOptions.categories.find(
-          (cat) => cat.id.toString() === categoryId
+          (cat) => cat.id.toString() === categoryId,
         );
 
         if (!categoryObj) {
@@ -194,7 +194,7 @@ export function SearchProvider({ children, initialCategory }) {
       } catch (err) {
         console.error('Search error:', err);
         setError(
-          'لم يتم العثور على نتائج مطابقة قم بتعديل كلمات البحث للحصول على نتائج أفضل'
+          'لم يتم العثور على نتائج مطابقة قم بتعديل كلمات البحث للحصول على نتائج أفضل',
         );
         setResults([]);
         setTotalCount(0);
@@ -203,7 +203,7 @@ export function SearchProvider({ children, initialCategory }) {
         setIsNewSearch(false);
       }
     },
-    [searchQuery, category, filters, isSearchPage]
+    [searchQuery, category, filters, isSearchPage],
   );
 
   // Handle scrolling separately
@@ -219,11 +219,11 @@ export function SearchProvider({ children, initialCategory }) {
     (cityId) => {
       if (!cityId) return [];
       const city = staticFilters.cities.find(
-        (c) => c.id === cityId || c.name === cityId
+        (c) => c.id === cityId || c.name === cityId,
       );
       return city?.towns || [];
     },
-    [staticFilters.cities]
+    [staticFilters.cities],
   );
 
   // إضافة useEffect جديد لإدارة طلبات البحث عند تغيير الصفحة
@@ -285,7 +285,7 @@ export function SearchProvider({ children, initialCategory }) {
       setPage(1);
       setIsNewSearch(true); // تمييز أن هذا بحث جديد
     },
-    [searchQuery]
+    [searchQuery],
   );
 
   const removeFilter = useCallback(
@@ -320,7 +320,7 @@ export function SearchProvider({ children, initialCategory }) {
       // Trigger search after removing filter
       setShouldSearchOnLoad(true);
     },
-    [setCategory]
+    [setCategory],
   );
 
   const clearFilters = useCallback(() => {

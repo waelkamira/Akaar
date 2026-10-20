@@ -181,7 +181,7 @@ export default function Footer() {
               <Link href="/" className="inline-block mb-4">
                 <div className="relative h-16 w-48 hover:scale-105 transition-transform duration-300">
                   <Image
-                    src="/logo1.png"
+                    src="/logo.png"
                     fill
                     className="object-contain"
                     alt="Bayya Logo"

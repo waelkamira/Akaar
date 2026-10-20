@@ -7,8 +7,8 @@ if (!self.define) {
       new Promise((s) => {
         if ('document' in self) {
           const e = document.createElement('script');
-          (e.src = c), (e.onload = s), document.head.appendChild(e);
-        } else (e = c), importScripts(c), s();
+          ((e.src = c), (e.onload = s), document.head.appendChild(e));
+        } else ((e = c), importScripts(c), s());
       }).then(() => {
         let e = s[c];
         if (!e) throw new Error(`Module ${c} didn’t register its module`);
@@ -29,7 +29,7 @@ if (!self.define) {
 }
 define(['./workbox-4754cb34'], function (e) {
   'use strict';
-  importScripts(),
+  (importScripts(),
     self.skipWaiting(),
     e.clientsClaim(),
     e.precacheAndRoute(
@@ -564,7 +564,7 @@ define(['./workbox-4754cb34'], function (e) {
           revision: 'e4788e87a148d4748b27d8ee76b147a3',
         },
         { url: '/logo.png', revision: '730f4a4a1260c70f7ea725769ea0184e' },
-        { url: '/logo1.png', revision: '9628b3d7162716d7bec104c530492ab2' },
+        { url: '/logo.png', revision: '9628b3d7162716d7bec104c530492ab2' },
         { url: '/manifest.json', revision: '9b309cbdf930c48a94e08f0db384ddb5' },
         {
           url: '/placeholder.jpg',
@@ -575,7 +575,7 @@ define(['./workbox-4754cb34'], function (e) {
           revision: '71188384f2f7efcb4ef00c7bd0677b57',
         },
       ],
-      { ignoreURLParametersMatching: [] }
+      { ignoreURLParametersMatching: [] },
     ),
     e.cleanupOutdatedCaches(),
     e.registerRoute(
@@ -600,7 +600,7 @@ define(['./workbox-4754cb34'], function (e) {
           },
         ],
       }),
-      'GET'
+      'GET',
     ),
     e.registerRoute(
       /^https:\/\/fonts\.(?:gstatic)\.com\/.*/i,
@@ -610,7 +610,7 @@ define(['./workbox-4754cb34'], function (e) {
           new e.ExpirationPlugin({ maxEntries: 4, maxAgeSeconds: 31536e3 }),
         ],
       }),
-      'GET'
+      'GET',
     ),
     e.registerRoute(
       /^https:\/\/fonts\.(?:googleapis)\.com\/.*/i,
@@ -620,7 +620,7 @@ define(['./workbox-4754cb34'], function (e) {
           new e.ExpirationPlugin({ maxEntries: 4, maxAgeSeconds: 604800 }),
         ],
       }),
-      'GET'
+      'GET',
     ),
     e.registerRoute(
       /\.(?:eot|otf|ttc|ttf|woff|woff2|font.css)$/i,
@@ -630,7 +630,7 @@ define(['./workbox-4754cb34'], function (e) {
           new e.ExpirationPlugin({ maxEntries: 4, maxAgeSeconds: 604800 }),
         ],
       }),
-      'GET'
+      'GET',
     ),
     e.registerRoute(
       /\.(?:jpg|jpeg|gif|png|svg|ico|webp)$/i,
@@ -640,7 +640,7 @@ define(['./workbox-4754cb34'], function (e) {
           new e.ExpirationPlugin({ maxEntries: 64, maxAgeSeconds: 86400 }),
         ],
       }),
-      'GET'
+      'GET',
     ),
     e.registerRoute(
       /\/_next\/image\?url=.+$/i,
@@ -650,7 +650,7 @@ define(['./workbox-4754cb34'], function (e) {
           new e.ExpirationPlugin({ maxEntries: 64, maxAgeSeconds: 86400 }),
         ],
       }),
-      'GET'
+      'GET',
     ),
     e.registerRoute(
       /\.(?:mp3|wav|ogg)$/i,
@@ -661,7 +661,7 @@ define(['./workbox-4754cb34'], function (e) {
           new e.ExpirationPlugin({ maxEntries: 32, maxAgeSeconds: 86400 }),
         ],
       }),
-      'GET'
+      'GET',
     ),
     e.registerRoute(
       /\.(?:mp4)$/i,
@@ -672,7 +672,7 @@ define(['./workbox-4754cb34'], function (e) {
           new e.ExpirationPlugin({ maxEntries: 32, maxAgeSeconds: 86400 }),
         ],
       }),
-      'GET'
+      'GET',
     ),
     e.registerRoute(
       /\.(?:js)$/i,
@@ -682,7 +682,7 @@ define(['./workbox-4754cb34'], function (e) {
           new e.ExpirationPlugin({ maxEntries: 32, maxAgeSeconds: 86400 }),
         ],
       }),
-      'GET'
+      'GET',
     ),
     e.registerRoute(
       /\.(?:css|less)$/i,
@@ -692,7 +692,7 @@ define(['./workbox-4754cb34'], function (e) {
           new e.ExpirationPlugin({ maxEntries: 32, maxAgeSeconds: 86400 }),
         ],
       }),
-      'GET'
+      'GET',
     ),
     e.registerRoute(
       /\/_next\/data\/.+\/.+\.json$/i,
@@ -702,7 +702,7 @@ define(['./workbox-4754cb34'], function (e) {
           new e.ExpirationPlugin({ maxEntries: 32, maxAgeSeconds: 86400 }),
         ],
       }),
-      'GET'
+      'GET',
     ),
     e.registerRoute(
       /\.(?:json|xml|csv)$/i,
@@ -712,7 +712,7 @@ define(['./workbox-4754cb34'], function (e) {
           new e.ExpirationPlugin({ maxEntries: 32, maxAgeSeconds: 86400 }),
         ],
       }),
-      'GET'
+      'GET',
     ),
     e.registerRoute(
       ({ url: e }) => {
@@ -727,7 +727,7 @@ define(['./workbox-4754cb34'], function (e) {
           new e.ExpirationPlugin({ maxEntries: 16, maxAgeSeconds: 86400 }),
         ],
       }),
-      'GET'
+      'GET',
     ),
     e.registerRoute(
       ({ url: e }) => {
@@ -741,7 +741,7 @@ define(['./workbox-4754cb34'], function (e) {
           new e.ExpirationPlugin({ maxEntries: 32, maxAgeSeconds: 86400 }),
         ],
       }),
-      'GET'
+      'GET',
     ),
     e.registerRoute(
       ({ url: e }) => !(self.origin === e.origin),
@@ -752,6 +752,6 @@ define(['./workbox-4754cb34'], function (e) {
           new e.ExpirationPlugin({ maxEntries: 32, maxAgeSeconds: 3600 }),
         ],
       }),
-      'GET'
-    );
+      'GET',
+    ));
 });

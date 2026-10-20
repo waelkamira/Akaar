@@ -1,75 +1,80 @@
 'use client';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import SideBarMenu from '../navbars/SideBarMenu';
 
 export default function Hero({
   images = [
-    'https://i.imgur.com/wZ0aruw.jpg',
-    'https://i.imgur.com/uPsQqzu.png',
-    'https://i.imgur.com/wHyvDAD.png',
-    'https://i.imgur.com/Kc6Pcu1.png',
-    'https://i.imgur.com/rLz58YH.jpg',
-    'https://i.imgur.com/VVu5la7.png',
+    '/images/img (1).jpg',
+    '/images/img (2).jpg',
+    '/images/img (3).jpg',
+    '/images/img (4).jpg',
+    '/images/img (5).jpg',
+    '/images/img (6).jpg',
   ],
 }) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const sliderRef = useRef(null);
+
   const goToPreviousSlide = () => {
     setCurrentImageIndex((prevIndex) =>
-      prevIndex === 0 ? images.length - 1 : prevIndex - 1
+      prevIndex === 0 ? images.length - 1 : prevIndex - 1,
     );
   };
 
   const goToNextSlide = () => {
     setCurrentImageIndex((prevIndex) =>
-      prevIndex === images.length - 1 ? 0 : prevIndex + 1
+      prevIndex === images.length - 1 ? 0 : prevIndex + 1,
     );
   };
 
+  // تحسين دالة التوقيت لتعمل بالتزامن مع تغيير الفهرس الحالي لمنع القفزات
   useEffect(() => {
-    if (!sliderRef.current) return;
-
     const intervalId = setInterval(() => {
       goToNextSlide();
     }, 5000);
 
     return () => clearInterval(intervalId);
-  }, [images]);
+  }, [currentImageIndex]); // 🟢 يتم التحديث بناءً على الفهرس الحالي
 
   return (
-    <div
-      ref={sliderRef}
-      className="hidden sm:block w-full h-full overflow-hidden sm:h-64 z-50"
-    >
-      <SideBarMenu />{' '}
+    // 🟢 إضافة كلاس relative لتثبيت أزرار التحكم بداخل السلايدر
+    <div className="hidden sm:block relative w-full h-64 sm:h-96 overflow-hidden z-40">
+      <SideBarMenu />
+
+      {/* حاوية الصور المترابطة فوق بعضها */}
       {images.map((image, index) => (
         <div
           key={index}
-          className={`sm:h-40 w-full transition-opacity duration-500 ${
+          // 🟢 تم تغيير التموضع ليكون absolute لضمان عرض الصور في نفس البقعة وتناوبها بالـ opacity
+          className={`absolute inset-0 w-full h-full transition-opacity duration-1000 ease-in-out ${
             index === currentImageIndex ? 'opacity-100 z-10' : 'opacity-0 z-0'
           }`}
         >
           <Image
             src={image}
             fill
+            priority={index === 0} // تسريع تحميل الصورة الأولى
             alt={`Slide ${index + 1}`}
-            className="object-cover w-full s"
+            className="object-cover w-full h-full"
           />
         </div>
       ))}
+
+      {/* زر الانتقال للخلف */}
       <button
         onClick={goToPreviousSlide}
-        className="absolute top-1/2 transform -translate-y-1/2 left-4 bg-black bg-opacity-50 text-white rounded-full p-2 z-20"
+        className="absolute top-1/2 transform -translate-y-1/2 left-4 bg-black bg-opacity-50 hover:bg-opacity-70 text-white rounded-full p-3 z-30 transition-all"
       >
-        <FaChevronLeft />
+        <FaChevronLeft size={20} />
       </button>
+
+      {/* زر الانتقال للأمام */}
       <button
         onClick={goToNextSlide}
-        className="absolute top-1/2 transform -translate-y-1/2 right-4 bg-black bg-opacity-50 text-white rounded-full p-2 z-20"
+        className="absolute top-1/2 transform -translate-y-1/2 right-4 bg-black bg-opacity-50 hover:bg-opacity-70 text-white rounded-full p-3 z-30 transition-all"
       >
-        <FaChevronRight />
+        <FaChevronRight size={20} />
       </button>
     </div>
   );

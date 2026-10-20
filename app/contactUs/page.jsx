@@ -89,7 +89,7 @@ export default function ContactUs() {
       emoji: <MdCarRental className="text-[#119530]" />,
     },
   ];
-  const image = '/logo1.png';
+  const image = '/logo.png';
   return (
     <main className="flex flex-col justify-center items-center sm:pb-16 w-full rounded-b mt-16 sm:mt-0">
       <div className="flex flex-col justify-center items-center w-full xl:w-[90%]  h-full sm:px-16 pt-2 overflow-y-auto z-10 px-2">
@@ -203,7 +203,7 @@ export default function ContactUs() {
                         </span>
                       </div>
                     </div>
-                  )
+                  ),
                 )}
               </ul>
             </div>
