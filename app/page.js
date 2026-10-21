@@ -37,7 +37,7 @@ export default function Home() {
             `/api/categories/bulk?categories=${categoryIds}`,
             {
               next: { revalidate: 3600 }, // إعادة التحقق بعد ساعة (ISR)
-            }
+            },
           );
 
           if (!response.ok)
@@ -89,9 +89,9 @@ export default function Home() {
   };
 
   return (
-    <main className="relative flex flex-row-reverse items-start justify-between overflow-hidden z-[30] h-fit w-full bg-five rounded-b mt-8">
-      <div className="relative flex-col justify-between items-start w-full h-full">
-        <div className="flex flex-col items-center justify-center overflow-hidden z-50 h-fit w-full bg-five rounded-b mt-8">
+    <main className="relative flex flex-row-reverse items-start bg-green-500 justify-between overflow-hidden z-[30] h-fit w-full bg-five rounded-b lg:mt-60">
+      <div className="relative flex-col justify-between items-start w-full bg-green-400 h-full">
+        <div className="flex flex-col items-center justify-center overflow-hidden z-50 h-fit w-full bg-five rounded-b mt-8 bg-red-400">
           {loading && loadedCategories === 0 ? (
             <Loading fullPage />
           ) : (

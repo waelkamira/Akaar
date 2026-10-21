@@ -422,7 +422,7 @@ const CategoriesNavBar = () => {
                       'text-xs font-semibold mt-2 transition-colors duration-200 tracking-wide select-none',
                       isSelected
                         ? 'text-white font-bold'
-                        : 'text-slate-600 group-hover:text-orange-600',
+                        : 'text-white/70 group-hover:text-orange-600',
                     )}
                   >
                     {categoryItem?.name}
@@ -446,7 +446,7 @@ const CategoriesNavBar = () => {
                 whileTap={{ scale: 0.95 }}
                 className={cn(
                   // 🟢 تم تقليل الـ padding من p-3 إلى p-2 والـ min-w من 84px إلى 72px لتوفير مساحة
-                  'flex-shrink-0 flex flex-col items-center justify-center p-2 rounded-xl min-w-[72px] snap-center transition-all duration-300 border',
+                  'flex-shrink-0 flex flex-col items-center justify-center p-2 rounded-xl lg:min-w-[72px] sm:w-6 snap-center transition-all duration-300 border',
                   isSelected
                     ? 'bg-gradient-to-br from-[#FDAA05] to-[#FA6D0B] text-white border-transparent shadow-md shadow-orange-500/25'
                     : 'bg-slate-50 text-slate-600 border-slate-100',

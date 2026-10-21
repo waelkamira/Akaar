@@ -288,9 +288,9 @@ function SearchCategoryContent() {
       transition={{ duration: 0.5 }}
       className="min-h-screen lg:gap-2 pb-8"
     >
-      <div className="flex justify-center items-start w-full min-h-screen px-2 lg:gap-2">
+      <div className="flex justify-center items-start w-full min-h-screen px-2 lg:gap-2 md:mt-64 ">
         {/* Filters Sidebar */}
-        <main className=" z-50 sticky top-0 ">
+        <main className=" z-50 sticky ">
           <div className="flex flex-col lg:flex-row w-full h-screen">
             <div className="lg:sticky z-50 sm:top-4 sm:self-start sm:h-[calc(100vh-2rem)] sm:overflow-y-auto pb-16 sm:pb-0">
               <AnimatePresence>
@@ -344,7 +344,7 @@ function SearchCategoryContent() {
         </main>
 
         {/* Search Results */}
-        <section className="relative flex flex-col justify-s w-full lg:ml-6 sm:mt-0 bg-black">
+        <section className="relative flex flex-col justify-s w-full lg:ml-6 sm:mt-0">
           {/* الزر العائم لفلاتر وضع الهاتف والشاشات الصغيرة */}
           {isMobile && (
             <motion.button

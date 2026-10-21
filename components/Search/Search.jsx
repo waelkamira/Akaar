@@ -445,7 +445,7 @@ export default function EnhancedSearch() {
   };
 
   return (
-    <div className="w-full flex flex-col justify-center items-center gap-4 sm:p-0 z-10 relative bg-black">
+    <div className="w-full flex flex-col justify-center items-center gap-4 sm:p-0 z-10 relative">
       {/* حاوية شريط البحث: تم تقليل الارتفاع على الهواتف من h-20 إلى h-14 وإعادته sm:h-20 */}
       <div className="w-full sm:w-2/3 bg-white/90 backdrop-blur-sm rounded-lg shadow-sm flex justify-center items-center gap-2 h-14 sm:h-20 px-3 sm:px-4">
         {/* زر البحث: تم تقليل الارتفاع والخط على الشاشات الصغيرة h-8 والخط text-xs */}
