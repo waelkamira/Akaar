@@ -7,6 +7,7 @@ import AuthContextProvider from '../components/authContext/AuthContext';
 import MainNavBar from '../components/navbars/MainNavbar';
 import { SearchProvider } from '../contexts/SearchContext';
 import Script from 'next/script';
+import { Suspense } from 'react';
 
 const rubik = Rubik({
   subsets: ['latin'],
@@ -19,7 +20,6 @@ export const metadata = {
   title: 'Bayya - Your Online Store',
   description: 'Bayya is your one-stop shop for all your needs',
   manifest: '/manifest.json',
-  themeColor: '#000000',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
@@ -30,7 +30,12 @@ export const metadata = {
   },
 };
 
-export const viewport = 'width=device-width, initial-scale=1, maximum-scale=1';
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  themeColor: '#000000',
+};
 
 export default function RootLayout({ children }) {
   return (
@@ -49,10 +54,12 @@ export default function RootLayout({ children }) {
         <Toaster />
         <AuthContextProvider>
           <InputsContextProvider>
-            <SearchProvider>
-              <MainNavBar />
-              {children}
-            </SearchProvider>
+            <Suspense fallback={null}>
+              <SearchProvider>
+                <MainNavBar />
+                {children}
+              </SearchProvider>
+            </Suspense>
           </InputsContextProvider>
         </AuthContextProvider>
         <Script src="/register-sw.js" strategy="afterInteractive" />
