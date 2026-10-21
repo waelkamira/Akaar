@@ -1,5 +1,5 @@
 // import { PrismaClient } from '@prisma/client';
-// import bcrypt from 'bcrypt';
+// import bcrypt from 'bcryptjs';
 // import CredentialsProvider from 'next-auth/providers/credentials';
 // import GoogleProvider from 'next-auth/providers/google';
 
@@ -99,7 +99,7 @@
 //   pages: { signIn: '/login' },
 // };
 import { PrismaClient } from '@prisma/client';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
 import { v4 as uuidv4 } from 'uuid';
