@@ -85,69 +85,65 @@ import Image from 'next/image';
 import { useState } from 'react';
 
 export default function FirstNavBar() {
+  // تم تصحيح السطر أدناه لإزالة كود الـ TypeScript ليناسب ملف الـ .jsx
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
   return (
     <motion.div
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-      className="hidden xl:flex xl:flex-col xl:justify-start w-full fixed top-0 left-0 right-0 z-[1000] border-b border-white/[0.06] bg-black/40 backdrop-blur-xl shadow-[0_4px_30px_rgba(0,0,0,0.4)]"
+      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+      className="hidden w-full lg:flex xl:flex-col xl:justify-start top-4 left-1/2 -translate-x-1/2 z-[1000] rounded-2xl border border-white/[0.08] bg-black/50 backdrop-blur-xl shadow-[0_24px_50px_-12px_rgba(0,0,0,0.7)]"
     >
-      <div className="max-w-[1600px] w-full mx-auto flex justify-between items-center px-8 h-20">
+      <div className="w-full flex justify-between items-center px-10 h-20">
         {/* أزرار التنقل (القائمة) */}
         <nav className="flex items-center h-full">
-          <ul className="flex items-center gap-6">
+          <ul className="flex items-center gap-2">
             {mainButtons?.map((button) => {
-              // التحقق مما إذا كان الماوس فوق هذا الزر حالياً
               const isHovered = hoveredIndex === button?.title;
 
               return (
                 <li
                   key={button?.title}
-                  className="relative"
+                  className="relative px-1 py-2"
                   onMouseEnter={() => setHoveredIndex(button?.title)}
                   onMouseLeave={() => setHoveredIndex(null)}
                 >
                   <Link
                     href={button?.path}
-                    className="flex items-center gap-2.5 text-gray-300 hover:text-white font-medium text-sm tracking-wide transition-colors duration-300 px-6 py-3 rounded-xl relative z-10"
+                    className="flex items-center gap-3 font-medium text-[13px] tracking-widest uppercase transition-colors duration-500 px-5 py-2.5 rounded-xl relative z-10 select-none text-neutral-400 hover:text-white"
                   >
                     {button?.icon && (
                       <span
-                        className={`text-lg flex items-center transition-colors duration-300 ${
-                          isHovered ? 'text-orange-500' : 'text-gray-400'
+                        className={`text-base flex items-center transition-all duration-500 ${
+                          isHovered
+                            ? 'text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)] scale-110'
+                            : 'text-slate-400'
                         }`}
                       >
                         {button?.icon}
                       </span>
                     )}
-                    <span className="whitespace-nowrap select-none">
+                    <span className="whitespace-nowrap font-light text-white tracking-wider">
                       {button?.title}
                     </span>
                   </Link>
 
-                  {/* خلفية الإطار البرتقالي الفاخر بتصميم الواسع والمضيء */}
+                  {/* تأثير الخلفية الانسيابية المتحركة (Premium Fluid Capsule) */}
                   <AnimatePresence>
                     {isHovered && (
                       <motion.div
-                        layoutId="nav-hover-border"
-                        className="absolute inset-[-4px] rounded-xl p-[2px] overflow-hidden pointer-events-none z-0 shadow-[0_0_15px_rgba(249,115,22,0.3)]"
-                        initial={{ opacity: 0, scale: 0.96 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.96 }}
+                        layoutId="nav-hover-pill"
+                        className="absolute inset-0 rounded-xl bg-gradient-to-r from-white/[0.04] to-white/[0.08] border border-white/[0.05] pointer-events-none z-0"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
                         transition={{
                           type: 'spring',
-                          stiffness: 350,
-                          damping: 28,
+                          stiffness: 380,
+                          damping: 30,
                         }}
-                      >
-                        {/* التأثير الدوّار للون البرتقالي */}
-                        <div className="absolute inset-0 w-[300%] h-[300%] top-[-100%] left-[-100%] animate-spin-slow bg-[conic-gradient(from_0deg,transparent_30%,#f97316_50%,transparent_70%)]" />
-
-                        {/* طبقة داخلية لحجب المنتصف */}
-                        <div className="absolute inset-[2px] bg-[#0c0c0c] rounded-[10px]" />
-                      </motion.div>
+                      />
                     )}
                   </AnimatePresence>
                 </li>
@@ -160,18 +156,21 @@ export default function FirstNavBar() {
         <div className="flex items-center justify-end">
           <Link
             href={'/'}
-            className="relative flex items-center cursor-pointer"
+            className="relative flex items-center cursor-pointer group"
           >
             <motion.div
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="relative h-12 w-40 flex items-center justify-end"
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
+              className="relative h-12 w-40 flex items-center justify-end transition-all duration-500"
             >
+              {/* توهج خافي خلف الشعار يظهر عند تمرير الماوس */}
+              <div className="absolute inset-0 bg-amber-500/10 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+
               <Image
                 src="/logo.png"
                 alt="luxury_logo"
                 fill
-                className="object-contain filter drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)]"
+                className="object-contain filter drop-shadow-[0_4px_12px_rgba(0,0,0,0.6)] brightness-105 group-hover:brightness-120 transition-all duration-500"
                 priority
               />
             </motion.div>
