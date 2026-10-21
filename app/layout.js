@@ -8,7 +8,7 @@ import MainNavBar from '../components/navbars/MainNavbar';
 import { SearchProvider } from '../contexts/SearchContext';
 import Script from 'next/script';
 import { Suspense } from 'react';
-
+import SideBarMenu from '../components/navbars/SideBarMenu';
 const rubik = Rubik({
   subsets: ['latin'],
   weight: ['300', '400', '500', '700'],
@@ -56,6 +56,7 @@ export default function RootLayout({ children }) {
           <InputsContextProvider>
             <Suspense fallback={null}>
               <SearchProvider>
+                <SideBarMenu />
                 <MainNavBar />
                 {children}
               </SearchProvider>

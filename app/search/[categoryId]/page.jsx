@@ -344,7 +344,7 @@ function SearchCategoryContent() {
         </main>
 
         {/* Search Results */}
-        <section className="relative flex flex-col justify-start w-full lg:ml-6 sm:mt-0">
+        <section className="relative flex flex-col justify-s w-full lg:ml-6 sm:mt-0 bg-black">
           {/* الزر العائم لفلاتر وضع الهاتف والشاشات الصغيرة */}
           {isMobile && (
             <motion.button
@@ -404,7 +404,7 @@ function SearchCategoryContent() {
 export default function SearchCategoryPage({ params }) {
   const categoryId = params.categoryId?.split('=')[1];
   const category = filterOptions.categories.find(
-    (cat) => cat.id.toString() === categoryId
+    (cat) => cat.id.toString() === categoryId,
   );
 
   return (

@@ -41,10 +41,10 @@ export default function SideBarMenu() {
 
   return (
     <>
-      <div className="xl:hidden relative flex flex-col justify-start items-start gap-3 w-fit ">
+      <div className="xl:hidden flex flex-col justify-start items-start gap-3 w-fit z-50 fixed p-2">
         {/* زر فتح القائمة */}
         <TfiMenuAlt
-          className=" w-fit sm:p-1 sm:m-2 text-4xl text-gray-400 sm:text-white cursor-pointer z-40 transition-transform duration-500 hover:scale-110 sm:bg-black/20 rounded-lg hover:rotate-180"
+          className=" w-fit sm:p-1 sm:m-2 text-4xl text-gray-400 sm:text-white cursor-pointer z-50 transition-transform duration-500 hover:scale-110 sm:bg-black/20 rounded-lg hover:rotate-180"
           onClick={() => setIsOpen(!isOpen)}
         />
 
@@ -56,7 +56,7 @@ export default function SideBarMenu() {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', stiffness: 120, damping: 15 }}
-              className="fixed top-0 right-0 h-screen w-64 bg-gradient-to-b from-primary-300 to-primary-500 backdrop-blur-md shadow-xl z-[1006] p-6 overflow-y-auto flex flex-col items-center"
+              className="fixed top-0 right-0 h-screen w-64 bg-gradient-to-b from-primary-300 to-primary-500 backdrop-blur-md shadow-xl z-50 p-6 overflow-y-auto flex flex-col items-center"
               style={{ color: secondaryColor }}
             >
               {/* زر الإغلاق */}
@@ -198,7 +198,7 @@ export default function SideBarMenu() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-black/30 backdrop-blur-sm z-[1000] h-screen top-0"
+          className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40 h-screen top-0"
           onClick={() => setIsOpen(false)}
         />
       )}

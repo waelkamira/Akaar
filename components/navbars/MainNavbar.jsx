@@ -11,7 +11,7 @@ export default function MainNavbar() {
       <div className="w-full sm:h-64">
         <Hero />
       </div>
-      <Search />
+      {/* <Search /> */}
     </div>
   );
 }

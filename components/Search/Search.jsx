@@ -253,7 +253,6 @@ import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { ImSearch, ImSpinner8, ImCross } from 'react-icons/im';
 import CategoriesNavBar from '../navbars/CategoriesNavBar';
 import { useSearch } from '../../contexts/SearchContext';
-import SideBarMenu from '../navbars/SideBarMenu';
 import { debounce } from 'lodash';
 
 export default function EnhancedSearch() {
@@ -446,29 +445,27 @@ export default function EnhancedSearch() {
   };
 
   return (
-    <div className="w-full flex flex-col justify-center items-center gap-4 sm:p-0 z-40 relative">
-      {/* حاوية شريط البحث */}
-      <div className="w-full sm:w-2/3 bg-white/90 backdrop-blur-sm rounded-lg shadow-sm flex justify-center items-center gap-2 z-20 h-20 px-4">
-        <div className="sm:hidden">
-          <SideBarMenu />
-        </div>
-
+    <div className="w-full flex flex-col justify-center items-center gap-4 sm:p-0 z-10 relative bg-black">
+      {/* حاوية شريط البحث: تم تقليل الارتفاع على الهواتف من h-20 إلى h-14 وإعادته sm:h-20 */}
+      <div className="w-full sm:w-2/3 bg-white/90 backdrop-blur-sm rounded-lg shadow-sm flex justify-center items-center gap-2 h-14 sm:h-20 px-3 sm:px-4">
+        {/* زر البحث: تم تقليل الارتفاع والخط على الشاشات الصغيرة h-8 والخط text-xs */}
         <button
           onClick={() => handleSearch(inputValue)}
           disabled={isSearching}
-          className="flex justify-center items-center bg-gradient-to-r from-primary-500 to-primary-400 text-white text-nowrap rounded-lg h-10 px-2 sm:px-6 hover:bg-primary-600 hover:scale-105 transition-all cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
+          className="flex justify-center items-center bg-gradient-to-r from-primary-500 to-primary-400 text-white text-nowrap rounded-lg h-8 sm:h-10 px-2 sm:px-6 hover:bg-primary-600 hover:scale-105 transition-all cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed text-xs sm:text-base"
           aria-label="بحث"
         >
           {isSearching ? (
-            <ImSpinner8 className="animate-spin ml-2" />
+            <ImSpinner8 className="animate-spin ml-1 sm:ml-2 text-xs sm:text-sm" />
           ) : (
-            <ImSearch className="ml-2" />
+            <ImSearch className="ml-1 sm:ml-2 text-xs sm:text-sm" />
           )}
-          <span className="mr-1">بحث</span>
+          <span className="mr-0.5 sm:mr-1">بحث</span>
         </button>
 
         <div className="flex-grow relative" ref={suggestionsRef}>
           <div className="relative">
+            {/* حقل الإدخال: تم تقليل الارتفاع h-8، الحشوات pr-6 pl-6، والخط text-xs على الهواتف */}
             <input
               ref={inputRef}
               type="text"
@@ -478,25 +475,27 @@ export default function EnhancedSearch() {
               onKeyDown={handleKeyDown}
               onFocus={handleInputFocus}
               placeholder="ابحث عن عقار، سيارة، أو أي منتج..."
-              className="flex-grow w-full rounded-lg h-10 p-2 text-sm sm:text-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-500 placeholder:text-sm lg:placeholder:text-lg pr-8 pl-8"
+              className="flex-grow w-full rounded-lg h-8 sm:h-10 p-2 text-xs sm:text-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-500 placeholder:text-[11px] sm:placeholder:text-sm lg:placeholder:text-lg pr-6 pl-6 sm:pr-8 sm:pl-8 text-right"
               aria-autocomplete="list"
               aria-controls="search-suggestions"
               aria-expanded={showSuggestions}
             />
 
+            {/* زر مسح البحث: تم تصغير حجم الأيقونة وموضعها على الهواتف */}
             {inputValue && (
               <button
                 onClick={clearSearch}
-                className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                className="absolute left-1.5 sm:left-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                 aria-label="مسح البحث"
               >
-                <ImCross size={14} />
+                <ImCross className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5" />
               </button>
             )}
 
+            {/* أيقونة التحميل: تم تصغير حجمها وموضعها على الهواتف */}
             {isLoading && (
-              <div className="absolute right-2 top-1/2 -translate-y-1/2">
-                <ImSpinner8 className="animate-spin text-gray-400" />
+              <div className="absolute right-1.5 sm:right-2 top-1/2 -translate-y-1/2">
+                <ImSpinner8 className="animate-spin text-gray-400 text-xs sm:text-base" />
               </div>
             )}
           </div>
@@ -504,25 +503,25 @@ export default function EnhancedSearch() {
           {showSuggestions && suggestions.length > 0 && (
             <div
               id="search-suggestions"
-              className="absolute z-[60] w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-y-auto"
+              className="absolute w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-y-auto text-xs sm:text-sm"
               role="listbox"
             >
               {suggestions.map((suggestion, index) => (
                 <div
                   key={`${suggestion.text}-${index}`}
                   onClick={() => handleSuggestionClick(suggestion)}
-                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-right flex justify-between items-center transition-colors"
+                  className="px-3 py-1.5 sm:px-4 sm:py-2 hover:bg-gray-100 cursor-pointer text-right flex justify-between items-center transition-colors"
                   role="option"
                   aria-selected="false"
                 >
                   <span>{suggestion.text}</span>
                   {suggestion.type === 'recent' && (
-                    <span className="text-xs text-gray-400 whitespace-nowrap mr-2">
+                    <span className="text-[10px] sm:text-xs text-gray-400 whitespace-nowrap mr-2">
                       حديث
                     </span>
                   )}
                   {suggestion.type === 'popular' && (
-                    <span className="text-xs text-primary-500 whitespace-nowrap mr-2">
+                    <span className="text-[10px] sm:text-xs text-primary-500 whitespace-nowrap mr-2">
                       شائع
                     </span>
                   )}

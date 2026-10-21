@@ -380,8 +380,8 @@ const CategoriesNavBar = () => {
   }, [category]);
 
   return (
-    <div className="w-full backdrop-blur-md border-b border-slate-200/60 sticky z-40">
-      {/* ديسكتوب (Desktop View) */}
+    <div className="w-full backdrop-blur-md border-b border-slate-200/60 sticky">
+      {/* ديسكتوب (Desktop View) - يبقى كما هو تماماً دون تغيير */}
       <div className="hidden w-full sm:flex mx-auto px-1 overflow-x-auto gap-1 py-3 scrollbar-none justify-start items-center">
         {categories?.length > 0 &&
           categories.map((categoryItem) => {
@@ -391,7 +391,7 @@ const CategoriesNavBar = () => {
             return (
               <div
                 key={categoryItem?.id}
-                className="relative w-fit flex-1  group"
+                className="relative w-fit flex-1 group"
                 onMouseEnter={() => setHoveredCategory(categoryItem.id)}
                 onMouseLeave={() => setHoveredCategory(null)}
               >
@@ -400,7 +400,7 @@ const CategoriesNavBar = () => {
                   isHovered={isHovered}
                   onClick={() => handleCategoryIdClick(categoryItem)}
                 >
-                  {/* حاوية الأيقونة */}
+                  {/* حاوية الأيقونة في الديسكتوب */}
                   <div
                     className={cn(
                       'flex items-center justify-center w-11 h-11 rounded-xl transition-all duration-300 transform group-hover:-translate-y-0.5',
@@ -416,7 +416,7 @@ const CategoriesNavBar = () => {
                     </div>
                   </div>
 
-                  {/* اسم القسم */}
+                  {/* اسم القسم في الديسكتوب */}
                   <span
                     className={cn(
                       'text-xs font-semibold mt-2 transition-colors duration-200 tracking-wide select-none',
@@ -433,8 +433,8 @@ const CategoriesNavBar = () => {
           })}
       </div>
 
-      {/* موبايل (Mobile View) */}
-      <div className="sm:hidden flex overflow-x-auto gap-3 p-3 bg-white/80 backdrop-blur-md scrollbar-none snap-x">
+      {/* موبايل (Mobile View) - 🟢 تم تصغير الأيقونات والحشوات هنا */}
+      <div className="sm:hidden flex overflow-x-auto gap-2 p-2 bg-white/80 backdrop-blur-md scrollbar-none snap-x">
         {categories?.length > 0 &&
           categories.map((categoryItem) => {
             const isSelected = selectedCategory?.id === categoryItem?.id;
@@ -445,23 +445,29 @@ const CategoriesNavBar = () => {
                 onClick={() => handleCategoryIdClick(categoryItem)}
                 whileTap={{ scale: 0.95 }}
                 className={cn(
-                  'flex-shrink-0 flex flex-col items-center justify-center p-3 rounded-xl min-w-[84px] snap-center transition-all duration-300 border',
+                  // 🟢 تم تقليل الـ padding من p-3 إلى p-2 والـ min-w من 84px إلى 72px لتوفير مساحة
+                  'flex-shrink-0 flex flex-col items-center justify-center p-2 rounded-xl min-w-[72px] snap-center transition-all duration-300 border',
                   isSelected
                     ? 'bg-gradient-to-br from-[#FDAA05] to-[#FA6D0B] text-white border-transparent shadow-md shadow-orange-500/25'
                     : 'bg-slate-50 text-slate-600 border-slate-100',
                 )}
               >
+                {/* حاوية الأيقونة للموبايل */}
                 <div
                   className={cn(
-                    'text-xl mb-1.5',
+                    // 🟢 تم تصغير حجم الأيقونة من text-xl إلى text-base (أو text-lg حسب رغبتك) وتقليل الهامش السفلي mb-1
+                    'text-base mb-1',
                     isSelected ? 'text-white' : 'text-slate-500',
                   )}
                 >
                   {categoryItem?.icon || <FaHome />}
                 </div>
+
+                {/* اسم القسم للموبايل */}
                 <span
                   className={cn(
-                    'text-[11px] font-medium tracking-tight',
+                    // 🟢 تم تصغير الخط قليلاً من 11px إلى 10px ليناسب الحجم الجديد للبطاقة
+                    'text-[10px] font-medium tracking-tight whitespace-nowrap',
                     isSelected ? 'font-bold text-white' : 'text-slate-600',
                   )}
                 >
