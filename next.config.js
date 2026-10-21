@@ -9,7 +9,7 @@ const withPWA = require('next-pwa')({
 const nextConfig = withPWA({
   turbopack: {}, // 🟢 تم إضافة هذا السطر هنا لمنع تعارض Next-PWA مع محرّك البناء
   compress: true,
-  swcMinify: true,
+
   typescript: {
     ignoreBuildErrors: true,
   },

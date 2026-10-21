@@ -21,7 +21,6 @@ export function SearchProvider({ children, initialCategory }) {
   const [dynamicFilters, setDynamicFilters] = useState([]);
   const [shouldSearchOnLoad, setShouldSearchOnLoad] =
     useState(!!initialCategory);
-  console.log('filters from search context', filters);
   // Navigation
   const router = useRouter();
   const searchParams = useSearchParams();
