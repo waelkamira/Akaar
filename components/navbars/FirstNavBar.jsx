@@ -167,10 +167,11 @@ export default function FirstNavBar() {
               <div className="absolute inset-0 bg-amber-500/10 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
 
               <Image
-                src="/logo.png"
+                src="/images/matjar.png"
                 alt="luxury_logo"
-                fill
-                className="object-contain filter drop-shadow-[0_4px_12px_rgba(0,0,0,0.6)] brightness-105 group-hover:brightness-120 transition-all duration-500"
+                width={145}
+                height={20}
+                className="object-contain filter drop-shadow-[0_4px_12px_rgba(0,0,0,0.6)] brightness-105 group-hover:brightness-120 transition-all duration-500 bg-white "
                 priority
               />
             </motion.div>

@@ -1,4 +1,407 @@
+// 'use client';
+// import { useState, useEffect, useContext } from 'react';
+// import { useForm } from 'react-hook-form';
+// import categories from '../../components/Categories/categories';
+// import UploadingAndDisplayingImage from '../../components/photos/UploadingAndDisplayingImage';
+// import { inputsContext } from '../../components/authContext/Context';
+// import toast from 'react-hot-toast';
+// import { useRouter } from 'next/navigation';
+// import LoginButton from '../../components/Buttons/LoginButton';
+// import {
+//   MdCategory,
+//   MdTitle,
+//   MdPhone,
+//   MdDescription,
+//   MdAttachMoney,
+// } from 'react-icons/md';
+// import FormInput from './FormInput';
+// import FormSelect from './FormSelect';
+// import FormTextarea from './FormTextarea';
+// import FormSubmitButton from './FormSubmitButton';
+// import OnClickMap from '../../components/map/onClickMap';
+// import { useSession } from 'next-auth/react';
+// import { FaTreeCity } from 'react-icons/fa6';
+// import { PiBuildingsDuotone } from 'react-icons/pi';
+// import { FaObjectGroup } from 'react-icons/fa';
+
+// export default function NewPost() {
+//   const [categoryFields, setCategoryFields] = useState([]);
+//   const { register, handleSubmit } = useForm();
+//   const [selectedCategory, setSelectedCategory] = useState(null);
+//   const [emptyFields, setEmptyFields] = useState([]);
+//   const router = useRouter();
+//   const { addImages, location, dispatch } = useContext(inputsContext);
+//   const session = useSession();
+//   const [error, setError] = useState(null);
+
+//   const [formState, setFormState] = useState({
+//     userId: 'b2a4f3fa-2bb7-4f97-95db-4fa53c581bb4',
+//     userImage: '/placeholder.jpg',
+//     userName: 'wael',
+//     title: '',
+//     categoryId: '',
+//     categoryName: '',
+//     images: [
+//       '/images/house.png',
+//       '/images/house.png',
+//       '/images/house.png',
+//       '/images/house.png',
+//     ],
+//     city: '',
+//     town: '',
+//     stockQuantity: 1,
+//     basePrice: '',
+//     phoneNumber: '',
+//     description: '',
+//     link: '',
+//     lng: 36.2765,
+//     lat: 33.5138,
+//     details: {},
+//   });
+
+//   // ✅ جلب الفئة
+//   const handleCategoryChange = (category) => {
+//     if (category) {
+//       const selected = categories[category - 1];
+//       setSelectedCategory(selected);
+
+//       // قم بتحديث formState مباشرةً هنا
+//       setFormState((prev) => ({
+//         ...prev,
+//         categoryId: selected?.id || '',
+//         categoryName: selected?.name || '',
+//       }));
+//     } else {
+//       setSelectedCategory(null);
+//       // قم بتحديث formState هنا أيضًا إذا تم إلغاء تحديد الفئة
+//       setFormState((prev) => ({
+//         ...prev,
+//         categoryId: '',
+//         categoryName: '',
+//       }));
+//     }
+//   };
+
+//   // ✅ تحميل الحقول بناءً على الفئة عند تغيير الفئة
+//   useEffect(() => {
+//     if (selectedCategory) {
+//       import(`../../components/categoryFields/${selectedCategory?.name}.jsx`)
+//         .then((module) => {
+//           setCategoryFields(module.default);
+//           setError(null); // Reset error on successful load
+//         })
+//         .catch((err) => {
+//           console.error('Failed to load fields:', err);
+//           setCategoryFields([]); // Reset fields on error
+//           setError('فشل في تحميل الحقول');
+//         });
+//     } else {
+//       setCategoryFields([]); // Reset fields when category is unselected
+//     }
+//   }, [selectedCategory]);
+
+//   // ✅ تحديث formState عند تغيير userId, selectedCategory, location, addImages
+//   useEffect(() => {
+//     setFormState((prev) => ({
+//       ...prev,
+//       categoryId: selectedCategory?.id || '',
+//       categoryName: selectedCategory?.name || '',
+//       images: addImages.length ? addImages : prev.images,
+//       lng: location?.[1] || prev.lng,
+//       lat: location?.[0] || prev.lat,
+//     }));
+//   }, [selectedCategory, location, addImages]);
+
+//   const handleInputChange = (e) => {
+//     const { name, value } = e.target;
+//     setFormState((prev) => ({
+//       ...prev,
+//       [name]: value,
+//     }));
+
+//     if (value.trim()) {
+//       setEmptyFields((prev) => prev.filter((item) => item !== name));
+//     }
+//   };
+
+//   const handleDetailsChange = (field, value) => {
+//     setFormState((prev) => ({
+//       ...prev,
+//       details: {
+//         ...prev.details,
+//         [field]: value,
+//       },
+//     }));
+
+//     if (value.trim()) {
+//       setEmptyFields((prev) => prev.filter((item) => item !== field));
+//     }
+//   };
+
+//   const validateForm = () => {
+//     const requiredFields = [
+//       'userId',
+//       'title',
+//       'categoryId',
+//       'categoryName',
+//       'city',
+//       'town',
+//       'phoneNumber',
+//       'basePrice',
+//       'description',
+//     ];
+
+//     let emptyFieldsList = [];
+
+//     const hasEmptyRequiredField = requiredFields.some((field) => {
+//       if (typeof formState[field] === 'string' && !formState[field].trim()) {
+//         emptyFieldsList.push(field);
+//         return true; // Stop iterating if an empty field is found
+//       }
+//       return false;
+//     });
+
+//     if (!hasEmptyRequiredField && selectedCategory && categoryFields) {
+//       categoryFields.forEach((field) => {
+//         if (!formState.details[field?.name]?.trim()) {
+//           emptyFieldsList.push(field?.name);
+//         }
+//       });
+//     }
+
+//     setEmptyFields(emptyFieldsList);
+//     return emptyFieldsList.length === 0;
+//   };
+
+//   // const validateImages = () => {
+//   //   if (addImages.length === 0) {
+//   //     toast.error('يرجى إضافة صورة على الأقل.');
+//   //     return false;
+//   //   }
+//   //   return true;
+//   // };
+
+//   const onSubmit = async () => {
+//     // if (!validateImages()) {
+//     //   return;
+//     // }
+//     // if (!validateForm()) {
+//     //   toast.error('يرجى ملء جميع الحقول المطلوبة.');
+//     //   return;
+//     // }
+
+//     if (!selectedCategory) {
+//       toast.error('يجب اختيار فئة قبل إرسال النموذج.');
+//       return;
+//     }
+
+//     const formData = {
+//       ...formState,
+//       userId: formState.userId,
+//       categoryId: formState.categoryId,
+//       basePrice: parseInt(formState.basePrice) || 0,
+//       stockQuantity: parseInt(formState.stockQuantity) || 1,
+//       lng: formState.lng ? parseFloat(formState.lng) : null,
+//       lat: formState.lat ? parseFloat(formState.lat) : null,
+//     };
+//     console.log('formData to be sent:', formData);
+
+//     try {
+//       const response = await fetch('/api/product', {
+//         method: 'POST',
+//         headers: { 'Content-Type': 'application/json' },
+//         body: JSON.stringify(formData),
+//       });
+
+//       if (response.ok) {
+//         console.log('Product added successfully:', await response.json());
+//         toast.success('تم إنشاء الإعلان بنجاح');
+//         dispatch({ type: 'ADD_IMAGE', payload: [] });
+//         router.push('/posts');
+//       } else {
+//         console.error('Failed to add product:', await response.text());
+//         toast.error('حدث خطأ ما، حاول مرة أخرى');
+//       }
+//     } catch (error) {
+//       console.error('Error:', error);
+//       toast.error('حدث خطأ ما، حاول مرة أخرى');
+//     }
+//   };
+
+//   if (session?.status === 'unauthenticated') {
+//     // return <LoginButton />;
+//   }
+//   return (
+//     <div className="flex flex-col justify-center items-center w-full bg-five text-sm sm:text-lg mt-64 bg-green-400">
+//       <form
+//         onSubmit={(e) => {
+//           e.preventDefault();
+//           onSubmit();
+//         }}
+//         className="space-y-4 p-4 border rounded-lg shadow-md w-full xl:w-1/2 mt-64 sm:mt-0"
+//       >
+//         <UploadingAndDisplayingImage />
+
+//         <FormSelect
+//           label="الفئة"
+//           icon={<MdCategory className="text-primary-500 text-lg sm:text-xl" />}
+//           name="category"
+//           options={categories.map((cat) => ({
+//             value: cat.id,
+//             label: cat.name, // النص المعروض في القائمة
+//           }))}
+//           register={register}
+//           errors={emptyFields}
+//           onChange={(e) => handleCategoryChange(e.target.value)} // تمرير الدالة المعدلة
+//           placeholder="-اختر-"
+//         />
+
+//         <FormInput
+//           label="عنوان الإعلان"
+//           icon={<MdTitle className="text-primary-500 text-lg sm:text-xl" />}
+//           name="title"
+//           placeholder="ضع عنوان مناسب للإعلان"
+//           register={register}
+//           errors={emptyFields}
+//           onChange={handleInputChange}
+//         />
+//         <FormInput
+//           label="المدينة"
+//           icon={
+//             <PiBuildingsDuotone className="text-primary-500 text-lg sm:text-xl" />
+//           }
+//           name="city"
+//           placeholder="دمشق"
+//           register={register}
+//           errors={emptyFields}
+//           onChange={handleInputChange}
+//         />
+//         <FormInput
+//           label="المنطقة"
+//           icon={<FaTreeCity className="text-primary-500 text-lg sm:text-xl" />}
+//           name="town"
+//           placeholder="المزة"
+//           register={register}
+//           errors={emptyFields}
+//           onChange={handleInputChange}
+//         />
+
+//         <FormInput
+//           label="رقم الهاتف"
+//           icon={<MdPhone className="text-primary-500 text-lg sm:text-xl" />}
+//           name="phoneNumber"
+//           placeholder="+963 955555555"
+//           type="number"
+//           register={register}
+//           errors={emptyFields}
+//           onChange={handleInputChange}
+//         />
+
+//         {error && <p className="text-red-500">خطأ: {error}</p>}
+
+//         {selectedCategory &&
+//           Array.isArray(categoryFields) &&
+//           categoryFields?.map((field, index) => (
+//             <div key={index}>
+//               <label className="font-medium mb-2 flex items-center gap-2">
+//                 {field?.icon} {field?.label}
+//               </label>
+//               {field?.options ? (
+//                 <select
+//                   className={`w-full p-1 sm:p-2 lg:p-3 border rounded focus:outline-2 focus:outline-primary-500 ${
+//                     emptyFields.includes(field?.name)
+//                       ? 'outline-2 outline-red-500'
+//                       : ''
+//                   }`}
+//                   required
+//                   onChange={(e) =>
+//                     handleDetailsChange(field?.name, e.target.value)
+//                   }
+//                 >
+//                   <option value="">{field?.placeholder}</option>
+//                   {Object.entries(field?.options).map(([key, value]) => (
+//                     <option key={key} value={key}>
+//                       {value}
+//                     </option>
+//                   ))}
+//                 </select>
+//               ) : (
+//                 <input
+//                   placeholder={field?.placeholder}
+//                   className={`w-full p-1 sm:p-2 lg:p-3 border rounded focus:outline-2 focus:outline-primary-500 ${
+//                     emptyFields.includes(field?.name)
+//                       ? 'outline-2 outline-red-500'
+//                       : ''
+//                   }`}
+//                   required
+//                   onChange={(e) =>
+//                     handleDetailsChange(field?.name, e.target.value)
+//                   }
+//                 />
+//               )}
+//               {emptyFields.includes(field?.name) && (
+//                 <p className="text-red-500 text-sm mt-1">هذا الحقل مطلوب</p>
+//               )}
+//             </div>
+//           ))}
+
+//         <FormInput
+//           label="السعر"
+//           icon={
+//             <MdAttachMoney className="text-primary-500 text-lg sm:text-xl" />
+//           }
+//           name="basePrice"
+//           placeholder="500 $"
+//           type="number"
+//           register={register}
+//           errors={emptyFields}
+//           onChange={handleInputChange}
+//         />
+//         <FormInput
+//           label="الكمية المتاحة"
+//           icon={
+//             <FaObjectGroup className="text-primary-500 text-lg sm:text-xl" />
+//           }
+//           name="stockQuantity"
+//           placeholder="1"
+//           type="number"
+//           register={register}
+//           errors={emptyFields}
+//           onChange={handleInputChange}
+//           value={formState.stockQuantity}
+//         />
+//         <FormTextarea
+//           label="وصف الإعلان"
+//           icon={
+//             <MdDescription className="text-primary-500 text-lg sm:text-xl" />
+//           }
+//           name="description"
+//           placeholder=" اكتب وصف المنتج بكامل التفاصيل..."
+//           register={register}
+//           errors={emptyFields}
+//           onChange={handleInputChange}
+//         />
+
+//         <OnClickMap />
+//         <FormInput
+//           label="رابط الفيديو من يوتيوب أو تيك توك"
+//           icon={
+//             <MdAttachMoney className="text-primary-500 text-lg sm:text-xl" />
+//           }
+//           name="link"
+//           placeholder="رابط الفيديو"
+//           register={register}
+//           errors={emptyFields}
+//           onChange={handleInputChange}
+//         />
+
+//         <FormSubmitButton />
+//       </form>
+//     </div>
+//   );
+// }
 'use client';
+
 import { useState, useEffect, useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import categories from '../../components/Categories/categories';
@@ -18,11 +421,23 @@ import FormInput from './FormInput';
 import FormSelect from './FormSelect';
 import FormTextarea from './FormTextarea';
 import FormSubmitButton from './FormSubmitButton';
-import OnClickMap from '../../components/map/onClickMap';
 import { useSession } from 'next-auth/react';
 import { FaTreeCity } from 'react-icons/fa6';
 import { PiBuildingsDuotone } from 'react-icons/pi';
 import { FaObjectGroup } from 'react-icons/fa';
+
+// ✅ 1. استيراد next/dynamic
+import dynamic from 'next/dynamic';
+
+// ✅ 2. الاستيراد الديناميكي لمكون الخريطة مع تعطيل SSR لمنع خطأ window is not defined
+const OnClickMap = dynamic(() => import('../../components/map/onClickMap'), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-72 sm:h-[500px] flex items-center justify-center bg-gray-100 rounded-lg text-gray-500 border border-gray-300 animate-pulse">
+      جاري تحميل الخريطة...
+    </div>
+  ),
+});
 
 export default function NewPost() {
   const [categoryFields, setCategoryFields] = useState([]);
@@ -65,7 +480,6 @@ export default function NewPost() {
       const selected = categories[category - 1];
       setSelectedCategory(selected);
 
-      // قم بتحديث formState مباشرةً هنا
       setFormState((prev) => ({
         ...prev,
         categoryId: selected?.id || '',
@@ -73,7 +487,6 @@ export default function NewPost() {
       }));
     } else {
       setSelectedCategory(null);
-      // قم بتحديث formState هنا أيضًا إذا تم إلغاء تحديد الفئة
       setFormState((prev) => ({
         ...prev,
         categoryId: '',
@@ -88,15 +501,15 @@ export default function NewPost() {
       import(`../../components/categoryFields/${selectedCategory?.name}.jsx`)
         .then((module) => {
           setCategoryFields(module.default);
-          setError(null); // Reset error on successful load
+          setError(null);
         })
         .catch((err) => {
           console.error('Failed to load fields:', err);
-          setCategoryFields([]); // Reset fields on error
+          setCategoryFields([]);
           setError('فشل في تحميل الحقول');
         });
     } else {
-      setCategoryFields([]); // Reset fields when category is unselected
+      setCategoryFields([]);
     }
   }, [selectedCategory]);
 
@@ -107,8 +520,9 @@ export default function NewPost() {
       categoryId: selectedCategory?.id || '',
       categoryName: selectedCategory?.name || '',
       images: addImages.length ? addImages : prev.images,
-      lng: location?.[1] || prev.lng,
-      lat: location?.[0] || prev.lat,
+      // ✅ تحديث الإحداثيات من الـ Context عند تحديدها في الخريطة
+      lng: location?.[1] !== undefined ? location[1] : prev.lng,
+      lat: location?.[0] !== undefined ? location[0] : prev.lat,
     }));
   }, [selectedCategory, location, addImages]);
 
@@ -156,7 +570,7 @@ export default function NewPost() {
     const hasEmptyRequiredField = requiredFields.some((field) => {
       if (typeof formState[field] === 'string' && !formState[field].trim()) {
         emptyFieldsList.push(field);
-        return true; // Stop iterating if an empty field is found
+        return true;
       }
       return false;
     });
@@ -173,23 +587,7 @@ export default function NewPost() {
     return emptyFieldsList.length === 0;
   };
 
-  // const validateImages = () => {
-  //   if (addImages.length === 0) {
-  //     toast.error('يرجى إضافة صورة على الأقل.');
-  //     return false;
-  //   }
-  //   return true;
-  // };
-
   const onSubmit = async () => {
-    // if (!validateImages()) {
-    //   return;
-    // }
-    // if (!validateForm()) {
-    //   toast.error('يرجى ملء جميع الحقول المطلوبة.');
-    //   return;
-    // }
-
     if (!selectedCategory) {
       toast.error('يجب اختيار فئة قبل إرسال النموذج.');
       return;
@@ -231,14 +629,15 @@ export default function NewPost() {
   if (session?.status === 'unauthenticated') {
     // return <LoginButton />;
   }
+
   return (
-    <div className="flex flex-col justify-center items-center w-full bg-five text-sm sm:text-lg ">
+    <div className="flex flex-col justify-center items-center w-full bg-five text-sm sm:text-lg mt-64 ">
       <form
         onSubmit={(e) => {
           e.preventDefault();
           onSubmit();
         }}
-        className="space-y-4 p-4 border rounded-lg shadow-md w-full xl:w-1/2 mt-16 sm:mt-0"
+        className="space-y-4 p-4 border rounded-lg shadow-md w-full xl:w-1/2 mt-64 sm:mt-0 bg-white"
       >
         <UploadingAndDisplayingImage />
 
@@ -248,11 +647,11 @@ export default function NewPost() {
           name="category"
           options={categories.map((cat) => ({
             value: cat.id,
-            label: cat.name, // النص المعروض في القائمة
+            label: cat.name,
           }))}
           register={register}
           errors={emptyFields}
-          onChange={(e) => handleCategoryChange(e.target.value)} // تمرير الدالة المعدلة
+          onChange={(e) => handleCategoryChange(e.target.value)}
           placeholder="-اختر-"
         />
 
@@ -265,6 +664,7 @@ export default function NewPost() {
           errors={emptyFields}
           onChange={handleInputChange}
         />
+
         <FormInput
           label="المدينة"
           icon={
@@ -276,6 +676,7 @@ export default function NewPost() {
           errors={emptyFields}
           onChange={handleInputChange}
         />
+
         <FormInput
           label="المنطقة"
           icon={<FaTreeCity className="text-primary-500 text-lg sm:text-xl" />}
@@ -357,6 +758,7 @@ export default function NewPost() {
           errors={emptyFields}
           onChange={handleInputChange}
         />
+
         <FormInput
           label="الكمية المتاحة"
           icon={
@@ -370,6 +772,7 @@ export default function NewPost() {
           onChange={handleInputChange}
           value={formState.stockQuantity}
         />
+
         <FormTextarea
           label="وصف الإعلان"
           icon={
@@ -382,7 +785,14 @@ export default function NewPost() {
           onChange={handleInputChange}
         />
 
-        <OnClickMap />
+        {/* ✅ 3. استخدام المكون الديناميكي مع تمرير البيانات الضرورية له */}
+        <OnClickMap
+          chosenCity={formState.city}
+          chosentown={formState.town}
+          lat={formState.lat}
+          lng={formState.lng}
+        />
+
         <FormInput
           label="رابط الفيديو من يوتيوب أو تيك توك"
           icon={
