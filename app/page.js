@@ -82,7 +82,7 @@ export default function Home() {
     return products.map((item) => (
       <div
         key={item.id}
-        className="flex flex-col justify-center items-center w-full sm:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1rem)] xl:w-[calc(25%-1rem)] border cursor-pointer hover:shadow-xl transition-shadow duration-300 ease-in-out rounded-lg shadow-lg relative"
+        className="flex flex-col justify-center items-center w-full sm:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1rem)] xl:w-[calc(25%-1rem)]  cursor-pointer transition-shadow duration-300 ease-in-out  relative "
       >
         <SmallCard item={item} category={category} />
       </div>
@@ -91,7 +91,7 @@ export default function Home() {
 
   return (
     <div className="flex flex-col justify-center items-center">
-      <main className="relative flex flex-row-reverse items-start mt-56  justify-between overflow-hidden z-[30] h-fit w-full bg-five rounded-b lg:mt-56">
+      <main className="relative flex flex-row-reverse items-start mt-56  justify-between overflow-hidden z-[30] h-fit w-full bg-five lg:mt-56">
         <div className="relative flex-col justify-between items-start w-full  h-full">
           <div className="flex flex-col items-center justify-center overflow-hidden z-50 h-fit w-full bg-five rounded-b  ">
             {loading && loadedCategories === 0 ? (
@@ -110,22 +110,9 @@ export default function Home() {
                     viewport={{ once: true, margin: '0px 0px -100px 0px' }}
                     className="flex flex-col justify-center items-center w-full h-full"
                   >
-                    <div className="flex flex-col justify-center items-center w-full h-full gap-2 mb-8 ">
-                      <div className="relative w-full h-20 mb-36">
-                        {' '}
-                        {/* تأكد من وجود حاوية بريلتف وارتفاع محدد */}
-                        <Image
-                          src="/images/bar.png"
-                          alt="bar"
-                          width={2000}
-                          height={20}
-                          sizes="100vw"
-                          priority
-                          className="object-cover"
-                        />
-                      </div>
+                    <div className="flex flex-col justify-center items-center w-full h-full gap-2 mt-16 ">
                       <div
-                        className=" rounded-2xl px-2 py-1 text-nowrap text-xs text-white font-semibold flex items-center gap-2 border border-white/20 shadow-lg"
+                        className=" rounded-2xl px-2 py-1 text-nowrap text-xs text-white font-semibold flex items-center gap-2 shadow-lg"
                         onClick={() => handleCategoryClick(category)}
                       >
                         <ColoredCards

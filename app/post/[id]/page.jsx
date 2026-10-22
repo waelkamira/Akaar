@@ -342,7 +342,7 @@ const ImageSlider = dynamic(
   {
     loading: () => <Loading />,
     ssr: false,
-  }
+  },
 );
 
 const SyriaMap = dynamic(() => import('../../../components/map/SyriaMap'), {
@@ -357,7 +357,7 @@ const UserNameAndPhoto = dynamic(
       <div className="w-10 h-10 bg-gray-200 rounded-full animate-pulse"></div>
     ),
     ssr: false,
-  }
+  },
 );
 
 export default function Page() {
@@ -465,7 +465,7 @@ export default function Page() {
 
   const fields = useMemo(
     () => [...commonFields, ...categoryFields],
-    [commonFields, categoryFields]
+    [commonFields, categoryFields],
   );
 
   const getEmbedUrl = async (url) => {
@@ -473,7 +473,7 @@ export default function Page() {
 
     if (url.includes('youtube.com') || url.includes('youtube')) {
       const videoId = url.match(
-        /(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
+        /(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/,
       );
       if (videoId && videoId[1]) {
         const embedUrl = `https://www.youtube.com/embed/${videoId[1]}`;
@@ -577,8 +577,8 @@ export default function Page() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
-      <div className="flex flex-col items-center w-full min-h-screen p-4 sm:p-6 pt-20 sm:pt-8">
+    <div className="min-h-screen bg-red-600 to-indigo-100 ">
+      <div className="flex flex-col items-center w-full min-h-screen p-4 sm:p-6 pt-20 sm:pt-8 mt-64">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}

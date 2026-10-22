@@ -41,10 +41,10 @@ export default function SideBarMenu() {
 
   return (
     <>
-      <div className="xl:hidden flex flex-col justify-start items-start gap-3 w-fit z-50 fixed p-2">
+      <div className="xl:hidden flex flex-col justify-start items-start gap-3 w-fit z-50 fixed p-2 ">
         {/* زر فتح القائمة */}
         <TfiMenuAlt
-          className=" w-fit sm:p-1 sm:m-2 text-4xl text-gray-400 sm:text-white cursor-pointer z-50 transition-transform duration-500 hover:scale-110 sm:bg-black/20 rounded-lg hover:rotate-180"
+          className=" w-fit sm:p-1 p-1 sm:m-2 text-4xl text-gray-400 cursor-pointer z-50 transition-transform duration-500 hover:scale-110 bg-white rounded-lg hover:rotate-180"
           onClick={() => setIsOpen(!isOpen)}
         />
 

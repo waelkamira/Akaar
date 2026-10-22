@@ -93,7 +93,7 @@ export default function FirstNavBar() {
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-      className="hidden w-full lg:flex xl:flex-col xl:justify-start top-4 left-1/2 -translate-x-1/2 z-[1000] rounded-2xl border border-white/[0.08] bg-black/50 backdrop-blur-xl shadow-[0_24px_50px_-12px_rgba(0,0,0,0.7)]"
+      className="hidden fixed left-0 right-0 w-full lg:flex xl:flex-col xl:justify-start top-0 -translate-x-1/2 z-[1000] border border-white/[0.08] bg-black/50 backdrop-blur-xl shadow-[0_24px_50px_-12px_rgba(0,0,0,0.7)]"
     >
       <div className="w-full flex justify-between items-center px-10 h-20">
         {/* أزرار التنقل (القائمة) */}
@@ -117,7 +117,7 @@ export default function FirstNavBar() {
                       <span
                         className={`text-base flex items-center transition-all duration-500 ${
                           isHovered
-                            ? 'text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)] scale-110'
+                            ? 'text-primary-600 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)] scale-110'
                             : 'text-slate-400'
                         }`}
                       >
