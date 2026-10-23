@@ -1,30 +1,24 @@
 import React from 'react';
 
-let Icons = {};
+import { FaExpand } from 'react-icons/fa';
+import { GiSandal, GiRunningShoe, GiSportMedal } from 'react-icons/gi';
+import {
+  MdOutlineSportsHandball,
+  MdOutlineCleaningServices,
+} from 'react-icons/md';
+import { BiSolidColor } from 'react-icons/bi';
+import { IoShirtOutline } from 'react-icons/io5';
 
-try {
-  const { FaExpand } = require('react-icons/fa');
-  const { GiSandal, GiRunningShoe, GiSportMedal } = require('react-icons/gi');
-  const {
-    MdOutlineSportsHandball,
-    MdOutlineCleaningServices,
-  } = require('react-icons/md');
-  const { BiSolidColor } = require('react-icons/bi');
-  const { IoShirtOutline } = require('react-icons/io5');
-
-  Icons = {
-    Expand: FaExpand || null,
-    Sandal: GiSandal || null,
-    RunningShoe: GiRunningShoe || null,
-    SportMedal: GiSportMedal || null,
-    SportsHandball: MdOutlineSportsHandball || null,
-    CleaningServices: MdOutlineCleaningServices || null,
-    Color: BiSolidColor || null,
-    ShirtOutline: IoShirtOutline || null,
-  };
-} catch (error) {
-  console.warn('⚠️ حدث خطأ أثناء تحميل بعض الأيقونات من react-icons.');
-}
+const Icons = {
+  Expand: FaExpand,
+  Sandal: GiSandal,
+  RunningShoe: GiRunningShoe,
+  SportMedal: GiSportMedal,
+  SportsHandball: MdOutlineSportsHandball,
+  CleaningServices: MdOutlineCleaningServices,
+  Color: BiSolidColor,
+  ShirtOutline: IoShirtOutline,
+};
 
 const shoes = [
   {

@@ -107,11 +107,11 @@ import { v4 as uuidv4 } from 'uuid';
 const prisma = new PrismaClient();
 
 export const authOptions = {
-  secret: process.env.NEXT_PUBLIC_SECRET,
+  secret: process.env.NEXTAUTH_SECRET,
   providers: [
     GoogleProvider({
-      clientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
-      clientSecret: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_SECRET,
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       allowDangerousEmailAccountLinking: true,
     }),
     CredentialsProvider({
@@ -130,7 +130,17 @@ export const authOptions = {
         },
       },
       async authorize(credentials) {
-        const { email, password } = credentials;
+        const email =
+          typeof credentials?.email === 'string'
+            ? credentials.email.trim().toLowerCase()
+            : '';
+        const password =
+          typeof credentials?.password === 'string'
+            ? credentials.password
+            : '';
+        if (!email || !password) {
+          throw new Error('Email and password are required');
+        }
 
         // البحث عن المستخدم بالبريد الإلكتروني
         const user = await prisma.user.findUnique({
@@ -142,6 +152,9 @@ export const authOptions = {
         }
 
         // التحقق من كلمة المرور
+        if (!user.password) {
+          throw new Error('This account does not use password sign-in');
+        }
         const checkPassword = await bcrypt.compare(password, user.password);
         if (!checkPassword) {
           throw new Error('Incorrect password');

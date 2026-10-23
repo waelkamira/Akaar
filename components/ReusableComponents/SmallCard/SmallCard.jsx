@@ -230,6 +230,312 @@
 // });
 
 // export default SmallCard;
+// 'use client';
+
+// import React, { useCallback } from 'react';
+// import { useRouter } from 'next/navigation';
+// import { motion } from 'framer-motion';
+// import ImageComponent from './ImageComponent';
+// import DetailsSection from './DetailsSection';
+// import FavoriteButton from './FavoriteButton';
+// import { formatDistanceToNow } from 'date-fns';
+
+// const SmallCard = React.memo(function SmallCard({ item, category }) {
+//   const router = useRouter();
+
+//   const formatDate = useCallback((dateString) => {
+//     if (!dateString) return '';
+//     const date = new Date(dateString);
+//     return isNaN(date) ? '' : formatDistanceToNow(date, { addSuffix: true });
+//   }, []);
+
+//   const handleClick = () => {
+//     if (typeof window !== 'undefined') {
+//       localStorage.setItem('item', JSON.stringify(item));
+//       localStorage.setItem('category', JSON.stringify(category));
+//     }
+//     router.push(`/post/${item?.id}`);
+//   };
+
+//   if (!item) return null;
+
+//   return (
+//     <motion.div
+//       initial={{ opacity: 0, y: 20 }}
+//       animate={{ opacity: 1, y: 0 }}
+//       transition={{ duration: 0.4, ease: 'easeOut' }}
+//       whileHover={{ y: -6, transition: { duration: 0.3 } }}
+//       onClick={handleClick}
+//       className="group relative flex flex-col w-full cursor-pointer bg-white rounded-2xl shadow-sm hover:shadow-xl hover:shadow-primary-500/10 hover:border-primary-100 transition-all duration-300 overflow-hidden"
+//     >
+//       {/* ================= قسم الصورة (نسبة ثابتة وأنيقة) ================= */}
+//       <div className="relative w-full aspect-[4/3] overflow-hidden bg-slate-100">
+//         <ImageComponent
+//           item={item}
+//           className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+//         />
+
+//         {/* تدرج سفلي خفيف جداً لتحسين قراءة النصوص العائمة */}
+//         <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-60" />
+
+//         {/* شارة "جديد" الفاخرة (بسيطة وأنيقة) */}
+//         {item.isNew && (
+//           <div className="absolute top-3 right-3 z-20 flex items-center gap-1.5 bg-white/95 backdrop-blur-sm text-primary-700 text-[10px] font-bold px-2.5 py-1 rounded-full shadow-sm border border-primary-100">
+//             <span className="relative flex h-1.5 w-1.5">
+//               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-400 opacity-75"></span>
+//               <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-primary-500"></span>
+//             </span>
+//             جديد
+//           </div>
+//         )}
+
+//         {/* زر المفضلة (أنيق وغير مزعج) */}
+//         <div
+//           className="absolute top-3 left-3 z-20"
+//           onClick={(e) => e.stopPropagation()}
+//         >
+//           <FavoriteButton
+//             item={item}
+//             className="bg-white/90 backdrop-blur-sm border border-slate-200 text-slate-400 hover:text-red-500 hover:border-red-200 hover:bg-red-50 transition-all duration-300 rounded-full p-2 shadow-sm"
+//           />
+//         </div>
+
+//         {/* التاريخ (مدمج بشكل أنيق في أسفل الصورة) */}
+//         {item?.createdAt && (
+//           <div className="absolute bottom-3 left-3 z-20">
+//             <div className="bg-black/50 backdrop-blur-md text-white/90 text-[10px] font-medium px-2 py-1 rounded-lg flex items-center gap-1.5">
+//               <svg
+//                 className="w-3 h-3"
+//                 fill="none"
+//                 viewBox="0 0 24 24"
+//                 stroke="currentColor"
+//                 strokeWidth={2}
+//               >
+//                 <path
+//                   strokeLinecap="round"
+//                   strokeLinejoin="round"
+//                   d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+//                 />
+//               </svg>
+//               {formatDate(item.createdAt)}
+//             </div>
+//           </div>
+//         )}
+//       </div>
+
+//       {/* ================= قسم المحتوى (مضغوط ومركز) ================= */}
+//       <div className="flex-1 flex flex-col p-4 gap-3">
+//         {/* العنوان والتفاصيل الأساسية */}
+//         <div className="space-y-1.5">
+//           <DetailsSection item={item} />
+//         </div>
+
+//         {/* فاصل أنيق جداً */}
+//         <div className="w-full h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
+
+//         {/* السعر والمخزون (إن وجد) */}
+//         <div className="flex items-end justify-between mt-auto">
+//           <div className="flex flex-col">
+//             {item.oldPrice && item.oldPrice > item.basePrice && (
+//               <span className="text-xs text-slate-400 line-through font-medium mb-0.5">
+//                 {item.oldPrice?.toLocaleString()}
+//               </span>
+//             )}
+//             <div className="flex items-baseline gap-1">
+//               <span className="text-xl font-bold text-slate-900 tracking-tight">
+//                 {item.basePrice?.toLocaleString()}
+//               </span>
+//               <span className="text-xs font-semibold text-primary-600">
+//                 ر.س
+//               </span>
+//             </div>
+//           </div>
+
+//           {/* حالة المخزون (شارة صغيرة جداً وأنيقة) */}
+//           {item?.stockQuantity !== undefined && (
+//             <div className="flex items-center gap-1 text-[10px] font-medium text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md border border-emerald-100">
+//               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+//               متوفر ({item.stockQuantity})
+//             </div>
+//           )}
+//         </div>
+//       </div>
+//     </motion.div>
+//   );
+// });
+
+// export default SmallCard;
+// 'use client';
+
+// import React, { useCallback } from 'react';
+// import { useRouter } from 'next/navigation';
+// import { motion } from 'framer-motion';
+// import ImageComponent from './ImageComponent';
+// import DetailsSection from './DetailsSection';
+// import FavoriteButton from './FavoriteButton';
+// import { formatDistanceToNow } from 'date-fns';
+
+// const SmallCard = React.memo(function SmallCard({ item, category }) {
+//   const router = useRouter();
+
+//   const formatDate = useCallback((dateString) => {
+//     if (!dateString) return '';
+//     const date = new Date(dateString);
+//     return isNaN(date) ? '' : formatDistanceToNow(date, { addSuffix: true });
+//   }, []);
+
+//   // دالة آمنة لتحويل الكائنات إلى JSON مع تجنب البنى الدائرية
+//   const safeStringify = (obj) => {
+//     if (!obj) return '{}';
+
+//     // استخراج فقط الحقول الضرورية من category
+//     if (obj === category) {
+//       const safeCategory = {
+//         id: category?.id,
+//         name: category?.name,
+//         slug: category?.slug,
+//         categoryName: category?.categoryName,
+//       };
+//       return JSON.stringify(safeCategory);
+//     }
+
+//     // للـ item، نستخدم replacer function
+//     try {
+//       return JSON.stringify(obj, (key, value) => {
+//         // تخطي الدوال والمراجع الدائرية
+//         if (typeof value === 'function') return undefined;
+//         if (typeof value === 'object' && value !== null) {
+//           // تخطي كائنات React الخاصة
+//           if (value.$$typeof || value.Provider || value.Consumer) {
+//             return undefined;
+//           }
+//         }
+//         return value;
+//       });
+//     } catch (error) {
+//       console.error('Error stringifying object:', error);
+//       return '{}';
+//     }
+//   };
+
+//   const handleClick = () => {
+//     try {
+//       if (typeof window !== 'undefined') {
+//         // تخزين البيانات بأمان
+//         localStorage.setItem('item', safeStringify(item));
+//         localStorage.setItem('category', safeStringify(category));
+//       }
+//       router.push(`/post/${item?.id}`);
+//     } catch (error) {
+//       console.error('Error saving to localStorage:', error);
+//       // المتابعة حتى لو فشل التخزين
+//       router.push(`/post/${item?.id}`);
+//     }
+//   };
+
+//   if (!item) return null;
+
+//   return (
+//     <motion.div
+//       initial={{ opacity: 0, y: 20 }}
+//       animate={{ opacity: 1, y: 0 }}
+//       transition={{ duration: 0.4, ease: 'easeOut' }}
+//       whileHover={{ y: -6, transition: { duration: 0.3 } }}
+//       onClick={handleClick}
+//       className="group relative flex flex-col w-full cursor-pointer bg-white rounded-2xl shadow-sm hover:shadow-xl hover:shadow-primary-500/10 hover:border-primary-100 transition-all duration-300 overflow-hidden"
+//     >
+//       {/* ================= قسم الصورة ================= */}
+//       <div className="relative w-full aspect-[4/3] overflow-hidden bg-slate-100">
+//         <ImageComponent
+//           item={item}
+//           className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+//         />
+
+//         <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-60" />
+
+//         {/* شارة "جديد" */}
+//         {item.isNew && (
+//           <div className="absolute top-3 right-3 z-20 flex items-center gap-1.5 bg-white/95 backdrop-blur-sm text-primary-700 text-[10px] font-bold px-2.5 py-1 rounded-full shadow-sm border border-primary-100">
+//             <span className="relative flex h-1.5 w-1.5">
+//               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-400 opacity-75"></span>
+//               <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-primary-500"></span>
+//             </span>
+//             جديد
+//           </div>
+//         )}
+
+//         {/* زر المفضلة */}
+//         <div
+//           className="absolute top-3 left-3 z-20"
+//           onClick={(e) => e.stopPropagation()}
+//         >
+//           <FavoriteButton
+//             item={item}
+//             className="bg-white/90 backdrop-blur-sm border border-slate-200 text-slate-400 hover:text-red-500 hover:border-red-200 hover:bg-red-50 transition-all duration-300 rounded-full p-2 shadow-sm"
+//           />
+//         </div>
+
+//         {/* التاريخ */}
+//         {item?.createdAt && (
+//           <div className="absolute bottom-3 left-3 z-20">
+//             <div className="bg-black/50 backdrop-blur-md text-white/90 text-[10px] font-medium px-2 py-1 rounded-lg flex items-center gap-1.5">
+//               <svg
+//                 className="w-3 h-3"
+//                 fill="none"
+//                 viewBox="0 0 24 24"
+//                 stroke="currentColor"
+//                 strokeWidth={2}
+//               >
+//                 <path
+//                   strokeLinecap="round"
+//                   strokeLinejoin="round"
+//                   d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+//                 />
+//               </svg>
+//               {formatDate(item.createdAt)}
+//             </div>
+//           </div>
+//         )}
+//       </div>
+
+//       {/* ================= قسم المحتوى ================= */}
+//       <div className="flex-1 flex flex-col p-4 gap-3">
+//         <div className="space-y-1.5">
+//           <DetailsSection item={item} />
+//         </div>
+
+//         <div className="w-full h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
+
+//         <div className="flex items-end justify-between mt-auto">
+//           <div className="flex flex-col">
+//             {item.oldPrice && item.oldPrice > item.basePrice && (
+//               <span className="text-xs text-slate-400 line-through font-medium mb-0.5">
+//                 {item.oldPrice?.toLocaleString()}
+//               </span>
+//             )}
+//             <div className="flex items-baseline gap-1">
+//               <span className="text-xl font-bold text-slate-900 tracking-tight">
+//                 {item.basePrice?.toLocaleString()}
+//               </span>
+//               <span className="text-xs font-semibold text-primary-600">
+//                 ر.س
+//               </span>
+//             </div>
+//           </div>
+
+//           {item?.stockQuantity !== undefined && (
+//             <div className="flex items-center gap-1 text-[10px] font-medium text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md border border-emerald-100">
+//               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+//               متوفر ({item.stockQuantity})
+//             </div>
+//           )}
+//         </div>
+//       </div>
+//     </motion.div>
+//   );
+// });
+
+// export default SmallCard;
 'use client';
 
 import React, { useCallback } from 'react';
@@ -249,117 +555,170 @@ const SmallCard = React.memo(function SmallCard({ item, category }) {
     return isNaN(date) ? '' : formatDistanceToNow(date, { addSuffix: true });
   }, []);
 
-  const handleClick = () => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('item', JSON.stringify(item));
-      localStorage.setItem('category', JSON.stringify(category));
+  // دالة آمنة لتجنب circular structure
+  const safeStringify = (obj, isCategory = false) => {
+    if (!obj) return '{}';
+
+    if (isCategory) {
+      const safeCategory = {
+        id: category?.id,
+        name: category?.name,
+        slug: category?.slug,
+        categoryName: category?.categoryName,
+      };
+      return JSON.stringify(safeCategory);
     }
-    router.push(`/post/${item?.id}`);
+
+    try {
+      return JSON.stringify(obj, (key, value) => {
+        if (typeof value === 'function') return undefined;
+        if (typeof value === 'object' && value !== null) {
+          if (value.$$typeof || value.Provider || value.Consumer) {
+            return undefined;
+          }
+        }
+        return value;
+      });
+    } catch (error) {
+      console.error('Error stringifying:', error);
+      return '{}';
+    }
+  };
+
+  const handleClick = () => {
+    try {
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('item', safeStringify(item));
+        localStorage.setItem('category', safeStringify(category, true));
+      }
+      router.push(`/post/${item?.id}`);
+    } catch (error) {
+      console.error('Error:', error);
+      router.push(`/post/${item?.id}`);
+    }
   };
 
   if (!item) return null;
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, ease: 'easeOut' }}
-      whileHover={{ y: -6, transition: { duration: 0.3 } }}
+      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+      whileHover={{
+        y: -8,
+        transition: { duration: 0.3, ease: 'easeOut' },
+      }}
       onClick={handleClick}
-      className="group relative flex flex-col w-full cursor-pointer bg-white rounded-2xl shadow-sm hover:shadow-xl hover:shadow-primary-500/10 hover:border-primary-100 transition-all duration-300 overflow-hidden"
+      className="group relative cursor-pointer"
     >
-      {/* ================= قسم الصورة (نسبة ثابتة وأنيقة) ================= */}
-      <div className="relative w-full aspect-[4/3] overflow-hidden bg-slate-100">
-        <ImageComponent
-          item={item}
-          className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-        />
-
-        {/* تدرج سفلي خفيف جداً لتحسين قراءة النصوص العائمة */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-60" />
-
-        {/* شارة "جديد" الفاخرة (بسيطة وأنيقة) */}
-        {item.isNew && (
-          <div className="absolute top-3 right-3 z-20 flex items-center gap-1.5 bg-white/95 backdrop-blur-sm text-primary-700 text-[10px] font-bold px-2.5 py-1 rounded-full shadow-sm border border-primary-100">
-            <span className="relative flex h-1.5 w-1.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-primary-500"></span>
-            </span>
-            جديد
-          </div>
-        )}
-
-        {/* زر المفضلة (أنيق وغير مزعج) */}
-        <div
-          className="absolute top-3 left-3 z-20"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <FavoriteButton
+      {/* البطاقة الرئيسية */}
+      <div className="relative bg-neutral-950 border-2 border-neutral-800 hover:border-orange-500 transition-all duration-300 overflow-hidden">
+        {/* ================= قسم الصورة ================= */}
+        <div className="relative w-full aspect-[4/3] overflow-hidden bg-neutral-900">
+          <ImageComponent
             item={item}
-            className="bg-white/90 backdrop-blur-sm border border-slate-200 text-slate-400 hover:text-red-500 hover:border-red-200 hover:bg-red-50 transition-all duration-300 rounded-full p-2 shadow-sm"
+            className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
           />
-        </div>
 
-        {/* التاريخ (مدمج بشكل أنيق في أسفل الصورة) */}
-        {item?.createdAt && (
-          <div className="absolute bottom-3 left-3 z-20">
-            <div className="bg-black/50 backdrop-blur-md text-white/90 text-[10px] font-medium px-2 py-1 rounded-lg flex items-center gap-1.5">
-              <svg
-                className="w-3 h-3"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-              {formatDate(item.createdAt)}
-            </div>
-          </div>
-        )}
-      </div>
+          {/* Overlay متدرج قوي */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
 
-      {/* ================= قسم المحتوى (مضغوط ومركز) ================= */}
-      <div className="flex-1 flex flex-col p-4 gap-3">
-        {/* العنوان والتفاصيل الأساسية */}
-        <div className="space-y-1.5">
-          <DetailsSection item={item} />
-        </div>
-
-        {/* فاصل أنيق جداً */}
-        <div className="w-full h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
-
-        {/* السعر والمخزون (إن وجد) */}
-        <div className="flex items-end justify-between mt-auto">
-          <div className="flex flex-col">
-            {item.oldPrice && item.oldPrice > item.basePrice && (
-              <span className="text-xs text-slate-400 line-through font-medium mb-0.5">
-                {item.oldPrice?.toLocaleString()}
-              </span>
-            )}
-            <div className="flex items-baseline gap-1">
-              <span className="text-xl font-bold text-slate-900 tracking-tight">
-                {item.basePrice?.toLocaleString()}
-              </span>
-              <span className="text-xs font-semibold text-primary-600">
-                ر.س
-              </span>
-            </div>
-          </div>
-
-          {/* حالة المخزون (شارة صغيرة جداً وأنيقة) */}
-          {item?.stockQuantity !== undefined && (
-            <div className="flex items-center gap-1 text-[10px] font-medium text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md border border-emerald-100">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-              متوفر ({item.stockQuantity})
+          {/* شارة "جديد" عصرية */}
+          {item.isNew && (
+            <div className="absolute top-4 right-4 z-20">
+              <div className="bg-orange-500 text-black text-[10px] font-black px-3 py-1.5 uppercase tracking-wider clip-path-slant">
+                NEW DROP
+              </div>
             </div>
           )}
+
+          {/* زر المفضلة */}
+          <div
+            className="absolute top-4 left-4 z-20"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <FavoriteButton
+              item={item}
+              className="bg-black/80 backdrop-blur-sm border-2 border-white/20 text-white hover:text-red-500 hover:border-red-500 transition-all duration-300 p-2.5"
+            />
+          </div>
+
+          {/* التاريخ */}
+          {item?.createdAt && (
+            <div className="absolute bottom-4 left-4 z-20">
+              <div className="bg-black/90 backdrop-blur-md text-white text-[10px] font-bold px-3 py-1.5 uppercase tracking-wider border border-white/10">
+                {formatDate(item.createdAt)}
+              </div>
+            </div>
+          )}
+
+          {/* رقم المنتج كعنصر تصميمي */}
+          <div className="absolute top-4 left-1/2 -translate-x-1/2 z-10 opacity-20 group-hover:opacity-40 transition-opacity">
+            <span className="text-6xl font-black text-white tracking-tighter">
+              {String(item?.id || '').slice(-3)}
+            </span>
+          </div>
         </div>
+
+        {/* ================= قسم المحتوى ================= */}
+        <div className="p-5 space-y-4">
+          {/* التصنيف */}
+          {category?.name && (
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-0.5 bg-orange-500" />
+              <span className="text-[10px] font-bold text-orange-500 uppercase tracking-[0.2em]">
+                {category.name}
+              </span>
+            </div>
+          )}
+
+          {/* العنوان */}
+          <div className="space-y-1">
+            <DetailsSection item={item} />
+          </div>
+
+          {/* السعر والمخزون */}
+          <div className="flex items-end justify-between pt-4 border-t-2 border-neutral-800">
+            <div className="flex flex-col">
+              {item.oldPrice && item.oldPrice > item.basePrice && (
+                <span className="text-xs text-neutral-500 line-through font-bold mb-1">
+                  {item.oldPrice?.toLocaleString()}
+                </span>
+              )}
+              <div className="flex items-baseline gap-1.5">
+                <span className="text-2xl font-black text-white tracking-tight">
+                  {item.basePrice?.toLocaleString()}
+                </span>
+                <span className="text-xs font-bold text-orange-500 uppercase">
+                  ر.س
+                </span>
+              </div>
+            </div>
+
+            {/* حالة المخزون */}
+            {item?.stockQuantity !== undefined && (
+              <div className="flex items-center gap-2 text-[10px] font-black text-emerald-400 uppercase tracking-wider">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                IN STOCK ({item.stockQuantity})
+              </div>
+            )}
+          </div>
+
+          {/* زر "عرض التفاصيل" العصري */}
+          <div className="pt-2">
+            <div className="w-full bg-neutral-900 hover:bg-orange-500 text-white hover:text-black font-black text-xs uppercase tracking-[0.2em] py-3 px-4 transition-all duration-300 text-center border-2 border-neutral-800 hover:border-orange-500 group-hover:translate-x-0 -translate-x-2">
+              VIEW DETAILS →
+            </div>
+          </div>
+        </div>
+
+        {/* تأثير الزاوية العلوية */}
+        <div className="absolute top-0 right-0 w-16 h-16 bg-orange-500/0 group-hover:bg-orange-500/10 transition-all duration-500 clip-path-corner" />
       </div>
+
+      {/* ظل البطاقة */}
+      <div className="absolute inset-0 bg-orange-500/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10 translate-y-4" />
     </motion.div>
   );
 });

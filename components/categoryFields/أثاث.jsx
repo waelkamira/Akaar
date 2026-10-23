@@ -1,23 +1,17 @@
-let Icons = {};
+import { FaRulerCombined, FaBoxes } from 'react-icons/fa';
+import { GiWoodenChair, GiSofa, GiOfficeChair } from 'react-icons/gi';
+import { MdOutlineMeetingRoom } from 'react-icons/md';
+import { BiSolidColorFill } from 'react-icons/bi';
 
-try {
-  const { FaRulerCombined, FaBoxes } = require('react-icons/fa');
-  const { GiWoodenChair, GiSofa, GiOfficeChair } = require('react-icons/gi');
-  const { MdOutlineMeetingRoom } = require('react-icons/md');
-  const { BiSolidColorFill } = require('react-icons/bi');
-
-  Icons = {
-    Ruler: FaRulerCombined || null,
-    Boxes: FaBoxes || null,
-    WoodenChair: GiWoodenChair || null,
-    Sofa: GiSofa || null,
-    OfficeChair: GiOfficeChair || null,
-    MeetingRoom: MdOutlineMeetingRoom || null,
-    ColorFill: BiSolidColorFill || null,
-  };
-} catch (error) {
-  console.warn('⚠️ بعض الأيقونات غير متاحة في react-icons. تحقق من المكتبة!');
-}
+const Icons = {
+  Ruler: FaRulerCombined,
+  Boxes: FaBoxes,
+  WoodenChair: GiWoodenChair,
+  Sofa: GiSofa,
+  OfficeChair: GiOfficeChair,
+  MeetingRoom: MdOutlineMeetingRoom,
+  ColorFill: BiSolidColorFill,
+};
 
 const furniture = [
   {

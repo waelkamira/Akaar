@@ -16,14 +16,13 @@ export default function RegisterPage() {
   const session = useSession();
   const router = useRouter();
   const schema = z.object({
-    name: z.string(),
-    email: z.string().email(),
-    password: z.string().min(),
+    name: z.string().trim().min(1, 'اسم المستخدم مطلوب'),
+    email: z.string().trim().email('أدخل بريدًا إلكترونيًا صالحًا'),
+    password: z.string().min(5, 'يجب أن تتكون كلمة المرور من 5 أحرف على الأقل'),
   });
 
   const {
     register,
-    getValues,
     handleSubmit,
     setError,
     formState: { errors },
@@ -38,49 +37,37 @@ export default function RegisterPage() {
     }
   }, [router, session?.data?.user?.email]);
 
-  async function onSubmit() {
-    if (getValues()?.name === '') {
-      setError('name', {
-        type: 'custom',
-        message: 'اسم المستخدم مطلوب',
+  async function onSubmit(values) {
+    try {
+      const response = await fetch('/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(values),
       });
-      return;
-    } else if (getValues()?.email === '') {
-      setError('email', {
-        type: 'custom',
-        message: 'عنوان البريد الإلكتروني مطلوب',
-      });
-      return;
-    } else if (getValues()?.password?.length < 5) {
-      setError('password', {
-        type: 'custom',
-        message:
-          'طول كلمة السر يجب أن يكون 5 أحرف (أو 5 أرقام وأحرف) على الأقل',
-      });
-      return;
-    }
 
-    const response = await fetch('/api/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(getValues()),
-    });
+      if (!response.ok) {
+        const result = await response.json();
+        setError('email', {
+          type: 'server',
+          message:
+            result?.error ||
+            'تعذر إنشاء الحساب. تحقق من البيانات وحاول مرة أخرى.',
+        });
+        return;
+      }
 
-    if (response.ok) {
-      const values = getValues();
-      // تخزين بيانات تسجيل الدخول في LocalStorage
-      localStorage.setItem('username', values?.name);
-      localStorage.setItem('email', values?.email);
-
+      localStorage.setItem('username', values.name.trim());
+      localStorage.setItem('email', values.email.trim().toLowerCase());
       router.push('/login');
       toast.custom((t) => (
-        <CustomToast t={t} message={'🌿 تم التسجيل بنجاح 🌿'} />
+        <CustomToast t={t} message="🌿 تم التسجيل بنجاح 🌿" />
       ));
-    } else {
+    } catch (error) {
+      console.error('Registration request failed:', error);
+      toast.error('تعذر الاتصال بالخادم. يرجى المحاولة مرة أخرى.');
       setError('email', {
-        type: 'custom',
-        message:
-          'هذا الإيميل موجود بالفعل! قم بتسجيل الدخول أو استخدم عنوان بريد الكتروني أخر',
+        type: 'server',
+        message: 'تعذر الاتصال بالخادم. يرجى المحاولة مرة أخرى.',
       });
     }
   }
@@ -100,6 +87,7 @@ export default function RegisterPage() {
           </h1>
           <input
             type="text"
+            required
             name={'name'}
             placeholder="الإسم"
             {...register('name')}
@@ -116,7 +104,8 @@ export default function RegisterPage() {
             البريد الإلكتروني
           </h1>
           <input
-            type="text"
+            type="email"
+            required
             name={'email'}
             placeholder="الإيميل"
             {...register('email')}
@@ -134,6 +123,8 @@ export default function RegisterPage() {
           </h1>
           <input
             type="password"
+            required
+            minLength={5}
             name={'password'}
             placeholder="كلمة السر"
             {...register('password')}

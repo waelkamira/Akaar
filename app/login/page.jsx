@@ -58,7 +58,7 @@ export default function LogInPage() {
         console.error('Failed to fetch or store user data:', error);
       }
     },
-    [router, profileImage]
+    [router, profileImage],
   );
 
   // Function to fetch and favorite user data in localStorage
@@ -118,12 +118,12 @@ export default function LogInPage() {
   }
 
   return (
-    <div className="flex justify-center items-start w-full h-screen text-lg md:text-xl text-end bg-five p-2 mt-32 sm:mt-2">
+    <div className="flex justify-center items-start w-full h-screen text-lg md:text-xl text-end bg-five p-2 mt-64 sm:mt-2">
       {loggedIn && <Loading message=" ✔ جاري تحويلك للصفحة الرئيسية " />}
       {!loggedIn && (
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="w-full lg:w-1/2 p-2 sm:p-8 rounded-lg border bg-white"
+          className="w-full lg:w-1/2 p-2 sm:p-8 rounded-lg border bg-white mt-64"
         >
           <h1 className="flex justify-center items-center w-full my-2 text-xl sm:text-2xl md:text-3xl xl:text-4xl  text-center select-none">
             تسجيل الدخول <GiExitDoor className="text-primary-500" />

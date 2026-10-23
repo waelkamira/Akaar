@@ -4,41 +4,79 @@ import bcrypt from 'bcrypt';
 const prisma = new PrismaClient();
 
 export async function POST(req) {
+  let input;
   try {
-    const { name, email, password } = await req.json();
-
-    // التحقق مما إذا كان المستخدم موجودًا بالفعل
-    const existingUser = await prisma.user.findUnique({
-      where: { email },
+    input = await req.json();
+  } catch (error) {
+    return new Response(JSON.stringify({ error: 'بيانات الطلب غير صالحة.' }), {
+      status: 400,
+      headers: { 'Content-Type': 'application/json' },
     });
+  }
 
+  const name = typeof input?.name === 'string' ? input.name.trim() : '';
+  const email =
+    typeof input?.email === 'string' ? input.email.trim().toLowerCase() : '';
+  const password = typeof input?.password === 'string' ? input.password : '';
+
+  if (!name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || password.length < 5) {
+    return new Response(
+      JSON.stringify({ error: 'تحقق من الاسم والبريد الإلكتروني وكلمة المرور.' }),
+      {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' },
+      },
+    );
+  }
+
+  try {
+    const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) {
-      throw new Error(
-        'هذا الايميل موجود بالفعل، قم بتسجيل الدخول أو استخدم بريد إلكتروني آخر.'
+      return new Response(
+        JSON.stringify({
+          error:
+            'هذا البريد الإلكتروني مسجل بالفعل. يرجى تسجيل الدخول أو استخدام بريد آخر.',
+        }),
+        {
+          status: 409,
+          headers: { 'Content-Type': 'application/json' },
+        },
       );
     }
 
-    // تشفير كلمة المرور
     const hashedPassword = await bcrypt.hash(password, 10);
-
-    // إنشاء مستخدم جديد
     const user = await prisma.user.create({
       data: {
-        name,
+        userName: name,
         email,
         password: hashedPassword,
-        image:
-          'https://res.cloudinary.com/dh2xlutfu/image/upload/v1722957470/cooking/q9s2dvz8slw43lnyl0gf.png',
+        userImage: '/placeholder.jpg',
       },
+      select: { id: true, userName: true, email: true, userImage: true },
     });
 
-    return new Response(JSON.stringify(user), { status: 201 });
-  } catch (error) {
-    console.error('Error creating user:', error);
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
+    return new Response(JSON.stringify(user), {
+      status: 201,
+      headers: { 'Content-Type': 'application/json' },
     });
-  } finally {
-    await prisma.$disconnect();
+  } catch (error) {
+    if (error?.code === 'P2002') {
+      return new Response(
+        JSON.stringify({ error: 'هذا البريد الإلكتروني مسجل بالفعل.' }),
+        {
+          status: 409,
+          headers: { 'Content-Type': 'application/json' },
+        },
+      );
+    }
+
+    console.error('Error creating user:', error);
+    return new Response(
+      JSON.stringify({ error: 'تعذر إنشاء الحساب حاليًا.' }),
+      {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' },
+      },
+    );
   }
 }

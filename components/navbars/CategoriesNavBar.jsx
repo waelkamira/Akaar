@@ -380,8 +380,8 @@ const CategoriesNavBar = () => {
   }, [category]);
 
   return (
-    <div className="w-full backdrop-blur-md border-b border-slate-200/60 sticky">
-      {/* ديسكتوب (Desktop View) - يبقى كما هو تماماً دون تغيير */}
+    <div className="w-full backdrop-blur-sm border-b border-slate-200/60 sticky">
+      {/* ديسكتوب (Desktop View - يبقى كما هو تماماً دون تغيير */}
       <div className="hidden w-full sm:flex mx-auto px-1 overflow-x-auto gap-1 py-3 scrollbar-none justify-start items-center">
         {categories?.length > 0 &&
           categories.map((categoryItem) => {

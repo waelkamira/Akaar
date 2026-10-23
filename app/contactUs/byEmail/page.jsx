@@ -12,40 +12,32 @@ export default function ContactUs() {
   });
   const form = useRef();
 
-  const sendEmail = (e) => {
+  const sendEmail = async (e) => {
     e.preventDefault();
 
-    const createPromise = new Promise(async (resolve, reject) => {
-      const promise = emailjs
-        .sendForm(
-          process.env.NEXT_PUBLIC_SERVES_ID,
-          process.env.NEXT_PUBLIC_TEMPLATE_ID,
-          form.current,
-          {
-            publicKey: process.env.NEXT_PUBLIC_PUBLIC_ID,
-          }
-        )
-        .then(
-          () => {
-            console.log('SUCCESS!');
-          },
-          (error) => {
-            console.log('FAILED...', error.text);
-          }
-        );
-      if (promise) {
-        resolve();
-        setUserInfo({ name: '', email: '', message: '' });
-      } else {
-        reject();
-      }
-    });
+    if (
+      !form.current ||
+      !process.env.NEXT_PUBLIC_SERVICE_ID ||
+      !process.env.NEXT_PUBLIC_TEMPLATE_ID ||
+      !process.env.NEXT_PUBLIC_PUBLIC_ID
+    ) {
+      toast.error('نموذج التواصل غير مُعدّ حاليًا');
+      return;
+    }
 
-    toast.promise(createPromise, {
-      loading: 'Sending ...',
-      success: 'Your Message Successfully Sended',
-      error: 'Something Went Wrong Please Try Again Later',
-    });
+    try {
+      await emailjs.sendForm(
+        process.env.NEXT_PUBLIC_SERVICE_ID,
+        process.env.NEXT_PUBLIC_TEMPLATE_ID,
+        form.current,
+        { publicKey: process.env.NEXT_PUBLIC_PUBLIC_ID },
+      );
+      setUserInfo({ name: '', email: '', message: '' });
+      toast.success('تم إرسال رسالتك بنجاح');
+    } catch (error) {
+      console.error('Failed to send contact message:', error);
+      toast.error('تعذر إرسال الرسالة. يرجى المحاولة مرة أخرى.');
+    }
   };
 
   return (

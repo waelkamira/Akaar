@@ -93,7 +93,7 @@ export default function FirstNavBar() {
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-      className="hidden fixed left-0 right-0 w-full lg:flex xl:flex-col xl:justify-start top-0 -translate-x-1/2 z-[1000] border border-white/[0.08] bg-black/50 backdrop-blur-xl shadow-[0_24px_50px_-12px_rgba(0,0,0,0.7)]"
+      className="hidden fixed left-0 right-0 w-full lg:flex xl:flex-col xl:justify-start top-0 -translate-x-1/2 z-[1000] border border-white/[0.08] bg-black border-l boder-1-primary backdrop-blur-xl shadow-[0_24px_50px_-12px_rgba(0,0,0,0.7)]"
     >
       <div className="w-full flex justify-between items-center px-10 h-20">
         {/* أزرار التنقل (القائمة) */}
@@ -118,7 +118,7 @@ export default function FirstNavBar() {
                         className={`text-base flex items-center transition-all duration-500 ${
                           isHovered
                             ? 'text-primary-600 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)] scale-110'
-                            : 'text-slate-400'
+                            : 'text-neutral-500'
                         }`}
                       >
                         {button?.icon}
@@ -171,7 +171,7 @@ export default function FirstNavBar() {
                 alt="luxury_logo"
                 width={145}
                 height={20}
-                className="object-contain filter drop-shadow-[0_4px_12px_rgba(0,0,0,0.6)] brightness-105 group-hover:brightness-120 transition-all duration-500 bg-white "
+                className="object-contain filter drop-shadow-[0_4px_12px_rgba(0,0,0,0.6)] brightness-105 group-hover:brightness-120 border-0 border-l-8 border-primary transition-all duration-500 bg-black "
                 priority
               />
             </motion.div>
