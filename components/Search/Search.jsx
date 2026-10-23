@@ -248,12 +248,37 @@
 // }
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  useMemo,
+  useSyncExternalStore,
+} from 'react';
 import { ImSearch, ImSpinner8, ImCross } from 'react-icons/im';
 import CategoriesNavBar from '../navbars/CategoriesNavBar';
 import { useSearch } from '../../contexts/SearchContext';
 import { debounce } from 'lodash';
+
+function subscribeToRecentSearches(callback) {
+  window.addEventListener('storage', callback);
+  window.addEventListener('recent-searches-updated', callback);
+  return () => {
+    window.removeEventListener('storage', callback);
+    window.removeEventListener('recent-searches-updated', callback);
+  };
+}
+
+function getRecentSearchesSnapshot() {
+  try {
+    return localStorage.getItem('recentSearches') || '[]';
+  } catch (error) {
+    console.error('Unable to read recent searches:', error);
+    return '[]';
+  }
+}
 
 export default function EnhancedSearch() {
   const [inputValue, setInputValue] = useState('');
@@ -261,43 +286,45 @@ export default function EnhancedSearch() {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
-  const [recentSearches, setRecentSearches] = useState([]);
+  const recentSearchesSnapshot = useSyncExternalStore(
+    subscribeToRecentSearches,
+    getRecentSearchesSnapshot,
+    () => '[]',
+  );
 
   const router = useRouter();
+  const pathname = usePathname();
   const inputRef = useRef(null);
   const suggestionsRef = useRef(null);
-  const { setSearchQuery } = useSearch();
+  const { searchQuery, category, setSearchQuery } = useSearch();
+  const isSearchPage = pathname.startsWith('/search');
 
-  // مرجع للحفاظ على أحدث قيمة لـ recentSearches داخل الـ Debounce دون إعادة إنشائه
-  const recentSearchesRef = useRef(recentSearches);
-  useEffect(() => {
-    recentSearchesRef.current = recentSearches;
-  }, [recentSearches]);
-
-  // تحميل عمليات البحث الحديثة من localStorage
-  useEffect(() => {
-    const savedSearches = localStorage.getItem('recentSearches');
-    if (savedSearches) {
-      try {
-        setRecentSearches(JSON.parse(savedSearches));
-      } catch (e) {
-        console.error('Failed to parse recent searches', e);
-      }
+  const recentSearches = useMemo(() => {
+    try {
+      const parsed = JSON.parse(recentSearchesSnapshot);
+      return Array.isArray(parsed)
+        ? parsed.filter((item) => typeof item === 'string')
+        : [];
+    } catch (error) {
+      console.error('Unable to parse recent searches:', error);
+      return [];
     }
-  }, []);
+  }, [recentSearchesSnapshot]);
+  const currentInputValue = isSearchPage ? searchQuery : inputValue;
 
   // حفظ عمليات البحث الحديثة
   const saveToRecentSearches = useCallback((searchTerm) => {
-    setRecentSearches((prev) => {
-      const updatedSearches = [
-        searchTerm,
-        ...prev.filter((item) => item !== searchTerm),
-      ].slice(0, 5);
-
+    const updatedSearches = [
+      searchTerm,
+      ...recentSearches.filter((item) => item !== searchTerm),
+    ].slice(0, 5);
+    try {
       localStorage.setItem('recentSearches', JSON.stringify(updatedSearches));
-      return updatedSearches;
-    });
-  }, []);
+      window.dispatchEvent(new Event('recent-searches-updated'));
+    } catch (error) {
+      console.error('Unable to save recent searches:', error);
+    }
+  }, [recentSearches]);
 
   // إغلاق الاقتراحات عند النقر خارجها
   useEffect(() => {
@@ -322,14 +349,15 @@ export default function EnhancedSearch() {
   const fetchSuggestions = useMemo(
     () =>
       debounce(async (query) => {
-        const currentRecentSearches = recentSearchesRef.current;
-
         if (query.trim().length >= 2) {
           setIsLoading(true);
           try {
             const response = await fetch(
               `/api/search/suggestions?query=${encodeURIComponent(query.trim())}`,
             );
+            if (!response.ok) {
+              throw new Error(`Suggestions request failed: ${response.status}`);
+            }
             const data = await response.json();
 
             // تطبيع الاقتراحات للتأكد من أن كل عنصر يحتوي على خاصية text
@@ -340,7 +368,7 @@ export default function EnhancedSearch() {
             // دمج الاقتراحات مع عمليات البحث الحديثة وتجنب التكرار
             const allSuggestions = [
               ...apiSuggestions,
-              ...currentRecentSearches
+              ...recentSearches
                 .filter(
                   (search) =>
                     search.toLowerCase().includes(query.toLowerCase()) &&
@@ -358,10 +386,10 @@ export default function EnhancedSearch() {
           }
         } else if (
           query.trim().length === 0 &&
-          currentRecentSearches.length > 0
+          recentSearches.length > 0
         ) {
           setSuggestions(
-            currentRecentSearches.map((search) => ({
+            recentSearches.map((search) => ({
               type: 'recent',
               text: search,
             })),
@@ -372,48 +400,59 @@ export default function EnhancedSearch() {
           setShowSuggestions(false);
         }
       }, 300),
-    [], // مصفوفة فارغة لضمان إنشاء الدالة مرة واحدة فقط
+    [recentSearches],
   );
-
-  // إغلاق الاقتراحات عند بدء البحث الفعلي
-  useEffect(() => {
-    if (isSearching) {
-      setShowSuggestions(false);
-    }
-  }, [isSearching]);
 
   // التعامل مع تغيير قيمة الإدخال
   useEffect(() => {
-    fetchSuggestions(inputValue);
+    fetchSuggestions(currentInputValue);
     return () => {
       fetchSuggestions.cancel();
     };
-  }, [inputValue, fetchSuggestions]);
+  }, [currentInputValue, fetchSuggestions]);
 
   // إجراء البحث
   const handleSearch = useCallback(
     (searchTerm) => {
       const term = (
-        typeof searchTerm === 'string' ? searchTerm : inputValue
+        typeof searchTerm === 'string' ? searchTerm : currentInputValue
       ).trim();
       if (term) {
         setIsSearching(true);
         saveToRecentSearches(term);
         setSearchQuery(term);
-        router.push(`/search?query=${encodeURIComponent(term)}`);
+        const searchPath = isSearchPage ? pathname : '/search';
+        const params = new URLSearchParams();
+        params.set('query', term);
+        if (
+          category &&
+          searchPath === '/search' &&
+          !pathname.match(/\/search\/categoryId=\d+/)
+        ) {
+          params.set('category', category.id);
+        }
+        router.push(`${searchPath}?${params.toString()}`);
         setShowSuggestions(false);
 
         // إعادة تعيين حالة البحث بعد فترة قصيرة (اختياري، مفيد إذا لم يتم إعادة تحميل الصفحة)
         setTimeout(() => setIsSearching(false), 1000);
       }
     },
-    [inputValue, router, setSearchQuery, saveToRecentSearches],
+    [
+      currentInputValue,
+      category,
+      isSearchPage,
+      pathname,
+      router,
+      setSearchQuery,
+      saveToRecentSearches,
+    ],
   );
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      handleSearch(inputValue);
+      handleSearch(currentInputValue);
     } else if (e.key === 'Escape') {
       setShowSuggestions(false);
       inputRef.current?.blur();
@@ -427,7 +466,7 @@ export default function EnhancedSearch() {
   };
 
   const handleInputFocus = () => {
-    if (recentSearches.length > 0 && inputValue === '') {
+    if (recentSearches.length > 0 && currentInputValue === '') {
       setSuggestions(
         recentSearches.map((search) => ({ type: 'recent', text: search })),
       );
@@ -439,6 +478,10 @@ export default function EnhancedSearch() {
 
   const clearSearch = () => {
     setInputValue('');
+    if (isSearchPage) {
+      setSearchQuery('');
+      router.replace(pathname, { scroll: false });
+    }
     setSuggestions([]);
     setShowSuggestions(false);
     inputRef.current?.focus();
@@ -450,7 +493,7 @@ export default function EnhancedSearch() {
       <div className="w-full sm:w-2/3 bg-white/90 backdrop-blur-sm rounded-lg shadow-sm flex justify-center items-center gap-2 h-14 sm:h-20 px-3 sm:px-4">
         {/* زر البحث: تم تقليل الارتفاع والخط على الشاشات الصغيرة h-8 والخط text-xs */}
         <button
-          onClick={() => handleSearch(inputValue)}
+          onClick={() => handleSearch(currentInputValue)}
           disabled={isSearching}
           className="flex justify-center items-center bg-gradient-to-r from-primary-500 to-primary-400 text-white text-nowrap rounded-lg h-8 sm:h-10 px-2 sm:px-6 hover:bg-primary-600 hover:scale-105 transition-all cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed text-xs sm:text-base"
           aria-label="بحث"
@@ -468,10 +511,15 @@ export default function EnhancedSearch() {
             {/* حقل الإدخال: تم تقليل الارتفاع h-8، الحشوات pr-6 pl-6، والخط text-xs على الهواتف */}
             <input
               ref={inputRef}
+              role="combobox"
               type="text"
               id="search-input"
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
+              value={currentInputValue}
+              onChange={(event) => {
+                const value = event.target.value;
+                setInputValue(value);
+                if (isSearchPage) setSearchQuery(value);
+              }}
               onKeyDown={handleKeyDown}
               onFocus={handleInputFocus}
               placeholder="ابحث عن عقار، سيارة، أو أي منتج..."
@@ -479,10 +527,11 @@ export default function EnhancedSearch() {
               aria-autocomplete="list"
               aria-controls="search-suggestions"
               aria-expanded={showSuggestions}
+              aria-haspopup="listbox"
             />
 
             {/* زر مسح البحث: تم تصغير حجم الأيقونة وموضعها على الهواتف */}
-            {inputValue && (
+            {currentInputValue && (
               <button
                 onClick={clearSearch}
                 className="absolute left-1.5 sm:left-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"

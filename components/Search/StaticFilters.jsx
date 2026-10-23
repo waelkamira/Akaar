@@ -296,39 +296,28 @@
 //   );
 // }
 'use client';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { useSearch } from '../../contexts/SearchContext';
 import { motion } from 'framer-motion';
 
 export default function StaticFilters() {
   const { filters, setFilter, staticFilters, getTownsByCity } = useSearch();
 
-  // حالة محلية للتعامل مع hydration
-  const [isMounted, setIsMounted] = useState(false);
   const [inputValues, setInputValues] = useState({
-    min: '',
-    max: '',
+    min: null,
+    max: null,
   });
 
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  // تهيئة القيم بعد التأكد من mounting (حل مشكلة hydration)
-  useEffect(() => {
-    if (isMounted) {
-      setInputValues({
-        min:
-          filters.priceMin !== null && filters.priceMin !== undefined
-            ? filters.priceMin.toString()
-            : '',
-        max:
-          filters.priceMax !== null && filters.priceMax !== undefined
-            ? filters.priceMax.toString()
-            : '',
-      });
-    }
-  }, [filters.priceMin, filters.priceMax, isMounted]);
+  const committedMin = filters.priceMin?.toString() ?? '';
+  const committedMax = filters.priceMax?.toString() ?? '';
+  const minInput =
+    inputValues.min?.committed === committedMin
+      ? inputValues.min.value
+      : committedMin;
+  const maxInput =
+    inputValues.max?.committed === committedMax
+      ? inputValues.max.value
+      : committedMax;
 
   const availableTowns = getTownsByCity(filters.city || null);
 
@@ -353,14 +342,17 @@ export default function StaticFilters() {
     if (value === '' || /^\d*$/.test(value)) {
       setInputValues((prev) => ({
         ...prev,
-        [type]: value,
+        [type]: {
+          value,
+          committed: type === 'min' ? committedMin : committedMax,
+        },
       }));
     }
   };
 
   const applyPriceFilter = useCallback(() => {
-    let minPrice = inputValues.min === '' ? null : parseInt(inputValues.min);
-    let maxPrice = inputValues.max === '' ? null : parseInt(inputValues.max);
+    let minPrice = minInput === '' ? null : Number.parseInt(minInput, 10);
+    let maxPrice = maxInput === '' ? null : Number.parseInt(maxInput, 10);
 
     // التحقق من صحة الأرقام
     if (minPrice !== null && isNaN(minPrice)) minPrice = null;
@@ -376,10 +368,16 @@ export default function StaticFilters() {
 
     // تحديث حقول الإدخال بالقيم المصححة
     setInputValues({
-      min: minPrice !== null ? minPrice.toString() : '',
-      max: maxPrice !== null ? maxPrice.toString() : '',
+      min: {
+        value: minPrice !== null ? minPrice.toString() : '',
+        committed: minPrice !== null ? minPrice.toString() : '',
+      },
+      max: {
+        value: maxPrice !== null ? maxPrice.toString() : '',
+        committed: maxPrice !== null ? maxPrice.toString() : '',
+      },
     });
-  }, [inputValues, setFilter]);
+  }, [minInput, maxInput, setFilter]);
 
   const handlePriceInputBlur = useCallback(() => {
     applyPriceFilter();
@@ -391,25 +389,6 @@ export default function StaticFilters() {
     }
   };
 
-  // تجنب عرض المحتوى حتى يتم mounting لتجنب hydration errors
-  if (!isMounted) {
-    return (
-      <div className="bg-white shadow-sm p-4 space-y-6 border border-gray-100 rounded-lg">
-        <div className="space-y-6">
-          {/* عناصر تحميل مؤقتة */}
-          <div className="animate-pulse">
-            <div className="h-4 bg-gray-200 rounded w-1/3 mb-2"></div>
-            <div className="h-10 bg-gray-100 rounded"></div>
-          </div>
-          <div className="animate-pulse">
-            <div className="h-4 bg-gray-200 rounded w-1/3 mb-2"></div>
-            <div className="h-10 bg-gray-100 rounded"></div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -418,6 +397,98 @@ export default function StaticFilters() {
       className="bg-white shadow-sm p-4 space-y-6 border border-gray-100 rounded-lg"
     >
       <div className="space-y-6">
+        <div>
+          <label
+            htmlFor="search-sort"
+            className="mb-2 block text-sm font-medium text-gray-700"
+          >
+            ترتيب النتائج
+          </label>
+          <select
+            id="search-sort"
+            value={filters.sortBy || 'newest'}
+            onChange={(event) => setFilter('sortBy', event.target.value)}
+            className="w-full rounded-lg border-gray-200 bg-gray-50 px-3 py-2 shadow-sm"
+          >
+            <option value="newest">الأحدث</option>
+            <option value="cheapest">الأقل سعرًا</option>
+            <option value="best_sellers">الأكثر طلبًا</option>
+          </select>
+        </div>
+
+        <div>
+          <label
+            htmlFor="search-rating"
+            className="mb-2 block text-sm font-medium text-gray-700"
+          >
+            متوسط التقييم الأدنى
+          </label>
+          <select
+            id="search-rating"
+            value={filters.rating || ''}
+            onChange={(event) => setFilter('rating', event.target.value)}
+            className="w-full rounded-lg border-gray-200 bg-gray-50 px-3 py-2 shadow-sm"
+          >
+            <option value="">كل التقييمات</option>
+            {[5, 4, 3, 2, 1].map((rating) => (
+              <option key={rating} value={rating}>
+                {rating} نجوم فأكثر
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label
+            htmlFor="search-brand"
+            className="mb-2 block text-sm font-medium text-gray-700"
+          >
+            الماركة
+          </label>
+          <input
+            id="search-brand"
+            type="search"
+            value={filters.brand || ''}
+            onChange={(event) => setFilter('brand', event.target.value)}
+            className="w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm"
+            placeholder="ابحث باسم الماركة"
+          />
+        </div>
+
+        <div>
+          <label
+            htmlFor="search-subcategory"
+            className="mb-2 block text-sm font-medium text-gray-700"
+          >
+            الفئة الفرعية
+          </label>
+          <input
+            id="search-subcategory"
+            type="search"
+            value={filters.subCategory || ''}
+            onChange={(event) => setFilter('subCategory', event.target.value)}
+            className="w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm"
+            placeholder="ابحث بالفئة الفرعية"
+          />
+        </div>
+
+        <div>
+          <label
+            htmlFor="search-vendor"
+            className="mb-2 block text-sm font-medium text-gray-700"
+          >
+            معرّف البائع
+          </label>
+          <input
+            id="search-vendor"
+            type="search"
+            value={filters.vendorId || ''}
+            onChange={(event) => setFilter('vendorId', event.target.value)}
+            className="w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm"
+            placeholder="معرّف حساب البائع"
+          />
+        </div>
+
         {/* City Filter */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -528,7 +599,7 @@ export default function StaticFilters() {
               <input
                 type="text"
                 inputMode="numeric"
-                value={inputValues.min}
+                value={minInput}
                 onChange={(e) => handlePriceInputChange('min', e.target.value)}
                 onBlur={handlePriceInputBlur}
                 onKeyPress={handleKeyPress}
@@ -543,7 +614,7 @@ export default function StaticFilters() {
               <input
                 type="text"
                 inputMode="numeric"
-                value={inputValues.max}
+                value={maxInput}
                 onChange={(e) => handlePriceInputChange('max', e.target.value)}
                 onBlur={handlePriceInputBlur}
                 onKeyPress={handleKeyPress}

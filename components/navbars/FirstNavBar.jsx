@@ -83,10 +83,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import mainButtons from '../lists/mainButtons';
 import Image from 'next/image';
 import { useState } from 'react';
+import { useCommerce } from '../../contexts/CommerceContext';
 
 export default function FirstNavBar() {
   // تم تصحيح السطر أدناه لإزالة كود الـ TypeScript ليناسب ملف الـ .jsx
   const [hoveredIndex, setHoveredIndex] = useState(null);
+  const { cartCount } = useCommerce();
 
   return (
     <motion.div
@@ -101,6 +103,7 @@ export default function FirstNavBar() {
           <ul className="flex items-center gap-2">
             {mainButtons?.map((button) => {
               const isHovered = hoveredIndex === button?.title;
+              const isCart = button?.path === '/cart';
 
               return (
                 <li
@@ -111,6 +114,11 @@ export default function FirstNavBar() {
                 >
                   <Link
                     href={button?.path}
+                    aria-label={
+                      isCart
+                        ? `${button?.title}، ${cartCount} منتج`
+                        : button?.title
+                    }
                     className="flex items-center gap-3 font-medium text-[13px] tracking-widest uppercase transition-colors duration-500 px-5 py-2.5 rounded-xl relative z-10 select-none text-neutral-400 hover:text-white"
                   >
                     {button?.icon && (
@@ -127,6 +135,14 @@ export default function FirstNavBar() {
                     <span className="whitespace-nowrap font-light text-white tracking-wider">
                       {button?.title}
                     </span>
+                    {isCart && cartCount > 0 && (
+                      <span
+                        aria-hidden="true"
+                        className="absolute -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-orange-500 px-1 text-[10px] font-bold leading-none text-black"
+                      >
+                        {cartCount}
+                      </span>
+                    )}
                   </Link>
 
                   {/* تأثير الخلفية الانسيابية المتحركة (Premium Fluid Capsule) */}

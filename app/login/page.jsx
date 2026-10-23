@@ -8,40 +8,29 @@ import toast from 'react-hot-toast';
 import { signIn, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import CustomToast from '../../components/ReusableComponents/CustomToast';
-import { useEffect, useCallback, useContext, useState } from 'react';
+import { useEffect, useCallback } from 'react';
 import { GiExitDoor } from 'react-icons/gi';
-import { inputsContext } from '../../components/authContext/Context';
 import Loading from '../../components/ReusableComponents/Loading';
+import Link from 'next/link';
 
 export default function LogInPage() {
   const session = useSession();
   const router = useRouter();
-  const [loggedIn, setLoggedIn] = useState(false);
-  const { profileImage, favorite } = useContext(inputsContext);
-  console.log('favorite', favorite);
-  const userId = session?.data?.user?.id;
-  // Schema for form validation
+  const user = session?.data?.user;
   const schema = z.object({
-    email: z.string().email(),
-    password: z.string().min(5),
+    email: z.string().trim().email('أدخل عنوان بريد إلكتروني صالحًا'),
+    password: z.string().min(5, 'يجب أن تتكون كلمة المرور من 5 أحرف على الأقل'),
   });
 
-  const { getValues, handleSubmit, setError } = useForm({
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors },
+  } = useForm({
     resolver: zodResolver(schema),
   });
 
-  // Check if user is logged in and redirect to home page
-  useEffect(() => {
-    if (session?.data?.user) {
-      fetchAndStoreUserData(session?.data?.user?.email);
-      fetchAndStoreUserFavoriteIds(session?.data?.user?.id);
-      toast.success('تم تسجيل الدخول بنجاح أهلا وسهلا');
-      // router.push('/');
-      setLoggedIn(true);
-    }
-  }, [router, session?.data?.user]);
-
-  // Function to fetch and store user data in localStorage
   const fetchAndStoreUserData = useCallback(
     async (email) => {
       try {
@@ -58,95 +47,140 @@ export default function LogInPage() {
         console.error('Failed to fetch or store user data:', error);
       }
     },
-    [router, profileImage],
+    [router],
   );
 
-  // Function to fetch and favorite user data in localStorage
-  const fetchAndStoreUserFavoriteIds = async (userId) => {
-    console.log('userId', userId);
+  const fetchAndStoreUserFavoriteIds = useCallback(async (id) => {
     try {
-      const response = await fetch(`/api/favorite/ids?userId=${userId}`);
+      const response = await fetch(`/api/favorite/ids?userId=${id}`);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const favoriteIds = await response.json();
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('favoriteIds', JSON.stringify(favoriteIds));
-      }
+      localStorage.setItem('favoriteIds', JSON.stringify(favoriteIds));
     } catch (error) {
       console.error('Failed to fetch or store favorites data:', error);
     }
-  };
+  }, []);
 
-  // Handle form submission for email/password login
-  async function onSubmit() {
-    if (getValues()?.email === '') {
-      setError('email', {
-        type: 'custom',
-        message: 'عنوان البريد الإلكتروني مطلوب',
-      });
-      return;
-    } else if (getValues()?.password?.length < 5) {
-      setError('password', {
-        type: 'custom',
-        message:
-          'طول كلمة السر يجب أن يكون 5 أحرف (أو 5 أرقام وأحرف) على الأقل',
-      });
-      return;
+  useEffect(() => {
+    if (user) {
+      fetchAndStoreUserData(user.email);
+      fetchAndStoreUserFavoriteIds(user.id);
     }
+  }, [user, fetchAndStoreUserData, fetchAndStoreUserFavoriteIds]);
 
-    const signInResult = await signIn('credentials', {
-      ...getValues(),
-      redirect: false,
-      callbackUrl: '/',
-    });
+  async function onSubmit(values) {
+    try {
+      const signInResult = await signIn('credentials', {
+        ...values,
+        redirect: false,
+        callbackUrl: '/',
+      });
 
-    if (signInResult?.ok) {
-      toast.success('تم تسجيل الدخول بنجاح أهلا وسهلا');
-      fetchAndStoreUserData(getValues().email); // Call the function to fetch and store user data
-    } else {
-      setError(signInResult?.error);
+      if (signInResult?.ok) {
+        toast.success('تم تسجيل الدخول بنجاح أهلا وسهلا');
+      } else {
+        throw new Error(signInResult?.error || 'Sign-in was unsuccessful.');
+      }
+    } catch (error) {
+      console.error('Sign-in request failed:', error);
+      setError('root.server', {
+        type: 'server',
+        message: 'تعذر تسجيل الدخول. تحقق من البريد الإلكتروني وكلمة المرور.',
+      });
       toast.custom((t) => (
         <CustomToast
           t={t}
-          message={
-            'عنوان البريد الالكتروني هذا غير موجود يجب عليك التسجيل أولا 😐'
-          }
+          message="تعذر تسجيل الدخول، يرجى التحقق من البيانات والمحاولة مجددًا."
         />
       ));
     }
   }
 
   return (
-    <div className="flex justify-center items-start w-full h-screen text-lg md:text-xl text-end bg-five p-2 mt-64 sm:mt-2">
-      {loggedIn && <Loading message=" ✔ جاري تحويلك للصفحة الرئيسية " />}
-      {!loggedIn && (
+    <main className="flex min-h-[60vh] justify-center px-4 py-12 text-lg md:text-xl">
+      {user ? (
+        <Loading message=" ✔ جاري تحويلك للصفحة الرئيسية " />
+      ) : (
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="w-full lg:w-1/2 p-2 sm:p-8 rounded-lg border bg-white mt-64"
+          className="my-auto w-full max-w-xl rounded-2xl border border-neutral-200 bg-white p-6 text-right shadow-lg sm:p-8"
         >
           <h1 className="flex justify-center items-center w-full my-2 text-xl sm:text-2xl md:text-3xl xl:text-4xl  text-center select-none">
             تسجيل الدخول <GiExitDoor className="text-primary-500" />
           </h1>
-          <div
-            className="flex justify-center w-full bg-white border rounded-lg px-4 py-2 items-center my-8 hover:shadow-sm shadow-gray-300 cursor-pointer"
-            onClick={() => signIn('google')}
+          <label htmlFor="email" className="mb-2 block text-sm font-semibold">
+            البريد الإلكتروني
+          </label>
+          <input
+            id="email"
+            type="email"
+            autoComplete="email"
+            {...register('email')}
+            className="mb-1 w-full rounded-lg border border-neutral-300 px-3 py-2 text-base"
+          />
+          {errors.email && (
+            <p role="alert" className="mb-3 text-sm text-red-600">
+              {errors.email.message}
+            </p>
+          )}
+          <label
+            htmlFor="password"
+            className="mb-2 mt-4 block text-sm font-semibold"
           >
-            <h1 className="text-sm sm:text-lg grow text-center text-gray-500 select-none font-semibold">
+            كلمة المرور
+          </label>
+          <input
+            id="password"
+            type="password"
+            autoComplete="current-password"
+            {...register('password')}
+            className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-base"
+          />
+          {errors.password && (
+            <p role="alert" className="mt-1 text-sm text-red-600">
+              {errors.password.message}
+            </p>
+          )}
+          {errors.root?.server && (
+            <p role="alert" className="mt-3 text-sm text-red-600">
+              {errors.root.server.message}
+            </p>
+          )}
+          <button
+            type="submit"
+            className="mt-6 w-full rounded-lg bg-primary-500 px-4 py-3 font-bold text-white transition hover:bg-primary-600"
+          >
+            تسجيل الدخول
+          </button>
+          <div
+            className="my-5 flex w-full justify-center"
+          >
+            <button
+              type="button"
+              onClick={() => signIn('google')}
+              className="flex w-full items-center justify-center gap-3 rounded-lg border border-neutral-300 px-4 py-2 text-sm font-semibold text-neutral-600 hover:bg-neutral-50 sm:text-base"
+            >
               تسجيل الدخول عن طريق جوجل
-            </h1>
-            <div className="relative h-9 w-8 ">
               <Image
                 priority
-                src={'/google.png'}
-                alt="google image"
-                layout="fill"
-                objectFit="contain"
+                src="/google.png"
+                alt=""
+                width={28}
+                height={28}
+                className="object-contain"
               />
-            </div>
+            </button>
           </div>
+          <p className="text-center text-sm text-neutral-600">
+            ليس لديك حساب؟{' '}
+            <Link href="/register" className="font-semibold text-primary-600">
+              أنشئ حسابًا
+            </Link>
+          </p>
         </form>
       )}
-    </div>
+    </main>
   );
 }

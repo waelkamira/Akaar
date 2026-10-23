@@ -86,7 +86,7 @@ export default function SearchResults() {
         </motion.p>
 
         <motion.div className="text-xs text-gray-500 bg-gray-50 px-3 py-1.5 rounded-full">
-          عرض {results?.length} من {totalCount - results?.length * page}
+          عرض {results?.length} من {totalCount}
         </motion.div>
       </motion.div>
 

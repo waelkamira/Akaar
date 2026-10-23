@@ -8,6 +8,7 @@ import { SearchProvider } from '../contexts/SearchContext';
 import { Suspense } from 'react';
 import SideBarMenu from '../components/navbars/SideBarMenu';
 import { CommerceProvider } from '../contexts/CommerceContext';
+import Footer from '../components/ReusableComponents/Footer';
 const rubik = Rubik({
   subsets: ['latin'],
   weight: ['300', '400', '500', '700'],
@@ -58,6 +59,7 @@ export default function RootLayout({ children }) {
                   {children}
                 </SearchProvider>
               </Suspense>
+              <Footer />
             </InputsContextProvider>
           </AuthContextProvider>
         </CommerceProvider>

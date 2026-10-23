@@ -1,6 +1,6 @@
 'use client';
-import { useSession } from 'next-auth/react';
-import React, { useEffect, useState } from 'react';
+import { signOut, useSession } from 'next-auth/react';
+import React, { useMemo, useState, useSyncExternalStore } from 'react';
 import Button from '../Buttons/Button';
 import UserNameAndPhoto from '../ReusableComponents/userNameAndPhoto';
 import categories from '../Categories/categories';
@@ -10,30 +10,44 @@ import { IoCloseOutline } from 'react-icons/io5';
 import { TfiMenuAlt } from 'react-icons/tfi';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaSignInAlt, FaSignOutAlt } from 'react-icons/fa';
-import LogInPage from '../../app/login/page';
 import Image from 'next/image';
 import LoadingPhoto from '../photos/LoadingPhoto';
+
+function subscribeToStoredUser(callback) {
+  window.addEventListener('storage', callback);
+  return () => window.removeEventListener('storage', callback);
+}
+
+function getStoredUserSnapshot() {
+  try {
+    return localStorage.getItem('CurrentUser');
+  } catch (error) {
+    console.error('Unable to read the current user from local storage:', error);
+    return null;
+  }
+}
 
 export default function SideBarMenu() {
   const [isOpen, setIsOpen] = useState(false);
   const session = useSession();
-  const [user, setUser] = useState('');
+  const storedUser = useSyncExternalStore(
+    subscribeToStoredUser,
+    getStoredUserSnapshot,
+    () => null,
+  );
+  const user = useMemo(() => {
+    if (!storedUser) return null;
+    try {
+      return JSON.parse(storedUser);
+    } catch (error) {
+      console.error('Error parsing CurrentUser from localStorage:', error);
+      return null;
+    }
+  }, [storedUser]);
 
   // مجموعة ألوان أنيقة
   const primaryColor = '#ffff';
   const secondaryColor = '#374151'; // رمادي داكن
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        const storedUser = localStorage.getItem('CurrentUser');
-        const user = storedUser ? JSON.parse(storedUser) : null;
-        setUser(user);
-      } catch (error) {
-        console.error('Error parsing CurrentUser from localStorage:', error);
-      }
-    }
-  }, []);
 
   // if (session?.status === 'unauthenticated') {
   //   return;
@@ -127,23 +141,32 @@ export default function SideBarMenu() {
                       />
                     </motion.div>
                   ))}
-                  <Button
-                    title={
-                      session.status === 'authenticated'
-                        ? 'تسجيل الخروج'
-                        : 'تسجيل الدخول'
-                    }
-                    path={session.status === 'authenticated' ? '/' : '/login'}
-                    onClick={() => setIsOpen(false)}
-                    style={' '}
-                    emoji={
-                      session.status === 'authenticated' ? (
-                        <FaSignOutAlt />
-                      ) : (
-                        <FaSignInAlt />
-                      )
-                    }
-                  />
+                  {session.status === 'authenticated' ? (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsOpen(false);
+                        signOut({ callbackUrl: '/' });
+                      }}
+                      className="my-2 flex max-h-12 w-full items-center justify-between rounded-full border border-white/20 bg-transparent p-2 text-nowrap text-white shadow-lg transition-all duration-300 hover:scale-[102%] hover:shadow-lg sm:text-lg"
+                    >
+                      <FaSignOutAlt className="mx-2" />
+                      <span className="w-full text-center lg:text-base">
+                        تسجيل الخروج
+                      </span>
+                    </button>
+                  ) : (
+                    <Link
+                      href="/login"
+                      onClick={() => setIsOpen(false)}
+                      className="my-2 flex max-h-12 w-full items-center justify-between rounded-full border border-white/20 bg-transparent p-2 text-nowrap text-white shadow-lg transition-all duration-300 hover:scale-[102%] hover:shadow-lg sm:text-lg"
+                    >
+                      <FaSignInAlt className="mx-2" />
+                      <span className="w-full text-center lg:text-base">
+                        تسجيل الدخول
+                      </span>
+                    </Link>
+                  )}
                 </div>
               </div>
               {/* اختيار الفئات */}

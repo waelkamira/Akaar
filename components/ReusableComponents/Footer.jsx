@@ -67,6 +67,9 @@ export default function Footer() {
       path: '/contactUs',
       icon: <MessageCircle size={16} className="ml-2" />,
     },
+    { name: 'من نحن', path: '/about', icon: <User size={16} className="ml-2" /> },
+    { name: 'الشروط والأحكام', path: '/terms', icon: <PlusCircle size={16} className="ml-2" /> },
+    { name: 'سياسة الخصوصية', path: '/privacy', icon: <Heart size={16} className="ml-2" /> },
   ];
 
   const socialLinks = [

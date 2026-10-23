@@ -2,357 +2,247 @@
 
 import {
   createContext,
-  useContext,
-  useState,
-  useEffect,
   useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
 } from 'react';
 import { filterOptions } from '../lib/mockData';
-import { useRouter, useSearchParams, usePathname } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { cities } from '../components/lists/Cities';
 
 const SearchContext = createContext(undefined);
 
-export function SearchProvider({ children, initialCategory }) {
-  // Core state
-  const [searchQuery, setSearchQuery] = useState('');
-  const [category, setCategory] = useState(initialCategory || null);
-  const [filters, setFilters] = useState({});
-  const [dynamicFilters, setDynamicFilters] = useState([]);
-  const [shouldSearchOnLoad, setShouldSearchOnLoad] =
-    useState(!!initialCategory);
-  // Navigation
+export function SearchProvider({ children }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
-
-  // Check if we're on the search page
   const isSearchPage = pathname.startsWith('/search');
-
-  // Static filters state
-  const [staticFilters] = useState({
-    cities: cities,
-  });
-
-  // Results state
+  const [searchQuery, setSearchQuery] = useState('');
+  const [category, setCategory] = useState(null);
+  const [filters, setFilters] = useState({});
+  const [dynamicFilters, setDynamicFilters] = useState([]);
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [totalCount, setTotalCount] = useState(0);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
-  const [shouldScrollTop, setShouldScrollTop] = useState(false);
-  const [isNewSearch, setIsNewSearch] = useState(true); // إضافة حالة لتتبع إذا كان بحث جديد
+  const requestId = useRef(0);
+  const requestController = useRef(null);
+  const searchTimer = useRef(null);
 
-  // Handle URL query changes
-  useEffect(() => {
-    if (!isSearchPage) return;
+  const staticFilters = useMemo(() => ({ cities }), []);
 
-    const query = searchParams.get('query');
-    if (query !== null) {
-      setSearchQuery(query);
-      setShouldSearchOnLoad(true);
-    }
-  }, [searchParams, isSearchPage]);
-
-  // Load dynamic filters when category changes
-  const loadDynamicFilters = useCallback(async (categoryObj) => {
-    if (!categoryObj?.name) {
-      console.log('No category or name provided');
-      return [];
-    }
+  const loadDynamicFilters = useCallback(async (categoryName) => {
+    if (!categoryName) return [];
 
     try {
-      const selectedModule = await import(
-        `../components/categoryFields/${categoryObj.name}.jsx`
+      const categoryModule = await import(
+        `../components/categoryFields/${categoryName}.jsx`
       );
-      const filters = Array.isArray(selectedModule.default)
-        ? selectedModule.default
-        : [];
-      return filters;
-    } catch (err) {
-      console.error(`Failed to load filters for ${categoryObj.name}:`, err);
+      return Array.isArray(categoryModule.default) ? categoryModule.default : [];
+    } catch (loadError) {
+      console.error(`Unable to load filters for ${categoryName}:`, loadError);
       return [];
     }
   }, []);
 
-  // Handle initial category
+  // The URL is external state; synchronize it into the shared search state.
   useEffect(() => {
-    if (initialCategory) {
-      const categoryObj = filterOptions.categories.find(
-        (cat) => cat.id === initialCategory.id,
-      );
-      if (categoryObj) {
-        setCategory(categoryObj);
-        loadDynamicFilters(categoryObj).then((filters) => {
-          setDynamicFilters(filters);
-        });
-      }
-    }
-  }, [initialCategory, loadDynamicFilters]);
+    if (!isSearchPage) return;
 
-  // Handle category changes from URL (only on search page)
+    const query = searchParams.get('query') || '';
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setSearchQuery((current) => (current === query ? current : query));
+
+    const routeCategoryId =
+      pathname.match(/\/search\/categoryId=(\d+)/)?.[1] ||
+      searchParams.get('category');
+    const nextCategory = routeCategoryId
+      ? filterOptions.categories.find(
+          (item) => String(item.id) === String(routeCategoryId),
+        ) || null
+      : null;
+
+    setCategory((current) =>
+      current?.id === nextCategory?.id ? current : nextCategory,
+    );
+  }, [isSearchPage, pathname, searchParams]);
+
   useEffect(() => {
-    const handleUrlCategory = async () => {
-      // Extract categoryId from pathname
-      const categoryIdMatch = pathname.match(/\/search\/categoryId=(\d+)/);
-      const categoryId = categoryIdMatch ? categoryIdMatch[1] : null;
-
-      setLoading(true);
-      try {
-        if (!categoryId) {
-          setCategory(null);
-          setDynamicFilters([]);
-          setFilters((prev) => {
-            const { details, ...rest } = prev;
-            return rest;
-          });
-          setPage(1);
-          setShouldSearchOnLoad(true);
-          return;
-        }
-
-        const categoryObj = filterOptions.categories.find(
-          (cat) => cat.id.toString() === categoryId,
-        );
-
-        if (!categoryObj) {
-          console.log('Category not found:', categoryId);
-          return;
-        }
-
-        // Load dynamic filters first
-        const filters = await loadDynamicFilters(categoryObj);
-
-        // Then update state
-        setCategory(categoryObj);
-        setDynamicFilters(filters);
-        setFilters((prev) => {
-          const { details, ...rest } = prev;
-          return rest;
-        });
-        setPage(1);
-        setShouldSearchOnLoad(true);
-      } catch (err) {
-        console.error('Error loading category:', err);
-        setDynamicFilters([]);
-      } finally {
-        setLoading(false);
-      }
+    let active = true;
+    loadDynamicFilters(category?.name).then((nextFilters) => {
+      if (active) setDynamicFilters(nextFilters);
+    });
+    return () => {
+      active = false;
     };
+  }, [category?.name, loadDynamicFilters]);
 
-    handleUrlCategory();
-  }, [pathname, loadDynamicFilters]);
-
-  // Perform search - التعديل الرئيسي هنا
   const performSearch = useCallback(
-    async (targetPage = page, isLoadMore = false) => {
+    async (targetPage = 1, isLoadMore = false) => {
       if (!isSearchPage) return;
 
+      window.clearTimeout(searchTimer.current);
+      requestController.current?.abort();
+      const controller = new AbortController();
+      requestController.current = controller;
+      const currentRequestId = ++requestId.current;
       setLoading(true);
       setError(null);
 
       try {
-        const searchBody = {
-          query: searchQuery,
-          categoryId: category?.id,
-          filters: {
-            ...filters,
-            details: filters.details || {},
-          },
-          page: targetPage,
-          limit: 20,
-        };
-
-        // Remove query from filters if it exists to avoid duplication
-        if (searchBody.filters.query) {
-          delete searchBody.filters.query;
-        }
-
         const response = await fetch('/api/search', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(searchBody),
+          signal: controller.signal,
+          body: JSON.stringify({
+            query: searchQuery,
+            categoryId: category?.id,
+            filters: { ...filters, details: filters.details || {} },
+            page: targetPage,
+            limit: 20,
+          }),
         });
 
-        if (!response.ok) {
-          throw new Error('Search failed');
-        }
-
         const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data?.error || 'Search request failed.');
+        }
+        if (currentRequestId !== requestId.current) return;
 
-        // التعديل الرئيسي: عرض النتائج الجديدة فقط وليس إضافتها للنتائج السابقة
-        setResults(data.products); // دائماً استبدال النتائج القديمة بالجديدة
+        setResults((current) =>
+          isLoadMore ? [...current, ...data.products] : data.products,
+        );
         setTotalCount(data.totalCount);
         setHasMore(data.hasMore);
+      } catch (searchError) {
+        if (searchError.name === 'AbortError') return;
+        if (currentRequestId !== requestId.current) return;
 
-        // إذا كان هذا بحث جديد وليس تحميل المزيد، ننتقل للأعلى
-        if (!isLoadMore) {
-          setShouldScrollTop(true);
-        }
-      } catch (err) {
-        console.error('Search error:', err);
-        setError(
-          'لم يتم العثور على نتائج مطابقة قم بتعديل كلمات البحث للحصول على نتائج أفضل',
-        );
+        console.error('Search request failed:', searchError);
+        setError('تعذر إكمال البحث. يرجى المحاولة مرة أخرى.');
         setResults([]);
         setTotalCount(0);
+        setHasMore(false);
       } finally {
-        setLoading(false);
-        setIsNewSearch(false);
+        if (currentRequestId === requestId.current) setLoading(false);
       }
     },
-    [searchQuery, category, filters, isSearchPage],
+    [category, filters, isSearchPage, searchQuery],
   );
 
-  // Handle scrolling separately
   useEffect(() => {
-    if (shouldScrollTop && !loading && typeof window !== 'undefined') {
-      window.scrollTo({ top: 400, behavior: 'smooth' });
-      setShouldScrollTop(false);
-    }
-  }, [shouldScrollTop, loading]);
+    if (!isSearchPage) return undefined;
 
-  // Get towns by city
+    searchTimer.current = window.setTimeout(() => {
+      setPage(1);
+      performSearch(1, false);
+    }, 300);
+
+    return () => {
+      window.clearTimeout(searchTimer.current);
+      requestController.current?.abort();
+    };
+  }, [isSearchPage, searchQuery, category?.id, filters, performSearch]);
+
+  useEffect(() => {
+    // Page changes are external navigation state and trigger the next page request.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (page > 1 && isSearchPage) performSearch(page, true);
+  }, [page, isSearchPage, performSearch]);
+
+  useEffect(
+    () => () => {
+      requestController.current?.abort();
+    },
+    [],
+  );
+
   const getTownsByCity = useCallback(
     (cityId) => {
       if (!cityId) return [];
       const city = staticFilters.cities.find(
-        (c) => c.id === cityId || c.name === cityId,
+        (item) => item.id === cityId || item.name === cityId,
       );
       return city?.towns || [];
     },
     [staticFilters.cities],
   );
 
-  // إضافة useEffect جديد لإدارة طلبات البحث عند تغيير الصفحة
-  useEffect(() => {
-    if (page > 1 && !shouldSearchOnLoad && !isNewSearch) {
-      performSearch(page, false); // false يعني أن هذا ليس تحميلاً للمزيد بل صفحة جديدة
-    }
-  }, [page, performSearch, shouldSearchOnLoad, isNewSearch]);
+  const setFilter = useCallback((key, value) => {
+    setFilters((current) => {
+      const next = { ...current };
 
-  // Remove automatic search trigger
-  useEffect(() => {
-    if (!isSearchPage) return;
-
-    if (shouldSearchOnLoad) {
-      setIsNewSearch(true); // تمييز أن هذا بحث جديد
-      performSearch(1, false);
-      setShouldSearchOnLoad(false);
-    }
-  }, [shouldSearchOnLoad, performSearch, isSearchPage]);
-
-  // Update URL when category changes (only on search page)
-  useEffect(() => {
-    if (!isSearchPage) return;
-
-    // Only update URL for category changes, not for pagination
-    if (page === 1) {
-      if (category) {
-        router.replace(`/search/categoryId=${category.id}`, { scroll: false });
-      } else {
-        router.replace('/search', { scroll: false });
-      }
-    }
-  }, [category, router, isSearchPage, page]);
-
-  // Filter management functions
-  const setFilter = useCallback(
-    (key, value) => {
-      setFilters((prev) => {
-        const newFilters = { ...prev };
-
-        if (key.startsWith('details.')) {
-          const fieldName = key.split('.')[1];
-          newFilters.details = { ...prev.details, [fieldName]: value };
+      if (key.startsWith('details.')) {
+        const detailKey = key.slice('details.'.length);
+        const details = { ...current.details };
+        if (value === null || value === undefined || value === '') {
+          delete details[detailKey];
         } else {
-          // Clear town when city changes
-          if (key === 'city' && prev.town) {
-            delete newFilters.town;
-          }
-          newFilters[key] = value;
+          details[detailKey] = value;
         }
+        if (Object.keys(details).length) next.details = details;
+        else delete next.details;
+      } else if (value === null || value === undefined || value === '') {
+        delete next[key];
+      } else {
+        next[key] = value;
+      }
 
-        // Add search query to filters if it exists
-        if (searchQuery) {
-          newFilters.query = searchQuery;
-        }
-
-        return newFilters;
-      });
-      setPage(1);
-      setIsNewSearch(true); // تمييز أن هذا بحث جديد
-    },
-    [searchQuery],
-  );
+      if (key === 'city') delete next.town;
+      return next;
+    });
+    setPage(1);
+  }, []);
 
   const removeFilter = useCallback(
     (key) => {
-      setFilters((prev) => {
-        const newFilters = { ...prev };
-
-        if (key.startsWith('details.')) {
-          const fieldName = key.split('.')[1];
-          if (newFilters.details) {
-            const { [fieldName]: removed, ...rest } = newFilters.details;
-            newFilters.details =
-              Object.keys(rest).length > 0 ? rest : undefined;
-          }
-        } else if (key === 'city') {
-          // Remove both city and town
-          delete newFilters.city;
-          delete newFilters.town;
-        } else if (key === 'category') {
-          setCategory(null);
-        } else if (key === 'priceMin' || key === 'priceMax') {
-          // Handle price filters separately
-          delete newFilters[key];
-        } else {
-          delete newFilters[key];
-        }
-
-        return newFilters;
+      if (key === 'category') {
+        setFilters((current) => {
+          const next = { ...current };
+          delete next.details;
+          return next;
+        });
+        setCategory(null);
+        return;
+      }
+      if (key.startsWith('details.')) {
+        setFilter(key, null);
+        return;
+      }
+      setFilters((current) => {
+        const next = { ...current };
+        if (key === 'city') delete next.town;
+        delete next[key];
+        return next;
       });
       setPage(1);
-      setIsNewSearch(true); // تمييز أن هذا بحث جديد
-      // Trigger search after removing filter
-      setShouldSearchOnLoad(true);
     },
-    [setCategory],
+    [setFilter],
   );
 
   const clearFilters = useCallback(() => {
-    // Keep the category but clear all other filters and search query
     setFilters({});
-    setSearchQuery('');
     setPage(1);
-    setIsNewSearch(true); // تمييز أن هذا بحث جديد
-    // Trigger search after clearing filters
-    setShouldSearchOnLoad(true);
   }, []);
 
   const clearAll = useCallback(() => {
-    // Clear everything including category and search query
     setFilters({});
     setCategory(null);
     setSearchQuery('');
     setPage(1);
-    setIsNewSearch(true); // تمييز أن هذا بحث جديد
-    // Trigger search after clearing everything
-    setShouldSearchOnLoad(true);
-  }, []);
+    router.replace('/search', { scroll: false });
+  }, [router]);
 
   const loadMore = useCallback(() => {
-    if (!loading && hasMore) {
-      const nextPage = page + 1;
-      setPage(nextPage);
-      // سيتم التعامل مع البحث عبر useEffect الجديد
-    }
-  }, [loading, hasMore, page]);
+    if (!loading && hasMore) setPage((current) => current + 1);
+  }, [hasMore, loading]);
 
   const value = {
-    // Search state
     searchQuery,
     setSearchQuery,
     category,
@@ -364,20 +254,14 @@ export function SearchProvider({ children, initialCategory }) {
     clearAll,
     dynamicFilters,
     performSearch,
-
-    // Results
     results,
     loading,
     error,
     totalCount,
     hasMore,
     loadMore,
-
-    // Pagination
     page,
     setPage,
-
-    // Static filters
     staticFilters,
     getTownsByCity,
   };

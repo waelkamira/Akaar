@@ -1,5 +1,5 @@
 'use client';
-import { SearchProvider, useSearch } from '../../contexts/SearchContext';
+import { useSearch } from '../../contexts/SearchContext';
 import SelectedFilters from '../../components/Search/SelectedFilters';
 import CategoryFilter from '../../components/Search/CategoryFilter';
 import StaticFilters from '../../components/Search/StaticFilters';
@@ -187,7 +187,7 @@ function FiltersContent({ setShowFilters }) {
     </div>
   );
 }
-export default function SearchPage({ searchParams }) {
+export default function SearchPage() {
   const [showFilters, setShowFilters] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const { searchQuery } = useSearch();
@@ -207,20 +207,9 @@ export default function SearchPage({ searchParams }) {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  let initialCategory = null;
-  if (searchParams.category) {
-    try {
-      const categoryId = Number.parseInt(searchParams.category);
-      initialCategory = { id: categoryId };
-    } catch (e) {
-      console.error('Error parsing category:', e);
-    }
-  }
-
   return (
-    <SearchProvider initialCategory={initialCategory}>
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 relative">
-        <main className=" mx-auto px-4 py-8 w-full">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 relative ">
+        <main className=" mx-auto px-4 py-8 w-full mt-64 sm:mt-0">
           <div className="flex flex-col lg:flex-row gap-2 w-full">
             {/* Filters Sidebar - Always visible on desktop */}
             <div className="pb-8 z-50 sticky top-0">
@@ -336,6 +325,5 @@ export default function SearchPage({ searchParams }) {
           </div>
         </main>
       </div>
-    </SearchProvider>
   );
 }

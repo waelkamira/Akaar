@@ -18,7 +18,7 @@ function readStoredArray(key) {
     const value = JSON.parse(localStorage.getItem(key) || '[]');
     if (!Array.isArray(value)) return [];
 
-    return value.filter((item) => {
+    return value.flatMap((item) => {
       const validProduct =
         item &&
         typeof item.id === 'string' &&
@@ -26,15 +26,22 @@ function readStoredArray(key) {
         Number.isFinite(item.basePrice) &&
         item.basePrice >= 0;
 
-      if (!validProduct) return false;
-      if (key !== CART_STORAGE_KEY) return true;
+      if (!validProduct) return [];
+      if (key !== CART_STORAGE_KEY) return [item];
 
-      return (
-        Number.isInteger(item.quantity) &&
-        item.quantity > 0 &&
-        Number.isInteger(item.stockQuantity) &&
-        item.stockQuantity >= item.quantity
-      );
+      const stockQuantity = Number.isInteger(item.stockQuantity)
+        ? item.stockQuantity
+        : item.quantity;
+      if (
+        !Number.isInteger(item.quantity) ||
+        item.quantity < 1 ||
+        !Number.isInteger(stockQuantity) ||
+        stockQuantity < item.quantity
+      ) {
+        return [];
+      }
+
+      return [{ ...item, stockQuantity }];
     });
   } catch (error) {
     console.error(`Unable to read ${key} from local storage:`, error);
@@ -106,7 +113,7 @@ export function CommerceProvider({ children }) {
               : item,
           );
         }
-        return [...items, { ...product, quantity }];
+        return [...items, { ...product, stockQuantity: available, quantity }];
       });
     },
     [cartItems],

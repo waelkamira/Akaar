@@ -254,6 +254,25 @@ export default function SelectedFilters() {
       });
     }
 
+    if (filters.brand) {
+      selected.push({ key: 'brand', label: `الماركة: ${filters.brand}` });
+    }
+    if (filters.subCategory) {
+      selected.push({
+        key: 'subCategory',
+        label: `الفئة الفرعية: ${filters.subCategory}`,
+      });
+    }
+    if (filters.vendorId) {
+      selected.push({ key: 'vendorId', label: 'البائع المحدد' });
+    }
+    if (filters.rating) {
+      selected.push({
+        key: 'rating',
+        label: `${filters.rating} نجوم فأكثر`,
+      });
+    }
+
     // Add price range if selected
     if (filters.priceMin !== undefined || filters.priceMax !== undefined) {
       if (filters.priceMin !== undefined) {

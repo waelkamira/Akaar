@@ -7,8 +7,6 @@ import StaticFilters from '../../../components/Search/StaticFilters';
 import DynamicFilters from '../../../components/Search/DynamicFilters';
 import SelectedFilters from '../../../components/Search/SelectedFilters';
 import { AnimatePresence, motion } from 'framer-motion';
-import { SearchProvider } from '../../../contexts/SearchContext';
-import { filterOptions } from '../../../lib/mockData';
 import {
   ChevronDownIcon,
   FilterIcon,
@@ -402,16 +400,7 @@ function SearchCategoryContent() {
 }
 
 export default function SearchCategoryPage({ params }) {
-  const categoryId = params.categoryId?.split('=')[1];
-  const category = filterOptions.categories.find(
-    (cat) => cat.id.toString() === categoryId,
-  );
-
-  return (
-    <SearchProvider initialCategory={category}>
-      <SearchCategoryContent params={params} />
-    </SearchProvider>
-  );
+  return <SearchCategoryContent params={params} />;
 }
 
 // 'use client';

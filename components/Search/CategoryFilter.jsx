@@ -126,41 +126,33 @@
 'use client';
 
 import { useSearch } from '../../contexts/SearchContext';
-import { useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import categories from '../Categories/categories';
 import { ChevronLeft, Check, SlidersHorizontalIcon } from 'lucide-react';
 
 export default function CategoryFilter() {
-  const { category, setCategory } = useSearch();
+  const { category, setCategory, setFilter } = useSearch();
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   // Handle category selection
   const handleCategoryChange = (selectedCategory) => {
-    if (category && selectedCategory && category.id === selectedCategory?.id) {
-      setCategory(null);
-      localStorage.removeItem('category');
-    } else {
-      setCategory(selectedCategory);
-      if (selectedCategory) {
-        localStorage.setItem('category', JSON.stringify(selectedCategory));
-      } else {
-        localStorage.removeItem('category');
-      }
-    }
-  };
+    const nextCategory =
+      category && selectedCategory && category.id === selectedCategory.id
+        ? null
+        : selectedCategory;
+    const query = searchParams.get('query');
+    const categoryPath = nextCategory
+      ? `/search/categoryId=${nextCategory.id}`
+      : '/search';
 
-  // Load category from localStorage on mount
-  useEffect(() => {
-    const storedCategory = localStorage.getItem('category');
-    if (storedCategory && !category) {
-      try {
-        const parsedCategory = JSON.parse(storedCategory);
-        setCategory(parsedCategory);
-      } catch (error) {
-        console.error('Error parsing stored category:', error);
-        localStorage.removeItem('category');
-      }
-    }
-  }, [category, setCategory]);
+    setCategory(nextCategory);
+    setFilter('details', {});
+    router.replace(
+      `${categoryPath}${query ? `?query=${encodeURIComponent(query)}` : ''}`,
+      { scroll: false },
+    );
+  };
 
   const selectedCategory = category;
 

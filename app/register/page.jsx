@@ -3,7 +3,6 @@
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import Button from '../../components/Buttons/Button';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
@@ -136,23 +135,23 @@ export default function RegisterPage() {
             {errors?.password?.message}
           </h1>
         )}
-        <div
-          className="flex justify-between w-full bg-white rounded-lg px-4 py-2 items-center my-8 hover:shadow-sm shadow-gray-300 cursor-pointer"
+        <button
+          type="button"
           onClick={() => signIn('google')}
+          className="my-8 flex w-full items-center justify-between rounded-lg bg-white px-4 py-2 shadow-gray-300 transition-shadow hover:shadow-sm"
         >
-          <div className="relative h-9 w-8">
-            <Image
-              priority
-              src={'/google.png'}
-              alt="google image"
-              layout="fill"
-              objectFit="contain"
-            />
-          </div>
-          <h1 className="text-sm sm:text-lg grow text-center text-gray-500 select-none font-semibold">
+          <Image
+            priority
+            src="/google.png"
+            alt=""
+            width={32}
+            height={36}
+            className="object-contain"
+          />
+          <span className="grow text-center text-sm font-semibold text-gray-500 sm:text-lg">
             التسجيل عن طريق جوجل
-          </h1>
-        </div>
+          </span>
+        </button>
         <div className="flex flex-col sm:flex-row justify-between gap-8 items-center mt-4 w-full">
           <button
             type="submit"
@@ -161,16 +160,13 @@ export default function RegisterPage() {
             تسجيل
           </button>
 
-          <div className="w-full">
-            <Link href={'/'}>
-              <button
-                type="submit"
-                className=" text-lg p-2  my-3  text-nowrap bg-five hover:bg-primary-500  hover:scale-[101%] w-full "
-              >
-                إغلاق
-              </button>
-            </Link>
-          </div>
+          <button
+            type="button"
+            onClick={() => router.push('/')}
+            className="my-3 w-full text-nowrap bg-five p-2 text-lg hover:bg-primary-500 hover:scale-[101%]"
+          >
+            إغلاق
+          </button>
         </div>
         <Link href={'/login'}>
           <h1 className="mt-4 text-start text-sm sm:text-lg">
