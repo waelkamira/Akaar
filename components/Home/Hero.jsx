@@ -39,26 +39,17 @@ export default function Hero({
   return (
     // 🟢 جعلنا الحاوية الرئيسية تظهر على كل الشاشات (أزلنا hidden sm:block) وثبتنا الارتفاع
     <div className="relative flex flex-col justify-end w-full h-[350px] sm:h-[500px] overflow-hidden z-0">
-      {/* حاوية الصور المترابطة */}
-      {images.map((image, index) => (
-        <div
-          key={index}
-          className={`absolute inset-0 w-full h-full transition-opacity duration-1000 ease-in-out ${
-            index === currentImageIndex ? 'opacity-100 z-10' : 'opacity-0 z-0'
-          }`}
-        >
-          <Image
-            src={image}
-            fill
-            sizes="100vw"
-            priority={index === 0}
-            alt={`Slide ${index + 1}`}
-            className="object-cover"
-          />
-          {/* 🟢 طبقة تعتيم اختيارية فوق الصور لزيادة وضوح مربع البحث */}
-          <div className="absolute inset-0 bg-black/30 z-10" />
-        </div>
-      ))}
+      <div className="absolute inset-0 w-full h-full">
+        <Image
+          src={images[currentImageIndex]}
+          fill
+          sizes="100vw"
+          priority={currentImageIndex === 0}
+          alt={`Slide ${currentImageIndex + 1}`}
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-black/30 z-10" />
+      </div>
 
       {/* زر الانتقال للخلف */}
       <button

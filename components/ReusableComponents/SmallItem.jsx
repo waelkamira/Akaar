@@ -5,7 +5,7 @@ import CustomToast from './CustomToast';
 import { usePathname, useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { IoMdClose } from 'react-icons/io';
-import { inputsContext } from '../authContext/Context';
+import { inputsContext } from '@/features/auth/inputs-context';
 import PostGallery from '../photos/PostGallery';
 import UserNameAndPhoto from './userNameAndPhoto';
 import { motion } from 'framer-motion';

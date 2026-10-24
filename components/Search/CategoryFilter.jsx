@@ -1,6 +1,6 @@
 // 'use client';
 
-// import { useSearch } from '../../contexts/SearchContext';
+// import { useSearch } from '@/features/search/search-context';
 // import { useEffect } from 'react';
 // import categories from '../Categories/categories';
 // import { ChevronLeft } from 'lucide-react';
@@ -125,7 +125,7 @@
 // }
 'use client';
 
-import { useSearch } from '../../contexts/SearchContext';
+import { useSearch } from '@/features/search/search-context';
 import { useRouter, useSearchParams } from 'next/navigation';
 import categories from '../Categories/categories';
 import { ChevronLeft, Check, SlidersHorizontalIcon } from 'lucide-react';

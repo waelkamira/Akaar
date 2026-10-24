@@ -4,7 +4,7 @@
 // import { useState, useEffect, useRef, useCallback } from 'react';
 // import { ImSearch, ImSpinner8, ImCross } from 'react-icons/im';
 // import CategoriesNavBar from '../navbars/CategoriesNavBar';
-// import { useSearch } from '../../contexts/SearchContext';
+// import { useSearch } from '@/features/search/search-context';
 // import SideBarMenu from '../navbars/SideBarMenu';
 // import { debounce } from 'lodash';
 
@@ -259,7 +259,7 @@ import {
 } from 'react';
 import { ImSearch, ImSpinner8, ImCross } from 'react-icons/im';
 import CategoriesNavBar from '../navbars/CategoriesNavBar';
-import { useSearch } from '../../contexts/SearchContext';
+import { useSearch } from '@/features/search/search-context';
 import { debounce } from 'lodash';
 
 function subscribeToRecentSearches(callback) {

@@ -6,7 +6,7 @@
 // import { FaHome } from 'react-icons/fa';
 // import { motion } from 'framer-motion';
 // import { cn } from '../lib/utils';
-// import { useSearch } from '../../contexts/SearchContext';
+// import { useSearch } from '@/features/search/search-context';
 // import { cities } from '../lists/Cities';
 
 // // تعريف الكومبوننت AnimatedCard مع تأثيرات التعويم المحسنة
@@ -259,13 +259,12 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useEffect, useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import categories from '../Categories/categories';
 import { FaHome } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '../lib/utils';
-import { useSearch } from '../../contexts/SearchContext';
-import { cities } from '../lists/Cities';
+import { useSearch } from '@/features/search/search-context';
 
 // تعريف الكومبوننت AnimatedCard بتصميم زجاجي وتأثيرات ناعمة
 const AnimatedCard = ({ children, isSelected, onClick, isHovered }) => (
@@ -325,8 +324,6 @@ const CategoriesNavBar = () => {
   const {
     category,
     setCategory,
-    availableFilters,
-    setAvailableFilters,
     performSearch,
   } = useSearch();
   const [hoveredCategory, setHoveredCategory] = useState(null);
@@ -340,40 +337,6 @@ const CategoriesNavBar = () => {
     },
     [setCategory, router, performSearch],
   );
-
-  useEffect(() => {
-    if (category) {
-      const categoryId = categories.find((c) => c.id === category?.id)?.id;
-
-      if (categoryId) {
-        import(`../categoryFields/${category?.name}.jsx`)
-          .then((module) => {
-            const dynamicFilters = module?.default;
-
-            const filterOptionsUpdate = {
-              ...availableFilters,
-              static: {
-                cities: cities.map((city) => ({
-                  ...city,
-                  id: city.name,
-                  towns: city.towns.map((town) => ({
-                    ...town,
-                    id: town.name,
-                  })),
-                })),
-                priceRange: { min: 0, max: 0 },
-              },
-              dynamic: dynamicFilters,
-            };
-
-            setAvailableFilters(filterOptionsUpdate);
-          })
-          .catch((err) => {
-            console.error('Failed to load fields:', err);
-          });
-      }
-    }
-  }, [category, setAvailableFilters, availableFilters]);
 
   const selectedCategory = useMemo(() => {
     return categories.find((cat) => cat.id === category?.id) || null;

@@ -1,7 +1,7 @@
 'use client';
 import React, { useContext, useEffect, useState } from 'react';
 import Select from 'react-select';
-import { inputsContext } from './Context.jsx';
+import { inputsContext } from '@/features/auth/inputs-context';
 import { VscUngroupByRefType } from 'react-icons/vsc';
 
 export default function PropertyTypeSelector({ check }) {

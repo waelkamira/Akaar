@@ -4,7 +4,7 @@ import React, { useEffect, useState, useMemo, useContext } from 'react';
 import { FaTag, FaDollarSign, FaMapMarkerAlt, FaPhone } from 'react-icons/fa';
 import toast from 'react-hot-toast';
 import { toInteger } from 'lodash';
-import { inputsContext } from '../../../components/authContext/Context';
+import { inputsContext } from '@/features/auth/inputs-context';
 import { useParams, useRouter } from 'next/navigation';
 import PostForm from './PostForm';
 import UploadingAndDisplayingImage from '../../../components/photos/UploadingAndDisplayingImage';

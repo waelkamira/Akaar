@@ -1,6 +1,6 @@
 // 'use client';
 // import { useState, useEffect, useCallback } from 'react';
-// import { useSearch } from '../../contexts/SearchContext';
+// import { useSearch } from '@/features/search/search-context';
 // import { Slider } from '../ui/slider';
 // import { motion, AnimatePresence } from 'framer-motion';
 
@@ -297,7 +297,7 @@
 // }
 'use client';
 import { useState, useCallback } from 'react';
-import { useSearch } from '../../contexts/SearchContext';
+import { useSearch } from '@/features/search/search-context';
 import { motion } from 'framer-motion';
 
 export default function StaticFilters() {

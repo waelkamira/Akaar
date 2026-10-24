@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import Select, { components } from 'react-select';
-import { inputsContext } from '../authContext/Context';
+import { inputsContext } from '@/features/auth/inputs-context';
 import { FaCar } from 'react-icons/fa';
 import { usePathname } from 'next/navigation.js';
 import { carsBrandsList } from '../lists/CarsBrandsList.jsx';

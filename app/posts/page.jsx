@@ -1,7 +1,7 @@
 'use client';
 import React, { useContext, useEffect, useState, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
-import { inputsContext } from '../../components/authContext/Context';
+import { inputsContext } from '@/features/auth/inputs-context';
 import { useParams, useRouter } from 'next/navigation';
 import SmallCard from '../../components/ReusableComponents/SmallCard/SmallCard';
 import Pagination from '../../components/ReusableComponents/Pagination';

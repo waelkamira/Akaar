@@ -131,8 +131,8 @@ export default function Footer() {
                   src={images[currentImageIndex] || '/placeholder.svg'}
                   alt={`Image ${currentImageIndex + 1}`}
                   fill
+                  sizes="(max-width: 768px) 256px, 320px"
                   className="object-cover rounded-lg"
-                  priority={currentImageIndex === 0}
                 />
               </motion.div>
             </motion.div>

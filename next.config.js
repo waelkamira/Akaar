@@ -1,12 +1,5 @@
 /** @type {import('next').NextConfig} */
-const withPWA = require('next-pwa')({
-  dest: 'public',
-  register: true,
-  skipWaiting: true,
-  disable: process.env.NODE_ENV === 'development',
-});
-
-const nextConfig = withPWA({
+const nextConfig = {
   turbopack: {}, // 🟢 تم إضافة هذا السطر هنا لمنع تعارض Next-PWA مع محرّك البناء
   compress: true,
   images: {
@@ -21,6 +14,16 @@ const nextConfig = withPWA({
   },
   productionBrowserSourceMaps: false,
   staticPageGenerationTimeout: 120,
-});
+};
 
-module.exports = nextConfig;
+if (process.env.NODE_ENV === 'development') {
+  module.exports = nextConfig;
+} else {
+  const withPWA = require('next-pwa')({
+    dest: 'public',
+    register: true,
+    skipWaiting: true,
+  });
+
+  module.exports = withPWA(nextConfig);
+}

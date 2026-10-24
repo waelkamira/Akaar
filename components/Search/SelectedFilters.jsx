@@ -1,9 +1,9 @@
 // 'use client';
 
-// import { useSearch } from '../../contexts/SearchContext';
+// import { useSearch } from '@/features/search/search-context';
 // import { X } from 'lucide-react';
 // import { motion, AnimatePresence } from 'framer-motion';
-// import { inputsContext } from '../../components/authContext/Context';
+// import { inputsContext } from '@/features/auth/inputs-context';
 // import { useCallback, useContext, useEffect } from 'react';
 
 // export default function SelectedFilters() {
@@ -209,10 +209,10 @@
 // }
 'use client';
 
-import { useSearch } from '../../contexts/SearchContext';
+import { useSearch } from '@/features/search/search-context';
 import { X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { inputsContext } from '../../components/authContext/Context';
+import { inputsContext } from '@/features/auth/inputs-context';
 import { useCallback, useContext, useEffect, useMemo } from 'react';
 
 export default function SelectedFilters() {

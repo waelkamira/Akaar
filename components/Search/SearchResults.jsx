@@ -1,6 +1,6 @@
 'use client';
 
-import { useSearch } from '../../contexts/SearchContext';
+import { useSearch } from '@/features/search/search-context';
 import { Loader2 } from 'lucide-react';
 import SmallCard from '../ReusableComponents/SmallCard/SmallCard';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -104,7 +104,7 @@ export default function SearchResults() {
               transition={{ duration: 0.3, delay: index * 0.05 }}
               layout
             >
-              <SmallCard item={product} />
+              <SmallCard item={product} priority={index === 0} />
             </motion.div>
           ))}
         </AnimatePresence>

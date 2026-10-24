@@ -83,7 +83,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import mainButtons from '../lists/mainButtons';
 import Image from 'next/image';
 import { useState } from 'react';
-import { useCommerce } from '../../contexts/CommerceContext';
+import { useCommerce } from '@/features/cart/commerce-context';
 
 export default function FirstNavBar() {
   // تم تصحيح السطر أدناه لإزالة كود الـ TypeScript ليناسب ملف الـ .jsx

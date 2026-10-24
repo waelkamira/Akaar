@@ -1,5 +1,5 @@
 'use client';
-import { useSearch } from '../../contexts/SearchContext';
+import { useSearch } from '@/features/search/search-context';
 import { useCallback, useState, useEffect } from 'react';
 import DynamicField from './DynamicField';
 import { ImSpinner8 } from 'react-icons/im';

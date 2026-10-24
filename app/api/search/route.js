@@ -1,11 +1,19 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '../../../lib/prisma';
+import { prisma } from '@/lib/db/prisma';
 
 const MAX_QUERY_LENGTH = 120;
 const MAX_PAGE_SIZE = 50;
+const CATEGORY_SEARCH_TERM_IDS = {
+  car: 2,
+  cars: 2,
+  automobile: 2,
+  automobiles: 2,
+  vehicle: 2,
+  vehicles: 2,
+};
 const SORT_ORDERS = {
   cheapest: [{ basePrice: { sort: 'asc', nulls: 'last' } }, { createdAt: 'desc' }],
-  best_sellers: [{ orders: { _count: 'desc' } }, { createdAt: 'desc' }],
+  best_sellers: [{ salesCount: 'desc' }, { createdAt: 'desc' }],
   newest: [{ createdAt: 'desc' }],
 };
 
@@ -23,14 +31,19 @@ function getQueryTerms(query) {
 }
 
 function textConditions(terms) {
-  return terms.map((term) => ({
-    OR: [
-      { title: { contains: term, mode: 'insensitive' } },
-      { description: { contains: term, mode: 'insensitive' } },
-      { categoryName: { contains: term, mode: 'insensitive' } },
-      { userName: { contains: term, mode: 'insensitive' } },
-    ],
-  }));
+  return terms.map((term) => {
+    const categoryId = CATEGORY_SEARCH_TERM_IDS[term.toLowerCase()];
+
+    return {
+      OR: [
+        { title: { contains: term, mode: 'insensitive' } },
+        { description: { contains: term, mode: 'insensitive' } },
+        { categoryName: { contains: term, mode: 'insensitive' } },
+        { userName: { contains: term, mode: 'insensitive' } },
+        ...(categoryId ? [{ categoryId }] : []),
+      ],
+    };
+  });
 }
 
 function addDetailsFilters(where, details = {}) {
@@ -144,31 +157,9 @@ export async function POST(request) {
   try {
     const queryTerms = getQueryTerms(query);
     if (queryTerms.length) {
-      const exactMatches = textConditions(queryTerms);
-      const fuzzyMatches = await prisma.$queryRaw`
-        SELECT product.id
-        FROM "products" AS product
-        WHERE product."isDeleted" = false
-          AND NOT EXISTS (
-            SELECT 1
-            FROM unnest(${queryTerms}::text[]) AS term(value)
-            WHERE NOT (
-              product."title" % term.value
-              OR product."categoryName" % term.value
-              OR COALESCE(product."description", '') % term.value
-              OR COALESCE(product."userName", '') % term.value
-            )
-          )
-        LIMIT 5000
-      `;
       where.AND = [
         ...(where.AND || []),
-        {
-          OR: [
-            { AND: exactMatches },
-            { id: { in: fuzzyMatches.map((product) => product.id) } },
-          ],
-        },
+        { AND: textConditions(queryTerms) },
       ];
     }
 
@@ -190,21 +181,94 @@ export async function POST(request) {
       ];
     }
 
-    const [products, totalCount] = await Promise.all([
-      prisma.product.findMany({
-        where,
-        skip: (page - 1) * limit,
-        take: limit,
-        orderBy,
-        include: {
-          user: {
-            select: { id: true, userName: true, userImage: true },
-          },
-          _count: { select: { orders: true, reviews: true } },
-        },
-      }),
-      prisma.product.count({ where }),
-    ]);
+    const titleCondition = query
+      ? { title: { contains: query, mode: 'insensitive' } }
+      : null;
+    const titleMatchWhere = titleCondition
+      ? { ...where, AND: [...(where.AND || []), titleCondition] }
+      : null;
+    const pageOffset = (page - 1) * limit;
+    const remainingWhere = titleCondition
+      ? { ...where, AND: [...(where.AND || []), { NOT: titleCondition }] }
+      : where;
+    const productInclude = {
+      user: {
+        select: { id: true, userName: true, userImage: true },
+      },
+      _count: { select: { orders: true, reviews: true } },
+    };
+
+    let products;
+    let totalCount;
+
+    if (titleCondition && page === 1) {
+      const [titleProducts, remainingCandidates, matchingCount] =
+        await Promise.all([
+          prisma.product.findMany({
+            where: titleMatchWhere,
+            take: limit,
+            orderBy,
+            include: productInclude,
+          }),
+          prisma.product.findMany({
+            where: remainingWhere,
+            take: limit,
+            orderBy,
+            include: productInclude,
+          }),
+          prisma.product.count({ where }),
+        ]);
+      products = [
+        ...titleProducts,
+        ...remainingCandidates.slice(0, limit - titleProducts.length),
+      ];
+      totalCount = matchingCount;
+    } else if (titleCondition) {
+      const [titleMatchCount, matchingCount] = await Promise.all([
+        prisma.product.count({ where: titleMatchWhere }),
+        prisma.product.count({ where }),
+      ]);
+      const titleOffset = Math.min(pageOffset, titleMatchCount);
+      const titleLimit = Math.max(
+        0,
+        Math.min(limit, titleMatchCount - pageOffset),
+      );
+      const remainingLimit = limit - titleLimit;
+      const remainingOffset = Math.max(0, pageOffset - titleMatchCount);
+      const [titleProducts, remainingProducts] = await Promise.all([
+        titleLimit
+          ? prisma.product.findMany({
+              where: titleMatchWhere,
+              skip: titleOffset,
+              take: titleLimit,
+              orderBy,
+              include: productInclude,
+            })
+          : [],
+        remainingLimit
+          ? prisma.product.findMany({
+              where: remainingWhere,
+              skip: remainingOffset,
+              take: remainingLimit,
+              orderBy,
+              include: productInclude,
+            })
+          : [],
+      ]);
+      products = [...titleProducts, ...remainingProducts];
+      totalCount = matchingCount;
+    } else {
+      [products, totalCount] = await Promise.all([
+        prisma.product.findMany({
+          where,
+          skip: pageOffset,
+          take: limit,
+          orderBy,
+          include: productInclude,
+        }),
+        prisma.product.count({ where }),
+      ]);
+    }
 
     const normalizedProducts = products.map((product) => ({
       ...product,

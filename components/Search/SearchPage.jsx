@@ -1,6 +1,6 @@
 'use client';
 
-import { useSearch } from '../../contexts/SearchContext';
+import { useSearch } from '@/features/search/search-context';
 import CategoryFilter from './CategoryFilter';
 import StaticFilters from './StaticFilters';
 import DynamicFilters from './DynamicFilters';

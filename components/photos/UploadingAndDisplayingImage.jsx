@@ -2,7 +2,7 @@
 // import { useContext, useState } from 'react';
 // import Image from 'next/image';
 // import { MdOutlineAddPhotoAlternate, MdClose } from 'react-icons/md';
-// import { inputsContext } from '../authContext/Context';
+// import { inputsContext } from '@/features/auth/inputs-context';
 // import LoadingPhoto from './LoadingPhoto';
 // import Link from 'next/link';
 // import toast from 'react-hot-toast';
@@ -233,7 +233,7 @@ import {
   MdCheckCircle,
   MdError,
 } from 'react-icons/md';
-import { inputsContext } from '../authContext/Context';
+import { inputsContext } from '@/features/auth/inputs-context';
 
 // 🌟 مكون العداد الزجاجي الفخم أثناء الرفع (مع Portal)
 const GlassUploadLoader = ({ current, total, fileName }) => {

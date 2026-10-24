@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { FaHeart, FaRegHeart, FaShoppingCart } from 'react-icons/fa';
 import toast from 'react-hot-toast';
-import { useCommerce } from '../../contexts/CommerceContext';
+import { useCommerce } from '@/features/cart/commerce-context';
 
 export default function DemoProductCard({ product }) {
   const router = useRouter();

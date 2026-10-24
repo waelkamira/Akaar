@@ -1,7 +1,7 @@
 'use client';
 import React, { useContext, useEffect, useState } from 'react';
 import Select from 'react-select';
-import { inputsContext } from '../authContext/Context.jsx';
+import { inputsContext } from '@/features/auth/inputs-context';
 import { usePathname } from 'next/navigation.js';
 import { MdOutlineBedroomParent } from 'react-icons/md';
 import { FaDharmachakra } from 'react-icons/fa6';

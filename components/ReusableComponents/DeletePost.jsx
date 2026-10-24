@@ -1,6 +1,6 @@
 'use client';
 import toast from 'react-hot-toast';
-import { inputsContext } from '../authContext/Context';
+import { inputsContext } from '@/features/auth/inputs-context';
 import { useContext } from 'react';
 import CustomToast from './CustomToast';
 

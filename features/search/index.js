@@ -1,0 +1,1 @@
+export { SearchProvider, useSearch } from './search-context';

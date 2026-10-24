@@ -1,7 +1,7 @@
 'use client';
 import React, { useContext, useEffect, useState } from 'react';
 import Select, { components } from 'react-select';
-import { inputsContext } from '../authContext/Context';
+import { inputsContext } from '@/features/auth/inputs-context';
 // import { years } from '../lists/Years';
 import { FaCalendarAlt } from 'react-icons/fa';
 

@@ -3,9 +3,8 @@ import React from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import LoadingPhoto from '../../photos/LoadingPhoto';
-import FormatDate from '../FormatDate';
 
-function ImageComponent({ item }) {
+function ImageComponent({ item, priority = false }) {
   return (
     <motion.div
       className="relative w-full h-56 bg-gradient-to-br from-gray-100 to-gray-200 rounded-t-lg "
@@ -19,7 +18,7 @@ function ImageComponent({ item }) {
           <Image
             src={item?.image1}
             fill
-            priority
+            priority={priority}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             alt={item?.title || 'عقار'}
             className="object-cover transition-all duration-700 ease-out overflow-hidden rounded-lg"

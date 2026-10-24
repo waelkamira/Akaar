@@ -1,5 +1,14 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '../../../../lib/prisma';
+import { prisma } from '@/lib/db/prisma';
+
+const CATEGORY_SEARCH_TERM_IDS = {
+  car: 2,
+  cars: 2,
+  automobile: 2,
+  automobiles: 2,
+  vehicle: 2,
+  vehicles: 2,
+};
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
@@ -10,6 +19,7 @@ export async function GET(request) {
   }
 
   try {
+    const categoryId = CATEGORY_SEARCH_TERM_IDS[query.toLowerCase()];
     const products = await prisma.product.findMany({
       where: {
         isDeleted: false,
@@ -17,6 +27,7 @@ export async function GET(request) {
           { title: { contains: query, mode: 'insensitive' } },
           { description: { contains: query, mode: 'insensitive' } },
           { categoryName: { contains: query, mode: 'insensitive' } },
+          ...(categoryId ? [{ categoryId }] : []),
         ],
       },
       select: { title: true },

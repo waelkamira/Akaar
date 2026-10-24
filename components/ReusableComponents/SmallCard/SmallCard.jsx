@@ -9,7 +9,11 @@ import FavoriteButton from './FavoriteButton';
 import { formatDistanceToNow } from 'date-fns';
 import { FaArrowRight, FaMagic } from 'react-icons/fa';
 
-const SmallCard = React.memo(function SmallCard({ item, category }) {
+const SmallCard = React.memo(function SmallCard({
+  item,
+  category,
+  priority = false,
+}) {
   const router = useRouter();
 
   const formatDate = useCallback((dateString) => {
@@ -86,6 +90,7 @@ const SmallCard = React.memo(function SmallCard({ item, category }) {
         <div className="relative w-full aspect-[4/3] overflow-hidden bg-gradient-to-br from-emerald-100 to-teal-100">
           <ImageComponent
             item={item}
+            priority={priority}
             className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
           />
 
