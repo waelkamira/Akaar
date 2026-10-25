@@ -1,28 +1,43 @@
+
 // 'use client';
+
 // import { useState, useEffect, useContext } from 'react';
 // import { useForm } from 'react-hook-form';
-// import categories from '../../components/Categories/categories';
-// import UploadingAndDisplayingImage from '../../components/photos/UploadingAndDisplayingImage';
+// import categories from '@/components/Categories/categories';
+// import UploadingAndDisplayingImage from '@/components/photos/UploadingAndDisplayingImage';
 // import { inputsContext } from '@/features/auth/inputs-context';
 // import toast from 'react-hot-toast';
 // import { useRouter } from 'next/navigation';
-// import LoginButton from '../../components/Buttons/LoginButton';
+// import LoginButton from '@/components/Buttons/LoginButton';
 // import {
 //   MdCategory,
 //   MdTitle,
 //   MdPhone,
 //   MdDescription,
 //   MdAttachMoney,
+//   MdCheckCircle,
 // } from 'react-icons/md';
 // import FormInput from './FormInput';
 // import FormSelect from './FormSelect';
 // import FormTextarea from './FormTextarea';
 // import FormSubmitButton from './FormSubmitButton';
-// import OnClickMap from '../../components/map/onClickMap';
 // import { useSession } from 'next-auth/react';
-// import { FaTreeCity } from 'react-icons/fa6';
+// import { FaTreeCity, FaMapLocationDot } from 'react-icons/fa6';
 // import { PiBuildingsDuotone } from 'react-icons/pi';
 // import { FaObjectGroup } from 'react-icons/fa';
+// import { motion } from 'framer-motion';
+// import dynamic from 'next/dynamic';
+
+// // الاستيراد الديناميكي لمكون الخريطة مع تعطيل SSR وتحديث ستايل التحميل ليتناسب مع الثيم الداكن
+// const OnClickMap = dynamic(() => import('../../../components/map/onClickMap'), {
+//   ssr: false,
+//   loading: () => (
+//     <div className="w-full h-72 sm:h-[400px] flex flex-col items-center justify-center bg-neutral-800/50 rounded-2xl text-white border border-neutral-700 animate-pulse gap-3">
+//       <FaMapLocationDot className="text-3xl text-orange-500/50" />
+//       <span className="text-sm font-medium">جاري تحميل الخريطة...</span>
+//     </div>
+//   ),
+// });
 
 // export default function NewPost() {
 //   const [categoryFields, setCategoryFields] = useState([]);
@@ -59,13 +74,10 @@
 //     details: {},
 //   });
 
-//   // ✅ جلب الفئة
 //   const handleCategoryChange = (category) => {
 //     if (category) {
 //       const selected = categories[category - 1];
 //       setSelectedCategory(selected);
-
-//       // قم بتحديث formState مباشرةً هنا
 //       setFormState((prev) => ({
 //         ...prev,
 //         categoryId: selected?.id || '',
@@ -73,7 +85,6 @@
 //       }));
 //     } else {
 //       setSelectedCategory(null);
-//       // قم بتحديث formState هنا أيضًا إذا تم إلغاء تحديد الفئة
 //       setFormState((prev) => ({
 //         ...prev,
 //         categoryId: '',
@@ -82,43 +93,37 @@
 //     }
 //   };
 
-//   // ✅ تحميل الحقول بناءً على الفئة عند تغيير الفئة
 //   useEffect(() => {
 //     if (selectedCategory) {
-//       import(`../../components/categoryFields/${selectedCategory?.name}.jsx`)
+//       import(`../../../components/categoryFields/${selectedCategory?.name}.jsx`)
 //         .then((module) => {
 //           setCategoryFields(module.default);
-//           setError(null); // Reset error on successful load
+//           setError(null);
 //         })
 //         .catch((err) => {
 //           console.error('Failed to load fields:', err);
-//           setCategoryFields([]); // Reset fields on error
+//           setCategoryFields([]);
 //           setError('فشل في تحميل الحقول');
 //         });
 //     } else {
-//       setCategoryFields([]); // Reset fields when category is unselected
+//       setCategoryFields([]);
 //     }
 //   }, [selectedCategory]);
 
-//   // ✅ تحديث formState عند تغيير userId, selectedCategory, location, addImages
 //   useEffect(() => {
 //     setFormState((prev) => ({
 //       ...prev,
 //       categoryId: selectedCategory?.id || '',
 //       categoryName: selectedCategory?.name || '',
 //       images: addImages.length ? addImages : prev.images,
-//       lng: location?.[1] || prev.lng,
-//       lat: location?.[0] || prev.lat,
+//       lng: location?.[1] !== undefined ? location[1] : prev.lng,
+//       lat: location?.[0] !== undefined ? location[0] : prev.lat,
 //     }));
 //   }, [selectedCategory, location, addImages]);
 
 //   const handleInputChange = (e) => {
 //     const { name, value } = e.target;
-//     setFormState((prev) => ({
-//       ...prev,
-//       [name]: value,
-//     }));
-
+//     setFormState((prev) => ({ ...prev, [name]: value }));
 //     if (value.trim()) {
 //       setEmptyFields((prev) => prev.filter((item) => item !== name));
 //     }
@@ -127,12 +132,8 @@
 //   const handleDetailsChange = (field, value) => {
 //     setFormState((prev) => ({
 //       ...prev,
-//       details: {
-//         ...prev.details,
-//         [field]: value,
-//       },
+//       details: { ...prev.details, [field]: value },
 //     }));
-
 //     if (value.trim()) {
 //       setEmptyFields((prev) => prev.filter((item) => item !== field));
 //     }
@@ -140,23 +141,14 @@
 
 //   const validateForm = () => {
 //     const requiredFields = [
-//       'userId',
-//       'title',
-//       'categoryId',
-//       'categoryName',
-//       'city',
-//       'town',
-//       'phoneNumber',
-//       'basePrice',
-//       'description',
+//       'userId', 'title', 'categoryId', 'categoryName', 'city', 'town', 'phoneNumber', 'basePrice', 'description',
 //     ];
-
 //     let emptyFieldsList = [];
 
 //     const hasEmptyRequiredField = requiredFields.some((field) => {
 //       if (typeof formState[field] === 'string' && !formState[field].trim()) {
 //         emptyFieldsList.push(field);
-//         return true; // Stop iterating if an empty field is found
+//         return true;
 //       }
 //       return false;
 //     });
@@ -173,23 +165,7 @@
 //     return emptyFieldsList.length === 0;
 //   };
 
-//   // const validateImages = () => {
-//   //   if (addImages.length === 0) {
-//   //     toast.error('يرجى إضافة صورة على الأقل.');
-//   //     return false;
-//   //   }
-//   //   return true;
-//   // };
-
 //   const onSubmit = async () => {
-//     // if (!validateImages()) {
-//     //   return;
-//     // }
-//     // if (!validateForm()) {
-//     //   toast.error('يرجى ملء جميع الحقول المطلوبة.');
-//     //   return;
-//     // }
-
 //     if (!selectedCategory) {
 //       toast.error('يجب اختيار فئة قبل إرسال النموذج.');
 //       return;
@@ -197,14 +173,11 @@
 
 //     const formData = {
 //       ...formState,
-//       userId: formState.userId,
-//       categoryId: formState.categoryId,
 //       basePrice: parseInt(formState.basePrice) || 0,
 //       stockQuantity: parseInt(formState.stockQuantity) || 1,
 //       lng: formState.lng ? parseFloat(formState.lng) : null,
 //       lat: formState.lat ? parseFloat(formState.lat) : null,
 //     };
-//     console.log('formData to be sent:', formData);
 
 //     try {
 //       const response = await fetch('/api/product', {
@@ -214,12 +187,10 @@
 //       });
 
 //       if (response.ok) {
-//         console.log('Product added successfully:', await response.json());
-//         toast.success('تم إنشاء الإعلان بنجاح');
+//         toast.success('تم إنشاء الإعلان بنجاح', { icon: <MdCheckCircle className="text-emerald-500" /> });
 //         dispatch({ type: 'ADD_IMAGE', payload: [] });
 //         router.push('/posts');
 //       } else {
-//         console.error('Failed to add product:', await response.text());
 //         toast.error('حدث خطأ ما، حاول مرة أخرى');
 //       }
 //     } catch (error) {
@@ -231,172 +202,247 @@
 //   if (session?.status === 'unauthenticated') {
 //     // return <LoginButton />;
 //   }
+
 //   return (
-//     <div className="flex flex-col justify-center items-center w-full bg-five text-sm sm:text-lg mt-64 bg-green-400">
-//       <form
-//         onSubmit={(e) => {
-//           e.preventDefault();
-//           onSubmit();
-//         }}
-//         className="space-y-4 p-4 border rounded-lg shadow-md w-full xl:w-1/2 mt-64 sm:mt-0"
-//       >
-//         <UploadingAndDisplayingImage />
+//     <div className="min-h-screen bg-gradient-to-br from-neutral-950 via-orange-950/10 to-neutral-950 relative overflow-hidden mt-60" dir="rtl">
+//       {/* Animated Background Elements */}
+//       <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+//         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-orange-600/20 rounded-full blur-[120px] animate-pulse" />
+//         <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-amber-600/10 rounded-full blur-[100px]" />
+//       </div>
 
-//         <FormSelect
-//           label="الفئة"
-//           icon={<MdCategory className="text-primary-500 text-lg sm:text-xl" />}
-//           name="category"
-//           options={categories.map((cat) => ({
-//             value: cat.id,
-//             label: cat.name, // النص المعروض في القائمة
-//           }))}
-//           register={register}
-//           errors={emptyFields}
-//           onChange={(e) => handleCategoryChange(e.target.value)} // تمرير الدالة المعدلة
-//           placeholder="-اختر-"
-//         />
+//       {/* Vertical Text Decoration */}
+//       <div className="fixed left-8 top-1/2 -translate-y-1/2 -z-10 hidden xl:block">
+//         <h1 className="text-[12rem] font-black text-neutral-800/30 writing-vertical-rl tracking-tighter select-none">
+//           NEW POST
+//         </h1>
+//       </div>
 
-//         <FormInput
-//           label="عنوان الإعلان"
-//           icon={<MdTitle className="text-primary-500 text-lg sm:text-xl" />}
-//           name="title"
-//           placeholder="ضع عنوان مناسب للإعلان"
-//           register={register}
-//           errors={emptyFields}
-//           onChange={handleInputChange}
-//         />
-//         <FormInput
-//           label="المدينة"
-//           icon={
-//             <PiBuildingsDuotone className="text-primary-500 text-lg sm:text-xl" />
-//           }
-//           name="city"
-//           placeholder="دمشق"
-//           register={register}
-//           errors={emptyFields}
-//           onChange={handleInputChange}
-//         />
-//         <FormInput
-//           label="المنطقة"
-//           icon={<FaTreeCity className="text-primary-500 text-lg sm:text-xl" />}
-//           name="town"
-//           placeholder="المزة"
-//           register={register}
-//           errors={emptyFields}
-//           onChange={handleInputChange}
-//         />
-
-//         <FormInput
-//           label="رقم الهاتف"
-//           icon={<MdPhone className="text-primary-500 text-lg sm:text-xl" />}
-//           name="phoneNumber"
-//           placeholder="+963 955555555"
-//           type="number"
-//           register={register}
-//           errors={emptyFields}
-//           onChange={handleInputChange}
-//         />
-
-//         {error && <p className="text-red-500">خطأ: {error}</p>}
-
-//         {selectedCategory &&
-//           Array.isArray(categoryFields) &&
-//           categoryFields?.map((field, index) => (
-//             <div key={index}>
-//               <label className="font-medium mb-2 flex items-center gap-2">
-//                 {field?.icon} {field?.label}
-//               </label>
-//               {field?.options ? (
-//                 <select
-//                   className={`w-full p-1 sm:p-2 lg:p-3 border rounded focus:outline-2 focus:outline-primary-500 ${
-//                     emptyFields.includes(field?.name)
-//                       ? 'outline-2 outline-red-500'
-//                       : ''
-//                   }`}
-//                   required
-//                   onChange={(e) =>
-//                     handleDetailsChange(field?.name, e.target.value)
-//                   }
-//                 >
-//                   <option value="">{field?.placeholder}</option>
-//                   {Object.entries(field?.options).map(([key, value]) => (
-//                     <option key={key} value={key}>
-//                       {value}
-//                     </option>
-//                   ))}
-//                 </select>
-//               ) : (
-//                 <input
-//                   placeholder={field?.placeholder}
-//                   className={`w-full p-1 sm:p-2 lg:p-3 border rounded focus:outline-2 focus:outline-primary-500 ${
-//                     emptyFields.includes(field?.name)
-//                       ? 'outline-2 outline-red-500'
-//                       : ''
-//                   }`}
-//                   required
-//                   onChange={(e) =>
-//                     handleDetailsChange(field?.name, e.target.value)
-//                   }
-//                 />
-//               )}
-//               {emptyFields.includes(field?.name) && (
-//                 <p className="text-red-500 text-sm mt-1">هذا الحقل مطلوب</p>
-//               )}
+//       <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+//         <motion.div
+//           initial={{ opacity: 0, y: 20 }}
+//           animate={{ opacity: 1, y: 0 }}
+//           transition={{ duration: 0.5 }}
+//         >
+//           <form
+//             onSubmit={(e) => {
+//               e.preventDefault();
+//               if (validateForm()) onSubmit();
+//             }}
+//             className="space-y-8 bg-neutral-900/60 backdrop-blur-xl border border-neutral-800 rounded-3xl p-6 sm:p-10 shadow-2xl"
+//           >
+//             {/* Header */}
+//             <div className="border-b border-neutral-800 pb-6 mb-6">
+//               <h1 className="text-2xl sm:text-3xl font-black text-white flex items-center gap-3">
+//                 <span className="w-1.5 h-8 bg-gradient-to-b from-orange-500 to-amber-500 rounded-full" />
+//                 إنشاء إعلان جديد
+//               </h1>
+//               <p className="text-white mt-2 mr-5 text-sm">قم بتعبئة جميع الحقول المطلوبة لإضافة إعلانك إلى المنصة</p>
 //             </div>
-//           ))}
 
-//         <FormInput
-//           label="السعر"
-//           icon={
-//             <MdAttachMoney className="text-primary-500 text-lg sm:text-xl" />
-//           }
-//           name="basePrice"
-//           placeholder="500 $"
-//           type="number"
-//           register={register}
-//           errors={emptyFields}
-//           onChange={handleInputChange}
-//         />
-//         <FormInput
-//           label="الكمية المتاحة"
-//           icon={
-//             <FaObjectGroup className="text-primary-500 text-lg sm:text-xl" />
-//           }
-//           name="stockQuantity"
-//           placeholder="1"
-//           type="number"
-//           register={register}
-//           errors={emptyFields}
-//           onChange={handleInputChange}
-//           value={formState.stockQuantity}
-//         />
-//         <FormTextarea
-//           label="وصف الإعلان"
-//           icon={
-//             <MdDescription className="text-primary-500 text-lg sm:text-xl" />
-//           }
-//           name="description"
-//           placeholder=" اكتب وصف المنتج بكامل التفاصيل..."
-//           register={register}
-//           errors={emptyFields}
-//           onChange={handleInputChange}
-//         />
+//             {/* Image Upload Section */}
+//             <div className="bg-neutral-800/30 rounded-2xl p-4 border border-neutral-700/50">
+//               <UploadingAndDisplayingImage />
+//             </div>
 
-//         <OnClickMap />
-//         <FormInput
-//           label="رابط الفيديو من يوتيوب أو تيك توك"
-//           icon={
-//             <MdAttachMoney className="text-primary-500 text-lg sm:text-xl" />
-//           }
-//           name="link"
-//           placeholder="رابط الفيديو"
-//           register={register}
-//           errors={emptyFields}
-//           onChange={handleInputChange}
-//         />
+//             {/* Form Fields */}
+//             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+//               <div className="md:col-span-2">
+//                 <FormSelect
+//                   label="الفئة"
+//                   icon={<MdCategory className="text-orange-500 text-lg sm:text-xl" />}
+//                   name="category"
+//                   options={categories.map((cat) => ({ value: cat.id, label: cat.name }))}
+//                   register={register}
+//                   errors={emptyFields}
+//                   onChange={(e) => handleCategoryChange(e.target.value)}
+//                   placeholder="- اختر الفئة -"
+//                   // ملاحظة: تأكد من أن مكون FormSelect يدعم تمرير className أو أنه مصمم داخلياً ليدعم الثيم الداكن
+//                 />
+//               </div>
 
-//         <FormSubmitButton />
-//       </form>
+//               <div className="md:col-span-2">
+//                 <FormInput
+//                   label="عنوان الإعلان"
+//                   icon={<MdTitle className="text-orange-500 text-lg sm:text-xl" />}
+//                   name="title"
+//                   placeholder="ضع عنواناً جذاباً ومناسباً للإعلان"
+//                   register={register}
+//                   errors={emptyFields}
+//                   onChange={handleInputChange}
+//                 />
+//               </div>
+
+//               <FormInput
+//                 label="المدينة"
+//                 icon={<PiBuildingsDuotone className="text-orange-500 text-lg sm:text-xl" />}
+//                 name="city"
+//                 placeholder="مثال: دمشق"
+//                 register={register}
+//                 errors={emptyFields}
+//                 onChange={handleInputChange}
+//               />
+
+//               <FormInput
+//                 label="المنطقة"
+//                 icon={<FaTreeCity className="text-orange-500 text-lg sm:text-xl" />}
+//                 name="town"
+//                 placeholder="مثال: المزة"
+//                 register={register}
+//                 errors={emptyFields}
+//                 onChange={handleInputChange}
+//               />
+
+//               <FormInput
+//                 label="رقم الهاتف"
+//                 icon={<MdPhone className="text-orange-500 text-lg sm:text-xl" />}
+//                 name="phoneNumber"
+//                 placeholder="09xxxxxxxx"
+//                 type="tel"
+//                 register={register}
+//                 errors={emptyFields}
+//                 onChange={handleInputChange}
+//               />
+
+//               <FormInput
+//                 label="السعر"
+//                 icon={<MdAttachMoney className="text-orange-500 text-lg sm:text-xl" />}
+//                 name="basePrice"
+//                 placeholder="0"
+//                 type="number"
+//                 register={register}
+//                 errors={emptyFields}
+//                 onChange={handleInputChange}
+//               />
+
+//               <FormInput
+//                 label="الكمية المتاحة"
+//                 icon={<FaObjectGroup className="text-orange-500 text-lg sm:text-xl" />}
+//                 name="stockQuantity"
+//                 placeholder="1"
+//                 type="number"
+//                 register={register}
+//                 errors={emptyFields}
+//                 onChange={handleInputChange}
+//                 value={formState.stockQuantity}
+//               />
+//             </div>
+
+//             {/* Dynamic Category Fields */}
+//             {selectedCategory && Array.isArray(categoryFields) && categoryFields.length > 0 && (
+//               <div className="space-y-6 pt-4 border-t border-neutral-800">
+//                 <h3 className="text-lg font-bold text-white flex items-center gap-2">
+//                   <span className="w-1.5 h-5 bg-amber-500 rounded-full" />
+//                   تفاصيل إضافية ({selectedCategory.name})
+//                 </h3>
+//                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+//                   {categoryFields.map((field, index) => (
+//                     <div key={index} className="space-y-1.5">
+//                       <label className="block text-sm font-bold text-neutral-300 flex items-center gap-2">
+//                         {field?.icon} {field?.label}
+//                       </label>
+//                       {field?.options ? (
+//                         <select
+//                           className={`w-full bg-neutral-800/50 border rounded-xl px-4 py-3 text-white placeholder-neutral-500 focus:outline-none transition-all appearance-none ${
+//                             emptyFields.includes(field?.name)
+//                               ? 'border-red-500/50 focus:border-red-500/50 focus:ring-1 focus:ring-red-500/20'
+//                               : 'border-neutral-700/50 focus-within:border-orange-500/50 focus:ring-1 focus:ring-orange-500/20'
+//                           }`}
+//                           required
+//                           onChange={(e) => handleDetailsChange(field?.name, e.target.value)}
+//                         >
+//                           <option value="">{field?.placeholder || '- اختر -'}</option>
+//                           {Object.entries(field?.options).map(([key, value]) => (
+//                             <option key={key} value={key} className="bg-neutral-800">
+//                               {value}
+//                             </option>
+//                           ))}
+//                         </select>
+//                       ) : (
+//                         <input
+//                           type="text"
+//                           placeholder={field?.placeholder || 'أدخل القيمة'}
+//                           className={`w-full bg-neutral-800/50 border rounded-xl px-4 py-3 text-white placeholder-neutral-500 focus:outline-none transition-all ${
+//                             emptyFields.includes(field?.name)
+//                               ? 'border-red-500/50 focus:border-red-500/50 focus:ring-1 focus:ring-red-500/20'
+//                               : 'border-neutral-700/50 focus-within:border-orange-500/50 focus:ring-1 focus:ring-orange-500/20'
+//                           }`}
+//                           required
+//                           onChange={(e) => handleDetailsChange(field?.name, e.target.value)}
+//                         />
+//                       )}
+//                       {emptyFields.includes(field?.name) && (
+//                         <p className="text-red-400 text-xs mt-1 flex items-center gap-1">
+//                           <span>•</span> هذا الحقل مطلوب
+//                         </p>
+//                       )}
+//                     </div>
+//                   ))}
+//                 </div>
+//               </div>
+//             )}
+
+//             {error && (
+//               <div className="bg-red-500/10 border border-red-500/30 text-red-400 px-4 py-3 rounded-xl text-sm flex items-center gap-2">
+//                 <span>⚠️</span> {error}
+//               </div>
+//             )}
+
+//             <div className="space-y-6 pt-4 border-t border-neutral-800">
+//               <FormTextarea
+//                 label="وصف الإعلان"
+//                 icon={<MdDescription className="text-orange-500 text-lg sm:text-xl" />}
+//                 name="description"
+//                 placeholder="اكتب وصفاً تفصيلياً وواضحاً للمنتج أو الخدمة..."
+//                 register={register}
+//                 errors={emptyFields}
+//                 onChange={handleInputChange}
+//               />
+
+//               <FormInput
+//                 label="رابط الفيديو (يوتيوب أو تيك توك)"
+//                 icon={<MdAttachMoney className="text-orange-500 text-lg sm:text-xl" />}
+//                 name="link"
+//                 placeholder="https://..."
+//                 register={register}
+//                 errors={emptyFields}
+//                 onChange={handleInputChange}
+//               />
+
+//               {/* Map Section */}
+//               <div className="space-y-1.5">
+//                 <label className="block text-sm font-bold text-neutral-300 flex items-center gap-2">
+//                   <FaMapLocationDot className="text-orange-500 text-lg" />
+//                   تحديد الموقع على الخريطة
+//                 </label>
+//                 <div className="rounded-2xl overflow-hidden border border-neutral-700/50">
+//                   <OnClickMap
+//                     chosenCity={formState.city}
+//                     chosentown={formState.town}
+//                     lat={formState.lat}
+//                     lng={formState.lng}
+//                   />
+//                 </div>
+//               </div>
+//             </div>
+
+//             {/* Submit Button */}
+//             <div className="pt-6 border-t border-neutral-800">
+//               {/* ملاحظة: إذا كان FormSubmitButton لا يدعم الثيم الداكن داخلياً، يمكنك استبداله بالزر أدناه */}
+//               {/* 
+//               <button
+//                 type="submit"
+//                 className="w-full bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white font-bold py-4 px-6 rounded-xl transition-all shadow-lg shadow-orange-600/20 hover:shadow-orange-600/40 hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2"
+//               >
+//                 <MdCheckCircle className="text-xl" />
+//                 نشر الإعلان
+//               </button> 
+//               */}
+//               <FormSubmitButton />
+//             </div>
+//           </form>
+//         </motion.div>
+//       </main>
 //     </div>
 //   );
 // }
@@ -409,32 +455,31 @@ import UploadingAndDisplayingImage from '@/components/photos/UploadingAndDisplay
 import { inputsContext } from '@/features/auth/inputs-context';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
-import LoginButton from '@/components/Buttons/LoginButton';
 import {
   MdCategory,
   MdTitle,
   MdPhone,
   MdDescription,
   MdAttachMoney,
+  MdCheckCircle,
+  MdImage,
 } from 'react-icons/md';
 import FormInput from './FormInput';
 import FormSelect from './FormSelect';
 import FormTextarea from './FormTextarea';
 import FormSubmitButton from './FormSubmitButton';
 import { useSession } from 'next-auth/react';
-import { FaTreeCity } from 'react-icons/fa6';
+import { FaTreeCity, FaMapLocationDot, FaBoxOpen } from 'react-icons/fa6';
 import { PiBuildingsDuotone } from 'react-icons/pi';
-import { FaObjectGroup } from 'react-icons/fa';
-
-// ✅ 1. استيراد next/dynamic
+import { motion } from 'framer-motion';
 import dynamic from 'next/dynamic';
 
-// ✅ 2. الاستيراد الديناميكي لمكون الخريطة مع تعطيل SSR لمنع خطأ window is not defined
 const OnClickMap = dynamic(() => import('../../../components/map/onClickMap'), {
   ssr: false,
   loading: () => (
-    <div className="w-full h-72 sm:h-[500px] flex items-center justify-center bg-gray-100 rounded-lg text-gray-500 border border-gray-300 animate-pulse">
-      جاري تحميل الخريطة...
+    <div className="w-full h-64 flex flex-col items-center justify-center bg-neutral-800/50 rounded-2xl text-white border border-neutral-700 animate-pulse gap-3">
+      <FaMapLocationDot className="text-3xl text-orange-500/50" />
+      <span className="text-sm font-medium">جاري تحميل الخريطة...</span>
     </div>
   ),
 });
@@ -456,12 +501,7 @@ export default function NewPost() {
     title: '',
     categoryId: '',
     categoryName: '',
-    images: [
-      '/images/house.png',
-      '/images/house.png',
-      '/images/house.png',
-      '/images/house.png',
-    ],
+    images: ['/images/house.png', '/images/house.png', '/images/house.png', '/images/house.png'],
     city: '',
     town: '',
     stockQuantity: 1,
@@ -474,12 +514,10 @@ export default function NewPost() {
     details: {},
   });
 
-  // ✅ جلب الفئة
   const handleCategoryChange = (category) => {
     if (category) {
       const selected = categories[category - 1];
       setSelectedCategory(selected);
-
       setFormState((prev) => ({
         ...prev,
         categoryId: selected?.id || '',
@@ -487,15 +525,10 @@ export default function NewPost() {
       }));
     } else {
       setSelectedCategory(null);
-      setFormState((prev) => ({
-        ...prev,
-        categoryId: '',
-        categoryName: '',
-      }));
+      setFormState((prev) => ({ ...prev, categoryId: '', categoryName: '' }));
     }
   };
 
-  // ✅ تحميل الحقول بناءً على الفئة عند تغيير الفئة
   useEffect(() => {
     if (selectedCategory) {
       import(`../../../components/categoryFields/${selectedCategory?.name}.jsx`)
@@ -503,8 +536,7 @@ export default function NewPost() {
           setCategoryFields(module.default);
           setError(null);
         })
-        .catch((err) => {
-          console.error('Failed to load fields:', err);
+        .catch(() => {
           setCategoryFields([]);
           setError('فشل في تحميل الحقول');
         });
@@ -513,14 +545,12 @@ export default function NewPost() {
     }
   }, [selectedCategory]);
 
-  // ✅ تحديث formState عند تغيير userId, selectedCategory, location, addImages
   useEffect(() => {
     setFormState((prev) => ({
       ...prev,
       categoryId: selectedCategory?.id || '',
       categoryName: selectedCategory?.name || '',
       images: addImages.length ? addImages : prev.images,
-      // ✅ تحديث الإحداثيات من الـ Context عند تحديدها في الخريطة
       lng: location?.[1] !== undefined ? location[1] : prev.lng,
       lat: location?.[0] !== undefined ? location[0] : prev.lat,
     }));
@@ -528,43 +558,17 @@ export default function NewPost() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormState((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-
-    if (value.trim()) {
-      setEmptyFields((prev) => prev.filter((item) => item !== name));
-    }
+    setFormState((prev) => ({ ...prev, [name]: value }));
+    if (value.trim()) setEmptyFields((prev) => prev.filter((item) => item !== name));
   };
 
   const handleDetailsChange = (field, value) => {
-    setFormState((prev) => ({
-      ...prev,
-      details: {
-        ...prev.details,
-        [field]: value,
-      },
-    }));
-
-    if (value.trim()) {
-      setEmptyFields((prev) => prev.filter((item) => item !== field));
-    }
+    setFormState((prev) => ({ ...prev, details: { ...prev.details, [field]: value } }));
+    if (value.trim()) setEmptyFields((prev) => prev.filter((item) => item !== field));
   };
 
   const validateForm = () => {
-    const requiredFields = [
-      'userId',
-      'title',
-      'categoryId',
-      'categoryName',
-      'city',
-      'town',
-      'phoneNumber',
-      'basePrice',
-      'description',
-    ];
-
+    const requiredFields = ['userId', 'title', 'categoryId', 'categoryName', 'city', 'town', 'phoneNumber', 'basePrice', 'description'];
     let emptyFieldsList = [];
 
     const hasEmptyRequiredField = requiredFields.some((field) => {
@@ -577,9 +581,7 @@ export default function NewPost() {
 
     if (!hasEmptyRequiredField && selectedCategory && categoryFields) {
       categoryFields.forEach((field) => {
-        if (!formState.details[field?.name]?.trim()) {
-          emptyFieldsList.push(field?.name);
-        }
+        if (!formState.details[field?.name]?.trim()) emptyFieldsList.push(field?.name);
       });
     }
 
@@ -595,14 +597,11 @@ export default function NewPost() {
 
     const formData = {
       ...formState,
-      userId: formState.userId,
-      categoryId: formState.categoryId,
       basePrice: parseInt(formState.basePrice) || 0,
       stockQuantity: parseInt(formState.stockQuantity) || 1,
       lng: formState.lng ? parseFloat(formState.lng) : null,
       lat: formState.lat ? parseFloat(formState.lat) : null,
     };
-    console.log('formData to be sent:', formData);
 
     try {
       const response = await fetch('/api/product', {
@@ -612,12 +611,10 @@ export default function NewPost() {
       });
 
       if (response.ok) {
-        console.log('Product added successfully:', await response.json());
-        toast.success('تم إنشاء الإعلان بنجاح');
+        toast.success('تم إنشاء الإعلان بنجاح', { icon: <MdCheckCircle className="text-emerald-500" /> });
         dispatch({ type: 'ADD_IMAGE', payload: [] });
         router.push('/posts');
       } else {
-        console.error('Failed to add product:', await response.text());
         toast.error('حدث خطأ ما، حاول مرة أخرى');
       }
     } catch (error) {
@@ -631,182 +628,287 @@ export default function NewPost() {
   }
 
   return (
-    <div className="flex flex-col justify-center items-center w-full bg-five text-sm sm:text-lg mt-64 ">
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          onSubmit();
-        }}
-        className="space-y-4 p-4 border rounded-lg shadow-md w-full xl:w-1/2 mt-64 sm:mt-0 bg-white"
-      >
-        <UploadingAndDisplayingImage />
+    <div className="min-h-screen bg-gradient-to-br from-neutral-950 via-orange-950/10 to-neutral-950 relative overflow-hidden mt-60" dir="rtl">
+      {/* Animated Background Elements */}
+      <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-orange-600/20 rounded-full blur-[120px] animate-pulse" />
+        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-amber-600/10 rounded-full blur-[100px]" />
+      </div>
 
-        <FormSelect
-          label="الفئة"
-          icon={<MdCategory className="text-primary-500 text-lg sm:text-xl" />}
-          name="category"
-          options={categories.map((cat) => ({
-            value: cat.id,
-            label: cat.name,
-          }))}
-          register={register}
-          errors={emptyFields}
-          onChange={(e) => handleCategoryChange(e.target.value)}
-          placeholder="-اختر-"
-        />
-
-        <FormInput
-          label="عنوان الإعلان"
-          icon={<MdTitle className="text-primary-500 text-lg sm:text-xl" />}
-          name="title"
-          placeholder="ضع عنوان مناسب للإعلان"
-          register={register}
-          errors={emptyFields}
-          onChange={handleInputChange}
-        />
-
-        <FormInput
-          label="المدينة"
-          icon={
-            <PiBuildingsDuotone className="text-primary-500 text-lg sm:text-xl" />
-          }
-          name="city"
-          placeholder="دمشق"
-          register={register}
-          errors={emptyFields}
-          onChange={handleInputChange}
-        />
-
-        <FormInput
-          label="المنطقة"
-          icon={<FaTreeCity className="text-primary-500 text-lg sm:text-xl" />}
-          name="town"
-          placeholder="المزة"
-          register={register}
-          errors={emptyFields}
-          onChange={handleInputChange}
-        />
-
-        <FormInput
-          label="رقم الهاتف"
-          icon={<MdPhone className="text-primary-500 text-lg sm:text-xl" />}
-          name="phoneNumber"
-          placeholder="+963 955555555"
-          type="number"
-          register={register}
-          errors={emptyFields}
-          onChange={handleInputChange}
-        />
-
-        {error && <p className="text-red-500">خطأ: {error}</p>}
-
-        {selectedCategory &&
-          Array.isArray(categoryFields) &&
-          categoryFields?.map((field, index) => (
-            <div key={index}>
-              <label className="font-medium mb-2 flex items-center gap-2">
-                {field?.icon} {field?.label}
-              </label>
-              {field?.options ? (
-                <select
-                  className={`w-full p-1 sm:p-2 lg:p-3 border rounded focus:outline-2 focus:outline-primary-500 ${
-                    emptyFields.includes(field?.name)
-                      ? 'outline-2 outline-red-500'
-                      : ''
-                  }`}
-                  required
-                  onChange={(e) =>
-                    handleDetailsChange(field?.name, e.target.value)
-                  }
-                >
-                  <option value="">{field?.placeholder}</option>
-                  {Object.entries(field?.options).map(([key, value]) => (
-                    <option key={key} value={key}>
-                      {value}
-                    </option>
-                  ))}
-                </select>
-              ) : (
-                <input
-                  placeholder={field?.placeholder}
-                  className={`w-full p-1 sm:p-2 lg:p-3 border rounded focus:outline-2 focus:outline-primary-500 ${
-                    emptyFields.includes(field?.name)
-                      ? 'outline-2 outline-red-500'
-                      : ''
-                  }`}
-                  required
-                  onChange={(e) =>
-                    handleDetailsChange(field?.name, e.target.value)
-                  }
-                />
-              )}
-              {emptyFields.includes(field?.name) && (
-                <p className="text-red-500 text-sm mt-1">هذا الحقل مطلوب</p>
-              )}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+          
+          {/* Page Header */}
+          <div className="mb-8 flex items-center gap-4">
+            <div className="w-1.5 h-12 bg-gradient-to-b from-orange-500 to-amber-500 rounded-full" />
+            <div>
+              <h1 className="text-3xl sm:text-4xl font-black text-white">إنشاء إعلان جديد</h1>
+              <p className="text-white mt-1">قم بتعبئة البيانات بدقة لضمان ظهور إعلانك بشكل احترافي</p>
             </div>
-          ))}
+          </div>
 
-        <FormInput
-          label="السعر"
-          icon={
-            <MdAttachMoney className="text-primary-500 text-lg sm:text-xl" />
-          }
-          name="basePrice"
-          placeholder="500 $"
-          type="number"
-          register={register}
-          errors={emptyFields}
-          onChange={handleInputChange}
-        />
+          {/* 🌟 NEW LAYOUT: Two-Column Asymmetric Grid 🌟 */}
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (validateForm()) onSubmit();
+            }}
+            className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start"
+          >
+            
+            {/* ================= RIGHT COLUMN: Main Content (8/12) ================= */}
+            <div className="lg:col-span-8 space-y-6">
+              
+              {/* Card 1: Media Upload */}
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
+                className="bg-neutral-900/60 backdrop-blur-xl border border-neutral-800 rounded-3xl p-6"
+              >
+                <h2 className="text-lg font-bold text-white flex items-center gap-2 mb-4">
+                  <MdImage className="text-orange-500 text-xl" /> صور الإعلان
+                </h2>
+                <div className="bg-neutral-800/30 rounded-2xl p-4 border border-neutral-700/50">
+                  <UploadingAndDisplayingImage />
+                </div>
+              </motion.div>
 
-        <FormInput
-          label="الكمية المتاحة"
-          icon={
-            <FaObjectGroup className="text-primary-500 text-lg sm:text-xl" />
-          }
-          name="stockQuantity"
-          placeholder="1"
-          type="number"
-          register={register}
-          errors={emptyFields}
-          onChange={handleInputChange}
-          value={formState.stockQuantity}
-        />
+              {/* Card 2: Core Information */}
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
+                className="bg-neutral-900/60 backdrop-blur-xl border border-neutral-800 rounded-3xl p-6 space-y-6"
+              >
+                <h2 className="text-lg font-bold text-white flex items-center gap-2">
+                  <MdTitle className="text-orange-500 text-xl" /> المعلومات الأساسية
+                </h2>
+                
+                <FormSelect
+                  label="الفئة"
+                  icon={<MdCategory className="text-orange-500 text-lg" />}
+                  name="category"
+                  options={categories.map((cat) => ({ value: cat.id, label: cat.name }))}
+                  register={register}
+                  errors={emptyFields}
+                  onChange={(e) => handleCategoryChange(e.target.value)}
+                  placeholder="- اختر الفئة -"
+                />
 
-        <FormTextarea
-          label="وصف الإعلان"
-          icon={
-            <MdDescription className="text-primary-500 text-lg sm:text-xl" />
-          }
-          name="description"
-          placeholder=" اكتب وصف المنتج بكامل التفاصيل..."
-          register={register}
-          errors={emptyFields}
-          onChange={handleInputChange}
-        />
+                <FormInput
+                  label="عنوان الإعلان"
+                  icon={<MdTitle className="text-orange-500 text-lg" />}
+                  name="title"
+                  placeholder="عنوان جذاب يوضح محتوى الإعلان"
+                  register={register}
+                  errors={emptyFields}
+                  onChange={handleInputChange}
+                />
 
-        {/* ✅ 3. استخدام المكون الديناميكي مع تمرير البيانات الضرورية له */}
-        <OnClickMap
-          chosenCity={formState.city}
-          chosentown={formState.town}
-          lat={formState.lat}
-          lng={formState.lng}
-        />
+                <FormTextarea
+                  label="وصف الإعلان"
+                  icon={<MdDescription className="text-orange-500 text-lg" />}
+                  name="description"
+                  placeholder="اكتب وصفاً تفصيلياً وواضحاً للمنتج أو الخدمة..."
+                  register={register}
+                  errors={emptyFields}
+                  onChange={handleInputChange}
+                />
+              </motion.div>
 
-        <FormInput
-          label="رابط الفيديو من يوتيوب أو تيك توك"
-          icon={
-            <MdAttachMoney className="text-primary-500 text-lg sm:text-xl" />
-          }
-          name="link"
-          placeholder="رابط الفيديو"
-          register={register}
-          errors={emptyFields}
-          onChange={handleInputChange}
-        />
+              {/* Card 3: Dynamic Category Fields */}
+              {selectedCategory && Array.isArray(categoryFields) && categoryFields.length > 0 && (
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
+                  className="bg-neutral-900/60 backdrop-blur-xl border border-neutral-800 rounded-3xl p-6 space-y-6"
+                >
+                  <h2 className="text-lg font-bold text-white flex items-center gap-2">
+                    <span className="w-1.5 h-5 bg-amber-500 rounded-full" />
+                    تفاصيل إضافية ({selectedCategory.name})
+                  </h2>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    {categoryFields.map((field, index) => (
+                      <div key={index} className="space-y-1.5">
+                        <label className="block text-sm font-bold text-neutral-300 flex items-center gap-2">
+                          {field?.icon} {field?.label}
+                        </label>
+                        {field?.options ? (
+                          <select
+                            className={`w-full bg-neutral-800/50 border rounded-xl px-4 py-3 text-white placeholder-neutral-500 focus:outline-none transition-all appearance-none ${
+                              emptyFields.includes(field?.name)
+                                ? 'border-red-500/50 focus:border-red-500/50 focus:ring-1 focus:ring-red-500/20'
+                                : 'border-neutral-700/50 focus-within:border-orange-500/50 focus:ring-1 focus:ring-orange-500/20'
+                            }`}
+                            required
+                            onChange={(e) => handleDetailsChange(field?.name, e.target.value)}
+                          >
+                            <option value="">{field?.placeholder || '- اختر -'}</option>
+                            {Object.entries(field?.options).map(([key, value]) => (
+                              <option key={key} value={key} className="bg-neutral-800">{value}</option>
+                            ))}
+                          </select>
+                        ) : (
+                          <input
+                            type="text"
+                            placeholder={field?.placeholder || 'أدخل القيمة'}
+                            className={`w-full bg-neutral-800/50 border rounded-xl px-4 py-3 text-white placeholder-neutral-500 focus:outline-none transition-all ${
+                              emptyFields.includes(field?.name)
+                                ? 'border-red-500/50 focus:border-red-500/50 focus:ring-1 focus:ring-red-500/20'
+                                : 'border-neutral-700/50 focus-within:border-orange-500/50 focus:ring-1 focus:ring-orange-500/20'
+                            }`}
+                            required
+                            onChange={(e) => handleDetailsChange(field?.name, e.target.value)}
+                          />
+                        )}
+                        {emptyFields.includes(field?.name) && (
+                          <p className="text-red-400 text-xs mt-1 flex items-center gap-1">
+                            <span>•</span> هذا الحقل مطلوب
+                          </p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
 
-        <FormSubmitButton />
-      </form>
+              {/* Card 4: Video Link */}
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
+                className="bg-neutral-900/60 backdrop-blur-xl border border-neutral-800 rounded-3xl p-6"
+              >
+                <FormInput
+                  label="رابط الفيديو (يوتيوب أو تيك توك) - اختياري"
+                  icon={<MdDescription className="text-orange-500 text-lg" />}
+                  name="link"
+                  placeholder="https://..."
+                  register={register}
+                  errors={emptyFields}
+                  onChange={handleInputChange}
+                />
+              </motion.div>
+            </div>
+
+            {/* ================= LEFT COLUMN: Sticky Sidebar (4/12) ================= */}
+            <div className="lg:col-span-4 space-y-6 lg:sticky lg:top-24">
+              
+              {/* Sidebar Card 1: Pricing & Stock */}
+              <motion.div 
+                initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }}
+                className="bg-gradient-to-br from-neutral-900 to-neutral-950 backdrop-blur-xl border border-neutral-800 rounded-3xl p-6 shadow-xl"
+              >
+                <h2 className="text-lg font-bold text-white flex items-center gap-2 mb-4">
+                  <MdAttachMoney className="text-amber-500 text-xl" /> التسعير والمخزون
+                </h2>
+                <div className="space-y-4">
+                  <FormInput
+                    label="السعر (ل.س)"
+                    icon={<MdAttachMoney className="text-amber-500 text-lg" />}
+                    name="basePrice"
+                    placeholder="0"
+                    type="number"
+                    register={register}
+                    errors={emptyFields}
+                    onChange={handleInputChange}
+                  />
+                  <FormInput
+                    label="الكمية المتاحة"
+                    icon={<FaBoxOpen className="text-amber-500 text-lg" />}
+                    name="stockQuantity"
+                    placeholder="1"
+                    type="number"
+                    register={register}
+                    errors={emptyFields}
+                    onChange={handleInputChange}
+                    value={formState.stockQuantity}
+                  />
+                </div>
+              </motion.div>
+
+              {/* Sidebar Card 2: Location & Map */}
+              <motion.div 
+                initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 }}
+                className="bg-neutral-900/60 backdrop-blur-xl border border-neutral-800 rounded-3xl p-6 shadow-xl"
+              >
+                <h2 className="text-lg font-bold text-white flex items-center gap-2 mb-4">
+                  <FaMapLocationDot className="text-orange-500 text-xl" /> الموقع الجغرافي
+                </h2>
+                <div className="space-y-4">
+                  <FormInput
+                    label="المدينة"
+                    icon={<PiBuildingsDuotone className="text-orange-500 text-lg" />}
+                    name="city"
+                    placeholder="مثال: دمشق"
+                    register={register}
+                    errors={emptyFields}
+                    onChange={handleInputChange}
+                  />
+                  <FormInput
+                    label="المنطقة / الحي"
+                    icon={<FaTreeCity className="text-orange-500 text-lg" />}
+                    name="town"
+                    placeholder="مثال: المزة"
+                    register={register}
+                    errors={emptyFields}
+                    onChange={handleInputChange}
+                  />
+                  
+                  {/* Map Component */}
+                  <div className="pt-2">
+                    <label className="block text-xs font-bold text-white mb-2">تحديد دقيق على الخريطة</label>
+                    <div className="rounded-2xl overflow-hidden border border-neutral-700/50 shadow-inner">
+                      <OnClickMap
+                        chosenCity={formState.city}
+                        chosentown={formState.town}
+                        lat={formState.lat}
+                        lng={formState.lng}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Sidebar Card 3: Contact Info */}
+              <motion.div 
+                initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4 }}
+                className="bg-neutral-900/60 backdrop-blur-xl border border-neutral-800 rounded-3xl p-6 shadow-xl"
+              >
+                <FormInput
+                  label="رقم الهاتف للتواصل"
+                  icon={<MdPhone className="text-emerald-500 text-xl" />}
+                  name="phoneNumber"
+                  placeholder="09xxxxxxxx"
+                  type="tel"
+                  register={register}
+                  errors={emptyFields}
+                  onChange={handleInputChange}
+                />
+              </motion.div>
+
+              {/* Sidebar Card 4: Action Button */}
+              <motion.div 
+                initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5 }}
+                className="bg-neutral-900/60 backdrop-blur-xl border border-neutral-800 rounded-3xl p-6 shadow-xl"
+              >
+                {error && (
+                  <div className="bg-red-500/10 border border-red-500/30 text-red-400 px-4 py-3 rounded-xl text-sm mb-4 flex items-center gap-2">
+                    <span>⚠️</span> {error}
+                  </div>
+                )}
+                
+                <button
+                  type="submit"
+                  className="w-full bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white font-black py-4 px-6 rounded-2xl transition-all shadow-lg shadow-orange-600/20 hover:shadow-orange-600/40 hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2 text-lg"
+                >
+                  <MdCheckCircle className="text-2xl" />
+                  نشر الإعلان
+                </button>
+                
+                <p className="text-center text-xs text-neutral-300 mt-4">
+                  بالضغط على "نشر"، أنت توافق على شروط وأحكام المنصة
+                </p>
+              </motion.div>
+
+            </div>
+          </form>
+        </motion.div>
+      </main>
     </div>
   );
 }

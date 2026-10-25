@@ -14,7 +14,7 @@ const FormTextarea = ({
 }) => {
   return (
     <div>
-      <label className="font-medium mb-2 flex items-center gap-2">
+      <label className="font-medium mb-2 flex items-center gap-2 text-white">
         {icon} {label}
       </label>
       <textarea

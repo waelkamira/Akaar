@@ -58,7 +58,7 @@ const FormInput = ({
       {/* 🏷️ التسمية (Label) */}
       <label
         htmlFor={name}
-        className="text-sm font-semibold text-gray-700 flex items-center gap-2 mr-1 transition-colors duration-300"
+        className="text-sm font-semibold text-gray-700 flex items-center gap-2 mr-1 transition-colors duration-300 text-white"
       >
         {icon && <span className="text-orange-500 text-lg">{icon}</span>}
         {label}

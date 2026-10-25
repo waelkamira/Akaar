@@ -7,6 +7,12 @@ import { IoIosContacts } from 'react-icons/io';
 import { FaShoppingCart } from 'react-icons/fa';
 
 const mainButtons = [
+  
+  {
+    title: 'السلة',
+    path: '/cart',
+    icon: <FaShoppingCart />,
+  },
   {
     title: 'الرئيسية',
     path: '/',
@@ -26,11 +32,6 @@ const mainButtons = [
     title: 'المفضلة',
     path: '/favorite',
     icon: <TbTargetArrow />,
-  },
-  {
-    title: 'سلة التسوق',
-    path: '/cart',
-    icon: <FaShoppingCart />,
   },
   {
     title: 'إنشاء إعلان',

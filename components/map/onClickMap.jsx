@@ -528,18 +528,18 @@ export default function OnClickMap({
           <span className="flex text-primary-500 text-lg xl:text-2xl ml-2">
             <FaMapMarkedAlt />
           </span>
-          <span className="flex text-sm sm:text-lg select-none text-nowrap">
+          <span className="flex text-sm sm:text-lg select-none text-nowrap text-white">
             حدد الموقع على الخريطة :
           </span>
         </div>
-        <h1 className="text-right text-sm sm:text-lg select-none">
+        <h1 className="text-right text-sm sm:text-lg select-none text-gray-400">
           اختر المدينة من القائمة ثم اختر المنطقة من القائمة الثانية ثم قم بعمل
           زووم على الخريطة واضغط على الموقع بدقة
         </h1>
       </div>
 
       <div className="mb-4 relative z-50">
-        <label className="flex text-right mb-2 text-lg sm:text-md select-none text-nowrap">
+        <label className="flex text-right mb-2 text-lg sm:text-md select-none text-nowrap text-white">
           <span className="text-primary-500 text-lg xl:text-2xl ml-2">
             <GiModernCity />
           </span>
@@ -567,7 +567,7 @@ export default function OnClickMap({
 
       {selectedCity && (
         <div className="mb-4 relative z-40">
-          <label className="flex text-right mb-2 text-lg sm:text-md select-none text-nowrap">
+          <label className="flex text-right mb-2 text-lg sm:text-md select-none text-nowrap text-white">
             <span className="text-primary-500 text-lg xl:text-2xl ml-2">
               <FaTreeCity />
             </span>
