@@ -387,15 +387,10 @@ export default function OnClickMap({
 
   // ✅ 1. حالة للتأكد من أن الكود يعمل في المتصفح فقط
   const [isMounted, setIsMounted] = useState(false);
-  // ✅ 2. مفتاح فريد لإجبار React على إنشاء عنصر DOM جديد تماماً
-  const [mapKey, setMapKey] = useState('');
-  const containerRef = useRef(null);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       setIsMounted(true);
-      // إنشاء مفتاح فريد عند التحميل لضمان عدم وجود تعارض مع جلسات سابقة
-      setMapKey(`map-${Date.now()}`);
 
       const updateSize = () => {
         setMinHeight(window.innerWidth >= 640 ? '48px' : '20px');
@@ -406,22 +401,6 @@ export default function OnClickMap({
       return () => window.removeEventListener('resize', updateSize);
     }
   }, []);
-
-  // ✅ 3. تنظيف جذري لأي بقايا من Leaflet قبل الرسم (حل نهائي لمشكلة Turbopack HMR)
-  useEffect(() => {
-    if (containerRef.current && mapKey) {
-      const container = containerRef.current;
-      if (container._leaflet_id) {
-        delete container._leaflet_id;
-      }
-      // تنظيف أي عناصر أبناء قد تحمل المعرف وتسبب الخطأ
-      Array.from(container.children).forEach((child) => {
-        if (child._leaflet_id) {
-          delete child._leaflet_id;
-        }
-      });
-    }
-  }, [mapKey]);
 
   useEffect(() => {
     if (lat && lng) {
@@ -594,10 +573,7 @@ export default function OnClickMap({
         </div>
       )}
 
-      {/* ✅ 5. استخدام المفتاح الفريد (mapKey) على الحاوية لضمان إنشاء عقدة DOM جديدة تماماً */}
       <div
-        ref={containerRef}
-        key={`wrapper-${mapKey}`}
         className="w-full h-72 sm:h-[500px] rounded-lg overflow-hidden shadow-lg relative"
       >
         <button
@@ -611,7 +587,6 @@ export default function OnClickMap({
         </button>
 
         <MapContainer
-          key={`map-container-${mapKey}`}
           center={selectedLocation}
           zoom={7}
           className="w-full h-full z-10"

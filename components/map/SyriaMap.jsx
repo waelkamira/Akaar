@@ -2,7 +2,7 @@
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { icon } from 'leaflet';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 // أيقونة مخصصة للدبابيس
 const customIcon = icon({
@@ -18,26 +18,21 @@ function SetZoomAndCenter({ latitude, longitude }) {
   const map = useMap();
   useEffect(() => {
     map.setView([latitude, longitude], 16);
-  }, [latitude, longitude]); // إزالة `map` من التبعيات لتجنب الأخطاء
+  }, [map, latitude, longitude]);
 
   return null;
 }
 
 export default function SyriaMap({ lng = '', lat = '' }) {
-  const [coords, setCoords] = useState({ lat: 33.5138, lng: 36.2765 });
-
-  useEffect(() => {
-    setCoords({
-      lat: parseFloat(lat) || 33.5138,
-      lng: parseFloat(lng) || 36.2765,
-    });
-  }, [lat, lng]); // ✅ تأخير التحديث حتى يتم التأكد من تغيير القيم
+  const coords = {
+    lat: parseFloat(lat) || 33.5138,
+    lng: parseFloat(lng) || 36.2765,
+  };
 
   return (
-    <div key={`${coords.lat}-${coords.lng}`} className="w-full z-40">
+    <div className="w-full z-40">
       <div className="w-full h-72 sm:h-[500px] rounded-lg overflow-hidden">
         <MapContainer
-          key={`${coords.lat}-${coords.lng}`}
           center={[coords.lat, coords.lng]}
           zoom={13}
           className="w-full h-full"

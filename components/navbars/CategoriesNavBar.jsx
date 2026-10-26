@@ -261,6 +261,7 @@
 import { useRouter } from 'next/navigation';
 import { useCallback, useMemo, useState } from 'react';
 import categories from '../Categories/categories';
+import { serializeCategory } from '../Categories/serializeCategory';
 import { FaHome } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '../lib/utils';
@@ -332,7 +333,7 @@ const CategoriesNavBar = () => {
     async (categoryItem) => {
       setCategory(categoryItem);
       router.push(`/search/categoryId=${categoryItem.id}`);
-      localStorage.setItem('category', JSON.stringify(categoryItem));
+      localStorage.setItem('category', serializeCategory(categoryItem));
       performSearch();
     },
     [setCategory, router, performSearch],

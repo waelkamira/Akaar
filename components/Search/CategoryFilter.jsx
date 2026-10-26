@@ -123,162 +123,416 @@
 //     </div>
 //   );
 // }
+
+// 'use client';
+
+// import { useRouter } from 'next/navigation';
+// import { useCallback, useMemo } from 'react';
+// import categories from '../Categories/categories';
+// import { FaHome } from 'react-icons/fa';
+// import { motion, AnimatePresence } from 'framer-motion';
+// import { cn } from '../lib/utils';
+// import { useSearch } from '@/features/search/search-context';
+// import { serializeCategory } from '../Categories/serializeCategory';
+
+// const CategoryCard = ({
+//   item,
+//   selected,
+//   onClick,
+// }) => {
+//   return (
+//     <motion.button
+//       type="button"
+//       onClick={onClick}
+//       aria-pressed={selected}
+//       whileTap={{ scale: 0.97 }}
+//       initial={{ opacity: 0, y: 10 }}
+//       animate={{ opacity: 1, y: 0 }}
+//       transition={{ duration: 0.25 }}
+//       className={cn(
+//         'group relative isolate flex flex-col justify-center items-center w-full min-w-0 gap-3',
+//         'overflow-hidden rounded-2xl border p-3 text-right',
+//         'transition-colors duration-300',
+//         'focus-visible:outline-none focus-visible:ring-2',
+//         'focus-visible:ring-orange-500 focus-visible:ring-offset-2',
+//         'focus-visible:ring-offset-neutral-950',
+//         selected
+//           ? 'border-orange-500/50 bg-orange-500/[0.10]'
+//           : 'border-white/[0.07] bg-white/[0.025] hover:border-orange-500/30 hover:bg-white/[0.055]'
+//       )}
+//     >
+//       {/* Active glow */}
+//       <AnimatePresence>
+//         {selected && (
+//           <motion.div
+//             layoutId="category-active-glow"
+//             className="absolute inset-0 -z-10 bg-gradient-to-l from-orange-500/15 via-orange-500/[0.04] to-transparent"
+//             transition={{
+//               type: 'spring',
+//               stiffness: 300,
+//               damping: 30,
+//             }}
+//           />
+//         )}
+//       </AnimatePresence>
+
+//       {/* Icon */}
+//       <div
+//         className={cn(
+//           'relative flex h-12 w-12 shrink-0 items-center justify-center',
+//           'rounded-xl border transition-all duration-300',
+//           selected
+//             ? 'border-orange-400/30 bg-gradient-to-br from-orange-500 to-amber-500 text-white shadow-lg shadow-orange-500/20'
+//             : 'border-white/[0.06] bg-neutral-900 text-neutral-400 group-hover:border-orange-500/30 group-hover:text-orange-400'
+//         )}
+//       >
+//         <span className="text-xl">
+//           {item?.icon || <FaHome />}
+//         </span>
+//       </div>
+
+//       {/* Category name */}
+//       <div className="flex min-w-0 flex-1 flex-col items-start gap-1">
+//         <span
+//           className={cn(
+//             'w-full truncate text-sm font-bold transition-colors',
+//             selected
+//               ? 'text-white'
+//               : 'text-neutral-300 group-hover:text-white'
+//           )}
+//         >
+//           {item?.name}
+//         </span>
+
+//       </div>
+
+//       {/* Active indicator */}
+//       <div
+//         className={cn(
+//           'h-2 w-2 shrink-0 rounded-full transition-all duration-300',
+//           selected
+//             ? 'bg-orange-400 shadow-[0_0_10px_rgba(251,146,60,0.65)]'
+//             : 'bg-neutral-800 group-hover:bg-orange-500/50'
+//         )}
+//       />
+//     </motion.button>
+//   );
+// };
+
+// const CategoriesNavBar = () => {
+//   const router = useRouter();
+//   const { category, setCategory, performSearch } = useSearch();
+
+//   const selectedCategory = useMemo(
+//     () => categories?.find((item) => item.id === category?.id) || null,
+//     [category]
+//   );
+
+//   const handleCategoryClick = useCallback(
+//     (item) => {
+//       setCategory(item);
+
+//       try {
+//         localStorage.setItem(
+//           'category',
+//           serializeCategory(item)
+//         );
+//       } catch {
+//         // Storage may be unavailable in private browsing.
+//       }
+
+//       router.push(`/search?categoryId=${encodeURIComponent(item.id)}`);
+//       performSearch();
+//     },
+//     [setCategory, router, performSearch]
+//   );
+
+//   return (
+//     <section
+//       dir="rtl"
+//       aria-label="تصفح الأقسام"
+//       className="sticky top-0 z-40 w-full border-b border-white/[0.06] bg-neutral-950/90 backdrop-blur-2xl"
+//     >
+//       <div className="mx-auto max-w-7xl px-4 py-5 sm:px-6 lg:px-8">
+
+//         {/* Header */}
+//         <div className="mb-5 flex items-center justify-between gap-3">
+//           <div className="flex items-center gap-3">
+//             <div className="h-8 w-1 rounded-full bg-gradient-to-b from-orange-400 to-amber-600" />
+
+//             <div>
+//               <h2 className="text-base font-extrabold tracking-tight text-white sm:text-lg">
+//                 تصفح الأقسام
+//               </h2>
+
+//               <p className="mt-1 text-xs text-neutral-500">
+//                 اكتشف ما تبحث عنه بسهولة
+//               </p>
+//             </div>
+//           </div>
+
+//           <div className="hidden items-center gap-2 rounded-full border border-white/[0.07] bg-white/[0.03] px-3 py-2 sm:flex">
+//             <span className="h-1.5 w-1.5 rounded-full bg-orange-400" />
+//             <span className="text-xs text-neutral-400">
+//               {categories?.length || 0} قسم
+//             </span>
+//           </div>
+//         </div>
+
+//         {/* Categories grid */}
+//         <div className="grid grid-cols-1 gap-2.5 min-[380px]:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 ">
+//           {categories?.map((item, index) => (
+//             <motion.div
+//               key={item.id}
+//               initial={{ opacity: 0, y: 8 }}
+//               animate={{ opacity: 1, y: 0 }}
+//               transition={{
+//                 duration: 0.25,
+//                 delay: Math.min(index * 0.035, 0.3),
+//               }}
+//             >
+//               <CategoryCard
+//                 item={item}
+//                 selected={selectedCategory?.id === item.id}
+//                 onClick={() => handleCategoryClick(item)}
+//               />
+//             </motion.div>
+//           ))}
+//         </div>
+//       </div>
+//     </section>
+//   );
+// };
+
+// export default CategoriesNavBar;
+
 'use client';
 
-import { useSearch } from '@/features/search/search-context';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
+import { useCallback, useMemo } from 'react';
 import categories from '../Categories/categories';
-import { ChevronLeft, Check, SlidersHorizontalIcon } from 'lucide-react';
+import { FaHome } from 'react-icons/fa';
+import { motion, AnimatePresence } from 'framer-motion';
+import { cn } from '../lib/utils';
+import { useSearch } from '@/features/search/search-context';
+import { serializeCategory } from '../Categories/serializeCategory';
 
-export default function CategoryFilter() {
-  const { category, setCategory, setFilter } = useSearch();
+const CategoryCard = ({ item, selected, onClick }) => {
+  return (
+    <motion.button
+      type="button"
+      onClick={onClick}
+      aria-pressed={selected}
+      whileHover={{ y: -3 }}
+      whileTap={{ scale: 0.98 }}
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      className={cn(
+        'group relative isolate flex w-full min-w-0',
+        'min-h-[118px] flex-col items-center justify-center gap-3',
+        'overflow-hidden rounded-xl border p-4 text-right',
+        'transition-all duration-300',
+        'focus-visible:outline-none focus-visible:ring-2',
+        'focus-visible:ring-orange-300 focus-visible:ring-offset-2',
+        'focus-visible:ring-offset-[#54251c]',
+        selected
+          ? 'border-orange-200/70 bg-[#ffb17c]/20 shadow-lg shadow-black/10'
+          : 'border-white/15 bg-white/[0.055] hover:border-orange-200/50 hover:bg-white/[0.11]'
+      )}
+    >
+      {/* خلفية متوهجة للقسم المحدد */}
+      <AnimatePresence>
+        {selected && (
+          <motion.div
+            layoutId="category-active-glow"
+            className="absolute inset-0 -z-10 bg-gradient-to-br from-orange-300/25 via-orange-200/10 to-transparent"
+            transition={{
+              type: 'spring',
+              stiffness: 300,
+              damping: 30,
+            }}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* زخرفة هندسية مستوحاة من التصميم المرجعي */}
+      <div
+        aria-hidden="true"
+        className={cn(
+          'pointer-events-none absolute -bottom-8 -left-5',
+          'h-20 w-20 rounded-full border',
+          'border-white/[0.07] transition-transform duration-500',
+          'group-hover:scale-125'
+        )}
+      />
+
+      {/* أيقونة القسم */}
+      <div
+        className={cn(
+          'relative flex h-12 w-12 shrink-0 items-center justify-center',
+          'rounded-xl border transition-all duration-300',
+          selected
+            ? 'border-white/40 bg-gradient-to-br from-[#ffb06e] to-[#e85c25] text-white shadow-lg shadow-orange-950/20'
+            : 'border-white/15 bg-[#572b21]/40 text-orange-100 group-hover:border-orange-200/50 group-hover:bg-[#a8492b]/50 group-hover:text-white'
+        )}
+      >
+        <span className="text-xl">
+          {item?.icon || <FaHome />}
+        </span>
+      </div>
+
+      {/* اسم القسم */}
+      <div className="relative flex min-w-0 w-full flex-col items-center gap-1">
+        <span
+          className={cn(
+            'w-full text-center text-[10px] font-bold',
+            'transition-colors duration-300',
+            selected
+              ? 'text-white'
+              : 'text-orange-50/85 group-hover:text-white'
+          )}
+        >
+          {item?.name}
+        </span>
+
+        <span
+          className={cn(
+            'h-px transition-all duration-300',
+            selected
+              ? 'w-10 bg-orange-200'
+              : 'w-0 bg-orange-200 group-hover:w-8'
+          )}
+        />
+      </div>
+
+      {/* مؤشر الاختيار */}
+      <span
+        className={cn(
+          'absolute right-2 top-2 h-1.5 w-1.5 rounded-full',
+          'transition-all duration-300',
+          selected
+            ? 'bg-orange-200 shadow-[0_0_9px_rgba(255,207,157,0.9)]'
+            : 'bg-white/15 group-hover:bg-orange-200/70'
+        )}
+      />
+    </motion.button>
+  );
+};
+
+const CategoriesNavBar = () => {
   const router = useRouter();
-  const searchParams = useSearchParams();
+  const { category, setCategory, performSearch } = useSearch();
 
-  // Handle category selection
-  const handleCategoryChange = (selectedCategory) => {
-    const nextCategory =
-      category && selectedCategory && category.id === selectedCategory.id
-        ? null
-        : selectedCategory;
-    const query = searchParams.get('query');
-    const categoryPath = nextCategory
-      ? `/search/categoryId=${nextCategory.id}`
-      : '/search';
+  const selectedCategory = useMemo(
+    () => categories?.find((item) => item.id === category?.id) || null,
+    [category]
+  );
 
-    setCategory(nextCategory);
-    setFilter('details', {});
-    router.replace(
-      `${categoryPath}${query ? `?query=${encodeURIComponent(query)}` : ''}`,
-      { scroll: false },
-    );
-  };
+  const handleCategoryClick = useCallback(
+    (item) => {
+      setCategory(item);
 
-  const selectedCategory = category;
+      try {
+        localStorage.setItem(
+          'category',
+          serializeCategory(item)
+        );
+      } catch {
+        // Storage may be unavailable in private browsing.
+      }
+
+      router.push(
+        `/search?categoryId=${encodeURIComponent(item.id)}`
+      );
+
+      performSearch();
+    },
+    [setCategory, router, performSearch]
+  );
 
   return (
-    <div className="bg-white p-2 rounded-lg mb-6">
-      <div className="flex justify-start items-center gap-2 mb-6 w-full">
-        <div className="p-2 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-lg shadow-md">
-          <SlidersHorizontalIcon className="size-5 text-white" />
-        </div>
-        <h2 className="font-bold text-xl text-gray-800 text-right">اختر فئة</h2>
-      </div>
+    <section
+      dir="rtl"
+      aria-label="تصفح الأقسام"
+      className={cn(
+        'sticky top-0 z-40 w-full overflow-hidden',
+        'border-b border-white/10',
+        'bg-gradient-to-br from-[#e97842] via-[#a94e31] to-[#54291f]',
+        'text-white shadow-xl shadow-black/10'
+      )}
+    >
+      {/* توهجات زخرفية في الخلفية */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -right-24 -top-28 h-72 w-72 rounded-full bg-orange-300/15 blur-3xl"
+      />
 
-      <div className="space-y-3">
-        {/* All Categories Option */}
-        <div
-          className={`flex justify-center items-center gap-2 p-2 rounded-lg transition-all duration-300 cursor-pointer border-2 ${
-            !category
-              ? 'bg-green-50 border-green-500 shadow-md'
-              : 'bg-gray-50 border-gray-200 hover:bg-gray-100'
-          }`}
-          onClick={() => handleCategoryChange(null)}
-        >
-          <div
-            className={`flex items-center justify-center w-6 h-6 rounded-full border-2 mr-3 transition-all duration-300 ${
-              !category
-                ? 'bg-green-500 border-green-500 gap-2'
-                : 'bg-white border-gray-400 gap-2'
-            }`}
-          >
-            {!category && <Check size={14} className="text-white" />}
-          </div>
-          <span
-            className={`font-medium transition-colors duration-300 ${
-              !category ? 'text-green-700' : 'text-gray-700'
-            }`}
-          >
-            كل الفئات
-          </span>
-        </div>
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -bottom-36 left-0 h-72 w-72 rounded-full bg-[#351b19]/30 blur-3xl"
+      />
 
-        {/* Categories List */}
-        {selectedCategory ? (
-          // Selected Category View
-          <div className="flex items-center p-4 rounded-lg bg-green-50 border-2 border-green-500 shadow-md transition-all duration-300">
-            <div className="flex items-center justify-center w-6 h-6 rounded-full bg-green-500 border-2 border-green-500 mr-3">
-              <Check size={14} className="text-white" />
+      <div className="relative mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+        {/* رأس الأقسام */}
+        <div className="mb-6 flex items-center justify-between gap-3">
+          <div className="flex min-w-0 items-center gap-3">
+            <div className="h-11 w-1 shrink-0 rounded-full bg-gradient-to-b from-orange-100 to-orange-300/30" />
+
+            <div className="min-w-0">
+              <h2 className="text-lg font-black tracking-tight text-white sm:text-xl">
+                تصفح الأقسام
+              </h2>
+
+              <p className="mt-1 text-xs text-orange-50/75 sm:text-sm">
+                اكتشف ما تبحث عنه بسهولة
+              </p>
             </div>
-            <label className="flex items-center font-medium text-green-700">
-              <span className="mx-2 text-green-600">
-                {selectedCategory?.icon}
-              </span>
-              {selectedCategory?.name}
-            </label>
           </div>
-        ) : (
-          // All Categories View
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            {categories?.map((cat) => (
-              <div
-                key={cat?.id}
-                className={`flex items-center justify-center p-2 rounded-lg border-2 transition-all duration-300 cursor-pointer group hover:shadow-md ${
-                  category && category.id === cat?.id
-                    ? 'bg-green-50 border-green-500 shadow-md scale-[1.02]'
-                    : 'bg-gray-50 border-gray-200 hover:border-green-300'
-                }`}
-                onClick={() => handleCategoryChange(cat)}
-              >
-                {/* <div
-                  className={`flex items-center justify-center w-6 h-6 rounded-full border-2 mr-3 transition-all duration-300 ${
-                    category && category.id === cat?.id
-                      ? 'bg-green-500 border-green-500'
-                      : 'bg-white border-gray-400 group-hover:border-green-400'
-                  }`}
-                >
-                  {category && category.id === cat?.id && (
-                    <Check size={14} className="text-white" />
-                  )}
-                </div> */}
-                <div className="flex items-center flex-1">
-                  <span
-                    className={`mx-2 transition-colors duration-300 ${
-                      category && category.id === cat?.id
-                        ? 'text-green-600'
-                        : 'text-gray-500 group-hover:text-green-600'
-                    }`}
-                  >
-                    {cat?.icon}
-                  </span>
-                  <span
-                    className={`font-medium transition-colors duration-300 ${
-                      category && category.id === cat?.id
-                        ? 'text-green-700'
-                        : 'text-gray-700 group-hover:text-green-700'
-                    }`}
-                  >
-                    {cat?.name}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
 
-        {/* Back to All Categories Button */}
-        {selectedCategory && (
-          <button
-            onClick={() => handleCategoryChange(null)}
-            className="flex items-center justify-center w-full p-3 mt-4 text-green-600 hover:text-green-700 font-medium bg-green-50 hover:bg-green-100 rounded-lg transition-all duration-300 border border-green-200 hover:border-green-300"
-          >
-            <ChevronLeft size={18} className="ml-1" />
-            عرض جميع الفئات
-          </button>
-        )}
-      </div>
+          <div className="hidden shrink-0 items-center gap-2 rounded-full border border-white/15 bg-black/[0.10] px-3 py-2 sm:flex">
+            <span className="h-1.5 w-1.5 rounded-full bg-orange-200 shadow-[0_0_8px_rgba(255,220,180,0.7)]" />
 
-      {/* Selected Category Indicator */}
-      {selectedCategory && (
-        <div className="mt-4 p-3 bg-green-50 rounded-lg border border-green-200">
-          <div className="flex items-center text-green-700 text-sm">
-            <div className="w-2 h-2 bg-green-500 rounded-full ml-2"></div>
-            <span>
-              الفئة المحددة: <strong>{selectedCategory?.name}</strong>
+            <span className="text-xs font-medium text-orange-50/90">
+              {categories?.length || 0} قسم
             </span>
           </div>
         </div>
-      )}
-    </div>
+
+        {/* شبكة الأقسام: حافظنا على توزيع الأعمدة الأصلي */}
+        <div className="grid grid-cols-1 gap-2.5 min-[380px]:grid-cols-2 sm:grid-cols-2 md:grid-cols-3">
+          {categories?.map((item, index) => (
+            <motion.div
+              key={item.id}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.3,
+                delay: Math.min(index * 0.035, 0.3),
+              }}
+            >
+              <CategoryCard
+                item={item}
+                selected={selectedCategory?.id === item.id}
+                onClick={() => handleCategoryClick(item)}
+              />
+            </motion.div>
+          ))}
+        </div>
+
+        {/* تذييل بسيط */}
+        <div className="mt-5 flex items-center justify-between border-t border-white/10 pt-3">
+          <span className="text-[10px] font-medium tracking-[0.18em] text-orange-50/50">
+            DISCOVER YOUR CATEGORY
+          </span>
+
+          <span className="text-xs text-orange-50/60">
+            {selectedCategory?.name || 'اختر قسماً للبدء'}
+          </span>
+        </div>
+      </div>
+    </section>
   );
-}
+};
+
+export default CategoriesNavBar;

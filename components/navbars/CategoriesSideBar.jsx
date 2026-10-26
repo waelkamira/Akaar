@@ -2,13 +2,14 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import categories from '../Categories/categories';
+import { serializeCategory } from '../Categories/serializeCategory';
 import { useRouter } from 'next/navigation';
 
 export default function CategoriesSideBar() {
   const router = useRouter();
 
   const handleCategoryClick = (category) => {
-    localStorage.setItem('category', JSON.stringify(category));
+    localStorage.setItem('category', serializeCategory(category));
     router.push(`/categories/${category.id}?category=${category.name}`);
   };
 

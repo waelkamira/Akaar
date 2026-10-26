@@ -1384,7 +1384,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen mt-60 bg-gradient-to-br from-neutral-950 via-orange-950/10 to-neutral-950 relative overflow-hidden mt-60" dir="rtl">
+    <div className="min-h-screen mt-60 bg-gradient-to-br from-neutral-950 via-orange-950/10 to-neutral-950 relative overflow-hidden" dir="rtl">
       {/* Animated Background Elements */}
       <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-orange-600/20 rounded-full blur-[120px] animate-pulse" />
