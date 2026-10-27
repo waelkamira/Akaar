@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import ImageKit from 'imagekit';
 import { getAuthenticatedUser } from '@/lib/auth/require-auth';
-import { safeImageFileName, validateImageFile } from '@/lib/uploads/validate-image.mjs';
+import { safeImageFileName, validateImageContent, validateImageFile } from '@/lib/uploads/validate-image.mjs';
 
 export const runtime = 'nodejs';
 
@@ -19,6 +19,8 @@ export async function POST(request) {
     const file = form.get('file') || form.get('image');
     const validationError = validateImageFile(file);
     if (validationError) return NextResponse.json({ success: false, error: validationError }, { status: 400 });
+    const contentError = await validateImageContent(file);
+    if (contentError) return NextResponse.json({ success: false, error: contentError }, { status: 400 });
 
     const imagekit = new ImageKit({
       publicKey: IMAGEKIT_PUBLIC_KEY,

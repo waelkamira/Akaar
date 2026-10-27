@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getAuthenticatedUser } from '@/lib/auth/require-auth';
-import { safeImageFileName, validateImageFile } from '@/lib/uploads/validate-image.mjs';
+import { safeImageFileName, validateImageContent, validateImageFile } from '@/lib/uploads/validate-image.mjs';
 
 export const runtime = 'nodejs';
 
@@ -18,6 +18,8 @@ export async function POST(request) {
     const file = form.get('image') || form.get('file');
     const validationError = validateImageFile(file);
     if (validationError) return NextResponse.json({ success: false, error: validationError }, { status: 400 });
+    const contentError = await validateImageContent(file);
+    if (contentError) return NextResponse.json({ success: false, error: contentError }, { status: 400 });
 
     const base64Data = Buffer.from(await file.arrayBuffer()).toString('base64');
     const uploadForm = new FormData();
