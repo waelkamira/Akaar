@@ -13,7 +13,7 @@ const cache = new LRUCache({
 });
 
 // دالة مساعدة لإنشاء مفتاح ذاكرة التخزين المؤقت
-function generateFavoriteCacheKey(userId, page, limit) {
+function generateFavoriteCacheKey(userId, currentPage, limit) {
   const hash = crypto
     .createHash('md5')
     .update(`${userId}-${page}-${limit}`)
@@ -30,10 +30,11 @@ async function clearUserFavoritesCache() {
 export async function GET(req) {
   const { searchParams } = new URL(req.url);
   const userId = searchParams.get('userId');
-  const page = parseInt(searchParams.get('page')) || 0;
-  const limit = parseInt(searchParams.get('limit')) || 8;
-  const currentPage = Math.max(0, page);
-  const skip = Math.max(0, currentPage * limit);
+  const requestedPage = Number.parseInt(searchParams.get('page') || '1', 10);
+  const requestedLimit = Number.parseInt(searchParams.get('limit') || '8', 10);
+  const currentPage = Number.isInteger(requestedPage) && requestedPage > 0 ? requestedPage : 1;
+  const limit = Number.isInteger(requestedLimit) && requestedLimit > 0 ? Math.min(requestedLimit, 50) : 8;
+  const skip = (currentPage - 1) * limit;
 
   try {
     const authenticatedUser = await getAuthenticatedUser();
