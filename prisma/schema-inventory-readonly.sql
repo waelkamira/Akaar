@@ -81,8 +81,8 @@ WHERE table_schema = 'public'
 ORDER BY table_name, ordinal_position;
 
 \echo '4) Existing Prisma migration ledger (if present)'
-SELECT table_name,
-       CASE WHEN table_name IS NULL THEN 'MISSING' ELSE 'present' END AS status
+SELECT expected.table_name,
+       CASE WHEN t.table_name IS NULL THEN 'MISSING' ELSE 'present' END AS status
 FROM (VALUES ('_prisma_migrations')) expected(table_name)
 LEFT JOIN information_schema.tables t
   ON t.table_schema = 'public'
