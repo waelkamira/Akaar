@@ -157,8 +157,8 @@
 //         'focus-visible:ring-orange-500 focus-visible:ring-offset-2',
 //         'focus-visible:ring-offset-neutral-950',
 //         selected
-//           ? 'border-orange-500/50 bg-orange-500/[0.10]'
-//           : 'border-white/[0.07] bg-white/[0.025] hover:border-orange-500/30 hover:bg-white/[0.055]'
+//           ? 'border-[#C99B70]/50 bg-[#C99B70]/10'
+//           : 'border-white/[0.07] bg-white/[0.025] hover:border-[#C99B70]/30 hover:bg-white/[0.055]'
 //       )}
 //     >
 //       {/* Active glow */}
@@ -182,8 +182,8 @@
 //           'relative flex h-12 w-12 shrink-0 items-center justify-center',
 //           'rounded-xl border transition-all duration-300',
 //           selected
-//             ? 'border-orange-400/30 bg-gradient-to-br from-orange-500 to-amber-500 text-white shadow-lg shadow-orange-500/20'
-//             : 'border-white/[0.06] bg-neutral-900 text-neutral-400 group-hover:border-orange-500/30 group-hover:text-orange-400'
+//             ? 'border-orange-400/30 bg-gradient-to-br from-[#C99B70] to-[#A8754D] text-white shadow-lg shadow-orange-500/20'
+//             : 'border-white/[0.06] bg-neutral-900 text-neutral-400 group-hover:border-[#C99B70]/30 group-hover:text-[#D9B18C]'
 //         )}
 //       >
 //         <span className="text-xl">
@@ -211,8 +211,8 @@
 //         className={cn(
 //           'h-2 w-2 shrink-0 rounded-full transition-all duration-300',
 //           selected
-//             ? 'bg-orange-400 shadow-[0_0_10px_rgba(251,146,60,0.65)]'
-//             : 'bg-neutral-800 group-hover:bg-orange-500/50'
+//             ? 'bg-[#D9B18C] shadow-[0_0_10px_rgba(251,146,60,0.65)]'
+//             : 'bg-neutral-800 group-hover:bg-[#C99B70]/50'
 //         )}
 //       />
 //     </motion.button>
@@ -258,7 +258,7 @@
 //         {/* Header */}
 //         <div className="mb-5 flex items-center justify-between gap-3">
 //           <div className="flex items-center gap-3">
-//             <div className="h-8 w-1 rounded-full bg-gradient-to-b from-orange-400 to-amber-600" />
+//             <div className="h-8 w-1 rounded-full bg-gradient-to-b from-[#C99B70] to-[#A8754D]" />
 
 //             <div>
 //               <h2 className="text-base font-extrabold tracking-tight text-white sm:text-lg">
@@ -272,7 +272,7 @@
 //           </div>
 
 //           <div className="hidden items-center gap-2 rounded-full border border-white/[0.07] bg-white/[0.03] px-3 py-2 sm:flex">
-//             <span className="h-1.5 w-1.5 rounded-full bg-orange-400" />
+//             <span className="h-1.5 w-1.5 rounded-full bg-[#D9B18C]" />
 //             <span className="text-xs text-neutral-400">
 //               {categories?.length || 0} قسم
 //             </span>
@@ -346,7 +346,7 @@ const CategoryCard = ({ item, selected, onClick }) => {
         {selected && (
           <motion.div
             layoutId="category-active-glow"
-            className="absolute inset-0 -z-10 bg-gradient-to-br from-orange-300/25 via-orange-200/10 to-transparent"
+            className="absolute inset-0 -z-10 bg-gradient-to-br from-[#C99B70]/25 via-[#C99B70]/10 to-transparent"
             transition={{
               type: 'spring',
               stiffness: 300,
@@ -374,7 +374,7 @@ const CategoryCard = ({ item, selected, onClick }) => {
           'rounded-xl border transition-all duration-300',
           selected
             ? 'border-white/40 bg-gradient-to-br from-[#ffb06e] to-[#e85c25] text-white shadow-lg shadow-orange-950/20'
-            : 'border-white/15 bg-[#572b21]/40 text-orange-100 group-hover:border-orange-200/50 group-hover:bg-[#a8492b]/50 group-hover:text-white'
+            : 'border-white/15 bg-[#572b21]/40 text-[#E5C5A5] group-hover:border-orange-200/50 group-hover:bg-[#a8492b]/50 group-hover:text-white'
         )}
       >
         <span className="text-xl">
@@ -390,7 +390,7 @@ const CategoryCard = ({ item, selected, onClick }) => {
             'transition-colors duration-300',
             selected
               ? 'text-white'
-              : 'text-orange-50/85 group-hover:text-white'
+              : 'text-[#E5C5A5]/85 group-hover:text-white'
           )}
         >
           {item?.name}
@@ -400,8 +400,8 @@ const CategoryCard = ({ item, selected, onClick }) => {
           className={cn(
             'h-px transition-all duration-300',
             selected
-              ? 'w-10 bg-orange-200'
-              : 'w-0 bg-orange-200 group-hover:w-8'
+              ? 'w-10 bg-[#D9B18C]'
+              : 'w-0 bg-[#D9B18C] group-hover:w-8'
           )}
         />
       </div>
@@ -412,8 +412,8 @@ const CategoryCard = ({ item, selected, onClick }) => {
           'absolute right-2 top-2 h-1.5 w-1.5 rounded-full',
           'transition-all duration-300',
           selected
-            ? 'bg-orange-200 shadow-[0_0_9px_rgba(255,207,157,0.9)]'
-            : 'bg-white/15 group-hover:bg-orange-200/70'
+            ? 'bg-[#D9B18C] shadow-[0_0_9px_rgba(255,207,157,0.9)]'
+            : 'bg-white/15 group-hover:bg-[#D9B18C]/70'
         )}
       />
     </motion.button>
@@ -484,16 +484,16 @@ const CategoriesNavBar = () => {
                 تصفح الأقسام
               </h2>
 
-              <p className="mt-1 text-xs text-orange-50/75 sm:text-sm">
+              <p className="mt-1 text-xs text-[#E5C5A5]/75 sm:text-sm">
                 اكتشف ما تبحث عنه بسهولة
               </p>
             </div>
           </div>
 
           <div className="hidden shrink-0 items-center gap-2 rounded-full border border-white/15 bg-black/[0.10] px-3 py-2 sm:flex">
-            <span className="h-1.5 w-1.5 rounded-full bg-orange-200 shadow-[0_0_8px_rgba(255,220,180,0.7)]" />
+            <span className="h-1.5 w-1.5 rounded-full bg-[#D9B18C] shadow-[0_0_8px_rgba(255,220,180,0.7)]" />
 
-            <span className="text-xs font-medium text-orange-50/90">
+            <span className="text-xs font-medium text-[#E5C5A5]/90">
               {categories?.length || 0} قسم
             </span>
           </div>
@@ -522,7 +522,7 @@ const CategoriesNavBar = () => {
 
         {/* تذييل بسيط */}
         <div className="mt-5 flex items-center justify-between border-t border-white/10 pt-3">
-          <span className="text-[10px] font-medium tracking-[0.18em] text-orange-50/50">
+          <span className="text-[10px] font-medium tracking-[0.18em] text-[#E5C5A5]/50">
             DISCOVER YOUR CATEGORY
           </span>
 
