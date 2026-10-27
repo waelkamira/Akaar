@@ -4,6 +4,10 @@
 
 body {
   @apply rubik select-none;
+  background-color: #141311;
+  color: #F5F0E9;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 html {
@@ -34,7 +38,7 @@ html {
 
 /* ✅ تغيير لون شريط التمرير */
 ::-webkit-scrollbar-thumb {
-  background: #fb923c; /* لون شريط التمرير */
+  background: #C99B70; /* Akaar copper accent */
   border-radius: 20px; /* زوايا دائرية */
 }
 
@@ -56,8 +60,14 @@ pre {
 }
 
 :root {
-  --btn-background: #7e7f81; /* لون افتراضي */
-  --btn-hover-background: #ff7c34; /* لون افتراضي عند hover */
+  --akaar-bg: #141311;
+  --akaar-surface: #211F1B;
+  --akaar-surface-raised: #29251F;
+  --akaar-copper: #C99B70;
+  --akaar-copper-light: #D9B18C;
+  --akaar-ivory: #F5F0E9;
+  --btn-background: #C99B70;
+  --btn-hover-background: #D9B18C;
 }
 
 .btn {
