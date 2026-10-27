@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
 import { getAuthenticatedUser } from '@/lib/auth/require-auth';
 import { favoriteCacheKey } from '@/lib/api/cache-keys.mjs';
+import { publicProductWhere } from '@/lib/api/public-product-where.mjs';
 import { LRUCache } from 'lru-cache';
 
 // إعدادات الذاكرة المؤقتة
@@ -114,7 +115,7 @@ export async function POST(req) {
     // التحقق من وجود المستخدم والمنتج
     const [userExists, productExists] = await Promise.all([
       prisma.user.findUnique({ where: { id: userId } }),
-      prisma.product.findFirst({ where: { id, isDeleted: false, isActive: true } }),
+      prisma.product.findFirst({ where: publicProductWhere({ id }) }),
     ]);
 
     if (!userExists || !productExists) {
