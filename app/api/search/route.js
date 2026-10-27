@@ -272,10 +272,10 @@ export async function POST(request) {
     return NextResponse.json({
       products: normalizedProducts,
       totalCount,
-      hasMore: page * limit < totalCount,
+      hasMore: pageOffset + normalizedProducts.length < totalCount,
       page,
       limit,
-      remainingCount: Math.max(0, totalCount - page * limit),
+      remainingCount: Math.max(0, totalCount - (pageOffset + normalizedProducts.length)),
     });
   } catch (error) {
     console.error('Search request failed:', error);
