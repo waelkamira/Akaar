@@ -1,17 +1,9 @@
 'use client';
+
 import FirstNavBar from './FirstNavBar';
-import Search from '../Search/Search';
-import Hero from '../Home/Hero';
 
+// The site header is global. The homepage owns its own hero so inner routes
+// do not inherit a large promotional carousel or duplicate navigation.
 export default function MainNavbar() {
-  return (
-    <div className="relative flex flex-col justify-center items-center w-full inset-0 lg:mb-5">
-      <FirstNavBar />
-
-      <div className="w-full sm:h-64">
-        <Hero />
-      </div>
-      {/* <Search /> */}
-    </div>
-  );
+  return <FirstNavBar />;
 }

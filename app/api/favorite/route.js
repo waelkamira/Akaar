@@ -1,7 +1,10 @@
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '@/lib/db/prisma';
+import { getAuthenticatedUser } from '@/lib/auth/require-auth';
+import { favoriteCacheKey } from '@/lib/api/cache-keys.mjs';
+import { parsePositiveInteger } from '@/lib/api/validation.mjs';
+import { publicProductWhere } from '@/lib/api/public-product-where.mjs';
 import { LRUCache } from 'lru-cache';
-import crypto from 'crypto';
 
 // إعدادات الذاكرة المؤقتة
 const cache = new LRUCache({
@@ -11,36 +14,26 @@ const cache = new LRUCache({
   ttl: 1000 * 60 * 60, // 60 دقيقة
 });
 
-const prisma = new PrismaClient();
-
 // دالة مساعدة لإنشاء مفتاح ذاكرة التخزين المؤقت
-function generateFavoriteCacheKey(userId, page, limit) {
-  const hash = crypto
-    .createHash('md5')
-    .update(`${userId}-${page}-${limit}`)
-    .digest('hex');
-  return `fav_${hash}`;
-}
-
-// تنظيف الذاكرة المؤقتة عند التعديلات
-async function clearUserFavoritesCache(userId) {
-  const keys = cache.keys();
-  keys.forEach((key) => {
-    if (key.startsWith(`fav_${userId}`)) {
-      cache.delete(key);
-    }
-  });
+async function clearUserFavoritesCache() {
+  // Cache keys contain a hash, not the raw user ID; clear the cache to avoid stale favorites.
+  cache.clear();
 }
 
 export async function GET(req) {
   const { searchParams } = new URL(req.url);
   const userId = searchParams.get('userId');
-  const page = parseInt(searchParams.get('page')) || 0;
-  const limit = parseInt(searchParams.get('limit')) || 8;
-  const currentPage = Math.max(0, page);
-  const skip = Math.max(0, currentPage * limit);
+  const requestedPage = parsePositiveInteger(searchParams.get('page'), 1);
+  const limit = parsePositiveInteger(searchParams.get('limit'), 8, 50);
+  const requestedSkip = (requestedPage - 1) * limit;
+  const currentPage = Number.isSafeInteger(requestedSkip) ? requestedPage : 1;
+  const skip = (currentPage - 1) * limit;
 
   try {
+    const authenticatedUser = await getAuthenticatedUser();
+    if (!authenticatedUser || authenticatedUser.id !== userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
     if (!userId) {
       return NextResponse.json(
         { error: 'User ID is required' },
@@ -49,12 +42,11 @@ export async function GET(req) {
     }
 
     // إنشاء مفتاح الذاكرة المؤقتة
-    const cacheKey = generateFavoriteCacheKey(userId, page, limit);
+    const cacheKey = favoriteCacheKey(userId, currentPage, limit);
 
     // التحقق من الذاكرة المؤقتة
     const cachedData = cache.get(cacheKey);
     if (cachedData) {
-      console.log('📦 [Cache Hit] Favorites', cacheKey);
       return NextResponse.json(cachedData);
     }
 
@@ -69,9 +61,9 @@ export async function GET(req) {
 
     // جلب البيانات من قاعدة البيانات
     const [totalCount, favorites] = await Promise.all([
-      prisma.favorite.count({ where: { userId } }),
+      prisma.favorite.count({ where: { userId, isDeleted: false, product: { isDeleted: false, isActive: true, category: { isActive: true } } } }),
       prisma.favorite.findMany({
-        where: { userId },
+        where: { userId, isDeleted: false, product: { isDeleted: false, isActive: true, category: { isActive: true } } },
         skip,
         take: limit,
         orderBy: { createdAt: 'desc' },
@@ -90,7 +82,6 @@ export async function GET(req) {
 
     // تخزين في الذاكرة المؤقتة
     cache.set(cacheKey, result);
-    console.log('💾 [Cache Set] Favorites', cacheKey);
 
     return NextResponse.json(result, { status: 200 });
   } catch (error) {
@@ -99,15 +90,20 @@ export async function GET(req) {
       { error: 'حدث خطأ أثناء جلب المفضلة' },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }
 
 export async function POST(req) {
-  const { id, userId } = await req.json();
-
   try {
+    let body;
+    try { body = await req.json(); } catch {
+      return NextResponse.json({ error: 'Invalid JSON body.' }, { status: 400 });
+    }
+    const { id, userId } = body || {};
+    const authenticatedUser = await getAuthenticatedUser();
+    if (!authenticatedUser || authenticatedUser.id !== userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
     if (!id || !userId) {
       return NextResponse.json(
         { error: 'Post ID and userId are required' },
@@ -118,7 +114,7 @@ export async function POST(req) {
     // التحقق من وجود المستخدم والمنتج
     const [userExists, productExists] = await Promise.all([
       prisma.user.findUnique({ where: { id: userId } }),
-      prisma.product.findUnique({ where: { id } }),
+      prisma.product.findFirst({ where: publicProductWhere({ id }) }),
     ]);
 
     if (!userExists || !productExists) {
@@ -153,7 +149,7 @@ export async function POST(req) {
     }
 
     // تنظيف الذاكرة المؤقتة للمستخدم
-    await clearUserFavoritesCache(userId);
+    await clearUserFavoritesCache();
 
     return NextResponse.json(result);
   } catch (error) {
@@ -162,15 +158,23 @@ export async function POST(req) {
       { error: 'حدث خطأ أثناء العملية' },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }
 
 export async function DELETE(req) {
-  const { id, userId } = await req.json();
-
   try {
+    let body;
+    try { body = await req.json(); } catch {
+      return NextResponse.json({ error: 'Invalid JSON body.' }, { status: 400 });
+    }
+    const { id, userId } = body || {};
+    const authenticatedUser = await getAuthenticatedUser();
+    if (!authenticatedUser || authenticatedUser.id !== userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+    if (!id || !userId) {
+      return NextResponse.json({ error: 'Favorite ID and user ID are required.' }, { status: 400 });
+    }
     const existingFavorite = await prisma.favorite.findFirst({
       where: { id, userId },
       select: { id: true },
@@ -195,7 +199,5 @@ export async function DELETE(req) {
       { error: 'Internal Server Error' },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }

@@ -1,54 +1,43 @@
-import axios from 'axios';
+import { NextResponse } from 'next/server';
+import { getAuthenticatedUser } from '@/lib/auth/require-auth';
+import { safeImageFileName, validateImageFile } from '@/lib/uploads/validate-image.mjs';
 
-export const runtime = 'nodejs'; // تصحيح Next.js 14
-export const maxDuration = 60; // تحديد مدة التنفيذ القصوى
-export const dynamic = 'force-dynamic'; // جعل الـ API ديناميكيًا دائمًا
+export const runtime = 'nodejs';
+export const maxDuration = 60;
+export const dynamic = 'force-dynamic';
 
-export async function POST(req) {
+export async function POST(request) {
+  const user = await getAuthenticatedUser();
+  if (!user) return NextResponse.json({ success: false, error: 'يجب تسجيل الدخول لرفع الصور.' }, { status: 401 });
+
+  const apiKey = process.env.PINATA_API_KEY;
+  const secretKey = process.env.PINATA_SECRET_API_KEY;
+  if (!apiKey || !secretKey) {
+    return NextResponse.json({ success: false, error: 'خدمة رفع الصور غير مهيأة على الخادم.' }, { status: 503 });
+  }
+
   try {
-    const chunks = [];
-    for await (const chunk of req.body) {
-      chunks.push(chunk);
-    }
+    const form = await request.formData();
+    const file = form.get('file') || form.get('image');
+    const validationError = validateImageFile(file);
+    if (validationError) return NextResponse.json({ success: false, error: validationError }, { status: 400 });
 
-    const buffer = Buffer.concat(chunks);
-
-    // رفع الصورة إلى IPFS باستخدام Pinata
-    const formData = new FormData();
-    formData.append('file', buffer, {
-      filename: `image-${Date.now()}.jpg`,
+    const uploadForm = new FormData();
+    uploadForm.append('file', file, safeImageFileName(file.name));
+    const response = await fetch('https://api.pinata.cloud/pinning/pinFileToIPFS', {
+      method: 'POST',
+      headers: { pinata_api_key: apiKey, pinata_secret_api_key: secretKey },
+      body: uploadForm,
+      cache: 'no-store',
     });
-
-    const pinataResponse = await axios.post(
-      'https://api.pinata.cloud/pinning/pinFileToIPFS',
-      formData,
-      {
-        headers: {
-          'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
-          pinata_api_key: process.env.PINATA_API_KEY,
-          pinata_secret_api_key: process.env.PINATA_SECRET_API_KEY,
-        },
-      }
-    );
-
-    const ipfsHash = pinataResponse.data.IpfsHash;
-    const ipfsUrl = `https://ipfs.io/ipfs/${ipfsHash}`;
-
-    return new Response(
-      JSON.stringify({ success: true, data: { url: ipfsUrl } }),
-      {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' },
-      }
-    );
+    const payload = await response.json().catch(() => null);
+    if (!response.ok || !payload?.IpfsHash) {
+      console.error('Pinata upload failed with status:', response.status);
+      return NextResponse.json({ success: false, error: 'تعذر رفع الصورة إلى خدمة التخزين.' }, { status: 502 });
+    }
+    return NextResponse.json({ success: true, data: { url: `https://ipfs.io/ipfs/${payload.IpfsHash}` } });
   } catch (error) {
-    console.error('فشل رفع الصورة إلى IPFS:', error);
-    return new Response(
-      JSON.stringify({ success: false, message: 'فشل رفع الصورة إلى IPFS' }),
-      {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' },
-      }
-    );
+    console.error('IPFS upload failed:', error);
+    return NextResponse.json({ success: false, error: 'تعذر رفع الصورة حاليًا.' }, { status: 500 });
   }
 }

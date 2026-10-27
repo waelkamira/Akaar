@@ -20,49 +20,38 @@ export default function Users() {
   const [page, setPage] = useState(1);
   const [users, setUsers] = useState([]);
   const [findUser, setFindUser] = useState('');
-  const [user, setUser] = useState('');
   const session = useSession();
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        const storedUser = localStorage.getItem('CurrentUser');
-        const user = storedUser ? JSON.parse(storedUser) : null;
-        setUser(user);
-      } catch (error) {
-        console.error('Error parsing CurrentUser from localStorage:', error);
-      }
+    if (session.status === 'authenticated' && session.data?.user?.role === 'ADMIN') {
+      fetchAllUsers();
     }
-  }, []);
+  }, [session.status, session.data?.user?.role, page]);
 
-  useEffect(() => {
-    fetchAllUsers();
-  }, []);
-
-  if (!session?.status === 'authenticated' || !user?.isAdmin) {
+  if (session.status !== 'authenticated' || session.data?.user?.role !== 'ADMIN') {
     return null;
   }
 
   async function fetchAllUsers() {
     const response = await fetch(
-      `/api/allUsers?page=${page}&searchQuery=${findUser}&limit=5&isAdmin=true`
+      `/api/allUsers?page=${page}&searchQuery=${encodeURIComponent(findUser)}&limit=5`
     );
     const json = await response.json();
     if (response.ok) {
-      setUsers(json);
+      setUsers(Array.isArray(json) ? json : json.users || []);
     }
   }
 
   async function handleDeleteUser(user) {
-    if (user.isAdmin === true) {
+    if (user.role === 'ADMIN') {
       return toast.custom((t) => (
         <CustomToast t={t} message={'لايمكن حذف الأدمن ✖'} />
       ));
     }
-    const response = await fetch('/api/user', {
+    const response = await fetch('/api/allUsers', {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(user),
+      body: JSON.stringify({ id: user.id }),
     });
 
     if (response.ok) {
@@ -131,13 +120,13 @@ export default function Users() {
               >
                 <div>
                   <h1 className="text-sm sm:text-md lg:text-lg">
-                    اسم المستخدم: {user.name}
+                    اسم المستخدم: {user.userName || '—'}
                   </h1>
                   <h1 className="text-sm sm:text-md lg:text-lg">
                     الايميل: {user.email}
                   </h1>
                 </div>
-                {user.isAdmin ? (
+                {user.role === 'ADMIN' ? (
                   'أدمن'
                 ) : (
                   <div

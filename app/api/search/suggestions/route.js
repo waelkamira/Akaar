@@ -23,6 +23,8 @@ export async function GET(request) {
     const products = await prisma.product.findMany({
       where: {
         isDeleted: false,
+        isActive: true,
+        category: { isActive: true },
         OR: [
           { title: { contains: query, mode: 'insensitive' } },
           { description: { contains: query, mode: 'insensitive' } },

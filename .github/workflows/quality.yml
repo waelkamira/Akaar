@@ -1,0 +1,78 @@
+name: Quality checks
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: quality-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: akaar
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d akaar"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/akaar?schema=public
+      SHADOW_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/akaar_shadow?schema=public
+      NEXTAUTH_URL: http://localhost:3000
+      NEXTAUTH_SECRET: ci-only-not-a-production-secret
+      NODE_ENV: test
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate Prisma schema
+        run: npx prisma validate
+
+      - name: Generate Prisma client
+        run: npx prisma generate
+
+      - name: Create Prisma shadow database
+        run: PGPASSWORD=postgres psql -h localhost -U postgres -d postgres -c "CREATE DATABASE akaar_shadow;"
+
+      - name: Apply committed migrations to clean PostgreSQL
+        run: npx prisma migrate deploy
+
+      - name: Generate schema-to-migration drift SQL
+        run: npx prisma migrate diff --from-migrations prisma/migrations --to-schema-datamodel prisma/schema.prisma --script --shadow-database-url "$SHADOW_DATABASE_URL" > prisma-schema-drift.sql
+
+      - name: Upload schema drift report
+        uses: actions/upload-artifact@v4
+        with:
+          name: prisma-schema-drift
+          path: prisma-schema-drift.sql
+          if-no-files-found: error
+
+      - name: Run unit tests
+        run: npm test
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Build production app
+        run: npm run build

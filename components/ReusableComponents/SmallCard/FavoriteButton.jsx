@@ -3,34 +3,30 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { TbHeartFilled } from 'react-icons/tb';
 import { FaRegHeart } from 'react-icons/fa6';
 import toast from 'react-hot-toast';
+import { useSession } from 'next-auth/react';
 
 function FavoriteButton({ item }) {
   const [isFavorited, setIsFavorited] = useState(false);
-  const [userId, setUserId] = useState(null);
+  const session = useSession();
+  const userId = session?.data?.user?.id;
+  const sessionStatus = session.status;
   const [favoriteIds, setFavoriteIds] = useState([]);
   const isMounted = useRef(false);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const userData = localStorage.getItem('CurrentUser');
-      const favoriteIds = localStorage.getItem('favoriteIds');
-
-      if (userData) {
-        try {
-          const user = JSON.parse(userData);
-          setUserId(user?.id);
-          setFavoriteIds(favoriteIds);
-        } catch (error) {
-          console.error('Failed to parse user data:', error);
-        }
-      }
+    if (typeof window === 'undefined') return;
+    try {
+      const storedFavoriteIds = localStorage.getItem('favoriteIds');
+      const parsedFavoriteIds = storedFavoriteIds ? JSON.parse(storedFavoriteIds) : [];
+      setFavoriteIds(Array.isArray(parsedFavoriteIds) ? parsedFavoriteIds : []);
+    } catch {
+      localStorage.removeItem('favoriteIds');
+      setFavoriteIds([]);
     }
   }, []);
 
   const fetchAndStoreUserFavoriteIds = useCallback(
     async (userId) => {
-      // console.log('fetchAndStoreUserFavoriteIds من داخل ');
-
       if (!userId) return;
 
       try {
@@ -49,18 +45,24 @@ function FavoriteButton({ item }) {
         toast.error('فشل في جلب بيانات المفضلة');
       }
     },
-    [isFavorited]
+    []
   );
 
-  const checkFavoriteStatus = useCallback(() => {
-    // console.log('checkFavoriteStatus تم الاستدعاء ');
+  useEffect(() => {
+    if (sessionStatus === 'loading') return;
+    if (!userId) {
+      setFavoriteIds([]);
+      setIsFavorited(false);
+      if (typeof window !== 'undefined') localStorage.removeItem('favoriteIds');
+      return;
+    }
+    fetchAndStoreUserFavoriteIds(userId);
+  }, [userId, sessionStatus, fetchAndStoreUserFavoriteIds]);
 
+  const checkFavoriteStatus = useCallback(() => {
     if (item?.id) {
       const favorited = favoriteIds.includes(item?.id);
-      // console.log('favoriteIds', favoriteIds);
       if (favorited) {
-        // console.log('favorited', favorited);
-        // console.log('item?.id', item?.id);
         setIsFavorited(true);
       } else {
         setIsFavorited(false);
@@ -77,8 +79,11 @@ function FavoriteButton({ item }) {
   }, [checkFavoriteStatus]);
 
   const handleFavorite = useCallback(async () => {
-    if (!item?.id || !userId) return;
-    console.log('item?.id', item?.id);
+    if (!item?.id) return;
+    if (!userId) {
+      toast.error('سجّل الدخول لإضافة المنتج إلى المفضلة');
+      return;
+    }
 
     try {
       const response = await fetch('/api/favorite', {
@@ -105,23 +110,24 @@ function FavoriteButton({ item }) {
   }, [item?.id, userId, fetchAndStoreUserFavoriteIds]);
 
   return (
-    <div
-      className="absolute top-0 left-2 z-10 size-10 p-2"
-      onClick={(e) => {
-        e.stopPropagation();
+    <button
+      type="button"
+      aria-label={isFavorited ? 'إزالة من المفضلة' : 'إضافة إلى المفضلة'}
+      aria-pressed={isFavorited}
+      className="absolute top-0 left-2 z-10 flex size-10 items-center justify-center p-2"
+      onClick={(event) => {
+        event.stopPropagation();
         handleFavorite();
       }}
     >
-      <div
-        className={` backdrop-blur-sm rounded-full size-8 p-2 transition-all duration-300 hover:scale-110 cursor-pointer`}
-      >
+      <span className="flex size-8 items-center justify-center rounded-full p-2 backdrop-blur-sm transition-transform duration-300 hover:scale-110">
         {isFavorited ? (
           <TbHeartFilled className="size-4 text-red-600 transition-colors duration-300" />
         ) : (
-          <FaRegHeart className="size-4 bg-transparent text-clip text-gray-600 hover:text-red-500 transition-colors duration-300" />
+          <FaRegHeart className="size-4 bg-transparent text-clip text-gray-600 transition-colors duration-300 hover:text-red-500" />
         )}
-      </div>
-    </div>
+      </span>
+    </button>
   );
 }
 

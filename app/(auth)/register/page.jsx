@@ -17,7 +17,7 @@ export default function RegisterPage() {
   const schema = z.object({
     name: z.string().trim().min(1, 'اسم المستخدم مطلوب'),
     email: z.string().trim().email('أدخل بريدًا إلكترونيًا صالحًا'),
-    password: z.string().min(5, 'يجب أن تتكون كلمة المرور من 5 أحرف على الأقل'),
+    password: z.string().min(8, 'يجب أن تتكون كلمة المرور من 8 أحرف على الأقل'),
   });
 
   const {

@@ -1,13 +1,14 @@
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
-
+import { prisma } from '@/lib/db/prisma';
+import { getAuthenticatedUser } from '@/lib/auth/require-auth';
 export async function GET(req) {
   const { searchParams } = new URL(req.url);
   const userId = searchParams.get('userId');
-  console.log('userId', userId);
   try {
+    const authenticatedUser = await getAuthenticatedUser();
+    if (!authenticatedUser || authenticatedUser.id !== userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
     if (!userId) {
       return NextResponse.json(
         { error: 'User ID is required' },
@@ -26,7 +27,7 @@ export async function GET(req) {
 
     // جلب معرفات المنتجات فقط من المفضلة
     const favorites = await prisma.favorite.findMany({
-      where: { userId },
+      where: { userId, isDeleted: false, product: { isDeleted: false, isActive: true, category: { isActive: true } } },
       select: {
         product: {
           select: {
@@ -38,7 +39,6 @@ export async function GET(req) {
 
     // استخراج المعرّفات فقط من النتائج
     const productIds = favorites.map((fav) => fav.product.id);
-    console.log('productIds:', productIds);
 
     return NextResponse.json(
       {
@@ -53,7 +53,5 @@ export async function GET(req) {
       { error: 'حدث خطأ أثناء جلب المفضلة' },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }

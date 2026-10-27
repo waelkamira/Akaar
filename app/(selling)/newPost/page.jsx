@@ -901,7 +901,7 @@ export default function NewPost() {
                 </button>
                 
                 <p className="text-center text-xs text-neutral-300 mt-4">
-                  بالضغط على "نشر"، أنت توافق على شروط وأحكام المنصة
+                  بالضغط على &quot;نشر&quot;، أنت توافق على شروط وأحكام المنصة
                 </p>
               </motion.div>
 

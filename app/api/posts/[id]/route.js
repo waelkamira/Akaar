@@ -1,8 +1,9 @@
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '@/lib/db/prisma';
+import { getAuthenticatedUser } from '@/lib/auth/require-auth';
+import { publicProductWhere } from '@/lib/api/public-product-where.mjs';
+import { getPagination } from '@/lib/api/validation.mjs';
 import { LRUCache } from 'lru-cache';
 import crypto from 'crypto';
-
-const prisma = new PrismaClient();
 
 // إعدادات الذاكرة المؤقتة
 const cache = new LRUCache({
@@ -22,44 +23,33 @@ function generatePostsCacheKey(userId, page, limit) {
 }
 
 // تنظيف ذاكرة التخزين المؤقت عند التعديلات
-async function clearUserPostsCache(userId) {
-  const keys = cache.keys();
-  keys.forEach((key) => {
-    if (key.startsWith(`posts_${userId}`)) {
-      cache.delete(key);
-    }
-  });
+async function clearUserPostsCache() {
+  // Keys are hashed, so prefix matching by userId cannot invalidate them reliably.
+  cache.clear();
 }
 
 export async function GET(req, { params }) {
   const { id } = await params;
   const url = new URL(req.url);
-  const page = parseInt(url.searchParams.get('page')) || 1;
-  const limit = parseInt(url.searchParams.get('limit')) || 5;
+  const { page, limit, skip } = getPagination(url.searchParams, {
+    defaultPage: 1,
+    defaultLimit: 5,
+    maxLimit: 50,
+  });
 
-  console.log('id', id);
   try {
-    if (!id) {
+    if (typeof id !== 'string' || !id.trim() || id.length > 128) {
       return new Response(
         JSON.stringify({ message: 'يجب توفير معرف المستخدم' }),
         { status: 400 }
       );
     }
 
-    if (isNaN(page) || isNaN(limit)) {
-      return new Response(
-        JSON.stringify({ error: 'قيم الصفحة أو الحدود غير صالحة' }),
-        { status: 400 }
-      );
-    }
-
-    const skip = (page - 1) * limit;
     const cacheKey = generatePostsCacheKey(id, page, limit);
 
     // التحقق من الذاكرة المؤقتة
     const cachedData = cache.get(cacheKey);
     if (cachedData) {
-      console.log('📦 [Cache Hit] User Posts', cacheKey);
       return new Response(JSON.stringify(cachedData), { status: 200 });
     }
 
@@ -70,15 +60,14 @@ export async function GET(req, { params }) {
 
     // جلب البيانات من قاعدة البيانات
     const [totalCount, products] = await Promise.all([
-      prisma.product.count({ where: { userId: id } }),
+      prisma.product.count({ where: publicProductWhere({ userId: id }) }),
       prisma.product.findMany({
-        where: { userId: id },
+        where: publicProductWhere({ userId: id }),
         skip,
         take: limit,
         orderBy: { createdAt: 'desc' },
       }),
     ]);
-    console.log('products', products);
     if (products.length === 0) {
       return new Response(
         JSON.stringify({ message: 'لم يتم العثور على إعلانات' }),
@@ -96,61 +85,44 @@ export async function GET(req, { params }) {
 
     // تخزين في الذاكرة المؤقتة
     cache.set(cacheKey, result);
-    console.log('💾 [Cache Set] User Posts', cacheKey);
 
     return new Response(JSON.stringify(result), { status: 200 });
   } catch (error) {
     console.error('Error details:', error);
-    return new Response(JSON.stringify({ error: error.message }), {
+    return new Response(JSON.stringify({ error: 'تعذر تحميل الإعلانات حاليًا' }), {
       status: 500,
+      headers: { 'Content-Type': 'application/json' },
     });
-  } finally {
-    await prisma.$disconnect();
   }
 }
 
 export async function DELETE(req, { params }) {
-  const { id } = params;
-  const url = new URL(req.url);
-  const searchParams = url.searchParams;
-
-  if (!id) {
-    return new Response(
-      JSON.stringify({ error: 'يجب توفير معرف الإعلان ومعرف المستخدم' }),
-      { status: 400 }
-    );
+  const { id: productId } = await params;
+  const authenticatedUser = await getAuthenticatedUser();
+  if (!authenticatedUser) {
+    return new Response(JSON.stringify({ error: 'يجب تسجيل الدخول' }), { status: 401 });
+  }
+  if (!productId) {
+    return new Response(JSON.stringify({ error: 'معرف المنتج مطلوب' }), { status: 400 });
   }
 
   try {
-    // تحقق إذا كانت الإعلان موجودة
     const product = await prisma.product.findFirst({
-      where: { userId: id },
+      where: { id: productId, userId: authenticatedUser.id, isDeleted: false },
+      select: { id: true },
     });
-
     if (!product) {
-      return new Response(
-        JSON.stringify({
-          error: 'لم يتم العثور على الإعلان أو لا تملك صلاحية حذف هذه الإعلان',
-        }),
-        { status: 404 }
-      );
+      return new Response(JSON.stringify({ error: 'المنتج غير موجود أو لا تملك صلاحية حذفه' }), { status: 404 });
     }
 
-    // حذف الإعلان
-    await prisma.product.delete({ where: { id } });
-
-    // تنظيف الذاكرة المؤقتة للمستخدم
-    await clearUserPostsCache(id);
-
-    return new Response(JSON.stringify({ message: 'تم الحذف بنجاح ✔' }), {
-      status: 200,
+    await prisma.product.update({
+      where: { id: productId },
+      data: { isDeleted: true, deletedAt: new Date() },
     });
+    await clearUserPostsCache();
+    return new Response(JSON.stringify({ message: 'تم حذف الإعلان بنجاح' }), { status: 200 });
   } catch (error) {
     console.error('Error deleting product:', error);
-    return new Response(JSON.stringify({ error: 'Internal Server Error' }), {
-      status: 500,
-    });
-  } finally {
-    await prisma.$disconnect();
+    return new Response(JSON.stringify({ error: 'Internal Server Error' }), { status: 500 });
   }
 }

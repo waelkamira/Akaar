@@ -1,38 +1,94 @@
 # Akaar
 
-An Arabic RTL marketplace built with Next.js, Prisma, and PostgreSQL. The home
-page includes a local demo catalog so cart, favorites, and checkout interactions
-can be explored without a payment provider.
+Akaar is an Arabic RTL marketplace built with Next.js, Prisma, and PostgreSQL.
 
 ## Development
 
-Use Node.js 20.9 or newer.
+Requirements: Node.js 20.9 or newer.
 
 1. Install dependencies with `npm ci`.
-2. Copy `.env.example` to `.env.local` and set the required environment values.
-3. For a new database, synchronize the schema with `npx prisma db push`.
-4. Start the development server with `npm run dev`.
+2. Copy `.env.example` to `.env.local` and configure the required server-side values.
+3. For a new database, review the Prisma schema and migration history before applying it.
+4. Run `npm run dev` and open [http://localhost:3000](http://localhost:3000).
 
-Visit [http://localhost:3000](http://localhost:3000).
+## Validation commands
 
-## Demo shopping flow
+- `npm run lint` — ESLint.
+- `npx prisma validate` — validate Prisma schema (requires compatible Prisma configuration).
+- `npx prisma generate` — generate the Prisma client.
+- `npx prisma migrate status` — inspect migration state (requires a reachable database).
+- `npm run build` — production build (requires applicable environment variables).
+- `npm test` — run the Node.js unit tests in `tests/*.test.mjs` (currently covers validation, cache keys, upload validation, public-product visibility, and dynamic search-filter sanitization). API/database/browser integration coverage remains incomplete.
 
-The products marked **منتج تجريبي** use images from `public/images`. Liked items
-and the cart are saved in the current browser. The checkout validates contact
-fields and displays a local confirmation; it does not send an order, charge a
-payment method, or transmit the entered details.
+Do not apply schema changes to production without a backup and a reviewed migration. Never expose server secrets through `NEXT_PUBLIC_*` variables.
 
-## Validation and production
+## Commerce/demo behavior
 
-- `npm run lint` runs the Next.js ESLint rules.
-- `npx tsc --noEmit` checks JavaScript and TypeScript project types.
-- `npm run build` creates the production build.
-- `npm start` serves the production build.
+The local demo catalog and browser-persisted cart/favorites are for exploration only. The current demo checkout does not create a persisted order, charge a payment method, or confirm a real purchase. Do not present this flow as production checkout until order persistence, inventory reservation, payment-provider integration, idempotency, and order confirmation have been implemented and tested.
 
-Deploy with a Node.js host or Vercel. Configure `DATABASE_URL`,
-`NEXTAUTH_URL`, and `NEXTAUTH_SECRET` in the host's server-side environment. Google sign-in,
-EmailJS contact, and Pinata uploads additionally require their corresponding
-optional credentials from `.env.example`. Never expose server secrets using a
-`NEXT_PUBLIC_` variable. This repository does not yet include Prisma migration
-history; review the schema and back up production data before applying changes
-with `npx prisma db push`.
+---
+
+# Global audit and remediation ledger
+
+**Audit branch:** `refactor/global-commerce-audit`  
+**Base branch:** `main`  
+**Status:** In progress. This ledger is updated as issues are confirmed, fixed, and tested. Static inspection is not a substitute for running the app and integration tests.
+
+## Rules for closing an issue
+
+An issue may be marked **Verified fixed** only after the relevant code change is reviewed and the applicable automated or manual test has actually passed. If a test cannot run because the database, credentials, or deployment environment is unavailable, record it as **Code changed — runtime verification blocked**, not as verified. Work proceeds in priority order.
+
+## Confirmed findings from the initial repository inspection
+
+| ID | Priority | Area | Finding / risk | Remediation and verification | Status |
+|---|---|---|---|---|---|
+| AK-000 | P0 | Exposed provider credentials | The public repository history contained hard-coded image-provider credentials (ImageKit, ImgBB, and Imgur). Removing them from the latest source does not revoke them or erase Git history. | Replaced hard-coded credentials with server-only environment variables, removed the multi-key Imgur manager, and added image type/size validation plus authenticated upload routes. **Owner action required:** revoke/rotate every previously committed provider key in each provider dashboard, then set the new values in deployment secrets. | Code references removed; credential rotation required |
+| AK-001 | P0 | API authorization | Several user-specific/admin-style endpoints accepted caller-supplied `userId` or `isAdmin` without server-side identity checks. | Added server-session/active-account helpers; secured user management, profile, favorite, product-create, and post-delete paths. **Still open:** audit and secure every remaining private/admin route; test role and ownership boundaries. | Partially mitigated; full audit open |
+| AK-002 | P1 | Prisma lifecycle | Runtime handlers had inconsistent Prisma client lifecycles and a duplicate singleton module. | Runtime API handlers now use `lib/db/prisma.js`; removed the unused duplicate `lib/prisma.js`. Clean PostgreSQL migration deployment passes in CI. Full existing-data and transaction/integration tests remain tied to AK-015. | Code standardized; integration verification pending |
+| AK-003 | P1 | Cache correctness | Hashed posts/favorites cache keys could not be invalidated by matching the raw user ID prefix. The favorites GET cache-key function also referenced an undefined `page` variable instead of its `currentPage` argument, causing runtime failures. | Mutation paths clear route-local caches. Extracted `favoriteCacheKey()`, fixed pagination argument usage, added deterministic/page/limit tests, removed user/favorite identifier debug logs, and shared strict pagination parsing with favorites. | Unit regression tests and CI verified; mutation/read integration pending |
+| AK-004 | P1 | Pagination and query validation | Pagination behavior and bounds were inconsistent across product, category, posts, favorites, admin-user, and search endpoints. `parseInt` accepted malformed values such as `12abc`, and unsafe page numbers could overflow offsets. Bulk category IDs also accepted malformed numeric prefixes. | Shared pagination parsing rejects malformed and unsafe integers and caps page sizes. Admin users, favorites, search offsets, and bulk category ID parsing now use strict numeric validation. Unit tests cover malformed, decimal, unsafe, and bounded helper inputs. Other route-specific parsing and large-offset query performance still need review. | Helper tests and prior CI verified; bulk category change pending CI; route integration pending |
+| AK-005 | P1 | Product visibility | Public product/category reads and the bulk-category endpoint did not consistently exclude inactive items; bulk previews returned mock data instead of the real catalog. Seller-listing queries counted only visible products but fetched all seller products, exposing inactive/deleted items and making pagination totals inconsistent. | Public catalog endpoints use active/deleted predicates where inspected. Bulk previews query Prisma/PostgreSQL. Added `publicProductWhere()` and applied it to seller-listing count and result queries; added predicate regression tests. Stock/seller-status consistency and database-backed API tests remain. | Seller-listing predicate and unit tests verified in CI; DB integration pending |
+| AK-006 | P1 | Route handlers | Some dynamic route handlers accessed Next.js route params synchronously. | Updated the inspected post/category dynamic handlers to await params; remaining dynamic routes and runtime requests still need review. | Partially fixed; test pending |
+| AK-007 | P1 | Mutation safety and error handling | Several APIs parsed JSON outside validation/error handling, returned inconsistent errors, or leaked raw exception messages and complete product records to server logs. Client-side debug logs also exposed user/product identifiers and image details in the browser console. | Added JSON boundary validation to inspected mutation APIs. Seller listing routes now return generic server errors instead of raw exception messages and no longer log full listing records or caller identifiers. Removed client-side debug logs from favorite controls, seller/user display, and seller-list page. Remaining mutation routes and malformed-input/error-path tests still require review. | Partially mitigated; CI verification pending |
+| AK-008 | P1 | Automated testing | The repository initially lacked a repeatable test suite for critical helper behavior. | Added Node test-runner coverage for pagination/input validation, cache keys, upload validation, public-product visibility, and dynamic search-filter sanitization; `npm test` is wired into CI. API/database/browser integration tests and end-to-end purchase flow remain open. | Unit tests and CI verified; integration coverage open |
+| AK-009 | P1 | Database/migrations | The README previously stated migration history was absent, but the repository contains `prisma/migrations/20250916162448_init/migration.sql`. The schema, migration, and production database state still need a consistency check. | Correct docs (done in this file), validate Prisma schema, compare migration state against a database, and use reviewed migrations for future changes. | Documentation corrected; DB verification pending |
+| AK-010 | P2 | Architecture/maintainability | The homepage and several shared/page components contained large legacy/commented implementations; an obsolete 122 KB homepage backup was tracked in the application tree. | Rebuilt the active homepage around live product API/categories and working cart/favorites; removed legacy blocks from search context, filters, product card, category navigation, cart, product detail, seller listing, profile, and favorites; deleted the obsolete homepage backup. Other components still need incremental extraction and architectural tests. | Legacy blocks removed; CI verification pending for latest cleanup |
+| AK-011 | P2 | Global layout | Global navigation and homepage-level header/hero composition overlapped, producing duplicate navigation and promotional content on inner routes. | Consolidated the shared header and moved the hero to the homepage only. Route-by-route visual/accessibility checks and responsive browser testing remain. | Partially fixed; browser verification pending |
+| AK-012 | P2 | Search and filters | Category objects used mismatched legacy IDs; two category-navigation components generated malformed or inconsistent URLs and invoked search before React state settled; removing the category chip left the URL category active. Dynamic filter objects could also create oversized query predicates. | All 22 category paths and both category-navigation components now use canonical `/search?categoryId=<id>` URLs, preserve active search terms, and rely on URL/state synchronization. Removing a category also removes `categoryId` from the URL. `sanitizeDetailsFilters()` bounds dynamic filters to 30 primitive values, valid keys, and 200-character values. Stable category-key mapping, full filter-combination tests, relevance, and performance tests remain. | Code changed; CI and browser/search integration verification pending |
+| AK-013 | P2 | Configuration/operations | The project uses optional integrations and environment-dependent services. | Added a repeatable CI workflow. Install, Prisma validate/generate, unit tests, ESLint, and production build passed on the latest recorded green run; database-backed and external-provider integration checks still require configured services/credentials. | CI green; integration verification pending |
+| AK-014 | P1 | Real checkout, currency, and global commerce | The cart checkout is explicitly a local demo; it does not persist an order or process payment. Product/order prices are integers without a stored ISO currency code, and taxes, regional shipping rules, and payment-provider integration are incomplete. Search UI also previously hard-coded Saudi riyals regardless of product currency. | Removed the misleading Saudi-riyal label from search filters. Added a read-only authenticated order-history API/page, but do not represent checkout as a real purchase. Production launch still requires currency-aware money storage, tax/shipping rules, order transitions, inventory reservation, payment provider, verified webhooks, idempotency, refunds, and integration tests. | UI label fixed; production checkout remains blocked |
+| AK-015 | P1 | Prisma migration drift | Static comparison of the committed initial migration with `schema.prisma` found missing tables (`Seller`, `GuestSession`, `Cart`, `CartItem`, `OrderItem`, token tables), missing scalar columns, a `Category.id` type mismatch, and a legacy `ProductImage` shape (`image1`–`image5` instead of `url`/`sortOrder`). `prisma validate` alone cannot detect this drift. | Added a clean PostgreSQL CI service and a schema-diff artifact step. Review the generated diff, write a data-preserving follow-up migration, and require `migrate deploy` plus schema-diff verification before closing this issue. Do not apply a guessed migration to production. | Confirmed; migration remediation pending |
+| AK-016 | P1 | Product deep links | Product detail pages previously depended on a product object in browser `localStorage` or the demo catalog, so opening a real product URL directly in a fresh browser could show a false not-found state. | Product detail page now fetches the real product by ID from `/api/showPostById`, handles aborts, and uses matching local cache only as a fallback if the API is unavailable. CI pending; browser deep-link testing remains open. | Code changed; CI/browser verification pending |
+| AK-017 | P1 | Favorites UI state | Favorite controls relied on stale local user data or local-only state, and the favorites page started at page 0 while the API defaults invalid pages to page 1, causing duplicate first-page results. The real-product detail heart only toggled React state without saving to the API. | Favorite button and favorites page use NextAuth session identity; cached IDs are arrays refreshed from the server; login normalizes the `productIds` response; favorites pagination is one-based; product detail loads current favorite state and toggles via `/api/favorite` with optimistic rollback on error. CI and browser testing pending. | Code changed; CI/browser verification pending |
+
+## Ordered remediation plan
+
+1. **Security first:** rotate all previously committed image-provider credentials (AK-000), inventory API routes, establish a shared session/role authorization policy, and close AK-001 before exposing administrative mutations.
+2. **Database lifecycle:** standardize Prisma access and remove per-request disconnects (AK-002).
+3. **Correctness:** fix cache invalidation, route params, validation, pagination, and consistent product visibility (AK-003 through AK-007).
+4. **Database safety:** resolve migration drift with a generated/reviewed data-preserving migration (AK-015), then run clean-database and existing-data migration checks.
+5. **Regression safety:** add tests and run the available checks (AK-008 and AK-013).
+6. **Data layer:** validate schema/migration compatibility and document database-dependent results (AK-009).
+7. **Search system:** unify the search contract and verify UI/API/filter interoperability (AK-012).
+8. **Architecture and design:** modularize the homepage/layout, then apply the unified luxury visual system without losing existing functionality (AK-010 and AK-011).
+9. **Final regression pass:** test routes, links, buttons, responsive layouts, error/loading/empty states, and all available API/DB flows before proposing merge.
+
+## Verification log
+
+| Date | Scope | Command / method | Result |
+|---|---|---|---|
+| 2026-10-27 | Initial static repository inspection | GitHub source/tree review | Initial findings recorded above. No build, lint, database, or browser test had yet been claimed as run. |
+| 2026-10-27 | First CI run | GitHub Actions run `40425041806` | `npm ci`, `prisma validate`, and `prisma generate` passed. ESLint failed with 8 errors at that commit: a product-route parse error, unescaped quotes in two JSX views, nested component creation in dynamic filters, and the intentional CommonJS seed import. The product route was rebuilt; JSX/component issues were corrected; the seed import received a targeted lint directive. Follow-up CI is pending; these changes are not marked verified until a run passes. |
+| 2026-10-27 | First CI pass | GitHub Actions run `40425819726` | `npm ci`, Prisma schema validation, Prisma client generation, Node unit tests, ESLint, and production build passed on commit `eb9e8e8bca08c015a026e0529f6b520be47438cf`. |
+| 2026-10-27 | Seller visibility and favorites cache-key regression | GitHub Actions run `40429579234` (commit `aec8260f8ab4ac82311f85aaaf4b4ff143c68b71`) | Node unit tests, ESLint, Prisma validation/generation, clean PostgreSQL migration application, drift SQL generation, and production build passed. Added public-product visibility and favorites cache-key regression tests; database-backed route behavior and existing-data migration safety remain unverified. |
+| 2026-10-27 | Public seller-listing visibility regression | Added `tests/public-product-where.test.mjs`; applied the shared visibility predicate to `/api/posts` and `/api/posts/[id]` result/count queries | Code review confirms list and count predicates now match and public reads exclude deleted/inactive products and inactive categories. Automated test and CI rerun are pending; not marked verified yet. |
+| 2026-10-27 | Strict pagination parsing | Updated `lib/api/validation.mjs`, `app/api/allUsers/route.js`, and `tests/api-validation.test.mjs` | Pagination parser rejects malformed numeric prefixes (`12abc`), decimals, and unsafe integers rather than accepting a partial value; admin user listing now reuses the shared helper. Regression tests and CI are pending. |
+| 2026-10-27 | Strict pagination and bounded search filters | GitHub Actions run `40430508488` (commit `53d6596dbe082fdc10f483c3982546dc1879bd81`) | Node unit tests, ESLint, Prisma validation/client generation, clean PostgreSQL migration application, schema drift report generation, and production build passed. This verifies code-level regressions, not production database compatibility or route-level behavior with real data. |
+| 2026-10-27 | Currency-label correction | Removed the hard-coded Saudi-riyal label from `components/Search/StaticFilters.jsx` | UI now avoids claiming a currency that the product schema does not store. Currency-aware product prices and checkout remain a release blocker; CI for this latest change is pending. |
+| 2026-10-27 | Legacy UI cleanup | Removed the tracked homepage backup (122 KB) and obsolete commented implementations from filter components, product card/detail, category navigation, cart, seller listing, profile, and favorites pages; removed hard-coded SAR filter labels | Active implementations retained; cart still explicitly labels checkout as demo-only. ESLint/build verification is pending for this cleanup batch. |
+| 2026-10-27 | Client debug-log cleanup | Removed debug `console.log` calls from the favorite button, user-name/photo component, and seller-list page | Logs containing favorite/product/user details no longer execute in these inspected components. CI verification is pending. |
+| 2026-10-27 | Category/search synchronization | Updated all 22 category paths, `CategoriesNavBar.jsx`, `CategoryFilter.jsx`, and `features/search/search-context.jsx` | Both category-navigation components now preserve search terms and rely on URL/state synchronization; category removal clears the URL parameter. CI and browser click-through tests are pending. |
+| 2026-10-27 | Search offset bounds | Updated `/api/search` to reject unsafe integers and cap page offsets so `(page - 1) * limit` remains within `Number.MAX_SAFE_INTEGER` | Code-level guard added; CI and real-query performance verification are pending. |
+| 2026-10-27 | Strict bulk category IDs | Extracted `parseCategoryIds()` into `lib/api/category-ids.mjs`, reused it in `/api/categories/bulk`, and added `tests/category-ids.test.mjs` | Tests cover malformed prefixes, duplicates, limits, and empty inputs. CI is pending; DB route integration remains open. |
+| 2026-10-27 | Product deep-link loading | Updated `app/post/[id]/page.jsx` to load real product data from the server API and treat localStorage only as a fallback | Real product URLs can now load without a prior card click or pre-populated browser storage. CI and direct-link browser testing are pending. |
+| 2026-10-27 | Favorite state and pagination | Updated `FavoriteButton.jsx`, login cache normalization, `app/(shop)/favorite/page.jsx`, and `app/post/[id]/page.jsx` | Session-backed favorite state, correct array cache, semantic button markup, one-based pagination, and API-backed product-detail toggles now share the authenticated favorites endpoints. CI and browser interaction tests are pending. |

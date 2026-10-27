@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
+import { sanitizeDetailsFilters } from '@/lib/api/search-filters.mjs';
 
 const MAX_QUERY_LENGTH = 120;
 const MAX_PAGE_SIZE = 50;
@@ -19,7 +20,7 @@ const SORT_ORDERS = {
 
 function validPositiveInteger(value, fallback) {
   const parsed = Number(value);
-  return Number.isInteger(parsed) && parsed > 0 ? parsed : fallback;
+  return Number.isSafeInteger(parsed) && parsed > 0 ? parsed : fallback;
 }
 
 function getQueryTerms(query) {
@@ -47,28 +48,17 @@ function textConditions(terms) {
 }
 
 function addDetailsFilters(where, details = {}) {
-  for (const [key, value] of Object.entries(details)) {
-    if (
-      typeof key !== 'string' ||
-      !/^[\w-]{1,80}$/.test(key) ||
-      value === undefined ||
-      value === null ||
-      value === ''
-    ) {
-      continue;
-    }
-
+  for (const [key, value] of sanitizeDetailsFilters(details)) {
     where.AND.push({
       details: {
         path: [key],
-        equals: String(value),
+        equals: value,
       },
     });
   }
 }
-
 function buildWhere({ categoryId, filters }) {
-  const where = { isDeleted: false, AND: [] };
+  const where = { isDeleted: false, isActive: true, category: { isActive: true }, AND: [] };
 
   const selectedCategoryId = validPositiveInteger(
     categoryId ?? filters.categoryId,
@@ -147,8 +137,10 @@ export async function POST(request) {
     body.filters && typeof body.filters === 'object' && !Array.isArray(body.filters)
       ? body.filters
       : {};
-  const page = validPositiveInteger(body.page, 1);
   const limit = Math.min(validPositiveInteger(body.limit, 20), MAX_PAGE_SIZE);
+  // Keep offset arithmetic within JavaScript's safe-integer range.
+  const maxPage = Math.floor(Number.MAX_SAFE_INTEGER / limit) + 1;
+  const page = Math.min(validPositiveInteger(body.page, 1), maxPage);
   const where = buildWhere({ categoryId: body.categoryId, filters });
   const sortKey =
     typeof filters.sortBy === 'string' ? filters.sortBy : body.sortBy;
@@ -280,10 +272,10 @@ export async function POST(request) {
     return NextResponse.json({
       products: normalizedProducts,
       totalCount,
-      hasMore: page * limit < totalCount,
+      hasMore: pageOffset + normalizedProducts.length < totalCount,
       page,
       limit,
-      remainingCount: Math.max(0, totalCount - page * limit),
+      remainingCount: Math.max(0, totalCount - (pageOffset + normalizedProducts.length)),
     });
   } catch (error) {
     console.error('Search request failed:', error);

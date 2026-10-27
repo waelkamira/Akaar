@@ -1,567 +1,194 @@
-// import { PrismaClient } from '@prisma/client';
-// import { LRUCache } from 'lru-cache';
-// import { getServerSession } from 'next-auth';
-// import { authOptions } from '@/lib/auth/options';
-
-// const prisma = new PrismaClient();
-// const cache = new LRUCache({
-//   max: 100,
-//   ttl: 60 * 1000,
-// });
-
-// // GET: جلب المنتجات مع دعم التخزين المؤقت
-// export async function GET(req) {
-//   const url = new URL(req.url);
-//   const searchParams = url.searchParams;
-
-//   const page = parseInt(searchParams.get('page')) || 1;
-//   const limit = parseInt(searchParams.get('limit')) || 5;
-//   const skip = (page - 1) * limit;
-
-//   const cacheKey = `products-page-${page}-limit-${limit}`;
-
-//   if (cache.has(cacheKey)) {
-//     console.log('📌 إعادة البيانات من الكاش');
-//     return new Response(JSON.stringify(cache.get(cacheKey)), {
-//       headers: { 'Content-Type': 'application/json' },
-//     });
-//   }
-
-//   try {
-//     console.log('🗄️ جلب البيانات من قاعدة البيانات...');
-//     const products = await prisma.product.findMany({
-//       skip,
-//       take: limit,
-//       orderBy: { createdAt: 'desc' },
-//       where: { isDeleted: false }, // فقط المنتجات غير المحذوفة
-//       include: {
-//         user: {
-//           select: {
-//             userName: true,
-//             userImage: true,
-//             email: true,
-//           },
-//         },
-//       },
-//     });
-
-//     cache.set(cacheKey, products);
-
-//     return new Response(JSON.stringify(products), {
-//       headers: { 'Content-Type': 'application/json' },
-//     });
-//   } catch (error) {
-//     console.error('❌ خطأ أثناء جلب البيانات:', error);
-//     return new Response(JSON.stringify({ error: 'Internal Server Error' }), {
-//       headers: { 'Content-Type': 'application/json' },
-//       status: 500,
-//     });
-//   }
-// }
-
-// // POST: إنشاء منتج جديد
-// export async function POST(req) {
-//   const session = await getServerSession(authOptions);
-//   const user = session?.user;
-//   const userId = user?.id;
-
-//   if (!userId) {
-//     return new Response(
-//       JSON.stringify({ error: 'يجب تسجيل الدخول لإنشاء منتج' }),
-//       { status: 401 }
-//     );
-//   }
-
-//   try {
-//     const data = await req.json();
-//     console.log('Data received from client:', data);
-
-//     // التحقق من وجود المستخدم في قاعدة البيانات
-//     const existingUser = await prisma.user.findUnique({
-//       where: { id: userId },
-//     });
-
-//     if (!existingUser) {
-//       console.error(`User with ID ${userId} not found in database.`);
-//       return new Response(
-//         JSON.stringify({ error: 'المستخدم غير موجود في قاعدة البيانات.' }),
-//         { status: 400 }
-//       );
-//     }
-
-//     // إنشاء المنتج مع الحقول الجديدة
-//     const newProduct = await prisma.product.create({
-//       data: {
-//         title: data?.title,
-//         userId: userId,
-//         userName: existingUser.userName, // استخدام اسم المستخدم من قاعدة البيانات
-//         userImage: existingUser.userImage, // استخدام صورة المستخدم من قاعدة البيانات
-//         categoryId: parseInt(data?.categoryId) || 1,
-//         categoryName: data?.categoryName,
-//         images: data?.images || [], // استخدام مصفوفة الصور الجديدة
-//         basePrice: parseInt(data?.basePrice) || 0,
-//         adCategory: data?.adCategory,
-//         city: data?.city,
-//         town: data?.town,
-//         phoneNumber: data?.phoneNumber,
-//         lng: data?.lng ? parseFloat(data.lng) : null,
-//         lat: data?.lat ? parseFloat(data.lat) : null,
-//         link: data?.link || '',
-//         description: data?.description,
-//         details: data?.details,
-//         stockQuantity: parseInt(data?.stockQuantity) || 1,
-//       },
-//     });
-
-//     // مسح الكاش لأن البيانات تغيرت
-//     cache.clear();
-
-//     return new Response(
-//       JSON.stringify({
-//         message: 'تم إنشاء المنتج بنجاح',
-//         product: newProduct,
-//       }),
-//       { status: 201 }
-//     );
-//   } catch (error) {
-//     console.error('خطأ أثناء إنشاء المنتج:', error);
-//     return new Response(
-//       JSON.stringify({
-//         error: 'Internal Server Error',
-//         details: error.message,
-//       }),
-//       {
-//         status: 500,
-//       }
-//     );
-//   }
-// }
-
-// // PUT: تحديث منتج موجود
-// export async function PUT(req) {
-//   const session = await getServerSession(authOptions);
-//   const userId = session?.user?.id;
-
-//   if (!userId) {
-//     return new Response(
-//       JSON.stringify({ error: 'يجب تسجيل الدخول لتحديث المنتج' }),
-//       { status: 401 }
-//     );
-//   }
-
-//   try {
-//     const { id, ...data } = await req.json();
-
-//     if (!id) {
-//       return new Response(JSON.stringify({ error: 'رقم المنتج مطلوب' }), {
-//         status: 400,
-//       });
-//     }
-
-//     // التحقق من وجود المنتج وملكيته
-//     const existingProduct = await prisma.product.findFirst({
-//       where: {
-//         id: id,
-//         userId: userId, // التأكد من أن المستخدم هو المالك
-//         isDeleted: false,
-//       },
-//     });
-
-//     if (!existingProduct) {
-//       return new Response(
-//         JSON.stringify({
-//           error: 'المنتج غير موجود أو ليس لديك صلاحية التعديل',
-//         }),
-//         { status: 404 }
-//       );
-//     }
-
-//     // تحديث البيانات
-//     const updatedProduct = await prisma.product.update({
-//       where: { id: id },
-//       data: {
-//         title: data.title,
-//         categoryId: data.categoryId ? parseInt(data.categoryId) : undefined,
-//         categoryName: data.categoryName,
-//         images: data.images,
-//         basePrice: data.basePrice ? parseInt(data.basePrice) : undefined,
-//         adCategory: data.adCategory,
-//         city: data.city,
-//         town: data.town,
-//         phoneNumber: data.phoneNumber,
-//         lng: data.lng ? parseFloat(data.lng) : undefined,
-//         lat: data.lat ? parseFloat(data.lat) : undefined,
-//         link: data.link,
-//         description: data.description,
-//         details: data.details,
-//         stockQuantity: data.stockQuantity
-//           ? parseInt(data.stockQuantity)
-//           : undefined,
-//         updatedAt: new Date(),
-//       },
-//     });
-
-//     // مسح الكاش
-//     cache.clear();
-
-//     return new Response(
-//       JSON.stringify({
-//         message: 'تم تحديث المنتج بنجاح',
-//         product: updatedProduct,
-//       }),
-//       { status: 200 }
-//     );
-//   } catch (error) {
-//     console.error('خطأ أثناء تحديث المنتج:', error);
-//     return new Response(
-//       JSON.stringify({
-//         error: 'خطأ داخلي في السيرفر',
-//         details: error.message,
-//       }),
-//       { status: 500 }
-//     );
-//   }
-// }
-
-// // DELETE: حذف منتج (Soft Delete)
-// export async function DELETE(req) {
-//   const session = await getServerSession(authOptions);
-//   const userId = session?.user?.id;
-
-//   if (!userId) {
-//     return new Response(
-//       JSON.stringify({ error: 'يجب تسجيل الدخول لحذف المنتج' }),
-//       { status: 401 }
-//     );
-//   }
-
-//   try {
-//     const { id } = await req.json();
-
-//     if (!id) {
-//       return new Response(JSON.stringify({ error: 'يجب توفير معرف المنتج' }), {
-//         status: 400,
-//       });
-//     }
-
-//     // التحقق من وجود المنتج وملكيته
-//     const product = await prisma.product.findFirst({
-//       where: {
-//         id: id,
-//         userId: userId,
-//       },
-//     });
-
-//     if (!product) {
-//       return new Response(
-//         JSON.stringify({ error: 'المنتج غير موجود أو ليس لديك صلاحية الحذف' }),
-//         { status: 404 }
-//       );
-//     }
-
-//     // soft delete بدلاً من الحذف الفعلي
-//     await prisma.product.update({
-//       where: { id: id },
-//       data: {
-//         isDeleted: true,
-//         deletedAt: new Date(),
-//       },
-//     });
-
-//     // مسح الكاش
-//     cache.clear();
-
-//     return new Response(JSON.stringify({ message: 'تم حذف المنتج بنجاح' }), {
-//       status: 200,
-//     });
-//   } catch (error) {
-//     console.error('خطأ أثناء حذف المنتج:', error);
-//     return new Response(JSON.stringify({ error: 'حدث خطأ داخلي' }), {
-//       status: 500,
-//     });
-//   }
-// }
-import { PrismaClient } from '@prisma/client';
+import { NextResponse } from 'next/server';
 import { LRUCache } from 'lru-cache';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth/options';
+import { prisma } from '@/lib/db/prisma';
+import { getAuthenticatedUser } from '@/lib/auth/require-auth';
+import { getPagination, isPlainObject, parseOptionalNumber } from '@/lib/api/validation.mjs';
 
-const prisma = new PrismaClient();
-const cache = new LRUCache({
-  max: 100,
-  ttl: 60 * 1000,
-});
+const cache = new LRUCache({ max: 100, ttl: 60_000 });
+const MAX_PAGE_SIZE = 50;
+const productOwnerSelect = { id: true, userName: true, userImage: true };
 
-// GET: جلب المنتجات مع دعم التخزين المؤقت
-export async function GET(req) {
-  const url = new URL(req.url);
-  const searchParams = url.searchParams;
+function readPageParams(searchParams) {
+  return getPagination(searchParams, { defaultPage: 1, defaultLimit: 5, maxLimit: MAX_PAGE_SIZE });
+}
 
-  const page = parseInt(searchParams.get('page')) || 0;
-  const limit = parseInt(searchParams.get('limit')) || 5;
-  const skip = (page - 1) * limit;
-
-  const cacheKey = `products-page-${page}-limit-${limit}`;
-
-  if (cache.has(cacheKey)) {
-    console.log('📌 إعادة البيانات من الكاش');
-    return new Response(JSON.stringify(cache.get(cacheKey)), {
-      headers: { 'Content-Type': 'application/json' },
-    });
+async function readJson(request) {
+  try {
+    const body = await request.json();
+    if (!isPlainObject(body)) return null;
+    return body;
+  } catch {
+    return null;
   }
+}
+
+
+
+export async function GET(request) {
+  const { searchParams } = new URL(request.url);
+  const { page, limit, skip } = readPageParams(searchParams);
+  const cacheKey = `products-page-${page}-limit-${limit}`;
+  const cached = cache.get(cacheKey);
+  if (cached) return NextResponse.json(cached);
 
   try {
-    console.log('🗄️ جلب البيانات من قاعدة البيانات...');
     const products = await prisma.product.findMany({
+      where: { isDeleted: false, isActive: true, category: { isActive: true } },
       skip,
       take: limit,
       orderBy: { createdAt: 'desc' },
-      where: { isDeleted: false }, // فقط المنتجات غير المحذوفة
-      include: {
-        user: {
-          select: {
-            userName: true,
-            userImage: true,
-            email: true,
-          },
-        },
-      },
+      include: { user: { select: productOwnerSelect } },
     });
-
     cache.set(cacheKey, products);
-
-    return new Response(JSON.stringify(products), {
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return NextResponse.json(products);
   } catch (error) {
-    console.error('❌ خطأ أثناء جلب البيانات:', error);
-    return new Response(JSON.stringify({ error: 'Internal Server Error' }), {
-      headers: { 'Content-Type': 'application/json' },
-      status: 500,
-    });
+    console.error('Unable to load products:', error);
+    return NextResponse.json({ error: 'Unable to load products.' }, { status: 500 });
   }
 }
 
-// POST: إنشاء منتج جديد
-export async function POST(req) {
-  // const session = await getServerSession(authOptions);
-  // const user = session?.user;
-  // const userId = user?.id;
-  // console.log('userId', userId);
-  // console.log('user', user);
-  // console.log('userId', userId);
-  // if (!userId) {
-  //   return new Response(
-  //     JSON.stringify({ error: 'يجب تسجيل الدخول لإنشاء منتج' }),
-  //     { status: 401 }
-  //   );
-  // }
+export async function POST(request) {
+  const user = await getAuthenticatedUser();
+  if (!user) return NextResponse.json({ error: 'يجب تسجيل الدخول لإنشاء منتج' }, { status: 401 });
 
-  const data = await req.json();
-  console.log('Data received from client:', data);
+  const body = await readJson(request);
+  if (!body) return NextResponse.json({ error: 'صيغة الطلب غير صالحة' }, { status: 400 });
+
+  const title = typeof body.title === 'string' ? body.title.trim() : '';
+  const categoryId = parseOptionalNumber(body.categoryId, { integer: true, min: 1 });
+  const basePrice = parseOptionalNumber(body.basePrice, { min: 0 });
+  const stockQuantity = body.stockQuantity === undefined
+    ? 1
+    : parseOptionalNumber(body.stockQuantity, { integer: true, min: 0 });
+  const images = body.images === undefined ? [] : body.images;
+
+  if (!title || title.length > 200 || categoryId === undefined || categoryId === null ||
+      basePrice === undefined || basePrice === null || stockQuantity === undefined || stockQuantity === null ||
+      !Array.isArray(images) || images.length > 20 || images.some((item) => typeof item !== 'string')) {
+    return NextResponse.json({ error: 'يرجى التحقق من العنوان والفئة والسعر والمخزون والصور' }, { status: 400 });
+  }
+
   try {
-    // التحقق من وجود المستخدم في قاعدة البيانات
-    // const existingUser = await prisma.user.findUnique({
-    //   where: { id: userId },
-    // });
+    const [owner, category] = await Promise.all([
+      prisma.user.findUnique({ where: { id: user.id }, select: productOwnerSelect }),
+      prisma.category.findUnique({ where: { id: categoryId }, select: { id: true, name: true, isActive: true } }),
+    ]);
+    if (!owner) return NextResponse.json({ error: 'المستخدم غير موجود' }, { status: 401 });
+    if (!category || !category.isActive) return NextResponse.json({ error: 'الفئة غير موجودة أو غير مفعلة' }, { status: 400 });
 
-    // if (!existingUser) {
-    //   console.error(`User with ID ${userId} not found in database.`);
-    //   return new Response(
-    //     JSON.stringify({ error: 'المستخدم غير موجود في قاعدة البيانات.' }),
-    //     { status: 400 }
-    //   );
-    // }
-
-    // إنشاء المنتج مع الحقول الجديدة
-    const newProduct = await prisma.product.create({
+    const product = await prisma.product.create({
       data: {
-        title: data?.title,
-        userId: data.userId,
-        userName: data.userName, // استخدام اسم المستخدم من قاعدة البيانات
-        userImage: data.userImage, // استخدام صورة المستخدم من قاعدة البيانات
-        categoryId: parseInt(data?.categoryId) || 1,
-        categoryName: data?.categoryName,
-        images: data?.images || [], // استخدام مصفوفة الصور الجديدة
-        basePrice: parseInt(data?.basePrice) || 0,
-        adCategory: data?.adCategory,
-        city: data?.city,
-        town: data?.town,
-        phoneNumber: data?.phoneNumber,
-        lng: data?.lng ? parseFloat(data.lng) : null,
-        lat: data?.lat ? parseFloat(data.lat) : null,
-        link: data?.link || '',
-        description: data?.description,
-        details: data?.details,
-        stockQuantity: parseInt(data?.stockQuantity) || 1,
+        title,
+        userId: user.id,
+        userName: owner.userName,
+        userImage: owner.userImage,
+        categoryId,
+        categoryName: typeof body.categoryName === 'string' && body.categoryName.trim()
+          ? body.categoryName.trim().slice(0, 120)
+          : category.name,
+        images,
+        basePrice: Math.floor(basePrice),
+        adCategory: typeof body.adCategory === 'string' ? body.adCategory.slice(0, 80) : null,
+        city: typeof body.city === 'string' ? body.city.slice(0, 120) : null,
+        town: typeof body.town === 'string' ? body.town.slice(0, 120) : null,
+        phoneNumber: typeof body.phoneNumber === 'string' ? body.phoneNumber.slice(0, 40) : null,
+        lng: parseOptionalNumber(body.lng) ?? null,
+        lat: parseOptionalNumber(body.lat) ?? null,
+        link: typeof body.link === 'string' ? body.link.slice(0, 2000) : '',
+        description: typeof body.description === 'string' ? body.description.slice(0, 10000) : null,
+        details: body.details && typeof body.details === 'object' && !Array.isArray(body.details) ? body.details : undefined,
+        stockQuantity,
       },
     });
-
-    // مسح الكاش لأن البيانات تغيرت
     cache.clear();
-
-    return new Response(
-      JSON.stringify({
-        message: 'تم إنشاء المنتج بنجاح',
-        product: newProduct,
-      }),
-      { status: 201 }
-    );
+    return NextResponse.json({ message: 'تم إنشاء المنتج بنجاح', product }, { status: 201 });
   } catch (error) {
-    console.error('خطأ أثناء إنشاء المنتج:', error);
-    return new Response(
-      JSON.stringify({
-        error: 'Internal Server Error',
-        details: error.message,
-      }),
-      {
-        status: 500,
+    console.error('Product creation failed:', error);
+    return NextResponse.json({ error: 'تعذر إنشاء المنتج. تحقق من الفئة والبيانات المدخلة.' }, { status: 400 });
+  }
+}
+
+export async function PUT(request) {
+  const user = await getAuthenticatedUser();
+  if (!user) return NextResponse.json({ error: 'يجب تسجيل الدخول لتحديث المنتج' }, { status: 401 });
+
+  const body = await readJson(request);
+  if (!body) return NextResponse.json({ error: 'صيغة الطلب غير صالحة' }, { status: 400 });
+  const id = typeof body.id === 'string' ? body.id.trim() : '';
+  if (!id) return NextResponse.json({ error: 'معرف المنتج مطلوب' }, { status: 400 });
+
+  try {
+    const existing = await prisma.product.findFirst({
+      where: { id, userId: user.id, isDeleted: false },
+      select: { id: true },
+    });
+    if (!existing) return NextResponse.json({ error: 'المنتج غير موجود أو لا تملك صلاحية تعديله' }, { status: 404 });
+
+    const data = {};
+    if (typeof body.title === 'string') {
+      const title = body.title.trim();
+      if (!title || title.length > 200) return NextResponse.json({ error: 'عنوان المنتج غير صالح' }, { status: 400 });
+      data.title = title;
+    }
+    if (body.categoryId !== undefined) {
+      const categoryId = parseOptionalNumber(body.categoryId, { integer: true, min: 1 });
+      if (categoryId === null || categoryId === undefined) return NextResponse.json({ error: 'الفئة غير صالحة' }, { status: 400 });
+      const category = await prisma.category.findUnique({ where: { id: categoryId }, select: { id: true, name: true, isActive: true } });
+      if (!category || !category.isActive) return NextResponse.json({ error: 'الفئة غير موجودة أو غير مفعلة' }, { status: 400 });
+      data.categoryId = category.id;
+      data.categoryName = category.name;
+    }
+    if (body.basePrice !== undefined) {
+      const price = parseOptionalNumber(body.basePrice, { min: 0 });
+      if (price === null || price === undefined) return NextResponse.json({ error: 'السعر غير صالح' }, { status: 400 });
+      data.basePrice = Math.floor(price);
+    }
+    if (body.stockQuantity !== undefined) {
+      const stock = parseOptionalNumber(body.stockQuantity, { integer: true, min: 0 });
+      if (stock === null || stock === undefined) return NextResponse.json({ error: 'المخزون غير صالح' }, { status: 400 });
+      data.stockQuantity = stock;
+    }
+    if (body.images !== undefined) {
+      if (!Array.isArray(body.images) || body.images.length > 20 || body.images.some((item) => typeof item !== 'string')) {
+        return NextResponse.json({ error: 'قائمة الصور غير صالحة' }, { status: 400 });
       }
-    );
+      data.images = body.images;
+    }
+    for (const field of ['adCategory', 'city', 'town', 'phoneNumber', 'link', 'description']) {
+      if (body[field] === null || typeof body[field] === 'string') data[field] = body[field];
+    }
+    if (body.details && typeof body.details === 'object' && !Array.isArray(body.details)) data.details = body.details;
+    if (!Object.keys(data).length) return NextResponse.json({ error: 'لا توجد حقول صالحة للتحديث' }, { status: 400 });
+
+    const product = await prisma.product.update({ where: { id }, data, include: { user: { select: productOwnerSelect } } });
+    cache.clear();
+    return NextResponse.json({ message: 'تم تحديث المنتج بنجاح', product });
+  } catch (error) {
+    console.error('Product update failed:', error);
+    return NextResponse.json({ error: 'تعذر تحديث المنتج.' }, { status: 500 });
   }
 }
 
-// PUT: تحديث منتج موجود
-export async function PUT(req) {
-  const session = await getServerSession(authOptions);
-  const userId = session?.user?.id;
+export async function DELETE(request) {
+  const user = await getAuthenticatedUser();
+  if (!user) return NextResponse.json({ error: 'يجب تسجيل الدخول لحذف المنتج' }, { status: 401 });
 
-  if (!userId) {
-    return new Response(
-      JSON.stringify({ error: 'يجب تسجيل الدخول لتحديث المنتج' }),
-      { status: 401 }
-    );
-  }
+  const body = await readJson(request);
+  const id = typeof body?.id === 'string' ? body.id.trim() : '';
+  if (!id) return NextResponse.json({ error: 'معرف المنتج مطلوب' }, { status: 400 });
 
   try {
-    const { id, ...data } = await req.json();
-
-    if (!id) {
-      return new Response(JSON.stringify({ error: 'رقم المنتج مطلوب' }), {
-        status: 400,
-      });
-    }
-
-    // التحقق من وجود المنتج وملكيته
-    const existingProduct = await prisma.product.findFirst({
-      where: {
-        id: id,
-        userId: userId, // التأكد من أن المستخدم هو المالك
-        isDeleted: false,
-      },
+    const existing = await prisma.product.findFirst({
+      where: { id, userId: user.id, isDeleted: false },
+      select: { id: true },
     });
+    if (!existing) return NextResponse.json({ error: 'المنتج غير موجود أو لا تملك صلاحية حذفه' }, { status: 404 });
 
-    if (!existingProduct) {
-      return new Response(
-        JSON.stringify({
-          error: 'المنتج غير موجود أو ليس لديك صلاحية التعديل',
-        }),
-        { status: 404 }
-      );
-    }
-
-    // تحديث البيانات
-    const updatedProduct = await prisma.product.update({
-      where: { id: id },
-      data: {
-        title: data.title,
-        categoryId: data.categoryId ? parseInt(data.categoryId) : undefined,
-        categoryName: data.categoryName,
-        images: data.images,
-        basePrice: data.basePrice ? parseInt(data.basePrice) : undefined,
-        adCategory: data.adCategory,
-        city: data.city,
-        town: data.town,
-        phoneNumber: data.phoneNumber,
-        lng: data.lng ? parseFloat(data.lng) : undefined,
-        lat: data.lat ? parseFloat(data.lat) : undefined,
-        link: data.link,
-        description: data.description,
-        details: data.details,
-        stockQuantity: data.stockQuantity
-          ? parseInt(data.stockQuantity)
-          : undefined,
-        updatedAt: new Date(),
-      },
-    });
-
-    // مسح الكاش
+    await prisma.product.update({ where: { id }, data: { isDeleted: true, deletedAt: new Date() } });
     cache.clear();
-
-    return new Response(
-      JSON.stringify({
-        message: 'تم تحديث المنتج بنجاح',
-        product: updatedProduct,
-      }),
-      { status: 200 }
-    );
+    return NextResponse.json({ message: 'تم حذف المنتج بنجاح' });
   } catch (error) {
-    console.error('خطأ أثناء تحديث المنتج:', error);
-    return new Response(
-      JSON.stringify({
-        error: 'خطأ داخلي في السيرفر',
-        details: error.message,
-      }),
-      { status: 500 }
-    );
-  }
-}
-
-// DELETE: حذف منتج (Soft Delete)
-export async function DELETE(req) {
-  const session = await getServerSession(authOptions);
-  const userId = session?.user?.id;
-
-  if (!userId) {
-    return new Response(
-      JSON.stringify({ error: 'يجب تسجيل الدخول لحذف المنتج' }),
-      { status: 401 }
-    );
-  }
-
-  try {
-    const { id } = await req.json();
-
-    if (!id) {
-      return new Response(JSON.stringify({ error: 'يجب توفير معرف المنتج' }), {
-        status: 400,
-      });
-    }
-
-    // التحقق من وجود المنتج وملكيته
-    const product = await prisma.product.findFirst({
-      where: {
-        id: id,
-        userId: userId,
-      },
-    });
-
-    if (!product) {
-      return new Response(
-        JSON.stringify({ error: 'المنتج غير موجود أو ليس لديك صلاحية الحذف' }),
-        { status: 404 }
-      );
-    }
-
-    // soft delete بدلاً من الحذف الفعلي
-    await prisma.product.update({
-      where: { id: id },
-      data: {
-        isDeleted: true,
-        deletedAt: new Date(),
-      },
-    });
-
-    // مسح الكاش
-    cache.clear();
-
-    return new Response(JSON.stringify({ message: 'تم حذف المنتج بنجاح' }), {
-      status: 200,
-    });
-  } catch (error) {
-    console.error('خطأ أثناء حذف المنتج:', error);
-    return new Response(JSON.stringify({ error: 'حدث خطأ داخلي' }), {
-      status: 500,
-    });
+    console.error('Product deletion failed:', error);
+    return NextResponse.json({ error: 'تعذر حذف المنتج.' }, { status: 500 });
   }
 }

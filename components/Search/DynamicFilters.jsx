@@ -1,148 +1,3 @@
-// 'use client';
-// import { useSearch } from '@/features/search/search-context';
-// import { useCallback, useState, useEffect } from 'react';
-// import DynamicField from './DynamicField';
-// import { ImSpinner8 } from 'react-icons/im';
-// import { motion } from 'framer-motion';
-
-// export default function DynamicFilters() {
-//   const { category, filters, setFilter, dynamicFilters, loading } = useSearch();
-//   const [localValues, setLocalValues] = useState({});
-
-//   useEffect(() => {
-//     if (filters.details) {
-//       setLocalValues(filters.details);
-//     }
-//   }, [filters.details]);
-
-//   const handleFieldChange = useCallback((fieldName, value) => {
-//     setLocalValues((prev) => ({
-//       ...prev,
-//       [fieldName]: value,
-//     }));
-//   }, []);
-
-//   const handleFieldBlur = useCallback(
-//     (fieldName, value) => {
-//       if (
-//         value === '' ||
-//         value === null ||
-//         (Array.isArray(value) && value.length === 0)
-//       ) {
-//         const newDetails = { ...filters.details };
-//         delete newDetails[fieldName];
-//         setFilter('details', newDetails);
-//       } else {
-//         const currentDetails = filters.details || {};
-//         setFilter('details', {
-//           ...currentDetails,
-//           [fieldName]: value,
-//         });
-//       }
-//     },
-//     [filters.details, setFilter]
-//   );
-
-//   if (!category) {
-//     return null;
-//   }
-
-//   if (loading) {
-//     return (
-//       <motion.div
-//         initial={{ opacity: 0 }}
-//         animate={{ opacity: 1 }}
-//         className="bg-white p-6 rounded-lg shadow-md border border-gray-100 mb-4"
-//       >
-//         <div className="flex justify-center items-center py-4 space-x-2">
-//           <motion.div
-//             animate={{ rotate: 360 }}
-//             transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-//           >
-//             <ImSpinner8 className="text-primary-500 text-xl" />
-//           </motion.div>
-//           <span className="text-gray-600">جاري تحميل الخصائص...</span>
-//         </div>
-//       </motion.div>
-//     );
-//   }
-
-//   if (!dynamicFilters || dynamicFilters.length === 0) {
-//     return (
-//       <motion.div
-//         initial={{ opacity: 0 }}
-//         animate={{ opacity: 1 }}
-//         className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 mb-4"
-//       >
-//         <div className="text-gray-500 text-center py-4 flex flex-col items-center">
-//           <svg
-//             xmlns="http://www.w3.org/2000/svg"
-//             className="h-10 w-10 text-gray-300 mb-2"
-//             fill="none"
-//             viewBox="0 0 24 24"
-//             stroke="currentColor"
-//           >
-//             <path
-//               strokeLinecap="round"
-//               strokeLinejoin="round"
-//               strokeWidth={1.5}
-//               d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-//             />
-//           </svg>
-//           <p>لا توجد خصائص متاحة لهذه الفئة</p>
-//         </div>
-//       </motion.div>
-//     );
-//   }
-
-//   return (
-//     <motion.div
-//       initial={{ opacity: 0, y: 20 }}
-//       animate={{ opacity: 1, y: 0 }}
-//       transition={{ duration: 0.3 }}
-//       className="bg-white shadow-sm p-4 space-y-6 border border-gray-100 rounded-lg"
-//     >
-//       <div className="flex items-center justify-between">
-//         <motion.h3
-//           whileHover={{ scale: 1.02 }}
-//           className="text-lg font-semibold text-gray-900 flex items-center gap-2"
-//         >
-//           <svg
-//             xmlns="http://www.w3.org/2000/svg"
-//             className="h-5 w-5 text-primary"
-//             viewBox="0 0 20 20"
-//             fill="currentColor"
-//           >
-//             <path
-//               fillRule="evenodd"
-//               d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z"
-//               clipRule="evenodd"
-//             />
-//           </svg>
-//           خصائص {category.name}
-//         </motion.h3>
-//       </div>
-
-//       <div className="space-y-6">
-//         {dynamicFilters.map((field, index) => (
-//           <motion.div
-//             key={field.name}
-//             initial={{ opacity: 0, y: 10 }}
-//             animate={{ opacity: 1, y: 0 }}
-//             transition={{ duration: 0.3, delay: index * 0.05 }}
-//           >
-//             <DynamicField
-//               field={field}
-//               value={localValues[field.name] || ''}
-//               onChange={handleFieldChange}
-//               onBlur={handleFieldBlur}
-//             />
-//           </motion.div>
-//         ))}
-//       </div>
-//     </motion.div>
-//   );
-// }
 'use client';
 
 import { useState, useCallback } from 'react';
@@ -258,11 +113,11 @@ export default function StaticFilters() {
   };
 
   const inputClass =
-    'w-full rounded-xl border border-stone-200/60 bg-stone-50/50 px-4 py-2.5 text-sm text-stone-900 placeholder-stone-400 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/10 focus:bg-white transition-all duration-300 outline-none';
+    'w-full rounded-xl border border-white/10 bg-[#171512] px-4 py-2.5 text-sm text-[#F5F0E9] placeholder-stone-400 focus:border-[#C99B70] focus:ring-2 focus:ring-[#C99B70]/20 focus:bg-[#171512] transition-all duration-300 outline-none';
   const labelClass =
-    'flex items-center gap-2 text-sm font-semibold text-stone-700 mb-2';
+    'flex items-center gap-2 text-sm font-semibold text-stone-300 mb-2';
 
-  const FiltersContent = () => (
+  const renderFiltersContent = () => (
     <div className="space-y-6">
       <motion.div
         initial={{ opacity: 0 }}
@@ -270,7 +125,7 @@ export default function StaticFilters() {
         transition={{ delay: 0.1 }}
       >
         <label htmlFor="search-sort" className={labelClass}>
-          <FaSortAmountDown className="text-orange-600" /> ترتيب النتائج
+          <FaSortAmountDown className="text-[#C99B70]" /> ترتيب النتائج
         </label>
         <select
           id="search-sort"
@@ -290,7 +145,7 @@ export default function StaticFilters() {
         transition={{ delay: 0.15 }}
       >
         <label htmlFor="search-rating" className={labelClass}>
-          <FaStar className="text-orange-600" /> متوسط التقييم الأدنى
+          <FaStar className="text-[#C99B70]" /> متوسط التقييم الأدنى
         </label>
         <select
           id="search-rating"
@@ -307,7 +162,7 @@ export default function StaticFilters() {
         </select>
       </motion.div>
 
-      <div className="border-t border-stone-200/60 my-4" />
+      <div className="border-t border-white/10/60 my-4" />
 
       <div className="space-y-5">
         <motion.div
@@ -316,7 +171,7 @@ export default function StaticFilters() {
           transition={{ delay: 0.2 }}
         >
           <label htmlFor="search-brand" className={labelClass}>
-            <FaTag className="text-orange-600" /> الماركة
+            <FaTag className="text-[#C99B70]" /> الماركة
           </label>
           <input
             id="search-brand"
@@ -334,7 +189,7 @@ export default function StaticFilters() {
           transition={{ delay: 0.25 }}
         >
           <label htmlFor="search-subcategory" className={labelClass}>
-            <FaLayerGroup className="text-orange-600" /> الفئة الفرعية
+            <FaLayerGroup className="text-[#C99B70]" /> الفئة الفرعية
           </label>
           <input
             id="search-subcategory"
@@ -352,7 +207,7 @@ export default function StaticFilters() {
           transition={{ delay: 0.3 }}
         >
           <label htmlFor="search-vendor" className={labelClass}>
-            <FaStore className="text-orange-600" /> معرّف البائع
+            <FaStore className="text-[#C99B70]" /> معرّف البائع
           </label>
           <input
             id="search-vendor"
@@ -373,7 +228,7 @@ export default function StaticFilters() {
         transition={{ delay: 0.35 }}
       >
         <label className={labelClass}>
-          <FaMapMarkerAlt className="text-orange-600" /> المدينة
+          <FaMapMarkerAlt className="text-[#C99B70]" /> المدينة
         </label>
         <select
           value={filters.city || ''}
@@ -399,7 +254,7 @@ export default function StaticFilters() {
             className="overflow-hidden"
           >
             <label className={labelClass}>
-              <FaMapMarkerAlt className="text-orange-600/70" /> المنطقة
+              <FaMapMarkerAlt className="text-[#C99B70]/70" /> المنطقة
             </label>
             <select
               value={filters.town || ''}
@@ -425,11 +280,11 @@ export default function StaticFilters() {
         transition={{ delay: 0.4 }}
       >
         <label className={labelClass}>
-          <FaMoneyBillWave className="text-orange-600" /> نطاق السعر (ر.س)
+          <FaMoneyBillWave className="text-[#C99B70]" /> نطاق السعر
         </label>
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="text-xs text-stone-500 mb-1.5 block font-medium">
+            <label className="text-xs text-stone-400 mb-1.5 block font-medium">
               أدنى سعر
             </label>
             <input
@@ -465,7 +320,7 @@ export default function StaticFilters() {
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
         onClick={handleReset}
-        className="w-full mt-4 flex items-center justify-center gap-2 rounded-xl border border-stone-200 bg-stone-100 py-3 text-sm font-semibold text-stone-600 transition-colors hover:bg-orange-50 hover:border-orange-200 hover:text-orange-700"
+        className="w-full mt-4 flex items-center justify-center gap-2 rounded-xl border border-stone-200 bg-[#29251F] py-3 text-sm font-semibold text-stone-300 transition-colors hover:bg-[#C99B70]/10 hover:border-[#C99B70]/30 hover:text-[#E5C5A5]"
       >
         <FaUndo className="text-xs" />
         إعادة تعيين جميع الفلاتر
@@ -478,19 +333,19 @@ export default function StaticFilters() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="bg-white/70 backdrop-blur-xl border border-stone-200/60 rounded-3xl shadow-sm shadow-stone-900/5"
+      className="bg-[#211F1B]/90 backdrop-blur-xl border border-white/10 rounded-3xl shadow-xl shadow-black/20"
       dir="rtl"
     >
       {/* عرض الموبايل (قابل للطي) */}
       <div className="sm:hidden">
         <div className="p-5 flex items-center justify-between border-b border-stone-100">
           <h3 className="text-base font-bold text-stone-900 flex items-center gap-2">
-            <FaLayerGroup className="text-orange-600" />
+            <FaLayerGroup className="text-[#C99B70]" />
             تصفية النتائج
           </h3>
           <button
             onClick={() => setIsMobileOpen(!isMobileOpen)}
-            className="p-2 rounded-lg bg-stone-100 text-stone-600 hover:bg-orange-50 hover:text-orange-600 transition-colors"
+            className="p-2 rounded-lg bg-stone-100 text-stone-600 hover:bg-[#C99B70]/10 hover:text-[#C99B70] transition-colors"
             aria-label="تبديل عرض الفلاتر"
           >
             <FaChevronDown
@@ -509,7 +364,7 @@ export default function StaticFilters() {
               className="overflow-hidden"
             >
               <div className="p-5">
-                <FiltersContent />
+                {renderFiltersContent()}
               </div>
             </motion.div>
           )}
@@ -520,17 +375,17 @@ export default function StaticFilters() {
       <div className="hidden sm:block p-6">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-lg font-bold text-stone-900 flex items-center gap-2">
-            <FaLayerGroup className="text-orange-600" />
+            <FaLayerGroup className="text-[#C99B70]" />
             تصفية النتائج
           </h3>
           <button
             onClick={handleReset}
-            className="text-xs font-medium text-stone-500 hover:text-orange-600 transition-colors flex items-center gap-1.5 px-3 py-1.5 rounded-lg hover:bg-orange-50"
+            className="text-xs font-medium text-stone-500 hover:text-[#C99B70] transition-colors flex items-center gap-1.5 px-3 py-1.5 rounded-lg hover:bg-[#C99B70]/10"
           >
             <FaUndo /> إعادة تعيين
           </button>
         </div>
-        <FiltersContent />
+        {renderFiltersContent()}
       </div>
     </motion.div>
   );

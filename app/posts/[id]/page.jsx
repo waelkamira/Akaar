@@ -18,7 +18,6 @@ const SellerPosts = () => {
   const router = useRouter();
   const session = useSession();
   const { id } = useParams();
-  console.log('id', id);
 
   useEffect(() => {
     fetchPosts();
@@ -30,7 +29,6 @@ const SellerPosts = () => {
 
     setLoading(true);
     try {
-      console.log('id من داخل الدالة', id);
 
       const response = await fetch(`/api/posts/${id}?page=${page}&limit=8`, {
         next: { revalidate: 1800 }, // إعادة التحقق بعد 30 دقيقة

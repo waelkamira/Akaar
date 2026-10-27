@@ -1,7 +1,6 @@
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '@/lib/db/prisma';
 import bcrypt from 'bcrypt';
-
-const prisma = new PrismaClient();
+import { validateRegistrationInput } from '@/lib/auth/registration-validation.mjs';
 
 export async function POST(req) {
   let input;
@@ -14,20 +13,14 @@ export async function POST(req) {
     });
   }
 
-  const name = typeof input?.name === 'string' ? input.name.trim() : '';
-  const email =
-    typeof input?.email === 'string' ? input.email.trim().toLowerCase() : '';
-  const password = typeof input?.password === 'string' ? input.password : '';
-
-  if (!name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || password.length < 5) {
-    return new Response(
-      JSON.stringify({ error: 'تحقق من الاسم والبريد الإلكتروني وكلمة المرور.' }),
-      {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' },
-      },
-    );
+  const validation = validateRegistrationInput(input);
+  if (!validation.ok) {
+    return new Response(JSON.stringify({ error: validation.error }), {
+      status: 400,
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
+  const { name, email, password } = validation;
 
   try {
     const existingUser = await prisma.user.findUnique({ where: { email } });

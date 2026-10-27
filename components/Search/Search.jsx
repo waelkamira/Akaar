@@ -429,7 +429,7 @@ export default function EnhancedSearch() {
           searchPath === '/search' &&
           !pathname.match(/\/search\/categoryId=\d+/)
         ) {
-          params.set('category', category.id);
+          params.set('categoryId', String(category.id));
         }
         router.push(`${searchPath}?${params.toString()}`);
         setShowSuggestions(false);
@@ -490,12 +490,12 @@ export default function EnhancedSearch() {
   return (
     <div className="w-full flex flex-col justify-center items-center gap-4 sm:p-0 z-10 relative ">
       {/* حاوية شريط البحث: تم تقليل الارتفاع على الهواتف من h-20 إلى h-14 وإعادته sm:h-20 */}
-      <div className="w-full sm:w-2/3 bg-white/90 backdrop-blur-sm rounded-lg shadow-sm flex justify-center items-center gap-2 h-14 sm:h-20 px-3 sm:px-4">
+      <div className="w-full border border-white/10 bg-[#211F1B]/95 backdrop-blur-xl rounded-2xl shadow-2xl shadow-black/20 flex justify-center items-center gap-2 min-h-14 sm:min-h-20 px-2 sm:px-3 py-2">
         {/* زر البحث: تم تقليل الارتفاع والخط على الشاشات الصغيرة h-8 والخط text-xs */}
         <button
           onClick={() => handleSearch(currentInputValue)}
           disabled={isSearching}
-          className="flex justify-center items-center bg-gradient-to-r from-primary-500 to-primary-400 text-white text-nowrap rounded-lg h-8 sm:h-10 px-2 sm:px-6 hover:bg-primary-600 hover:scale-105 transition-all cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed text-xs sm:text-base"
+          className="flex justify-center items-center bg-[#C99B70] text-[#171512] text-nowrap rounded-xl h-9 sm:h-11 px-3 sm:px-6 hover:bg-[#D9B18C] transition-all cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed text-xs sm:text-base"
           aria-label="بحث"
         >
           {isSearching ? (
@@ -523,7 +523,7 @@ export default function EnhancedSearch() {
               onKeyDown={handleKeyDown}
               onFocus={handleInputFocus}
               placeholder="ابحث عن عقار، سيارة، أو أي منتج..."
-              className="flex-grow w-full rounded-lg h-8 sm:h-10 p-2 text-xs sm:text-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-500 placeholder:text-[11px] sm:placeholder:text-sm lg:placeholder:text-lg pr-6 pl-6 sm:pr-8 sm:pl-8 text-right"
+              className="flex-grow w-full rounded-xl h-9 sm:h-11 p-2 text-xs sm:text-base border border-white/10 bg-[#171512] text-[#F5F0E9] focus:outline-none focus:ring-2 focus:ring-[#C99B70]/40 placeholder:text-[11px] sm:placeholder:text-sm lg:placeholder:text-base placeholder:text-stone-500 pr-6 pl-6 sm:pr-8 sm:pl-8 text-right"
               aria-autocomplete="list"
               aria-controls="search-suggestions"
               aria-expanded={showSuggestions}
@@ -534,7 +534,7 @@ export default function EnhancedSearch() {
             {currentInputValue && (
               <button
                 onClick={clearSearch}
-                className="absolute left-1.5 sm:left-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                className="absolute left-1.5 sm:left-2 top-1/2 -translate-y-1/2 text-stone-400 hover:text-[#D9B18C] transition-colors"
                 aria-label="مسح البحث"
               >
                 <ImCross className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5" />
@@ -544,7 +544,7 @@ export default function EnhancedSearch() {
             {/* أيقونة التحميل: تم تصغير حجمها وموضعها على الهواتف */}
             {isLoading && (
               <div className="absolute right-1.5 sm:right-2 top-1/2 -translate-y-1/2">
-                <ImSpinner8 className="animate-spin text-gray-400 text-xs sm:text-base" />
+                <ImSpinner8 className="animate-spin text-stone-400 text-xs sm:text-base" />
               </div>
             )}
           </div>
@@ -552,14 +552,14 @@ export default function EnhancedSearch() {
           {showSuggestions && suggestions.length > 0 && (
             <div
               id="search-suggestions"
-              className="absolute w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-y-auto text-xs sm:text-sm"
+              className="absolute z-50 w-full mt-2 bg-[#211F1B] border border-white/10 rounded-xl shadow-2xl max-h-60 overflow-y-auto text-xs sm:text-sm text-[#F5F0E9]"
               role="listbox"
             >
               {suggestions.map((suggestion, index) => (
                 <div
                   key={`${suggestion.text}-${index}`}
                   onClick={() => handleSuggestionClick(suggestion)}
-                  className="px-3 py-1.5 sm:px-4 sm:py-2 hover:bg-gray-100 cursor-pointer text-right flex justify-between items-center transition-colors"
+                  className="px-3 py-2.5 sm:px-4 sm:py-3 hover:bg-[#C99B70]/10 cursor-pointer text-right flex justify-between items-center transition-colors"
                   role="option"
                   aria-selected="false"
                 >
