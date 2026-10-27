@@ -2,31 +2,6 @@ import { prisma } from '@/lib/db/prisma';
 import { getAuthenticatedUser } from '@/lib/auth/require-auth';
 import { publicProductWhere } from '@/lib/api/public-product-where.mjs';
 import { getPagination } from '@/lib/api/validation.mjs';
-import { LRUCache } from 'lru-cache';
-import crypto from 'crypto';
-
-// إعدادات الذاكرة المؤقتة
-const cache = new LRUCache({
-  max: 100,
-  maxSize: 5000000, // 5MB
-  sizeCalculation: (value) => Buffer.byteLength(JSON.stringify(value), 'utf8'),
-  ttl: 1000 * 60 * 60, // 30 دقيقة
-});
-
-// دالة لإنشاء مفتاح ذاكرة التخزين المؤقت
-function generatePostsCacheKey(userId, page, limit) {
-  const hash = crypto
-    .createHash('md5')
-    .update(`${userId}-${page}-${limit}`)
-    .digest('hex');
-  return `posts_${hash}`;
-}
-
-// تنظيف ذاكرة التخزين المؤقت عند التعديلات
-async function clearUserPostsCache() {
-  // Keys are hashed, so prefix matching by userId cannot invalidate them reliably.
-  cache.clear();
-}
 
 export async function GET(req) {
   const url = new URL(req.url);
@@ -42,14 +17,6 @@ export async function GET(req) {
         JSON.stringify({ message: 'يجب توفير معرف المستخدم' }),
         { status: 400 }
       );
-    }
-
-    const cacheKey = generatePostsCacheKey(userId, page, limit);
-
-    // التحقق من الذاكرة المؤقتة
-    const cachedData = cache.get(cacheKey);
-    if (cachedData) {
-      return new Response(JSON.stringify(cachedData), { status: 200 });
     }
 
     // التحقق من وجود Prisma
@@ -83,8 +50,6 @@ export async function GET(req) {
     };
 
     // تخزين في الذاكرة المؤقتة
-    cache.set(cacheKey, result);
-
     return new Response(JSON.stringify(result), { status: 200 });
   } catch (error) {
     console.error('Error details:', error);
@@ -132,7 +97,6 @@ export async function DELETE(req) {
     await prisma.product.update({ where: { id }, data: { isDeleted: true, deletedAt: new Date() } });
 
     // تنظيف الذاكرة المؤقتة للمستخدم
-    await clearUserPostsCache();
 
     return new Response(JSON.stringify({ message: 'تم الحذف بنجاح ✔' }), {
       status: 200,
