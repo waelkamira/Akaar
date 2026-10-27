@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '@/lib/db/prisma';
 import { LRUCache } from 'lru-cache';
 import crypto from 'crypto';
 
@@ -10,8 +10,6 @@ const cache = new LRUCache({
   sizeCalculation: (value) => Buffer.byteLength(JSON.stringify(value), 'utf8'),
   ttl: 1000 * 60 * 60, // 60 دقيقة
 });
-
-const prisma = new PrismaClient();
 
 // دالة مساعدة لإنشاء مفتاح ذاكرة التخزين المؤقت
 function generateFavoriteCacheKey(userId, page, limit) {
@@ -99,8 +97,6 @@ export async function GET(req) {
       { error: 'حدث خطأ أثناء جلب المفضلة' },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }
 
@@ -162,8 +158,6 @@ export async function POST(req) {
       { error: 'حدث خطأ أثناء العملية' },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }
 
@@ -195,7 +189,5 @@ export async function DELETE(req) {
       { error: 'Internal Server Error' },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }
