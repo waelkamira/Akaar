@@ -1,19 +1,20 @@
 import { prisma } from '@/lib/db/prisma';
 import bcrypt from 'bcrypt';
 import { validateRegistrationInput } from '@/lib/auth/registration-validation.mjs';
+import { readJsonBody } from '@/lib/api/read-json-body.mjs';
+
+const MAX_REGISTRATION_BODY_BYTES = 16 * 1024;
 
 export async function POST(req) {
-  let input;
-  try {
-    input = await req.json();
-  } catch (error) {
-    return new Response(JSON.stringify({ error: 'بيانات الطلب غير صالحة.' }), {
-      status: 400,
+  const parsedBody = await readJsonBody(req, MAX_REGISTRATION_BODY_BYTES);
+  if (!parsedBody.ok) {
+    return new Response(JSON.stringify({ error: parsedBody.error }), {
+      status: parsedBody.status,
       headers: { 'Content-Type': 'application/json' },
     });
   }
 
-  const validation = validateRegistrationInput(input);
+  const validation = validateRegistrationInput(parsedBody.value);
   if (!validation.ok) {
     return new Response(JSON.stringify({ error: validation.error }), {
       status: 400,
