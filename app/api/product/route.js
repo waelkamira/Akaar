@@ -3,6 +3,7 @@ import { LRUCache } from 'lru-cache';
 import { prisma } from '@/lib/db/prisma';
 import { getAuthenticatedUser } from '@/lib/auth/require-auth';
 import { getPagination, isPaginationOffsetOutOfRange, isPlainObject, parseOptionalNumber } from '@/lib/api/validation.mjs';
+import { readJsonBody } from '@/lib/api/read-json-body.mjs';
 
 const cache = new LRUCache({ max: 100, ttl: 60_000 });
 const MAX_PAGE_SIZE = 50;
@@ -13,13 +14,9 @@ function readPageParams(searchParams) {
 }
 
 async function readJson(request) {
-  try {
-    const body = await request.json();
-    if (!isPlainObject(body)) return null;
-    return body;
-  } catch {
-    return null;
-  }
+  const parsedBody = await readJsonBody(request, 128 * 1024);
+  if (!parsedBody.ok || !isPlainObject(parsedBody.value)) return parsedBody;
+  return parsedBody;
 }
 
 
@@ -41,7 +38,6 @@ export async function GET(request) {
         return NextResponse.json([]);
       }
     }
-
     const products = await prisma.product.findMany({
       where,
       skip,
@@ -61,8 +57,10 @@ export async function POST(request) {
   const user = await getAuthenticatedUser();
   if (!user) return NextResponse.json({ error: 'يجب تسجيل الدخول لإنشاء منتج' }, { status: 401 });
 
-  const body = await readJson(request);
-  if (!body) return NextResponse.json({ error: 'صيغة الطلب غير صالحة' }, { status: 400 });
+  const parsedBody = await readJson(request);
+  if (!parsedBody.ok) return NextResponse.json({ error: parsedBody.error }, { status: parsedBody.status });
+  if (!isPlainObject(parsedBody.value)) return NextResponse.json({ error: 'صيغة الطلب غير صالحة' }, { status: 400 });
+  const body = parsedBody.value;
 
   const title = typeof body.title === 'string' ? body.title.trim() : '';
   const categoryId = parseOptionalNumber(body.categoryId, { integer: true, min: 1 });
@@ -122,8 +120,10 @@ export async function PUT(request) {
   const user = await getAuthenticatedUser();
   if (!user) return NextResponse.json({ error: 'يجب تسجيل الدخول لتحديث المنتج' }, { status: 401 });
 
-  const body = await readJson(request);
-  if (!body) return NextResponse.json({ error: 'صيغة الطلب غير صالحة' }, { status: 400 });
+  const parsedBody = await readJson(request);
+  if (!parsedBody.ok) return NextResponse.json({ error: parsedBody.error }, { status: parsedBody.status });
+  if (!isPlainObject(parsedBody.value)) return NextResponse.json({ error: 'صيغة الطلب غير صالحة' }, { status: 400 });
+  const body = parsedBody.value;
   const id = typeof body.id === 'string' ? body.id.trim() : '';
   if (!id) return NextResponse.json({ error: 'معرف المنتج مطلوب' }, { status: 400 });
 
@@ -183,8 +183,11 @@ export async function DELETE(request) {
   const user = await getAuthenticatedUser();
   if (!user) return NextResponse.json({ error: 'يجب تسجيل الدخول لحذف المنتج' }, { status: 401 });
 
-  const body = await readJson(request);
-  const id = typeof body?.id === 'string' ? body.id.trim() : '';
+  const parsedBody = await readJson(request);
+  if (!parsedBody.ok) return NextResponse.json({ error: parsedBody.error }, { status: parsedBody.status });
+  if (!isPlainObject(parsedBody.value)) return NextResponse.json({ error: 'صيغة الطلب غير صالحة' }, { status: 400 });
+  const body = parsedBody.value;
+  const id = typeof body.id === 'string' ? body.id.trim() : '';
   if (!id) return NextResponse.json({ error: 'معرف المنتج مطلوب' }, { status: 400 });
 
   try {
