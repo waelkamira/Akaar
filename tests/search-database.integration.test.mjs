@@ -4,7 +4,7 @@ import { randomUUID } from 'node:crypto';
 import { PrismaClient } from '@prisma/client';
 import { buildWhere, getQueryTerms, textConditions, SORT_ORDERS } from '../lib/api/search-query.mjs';
 
-const enabled = Boolean(process.env.DATABASE_URL);
+const enabled = process.env.SEARCH_DB_INTEGRATION === '1' && Boolean(process.env.DATABASE_URL);
 const prisma = new PrismaClient();
 const suffix = randomUUID();
 const userId = `search-test-user-${suffix}`;
