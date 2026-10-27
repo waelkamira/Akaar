@@ -251,3 +251,10 @@ This section is the operational checkpoint for continuing the audit. It records 
 - **Important schema discovery:** the repository also contains a legacy root-level `schema.prisma` that differs from `prisma/schema.prisma`. CI and package installation now explicitly generate/validate against `prisma/schema.prisma`, the schema used by migrations and the search code. The root-level legacy schema still needs a separately reviewed retirement or reconciliation; it must not silently drive Prisma Client generation.
 - PR #22 merged after the PostgreSQL search/filter integration tests and required CI checks passed. PR #26 subsequently merged the documented local Docker/PostgreSQL test database workflow after Quality checks run `40484294756` passed on its exact head. This does not verify an existing production database migration or browser-driven API flows.
 - The read-only schema inventory added in the current audit branch has not yet been run against a restored legacy database; no migration SQL should be inferred from its expected-table list alone.
+
+
+### API security follow-up — 2026-10-27
+
+| ID | Priority | Area | Finding | Change and verification | Status |
+|---|---|---|---|---|---|
+| AK-028 | P1 | Product/category data integrity | Product creation accepted a client-supplied `categoryName` even after loading the canonical category record by ID. This allowed stored `categoryId` and `categoryName` to disagree and could corrupt category-based filtering/display. | Product create/update now derive both persisted category fields from the server-loaded category record through `getCanonicalCategoryFields()`. Added focused unit tests for canonical mapping and invalid records. CI and API/database integration verification are pending. | Code changed; verification pending |
