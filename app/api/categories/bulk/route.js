@@ -1,19 +1,10 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
-import { parsePositiveInteger } from '@/lib/api/validation.mjs';
+import { parseCategoryIds } from '@/lib/api/category-ids.mjs';
 
 export const revalidate = 60;
 const MAX_CATEGORIES = 24;
 const PREVIEW_SIZE = 2;
-
-function parseCategoryIds(value) {
-  return [...new Set(
-    String(value || '')
-      .split(',')
-      .map((item) => parsePositiveInteger(item, null))
-      .filter((id) => id !== null),
-  )].slice(0, MAX_CATEGORIES);
-}
 
 export async function GET(request) {
   try {
