@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { MAX_IMAGE_SIZE, safeImageFileName, validateImageContent, validateImageFile } from '../lib/uploads/validate-image.mjs';
+import { MAX_IMAGE_SIZE, MAX_UPLOAD_REQUEST_SIZE, isUploadRequestTooLarge, safeImageFileName, validateImageContent, validateImageFile } from '../lib/uploads/validate-image.mjs';
 
 function fakeFile({ type = 'image/jpeg', size = 1024, name = 'photo.jpg' } = {}) {
   return { type, size, name, arrayBuffer: async () => new ArrayBuffer(0) };
@@ -40,4 +40,12 @@ test('image content validation checks signatures rather than trusting MIME type'
 test('image content validation rejects MIME-spoofed and truncated files', async () => {
   assert.match(await validateImageContent(fileWithBytes('image/jpeg', [0x3c, 0x73, 0x76, 0x67])), /لا يطابق/);
   assert.match(await validateImageContent(fileWithBytes('image/png', [0x89, 0x50, 0x4e])), /لا يطابق/);
+});
+
+test('upload request size guard rejects oversized or malformed Content-Length', () => {
+  const request = (length) => ({ headers: { get: () => length } });
+  assert.equal(isUploadRequestTooLarge(request(String(MAX_UPLOAD_REQUEST_SIZE))), false);
+  assert.equal(isUploadRequestTooLarge(request(String(MAX_UPLOAD_REQUEST_SIZE + 1))), true);
+  assert.equal(isUploadRequestTooLarge(request('not-a-number')), true);
+  assert.equal(isUploadRequestTooLarge({ headers: { get: () => null } }), false);
 });
