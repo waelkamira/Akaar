@@ -120,3 +120,69 @@ An issue may be marked **Verified fixed** only after the relevant code change is
 | 2026-10-27 | Product deletion route and authorization | PR #14 (`fix/secure-product-delete-actions`) replaces two stale deletion URLs, uses the session role for admin-control visibility, and enforces owner-or-admin authorization server-side | All four focused Node tests passed locally under Node.js 22.16.0. Full repository CI and browser click-through tests have not been confirmed; Vercel preview deployment is blocked by the daily deployment quota. |
 
 | 2026-10-27 | Admin user pagination overflow | PR #16 (`fix/admin-user-pagination-overflow`) reuses the shared safe pagination helper in `/api/allUsers` | Existing unit coverage checks extremely large page values and safe offsets. Full repository CI and database-backed route tests have not been confirmed; do not mark as fully verified until those checks pass. |
+
+
+## Continuation handoff — 2026-10-27
+
+This section is the operational checkpoint for continuing the audit. It records the actual branch/PR state and must be refreshed from GitHub before further changes. A PR being open or mergeable does **not** mean its code is tested or safe to merge.
+
+### Current Git state
+
+- Base branch observed during this audit: `main`, commit `3773ba0ea6bf4bb535c004b5463ef8441b1d316b`.
+- The changes below are separate, **unmerged pull requests** at the time of this checkpoint. Do not assume their changes are present on `main`.
+- PR #13 — [Bound registration JSON request bodies](https://github.com/waelkamira/Akaar/pull/13), branch `security/bounded-registration-body`, head `81c137c9145dff11537bf2942c35ba96baf056f5`.
+- PR #14 — [Fix product deletion endpoints and enforce owner/admin access](https://github.com/waelkamira/Akaar/pull/14), branch `fix/secure-product-delete-actions`, head `4546aa922987ec1420a23e93f51ec6dbadcbbdfc`.
+- PR #15 — [Record registration and product deletion audit findings](https://github.com/waelkamira/Akaar/pull/15), branch `docs/audit-ledger-registration-delete`. This documentation PR records AK-023 through AK-025 and this handoff.
+- PR #16 — [Clamp admin user pagination offsets](https://github.com/waelkamira/Akaar/pull/16), branch `fix/admin-user-pagination-overflow`, head `2632cbd0e6e27f909a6a358bc00a9a03175c59c2`.
+
+**Status caveat:** At the last observed check, these PRs were open and reported mergeable, but Vercel preview checks failed because the account exceeded its daily deployment limit (`api-deployments-free-per-day`, more than 100 deployments). This is a deployment-quota blocker, not evidence that the code itself failed tests. Conversely, it is not a substitute for a passing code CI run. Full GitHub Actions CI was not confirmed for PRs #13, #14, or #16 at this checkpoint. Re-fetch each PR and its latest checks before acting; head SHAs and states may have changed.
+
+### Work completed or proposed (not all merged)
+
+1. **Registration request-size protection — PR #13 / AK-023**
+   - Added `lib/api/read-json-body.mjs`, a streaming JSON reader with a 16 KiB default cap, explicit oversized-body handling (413), malformed JSON/invalid UTF-8 handling, and body validation.
+   - Updated `app/api/register/route.js` to use the bounded reader before registration validation.
+   - Added `tests/read-json-body.test.mjs` covering valid JSON, malformed JSON, invalid UTF-8, oversized/missing body, and invalid limits.
+   - Five focused tests were reported as passing locally under Node.js 22.16.0. Re-run them from the actual PR checkout and run the complete project CI before merge. Durable registration rate limiting and hosting-level request limits remain necessary.
+
+2. **Product deletion route and authorization — PR #14 / AK-024**
+   - Changed two stale UI deletion URLs (`/api/allPosts` and `/api/Cars/allPosts`) to `DELETE /api/posts/{id}`.
+   - Removed client-provided `isAdmin` and body identity as authorization inputs; the endpoint is intended to authorize the authenticated owner or an ADMIN role server-side and soft-delete the active product.
+   - Added `lib/api/product-delete-access.mjs` and `tests/product-delete-access.test.mjs` for owner/admin/unauthorized/missing-identity cases.
+   - Four focused tests were reported as passing locally under Node.js 22.16.0. Before merge, explicitly verify the actual return shape of `getAuthenticatedUser()`, the session role field and its casing in the UI, whether the `SmallItem` component has the expected `session` value, the existence/types of `isDeleted` and `deletedAt` in Prisma, and the current Next.js dynamic-route params convention. Run the full suite and browser click-through tests. Do not rely on UI visibility for authorization.
+
+3. **Audit ledger — PR #15**
+   - Records AK-023 (registration body limit), AK-024 (delete endpoints/authorization), and AK-025 (admin-user pagination overflow), including what is known and what remains unverified.
+   - This PR is documentation-only; confirm the final README structure and ensure its statements match the latest code/CI evidence before merging.
+
+4. **Admin-user pagination safety — PR #16 / AK-025**
+   - Replaces manual page/limit parsing in `app/api/allUsers/route.js` with the shared `getPagination()` helper and uses its safe `skip` value.
+   - Computes `hasMore` from the actual offset and returned row count.
+   - Existing `tests/api-validation.test.mjs` is reported to cover very large page values and safe offsets. Verify the helper's behavior and route variable names, then run the full test/lint/build workflow and database-backed route tests.
+
+### Immediate next steps (in order)
+
+- [ ] Re-fetch PRs #13–#16 and confirm current state, merge status, latest head SHA, changed files, and review comments. Do not rely on this historical snapshot if GitHub has changed.
+- [ ] Inspect the complete diffs and source files for PRs #13, #14, and #16. Resolve the specific compatibility/auth/schema checks listed above.
+- [ ] Run the focused tests for each branch, then the full project checks: `npm ci`, `npm test`, `npm run lint`, `npx prisma validate`, `npx prisma generate`, clean PostgreSQL migration test, schema-drift report, and `npm run build` with the correct environment. Record actual commands, commit SHAs, and results here.
+- [ ] Inspect GitHub Actions separately from Vercel preview statuses. If required code CI is missing or does not run on pull requests, fix the workflow before merging. Do not repeatedly trigger Vercel deployments while the daily quota is exhausted.
+- [ ] Run browser tests for product deletion as owner, admin, and unrelated user; verify failed requests, deleted-product visibility, and UI refresh. Test registration oversized/malformed requests and admin pagination boundaries against a test database.
+- [ ] Merge only reviewed PRs with passing relevant CI and no unresolved security/data-integrity concerns. Keep the changes in separate PRs; merge the documentation PR only after its statements accurately reflect the code and evidence.
+- [ ] After merging, update this ledger with merge commit SHAs and rerun checks against the resulting `main`. Never assume a passing feature branch guarantees the combined main branch passes.
+
+### Remaining high-priority risks and release blockers
+
+- **P0 — historical provider credentials (AK-000):** revoke/rotate ImageKit, ImgBB, and Imgur credentials that appeared in Git history. Removing them from current source does not invalidate them or erase history. This requires the repository owner to rotate them in provider dashboards and replace deployment secrets. Do not paste secrets into source or logs.
+- **P1 — Prisma schema/migration drift (AK-015):** missing tables/columns, a Category ID type mismatch, and legacy ProductImage shape were found by comparing the initial migration with `schema.prisma`. Review the generated schema diff, create a data-preserving migration, test it against both a clean database and a representative copy of existing data, and take a verified backup before any production migration. **Do not apply guessed/destructive SQL to production.**
+- **P1 — complete API security audit (AK-001, AK-007):** audit every private/admin/mutation route for server-side authentication, role/ownership checks, strict input/body limits, rate limiting, safe errors, and appropriate logging. The fixes above cover only specific paths, not the entire API.
+- **P1 — upload and registration abuse controls (AK-020, AK-021, AK-023):** signature and declared-size checks exist in inspected upload paths; hosting-level body limits and durable rate limiting still need configuration/testing, including requests without `Content-Length`.
+- **P1 — search and filters (AK-004, AK-012, AK-018):** test category, text, seller, location, dynamic details, sort, pagination, URL state, clear-filter behavior, empty results, and malformed values in combinations. Measure query plans/latency on representative data.
+- **P1 — real commerce is not production-ready (AK-014):** current checkout is demo-only. Implement currency-aware money storage, taxes/shipping, persisted order lifecycle, inventory reservation, payment provider, verified webhooks, idempotency, refunds, and end-to-end tests before claiming purchases work.
+- **P1 — database/API integration:** unit tests and clean-database migration tests do not establish compatibility with the existing production database or prove route permissions and transactions under real data.
+- **P2 — UI and accessibility:** test every important button/link, direct product links, search/filter controls, cart/favorites/profile/seller/admin pages, responsive breakpoints, keyboard/focus behavior, loading/error/empty states, and RTL layout in a real browser.
+- **P2 — design/architecture:** continue extracting oversized components and applying a consistent premium marketplace design only after preserving the behavior and tests of the existing flows.
+- **Operations:** Vercel daily deployment quota was exhausted at the last check. Recheck after the quota window resets or use the repository's independent GitHub Actions checks. A blocked preview must be recorded as blocked, not passed or failed code CI.
+
+### Release decision
+
+**Do not declare Akaar production-ready yet.** The currently recorded work is a partial remediation, several changes remain in unmerged PRs, full CI for the latest PR heads is unconfirmed, and the credential-rotation, migration-safety, API-wide security, browser, and real-checkout blockers remain open. Mark an item “Verified fixed” only after reviewing the relevant diff and recording a passing test result against the exact commit.
