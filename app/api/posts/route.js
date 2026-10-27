@@ -1,7 +1,7 @@
 import { prisma } from '@/lib/db/prisma';
 import { getAuthenticatedUser } from '@/lib/auth/require-auth';
 import { publicProductWhere } from '@/lib/api/public-product-where.mjs';
-import { getPagination } from '@/lib/api/validation.mjs';
+import { getPagination, isPaginationOffsetOutOfRange } from '@/lib/api/validation.mjs';
 
 export async function GET(req) {
   const url = new URL(req.url);
@@ -25,15 +25,21 @@ export async function GET(req) {
     }
 
     // جلب البيانات من قاعدة البيانات
-    const [totalCount, products] = await Promise.all([
-      prisma.product.count({ where: publicProductWhere({ userId }) }),
-      prisma.product.findMany({
-        where: publicProductWhere({ userId }),
-        skip,
-        take: limit,
-        orderBy: { createdAt: 'desc' },
-      }),
-    ]);
+    const where = publicProductWhere({ userId });
+    const totalCount = await prisma.product.count({ where });
+    if (isPaginationOffsetOutOfRange(skip, totalCount)) {
+      return new Response(
+        JSON.stringify({ message: 'لم يتم العثور على إعلانات' }),
+        { status: 404, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const products = await prisma.product.findMany({
+      where,
+      skip,
+      take: limit,
+      orderBy: { createdAt: 'desc' },
+    });
     if (products.length === 0) {
       return new Response(
         JSON.stringify({ message: 'لم يتم العثور على إعلانات' }),
