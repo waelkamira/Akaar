@@ -20,7 +20,7 @@ const SORT_ORDERS = {
 
 function validPositiveInteger(value, fallback) {
   const parsed = Number(value);
-  return Number.isInteger(parsed) && parsed > 0 ? parsed : fallback;
+  return Number.isSafeInteger(parsed) && parsed > 0 ? parsed : fallback;
 }
 
 function getQueryTerms(query) {
@@ -137,8 +137,10 @@ export async function POST(request) {
     body.filters && typeof body.filters === 'object' && !Array.isArray(body.filters)
       ? body.filters
       : {};
-  const page = validPositiveInteger(body.page, 1);
   const limit = Math.min(validPositiveInteger(body.limit, 20), MAX_PAGE_SIZE);
+  // Keep offset arithmetic within JavaScript's safe-integer range.
+  const maxPage = Math.floor(Number.MAX_SAFE_INTEGER / limit) + 1;
+  const page = Math.min(validPositiveInteger(body.page, 1), maxPage);
   const where = buildWhere({ categoryId: body.categoryId, filters });
   const sortKey =
     typeof filters.sortBy === 'string' ? filters.sortBy : body.sortBy;
