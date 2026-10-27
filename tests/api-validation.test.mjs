@@ -65,6 +65,7 @@ test('isPlainObject rejects null, arrays and primitive values', () => {
 test('isValidIdentifier rejects malformed and oversized identifiers', () => {
   assert.equal(isValidIdentifier('abc'), true);
   assert.equal(isValidIdentifier('  abc  '), false);
+  assert.equal(isValidIdentifier('ab\ncd'), false);
   assert.equal(isValidIdentifier(''), false);
   assert.equal(isValidIdentifier(123), false);
   assert.equal(isValidIdentifier('x'.repeat(128)), true);
