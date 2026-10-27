@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports -- This seed script runs as CommonJS under Node. */
 const { PrismaClient } = require('@prisma/client');
 
 const prisma = new PrismaClient();
