@@ -110,23 +110,24 @@ function FavoriteButton({ item }) {
   }, [item?.id, userId, fetchAndStoreUserFavoriteIds]);
 
   return (
-    <div
-      className="absolute top-0 left-2 z-10 size-10 p-2"
-      onClick={(e) => {
-        e.stopPropagation();
+    <button
+      type="button"
+      aria-label={isFavorited ? 'إزالة من المفضلة' : 'إضافة إلى المفضلة'}
+      aria-pressed={isFavorited}
+      className="absolute top-0 left-2 z-10 flex size-10 items-center justify-center p-2"
+      onClick={(event) => {
+        event.stopPropagation();
         handleFavorite();
       }}
     >
-      <div
-        className={` backdrop-blur-sm rounded-full size-8 p-2 transition-all duration-300 hover:scale-110 cursor-pointer`}
-      >
+      <span className="flex size-8 items-center justify-center rounded-full p-2 backdrop-blur-sm transition-transform duration-300 hover:scale-110">
         {isFavorited ? (
           <TbHeartFilled className="size-4 text-red-600 transition-colors duration-300" />
         ) : (
-          <FaRegHeart className="size-4 bg-transparent text-clip text-gray-600 hover:text-red-500 transition-colors duration-300" />
+          <FaRegHeart className="size-4 bg-transparent text-clip text-gray-600 transition-colors duration-300 hover:text-red-500" />
         )}
-      </div>
-    </div>
+      </span>
+    </button>
   );
 }
 
