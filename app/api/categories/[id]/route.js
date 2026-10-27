@@ -16,8 +16,10 @@ export async function GET(req, { params }) {
   console.log('id من داخل الدالة', id);
 
   // الحصول على قيم الصفحة والحد الأقصى مع قيم افتراضية
-  const page = parseInt(searchParams.get('page')) || 0;
-  const limit = parseInt(searchParams.get('limit')) || 8;
+  const requestedPage = Number.parseInt(searchParams.get('page') || '1', 10);
+  const requestedLimit = Number.parseInt(searchParams.get('limit') || '8', 10);
+  const page = Number.isInteger(requestedPage) && requestedPage > 0 ? requestedPage : 1;
+  const limit = Number.isInteger(requestedLimit) && requestedLimit > 0 ? Math.min(requestedLimit, 50) : 8;
   const skip = (page - 1) * limit;
 
   // إنشاء مفتاح للتخزين المؤقت
@@ -33,7 +35,7 @@ export async function GET(req, { params }) {
   try {
     // جلب العدد الإجمالي للمنتجات
     const totalCount = await prisma.product.count({
-      where: { categoryId: toInteger(id) },
+      where: { categoryId: toInteger(id), isDeleted: false, isActive: true },
     });
 
     // جلب المنتجات
