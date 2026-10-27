@@ -88,7 +88,7 @@ export async function DELETE(req) {
   }
 
   try {
-    const product = await prisma.product.findFirst({ where: { id, userId, isDeleted: false, isActive: true, category: { isActive: true } } });
+    const product = await prisma.product.findFirst({ where: { id, userId, isDeleted: false } });
 
     if (!product) {
       return new Response(
