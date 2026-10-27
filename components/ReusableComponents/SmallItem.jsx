@@ -1,5 +1,5 @@
 'use client';
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext } from 'react';
 import toast from 'react-hot-toast';
 import CustomToast from './CustomToast';
 import { usePathname, useRouter } from 'next/navigation';
@@ -10,20 +10,10 @@ import PostGallery from '../photos/PostGallery';
 import UserNameAndPhoto from './userNameAndPhoto';
 import { motion } from 'framer-motion';
 export default function SmallItem({ post, index }) {
-  const [user, setUser] = useState(null);
   const { dispatch } = useContext(inputsContext);
   const session = useSession();
   const router = useRouter();
   const path = usePathname();
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const userData = localStorage.getItem('User');
-      if (userData && userData !== 'undefined') {
-        setUser(JSON.parse(userData));
-      }
-    }
-  }, []);
 
   async function handleDeletePost(post) {
     const response = await fetch(
@@ -65,7 +55,7 @@ export default function SmallItem({ post, index }) {
         {/* User Info & Admin Controls */}
         <div className="flex justify-between items-center w-full mb-6">
           <UserNameAndPhoto post={post} />
-          {user?.isAdmin === 1 && path === '/' && (
+          {session?.data?.user?.role === 'ADMIN' && path === '/' && (
             <motion.div
               whileTap={{ scale: 0.95 }}
               className="flex items-center cursor-pointer p-2.5 text-red-400 hover:bg-red-500/20 
