@@ -346,7 +346,7 @@
 //           {/* التصنيف باللون البرتقالي */}
 //           {category?.name && (
 //             <div className="text-right">
-//               <span className="text-orange-500 font-bold text-lg">
+//               <span className="text-[#C99B70] font-bold text-lg">
 //                 {category.name}
 //               </span>
 //             </div>
@@ -355,7 +355,7 @@
 //           {/* الموقع */}
 //           <div className="flex items-center gap-1 text-gray-500 text-sm">
 //             <svg
-//               className="w-4 h-4 text-orange-500"
+//               className="w-4 h-4 text-[#C99B70]"
 //               fill="none"
 //               stroke="currentColor"
 //               viewBox="0 0 24 24"
@@ -563,7 +563,7 @@
 //           {/* الموقع */}
 //           <div className="flex items-center gap-2 text-neutral-400 text-sm">
 //             <svg
-//               className="w-4 h-4 text-orange-500 shrink-0"
+//               className="w-4 h-4 text-[#C99B70] shrink-0"
 //               fill="none"
 //               stroke="currentColor"
 //               viewBox="0 0 24 24"
@@ -605,7 +605,7 @@
 //                 {item.basePrice?.toLocaleString() || '0'}
 //               </span>
 //               <div className="flex items-center gap-1.5 mt-1">
-//                 <span className="text-xs font-bold text-orange-400">ل.س</span>
+//                 <span className="text-xs font-bold text-[#D9B18C]">ل.س</span>
 //                 {item?.stockQuantity !== undefined && (
 //                   <span className="flex items-center gap-1 text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
 //                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
@@ -622,7 +622,7 @@
 //               e.stopPropagation();
 //               handleClick();
 //             }}
-//             className="w-full bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white font-bold text-sm py-3.5 px-6 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-orange-600/20 hover:shadow-orange-600/40 group/btn"
+//             className="w-full bg-gradient-to-r from-[#C99B70] to-[#A8754D] hover:from-orange-700 hover:to-amber-700 text-white font-bold text-sm py-3.5 px-6 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-[#C99B70]/20 hover:shadow-orange-600/40 group/btn"
 //           >
 //             <span>عرض التفاصيل</span>
 //             <FaArrowLeft className="group-hover/btn:-translate-x-1 transition-transform duration-300" />
@@ -712,7 +712,7 @@ const SmallCard = React.memo(function SmallCard({
       className="group cursor-pointer"
     >
       {/* البطاقة الرئيسية بتصميم عصري */}
-      <div className="relative bg-gradient-to-br from-neutral-900 to-neutral-950 rounded-[2rem] overflow-hidden border border-neutral-800/50 shadow-2xl shadow-black/50 hover:shadow-orange-500/10 hover:border-orange-500/20 transition-all duration-500">
+      <div className="relative bg-gradient-to-br from-neutral-900 to-neutral-950 rounded-[2rem] overflow-hidden border border-neutral-800/50 shadow-2xl shadow-black/50 hover:shadow-orange-500/10 hover:border-[#C99B70]/20 transition-all duration-500">
         
         {/* ================= قسم الصورة ================= */}
         <div className="relative w-full aspect-[4/3] overflow-hidden">
@@ -756,7 +756,7 @@ const SmallCard = React.memo(function SmallCard({
           {item?.createdAt && (
             <div className="absolute bottom-4 left-4 z-20">
               <div className="bg-neutral-900/80 backdrop-blur-xl border border-neutral-700/50 text-neutral-300 text-xs font-bold px-3 py-2 rounded-2xl flex items-center gap-2 shadow-lg">
-                <FaClock className="text-orange-500 text-[10px]" />
+                <FaClock className="text-[#C99B70] text-[10px]" />
                 {formatDate(item.createdAt)}
               </div>
             </div>
@@ -780,8 +780,8 @@ const SmallCard = React.memo(function SmallCard({
           <div className="space-y-3">
             {/* الموقع بتصميم أنيق */}
             <div className="flex items-center gap-2 text-neutral-400 text-sm group/location">
-              <div className="w-8 h-8 rounded-xl bg-neutral-800/50 flex items-center justify-center group-hover/location:bg-orange-500/20 transition-colors">
-                <FaMapMarkerAlt className="w-3.5 h-3.5 text-orange-500" />
+              <div className="w-8 h-8 rounded-xl bg-neutral-800/50 flex items-center justify-center group-hover/location:bg-[#C99B70]/20 transition-colors">
+                <FaMapMarkerAlt className="w-3.5 h-3.5 text-[#C99B70]" />
               </div>
               <div className="flex-1 min-w-0">
                 <span className="text-neutral-300 font-medium block truncate">
@@ -819,7 +819,7 @@ const SmallCard = React.memo(function SmallCard({
                 e.stopPropagation();
                 handleClick();
               }}
-              className="group/btn flex items-center gap-2 bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-500 hover:to-amber-500 text-white font-bold text-sm py-2.5 px-5 rounded-xl transition-all duration-300 shadow-lg shadow-orange-600/20 hover:shadow-orange-500/40 hover:scale-105 active:scale-95"
+              className="group/btn flex items-center gap-2 bg-gradient-to-r from-[#C99B70] to-[#A8754D] hover:from-[#D9B18C] hover:to-[#C99B70] text-[#171512] font-bold text-sm py-2.5 px-5 rounded-xl transition-all duration-300 shadow-lg shadow-[#C99B70]/20 hover:shadow-[#C99B70]/30 hover:scale-105 active:scale-95"
             >
               <span>التفاصيل</span>
               <FaArrowLeft className="group-hover/btn:-translate-x-1 transition-transform duration-300" />
