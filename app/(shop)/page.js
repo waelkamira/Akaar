@@ -51,11 +51,7 @@ function ProductCard({ product, onAddToCart, onToggleFavorite, favorite }) {
         >
           <FaHeart className={favorite ? 'text-rose-400' : 'text-stone-300'} aria-hidden="true" />
         </button>
-        {product.salesCount > 0 && (
-          <span className="absolute right-3 top-3 rounded-full border border-white/10 bg-[#171512]/90 px-3 py-1.5 text-[10px] font-semibold text-[#E5C5A5]">
-            الأكثر طلبًا
-          </span>
-        )}
+
       </div>
 
       <div className="p-4">
