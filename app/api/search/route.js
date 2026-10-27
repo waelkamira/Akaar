@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
 import { sanitizeDetailsFilters, sanitizeSearchText } from '@/lib/api/search-filters.mjs';
+import { readJsonBody } from '@/lib/api/read-json-body.mjs';
 
 const MAX_QUERY_LENGTH = 120;
 const MAX_PAGE_SIZE = 50;
@@ -122,12 +123,14 @@ function buildWhere({ categoryId, filters }) {
 }
 
 export async function POST(request) {
-  let body;
-  try {
-    body = await request.json();
-  } catch {
-    return NextResponse.json({ error: 'Invalid JSON request body.' }, { status: 400 });
+  const parsedBody = await readJsonBody(request, 64 * 1024);
+  if (!parsedBody.ok) {
+    return NextResponse.json(
+      { error: parsedBody.error },
+      { status: parsedBody.status },
+    );
   }
+  const body = parsedBody.value;
 
   if (!body || typeof body !== 'object' || Array.isArray(body)) {
     return NextResponse.json({ error: 'Invalid search request.' }, { status: 400 });
