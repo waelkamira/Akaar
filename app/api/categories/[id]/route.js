@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
-import { getPagination } from '@/lib/api/validation.mjs';
+import { getPagination, isPaginationOffsetOutOfRange } from '@/lib/api/validation.mjs';
 import { LRUCache } from 'lru-cache';
 
 // إنشاء كائن LRU Cache للتخزين المؤقت
@@ -39,9 +39,16 @@ export async function GET(req, { params }) {
       where: { categoryId, isDeleted: false, isActive: true, category: { isActive: true } },
     });
 
+    const where = { categoryId, isDeleted: false, isActive: true, category: { isActive: true } };
+    if (isPaginationOffsetOutOfRange(skip, totalCount)) {
+      const response = { data: [], hasMore: false, totalCount };
+      cache.set(cacheKey, response);
+      return NextResponse.json(response);
+    }
+
     // جلب المنتجات
     const products = await prisma.product.findMany({
-      where: { categoryId, isDeleted: false, isActive: true, category: { isActive: true } }, // Publicly visible products
+      where, // Publicly visible products
       skip, // تخطي عدد معين من العناصر
       take: limit, // الحد الأقصى للعناصر
       orderBy: { createdAt: 'desc' }, // ترتيب العناصر حسب التاريخ
