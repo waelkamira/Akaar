@@ -1,12 +1,13 @@
 import { NextResponse } from 'next/server';
 import { getAuthenticatedUser } from '@/lib/auth/require-auth';
-import { safeImageFileName, validateImageContent, validateImageFile } from '@/lib/uploads/validate-image.mjs';
+import { isUploadRequestTooLarge, safeImageFileName, validateImageContent, validateImageFile } from '@/lib/uploads/validate-image.mjs';
 
 export const runtime = 'nodejs';
 
 export async function POST(request) {
   const user = await getAuthenticatedUser();
   if (!user) return NextResponse.json({ success: false, error: 'يجب تسجيل الدخول لرفع الصور.' }, { status: 401 });
+  if (isUploadRequestTooLarge(request)) return NextResponse.json({ success: false, error: 'حجم طلب الرفع أكبر من الحد المسموح.' }, { status: 413 });
 
   const clientId = process.env.IMGUR_CLIENT_ID;
   if (!clientId) {
