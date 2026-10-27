@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/db/prisma';
 import { getAuthenticatedUser } from '@/lib/auth/require-auth';
+import { deleteProductAction } from '@/lib/api/delete-product-action.mjs';
 import { publicProductWhere } from '@/lib/api/public-product-where.mjs';
 import { getPagination, isPaginationOffsetOutOfRange } from '@/lib/api/validation.mjs';
 
@@ -20,12 +21,10 @@ export async function GET(req, { params }) {
       );
     }
 
-    // التحقق من وجود Prisma
     if (!prisma?.product) {
       throw new Error('جدول product غير موجود.');
     }
 
-    // جلب البيانات من قاعدة البيانات
     const where = publicProductWhere({ userId: id });
     const totalCount = await prisma.product.count({ where });
     if (isPaginationOffsetOutOfRange(skip, totalCount)) {
@@ -34,7 +33,6 @@ export async function GET(req, { params }) {
         { status: 404, headers: { 'Content-Type': 'application/json' } }
       );
     }
-
     const products = await prisma.product.findMany({
       where,
       skip,
@@ -48,7 +46,6 @@ export async function GET(req, { params }) {
       );
     }
 
-    // تنسيق النتيجة
     const result = {
       hasMore: skip + products.length < totalCount,
       count: totalCount,
@@ -56,7 +53,6 @@ export async function GET(req, { params }) {
       meta: { cached: false, source: 'database' },
     };
 
-    // تخزين في الذاكرة المؤقتة
     return new Response(JSON.stringify(result), { status: 200 });
   } catch (error) {
     console.error('Error details:', error);
@@ -68,31 +64,23 @@ export async function GET(req, { params }) {
 }
 
 export async function DELETE(req, { params }) {
-  const { id: productId } = await params;
-  const authenticatedUser = await getAuthenticatedUser();
-  if (!authenticatedUser) {
-    return new Response(JSON.stringify({ error: 'يجب تسجيل الدخول' }), { status: 401 });
-  }
-  if (!productId) {
-    return new Response(JSON.stringify({ error: 'معرف المنتج مطلوب' }), { status: 400 });
-  }
-
   try {
-    const product = await prisma.product.findFirst({
-      where: { id: productId, userId: authenticatedUser.id, isDeleted: false },
-      select: { id: true },
+    const { id: productId } = await params;
+    const authenticatedUser = await getAuthenticatedUser();
+    const result = await deleteProductAction({
+      productId,
+      authenticatedUser,
+      prisma,
     });
-    if (!product) {
-      return new Response(JSON.stringify({ error: 'المنتج غير موجود أو لا تملك صلاحية حذفه' }), { status: 404 });
-    }
-
-    await prisma.product.update({
-      where: { id: productId },
-      data: { isDeleted: true, deletedAt: new Date() },
+    return new Response(JSON.stringify(result.body), {
+      status: result.status,
+      headers: { 'Content-Type': 'application/json' },
     });
-    return new Response(JSON.stringify({ message: 'تم حذف الإعلان بنجاح' }), { status: 200 });
   } catch (error) {
     console.error('Error deleting product:', error);
-    return new Response(JSON.stringify({ error: 'Internal Server Error' }), { status: 500 });
+    return new Response(JSON.stringify({ error: 'Internal Server Error' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
 }
