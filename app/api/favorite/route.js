@@ -69,9 +69,9 @@ export async function GET(req) {
 
     // جلب البيانات من قاعدة البيانات
     const [totalCount, favorites] = await Promise.all([
-      prisma.favorite.count({ where: { userId, isDeleted: false, product: { isDeleted: false, isActive: true } } }),
+      prisma.favorite.count({ where: { userId, isDeleted: false, product: { isDeleted: false, isActive: true, category: { isActive: true } } } }),
       prisma.favorite.findMany({
-        where: { userId, isDeleted: false, product: { isDeleted: false, isActive: true } },
+        where: { userId, isDeleted: false, product: { isDeleted: false, isActive: true, category: { isActive: true } } },
         skip,
         take: limit,
         orderBy: { createdAt: 'desc' },
