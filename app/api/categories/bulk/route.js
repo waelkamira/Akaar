@@ -29,6 +29,14 @@ export async function GET(request) {
       categoryIds = categories.map(({ id }) => id);
     }
 
+    if (searchParams.get('categories') && categoryIds.length) {
+      const activeCategories = await prisma.category.findMany({
+        where: { id: { in: categoryIds }, isActive: true },
+        select: { id: true },
+      });
+      categoryIds = activeCategories.map(({ id }) => id);
+    }
+
     if (!categoryIds.length) {
       return NextResponse.json(
         { data: {}, counts: {}, source: 'database' },
