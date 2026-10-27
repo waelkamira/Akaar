@@ -1,10 +1,9 @@
-// import { PrismaClient } from '@prisma/client';
+// import { prisma } from '@/lib/db/prisma';
 // import { LRUCache } from 'lru-cache';
 // import { getServerSession } from 'next-auth';
 // import { authOptions } from '@/lib/auth/options';
 
-// const prisma = new PrismaClient();
-// const cache = new LRUCache({
+// // const cache = new LRUCache({
 //   max: 100,
 //   ttl: 60 * 1000,
 // });
@@ -281,12 +280,11 @@
 //     });
 //   }
 // }
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '@/lib/db/prisma';
 import { LRUCache } from 'lru-cache';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth/options';
 
-const prisma = new PrismaClient();
 const cache = new LRUCache({
   max: 100,
   ttl: 60 * 1000,
