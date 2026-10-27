@@ -77,7 +77,7 @@ function FilterPanel({ onApply, onClose, mobile = false }) {
 }
 
 export default function SearchPage() {
-  const { category, query, results, totalCount, clearFilters } = useSearch();
+  const { category, query, results, totalCount } = useSearch();
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   return (
