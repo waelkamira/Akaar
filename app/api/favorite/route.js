@@ -69,9 +69,9 @@ export async function GET(req) {
 
     // جلب البيانات من قاعدة البيانات
     const [totalCount, favorites] = await Promise.all([
-      prisma.favorite.count({ where: { userId } }),
+      prisma.favorite.count({ where: { userId, isDeleted: false, product: { isDeleted: false, isActive: true } } }),
       prisma.favorite.findMany({
-        where: { userId },
+        where: { userId, isDeleted: false, product: { isDeleted: false, isActive: true } },
         skip,
         take: limit,
         orderBy: { createdAt: 'desc' },
@@ -123,7 +123,7 @@ export async function POST(req) {
     // التحقق من وجود المستخدم والمنتج
     const [userExists, productExists] = await Promise.all([
       prisma.user.findUnique({ where: { id: userId } }),
-      prisma.product.findUnique({ where: { id } }),
+      prisma.product.findFirst({ where: { id, isDeleted: false, isActive: true } }),
     ]);
 
     if (!userExists || !productExists) {
