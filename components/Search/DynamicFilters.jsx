@@ -262,7 +262,7 @@ export default function StaticFilters() {
   const labelClass =
     'flex items-center gap-2 text-sm font-semibold text-stone-700 mb-2';
 
-  const FiltersContent = () => (
+  const renderFiltersContent = () => (
     <div className="space-y-6">
       <motion.div
         initial={{ opacity: 0 }}
@@ -509,7 +509,7 @@ export default function StaticFilters() {
               className="overflow-hidden"
             >
               <div className="p-5">
-                <FiltersContent />
+                {renderFiltersContent()}
               </div>
             </motion.div>
           )}
@@ -530,7 +530,7 @@ export default function StaticFilters() {
             <FaUndo /> إعادة تعيين
           </button>
         </div>
-        <FiltersContent />
+        {renderFiltersContent()}
       </div>
     </motion.div>
   );
