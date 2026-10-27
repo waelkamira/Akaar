@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
+import { sanitizeDetailsFilters } from '@/lib/api/search-filters.mjs';
 
 const MAX_QUERY_LENGTH = 120;
 const MAX_PAGE_SIZE = 50;
@@ -47,25 +48,11 @@ function textConditions(terms) {
 }
 
 function addDetailsFilters(where, details = {}) {
-  // Bound filter count and value size so clients cannot construct an
-  // arbitrarily large Prisma AND query.
-  for (const [key, value] of Object.entries(details).slice(0, 30)) {
-    if (
-      typeof key !== 'string' ||
-      !/^[\w-]{1,80}$/.test(key) ||
-      (typeof value !== 'string' && typeof value !== 'number' && typeof value !== 'boolean') ||
-      value === ''
-    ) {
-      continue;
-    }
-
-    const normalizedValue = String(value).trim();
-    if (!normalizedValue || normalizedValue.length > 200) continue;
-
+  for (const [key, value] of sanitizeDetailsFilters(details)) {
     where.AND.push({
       details: {
         path: [key],
-        equals: normalizedValue,
+        equals: value,
       },
     });
   }
