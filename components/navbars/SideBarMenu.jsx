@@ -1,6 +1,6 @@
 'use client';
 import { signOut, useSession } from 'next-auth/react';
-import React, { useMemo, useState, useSyncExternalStore } from 'react';
+import React, { useState } from 'react';
 import Button from '../Buttons/Button';
 import UserNameAndPhoto from '../ReusableComponents/userNameAndPhoto';
 import categories from '../Categories/categories';
@@ -13,41 +13,12 @@ import { FaSignInAlt, FaSignOutAlt } from 'react-icons/fa';
 import Image from 'next/image';
 import LoadingPhoto from '../photos/LoadingPhoto';
 
-function subscribeToStoredUser(callback) {
-  window.addEventListener('storage', callback);
-  return () => window.removeEventListener('storage', callback);
-}
-
-function getStoredUserSnapshot() {
-  try {
-    return localStorage.getItem('CurrentUser');
-  } catch (error) {
-    console.error('Unable to read the current user from local storage:', error);
-    return null;
-  }
-}
-
 export default function SideBarMenu() {
   const [isOpen, setIsOpen] = useState(false);
   const session = useSession();
-  const storedUser = useSyncExternalStore(
-    subscribeToStoredUser,
-    getStoredUserSnapshot,
-    () => null,
-  );
-  const user = useMemo(() => {
-    if (!storedUser) return null;
-    try {
-      return JSON.parse(storedUser);
-    } catch (error) {
-      console.error('Error parsing CurrentUser from localStorage:', error);
-      return null;
-    }
-  }, [storedUser]);
 
-  // مجموعة ألوان أنيقة
-  const primaryColor = '#ffff';
-  const secondaryColor = '#374151'; // رمادي داكن
+
+  const secondaryColor = '#F5F0E9';
 
   // if (session?.status === 'unauthenticated') {
   //   return;
@@ -55,10 +26,10 @@ export default function SideBarMenu() {
 
   return (
     <>
-      <div className="xl:hidden flex flex-col justify-start items-start gap-3 w-fit z-50 fixed p-2 ">
+      <div className="lg:hidden fixed right-3 top-3 z-[1001] flex w-fit flex-col items-start justify-start gap-3 p-2">
         {/* زر فتح القائمة */}
         <TfiMenuAlt
-          className=" w-fit sm:p-1 p-1 sm:m-2 text-4xl text-gray-400 cursor-pointer z-50 transition-transform duration-500 hover:scale-110 bg-white rounded-lg hover:rotate-180"
+          className="z-50 w-fit cursor-pointer rounded-xl border border-white/10 bg-[#211F1B] p-2 text-2xl text-[#D9B18C] transition-transform duration-300 hover:scale-105 hover:text-white"
           onClick={() => setIsOpen(!isOpen)}
         />
 
@@ -70,14 +41,14 @@ export default function SideBarMenu() {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', stiffness: 120, damping: 15 }}
-              className="fixed top-0 right-0 h-screen w-64 bg-gradient-to-b from-primary-300 to-primary-500 backdrop-blur-md shadow-xl z-50 p-6 overflow-y-auto flex flex-col items-center"
+              className="fixed right-0 top-0 z-50 flex h-screen w-72 flex-col items-center overflow-y-auto border-l border-white/10 bg-[#171512] p-6 text-[#F5F0E9] shadow-2xl backdrop-blur-xl"
               style={{ color: secondaryColor }}
             >
               {/* زر الإغلاق */}
               <div className="w-full flex justify-end">
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="text-white text-2xl font-bold hover:text-red-500 transition duration-200"
+                  className="text-2xl font-bold text-stone-300 transition hover:text-[#D9B18C]"
                 >
                   <IoCloseOutline />
                 </button>
@@ -90,7 +61,7 @@ export default function SideBarMenu() {
                   </div>
                 )}
 
-                {session?.status === 'authenticated' && user?.isAdmin === 1 && (
+                {session?.status === 'authenticated' && session?.data?.user?.role === 'ADMIN' && (
                   <Button path={'/users'} title={'المستخدمين'} />
                 )}
                 {/* User Profile Section */}
