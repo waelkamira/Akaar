@@ -19,7 +19,8 @@ function FavoriteButton({ item }) {
         try {
           const user = JSON.parse(userData);
           setUserId(user?.id);
-          setFavoriteIds(favoriteIds);
+          const parsedFavoriteIds = storedFavoriteIds ? JSON.parse(storedFavoriteIds) : [];
+          setFavoriteIds(Array.isArray(parsedFavoriteIds) ? parsedFavoriteIds : []);
         } catch (error) {
           console.error('Failed to parse user data:', error);
         }
@@ -29,8 +30,6 @@ function FavoriteButton({ item }) {
 
   const fetchAndStoreUserFavoriteIds = useCallback(
     async (userId) => {
-      // console.log('fetchAndStoreUserFavoriteIds من داخل ');
-
       if (!userId) return;
 
       try {
@@ -49,18 +48,22 @@ function FavoriteButton({ item }) {
         toast.error('فشل في جلب بيانات المفضلة');
       }
     },
-    [isFavorited]
+    []
   );
 
-  const checkFavoriteStatus = useCallback(() => {
-    // console.log('checkFavoriteStatus تم الاستدعاء ');
+  useEffect(() => {
+    if (!userId) {
+      setFavoriteIds([]);
+      setIsFavorited(false);
+      return;
+    }
+    fetchAndStoreUserFavoriteIds(userId);
+  }, [userId, fetchAndStoreUserFavoriteIds]);
 
+  const checkFavoriteStatus = useCallback(() => {
     if (item?.id) {
       const favorited = favoriteIds.includes(item?.id);
-      // console.log('favoriteIds', favoriteIds);
       if (favorited) {
-        // console.log('favorited', favorited);
-        // console.log('item?.id', item?.id);
         setIsFavorited(true);
       } else {
         setIsFavorited(false);
