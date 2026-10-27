@@ -8,9 +8,24 @@ on:
 jobs:
   validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: akaar
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d akaar"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
     env:
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/akaar?schema=public
+      SHADOW_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/akaar_shadow?schema=public
       NEXTAUTH_URL: http://localhost:3000
       NEXTAUTH_SECRET: ci-only-not-a-production-secret
       NODE_ENV: test
@@ -32,6 +47,22 @@ jobs:
 
       - name: Generate Prisma client
         run: npx prisma generate
+
+      - name: Create Prisma shadow database
+        run: PGPASSWORD=postgres psql -h localhost -U postgres -d postgres -c "CREATE DATABASE akaar_shadow;"
+
+      - name: Apply committed migrations to clean PostgreSQL
+        run: npx prisma migrate deploy
+
+      - name: Generate schema-to-migration drift SQL
+        run: npx prisma migrate diff --from-migrations prisma/migrations --to-schema-datamodel prisma/schema.prisma --script --shadow-database-url "$SHADOW_DATABASE_URL" > prisma-schema-drift.sql
+
+      - name: Upload schema drift report
+        uses: actions/upload-artifact@v4
+        with:
+          name: prisma-schema-drift
+          path: prisma-schema-drift.sql
+          if-no-files-found: error
 
       - name: Run unit tests
         run: npm test
