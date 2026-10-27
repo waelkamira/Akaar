@@ -92,3 +92,48 @@ An issue may be marked **Verified fixed** only after the relevant code change is
 | 2026-10-27 | Strict bulk category IDs | Extracted `parseCategoryIds()` into `lib/api/category-ids.mjs`, reused it in `/api/categories/bulk`, and added `tests/category-ids.test.mjs` | Tests cover malformed prefixes, duplicates, limits, and empty inputs. CI is pending; DB route integration remains open. |
 | 2026-10-27 | Product deep-link loading | Updated `app/post/[id]/page.jsx` to load real product data from the server API and treat localStorage only as a fallback | Real product URLs can now load without a prior card click or pre-populated browser storage. CI and direct-link browser testing are pending. |
 | 2026-10-27 | Favorite state and pagination | Updated `FavoriteButton.jsx`, login cache normalization, `app/(shop)/favorite/page.jsx`, and `app/post/[id]/page.jsx` | Session-backed favorite state, correct array cache, semantic button markup, one-based pagination, and API-backed product-detail toggles now share the authenticated favorites endpoints. CI and browser interaction tests are pending. |
+
+
+## Safe Prisma/database preflight (2026-10-27)
+
+The legacy database audit is **blocked until a read-only report is collected from a restored copy**. Do not use an unknown or production database URL to work around authentication errors.
+
+### Why the previous command failed
+
+The command using `psql "$DATABASE_URL"` returned a PostgreSQL password-authentication error for user `\\`. This indicates that the connection settings reaching `psql` were malformed or not the intended database credentials; it does not prove the Prisma schema is correct or incorrect. Do not paste a password into chat or commit it to the repository.
+
+### Collect a safe schema inventory
+
+1. Restore a recent backup into an isolated staging database and create/use a database role with SELECT-only permissions.
+2. Set `PREFLIGHT_DATABASE_URL` through your shell's secure secret mechanism. Verify that it points to the restored database, not production.
+3. Run the read-only inventory script from the repository root:
+
+```sh
+: "${PREFLIGHT_DATABASE_URL:?Set PREFLIGHT_DATABASE_URL to the restored, read-only database}"
+PGOPTIONS='-c default_transaction_read_only=on' \
+  psql "$PREFLIGHT_DATABASE_URL" \
+    --no-psqlrc --set ON_ERROR_STOP=1 \
+    --file prisma/schema-inventory-readonly.sql \
+    --output prisma-schema-inventory.txt
+```
+
+The report may contain sensitive operational details. Review it locally; do not commit a real database report or credential-bearing connection string. The SQL is diagnostic only and performs no schema/data changes.
+
+### Local checks without the old database password
+
+Run source-only checks first:
+
+```sh
+npm ci
+npx prisma validate
+npx prisma generate
+npm test
+npm run lint
+npm run build
+```
+
+These checks do not establish that the legacy database matches Prisma. If Docker-based isolated database scripts are available in your checkout, use those for fresh-schema integration tests; they also do not replace the restored-legacy-database inventory.
+
+### Migration gate
+
+Do **not** generate/apply a guessed migration against production. The initial migration and current Prisma schema have known differences involving missing tables/columns, the category key type, and legacy `ProductImage.image1..image5` versus normalized `url/sortOrder`. Review the inventory, reconcile existing records, prepare a data-preserving migration, test it on a restored copy, and verify backup restoration before production rollout.
