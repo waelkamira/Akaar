@@ -28,7 +28,7 @@ export async function GET(req) {
 
     // جلب معرفات المنتجات فقط من المفضلة
     const favorites = await prisma.favorite.findMany({
-      where: { userId },
+      where: { userId, isDeleted: false, product: { isDeleted: false, isActive: true } },
       select: {
         product: {
           select: {
