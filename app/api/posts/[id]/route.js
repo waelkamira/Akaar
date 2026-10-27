@@ -2,7 +2,7 @@ import { prisma } from '@/lib/db/prisma';
 import { getAuthenticatedUser } from '@/lib/auth/require-auth';
 import { deleteProductAction } from '@/lib/api/delete-product-action.mjs';
 import { publicProductWhere } from '@/lib/api/public-product-where.mjs';
-import { getPagination } from '@/lib/api/validation.mjs';
+import { getPagination, isPaginationOffsetOutOfRange } from '@/lib/api/validation.mjs';
 
 export async function GET(req, { params }) {
   const { id } = await params;
@@ -25,15 +25,20 @@ export async function GET(req, { params }) {
       throw new Error('جدول product غير موجود.');
     }
 
-    const [totalCount, products] = await Promise.all([
-      prisma.product.count({ where: publicProductWhere({ userId: id }) }),
-      prisma.product.findMany({
-        where: publicProductWhere({ userId: id }),
-        skip,
-        take: limit,
-        orderBy: { createdAt: 'desc' },
-      }),
-    ]);
+    const where = publicProductWhere({ userId: id });
+    const totalCount = await prisma.product.count({ where });
+    if (isPaginationOffsetOutOfRange(skip, totalCount)) {
+      return new Response(
+        JSON.stringify({ message: 'لم يتم العثور على إعلانات' }),
+        { status: 404, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+    const products = await prisma.product.findMany({
+      where,
+      skip,
+      take: limit,
+      orderBy: { createdAt: 'desc' },
+    });
     if (products.length === 0) {
       return new Response(
         JSON.stringify({ message: 'لم يتم العثور على إعلانات' }),

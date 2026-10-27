@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
 import { sanitizeDetailsFilters, sanitizeSearchText } from '@/lib/api/search-filters.mjs';
 import { readJsonBody } from '@/lib/api/read-json-body.mjs';
+import { isPaginationOffsetOutOfRange } from '@/lib/api/validation.mjs';
 
 const MAX_QUERY_LENGTH = 120;
 const MAX_PAGE_SIZE = 50;
@@ -189,6 +190,16 @@ export async function POST(request) {
       ? { ...where, AND: [...(where.AND || []), titleCondition] }
       : null;
     const pageOffset = (page - 1) * limit;
+    if (pageOffset > 1000) {
+      const offsetGuardCount = await prisma.product.count({ where });
+      if (isPaginationOffsetOutOfRange(pageOffset, offsetGuardCount)) {
+        return NextResponse.json({
+          products: [],
+          totalCount: offsetGuardCount,
+          hasMore: false,
+        });
+      }
+    }
     const remainingWhere = titleCondition
       ? { ...where, AND: [...(where.AND || []), { NOT: titleCondition }] }
       : where;

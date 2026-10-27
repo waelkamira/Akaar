@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
 import { getAdminUser } from '@/lib/auth/require-auth';
-import { parsePositiveInteger } from '@/lib/api/validation.mjs';
+import { getPagination, isPaginationOffsetOutOfRange } from '@/lib/api/validation.mjs';
 import { readJsonBody } from '@/lib/api/read-json-body.mjs';
 
 const MAX_PAGE_SIZE = 100;
@@ -24,8 +24,11 @@ export async function GET(request) {
     }
 
     const { searchParams } = new URL(request.url);
-    const page = parsePositiveInteger(searchParams.get('page'), 1);
-    const limit = parsePositiveInteger(searchParams.get('limit'), 20, MAX_PAGE_SIZE);
+    const { page, limit, skip } = getPagination(searchParams, {
+      defaultPage: 1,
+      defaultLimit: 20,
+      maxLimit: MAX_PAGE_SIZE,
+    });
     const searchQuery = (searchParams.get('searchQuery') || '').trim().slice(0, 120);
     const where = searchQuery
       ? { OR: [
@@ -34,23 +37,25 @@ export async function GET(request) {
         ] }
       : {};
 
-    const [users, totalCount] = await Promise.all([
-      prisma.user.findMany({
-        where,
-        select: userSelect,
-        orderBy: { createdAt: 'desc' },
-        skip: (page - 1) * limit,
-        take: limit,
-      }),
-      prisma.user.count({ where }),
-    ]);
+    // Count first so huge but safe-integer offsets cannot force an expensive page query.
+    const totalCount = await prisma.user.count({ where });
+    if (isPaginationOffsetOutOfRange(skip, totalCount)) {
+      return NextResponse.json({ users: [], page, limit, totalCount, hasMore: false });
+    }
+    const users = await prisma.user.findMany({
+      where,
+      select: userSelect,
+      orderBy: { createdAt: 'desc' },
+      skip,
+      take: limit,
+    });
 
     return NextResponse.json({
       users,
       page,
       limit,
       totalCount,
-      hasMore: page * limit < totalCount,
+      hasMore: skip + users.length < totalCount,
     });
   } catch (error) {
     console.error('Admin user listing failed:', error);
