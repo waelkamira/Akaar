@@ -22,40 +22,40 @@ export async function GET(request) {
     }
 
     const orders = await prisma.order.findMany({
-        where: { userId: user.id },
-        orderBy: { createdAt: 'desc' },
-        skip,
-        take: limit,
-        select: {
-          id: true,
-          productId: true,
-          quantity: true,
-          totalPrice: true,
-          status: true,
-          fulfillmentStatus: true,
-          createdAt: true,
-          updatedAt: true,
-          product: {
-            select: { id: true, title: true, images: true, basePrice: true, categoryName: true },
-          },
-          items: {
-            select: {
-              id: true,
-              productId: true,
-              quantity: true,
-              unitPrice: true,
-              totalPrice: true,
-              product: {
-                select: { id: true, title: true, images: true, basePrice: true, categoryName: true },
-              },
+      where,
+      orderBy: { createdAt: 'desc' },
+      skip,
+      take: limit,
+      select: {
+        id: true,
+        productId: true,
+        quantity: true,
+        totalPrice: true,
+        status: true,
+        fulfillmentStatus: true,
+        createdAt: true,
+        updatedAt: true,
+        product: {
+          select: { id: true, title: true, images: true, basePrice: true, categoryName: true },
+        },
+        items: {
+          select: {
+            id: true,
+            productId: true,
+            quantity: true,
+            unitPrice: true,
+            totalPrice: true,
+            product: {
+              select: { id: true, title: true, images: true, basePrice: true, categoryName: true },
             },
           },
-          payments: {
-            select: { id: true, amount: true, method: true, status: true, createdAt: true },
-            orderBy: { createdAt: 'desc' },
-          },
         },
-      });
+        payments: {
+          select: { id: true, amount: true, method: true, status: true, createdAt: true },
+          orderBy: { createdAt: 'desc' },
+        },
+      },
+    });
 
     return NextResponse.json({
       orders,
