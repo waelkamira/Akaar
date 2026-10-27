@@ -137,3 +137,8 @@ These checks do not establish that the legacy database matches Prisma. If Docker
 ### Migration gate
 
 Do **not** generate/apply a guessed migration against production. The initial migration and current Prisma schema have known differences involving missing tables/columns, the category key type, and legacy `ProductImage.image1..image5` versus normalized `url/sortOrder`. Review the inventory, reconcile existing records, prepare a data-preserving migration, test it on a restored copy, and verify backup restoration before production rollout.
+
+
+## Additional blocker
+
+| AK-017 | P1 | Legacy database preflight | The first inventory attempt failed at connection authentication: PostgreSQL reported password authentication failed for user `\\`. The connection string/environment variable is not reaching `psql` as intended; no schema inventory was produced. | Added `prisma/schema-inventory-readonly.sql` and `docs/prisma-preflight-runbook.md` to this audit branch, documented use of a restored isolated database and SELECT-only role, and documented source-only checks that do not need the legacy DB password. Next: collect the report from the restored copy, review legacy image/category mappings, then design and test a data-preserving migration. | Runbook/script committed; database evidence still blocked |
