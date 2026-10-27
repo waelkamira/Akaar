@@ -18,7 +18,7 @@ const fakeData = [
     id: '96a5b419-2513-4a13-ac15-4663f81e295c',
     title: 'للبيع منزل في دمشق حي الميدان تنظيم شرقي الميدان طابق سابع مصعد طاقة مساحة 110متر',
     userId: 'b2a4f3fa-2bb7-4f97-95db-4fa53c581bb4',
-    categoryId: 20,
+    categoryId: 1,
     categoryName: 'عقارات',
     image1: 'https://i.imgur.com/vGpGUAj.png',
     image2: 'https://i.imgur.com/vGpGUAj.png',
