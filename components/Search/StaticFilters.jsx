@@ -435,15 +435,15 @@ export default function StaticFilters() {
   };
 
   // ✅ فئة موحدة لحقول الإدخال والقوائم لضمان التناسق
-  const inputClass = "w-full rounded-xl border border-stone-200/60 bg-stone-50/50 px-4 py-2.5 text-sm text-stone-900 placeholder-stone-400 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/10 focus:bg-white transition-all duration-300 outline-none";
-  const labelClass = "flex items-center gap-2 text-sm font-medium text-stone-600 mb-2";
+  const inputClass = "w-full rounded-xl border border-white/10 bg-[#171512] px-4 py-2.5 text-sm text-[#F5F0E9] placeholder-stone-400 focus:border-[#C99B70] focus:ring-2 focus:ring-[#C99B70]/20 focus:bg-[#171512] transition-all duration-300 outline-none";
+  const labelClass = "flex items-center gap-2 text-sm font-medium text-stone-300 mb-2";
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="bg-white/70 backdrop-blur-xl border border-stone-200/60 rounded-3xl p-6 shadow-sm shadow-stone-900/5"
+      className="bg-[#211F1B]/90 backdrop-blur-xl border border-white/10 rounded-3xl p-6 shadow-xl shadow-black/20"
       dir="rtl"
     >
       <div className="space-y-6">
@@ -451,7 +451,7 @@ export default function StaticFilters() {
         {/* ==================== ترتيب النتائج ==================== */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }}>
           <label htmlFor="search-sort" className={labelClass}>
-            <FaSortAmountDown className="text-orange-600" />
+            <FaSortAmountDown className="text-[#C99B70]" />
             ترتيب النتائج
           </label>
           <select
@@ -469,7 +469,7 @@ export default function StaticFilters() {
         {/* ==================== التقييم ==================== */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.15 }}>
           <label htmlFor="search-rating" className={labelClass}>
-            <FaStar className="text-orange-600" />
+            <FaStar className="text-[#C99B70]" />
             متوسط التقييم الأدنى
           </label>
           <select
@@ -491,7 +491,7 @@ export default function StaticFilters() {
         <div className="space-y-5">
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
             <label htmlFor="search-brand" className={labelClass}>
-              <FaTag className="text-orange-600" />
+              <FaTag className="text-[#C99B70]" />
               الماركة
             </label>
             <input
@@ -506,7 +506,7 @@ export default function StaticFilters() {
 
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.25 }}>
             <label htmlFor="search-subcategory" className={labelClass}>
-              <FaLayerGroup className="text-orange-600" />
+              <FaLayerGroup className="text-[#C99B70]" />
               الفئة الفرعية
             </label>
             <input
@@ -521,7 +521,7 @@ export default function StaticFilters() {
 
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
             <label htmlFor="search-vendor" className={labelClass}>
-              <FaStore className="text-orange-600" />
+              <FaStore className="text-[#C99B70]" />
               معرّف البائع
             </label>
             <input
@@ -535,12 +535,12 @@ export default function StaticFilters() {
           </motion.div>
         </div>
 
-        <div className="border-t border-stone-200/60 my-2" />
+        <div className="border-t border-white/10/60 my-2" />
 
         {/* ==================== الموقع (المدينة والمنطقة) ==================== */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.35 }}>
           <label className={labelClass}>
-            <FaMapMarkerAlt className="text-orange-600" />
+            <FaMapMarkerAlt className="text-[#C99B70]" />
             المدينة
           </label>
           <select
@@ -565,7 +565,7 @@ export default function StaticFilters() {
             transition={{ duration: 0.3 }}
           >
             <label className={labelClass}>
-              <FaMapMarkerAlt className="text-orange-600/70" />
+              <FaMapMarkerAlt className="text-[#C99B70]/70" />
               المنطقة
             </label>
             <select
@@ -588,13 +588,13 @@ export default function StaticFilters() {
         {/* ==================== نطاق السعر ==================== */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}>
           <label className={labelClass}>
-            <FaMoneyBillWave className="text-orange-600" />
+            <FaMoneyBillWave className="text-[#C99B70]" />
             نطاق السعر (ر.س)
           </label>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs text-stone-500 mb-1.5 block font-medium">أدنى سعر</label>
+              <label className="text-xs text-stone-400 mb-1.5 block font-medium">أدنى سعر</label>
               <input
                 type="text"
                 inputMode="numeric"
