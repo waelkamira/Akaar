@@ -227,4 +227,6 @@ This section is the operational checkpoint for continuing the audit. It records 
 - Added an isolated PostgreSQL integration database in CI, created from the current Prisma schema (separate from the clean-migration/drift check database).
 - Added seeded integration coverage for combined text + price + city + brand + subcategory filters, exclusion of inactive/deleted products, sort order, pagination, and result counts.
 - This test validates the shared Prisma query predicates against PostgreSQL, not a live production database or a browser-driven end-to-end request. The historical migration/schema drift remains a separate release blocker; the isolated test database intentionally uses `prisma db push` and is never the production database.
+
+- **Important schema discovery:** the repository also contains a legacy root-level `schema.prisma` that differs from `prisma/schema.prisma`. CI and package installation now explicitly generate/validate against `prisma/schema.prisma`, the schema used by migrations and the search code. The root-level legacy schema still needs a separately reviewed retirement or reconciliation; it must not silently drive Prisma Client generation.
 - Do not merge this change unless the CI integration step, unit tests, lint, and production build pass.
