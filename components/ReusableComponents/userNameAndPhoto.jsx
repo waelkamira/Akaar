@@ -9,7 +9,6 @@ export default function UserNameAndPhoto({ post, size, rounded }) {
   const [user, setUser] = useState(null);
   const imageSize = size || 'size-10 sm:size-12 lg:size-14';
 
-  console.log('post', post?.userImage);
 
   useEffect(() => {
     // تحميل بيانات المستخدم من localStorage
