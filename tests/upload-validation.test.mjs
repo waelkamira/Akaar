@@ -15,8 +15,8 @@ test('image validation accepts supported image formats under the limit', () => {
 test('image validation rejects missing files, unsupported formats and oversize files', () => {
   assert.equal(validateImageFile(null), 'ملف الصورة مطلوب.');
   assert.match(validateImageFile(fakeFile({ type: 'image/svg+xml' })), /نوع الصورة/);
-  assert.match(validateImageFile(fakeFile({ size: MAX_IMAGE_SIZE + 1 })), /5 ميغابايت/);
-  assert.match(validateImageFile(fakeFile({ size: 0 })), /5 ميغابايت/);
+  assert.match(validateImageFile(fakeFile({ size: MAX_IMAGE_SIZE + 1 })), /4 ميغابايت/);
+  assert.match(validateImageFile(fakeFile({ size: 0 })), /4 ميغابايت/);
 });
 
 test('safeImageFileName strips directory components and unsafe characters', () => {
@@ -40,6 +40,11 @@ test('image content validation checks signatures rather than trusting MIME type'
 test('image content validation rejects MIME-spoofed and truncated files', async () => {
   assert.match(await validateImageContent(fileWithBytes('image/jpeg', [0x3c, 0x73, 0x76, 0x67])), /لا يطابق/);
   assert.match(await validateImageContent(fileWithBytes('image/png', [0x89, 0x50, 0x4e])), /لا يطابق/);
+});
+
+test('upload request cap stays below the Vercel Functions body limit', () => {
+  assert.equal(MAX_IMAGE_SIZE, 4 * 1024 * 1024);
+  assert.ok(MAX_UPLOAD_REQUEST_SIZE < 4.5 * 1024 * 1024);
 });
 
 test('upload request size guard rejects oversized or malformed Content-Length', () => {
