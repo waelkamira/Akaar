@@ -33,7 +33,7 @@ export async function GET(request) {
 
   try {
     const products = await prisma.product.findMany({
-      where: { isDeleted: false, isActive: true },
+      where: { isDeleted: false, isActive: true, category: { isActive: true } },
       skip,
       take: limit,
       orderBy: { createdAt: 'desc' },
