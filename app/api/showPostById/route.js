@@ -1,7 +1,4 @@
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
-
+import { prisma } from '@/lib/db/prisma';
 export async function POST(req) {
   const { id } = await req.json();
   // console.log('id', id);
@@ -38,8 +35,5 @@ export async function POST(req) {
       headers: { 'Content-Type': 'application/json' },
       status: 500,
     });
-  } finally {
-    // إغلاق الاتصال بقاعدة البيانات
-    await prisma.$disconnect();
   }
 }
