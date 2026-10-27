@@ -15,7 +15,7 @@ export async function POST(req) {
 
     // استخدام Prisma لجلب البيانات
     const product = await prisma.product.findUnique({
-      where: { id },
+      where: { id, isDeleted: false, isActive: true },
     });
 
     if (!product) {
