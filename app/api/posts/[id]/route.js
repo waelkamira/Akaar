@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/db/prisma';
 import { getAuthenticatedUser } from '@/lib/auth/require-auth';
+import { canDeleteProduct } from '@/lib/api/product-delete-access.mjs';
 import { publicProductWhere } from '@/lib/api/public-product-where.mjs';
 import { getPagination } from '@/lib/api/validation.mjs';
 
@@ -20,12 +21,10 @@ export async function GET(req, { params }) {
       );
     }
 
-    // التحقق من وجود Prisma
     if (!prisma?.product) {
       throw new Error('جدول product غير موجود.');
     }
 
-    // جلب البيانات من قاعدة البيانات
     const [totalCount, products] = await Promise.all([
       prisma.product.count({ where: publicProductWhere({ userId: id }) }),
       prisma.product.findMany({
@@ -42,7 +41,6 @@ export async function GET(req, { params }) {
       );
     }
 
-    // تنسيق النتيجة
     const result = {
       hasMore: skip + products.length < totalCount,
       count: totalCount,
@@ -50,7 +48,6 @@ export async function GET(req, { params }) {
       meta: { cached: false, source: 'database' },
     };
 
-    // تخزين في الذاكرة المؤقتة
     return new Response(JSON.stringify(result), { status: 200 });
   } catch (error) {
     console.error('Error details:', error);
@@ -67,17 +64,20 @@ export async function DELETE(req, { params }) {
   if (!authenticatedUser) {
     return new Response(JSON.stringify({ error: 'يجب تسجيل الدخول' }), { status: 401 });
   }
-  if (!productId) {
-    return new Response(JSON.stringify({ error: 'معرف المنتج مطلوب' }), { status: 400 });
+  if (typeof productId !== 'string' || !productId.trim() || productId.length > 128) {
+    return new Response(JSON.stringify({ error: 'معرف المنتج غير صالح' }), { status: 400 });
   }
 
   try {
     const product = await prisma.product.findFirst({
-      where: { id: productId, userId: authenticatedUser.id, isDeleted: false },
-      select: { id: true },
+      where: { id: productId, isDeleted: false },
+      select: { id: true, userId: true },
     });
-    if (!product) {
-      return new Response(JSON.stringify({ error: 'المنتج غير موجود أو لا تملك صلاحية حذفه' }), { status: 404 });
+    if (!product || !canDeleteProduct(authenticatedUser, product)) {
+      return new Response(
+        JSON.stringify({ error: 'المنتج غير موجود أو لا تملك صلاحية حذفه' }),
+        { status: 404 }
+      );
     }
 
     await prisma.product.update({
