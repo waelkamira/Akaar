@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "test": "node --test tests/*.test.mjs",
     "prisma": "prisma",
-    "postinstall": "prisma generate",
+    "postinstall": "prisma generate --schema=prisma/schema.prisma",
     "test:search-db": "node --test tests/search-database.integration.test.mjs"
   },
   "dependencies": {
