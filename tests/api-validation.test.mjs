@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { getPagination, isPlainObject, parseOptionalNumber, parsePositiveInteger } from '../lib/api/validation.mjs';
+import { getPagination, isPaginationOffsetOutOfRange, isPlainObject, parseOptionalNumber, parsePositiveInteger } from '../lib/api/validation.mjs';
 
 test('parsePositiveInteger uses fallback for invalid and non-positive input', () => {
   assert.equal(parsePositiveInteger('0', 3), 3);
@@ -31,6 +31,19 @@ test('getPagination clamps extremely large page offsets to safe integers', () =>
   assert.ok(Number.isSafeInteger(result.skip));
   assert.ok(result.skip >= 0);
   assert.equal(result.skip, (result.page - 1) * result.limit);
+});
+
+test('pagination avoids querying offsets outside the result set', () => {
+  assert.equal(isPaginationOffsetOutOfRange(0, 0), true);
+  assert.equal(isPaginationOffsetOutOfRange(20, 20), true);
+  assert.equal(isPaginationOffsetOutOfRange(19, 20), false);
+  assert.equal(isPaginationOffsetOutOfRange(Number.MAX_SAFE_INTEGER + 1, 100), true);
+  assert.equal(isPaginationOffsetOutOfRange(-1, 100), true);
+  assert.equal(isPaginationOffsetOutOfRange(Number.NaN, 100), true);
+  assert.equal(isPaginationOffsetOutOfRange(0.5, 100), true);
+  assert.equal(isPaginationOffsetOutOfRange(0, Number.NaN), true);
+  assert.equal(isPaginationOffsetOutOfRange(0, Number.POSITIVE_INFINITY), true);
+  assert.equal(isPaginationOffsetOutOfRange(0, -1), true);
 });
 
 test('parseOptionalNumber rejects invalid, negative and non-integer integer fields', () => {
