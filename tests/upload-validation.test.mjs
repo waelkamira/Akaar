@@ -44,7 +44,7 @@ test('image content validation rejects MIME-spoofed and truncated files', async 
 
 test('upload request cap stays below the Vercel Functions body limit', () => {
   assert.equal(MAX_IMAGE_SIZE, 4 * 1024 * 1024);
-  assert.ok(MAX_UPLOAD_REQUEST_SIZE < 4.5 * 1024 * 1024);
+  assert.ok(MAX_UPLOAD_REQUEST_SIZE < 4_500_000);
 });
 
 test('upload request size guard rejects oversized or malformed Content-Length', () => {
