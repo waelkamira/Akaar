@@ -11,7 +11,7 @@ import { CommerceProvider } from '@/features/cart/commerce-context';
 import Footer from '../components/ReusableComponents/Footer';
 
 const rubik = Rubik({
-  subsets: ['latin'],
+  subsets: ['arabic', 'latin'],
   weight: ['300', '400', '500', '700'],
   display: 'swap',
   variable: '--font-rubik',
