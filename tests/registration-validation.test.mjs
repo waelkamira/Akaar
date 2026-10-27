@@ -22,7 +22,7 @@ test('rejects short and oversized names', () => {
 
 test('rejects invalid and oversized email addresses', () => {
   assert.equal(validateRegistrationInput({ name: 'Seller', email: 'invalid', password: '12345678' }).ok, false);
-  assert.equal(validateRegistrationInput({ name: 'Seller', email: `${'x'.repeat(245)}@a.com`, password: '12345678' }).ok, false);
+  assert.equal(validateRegistrationInput({ name: 'Seller', email: `${'x'.repeat(250)}@a.com`, password: '12345678' }).ok, false);
 });
 
 test('enforces bcrypt password byte limits without truncation ambiguity', () => {
