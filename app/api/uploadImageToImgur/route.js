@@ -1,37 +1,40 @@
 import { NextResponse } from 'next/server';
-import imgurClientManager from '../../../components/photos/ImgurClientManager';
+import { getAuthenticatedUser } from '@/lib/auth/require-auth';
+import { safeImageFileName, validateImageFile } from '@/lib/uploads/validate-image.mjs';
 
-export async function POST(req) {
-  const formData = await req.formData();
-  const file = formData.get('image');
+export const runtime = 'nodejs';
 
-  // Get the next available Client ID
-  const clientId = imgurClientManager.getClientId();
-  console.log('clientId', clientId);
+export async function POST(request) {
+  const user = await getAuthenticatedUser();
+  if (!user) return NextResponse.json({ success: false, error: 'يجب تسجيل الدخول لرفع الصور.' }, { status: 401 });
+
+  const clientId = process.env.IMGUR_CLIENT_ID;
+  if (!clientId) {
+    return NextResponse.json({ success: false, error: 'خدمة رفع الصور غير مهيأة على الخادم.' }, { status: 503 });
+  }
+
   try {
-    const imgurResponse = await fetch('https://api.imgur.com/3/image', {
+    const form = await request.formData();
+    const file = form.get('image') || form.get('file');
+    const validationError = validateImageFile(file);
+    if (validationError) return NextResponse.json({ success: false, error: validationError }, { status: 400 });
+
+    const uploadForm = new FormData();
+    uploadForm.append('image', file, safeImageFileName(file.name));
+    const response = await fetch('https://api.imgur.com/3/image', {
       method: 'POST',
-      headers: {
-        Authorization: `Client-ID ${clientId}`,
-      },
-      body: file,
+      headers: { Authorization: `Client-ID ${clientId}` },
+      body: uploadForm,
+      cache: 'no-store',
     });
-
-    const data = await imgurResponse.json();
-
-    if (imgurResponse.ok) {
-      // console.log('data', data);
-      return NextResponse.json({ success: true, data: data.data });
-    } else {
-      return NextResponse.json(
-        { success: false, error: data.data.error },
-        { status: imgurResponse.status }
-      );
+    const payload = await response.json().catch(() => null);
+    if (!response.ok || !payload?.success || !payload?.data?.link) {
+      console.error('Imgur upload failed with status:', response.status);
+      return NextResponse.json({ success: false, error: 'تعذر رفع الصورة إلى خدمة التخزين.' }, { status: 502 });
     }
+    return NextResponse.json({ success: true, data: payload.data });
   } catch (error) {
-    return NextResponse.json(
-      { success: false, error: error.message },
-      { status: 500 }
-    );
+    console.error('Imgur upload failed:', error);
+    return NextResponse.json({ success: false, error: 'تعذر رفع الصورة حاليًا.' }, { status: 502 });
   }
 }

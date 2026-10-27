@@ -1,50 +1,41 @@
 import { NextResponse } from 'next/server';
 import ImageKit from 'imagekit';
+import { getAuthenticatedUser } from '@/lib/auth/require-auth';
+import { safeImageFileName, validateImageFile } from '@/lib/uploads/validate-image.mjs';
 
-const imagekit = new ImageKit({
-  publicKey: 'public_iR0emSJjiHQ8w4WIgDcj3rQWvOc=', // استبدل بمفتاحك العام
-  privateKey: 'private_8RLAAB7McKkVnh8x49iu038GtBs=', // استبدل بمفتاحك الخاص
-  urlEndpoint: 'https://ik.imagekit.io/srrt5l32w', // استبدل بمسار ImageKit الخاص بك
-});
+export const runtime = 'nodejs';
 
-export async function POST(req) {
+export async function POST(request) {
+  const user = await getAuthenticatedUser();
+  if (!user) return NextResponse.json({ success: false, error: 'يجب تسجيل الدخول لرفع الصور.' }, { status: 401 });
+
+  const { IMAGEKIT_PUBLIC_KEY, IMAGEKIT_PRIVATE_KEY, IMAGEKIT_URL_ENDPOINT } = process.env;
+  if (!IMAGEKIT_PUBLIC_KEY || !IMAGEKIT_PRIVATE_KEY || !IMAGEKIT_URL_ENDPOINT) {
+    return NextResponse.json({ success: false, error: 'خدمة رفع الصور غير مهيأة على الخادم.' }, { status: 503 });
+  }
+
   try {
-    const formData = await req.formData();
-    const file = formData.get('file');
+    const form = await request.formData();
+    const file = form.get('file') || form.get('image');
+    const validationError = validateImageFile(file);
+    if (validationError) return NextResponse.json({ success: false, error: validationError }, { status: 400 });
 
-    if (!file) {
-      return NextResponse.json(
-        { success: false, error: 'No file provided' },
-        { status: 400 }
-      );
-    }
-
-    // تحويل الملف إلى Buffer
-    const fileBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(fileBuffer);
-
-    // رفع الملف إلى ImageKit
+    const imagekit = new ImageKit({
+      publicKey: IMAGEKIT_PUBLIC_KEY,
+      privateKey: IMAGEKIT_PRIVATE_KEY,
+      urlEndpoint: IMAGEKIT_URL_ENDPOINT,
+    });
+    const buffer = Buffer.from(await file.arrayBuffer());
     const response = await imagekit.upload({
-      file: buffer, // الملف كـ Buffer
-      fileName: file.name, // اسم الملف
+      file: buffer,
+      fileName: `akaar-${Date.now()}-${safeImageFileName(file.name)}`,
+      useUniqueFileName: true,
+      tags: ['akaar', `user-${user.id}`],
     });
 
-    console.log('ImageKit Response:', response);
-
-    return NextResponse.json({
-      success: true,
-      data: {
-        url: response.url, // رابط الصورة المرفوعة
-      },
-    });
+    return NextResponse.json({ success: true, data: { url: response.url } });
   } catch (error) {
-    console.error('Error uploading to ImageKit:', error);
-    return NextResponse.json(
-      {
-        success: false,
-        error: error.message || 'Failed to upload image',
-      },
-      { status: 500 }
-    );
+    console.error('ImageKit upload failed:', error);
+    return NextResponse.json({ success: false, error: 'تعذر رفع الصورة حاليًا.' }, { status: 502 });
   }
 }
