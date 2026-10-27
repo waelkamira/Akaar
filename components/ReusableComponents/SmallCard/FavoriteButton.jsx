@@ -13,7 +13,7 @@ function FavoriteButton({ item }) {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const userData = localStorage.getItem('CurrentUser');
-      const favoriteIds = localStorage.getItem('favoriteIds');
+      const storedFavoriteIds = localStorage.getItem('favoriteIds');
 
       if (userData) {
         try {
