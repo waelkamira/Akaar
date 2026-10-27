@@ -5,7 +5,7 @@ export async function GET() {
   try {
     const categoryCounts = await prisma.product.groupBy({
       by: ['categoryId'],
-      where: { isDeleted: false, isActive: true },
+      where: { isDeleted: false, isActive: true, category: { isActive: true } },
       _count: { _all: true },
     });
 
