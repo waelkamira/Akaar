@@ -67,18 +67,16 @@ const CategoriesNavBar = () => {
   const {
     category,
     setCategory,
-    performSearch,
   } = useSearch();
   const [hoveredCategory, setHoveredCategory] = useState(null);
 
   const handleCategoryIdClick = useCallback(
     async (categoryItem) => {
       setCategory(categoryItem);
-      router.push(`/search/categoryId=${categoryItem.id}`);
+      router.push(`/search?categoryId=${categoryItem.id}`);
       localStorage.setItem('category', serializeCategory(categoryItem));
-      performSearch();
     },
-    [setCategory, router, performSearch],
+    [setCategory, router],
   );
 
   const selectedCategory = useMemo(() => {
