@@ -149,8 +149,8 @@
 
 // PUT: تحديث منتج موجود
 export async function PUT(req) {
-  const session = await getServerSession(authOptions);
-  const userId = session?.user?.id;
+  const authenticatedUser = await getAuthenticatedUser();
+  const userId = authenticatedUser?.id;
 
   if (!userId) {
     return new Response(
