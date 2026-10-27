@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { getPagination, isPaginationOffsetOutOfRange, isPlainObject, parseOptionalNumber, parsePositiveInteger } from '../lib/api/validation.mjs';
+import { getPagination, isPaginationOffsetOutOfRange, isPlainObject, isValidIdentifier, parseOptionalNumber, parsePositiveInteger } from '../lib/api/validation.mjs';
 
 test('parsePositiveInteger uses fallback for invalid and non-positive input', () => {
   assert.equal(parsePositiveInteger('0', 3), 3);
@@ -60,4 +60,13 @@ test('isPlainObject rejects null, arrays and primitive values', () => {
   assert.equal(isPlainObject(null), false);
   assert.equal(isPlainObject([]), false);
   assert.equal(isPlainObject('value'), false);
+});
+
+test('isValidIdentifier rejects malformed and oversized identifiers', () => {
+  assert.equal(isValidIdentifier('abc'), true);
+  assert.equal(isValidIdentifier('  abc  '), false);
+  assert.equal(isValidIdentifier(''), false);
+  assert.equal(isValidIdentifier(123), false);
+  assert.equal(isValidIdentifier('x'.repeat(128)), true);
+  assert.equal(isValidIdentifier('x'.repeat(129)), false);
 });
