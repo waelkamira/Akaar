@@ -3,6 +3,7 @@ import { prisma } from '@/lib/db/prisma';
 import { getAuthenticatedUser } from '@/lib/auth/require-auth';
 import { parsePositiveInteger, isPaginationOffsetOutOfRange } from '@/lib/api/validation.mjs';
 import { publicProductWhere } from '@/lib/api/public-product-where.mjs';
+import { readJsonBody } from '@/lib/api/read-json-body.mjs';
 
 export async function GET(req) {
   const { searchParams } = new URL(req.url);
@@ -34,8 +35,12 @@ export async function GET(req) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
-    // جلب البيانات من قاعدة البيانات
-    const where = { userId, isDeleted: false, product: { isDeleted: false, isActive: true, category: { isActive: true } } };
+    // جلب العدد أولًا لمنع استعلامات الصفحات الخارجة عن نطاق النتائج.
+    const where = {
+      userId,
+      isDeleted: false,
+      product: { isDeleted: false, isActive: true, category: { isActive: true } },
+    };
     const totalCount = await prisma.favorite.count({ where });
     if (isPaginationOffsetOutOfRange(skip, totalCount)) {
       return NextResponse.json({
@@ -46,7 +51,6 @@ export async function GET(req) {
         meta: { cached: false, source: 'database' },
       }, { status: 200 });
     }
-
     const favorites = await prisma.favorite.findMany({
       where,
       skip,
@@ -76,10 +80,11 @@ export async function GET(req) {
 
 export async function POST(req) {
   try {
-    let body;
-    try { body = await req.json(); } catch {
-      return NextResponse.json({ error: 'Invalid JSON body.' }, { status: 400 });
+    const parsedBody = await readJsonBody(req, 16 * 1024);
+    if (!parsedBody.ok) {
+      return NextResponse.json({ error: parsedBody.error }, { status: parsedBody.status });
     }
+    const body = parsedBody.value;
     const { id, userId } = body || {};
     const authenticatedUser = await getAuthenticatedUser();
     if (!authenticatedUser || authenticatedUser.id !== userId) {
@@ -143,10 +148,11 @@ export async function POST(req) {
 
 export async function DELETE(req) {
   try {
-    let body;
-    try { body = await req.json(); } catch {
-      return NextResponse.json({ error: 'Invalid JSON body.' }, { status: 400 });
+    const parsedBody = await readJsonBody(req, 16 * 1024);
+    if (!parsedBody.ok) {
+      return NextResponse.json({ error: parsedBody.error }, { status: parsedBody.status });
     }
+    const body = parsedBody.value;
     const { id, userId } = body || {};
     const authenticatedUser = await getAuthenticatedUser();
     if (!authenticatedUser || authenticatedUser.id !== userId) {
