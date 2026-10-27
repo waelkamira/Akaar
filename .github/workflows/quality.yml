@@ -71,6 +71,14 @@ jobs:
       - name: Generate schema-to-migration drift SQL
         run: npx prisma migrate diff --from-migrations prisma/migrations --to-schema-datamodel prisma/schema.prisma --script --shadow-database-url "$SHADOW_DATABASE_URL" > prisma-schema-drift.sql
 
+      - name: Fail if migration history drifts from Prisma schema
+        run: |
+          if grep -Eq '^(CREATE|ALTER|DROP|COMMENT ON|GRANT|REVOKE)' prisma-schema-drift.sql; then
+            echo 'Committed migrations do not match prisma/schema.prisma:'
+            cat prisma-schema-drift.sql
+            exit 1
+          fi
+
       - name: Upload schema drift report
         uses: actions/upload-artifact@v4
         with:
