@@ -2,35 +2,27 @@ import { NextResponse } from 'next/server';
 import { LRUCache } from 'lru-cache';
 import { prisma } from '@/lib/db/prisma';
 import { getAuthenticatedUser } from '@/lib/auth/require-auth';
+import { getPagination, isPlainObject, parseOptionalNumber } from '@/lib/api/validation.mjs';
 
 const cache = new LRUCache({ max: 100, ttl: 60_000 });
 const MAX_PAGE_SIZE = 50;
 const productOwnerSelect = { id: true, userName: true, userImage: true };
 
 function readPageParams(searchParams) {
-  const rawPage = Number.parseInt(searchParams.get('page') || '1', 10);
-  const rawLimit = Number.parseInt(searchParams.get('limit') || '5', 10);
-  const page = Number.isInteger(rawPage) && rawPage > 0 ? rawPage : 1;
-  const limit = Number.isInteger(rawLimit) && rawLimit > 0 ? Math.min(rawLimit, MAX_PAGE_SIZE) : 5;
-  return { page, limit, skip: (page - 1) * limit };
+  return getPagination(searchParams, { defaultPage: 1, defaultLimit: 5, maxLimit: MAX_PAGE_SIZE });
 }
 
 async function readJson(request) {
   try {
     const body = await request.json();
-    if (!body || typeof body !== 'object' || Array.isArray(body)) return null;
+    if (!isPlainObject(body)) return null;
     return body;
   } catch {
     return null;
   }
 }
 
-function parseOptionalNumber(value, { integer = false, min = 0 } = {}) {
-  if (value === undefined || value === null || value === '') return undefined;
-  const parsed = Number(value);
-  if (!Number.isFinite(parsed) || parsed < min || (integer && !Number.isInteger(parsed))) return null;
-  return parsed;
-}
+
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
