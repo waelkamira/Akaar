@@ -33,9 +33,13 @@ export async function GET(request) {
 
   try {
     const where = { isDeleted: false, isActive: true, category: { isActive: true } };
-    const totalCount = await prisma.product.count({ where });
-    if (isPaginationOffsetOutOfRange(skip, totalCount)) {
-      return NextResponse.json([]);
+    // Avoid an extra COUNT query for normal catalog pages; verify unusually deep
+    // offsets before asking PostgreSQL to skip through a large result set.
+    if (skip > 1000) {
+      const totalCount = await prisma.product.count({ where });
+      if (isPaginationOffsetOutOfRange(skip, totalCount)) {
+        return NextResponse.json([]);
+      }
     }
 
     const products = await prisma.product.findMany({
