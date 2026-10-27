@@ -329,7 +329,7 @@ export default function SelectedFilters() {
         const { type, color } = getFilterType('priceMin');
         selected.push({
           key: 'priceMin',
-          label: `أقل سعر: ${filters.priceMin} ر.س`,
+          label: `أقل سعر: ${filters.priceMin}`,
           type,
           color,
         });
@@ -338,7 +338,7 @@ export default function SelectedFilters() {
         const { type, color } = getFilterType('priceMax');
         selected.push({
           key: 'priceMax',
-          label: `أعلى سعر: ${filters.priceMax} ر.س`,
+          label: `أعلى سعر: ${filters.priceMax}`,
           type,
           color,
         });
