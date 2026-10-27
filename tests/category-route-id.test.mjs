@@ -8,7 +8,7 @@ test('parseCategoryRouteId accepts positive decimal integer strings', () => {
 });
 
 test('parseCategoryRouteId rejects non-canonical or unsafe identifiers', () => {
-  for (const value of ['', '0', '-1', '+1', ' 1', '1 ', '1.0', '1e2', '12abc', '9007199254740992', null, 1]) {
+  for (const value of ['', '0', '01', '-1', '+1', ' 1', '1 ', '1.0', '1e2', '12abc', '9007199254740992', null, 1]) {
     assert.equal(parseCategoryRouteId(value), null, String(value));
   }
 });
