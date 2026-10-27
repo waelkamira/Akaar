@@ -5,31 +5,36 @@
 
 export const EXPECTED_SCHEMA = {
   products: {
-    sellerId: 'multi-vendor ownership',
-    salesCount: 'best-seller sorting',
-    isActive: 'catalog visibility filtering',
+    id: 'product primary key',
+    title: 'product title',
+    userId: 'owner relation key',
+    categoryId: 'legacy numeric category key',
+    categoryName: 'legacy category display name',
+    images: 'legacy product image array',
+    isDeleted: 'soft-delete visibility',
+    createdAt: 'product creation timestamp',
+    updatedAt: 'product update timestamp',
   },
   Category: {
-    slug: 'category URL / unique slug',
-    parentId: 'category hierarchy',
-    isActive: 'category visibility filtering',
-    createdAt: 'category audit timestamps',
-    updatedAt: 'category audit timestamps',
+    id: 'legacy text category ID',
+    name: 'category display name',
+    description: 'category description',
   },
   ProductImage: {
-    url: 'normalized product image URL',
-    sortOrder: 'stable image ordering',
-  },
-  sellers: {
-    userId: 'seller account relation',
-    storeName: 'seller storefront',
-    slug: 'seller storefront URL',
-    status: 'seller approval workflow',
+    id: 'image record primary key',
+    productId: 'legacy product image key',
+    image1: 'legacy image slot 1',
+    image2: 'legacy image slot 2',
+    image3: 'legacy image slot 3',
+    image4: 'legacy image slot 4',
+    image5: 'legacy image slot 5',
+    isPrimary: 'primary image marker',
   },
 };
 
 export const EXPECTED_TYPES = {
-  'Category.id': ['int4'],
+  'Category.id': ['text'],
+  'products.categoryId': ['int4'],
 };
 
 /**
