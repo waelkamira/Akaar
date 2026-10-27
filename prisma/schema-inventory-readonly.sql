@@ -4,7 +4,7 @@
 \echo '1) Expected canonical Prisma tables: presence/absence'
 WITH expected(table_name) AS (
   VALUES
-    ('users'), ('sellers'), ('guest_sessions'), ('products'),
+    ('users'), ('guest_sessions'), ('products'),
     ('Favorite'), ('ProductImage'), ('Role'), ('Permission'), ('Category'),
     ('Country'), ('City'), ('Supplier'), ('Inventory'), ('ProductTranslation'),
     ('ProductPriceHistory'), ('Review'), ('Cart'), ('CartItem'), ('Order'),
@@ -31,29 +31,19 @@ WITH expected(table_name, column_name, reason) AS (
     ('products', 'categoryId', 'category relation key'),
     ('products', 'categoryName', 'legacy category label'),
     ('products', 'images', 'legacy/current image array'),
-    ('products', 'sellerId', 'seller relation'),
-    ('products', 'isActive', 'public visibility'),
     ('products', 'isDeleted', 'soft deletion'),
     ('products', 'createdAt', 'audit timestamp'),
     ('products', 'updatedAt', 'audit timestamp'),
     ('Category', 'id', 'category primary key'),
     ('Category', 'name', 'category display name'),
-    ('Category', 'slug', 'canonical unique slug'),
-    ('Category', 'updatedAt', 'audit timestamp'),
-    ('Category', 'parentId', 'hierarchical category relation'),
-    ('Category', 'isActive', 'category visibility'),
     ('ProductImage', 'id', 'media primary key'),
     ('ProductImage', 'productId', 'media/product relation'),
-    ('ProductImage', 'url', 'normalized media URL'),
-    ('ProductImage', 'sortOrder', 'media ordering'),
     ('ProductImage', 'isPrimary', 'primary image flag'),
     ('ProductImage', 'image1', 'legacy image slot; preserve until reconciled'),
     ('ProductImage', 'image2', 'legacy image slot; preserve until reconciled'),
     ('ProductImage', 'image3', 'legacy image slot; preserve until reconciled'),
     ('ProductImage', 'image4', 'legacy image slot; preserve until reconciled'),
     ('ProductImage', 'image5', 'legacy image slot; preserve until reconciled'),
-    ('sellers', 'userId', 'seller/user relation'),
-    ('sellers', 'slug', 'canonical unique seller slug'),
     ('Cart', 'userId', 'cart ownership'),
     ('CartItem', 'cartId', 'cart item relation'),
     ('OrderItem', 'orderId', 'persisted order line relation'),
@@ -92,7 +82,7 @@ LEFT JOIN information_schema.tables t
 \echo '5) Extra public tables not represented by canonical Prisma models (review; do not drop automatically)'
 WITH expected(table_name) AS (
   VALUES
-    ('users'), ('sellers'), ('guest_sessions'), ('products'),
+    ('users'), ('guest_sessions'), ('products'),
     ('Favorite'), ('ProductImage'), ('Role'), ('Permission'), ('Category'),
     ('Country'), ('City'), ('Supplier'), ('Inventory'), ('ProductTranslation'),
     ('ProductPriceHistory'), ('Review'), ('Cart'), ('CartItem'), ('Order'),
