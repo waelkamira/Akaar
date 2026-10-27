@@ -36,3 +36,13 @@ test('rejects non-object filter containers', () => {
   assert.deepEqual(sanitizeDetailsFilters([]), []);
   assert.deepEqual(sanitizeDetailsFilters('value'), []);
 });
+
+import { sanitizeSearchText } from '../lib/api/search-filters.mjs';
+
+test('trims and bounds scalar search text while rejecting non-strings', () => {
+  assert.equal(sanitizeSearchText('  Damascus  '), 'Damascus');
+  assert.equal(sanitizeSearchText('x'.repeat(150), 120), 'x'.repeat(120));
+  assert.equal(sanitizeSearchText({ value: 'city' }), '');
+  assert.equal(sanitizeSearchText(null), '');
+  assert.equal(sanitizeSearchText('value', 0), '');
+});

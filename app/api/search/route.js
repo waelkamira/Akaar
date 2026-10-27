@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
-import { sanitizeDetailsFilters } from '@/lib/api/search-filters.mjs';
+import { sanitizeDetailsFilters, sanitizeSearchText } from '@/lib/api/search-filters.mjs';
 
 const MAX_QUERY_LENGTH = 120;
 const MAX_PAGE_SIZE = 50;
@@ -68,9 +68,10 @@ function buildWhere({ categoryId, filters }) {
     where.AND.push({ categoryId: selectedCategoryId });
   }
 
-  if (filters.categoryName) {
+  const categoryName = sanitizeSearchText(filters.categoryName);
+  if (categoryName) {
     where.AND.push({
-      categoryName: { equals: String(filters.categoryName), mode: 'insensitive' },
+      categoryName: { equals: categoryName, mode: 'insensitive' },
     });
   }
 
@@ -81,14 +82,17 @@ function buildWhere({ categoryId, filters }) {
   if (Number.isFinite(max) && max >= 0) price.lte = Math.floor(max);
   if (Object.keys(price).length) where.AND.push({ basePrice: price });
 
-  if (filters.city) where.AND.push({ city: String(filters.city) });
-  if (filters.town) where.AND.push({ town: String(filters.town) });
-  if (filters.adType) where.AND.push({ adCategory: String(filters.adType) });
-
-  if (filters.vendorId) where.AND.push({ userId: String(filters.vendorId) });
+  const city = sanitizeSearchText(filters.city);
+  const town = sanitizeSearchText(filters.town);
+  const adType = sanitizeSearchText(filters.adType);
+  const vendorId = sanitizeSearchText(filters.vendorId);
+  if (city) where.AND.push({ city });
+  if (town) where.AND.push({ town });
+  if (adType) where.AND.push({ adCategory: adType });
+  if (vendorId) where.AND.push({ userId: vendorId });
 
   if (filters.brand) {
-    const brand = String(filters.brand).trim();
+    const brand = sanitizeSearchText(filters.brand);
     if (brand) {
       where.AND.push({
         OR: [
@@ -100,7 +104,7 @@ function buildWhere({ categoryId, filters }) {
   }
 
   if (filters.subCategory) {
-    const subCategory = String(filters.subCategory).trim();
+    const subCategory = sanitizeSearchText(filters.subCategory);
     if (subCategory) {
       where.AND.push({
         OR: [
@@ -142,8 +146,10 @@ export async function POST(request) {
   const maxPage = Math.floor(Number.MAX_SAFE_INTEGER / limit) + 1;
   const page = Math.min(validPositiveInteger(body.page, 1), maxPage);
   const where = buildWhere({ categoryId: body.categoryId, filters });
-  const sortKey =
-    typeof filters.sortBy === 'string' ? filters.sortBy : body.sortBy;
+  const sortKey = sanitizeSearchText(
+    typeof filters.sortBy === 'string' ? filters.sortBy : body.sortBy,
+    32,
+  );
   const orderBy = SORT_ORDERS[sortKey] || [{ createdAt: 'desc' }];
 
   try {
