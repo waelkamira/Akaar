@@ -139,7 +139,7 @@
 //       initial={{ opacity: 0, y: -20 }}
 //       animate={{ opacity: 1, y: 0 }}
 //       transition={{ duration: 0.3 }}
-//       className="bg-white rounded-lg shadow-sm p-4 border border-gray-100"
+//       className="bg-[#211F1B] rounded-lg shadow-sm p-4 border border-gray-100"
 //     >
 //       <div className="flex flex-col justify-start items-start mb-4 text-sm lg:text-lg">
 //         {/* <h3 className="font-semibold text-gray-900 flex items-center gap-2 text-nowrap">
@@ -442,16 +442,16 @@ export default function SelectedFilters() {
         icon: 'bg-yellow-100',
       },
       orange: {
-        bg: 'bg-orange-50',
-        border: 'border-orange-200',
-        text: 'text-orange-700',
-        hover: 'hover:bg-orange-100',
+        bg: 'bg-[#C99B70]/10',
+        border: 'border-[#C99B70]/20',
+        text: 'text-[#E5C5A5]',
+        hover: 'hover:bg-[#C99B70]/15',
         icon: 'bg-orange-100',
       },
       gray: {
         bg: 'bg-stone-100',
         border: 'border-stone-200',
-        text: 'text-stone-700',
+        text: 'text-stone-300',
         hover: 'hover:bg-stone-200',
         icon: 'bg-stone-200',
       },
@@ -480,25 +480,25 @@ export default function SelectedFilters() {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -15 }}
       transition={{ duration: 0.3, ease: 'easeOut' }}
-      className="bg-white/70 backdrop-blur-xl border border-stone-200/60 rounded-2xl p-5 shadow-sm shadow-stone-900/5"
+      className="bg-[#211F1B]/90 backdrop-blur-xl border border-white/10 rounded-2xl p-5 shadow-xl shadow-black/20"
       dir="rtl"
     >
       {/* ==================== رأس القسم ==================== */}
-      <div className="flex items-center justify-between mb-4 border-b border-stone-200/60 pb-3">
+      <div className="flex items-center justify-between mb-4 border-b border-white/10 pb-3">
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2 text-stone-800">
             <div className="relative">
-              <Filter className="w-5 h-5 text-orange-600" />
+              <Filter className="w-5 h-5 text-[#C99B70]" />
               {/* شارة عدد الفلاتر */}
               <motion.span
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                className="absolute -top-2 -right-2 bg-orange-600 text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-md"
+                className="absolute -top-2 -right-2 bg-[#C99B70] text-[#171512] text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-md"
               >
                 {selectedFilters.length}
               </motion.span>
             </div>
-            <span className="text-sm font-bold text-stone-900">
+            <span className="text-sm font-bold text-[#F5F0E9]">
               الفلاتر النشطة
             </span>
           </div>
@@ -511,7 +511,7 @@ export default function SelectedFilters() {
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-300 ${
             showClearConfirm
               ? 'bg-red-500 text-white hover:bg-red-600 shadow-md'
-              : 'text-stone-500 hover:text-red-600 hover:bg-red-50/80 border border-transparent hover:border-red-100'
+              : 'text-stone-400 hover:text-red-600 hover:bg-red-50/80 border border-transparent hover:border-red-100'
           }`}
         >
           <X size={14} strokeWidth={2.5} />
@@ -580,9 +580,9 @@ export default function SelectedFilters() {
         <motion.div
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: 'auto' }}
-          className="mt-3 pt-3 border-t border-stone-200/60"
+          className="mt-3 pt-3 border-t border-white/10"
         >
-          <p className="text-xs text-stone-500 text-center">
+          <p className="text-xs text-stone-400 text-center">
             يتم عرض {selectedFilters.length} فلتر نشط. انقر على أي فلتر لإزالته.
           </p>
         </motion.div>
