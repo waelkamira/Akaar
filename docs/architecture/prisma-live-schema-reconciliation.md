@@ -28,12 +28,11 @@ The table above reflects the last recorded live-schema observations and the comp
 
 ## Required next steps
 
-1. Confirm the audit ran against the intended database and preserve its output (do not include secrets).
-2. Inspect all table/column/type differences, indexes, constraints, foreign keys, and row counts using read-only queries.
-3. Decide a canonical category ID strategy. Do not convert text IDs to integers until every reference and existing value has been inventoried.
-4. Design a forward-only migration with explicit backfill and validation for `Category`, `ProductImage`, product visibility fields, and seller ownership.
-5. Test the migration against a disposable copy or the isolated test database, including rollback/recovery rehearsals.
-6. Only then update the Prisma schema and refactor route code to match the agreed schema contract.
+1. Run the read-only audit against the intended database and preserve its output (do not include secrets).
+2. Review remaining model/table differences, indexes, constraints, foreign keys, and row counts using read-only queries. The current patch reconciles the core catalog models from known observations, not every model in the full schema.
+3. Design a forward-only migration for normalized images and multi-vendor seller ownership, with explicit backfill and validation.
+4. Only reintroduce seller fields, category relations, activity flags, or sales metrics after their corresponding database migration has been deployed and verified.
+5. Run CI and the isolated PostgreSQL integration suite. Do not claim production compatibility until the read-only audit succeeds against the intended database.
 
 ## Exit criteria
 
