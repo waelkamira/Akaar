@@ -3,28 +3,25 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { TbHeartFilled } from 'react-icons/tb';
 import { FaRegHeart } from 'react-icons/fa6';
 import toast from 'react-hot-toast';
+import { useSession } from 'next-auth/react';
 
 function FavoriteButton({ item }) {
   const [isFavorited, setIsFavorited] = useState(false);
-  const [userId, setUserId] = useState(null);
+  const session = useSession();
+  const userId = session?.data?.user?.id;
+  const sessionStatus = session.status;
   const [favoriteIds, setFavoriteIds] = useState([]);
   const isMounted = useRef(false);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const userData = localStorage.getItem('CurrentUser');
+    if (typeof window === 'undefined') return;
+    try {
       const storedFavoriteIds = localStorage.getItem('favoriteIds');
-
-      if (userData) {
-        try {
-          const user = JSON.parse(userData);
-          setUserId(user?.id);
-          const parsedFavoriteIds = storedFavoriteIds ? JSON.parse(storedFavoriteIds) : [];
-          setFavoriteIds(Array.isArray(parsedFavoriteIds) ? parsedFavoriteIds : []);
-        } catch (error) {
-          console.error('Failed to parse user data:', error);
-        }
-      }
+      const parsedFavoriteIds = storedFavoriteIds ? JSON.parse(storedFavoriteIds) : [];
+      setFavoriteIds(Array.isArray(parsedFavoriteIds) ? parsedFavoriteIds : []);
+    } catch {
+      localStorage.removeItem('favoriteIds');
+      setFavoriteIds([]);
     }
   }, []);
 
@@ -52,13 +49,15 @@ function FavoriteButton({ item }) {
   );
 
   useEffect(() => {
+    if (sessionStatus === 'loading') return;
     if (!userId) {
       setFavoriteIds([]);
       setIsFavorited(false);
+      if (typeof window !== 'undefined') localStorage.removeItem('favoriteIds');
       return;
     }
     fetchAndStoreUserFavoriteIds(userId);
-  }, [userId, fetchAndStoreUserFavoriteIds]);
+  }, [userId, sessionStatus, fetchAndStoreUserFavoriteIds]);
 
   const checkFavoriteStatus = useCallback(() => {
     if (item?.id) {
@@ -80,7 +79,11 @@ function FavoriteButton({ item }) {
   }, [checkFavoriteStatus]);
 
   const handleFavorite = useCallback(async () => {
-    if (!item?.id || !userId) return;
+    if (!item?.id) return;
+    if (!userId) {
+      toast.error('سجّل الدخول لإضافة المنتج إلى المفضلة');
+      return;
+    }
 
     try {
       const response = await fetch('/api/favorite', {
