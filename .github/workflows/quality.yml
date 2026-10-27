@@ -52,6 +52,9 @@ jobs:
       - name: Generate Prisma client
         run: npx prisma generate --schema=prisma/schema.prisma
 
+      - name: Check read-only schema audit syntax
+        run: node --check scripts/audit-live-schema.mjs && node --check scripts/lib/schema-audit-analysis.mjs
+
       - name: Create Prisma shadow database
         run: PGPASSWORD=postgres psql -h localhost -U postgres -d postgres -c "CREATE DATABASE akaar_shadow;"
 
