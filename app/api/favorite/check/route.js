@@ -2,6 +2,7 @@ import { getAuthenticatedUser } from '@/lib/auth/require-auth';
 
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
+import { readJsonBody } from '@/lib/api/read-json-body.mjs';
 export async function POST(req) {
   try {
     const parsedBody = await readJsonBody(req, 16 * 1024);
