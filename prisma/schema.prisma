@@ -22,13 +22,6 @@ enum UserStatus {
   DELETED
 }
 
-enum SellerStatus {
-  PENDING
-  ACTIVE
-  SUSPENDED
-  REJECTED
-}
-
 enum OrderStatus {
   PENDING
   PAID
@@ -69,7 +62,6 @@ model User {
   reports           Report[]
   recommendations   Recommendation[]
   roleAssignment    Role?            @relation(fields: [roleId], references: [id], onDelete: SetNull)
-  seller            Seller?
   cart              Cart?
   passwordResets    PasswordResetToken[]
 
@@ -79,27 +71,6 @@ model User {
   @@index([status])
   @@index([roleId])
   @@map("users")
-}
-
-model Seller {
-  id          String       @id @default(uuid())
-  userId      String       @unique
-  storeName   String
-  slug        String       @unique
-  description String?
-  logo        String?
-  status      SellerStatus @default(PENDING)
-  isVerified  Boolean      @default(false)
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-
-  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  products Product[]
-
-  @@index([status])
-  @@index([isVerified])
-  @@index([storeName])
-  @@map("sellers")
 }
 
 model GuestSession {
@@ -118,7 +89,6 @@ model Product {
   id            String    @id @default(uuid())
   title         String
   userId        String
-  sellerId      String?
   userImage     String?
   userName      String?
   categoryId    Int       @default(1)
@@ -137,16 +107,12 @@ model Product {
   description   String?
   /// On-hand quantity. Application code treats this as `stock`.
   stockQuantity Int?      @default(1)
-  salesCount    Int       @default(0)
-  isActive      Boolean   @default(true)
   isDeleted     Boolean   @default(false)
   deletedAt     DateTime?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
   user            User                 @relation(fields: [userId], references: [id], onDelete: Restrict)
-  seller          Seller?              @relation(fields: [sellerId], references: [id], onDelete: SetNull)
-  category        Category             @relation(fields: [categoryId], references: [id], onDelete: Restrict)
   favorites       Favorite[]
   reviews         Review[]
   orders          Order[]
@@ -157,14 +123,10 @@ model Product {
   inventory       Inventory?
   discounts       Discount[]
   translations    ProductTranslation[]
-  media           ProductImage[]
 
   @@index([userId])
-  @@index([sellerId])
   @@index([categoryId])
   @@index([basePrice])
-  @@index([salesCount])
-  @@index([isActive])
   @@index([title], map: "products_title_btree_idx")
   @@index([title(ops: raw("gin_trgm_ops"))], type: Gin, map: "products_title_trgm_idx")
   @@index([categoryName(ops: raw("gin_trgm_ops"))], type: Gin, map: "products_category_name_trgm_idx")
@@ -175,10 +137,6 @@ model Product {
   @@index([city])
   @@index([isDeleted])
   @@index([createdAt])
-  @@index([isDeleted, isActive, createdAt])
-  @@index([isDeleted, isActive, basePrice])
-  @@index([isDeleted, isActive, salesCount])
-  @@index([categoryId, isDeleted, isActive])
   @@map("products")
 }
 
@@ -198,17 +156,15 @@ model Favorite {
 }
 
 model ProductImage {
-  id        String  @id @default(uuid())
+  id        String  @id
   productId String
-  url       String
-  sortOrder Int     @default(0)
+  image1    String
+  image2    String
+  image3    String
+  image4    String
+  image5    String
   isPrimary Boolean @default(false)
-
-  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-
-  @@index([productId, sortOrder])
 }
-
 model Role {
   id          String       @id @default(uuid())
   name        String       @unique
@@ -223,25 +179,10 @@ model Permission {
 }
 
 model Category {
-  id          Int       @id
+  id          String  @id
   name        String
-  slug        String    @unique
   description String?
-  parentId    Int?
-  isActive    Boolean   @default(true)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-
-  parent   Category?  @relation("CategoryTree", fields: [parentId], references: [id], onDelete: SetNull)
-  children Category[] @relation("CategoryTree")
-  products Product[]
-
-  @@unique([name])
-  @@index([name])
-  @@index([parentId])
-  @@index([isActive])
 }
-
 model Country {
   id        String @id @default(uuid())
   name      String @unique
