@@ -1,38 +1,84 @@
 import { NextResponse } from 'next/server';
-import { mockProducts } from '../../../../lib/mockData';
+import { prisma } from '@/lib/db/prisma';
 
-export const revalidate = 3600;
+export const revalidate = 60;
+const MAX_CATEGORIES = 24;
+const PREVIEW_SIZE = 2;
+
+function parseCategoryIds(value) {
+  return [...new Set(
+    String(value || '')
+      .split(',')
+      .map((item) => Number.parseInt(item, 10))
+      .filter((id) => Number.isInteger(id) && id > 0),
+  )].slice(0, MAX_CATEGORIES);
+}
 
 export async function GET(request) {
-  const { searchParams } = new URL(request.url);
-  const requestedIds = (searchParams.get('categories') || '')
-    .split(',')
-    .map((value) => Number.parseInt(value, 10))
-    .filter(Number.isInteger);
+  try {
+    const { searchParams } = new URL(request.url);
+    let categoryIds = parseCategoryIds(searchParams.get('categories'));
 
-  const categoryIds = requestedIds.length ? requestedIds : Object.keys(mockProducts).map(Number);
-  const counts = {};
-  const data = Object.fromEntries(
-    categoryIds.map((categoryId) => {
-      const products = mockProducts[categoryId] || [];
-      counts[categoryId] = products.length;
-      return [
-        categoryId,
-        products.slice(0, 2).map((product) => {
-          const preview = { ...product };
-          delete preview.category;
-          return preview;
-        }),
-      ];
-    }),
-  );
+    if (!categoryIds.length) {
+      const categories = await prisma.category.findMany({
+        where: { isActive: true },
+        select: { id: true },
+        orderBy: { id: 'asc' },
+        take: MAX_CATEGORIES,
+      });
+      categoryIds = categories.map(({ id }) => id);
+    }
 
-  return NextResponse.json(
-    { data, counts, source: 'mock-database' },
-    {
-      headers: {
-        'Cache-Control': 'public, max-age=3600, stale-while-revalidate=86400',
-      },
-    },
-  );
+    if (!categoryIds.length) {
+      return NextResponse.json(
+        { data: {}, counts: {}, source: 'database' },
+        { headers: { 'Cache-Control': 'public, max-age=30, stale-while-revalidate=60' } },
+      );
+    }
+
+    const [groupedCounts, previews] = await Promise.all([
+      prisma.product.groupBy({
+        by: ['categoryId'],
+        where: { categoryId: { in: categoryIds }, isDeleted: false, isActive: true },
+        _count: { _all: true },
+      }),
+      Promise.all(categoryIds.map(async (categoryId) => {
+        const products = await prisma.product.findMany({
+          where: { categoryId, isDeleted: false, isActive: true },
+          select: {
+            id: true,
+            title: true,
+            categoryId: true,
+            categoryName: true,
+            images: true,
+            basePrice: true,
+            stockQuantity: true,
+            salesCount: true,
+            createdAt: true,
+          },
+          orderBy: { createdAt: 'desc' },
+          take: PREVIEW_SIZE,
+        });
+        return [categoryId, products];
+      })),
+    ]);
+
+    const counts = Object.fromEntries(
+      groupedCounts.map(({ categoryId, _count }) => [categoryId, _count._all]),
+    );
+    const data = Object.fromEntries(previews);
+
+    for (const categoryId of categoryIds) {
+      if (!(categoryId in counts)) counts[categoryId] = 0;
+      if (!(categoryId in data)) data[categoryId] = [];
+    }
+
+    return NextResponse.json(
+      { data, counts, source: 'database' },
+      { headers: { 'Cache-Control': 'public, max-age=30, stale-while-revalidate=60' } },
+    );
+  } catch (error) {
+    console.error('Bulk category preview failed:', error);
+    return NextResponse.json({ error: 'Unable to load category previews.' }, { status: 500 });
+  }
 }
