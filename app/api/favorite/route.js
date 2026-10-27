@@ -21,13 +21,9 @@ function generateFavoriteCacheKey(userId, page, limit) {
 }
 
 // تنظيف الذاكرة المؤقتة عند التعديلات
-async function clearUserFavoritesCache(userId) {
-  const keys = cache.keys();
-  keys.forEach((key) => {
-    if (key.startsWith(`fav_${userId}`)) {
-      cache.delete(key);
-    }
-  });
+async function clearUserFavoritesCache() {
+  // Cache keys contain a hash, not the raw user ID; clear the cache to avoid stale favorites.
+  cache.clear();
 }
 
 export async function GET(req) {
@@ -149,7 +145,7 @@ export async function POST(req) {
     }
 
     // تنظيف الذاكرة المؤقتة للمستخدم
-    await clearUserFavoritesCache(userId);
+    await clearUserFavoritesCache();
 
     return NextResponse.json(result);
   } catch (error) {
