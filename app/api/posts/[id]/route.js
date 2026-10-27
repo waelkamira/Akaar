@@ -1,8 +1,6 @@
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '@/lib/db/prisma';
 import { LRUCache } from 'lru-cache';
 import crypto from 'crypto';
-
-const prisma = new PrismaClient();
 
 // إعدادات الذاكرة المؤقتة
 const cache = new LRUCache({
@@ -104,8 +102,6 @@ export async function GET(req, { params }) {
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
     });
-  } finally {
-    await prisma.$disconnect();
   }
 }
 
@@ -150,7 +146,5 @@ export async function DELETE(req, { params }) {
     return new Response(JSON.stringify({ error: 'Internal Server Error' }), {
       status: 500,
     });
-  } finally {
-    await prisma.$disconnect();
   }
 }
