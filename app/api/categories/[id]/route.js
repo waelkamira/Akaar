@@ -40,7 +40,7 @@ export async function GET(req, { params }) {
 
     // جلب المنتجات
     const products = await prisma.product.findMany({
-      where: { categoryId: toInteger(id) }, // تصفية البيانات حسب الفئة
+      where: { categoryId: toInteger(id), isDeleted: false, isActive: true }, // Publicly visible products
       skip, // تخطي عدد معين من العناصر
       take: limit, // الحد الأقصى للعناصر
       orderBy: { createdAt: 'desc' }, // ترتيب العناصر حسب التاريخ
