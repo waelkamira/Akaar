@@ -24,6 +24,7 @@ export async function GET(request) {
       where: {
         isDeleted: false,
         isActive: true,
+        category: { isActive: true },
         OR: [
           { title: { contains: query, mode: 'insensitive' } },
           { description: { contains: query, mode: 'insensitive' } },
