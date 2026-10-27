@@ -22,6 +22,7 @@ import { FiCopy, FiCheck } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 import { useCommerce } from '@/features/cart/commerce-context';
 import { useParams } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import demoProducts from '../../../lib/demoProducts';
 
 const ImageSlider = dynamic(
@@ -59,12 +60,43 @@ export default function Page() {
   const [copied, setCopied] = useState(false);
   const [activeTab, setActiveTab] = useState('details');
   const { addToCart, favoriteItems, toggleFavorite } = useCommerce();
+  const session = useSession();
+  const userId = session?.data?.user?.id;
 
   useEffect(() => {
     if (post?.isDemo) {
       setIsLiked(favoriteItems.some((item) => item.id === post.id));
     }
   }, [post, favoriteItems]);
+
+  useEffect(() => {
+    if (!post || post.isDemo) return undefined;
+    if (!userId) {
+      setIsLiked(false);
+      return undefined;
+    }
+
+    const controller = new AbortController();
+    const loadFavoriteStatus = async () => {
+      try {
+        const response = await fetch(
+          `/api/favorite/ids?userId=${encodeURIComponent(userId)}`,
+          { signal: controller.signal, headers: { Accept: 'application/json' } },
+        );
+        if (!response.ok) return;
+        const payload = await response.json();
+        const productIds = Array.isArray(payload?.productIds) ? payload.productIds : [];
+        setIsLiked(productIds.includes(post.id));
+      } catch (favoriteError) {
+        if (favoriteError?.name !== 'AbortError') {
+          console.error('Unable to load product favorite status:', favoriteError);
+        }
+      }
+    };
+
+    loadFavoriteStatus();
+    return () => controller.abort();
+  }, [post?.id, post?.isDemo, userId]);
 
   useEffect(() => {
     setIsClient(true);
@@ -184,12 +216,35 @@ export default function Page() {
     }
   };
 
-  const handleLike = () => {
-    if (post?.isDemo) {
+  const handleLike = async () => {
+    if (!post?.id) return;
+
+    if (post.isDemo) {
       toggleFavorite(post);
       return;
     }
-    setIsLiked((liked) => !liked);
+
+    if (!userId) {
+      toast.error('سجّل الدخول لإضافة المنتج إلى المفضلة');
+      return;
+    }
+
+    const previousState = isLiked;
+    setIsLiked(!previousState);
+    try {
+      const response = await fetch('/api/favorite', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({ id: post.id, userId }),
+      });
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(payload?.error || 'تعذر تحديث المفضلة');
+      setIsLiked(Boolean(payload?.favorited));
+      toast.success(payload?.message || 'تم تحديث المفضلة');
+    } catch (favoriteError) {
+      setIsLiked(previousState);
+      toast.error(favoriteError?.message || 'تعذر تحديث المفضلة');
+    }
   };
 
   const handleAddToCart = () => {
