@@ -1,24 +1,8 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
 import { getAuthenticatedUser } from '@/lib/auth/require-auth';
-import { favoriteCacheKey } from '@/lib/api/cache-keys.mjs';
 import { parsePositiveInteger } from '@/lib/api/validation.mjs';
 import { publicProductWhere } from '@/lib/api/public-product-where.mjs';
-import { LRUCache } from 'lru-cache';
-
-// إعدادات الذاكرة المؤقتة
-const cache = new LRUCache({
-  max: 100,
-  maxSize: 5000000, // 5MB
-  sizeCalculation: (value) => Buffer.byteLength(JSON.stringify(value), 'utf8'),
-  ttl: 1000 * 60 * 60, // 60 دقيقة
-});
-
-// دالة مساعدة لإنشاء مفتاح ذاكرة التخزين المؤقت
-async function clearUserFavoritesCache() {
-  // Cache keys contain a hash, not the raw user ID; clear the cache to avoid stale favorites.
-  cache.clear();
-}
 
 export async function GET(req) {
   const { searchParams } = new URL(req.url);
@@ -39,15 +23,6 @@ export async function GET(req) {
         { error: 'User ID is required' },
         { status: 400 }
       );
-    }
-
-    // إنشاء مفتاح الذاكرة المؤقتة
-    const cacheKey = favoriteCacheKey(userId, currentPage, limit);
-
-    // التحقق من الذاكرة المؤقتة
-    const cachedData = cache.get(cacheKey);
-    if (cachedData) {
-      return NextResponse.json(cachedData);
     }
 
     // التحقق من وجود المستخدم
@@ -79,9 +54,6 @@ export async function GET(req) {
       message: 'تم جلب المفضلة بنجاح',
       meta: { cached: false, source: 'database' },
     };
-
-    // تخزين في الذاكرة المؤقتة
-    cache.set(cacheKey, result);
 
     return NextResponse.json(result, { status: 200 });
   } catch (error) {
@@ -149,7 +121,6 @@ export async function POST(req) {
     }
 
     // تنظيف الذاكرة المؤقتة للمستخدم
-    await clearUserFavoritesCache();
 
     return NextResponse.json(result);
   } catch (error) {
