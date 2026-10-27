@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
 import { getAdminUser } from '@/lib/auth/require-auth';
 import { getPagination, isPaginationOffsetOutOfRange } from '@/lib/api/validation.mjs';
+import { readJsonBody } from '@/lib/api/read-json-body.mjs';
 
 const MAX_PAGE_SIZE = 100;
 const userSelect = {
@@ -36,19 +37,11 @@ export async function GET(request) {
         ] }
       : {};
 
-    // Count first so an attacker cannot force a huge but technically safe
-    // Prisma offset to scan the whole user table.
+    // Count first so huge but safe-integer offsets cannot force an expensive page query.
     const totalCount = await prisma.user.count({ where });
     if (isPaginationOffsetOutOfRange(skip, totalCount)) {
-      return NextResponse.json({
-        users: [],
-        page,
-        limit,
-        totalCount,
-        hasMore: false,
-      });
+      return NextResponse.json({ users: [], page, limit, totalCount, hasMore: false });
     }
-
     const users = await prisma.user.findMany({
       where,
       select: userSelect,
@@ -77,12 +70,11 @@ export async function PUT(request) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    let body;
-    try {
-      body = await request.json();
-    } catch {
-      return NextResponse.json({ error: 'Invalid JSON body.' }, { status: 400 });
+    const parsedBody = await readJsonBody(request, 16 * 1024);
+    if (!parsedBody.ok) {
+      return NextResponse.json({ error: parsedBody.error }, { status: parsedBody.status });
     }
+    const body = parsedBody.value;
 
     const id = typeof body?.id === 'string' ? body.id.trim() : '';
     if (!id) {
@@ -120,12 +112,11 @@ export async function DELETE(request) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    let body;
-    try {
-      body = await request.json();
-    } catch {
-      return NextResponse.json({ error: 'Invalid JSON body.' }, { status: 400 });
+    const parsedBody = await readJsonBody(request, 16 * 1024);
+    if (!parsedBody.ok) {
+      return NextResponse.json({ error: parsedBody.error }, { status: parsedBody.status });
     }
+    const body = parsedBody.value;
 
     const id = typeof body?.id === 'string' ? body.id.trim() : '';
     if (!id) {
