@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/db/prisma';
 import { getAuthenticatedUser } from '@/lib/auth/require-auth';
 import { publicProductWhere } from '@/lib/api/public-product-where.mjs';
+import { getPagination } from '@/lib/api/validation.mjs';
 import { LRUCache } from 'lru-cache';
 import crypto from 'crypto';
 
@@ -30,27 +31,20 @@ async function clearUserPostsCache() {
 export async function GET(req, { params }) {
   const { id } = await params;
   const url = new URL(req.url);
-  const requestedPage = Number.parseInt(url.searchParams.get('page') || '1', 10);
-  const requestedLimit = Number.parseInt(url.searchParams.get('limit') || '5', 10);
-  const page = Number.isInteger(requestedPage) && requestedPage > 0 ? requestedPage : 1;
-  const limit = Number.isInteger(requestedLimit) && requestedLimit > 0 ? Math.min(requestedLimit, 50) : 5;
+  const { page, limit, skip } = getPagination(url.searchParams, {
+    defaultPage: 1,
+    defaultLimit: 5,
+    maxLimit: 50,
+  });
 
   try {
-    if (!id) {
+    if (typeof id !== 'string' || !id.trim() || id.length > 128) {
       return new Response(
         JSON.stringify({ message: 'يجب توفير معرف المستخدم' }),
         { status: 400 }
       );
     }
 
-    if (isNaN(page) || isNaN(limit)) {
-      return new Response(
-        JSON.stringify({ error: 'قيم الصفحة أو الحدود غير صالحة' }),
-        { status: 400 }
-      );
-    }
-
-    const skip = (page - 1) * limit;
     const cacheKey = generatePostsCacheKey(id, page, limit);
 
     // التحقق من الذاكرة المؤقتة
