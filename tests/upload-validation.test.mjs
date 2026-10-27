@@ -15,8 +15,8 @@ test('image validation accepts supported image formats under the limit', () => {
 test('image validation rejects missing files, unsupported formats and oversize files', () => {
   assert.equal(validateImageFile(null), 'ملف الصورة مطلوب.');
   assert.match(validateImageFile(fakeFile({ type: 'image/svg+xml' })), /نوع الصورة/);
-  assert.match(validateImageFile(fakeFile({ size: MAX_IMAGE_SIZE + 1 })), /10 ميغابايت/);
-  assert.match(validateImageFile(fakeFile({ size: 0 })), /10 ميغابايت/);
+  assert.match(validateImageFile(fakeFile({ size: MAX_IMAGE_SIZE + 1 })), /5 ميغابايت/);
+  assert.match(validateImageFile(fakeFile({ size: 0 })), /5 ميغابايت/);
 });
 
 test('safeImageFileName strips directory components and unsafe characters', () => {
