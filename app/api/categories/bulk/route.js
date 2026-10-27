@@ -18,9 +18,12 @@ function parseCategoryIds(value) {
 export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url);
-    let categoryIds = parseCategoryIds(searchParams.get('categories'));
+    const requestedCategories = searchParams.get('categories');
+    let categoryIds = parseCategoryIds(requestedCategories);
 
-    if (!categoryIds.length) {
+    // Default to the active catalog only when no category list was supplied.
+    // A malformed supplied list must not silently broaden the response to every category.
+    if (!requestedCategories?.trim()) {
       const categories = await prisma.category.findMany({
         where: { isActive: true },
         select: { id: true },
@@ -30,7 +33,7 @@ export async function GET(request) {
       categoryIds = categories.map(({ id }) => id);
     }
 
-    if (searchParams.get('categories') && categoryIds.length) {
+    if (requestedCategories?.trim() && categoryIds.length) {
       const activeCategories = await prisma.category.findMany({
         where: { id: { in: categoryIds }, isActive: true },
         select: { id: true },
