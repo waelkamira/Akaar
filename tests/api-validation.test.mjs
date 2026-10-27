@@ -25,6 +25,14 @@ test('getPagination produces one-based pages and non-negative offsets', () => {
   });
 });
 
+test('getPagination clamps extremely large page offsets to safe integers', () => {
+  const result = getPagination(new URLSearchParams('page=9007199254740991&limit=50'));
+  assert.ok(Number.isSafeInteger(result.page));
+  assert.ok(Number.isSafeInteger(result.skip));
+  assert.ok(result.skip >= 0);
+  assert.equal(result.skip, (result.page - 1) * result.limit);
+});
+
 test('parseOptionalNumber rejects invalid, negative and non-integer integer fields', () => {
   assert.equal(parseOptionalNumber(undefined), undefined);
   assert.equal(parseOptionalNumber(''), undefined);
