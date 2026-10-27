@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
 import { getAdminUser } from '@/lib/auth/require-auth';
-import { getPagination } from '@/lib/api/validation.mjs';
+import { getPagination, isPaginationOffsetOutOfRange } from '@/lib/api/validation.mjs';
 
 const MAX_PAGE_SIZE = 100;
 const userSelect = {
@@ -36,16 +36,26 @@ export async function GET(request) {
         ] }
       : {};
 
-    const [users, totalCount] = await Promise.all([
-      prisma.user.findMany({
-        where,
-        select: userSelect,
-        orderBy: { createdAt: 'desc' },
-        skip,
-        take: limit,
-      }),
-      prisma.user.count({ where }),
-    ]);
+    // Count first so an attacker cannot force a huge but technically safe
+    // Prisma offset to scan the whole user table.
+    const totalCount = await prisma.user.count({ where });
+    if (isPaginationOffsetOutOfRange(skip, totalCount)) {
+      return NextResponse.json({
+        users: [],
+        page,
+        limit,
+        totalCount,
+        hasMore: false,
+      });
+    }
+
+    const users = await prisma.user.findMany({
+      where,
+      select: userSelect,
+      orderBy: { createdAt: 'desc' },
+      skip,
+      take: limit,
+    });
 
     return NextResponse.json({
       users,
