@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/db/prisma';
 import { getAuthenticatedUser } from '@/lib/auth/require-auth';
-import { canDeleteProduct } from '@/lib/api/product-delete-access.mjs';
+import { deleteProductAction } from '@/lib/api/delete-product-action.mjs';
 import { publicProductWhere } from '@/lib/api/public-product-where.mjs';
 import { getPagination } from '@/lib/api/validation.mjs';
 
@@ -59,34 +59,23 @@ export async function GET(req, { params }) {
 }
 
 export async function DELETE(req, { params }) {
-  const { id: productId } = await params;
-  const authenticatedUser = await getAuthenticatedUser();
-  if (!authenticatedUser) {
-    return new Response(JSON.stringify({ error: 'يجب تسجيل الدخول' }), { status: 401 });
-  }
-  if (typeof productId !== 'string' || !productId.trim() || productId.length > 128) {
-    return new Response(JSON.stringify({ error: 'معرف المنتج غير صالح' }), { status: 400 });
-  }
-
   try {
-    const product = await prisma.product.findFirst({
-      where: { id: productId, isDeleted: false },
-      select: { id: true, userId: true },
+    const { id: productId } = await params;
+    const authenticatedUser = await getAuthenticatedUser();
+    const result = await deleteProductAction({
+      productId,
+      authenticatedUser,
+      prisma,
     });
-    if (!product || !canDeleteProduct(authenticatedUser, product)) {
-      return new Response(
-        JSON.stringify({ error: 'المنتج غير موجود أو لا تملك صلاحية حذفه' }),
-        { status: 404 }
-      );
-    }
-
-    await prisma.product.update({
-      where: { id: productId },
-      data: { isDeleted: true, deletedAt: new Date() },
+    return new Response(JSON.stringify(result.body), {
+      status: result.status,
+      headers: { 'Content-Type': 'application/json' },
     });
-    return new Response(JSON.stringify({ message: 'تم حذف الإعلان بنجاح' }), { status: 200 });
   } catch (error) {
     console.error('Error deleting product:', error);
-    return new Response(JSON.stringify({ error: 'Internal Server Error' }), { status: 500 });
+    return new Response(JSON.stringify({ error: 'Internal Server Error' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
 }
