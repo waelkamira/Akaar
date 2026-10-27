@@ -31,6 +31,8 @@ Do not run `prisma migrate reset`, `prisma db push --accept-data-loss`, or seed 
 
 ## Verification required before closing the task
 
+CI now compares the migration history to the canonical schema and fails on remaining DDL drift. Prisma emits a known extension-only `CREATE EXTENSION IF NOT EXISTS "pg_trgm"` statement in this comparison; the gate ignores only that exact extension statement and still fails on schema/table/index/constraint differences.
+
 - `npx prisma validate --schema=prisma/schema.prisma`
 - `npx prisma generate --schema=prisma/schema.prisma`
 - `npx prisma migrate deploy --schema=prisma/schema.prisma` against clean disposable PostgreSQL
