@@ -67,16 +67,19 @@ const CategoriesNavBar = () => {
   const {
     category,
     setCategory,
+    searchQuery,
   } = useSearch();
   const [hoveredCategory, setHoveredCategory] = useState(null);
 
   const handleCategoryIdClick = useCallback(
     async (categoryItem) => {
       setCategory(categoryItem);
-      router.push(`/search?categoryId=${categoryItem.id}`);
+      const query = searchQuery.trim();
+      const queryParam = query ? `&query=${encodeURIComponent(query)}` : '';
+      router.push(`/search?categoryId=${categoryItem.id}${queryParam}`);
       localStorage.setItem('category', serializeCategory(categoryItem));
     },
-    [setCategory, router],
+    [setCategory, router, searchQuery],
   );
 
   const selectedCategory = useMemo(() => {
