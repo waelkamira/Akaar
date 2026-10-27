@@ -22,8 +22,8 @@ export default function SearchResults() {
   if (loading) {
     return (
       <div className="flex justify-center items-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin text-primary-500 mr-2" />
-        <span className="text-gray-600">جاري البحث...</span>
+        <Loader2 className="h-8 w-8 animate-spin text-[#C99B70] mr-2" />
+        <span className="text-stone-300">جاري البحث...</span>
       </div>
     );
   }
@@ -31,7 +31,7 @@ export default function SearchResults() {
   // Show error message
   if (error) {
     return (
-      <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+      <div className="rounded-2xl border border-rose-400/20 bg-rose-400/[.05] text-rose-200 px-4 py-3 rounded-lg">
         <p>{error}</p>
       </div>
     );
@@ -40,9 +40,9 @@ export default function SearchResults() {
   // Show empty state
   if (!loading && results.length === 0) {
     return (
-      <div className="text-center py-12 bg-gray-50 rounded-lg">
-        <p className="text-gray-500 mb-2">لم يتم العثور على نتائج</p>
-        <p className="text-sm text-gray-400">
+      <div className="rounded-2xl border border-white/[.08] bg-[#211F1B] py-12 text-center">
+        <p className="text-stone-200 mb-2">لم يتم العثور على نتائج</p>
+        <p className="text-sm text-stone-400">
           جرب تعديل معايير البحث للحصول على نتائج أفضل
         </p>
       </div>
@@ -62,12 +62,12 @@ export default function SearchResults() {
         animate={{ y: 0 }}
         className="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3"
       >
-        <motion.p className="text-sm text-gray-600 bg-gray-50 px-4 py-2 rounded-full inline-flex items-center">
-          <span className="font-medium text-primary mx-1">{totalCount}</span>
+        <motion.p className="text-sm text-gray-600 bg-[#211F1B] border border-white/[.08] px-4 py-2 rounded-full inline-flex items-center">
+          <span className="font-medium text-[#D9B18C] mx-1">{totalCount}</span>
           نتيجة متاحة
           {category && (
             <span className="flex items-center mr-2">
-              <span className="mx-2 text-gray-400">|</span>
+              <span className="mx-2 text-stone-500">|</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-4 w-4 text-gray-500 mr-1"
@@ -85,7 +85,7 @@ export default function SearchResults() {
           )}
         </motion.p>
 
-        <motion.div className="text-xs text-gray-500 bg-gray-50 px-3 py-1.5 rounded-full">
+        <motion.div className="text-xs text-stone-400 bg-[#211F1B] border border-white/[.08] px-3 py-1.5 rounded-full">
           عرض {results?.length} من {totalCount}
         </motion.div>
       </motion.div>
