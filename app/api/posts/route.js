@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/db/prisma';
 import { getAuthenticatedUser } from '@/lib/auth/require-auth';
+import { publicProductWhere } from '@/lib/api/public-product-where.mjs';
 import { LRUCache } from 'lru-cache';
 import crypto from 'crypto';
 
@@ -66,9 +67,9 @@ export async function GET(req) {
 
     // جلب البيانات من قاعدة البيانات
     const [totalCount, products] = await Promise.all([
-      prisma.product.count({ where: { userId, isDeleted: false, isActive: true, category: { isActive: true } } }),
+      prisma.product.count({ where: publicProductWhere({ userId }) }),
       prisma.product.findMany({
-        where: { userId },
+        where: publicProductWhere({ userId }),
         skip,
         take: limit,
         orderBy: { createdAt: 'desc' },
