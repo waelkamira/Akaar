@@ -17,9 +17,9 @@ export async function POST(req) {
     typeof input?.email === 'string' ? input.email.trim().toLowerCase() : '';
   const password = typeof input?.password === 'string' ? input.password : '';
 
-  if (!name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || password.length < 5) {
+  if (!name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || password.length < 8) {
     return new Response(
-      JSON.stringify({ error: 'تحقق من الاسم والبريد الإلكتروني وكلمة المرور.' }),
+      JSON.stringify({ error: 'تحقق من الاسم والبريد الإلكتروني وكلمة المرور (8 أحرف على الأقل).' }),
       {
         status: 400,
         headers: { 'Content-Type': 'application/json' },
