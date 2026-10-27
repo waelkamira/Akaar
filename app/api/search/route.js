@@ -68,7 +68,7 @@ function addDetailsFilters(where, details = {}) {
 }
 
 function buildWhere({ categoryId, filters }) {
-  const where = { isDeleted: false, AND: [] };
+  const where = { isDeleted: false, isActive: true, AND: [] };
 
   const selectedCategoryId = validPositiveInteger(
     categoryId ?? filters.categoryId,
