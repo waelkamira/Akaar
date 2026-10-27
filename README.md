@@ -11,6 +11,26 @@ Requirements: Node.js 20.9 or newer.
 3. For a new database, review the Prisma schema and migration history before applying it.
 4. Run `npm run dev` and open [http://localhost:3000](http://localhost:3000).
 
+
+## Isolated local Prisma/PostgreSQL test database
+
+Docker and Docker Compose are required. These commands use a separate PostgreSQL 16 container, bind only to `127.0.0.1:55432`, and use the canonical `prisma/schema.prisma`. They do not read `.env.local` and never target a production database.
+
+```sh
+npm ci
+npm run db:test:start
+npm run db:test:setup
+npm run test:search-db:local
+```
+
+- `db:test:start` starts the isolated PostgreSQL container.
+- `db:test:setup` applies the current Prisma schema to that local test database and seeds the standard categories.
+- `test:search-db:local` runs the PostgreSQL integration tests for search/filter combinations and pagination.
+- `db:test:reset` recreates the test database from scratch and **deletes only this Compose project's named test volume**. Do not use it if you need to retain local test data.
+- `db:test:stop` stops the container without deleting its volume.
+
+The test database is disposable and uses local-only credentials. Do not expose its port publicly or reuse these credentials in staging/production. This fixture validates the current Prisma schema; it does not prove that an existing legacy production database can be migrated safely.
+
 ## Validation commands
 
 - `npm run lint` — ESLint.

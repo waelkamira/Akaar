@@ -10,7 +10,12 @@
     "test": "node --test tests/*.test.mjs",
     "prisma": "prisma",
     "postinstall": "prisma generate --schema=prisma/schema.prisma",
-    "test:search-db": "node --test tests/search-database.integration.test.mjs"
+    "test:search-db": "node --test tests/search-database.integration.test.mjs",
+    "db:test:start": "node scripts/prisma-test-db.mjs start",
+    "db:test:setup": "node scripts/prisma-test-db.mjs setup",
+    "db:test:reset": "node scripts/prisma-test-db.mjs reset",
+    "db:test:stop": "node scripts/prisma-test-db.mjs stop",
+    "test:search-db:local": "node scripts/prisma-test-db.mjs test"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
