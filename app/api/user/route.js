@@ -24,7 +24,7 @@ export async function GET() {
       select: publicUserSelect,
     });
     if (!user) return NextResponse.json({ error: 'User not found' }, { status: 404 });
-    return NextResponse.json(user);
+    return NextResponse.json({ ...user, isAdmin: user.role === 'ADMIN' });
   } catch (error) {
     console.error('Unable to fetch current user:', error);
     return NextResponse.json({ error: 'Unable to fetch user.' }, { status: 500 });
