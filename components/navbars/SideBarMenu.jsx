@@ -28,10 +28,15 @@ export default function SideBarMenu() {
     <>
       <div className="lg:hidden fixed right-3 top-3 z-[1001] flex w-fit flex-col items-start justify-start gap-3 p-2">
         {/* زر فتح القائمة */}
-        <TfiMenuAlt
-          className="z-50 w-fit cursor-pointer rounded-xl border border-white/10 bg-[#211F1B] p-2 text-2xl text-[#D9B18C] transition-transform duration-300 hover:scale-105 hover:text-white"
-          onClick={() => setIsOpen(!isOpen)}
-        />
+        <button
+          type="button"
+          aria-label={isOpen ? 'إغلاق القائمة' : 'فتح القائمة'}
+          aria-expanded={isOpen}
+          onClick={() => setIsOpen((open) => !open)}
+          className="z-50 flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-[#211F1B] text-2xl text-[#D9B18C] transition hover:scale-105 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C99B70]"
+        >
+          <TfiMenuAlt aria-hidden="true" />
+        </button>
 
         {/* قائمة جانبية مع تأثيرات */}
         <AnimatePresence>
