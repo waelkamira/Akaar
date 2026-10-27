@@ -173,7 +173,7 @@ This section supersedes the older handoff notes below the verification log. Hist
 - [PR #35 — Harden NextAuth redirect validation](https://github.com/waelkamira/Akaar/pull/35): open; Quality CI passed on exact head `d2bab2643addcf8fa3bf4ab16a4ed140cfb48ffd` (run [40603106987](https://github.com/waelkamira/Akaar/actions/runs/40603106987)).
 - [PR #36 — Validate profile image URLs in user APIs](https://github.com/waelkamira/Akaar/pull/36): open; focused unit tests added; full Quality CI pending.
 
-PR #30 was closed as superseded by PR #33 because the project owner confirmed there is no production database. PR #32 was closed as superseded by PR #33. PR #35's Quality CI has now passed on its exact latest head. No PR has been merged by this checkpoint. External image-provider credential rotation remains an owner action; current source references use environment variables, but Git history cannot revoke exposed keys.
+PR #30 was closed as superseded by PR #33 because the project owner confirmed there is no production database. PR #32 was closed as superseded by PR #33. PR #35's Quality CI has passed on its exact latest head. None of the currently listed open PRs (#28, #29, #31, #33–#36) has been merged as part of this work; historical merges recorded above remain. External image-provider credential rotation remains an owner action; current source references use environment variables, but Git history cannot revoke exposed keys.
 
 ### Work sequence and exit criteria
 
