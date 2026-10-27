@@ -1,11 +1,9 @@
-// import { PrismaClient } from '@prisma/client';
+// import { prisma } from '@/lib/db/prisma';
 // import bcrypt from 'bcrypt';
 // import CredentialsProvider from 'next-auth/providers/credentials';
 // import GoogleProvider from 'next-auth/providers/google';
 
-// const prisma = new PrismaClient();
-
-// export const authOptions = {
+// // export const authOptions = {
 //   secret: process.env.NEXT_PUBLIC_SECRET,
 //   providers: [
 //     GoogleProvider({
@@ -98,13 +96,11 @@
 //   debug: process.env.NODE_ENV === 'development',
 //   pages: { signIn: '/login' },
 // };
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '@/lib/db/prisma';
 import bcrypt from 'bcrypt';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
 import { v4 as uuidv4 } from 'uuid';
-
-const prisma = new PrismaClient();
 
 export const authOptions = {
   secret: process.env.NEXTAUTH_SECRET,
