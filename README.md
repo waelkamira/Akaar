@@ -18,7 +18,7 @@ Requirements: Node.js 20.9 or newer.
 - `npx prisma generate` — generate the Prisma client.
 - `npx prisma migrate status` — inspect migration state (requires a reachable database).
 - `npm run build` — production build (requires applicable environment variables).
-- `npm test` — not configured yet; automated test coverage is a tracked issue.
+- `npm test` — run the Node.js unit tests in `tests/*.test.mjs` (currently covers validation, cache keys, upload validation, public-product visibility, and dynamic search-filter sanitization). API/database/browser integration coverage remains incomplete.
 
 Do not apply schema changes to production without a backup and a reviewed migration. Never expose server secrets through `NEXT_PUBLIC_*` variables.
 
