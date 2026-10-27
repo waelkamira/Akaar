@@ -35,7 +35,6 @@ export async function GET(req, { params }) {
   const page = Number.isInteger(requestedPage) && requestedPage > 0 ? requestedPage : 1;
   const limit = Number.isInteger(requestedLimit) && requestedLimit > 0 ? Math.min(requestedLimit, 50) : 5;
 
-  console.log('id', id);
   try {
     if (!id) {
       return new Response(
@@ -57,7 +56,6 @@ export async function GET(req, { params }) {
     // التحقق من الذاكرة المؤقتة
     const cachedData = cache.get(cacheKey);
     if (cachedData) {
-      console.log('📦 [Cache Hit] User Posts', cacheKey);
       return new Response(JSON.stringify(cachedData), { status: 200 });
     }
 
@@ -76,7 +74,6 @@ export async function GET(req, { params }) {
         orderBy: { createdAt: 'desc' },
       }),
     ]);
-    console.log('products', products);
     if (products.length === 0) {
       return new Response(
         JSON.stringify({ message: 'لم يتم العثور على إعلانات' }),
@@ -94,13 +91,13 @@ export async function GET(req, { params }) {
 
     // تخزين في الذاكرة المؤقتة
     cache.set(cacheKey, result);
-    console.log('💾 [Cache Set] User Posts', cacheKey);
 
     return new Response(JSON.stringify(result), { status: 200 });
   } catch (error) {
     console.error('Error details:', error);
-    return new Response(JSON.stringify({ error: error.message }), {
+    return new Response(JSON.stringify({ error: 'تعذر تحميل الإعلانات حاليًا' }), {
       status: 500,
+      headers: { 'Content-Type': 'application/json' },
     });
   }
 }
