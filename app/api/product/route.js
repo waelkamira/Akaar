@@ -1,293 +1,202 @@
-// import { prisma } from '@/lib/db/prisma';
-// import { LRUCache } from 'lru-cache';
-// import { getServerSession } from 'next-auth';
-// import { authOptions } from '@/lib/auth/options';
+import { NextResponse } from 'next/server';
+import { LRUCache } from 'lru-cache';
+import { prisma } from '@/lib/db/prisma';
+import { getAuthenticatedUser } from '@/lib/auth/require-auth';
 
-// // const cache = new LRUCache({
-//   max: 100,
-//   ttl: 60 * 1000,
-// });
+const cache = new LRUCache({ max: 100, ttl: 60_000 });
+const MAX_PAGE_SIZE = 50;
+const productOwnerSelect = { id: true, userName: true, userImage: true };
 
-// // GET: جلب المنتجات مع دعم التخزين المؤقت
-// export async function GET(req) {
-//   const url = new URL(req.url);
-//   const searchParams = url.searchParams;
+function readPageParams(searchParams) {
+  const rawPage = Number.parseInt(searchParams.get('page') || '1', 10);
+  const rawLimit = Number.parseInt(searchParams.get('limit') || '5', 10);
+  const page = Number.isInteger(rawPage) && rawPage > 0 ? rawPage : 1;
+  const limit = Number.isInteger(rawLimit) && rawLimit > 0 ? Math.min(rawLimit, MAX_PAGE_SIZE) : 5;
+  return { page, limit, skip: (page - 1) * limit };
+}
 
-//   const page = parseInt(searchParams.get('page')) || 1;
-//   const limit = parseInt(searchParams.get('limit')) || 5;
-//   const skip = (page - 1) * limit;
-
-//   const cacheKey = `products-page-${page}-limit-${limit}`;
-
-//   if (cache.has(cacheKey)) {
-//     console.log('📌 إعادة البيانات من الكاش');
-//     return new Response(JSON.stringify(cache.get(cacheKey)), {
-//       headers: { 'Content-Type': 'application/json' },
-//     });
-//   }
-
-//   try {
-//     console.log('🗄️ جلب البيانات من قاعدة البيانات...');
-//     const products = await prisma.product.findMany({
-//       skip,
-//       take: limit,
-//       orderBy: { createdAt: 'desc' },
-//       where: { isDeleted: false, isActive: true }, // Publicly visible products
-//       include: {
-//         user: {
-//           select: {
-//             userName: true,
-//             userImage: true,
-//             email: true,
-//           },
-//         },
-//       },
-//     });
-
-//     cache.set(cacheKey, products);
-
-//     return new Response(JSON.stringify(products), {
-//       headers: { 'Content-Type': 'application/json' },
-//     });
-//   } catch (error) {
-//     console.error('❌ خطأ أثناء جلب البيانات:', error);
-//     return new Response(JSON.stringify({ error: 'Internal Server Error' }), {
-//       headers: { 'Content-Type': 'application/json' },
-//       status: 500,
-//     });
-//   }
-// }
-
-// // POST: إنشاء منتج جديد
-// export async function POST(req) {
-  const authenticatedUser = await getAuthenticatedUser();
-  if (!authenticatedUser) {
-    return new Response(JSON.stringify({ error: 'يجب تسجيل الدخول لإنشاء منتج' }), {
-      status: 401,
-      headers: { 'Content-Type': 'application/json' },
-    });
-  }
-
-  let data;
+async function readJson(request) {
   try {
-    data = await req.json();
+    const body = await request.json();
+    if (!body || typeof body !== 'object' || Array.isArray(body)) return null;
+    return body;
   } catch {
-    return new Response(JSON.stringify({ error: 'صيغة الطلب غير صالحة' }), {
-      status: 400,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return null;
   }
+}
 
-  if (!data || typeof data !== 'object' || Array.isArray(data)) {
-    return new Response(JSON.stringify({ error: 'بيانات المنتج غير صالحة' }), {
-      status: 400,
-      headers: { 'Content-Type': 'application/json' },
+function parseOptionalNumber(value, { integer = false, min = 0 } = {}) {
+  if (value === undefined || value === null || value === '') return undefined;
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed) || parsed < min || (integer && !Number.isInteger(parsed))) return null;
+  return parsed;
+}
+
+export async function GET(request) {
+  const { searchParams } = new URL(request.url);
+  const { page, limit, skip } = readPageParams(searchParams);
+  const cacheKey = `products-page-${page}-limit-${limit}`;
+  const cached = cache.get(cacheKey);
+  if (cached) return NextResponse.json(cached);
+
+  try {
+    const products = await prisma.product.findMany({
+      where: { isDeleted: false, isActive: true },
+      skip,
+      take: limit,
+      orderBy: { createdAt: 'desc' },
+      include: { user: { select: productOwnerSelect } },
     });
+    cache.set(cacheKey, products);
+    return NextResponse.json(products);
+  } catch (error) {
+    console.error('Unable to load products:', error);
+    return NextResponse.json({ error: 'Unable to load products.' }, { status: 500 });
   }
+}
 
-  const title = typeof data.title === 'string' ? data.title.trim() : '';
-  const categoryId = Number.parseInt(data.categoryId, 10);
-  const basePrice = Number(data.basePrice);
-  const stockQuantity = data.stockQuantity === undefined ? 1 : Number(data.stockQuantity);
-  if (!title || title.length > 200 || !Number.isInteger(categoryId) || categoryId < 1 ||
-      !Number.isFinite(basePrice) || basePrice < 0 || !Number.isInteger(stockQuantity) || stockQuantity < 0 ||
-      !Array.isArray(data.images || []) || (data.images || []).some((image) => typeof image !== 'string')) {
-    return new Response(JSON.stringify({ error: 'يرجى التحقق من العنوان والفئة والسعر والمخزون والصور' }), {
-      status: 400,
-      headers: { 'Content-Type': 'application/json' },
-    });
+export async function POST(request) {
+  const user = await getAuthenticatedUser();
+  if (!user) return NextResponse.json({ error: 'يجب تسجيل الدخول لإنشاء منتج' }, { status: 401 });
+
+  const body = await readJson(request);
+  if (!body) return NextResponse.json({ error: 'صيغة الطلب غير صالحة' }, { status: 400 });
+
+  const title = typeof body.title === 'string' ? body.title.trim() : '';
+  const categoryId = parseOptionalNumber(body.categoryId, { integer: true, min: 1 });
+  const basePrice = parseOptionalNumber(body.basePrice, { min: 0 });
+  const stockQuantity = body.stockQuantity === undefined
+    ? 1
+    : parseOptionalNumber(body.stockQuantity, { integer: true, min: 0 });
+  const images = body.images === undefined ? [] : body.images;
+
+  if (!title || title.length > 200 || categoryId === undefined || categoryId === null ||
+      basePrice === undefined || basePrice === null || stockQuantity === undefined || stockQuantity === null ||
+      !Array.isArray(images) || images.length > 20 || images.some((item) => typeof item !== 'string')) {
+    return NextResponse.json({ error: 'يرجى التحقق من العنوان والفئة والسعر والمخزون والصور' }, { status: 400 });
   }
 
   try {
-    const owner = await prisma.user.findUnique({
-      where: { id: authenticatedUser.id },
-      select: { userName: true, userImage: true },
-    });
-    if (!owner) {
-      return new Response(JSON.stringify({ error: 'المستخدم غير موجود' }), {
-        status: 401,
-        headers: { 'Content-Type': 'application/json' },
-      });
-    }
+    const [owner, category] = await Promise.all([
+      prisma.user.findUnique({ where: { id: user.id }, select: productOwnerSelect }),
+      prisma.category.findUnique({ where: { id: categoryId }, select: { id: true, name: true, isActive: true } }),
+    ]);
+    if (!owner) return NextResponse.json({ error: 'المستخدم غير موجود' }, { status: 401 });
+    if (!category || !category.isActive) return NextResponse.json({ error: 'الفئة غير موجودة أو غير مفعلة' }, { status: 400 });
 
-    const newProduct = await prisma.product.create({
+    const product = await prisma.product.create({
       data: {
         title,
-        userId: authenticatedUser.id,
+        userId: user.id,
         userName: owner.userName,
         userImage: owner.userImage,
         categoryId,
-        categoryName: typeof data.categoryName === 'string' ? data.categoryName.trim().slice(0, 120) : '',
-        images: (data.images || []).slice(0, 20),
+        categoryName: typeof body.categoryName === 'string' && body.categoryName.trim()
+          ? body.categoryName.trim().slice(0, 120)
+          : category.name,
+        images,
         basePrice: Math.floor(basePrice),
-        adCategory: typeof data.adCategory === 'string' ? data.adCategory.slice(0, 80) : null,
-        city: typeof data.city === 'string' ? data.city.slice(0, 120) : null,
-        town: typeof data.town === 'string' ? data.town.slice(0, 120) : null,
-        phoneNumber: typeof data.phoneNumber === 'string' ? data.phoneNumber.slice(0, 40) : null,
-        lng: Number.isFinite(Number(data.lng)) && data.lng !== '' ? Number(data.lng) : null,
-        lat: Number.isFinite(Number(data.lat)) && data.lat !== '' ? Number(data.lat) : null,
-        link: typeof data.link === 'string' ? data.link.slice(0, 2000) : '',
-        description: typeof data.description === 'string' ? data.description.slice(0, 10000) : null,
-        details: data.details && typeof data.details === 'object' && !Array.isArray(data.details) ? data.details : undefined,
+        adCategory: typeof body.adCategory === 'string' ? body.adCategory.slice(0, 80) : null,
+        city: typeof body.city === 'string' ? body.city.slice(0, 120) : null,
+        town: typeof body.town === 'string' ? body.town.slice(0, 120) : null,
+        phoneNumber: typeof body.phoneNumber === 'string' ? body.phoneNumber.slice(0, 40) : null,
+        lng: parseOptionalNumber(body.lng) ?? null,
+        lat: parseOptionalNumber(body.lat) ?? null,
+        link: typeof body.link === 'string' ? body.link.slice(0, 2000) : '',
+        description: typeof body.description === 'string' ? body.description.slice(0, 10000) : null,
+        details: body.details && typeof body.details === 'object' && !Array.isArray(body.details) ? body.details : undefined,
         stockQuantity,
       },
     });
-
     cache.clear();
-    return new Response(JSON.stringify({ message: 'تم إنشاء المنتج بنجاح', product: newProduct }), {
-      status: 201,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return NextResponse.json({ message: 'تم إنشاء المنتج بنجاح', product }, { status: 201 });
   } catch (error) {
     console.error('Product creation failed:', error);
-    return new Response(JSON.stringify({ error: 'تعذر إنشاء المنتج. تحقق من الفئة والبيانات المدخلة.' }), {
-      status: 400,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return NextResponse.json({ error: 'تعذر إنشاء المنتج. تحقق من الفئة والبيانات المدخلة.' }, { status: 400 });
   }
 }
 
-// PUT: تحديث منتج موجود
-export async function PUT(req) {
-  const authenticatedUser = await getAuthenticatedUser();
-  const userId = authenticatedUser?.id;
+export async function PUT(request) {
+  const user = await getAuthenticatedUser();
+  if (!user) return NextResponse.json({ error: 'يجب تسجيل الدخول لتحديث المنتج' }, { status: 401 });
 
-  if (!userId) {
-    return new Response(
-      JSON.stringify({ error: 'يجب تسجيل الدخول لتحديث المنتج' }),
-      { status: 401 }
-    );
-  }
+  const body = await readJson(request);
+  if (!body) return NextResponse.json({ error: 'صيغة الطلب غير صالحة' }, { status: 400 });
+  const id = typeof body.id === 'string' ? body.id.trim() : '';
+  if (!id) return NextResponse.json({ error: 'معرف المنتج مطلوب' }, { status: 400 });
 
   try {
-    const { id, ...data } = await req.json();
-
-    if (!id) {
-      return new Response(JSON.stringify({ error: 'رقم المنتج مطلوب' }), {
-        status: 400,
-      });
-    }
-
-    // التحقق من وجود المنتج وملكيته
-    const existingProduct = await prisma.product.findFirst({
-      where: {
-        id: id,
-        userId: userId, // التأكد من أن المستخدم هو المالك
-        isDeleted: false,
-      },
+    const existing = await prisma.product.findFirst({
+      where: { id, userId: user.id, isDeleted: false },
+      select: { id: true },
     });
+    if (!existing) return NextResponse.json({ error: 'المنتج غير موجود أو لا تملك صلاحية تعديله' }, { status: 404 });
 
-    if (!existingProduct) {
-      return new Response(
-        JSON.stringify({
-          error: 'المنتج غير موجود أو ليس لديك صلاحية التعديل',
-        }),
-        { status: 404 }
-      );
+    const data = {};
+    if (typeof body.title === 'string') {
+      const title = body.title.trim();
+      if (!title || title.length > 200) return NextResponse.json({ error: 'عنوان المنتج غير صالح' }, { status: 400 });
+      data.title = title;
     }
+    if (body.categoryId !== undefined) {
+      const categoryId = parseOptionalNumber(body.categoryId, { integer: true, min: 1 });
+      if (categoryId === null || categoryId === undefined) return NextResponse.json({ error: 'الفئة غير صالحة' }, { status: 400 });
+      const category = await prisma.category.findUnique({ where: { id: categoryId }, select: { id: true, name: true, isActive: true } });
+      if (!category || !category.isActive) return NextResponse.json({ error: 'الفئة غير موجودة أو غير مفعلة' }, { status: 400 });
+      data.categoryId = category.id;
+      data.categoryName = category.name;
+    }
+    if (body.basePrice !== undefined) {
+      const price = parseOptionalNumber(body.basePrice, { min: 0 });
+      if (price === null || price === undefined) return NextResponse.json({ error: 'السعر غير صالح' }, { status: 400 });
+      data.basePrice = Math.floor(price);
+    }
+    if (body.stockQuantity !== undefined) {
+      const stock = parseOptionalNumber(body.stockQuantity, { integer: true, min: 0 });
+      if (stock === null || stock === undefined) return NextResponse.json({ error: 'المخزون غير صالح' }, { status: 400 });
+      data.stockQuantity = stock;
+    }
+    if (body.images !== undefined) {
+      if (!Array.isArray(body.images) || body.images.length > 20 || body.images.some((item) => typeof item !== 'string')) {
+        return NextResponse.json({ error: 'قائمة الصور غير صالحة' }, { status: 400 });
+      }
+      data.images = body.images;
+    }
+    for (const field of ['adCategory', 'city', 'town', 'phoneNumber', 'link', 'description']) {
+      if (body[field] === null || typeof body[field] === 'string') data[field] = body[field];
+    }
+    if (body.details && typeof body.details === 'object' && !Array.isArray(body.details)) data.details = body.details;
+    if (!Object.keys(data).length) return NextResponse.json({ error: 'لا توجد حقول صالحة للتحديث' }, { status: 400 });
 
-    // تحديث البيانات
-    const updatedProduct = await prisma.product.update({
-      where: { id: id },
-      data: {
-        title: data.title,
-        categoryId: data.categoryId ? parseInt(data.categoryId) : undefined,
-        categoryName: data.categoryName,
-        images: data.images,
-        basePrice: data.basePrice ? parseInt(data.basePrice) : undefined,
-        adCategory: data.adCategory,
-        city: data.city,
-        town: data.town,
-        phoneNumber: data.phoneNumber,
-        lng: data.lng ? parseFloat(data.lng) : undefined,
-        lat: data.lat ? parseFloat(data.lat) : undefined,
-        link: data.link,
-        description: data.description,
-        details: data.details,
-        stockQuantity: data.stockQuantity
-          ? parseInt(data.stockQuantity)
-          : undefined,
-        updatedAt: new Date(),
-      },
-    });
-
-    // مسح الكاش
+    const product = await prisma.product.update({ where: { id }, data, include: { user: { select: productOwnerSelect } } });
     cache.clear();
-
-    return new Response(
-      JSON.stringify({
-        message: 'تم تحديث المنتج بنجاح',
-        product: updatedProduct,
-      }),
-      { status: 200 }
-    );
+    return NextResponse.json({ message: 'تم تحديث المنتج بنجاح', product });
   } catch (error) {
-    console.error('خطأ أثناء تحديث المنتج:', error);
-    return new Response(
-      JSON.stringify({
-        error: 'خطأ داخلي في السيرفر',
-        details: error.message,
-      }),
-      { status: 500 }
-    );
+    console.error('Product update failed:', error);
+    return NextResponse.json({ error: 'تعذر تحديث المنتج.' }, { status: 500 });
   }
 }
 
-// DELETE: حذف منتج (Soft Delete)
-export async function DELETE(req) {
-  const session = await getServerSession(authOptions);
-  const userId = session?.user?.id;
+export async function DELETE(request) {
+  const user = await getAuthenticatedUser();
+  if (!user) return NextResponse.json({ error: 'يجب تسجيل الدخول لحذف المنتج' }, { status: 401 });
 
-  if (!userId) {
-    return new Response(
-      JSON.stringify({ error: 'يجب تسجيل الدخول لحذف المنتج' }),
-      { status: 401 }
-    );
-  }
+  const body = await readJson(request);
+  const id = typeof body?.id === 'string' ? body.id.trim() : '';
+  if (!id) return NextResponse.json({ error: 'معرف المنتج مطلوب' }, { status: 400 });
 
   try {
-    const { id } = await req.json();
-
-    if (!id) {
-      return new Response(JSON.stringify({ error: 'يجب توفير معرف المنتج' }), {
-        status: 400,
-      });
-    }
-
-    // التحقق من وجود المنتج وملكيته
-    const product = await prisma.product.findFirst({
-      where: {
-        id: id,
-        userId: userId,
-      },
+    const existing = await prisma.product.findFirst({
+      where: { id, userId: user.id, isDeleted: false },
+      select: { id: true },
     });
+    if (!existing) return NextResponse.json({ error: 'المنتج غير موجود أو لا تملك صلاحية حذفه' }, { status: 404 });
 
-    if (!product) {
-      return new Response(
-        JSON.stringify({ error: 'المنتج غير موجود أو ليس لديك صلاحية الحذف' }),
-        { status: 404 }
-      );
-    }
-
-    // soft delete بدلاً من الحذف الفعلي
-    await prisma.product.update({
-      where: { id: id },
-      data: {
-        isDeleted: true,
-        deletedAt: new Date(),
-      },
-    });
-
-    // مسح الكاش
+    await prisma.product.update({ where: { id }, data: { isDeleted: true, deletedAt: new Date() } });
     cache.clear();
-
-    return new Response(JSON.stringify({ message: 'تم حذف المنتج بنجاح' }), {
-      status: 200,
-    });
+    return NextResponse.json({ message: 'تم حذف المنتج بنجاح' });
   } catch (error) {
-    console.error('خطأ أثناء حذف المنتج:', error);
-    return new Response(JSON.stringify({ error: 'حدث خطأ داخلي' }), {
-      status: 500,
-    });
+    console.error('Product deletion failed:', error);
+    return NextResponse.json({ error: 'تعذر حذف المنتج.' }, { status: 500 });
   }
 }
