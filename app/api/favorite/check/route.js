@@ -1,5 +1,6 @@
 // import { NextResponse } from 'next/server';
 // import { prisma } from '@/lib/db/prisma';
+import { getAuthenticatedUser } from '@/lib/auth/require-auth';
 // // export async function POST(req) {
 //   const { productId, userId } = await req.json();
 
@@ -33,9 +34,16 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
 export async function POST(req) {
-  const { userId } = await req.json();
-
   try {
+    let body;
+    try { body = await req.json(); } catch {
+      return NextResponse.json({ error: 'Invalid JSON body.' }, { status: 400 });
+    }
+    const userId = body?.userId;
+    const authenticatedUser = await getAuthenticatedUser();
+    if (!authenticatedUser || authenticatedUser.id !== userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
     if (!userId) {
       return NextResponse.json(
         { error: 'User ID is required' },
