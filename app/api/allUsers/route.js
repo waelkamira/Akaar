@@ -126,8 +126,8 @@ export async function DELETE(request) {
       return NextResponse.json({ error: 'You cannot delete your own admin account.' }, { status: 400 });
     }
 
-    await prisma.user.delete({ where: { id } });
-    return NextResponse.json({ deleted: true, id });
+    await prisma.user.update({ where: { id }, data: { status: 'DELETED' } });
+    return NextResponse.json({ deleted: true, id, status: 'DELETED' });
   } catch (error) {
     if (error?.code === 'P2025') {
       return NextResponse.json({ error: 'User not found.' }, { status: 404 });
