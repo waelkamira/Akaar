@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
 import { getAuthenticatedUser } from '@/lib/auth/require-auth';
+import { favoriteCacheKey } from '@/lib/api/cache-keys.mjs';
 import { LRUCache } from 'lru-cache';
-import crypto from 'crypto';
 
 // إعدادات الذاكرة المؤقتة
 const cache = new LRUCache({
@@ -13,15 +13,6 @@ const cache = new LRUCache({
 });
 
 // دالة مساعدة لإنشاء مفتاح ذاكرة التخزين المؤقت
-function generateFavoriteCacheKey(userId, currentPage, limit) {
-  const hash = crypto
-    .createHash('md5')
-    .update(`${userId}-${page}-${limit}`)
-    .digest('hex');
-  return `fav_${hash}`;
-}
-
-// تنظيف الذاكرة المؤقتة عند التعديلات
 async function clearUserFavoritesCache() {
   // Cache keys contain a hash, not the raw user ID; clear the cache to avoid stale favorites.
   cache.clear();
@@ -49,7 +40,7 @@ export async function GET(req) {
     }
 
     // إنشاء مفتاح الذاكرة المؤقتة
-    const cacheKey = generateFavoriteCacheKey(userId, page, limit);
+    const cacheKey = favoriteCacheKey(userId, currentPage, limit);
 
     // التحقق من الذاكرة المؤقتة
     const cachedData = cache.get(cacheKey);
