@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
 import { getAuthenticatedUser } from '@/lib/auth/require-auth';
-import { parsePositiveInteger } from '@/lib/api/validation.mjs';
+import { parsePositiveInteger, isPaginationOffsetOutOfRange } from '@/lib/api/validation.mjs';
 import { publicProductWhere } from '@/lib/api/public-product-where.mjs';
 
 export async function GET(req) {
@@ -35,16 +35,25 @@ export async function GET(req) {
     }
 
     // جلب البيانات من قاعدة البيانات
-    const [totalCount, favorites] = await Promise.all([
-      prisma.favorite.count({ where: { userId, isDeleted: false, product: { isDeleted: false, isActive: true, category: { isActive: true } } } }),
-      prisma.favorite.findMany({
-        where: { userId, isDeleted: false, product: { isDeleted: false, isActive: true, category: { isActive: true } } },
-        skip,
-        take: limit,
-        orderBy: { createdAt: 'desc' },
-        select: { product: true },
-      }),
-    ]);
+    const where = { userId, isDeleted: false, product: { isDeleted: false, isActive: true, category: { isActive: true } } };
+    const totalCount = await prisma.favorite.count({ where });
+    if (isPaginationOffsetOutOfRange(skip, totalCount)) {
+      return NextResponse.json({
+        totalCount,
+        hasMore: false,
+        favorites: [],
+        message: 'تم جلب المفضلة بنجاح',
+        meta: { cached: false, source: 'database' },
+      }, { status: 200 });
+    }
+
+    const favorites = await prisma.favorite.findMany({
+      where,
+      skip,
+      take: limit,
+      orderBy: { createdAt: 'desc' },
+      select: { product: true },
+    });
 
     // تنسيق النتيجة
     const result = {
