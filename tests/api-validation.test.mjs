@@ -6,6 +6,9 @@ test('parsePositiveInteger uses fallback for invalid and non-positive input', ()
   assert.equal(parsePositiveInteger('0', 3), 3);
   assert.equal(parsePositiveInteger('-2', 3), 3);
   assert.equal(parsePositiveInteger('abc', 3), 3);
+  assert.equal(parsePositiveInteger('12abc', 3), 3);
+  assert.equal(parsePositiveInteger('1.5', 3), 3);
+  assert.equal(parsePositiveInteger('9007199254740992', 3), 3);
   assert.equal(parsePositiveInteger('12', 3), 12);
 });
 
