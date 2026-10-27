@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
 import { parseCategoryIds } from '@/lib/api/category-ids.mjs';
+import { getCategoryIds } from '@/lib/catalog/categories.mjs';
 
 export const revalidate = 60;
 const MAX_CATEGORIES = 24;
@@ -12,24 +13,13 @@ export async function GET(request) {
     const requestedCategories = searchParams.get('categories');
     let categoryIds = parseCategoryIds(requestedCategories);
 
-    // Default to the active catalog only when no category list was supplied.
-    // A malformed supplied list must not silently broaden the response to every category.
+    // Category records in the deployed database use legacy text IDs and are empty.
+    // Product.categoryId is numeric, so use the server-owned numeric registry instead.
+    const allowedIds = new Set(getCategoryIds(MAX_CATEGORIES));
     if (!requestedCategories?.trim()) {
-      const categories = await prisma.category.findMany({
-        where: { isActive: true },
-        select: { id: true },
-        orderBy: { id: 'asc' },
-        take: MAX_CATEGORIES,
-      });
-      categoryIds = categories.map(({ id }) => id);
-    }
-
-    if (requestedCategories?.trim() && categoryIds.length) {
-      const activeCategories = await prisma.category.findMany({
-        where: { id: { in: categoryIds }, isActive: true },
-        select: { id: true },
-      });
-      categoryIds = activeCategories.map(({ id }) => id);
+      categoryIds = getCategoryIds(MAX_CATEGORIES);
+    } else if (categoryIds.length) {
+      categoryIds = categoryIds.filter((id) => allowedIds.has(id));
     }
 
     if (!categoryIds.length) {
@@ -42,12 +32,12 @@ export async function GET(request) {
     const [groupedCounts, previews] = await Promise.all([
       prisma.product.groupBy({
         by: ['categoryId'],
-        where: { categoryId: { in: categoryIds }, isDeleted: false, isActive: true },
+        where: { categoryId: { in: categoryIds }, isDeleted: false },
         _count: { _all: true },
       }),
       Promise.all(categoryIds.map(async (categoryId) => {
         const products = await prisma.product.findMany({
-          where: { categoryId, isDeleted: false, isActive: true },
+          where: { categoryId, isDeleted: false },
           select: {
             id: true,
             title: true,
@@ -56,7 +46,6 @@ export async function GET(request) {
             images: true,
             basePrice: true,
             stockQuantity: true,
-            salesCount: true,
             createdAt: true,
           },
           orderBy: { createdAt: 'desc' },
