@@ -30,7 +30,7 @@ function waitUntilReady() {
 }
 
 function npm(args, extraEnv = {}) {
-  run(isWindows ? 'npm.cmd' : 'npm', args, { env: { DATABASE_URL, ...extraEnv } });
+  run(isWindows ? 'npm.cmd' : 'npm', args, { env: { DATABASE_URL, ...extraEnv }, shell: isWindows });
 }
 
 switch (command) {
