@@ -172,7 +172,7 @@ This section is the operational checkpoint for continuing the audit. It records 
 - [x] Reapply pagination guards on current main after the earlier branch became dirty; PR #17 passed full CI run `40476700512` and merged as `7efd49b7b1bfe9b0a2fc095ae5532232069c65e5`.
 - [x] Align upload size with Vercel's documented request-body limit; PR #19 passed full CI run `40477078826` and merged as `686c03890c6a28e240a83eefd44a6a51c63a9ee9`.
 - [x] Merge documentation ledger PR #18 after its latest README diff and CI passed in run `40477333557`; the updated ledger is now on `main`.
-- [ ] Complete PR #20's test-only decimal-MB refinement after fresh CI passes; then close out the upload-limit test follow-up.
+- [x] Complete PR #20's test-only decimal-MB refinement: run `40477648240` passed on reviewed head `e95c33fec5280c67a365c8ae8045895ebb2aea29`, and PR #20 merged as `417b79e11d5d30ebbd8132a88c9c873351e2ac7e`.
 - [ ] Run route/database integration tests for pagination boundaries and request-size responses; run browser tests for owner/admin/unrelated-user deletion behavior, soft-deleted product visibility, and UI refresh.
 - [ ] Design a data-preserving Prisma migration from the generated drift report. Map legacy product images, safely convert Category IDs and backfill slugs/timestamps, preserve foreign keys, and test against a clean DB plus representative existing data. Do not apply the diagnostic diff directly.
 - [ ] Rotate all previously committed provider credentials in provider dashboards and deployment secrets; configure/test upstream body limits and durable rate limiting.
