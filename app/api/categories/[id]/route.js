@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
-import { toInteger } from 'lodash';
 import { LRUCache } from 'lru-cache';
 
 // إنشاء كائن LRU Cache للتخزين المؤقت
