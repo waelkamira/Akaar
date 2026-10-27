@@ -1,6 +1,6 @@
 # Prisma migration safety plan
 
-Status: **design only — not an executable migration**
+Status: **design only — not an executable migration**. The catalog models in this branch have been aligned to the observed legacy columns; no database DDL has been executed.
 
 This document records the minimum safe sequence for reconciling the legacy root `schema.prisma` and the migration-backed `prisma/schema.prisma`. It deliberately does not include a blanket schema-diff SQL script: the current diff includes destructive and data-dependent changes that cannot be safely inferred without inspecting the target database.
 
@@ -8,8 +8,8 @@ This document records the minimum safe sequence for reconciling the legacy root 
 
 - `package.json` explicitly generates Prisma Client from `prisma/schema.prisma`.
 - `.github/workflows/quality.yml` applies `prisma/migrations` to a disposable PostgreSQL database and generates a schema-drift report against `prisma/schema.prisma`.
-- The committed initial migration creates `ProductImage.image1` through `image5`, while the current canonical Prisma model expects `ProductImage.url`, `sortOrder`, and a Product relation.
-- The initial migration models `Category.id` as `TEXT`; the canonical schema models it as `INTEGER` and requires `slug`, `isActive`, `createdAt`, and `updatedAt`.
+- The committed initial migration creates `ProductImage.image1` through `image5`. The catalog model in this branch now represents those legacy slots and does not assume a ProductImage foreign key.
+- The initial migration models `Category.id` as `TEXT`; the catalog model in this branch now uses a text ID and only the observed `id`, `name`, and `description` fields. Product.categoryId remains INTEGER and intentionally has no ORM relation to Category.
 - The canonical schema also contains newer models/columns that are not created by the initial migration.
 - A successful clean-database CI run is not evidence that an existing deployment database can be upgraded without data loss.
 
@@ -17,7 +17,7 @@ This document records the minimum safe sequence for reconciling the legacy root 
 
 1. Never apply the generated `prisma migrate diff` output directly to production.
 2. Do not use `prisma db push --accept-data-loss` against a shared, staging-with-real-data, or production database.
-3. Do not change `Category.id` types or drop legacy image columns until a verified mapping and row-count reconciliation exist.
+3. Do not cast or rewrite stored `Category.id` values, link numeric product category IDs to text category IDs, or drop legacy image columns until a verified mapping and row-count reconciliation exist. Updating the Prisma type to reflect the observed TEXT column does not change database data.
 4. Do not add a required column to populated tables without a deterministic backfill and a constraint-validation step.
 5. Take a database backup, verify that it can be restored, and record pre-migration row counts before any production change.
 6. Do not mark this task complete until a reviewed migration passes on both a clean database and a sanitized representative copy of the existing database.
@@ -40,6 +40,7 @@ Do not include database URLs, credentials, user emails, product descriptions, or
 ### Phase A — freeze the contract
 
 - Keep `prisma/schema.prisma` as the only schema used by package scripts and CI.
+- The core catalog models currently reflect the legacy database shape; do not reintroduce `sellerId`, `salesCount`, `isActive`, category relations, or normalized image fields until a corresponding migration has been reviewed and deployed.
 - Audit references to the root `schema.prisma`; do not delete it until repository and deployment configuration checks confirm it is not used by any external workflow.
 - Decide whether `ProductImage` is authoritative, whether `products.images` remains a compatibility field, and how reads/writes behave during rollout.
 
