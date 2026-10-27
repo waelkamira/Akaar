@@ -74,13 +74,13 @@
 
 //   useEffect(() => {
 //     let active = true;
-//     loadDynamicFilters(category?.name).then((nextFilters) => {
+//     loadDynamicFilters(category?.enName || category?.name).then((nextFilters) => {
 //       if (active) setDynamicFilters(nextFilters);
 //     });
 //     return () => {
 //       active = false;
 //     };
-//   }, [category?.name, loadDynamicFilters]);
+//   }, [category?.enName, category?.name, loadDynamicFilters]);
 
 //   const performSearch = useCallback(
 //     async (targetPage = 1, isLoadMore = false) => {
