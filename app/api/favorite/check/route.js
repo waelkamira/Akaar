@@ -53,7 +53,7 @@ export async function POST(req) {
 
     // جلب جميع المفضلات للمستخدم
     const favorites = await prisma.favorite.findMany({
-      where: { userId, isDeleted: false },
+      where: { userId, isDeleted: false, product: { isDeleted: false, isActive: true } },
       select: { productId: true },
     });
 
