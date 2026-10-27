@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { analyzeSchema } from '../scripts/lib/schema-audit-analysis.mjs';
+import { analyzeSchema, EXPECTED_SCHEMA, EXPECTED_TYPES } from '../scripts/lib/schema-audit-analysis.mjs';
 
 const row = (table_name, column_name, data_type = 'text', udt_name = 'text') => ({
   table_name,
@@ -67,4 +67,13 @@ test('does not mutate input rows or configuration', () => {
   assert.deepEqual(rows, beforeRows);
   assert.deepEqual(expected, beforeExpected);
   assert.deepEqual(types, beforeTypes);
+});
+
+test('default expectations match the observed legacy catalog schema', () => {
+  assert.deepEqual(Object.keys(EXPECTED_SCHEMA.products), [
+    'id', 'title', 'userId', 'categoryId', 'categoryName', 'images',
+    'isDeleted', 'createdAt', 'updatedAt',
+  ]);
+  assert.deepEqual(EXPECTED_TYPES['Category.id'], ['text']);
+  assert.deepEqual(EXPECTED_TYPES['products.categoryId'], ['int4']);
 });
