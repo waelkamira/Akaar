@@ -4,7 +4,7 @@ import { ImProfile } from 'react-icons/im';
 import { TbTargetArrow } from 'react-icons/tb';
 import { MdOutlineMapsHomeWork } from 'react-icons/md';
 import { IoIosContacts } from 'react-icons/io';
-import { FaShoppingCart } from 'react-icons/fa';
+import { FaShoppingCart, FaClipboardList } from 'react-icons/fa';
 
 const mainButtons = [
   
@@ -12,6 +12,11 @@ const mainButtons = [
     title: 'السلة',
     path: '/cart',
     icon: <FaShoppingCart />,
+  },
+  {
+    title: 'طلباتي',
+    path: '/orders',
+    icon: <FaClipboardList />,
   },
   {
     title: 'الرئيسية',
