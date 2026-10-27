@@ -68,6 +68,15 @@ jobs:
           path: prisma-schema-drift.sql
           if-no-files-found: error
 
+      - name: Create isolated search integration database
+        run: PGPASSWORD=postgres psql -h localhost -U postgres -d postgres -c "CREATE DATABASE akaar_search_test;"
+
+      - name: Prepare isolated search database from Prisma schema
+        run: DATABASE_URL=postgresql://postgres:postgres@localhost:5432/akaar_search_test?schema=public npx prisma db push --accept-data-loss
+
+      - name: Run search/filter integration tests against PostgreSQL
+        run: DATABASE_URL=postgresql://postgres:postgres@localhost:5432/akaar_search_test?schema=public npm run test:search-db
+
       - name: Run unit tests
         run: npm test
 
