@@ -96,6 +96,10 @@ An issue may be marked **Verified fixed** only after the relevant code change is
 | AK-026 | P1 | Unbounded search JSON request body | `POST /api/search` used `request.json()` without a streaming byte limit, so oversized public search payloads could be buffered and parsed before validation. | The shared streaming JSON reader now caps search requests at 64 KiB, returning 413 for oversized bodies and 400 for malformed JSON/UTF-8. This code is included in PR #13, merged at `a89ea238184db2a3dab215c09850fa99e3cf15ef`; CI run `40475361858` passed on the exact reviewed head before merge. Route/database integration, browser tests, and durable rate limiting remain open. | Merged; CI passed on reviewed head; integration/rate-limit checks open |
 | AK-025 | P1 | Admin user pagination overflow and expensive out-of-range queries | The admin user listing used the generic positive-integer parser and calculated `skip` directly. Even a technically safe but astronomically large offset can force an expensive database query. | Pagination guards now cover admin users, category listings, favorites, order history, seller listings, public catalog, and deep search offsets. Tests cover boundaries, unsafe, negative, non-finite, and fractional inputs. PR #17 was based on current `main`, passed run `40476700512` on head `b2c5da2bd1295b9b2d62efac8403120d62c2e646`, and merged as `7efd49b7b1bfe9b0a2fc095ae5532232069c65e5`. Route/database and browser verification remain open. | Merged; CI passed on reviewed head; integration tests open |
 
+| AK-029 | P1 | Product category integrity | Product creation/update accepted a client-provided category name even after resolving the category ID, allowing `categoryId` and `categoryName` to disagree. | PR #28 derives canonical category fields from the database category record and fixes a mismatched category fixture. The PR remains open; rerun Quality checks on its exact latest head before merge. | Code proposed in open PR; latest-head CI pending |
+| AK-030 | P1 | Authentication redirect validation | The NextAuth redirect callback used `url.startsWith(baseUrl)`, which can accept prefix-lookalike hosts and create an external redirect. The JWT callback also stored an OAuth access token with no repository consumer. | PR #35 compares parsed URL origins, tests relative/same-origin/external/lookalike/protocol-relative redirects, and removes the unused access token from the JWT. | Code changed in open PR; CI pending |
+| AK-031 | P1 | Local environment file exposure | `.gitignore` ignored `.env` and `.env*.local` but did not exclude all other `.env.*` files, such as `.env.production`. | PR #34 ignores `.env.*`, explicitly keeps `.env.example` trackable, and adds a test using `git check-ignore`. Quality CI passed on the exact PR head. | CI verified; PR open |
+
 ## Ordered remediation plan
 
 Execute these phases in order; do not mark a phase complete merely because a PR exists.
@@ -159,11 +163,14 @@ This section supersedes the older handoff notes below the verification log. Hist
 
 ### Current open pull requests observed during this review
 
-- [PR #28 — Prevent client-supplied product category name mismatches](https://github.com/waelkamira/Akaar/pull/28): open; last recorded CI success applies to an earlier head, so rerun CI before merge.
-- [PR #29 — Document modular marketplace architecture and safe migration plan](https://github.com/waelkamira/Akaar/pull/29): open; documentation only; its assumptions must be updated to reflect the greenfield database clarification.
-- [PR #30 — Reconcile legacy catalog Prisma models and remove incompatible route fields](https://github.com/waelkamira/Akaar/pull/30): open; CI passed on its recorded head, but its strategy aligns to a previously observed legacy catalog shape. **Do not treat this as the final schema direction without review.** Since there is no production database, prefer a coherent marketplace schema based on application requirements instead of removing seller/order/category capabilities merely because they were absent from an earlier legacy inspection.
+- [PR #28 — Prevent client-supplied product category name mismatches](https://github.com/waelkamira/Akaar/pull/28): open; rerun CI on the latest head before merge.
+- [PR #29 — Document modular marketplace architecture and safe migration plan](https://github.com/waelkamira/Akaar/pull/29): open; documentation only; update its assumptions to reflect the greenfield database clarification.
+- [PR #31 — Refresh README remediation status](https://github.com/waelkamira/Akaar/pull/31): open; documentation/status cleanup.
+- [PR #33 — Reconcile Prisma schema, migration history, and canonical source](https://github.com/waelkamira/Akaar/pull/33): open; Quality CI passed on exact head 2974f9f9c64a145460b6c4fc1d524580485a56ea, including clean migration deploy, no schema DDL drift, PostgreSQL integration tests, unit tests, lint, and build.
+- [PR #34 — Ignore local environment files](https://github.com/waelkamira/Akaar/pull/34): open; Quality CI passed on exact head 8a062a16f2d9f7f373f71d4fe19971baccfd90f9.
+- [PR #35 — Harden NextAuth redirect validation](https://github.com/waelkamira/Akaar/pull/35): open; CI is running on its latest head.
 
-No pull request is merged by this checkpoint. Refresh each PR's exact head and checks before acting.
+PR #30 was closed as superseded by PR #33 because the project owner confirmed there is no production database. PR #32 was closed as superseded by PR #33. No PR has been merged by this checkpoint. External image-provider credential rotation remains an owner action; current source references use environment variables, but Git history cannot revoke exposed keys.
 
 ### Work sequence and exit criteria
 
