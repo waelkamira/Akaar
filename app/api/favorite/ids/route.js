@@ -1,8 +1,5 @@
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
-
+import { prisma } from '@/lib/db/prisma';
 export async function GET(req) {
   const { searchParams } = new URL(req.url);
   const userId = searchParams.get('userId');
@@ -53,7 +50,5 @@ export async function GET(req) {
       { error: 'حدث خطأ أثناء جلب المفضلة' },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }
