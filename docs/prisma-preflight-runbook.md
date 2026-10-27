@@ -44,7 +44,7 @@ PGOPTIONS='-c default_transaction_read_only=on' \
     --output preflight-report.txt
 ```
 
-The database role should remain SELECT-only even with `default_transaction_read_only` enabled. The report uses psql's `\\echo` commands, so run it with `psql`, not a generic SQL editor that does not support psql meta-commands.
+The database role should remain SELECT-only even with `default_transaction_read_only` enabled. The report uses psql's `\echo` commands, so run it with `psql`, not a generic SQL editor that does not support psql meta-commands.
 
 Review `preflight-report.txt` locally. Treat it as potentially sensitive operational data and do not commit real production-derived output.
 
