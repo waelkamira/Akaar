@@ -66,7 +66,7 @@ export async function GET(req) {
 
     // جلب البيانات من قاعدة البيانات
     const [totalCount, products] = await Promise.all([
-      prisma.product.count({ where: { userId, isDeleted: false, isActive: true } }),
+      prisma.product.count({ where: { userId, isDeleted: false, isActive: true, category: { isActive: true } } }),
       prisma.product.findMany({
         where: { userId },
         skip,
@@ -125,7 +125,7 @@ export async function DELETE(req) {
   }
 
   try {
-    const product = await prisma.product.findFirst({ where: { id, userId, isDeleted: false, isActive: true } });
+    const product = await prisma.product.findFirst({ where: { id, userId, isDeleted: false, isActive: true, category: { isActive: true } } });
 
     if (!product) {
       return new Response(
