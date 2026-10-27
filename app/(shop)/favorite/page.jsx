@@ -8,6 +8,7 @@ import { useCommerce } from '@/features/cart/commerce-context';
 import { motion } from 'framer-motion';
 import { FaHeart, FaBoxOpen, FaStore } from 'react-icons/fa';
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
 
 // متغيرات الحركة لحركة انسيابية فاخرة
 const containerVariants = {
@@ -35,22 +36,13 @@ const itemVariants = {
 
 export default function FavoritesPage() {
   const { favoriteItems } = useCommerce();
-  const [userId, setUserId] = useState(null);
+  const session = useSession();
+  const userId = session?.data?.user?.id;
   const [serverFavorites, setServerFavorites] = useState([]);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
   const [loading, setLoading] = useState(false);
   const [totalCount, setTotalCount] = useState(0);
-
-  useEffect(() => {
-    try {
-      const currentUser = JSON.parse(localStorage.getItem('CurrentUser') || 'null');
-      setUserId(currentUser?.id || null);
-    } catch (error) {
-      console.error('Unable to read the current user:', error);
-      toast.error('تعذر تحميل بيانات الحساب');
-    }
-  }, []);
 
   const fetchFavorites = useCallback(async () => {
     if (!userId) return;
@@ -70,7 +62,7 @@ export default function FavoritesPage() {
         : [];
 
       setServerFavorites((current) =>
-        page === 0 ? products : [...current, ...products],
+        page === 1 ? products : [...current, ...products],
       );
       setTotalCount(Number(result.totalCount) || 0);
       setHasMore(Boolean(result.hasMore));
