@@ -78,7 +78,6 @@ function FavoriteButton({ item }) {
 
   const handleFavorite = useCallback(async () => {
     if (!item?.id || !userId) return;
-    console.log('item?.id', item?.id);
 
     try {
       const response = await fetch('/api/favorite', {
