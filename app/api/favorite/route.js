@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
+import { getAuthenticatedUser } from '@/lib/auth/require-auth';
 import { LRUCache } from 'lru-cache';
 import crypto from 'crypto';
 
@@ -35,6 +36,10 @@ export async function GET(req) {
   const skip = Math.max(0, currentPage * limit);
 
   try {
+    const authenticatedUser = await getAuthenticatedUser();
+    if (!authenticatedUser || authenticatedUser.id !== userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
     if (!userId) {
       return NextResponse.json(
         { error: 'User ID is required' },
@@ -97,9 +102,16 @@ export async function GET(req) {
 }
 
 export async function POST(req) {
-  const { id, userId } = await req.json();
-
   try {
+    let body;
+    try { body = await req.json(); } catch {
+      return NextResponse.json({ error: 'Invalid JSON body.' }, { status: 400 });
+    }
+    const { id, userId } = body || {};
+    const authenticatedUser = await getAuthenticatedUser();
+    if (!authenticatedUser || authenticatedUser.id !== userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
     if (!id || !userId) {
       return NextResponse.json(
         { error: 'Post ID and userId are required' },
@@ -158,9 +170,19 @@ export async function POST(req) {
 }
 
 export async function DELETE(req) {
-  const { id, userId } = await req.json();
-
   try {
+    let body;
+    try { body = await req.json(); } catch {
+      return NextResponse.json({ error: 'Invalid JSON body.' }, { status: 400 });
+    }
+    const { id, userId } = body || {};
+    const authenticatedUser = await getAuthenticatedUser();
+    if (!authenticatedUser || authenticatedUser.id !== userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+    if (!id || !userId) {
+      return NextResponse.json({ error: 'Favorite ID and user ID are required.' }, { status: 400 });
+    }
     const existingFavorite = await prisma.favorite.findFirst({
       where: { id, userId },
       select: { id: true },
