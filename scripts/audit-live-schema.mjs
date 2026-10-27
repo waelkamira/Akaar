@@ -58,7 +58,7 @@ async function main() {
     console.log('No differences found in the limited critical-column checks.');
     console.log('This is not proof that the entire Prisma schema matches the database.');
   } else {
-    console.log(`\\nFound ${findings.length} schema mismatch(es) in the audited subset.`);
+    console.log(`\nFound ${findings.length} schema mismatch(es) in the audited subset.`);
     console.log('Do not run prisma db push or migrations against production based only on this report.');
   }
 
