@@ -589,7 +589,7 @@ export default function StaticFilters() {
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}>
           <label className={labelClass}>
             <FaMoneyBillWave className="text-[#C99B70]" />
-            نطاق السعر (ر.س)
+            نطاق السعر
           </label>
 
           <div className="grid grid-cols-2 gap-3">
