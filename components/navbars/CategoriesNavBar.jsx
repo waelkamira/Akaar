@@ -89,8 +89,7 @@
 //     setCategory,
 //     availableFilters,
 //     setAvailableFilters,
-//     performSearch,
-//   } = useSearch();
+// //   } = useSearch();
 //   console.log('category', category);
 //   const [hoveredCategory, setHoveredCategory] = useState(null);
 
@@ -99,15 +98,14 @@
 //       setCategory(categoryItem); // Update context first
 
 //       // Update URL and navigate to search page with new URL structure
-//       router.push(`/search/categoryId=${categoryItem.id}`);
+//       router.push(`/search?categoryId=${encodeURIComponent(categoryItem.id)}`);
 
 //       // Store category in localStorage
 //       localStorage.setItem('category', JSON.stringify(categoryItem));
 
 //       // Perform search with the selected category
-//       performSearch();
-//     },
-//     [setCategory, router, performSearch],
+// //     },
+//     [setCategory, router],
 //   );
 
 //   useEffect(() => {
@@ -273,8 +271,8 @@ const AnimatedCard = ({ children, isSelected, onClick, isHovered }) => (
     className={cn(
       'relative flex flex-col items-center justify-center p-2 rounded-xl w-fit h-24 cursor-pointer overflow-hidden transition-all duration-300',
       isSelected
-        ? 'text-white shadow-lg shadow-orange-500/20'
-        : 'text-slate-400 hover:text-slate-700',
+        ? 'text-[#F5F0E9] shadow-lg shadow-[#C99B70]/15'
+        : 'text-stone-400 hover:text-[#F5F0E9]',
     )}
     initial={{ opacity: 0, y: 15 }}
     animate={{ opacity: 1, y: 0 }}
@@ -285,7 +283,7 @@ const AnimatedCard = ({ children, isSelected, onClick, isHovered }) => (
     {/* الخلفية المحددة (تنتقل بسلاسة بين الكاردات بفضل layoutId) */}
     {isSelected && (
       <motion.div
-        className="absolute inset-0 rounded-xl bg-gradient-to-br from-[#FDAA05] to-[#FA6D0B]"
+        className="absolute inset-0 rounded-xl bg-gradient-to-br from-[#C99B70] to-[#A8754D]"
         layoutId="categoryIdBackground"
         transition={{ type: 'spring', stiffness: 300, damping: 30 }}
       />
@@ -295,7 +293,7 @@ const AnimatedCard = ({ children, isSelected, onClick, isHovered }) => (
     <AnimatePresence>
       {isHovered && !isSelected && (
         <motion.div
-          className="absolute inset-0 rounded-xl border border-orange-500/30 bg-orange-50/30 backdrop-blur-sm"
+          className="absolute inset-0 rounded-xl border border-[#C99B70]/30 bg-[#C99B70]/10 backdrop-blur-sm"
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
@@ -344,7 +342,7 @@ const CategoriesNavBar = () => {
   }, [category]);
 
   return (
-    <div className="w-full backdrop-blur-sm border-b border-slate-200/60 sticky">
+    <div className="w-full border-b border-white/10 bg-[#171512]/85 backdrop-blur-sm">
       {/* ديسكتوب (Desktop View - يبقى كما هو تماماً دون تغيير */}
       <div className="hidden w-full sm:flex mx-auto px-1 overflow-x-auto gap-1 py-3 scrollbar-none justify-start items-center">
         {categories?.length > 0 &&
