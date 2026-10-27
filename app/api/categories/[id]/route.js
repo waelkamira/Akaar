@@ -10,7 +10,7 @@ const cache = new LRUCache({
 });
 
 export async function GET(req, { params }) {
-  const { id } = params;
+  const { id } = await params;
   const url = new URL(req.url);
   const searchParams = url.searchParams;
   console.log('id من داخل الدالة', id);
