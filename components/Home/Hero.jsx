@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import Search from '../Search/Search';
 
@@ -63,12 +64,12 @@ export default function Hero({ images = DEFAULT_IMAGES }) {
             <Search />
           </div>
           <div className="mt-5 flex flex-wrap gap-3">
-            <a href="/search" className="inline-flex items-center justify-center rounded-xl bg-[#C99B70] px-5 py-3 text-sm font-bold text-[#171512] transition hover:bg-[#D9B18C]">
+            <Link href="/search" className="inline-flex items-center justify-center rounded-xl bg-[#C99B70] px-5 py-3 text-sm font-bold text-[#171512] transition hover:bg-[#D9B18C]">
               استكشف المنتجات
-            </a>
-            <a href="/categories/1" className="inline-flex items-center justify-center rounded-xl border border-white/20 bg-black/20 px-5 py-3 text-sm font-semibold text-white transition hover:border-[#C99B70]/60">
+            </Link>
+            <Link href="/categories/1" className="inline-flex items-center justify-center rounded-xl border border-white/20 bg-black/20 px-5 py-3 text-sm font-semibold text-white transition hover:border-[#C99B70]/60">
               تصفح الأقسام
-            </a>
+            </Link>
           </div>
         </div>
       </div>
