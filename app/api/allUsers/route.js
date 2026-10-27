@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
 import { getAdminUser } from '@/lib/auth/require-auth';
-import { parsePositiveInteger } from '@/lib/api/validation.mjs';
+import { getPagination } from '@/lib/api/validation.mjs';
 
 const MAX_PAGE_SIZE = 100;
 const userSelect = {
@@ -23,8 +23,11 @@ export async function GET(request) {
     }
 
     const { searchParams } = new URL(request.url);
-    const page = parsePositiveInteger(searchParams.get('page'), 1);
-    const limit = parsePositiveInteger(searchParams.get('limit'), 20, MAX_PAGE_SIZE);
+    const { page, limit, skip } = getPagination(searchParams, {
+      defaultPage: 1,
+      defaultLimit: 20,
+      maxLimit: MAX_PAGE_SIZE,
+    });
     const searchQuery = (searchParams.get('searchQuery') || '').trim().slice(0, 120);
     const where = searchQuery
       ? { OR: [
@@ -38,7 +41,7 @@ export async function GET(request) {
         where,
         select: userSelect,
         orderBy: { createdAt: 'desc' },
-        skip: (page - 1) * limit,
+        skip,
         take: limit,
       }),
       prisma.user.count({ where }),
@@ -49,7 +52,7 @@ export async function GET(request) {
       page,
       limit,
       totalCount,
-      hasMore: page * limit < totalCount,
+      hasMore: skip + users.length < totalCount,
     });
   } catch (error) {
     console.error('Admin user listing failed:', error);
