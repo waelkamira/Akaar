@@ -56,7 +56,8 @@ export default function LogInPage() {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      const favoriteIds = await response.json();
+      const payload = await response.json();
+      const favoriteIds = Array.isArray(payload?.productIds) ? payload.productIds : [];
       localStorage.setItem('favoriteIds', JSON.stringify(favoriteIds));
     } catch (error) {
       console.error('Failed to fetch or store favorites data:', error);
