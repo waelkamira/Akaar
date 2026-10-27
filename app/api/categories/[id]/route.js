@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '@/lib/db/prisma';
 import { toInteger } from 'lodash';
 import { LRUCache } from 'lru-cache';
 
@@ -8,8 +8,6 @@ const cache = new LRUCache({
   max: 100, // الحد الأقصى للعناصر
   ttl: 1000 * 60 * 5, // وقت انتهاء الصلاحية: 5 دقائق
 });
-
-const prisma = new PrismaClient();
 
 export async function GET(req, { params }) {
   const { id } = params;
