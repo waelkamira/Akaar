@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/db/prisma';
+import { getAuthenticatedUser } from '@/lib/auth/require-auth';
 import { LRUCache } from 'lru-cache';
 import crypto from 'crypto';
 
@@ -103,6 +104,10 @@ export async function GET(req) {
 }
 
 export async function DELETE(req) {
+  const authenticatedUser = await getAuthenticatedUser();
+  if (!authenticatedUser) {
+    return new Response(JSON.stringify({ error: 'يجب تسجيل الدخول' }), { status: 401 });
+  }
   const url = new URL(req.url);
   const searchParams = url.searchParams;
   const id = searchParams.get('id');
@@ -115,11 +120,12 @@ export async function DELETE(req) {
     );
   }
 
+  if (authenticatedUser.id !== userId) {
+    return new Response(JSON.stringify({ error: 'ليس لديك صلاحية حذف هذا الإعلان' }), { status: 403 });
+  }
+
   try {
-    // تحقق إذا كانت الإعلان موجودة
-    const product = await prisma.product.findFirst({
-      where: { id, userId },
-    });
+    const product = await prisma.product.findFirst({ where: { id, userId, isDeleted: false } });
 
     if (!product) {
       return new Response(
@@ -131,7 +137,7 @@ export async function DELETE(req) {
     }
 
     // حذف الإعلان
-    await prisma.product.delete({ where: { id } });
+    await prisma.product.update({ where: { id }, data: { isDeleted: true, deletedAt: new Date() } });
 
     // تنظيف الذاكرة المؤقتة للمستخدم
     await clearUserPostsCache();
