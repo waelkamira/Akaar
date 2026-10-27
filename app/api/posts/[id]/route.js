@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/db/prisma';
+import { getAuthenticatedUser } from '@/lib/auth/require-auth';
 import { LRUCache } from 'lru-cache';
 import crypto from 'crypto';
 
@@ -104,45 +105,32 @@ export async function GET(req, { params }) {
 }
 
 export async function DELETE(req, { params }) {
-  const { id } = await params;
-  const url = new URL(req.url);
-  const searchParams = url.searchParams;
-
-  if (!id) {
-    return new Response(
-      JSON.stringify({ error: 'يجب توفير معرف الإعلان ومعرف المستخدم' }),
-      { status: 400 }
-    );
+  const { id: productId } = await params;
+  const authenticatedUser = await getAuthenticatedUser();
+  if (!authenticatedUser) {
+    return new Response(JSON.stringify({ error: 'يجب تسجيل الدخول' }), { status: 401 });
+  }
+  if (!productId) {
+    return new Response(JSON.stringify({ error: 'معرف المنتج مطلوب' }), { status: 400 });
   }
 
   try {
-    // تحقق إذا كانت الإعلان موجودة
     const product = await prisma.product.findFirst({
-      where: { userId: id },
+      where: { id: productId, userId: authenticatedUser.id, isDeleted: false },
+      select: { id: true },
     });
-
     if (!product) {
-      return new Response(
-        JSON.stringify({
-          error: 'لم يتم العثور على الإعلان أو لا تملك صلاحية حذف هذه الإعلان',
-        }),
-        { status: 404 }
-      );
+      return new Response(JSON.stringify({ error: 'المنتج غير موجود أو لا تملك صلاحية حذفه' }), { status: 404 });
     }
 
-    // حذف الإعلان
-    await prisma.product.delete({ where: { id } });
-
-    // تنظيف الذاكرة المؤقتة للمستخدم
-    await clearUserPostsCache();
-
-    return new Response(JSON.stringify({ message: 'تم الحذف بنجاح ✔' }), {
-      status: 200,
+    await prisma.product.update({
+      where: { id: productId },
+      data: { isDeleted: true, deletedAt: new Date() },
     });
+    await clearUserPostsCache();
+    return new Response(JSON.stringify({ message: 'تم حذف الإعلان بنجاح' }), { status: 200 });
   } catch (error) {
     console.error('Error deleting product:', error);
-    return new Response(JSON.stringify({ error: 'Internal Server Error' }), {
-      status: 500,
-    });
+    return new Response(JSON.stringify({ error: 'Internal Server Error' }), { status: 500 });
   }
 }
