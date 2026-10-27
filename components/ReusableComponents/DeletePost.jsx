@@ -10,11 +10,9 @@ export default function DeletePostHandler({ recipe }) {
   const handleDelete = async () => {
     try {
       const response = await fetch(
-        `/api/allPosts?id=${recipe?.id}&isAdmin=${true}`,
+        `/api/posts/${encodeURIComponent(recipe?.id || '')}`,
         {
           method: 'DELETE',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(recipe),
         }
       );
 
