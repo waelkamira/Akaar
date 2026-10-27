@@ -42,6 +42,7 @@ An issue may be marked **Verified fixed** only after the relevant code change is
 
 | ID | Priority | Area | Finding / risk | Remediation and verification | Status |
 |---|---|---|---|---|---|
+| AK-000 | P0 | Exposed provider credentials | The public repository history contained hard-coded image-provider credentials (ImageKit, ImgBB, and Imgur). Removing them from the latest source does not revoke them or erase Git history. | Replaced hard-coded credentials with server-only environment variables, removed the multi-key Imgur manager, and added image type/size validation plus authenticated upload routes. **Owner action required:** revoke/rotate every previously committed provider key in each provider dashboard, then set the new values in deployment secrets. | Code references removed; credential rotation required |
 | AK-001 | P0 | API authorization | Several user-specific/admin-style endpoints accepted caller-supplied `userId` or `isAdmin` without server-side identity checks. | Added server-session/active-account helpers; secured user management, profile, favorite, product-create, and post-delete paths. **Still open:** audit and secure every remaining private/admin route; test role and ownership boundaries. | Partially mitigated; full audit open |
 | AK-002 | P1 | Prisma lifecycle | Multiple route handlers instantiated their own `PrismaClient`; some disconnected it after every request. | Standardized the shared Prisma singleton in the inspected product, registration, auth-options, users, profile, posts, favorites, and category routes. **Still open:** repository-wide API scan, Prisma validation, and DB-backed smoke tests. | Partially fixed; verification pending |
 | AK-003 | P1 | Cache correctness | Hashed posts/favorites cache keys could not be invalidated by matching the raw user ID prefix. | Mutation paths now clear the affected route-local cache instead of using the mismatched prefix. Regression test for mutation-then-read still required. | Code fixed; test pending |
@@ -58,7 +59,7 @@ An issue may be marked **Verified fixed** only after the relevant code change is
 
 ## Ordered remediation plan
 
-1. **Security first:** inventory API routes, establish a shared session/role authorization policy, and close AK-001 before exposing administrative mutations.
+1. **Security first:** rotate all previously committed image-provider credentials (AK-000), inventory API routes, establish a shared session/role authorization policy, and close AK-001 before exposing administrative mutations.
 2. **Database lifecycle:** standardize Prisma access and remove per-request disconnects (AK-002).
 3. **Correctness:** fix cache invalidation, route params, validation, pagination, and consistent product visibility (AK-003 through AK-007).
 4. **Regression safety:** add tests and run the available checks (AK-008 and AK-013).
@@ -73,4 +74,4 @@ An issue may be marked **Verified fixed** only after the relevant code change is
 |---|---|---|---|
 | 2026-10-27 | Initial static repository inspection | GitHub source/tree review | Initial findings recorded above. No build, lint, database, or browser test had yet been claimed as run. |
 | 2026-10-27 | First CI run | GitHub Actions run `40425041806` | `npm ci`, `prisma validate`, and `prisma generate` passed. ESLint failed with 8 errors at that commit: a product-route parse error, unescaped quotes in two JSX views, nested component creation in dynamic filters, and the intentional CommonJS seed import. The product route was rebuilt; JSX/component issues were corrected; the seed import received a targeted lint directive. Follow-up CI is pending; these changes are not marked verified until a run passes. |
-| 2026-10-27 | First remediation pass | Source-level review and GitHub branch updates | Added server-side identity/role helpers; protected selected user/profile/favorite/product/post APIs; standardized Prisma in inspected routes; fixed selected cache invalidation, pagination, dynamic params, and visibility consistency; removed a duplicate auth-options route; added shared validation helpers and unit tests. |
+| 2026-10-27 | First CI pass | GitHub Actions run `40425819726` | `npm ci`, Prisma schema validation, Prisma client generation, Node unit tests, ESLint, and production build all passed on commit `eb9e8e8bca08c015a026e0529f6b520be47438cf`. Later storefront/search/upload changes are newer and require their own successful run. |
