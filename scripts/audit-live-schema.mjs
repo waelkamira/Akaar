@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { analyzeSchema, EXPECTED_SCHEMA, EXPECTED_TYPES } from './lib/schema-audit-analysis.mjs';
+import { analyzeSchema } from './lib/schema-audit-analysis.mjs';
 
 const prisma = new PrismaClient();
 
@@ -40,7 +40,7 @@ async function main() {
   const { findings, tableNames } = analyzeSchema(rows);
 
   console.log('Akaar read-only live-schema audit');
-  console.log('Scope: current_schema() metadata only; no data values are read.\\n');
+  console.log('Scope: current_schema() metadata only; no data values are read.\n');
 
   for (const finding of findings) {
     if (finding.type === 'missing-table') {
