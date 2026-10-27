@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
 import { getAuthenticatedUser } from '@/lib/auth/require-auth';
 import { favoriteCacheKey } from '@/lib/api/cache-keys.mjs';
+import { parsePositiveInteger } from '@/lib/api/validation.mjs';
 import { publicProductWhere } from '@/lib/api/public-product-where.mjs';
 import { LRUCache } from 'lru-cache';
 
@@ -22,10 +23,10 @@ async function clearUserFavoritesCache() {
 export async function GET(req) {
   const { searchParams } = new URL(req.url);
   const userId = searchParams.get('userId');
-  const requestedPage = Number.parseInt(searchParams.get('page') || '1', 10);
-  const requestedLimit = Number.parseInt(searchParams.get('limit') || '8', 10);
-  const currentPage = Number.isInteger(requestedPage) && requestedPage > 0 ? requestedPage : 1;
-  const limit = Number.isInteger(requestedLimit) && requestedLimit > 0 ? Math.min(requestedLimit, 50) : 8;
+  const requestedPage = parsePositiveInteger(searchParams.get('page'), 1);
+  const limit = parsePositiveInteger(searchParams.get('limit'), 8, 50);
+  const requestedSkip = (requestedPage - 1) * limit;
+  const currentPage = Number.isSafeInteger(requestedSkip) ? requestedPage : 1;
   const skip = (currentPage - 1) * limit;
 
   try {
@@ -46,7 +47,6 @@ export async function GET(req) {
     // التحقق من الذاكرة المؤقتة
     const cachedData = cache.get(cacheKey);
     if (cachedData) {
-      console.log('📦 [Cache Hit] Favorites', cacheKey);
       return NextResponse.json(cachedData);
     }
 
@@ -82,7 +82,6 @@ export async function GET(req) {
 
     // تخزين في الذاكرة المؤقتة
     cache.set(cacheKey, result);
-    console.log('💾 [Cache Set] Favorites', cacheKey);
 
     return NextResponse.json(result, { status: 200 });
   } catch (error) {
