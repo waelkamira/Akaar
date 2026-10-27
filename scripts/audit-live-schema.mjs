@@ -75,8 +75,8 @@ async function main() {
     console.log(`  ${item.tablename}.${item.indexname}: ${item.indexdef}`);
   }
 
-  console.log('\nObserved table names:', [...tables.keys()].sort().join(', ') || '(none)');
-  if (findings > 0) process.exitCode = 1;
+  console.log('\nObserved table names:', tableNames.join(', ') || '(none)');
+  if (findings.length > 0) process.exitCode = 1;
 }
 
 main()
