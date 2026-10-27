@@ -68,32 +68,60 @@ export default function Page() {
 
   useEffect(() => {
     setIsClient(true);
-    const loadData = async () => {
-      try {
-        if (typeof window !== 'undefined') {
-          const itemData = localStorage.getItem('item');
-          if (itemData) {
-            const storedItem = JSON.parse(itemData);
-            if (storedItem?.id === id) {
-              setPost(storedItem);
-              return;
-            }
-          }
+    const controller = new AbortController();
 
-          const demoProduct = demoProducts.find((product) => product.id === id);
-          if (demoProduct) {
-            setPost(demoProduct);
-          } else {
-            setError('لم يتم العثور على الإعلان');
-          }
-        }
-      } catch (err) {
-        setError('حدث خطأ في تحميل البيانات');
-      } finally {
+    const loadData = async () => {
+      setIsLoading(true);
+      setError(null);
+
+      // Demo items are intentionally local-only. Real product pages must work
+      // on direct links and fresh browser sessions without relying on localStorage.
+      const demoProduct = demoProducts.find((product) => product.id === id);
+      if (demoProduct) {
+        setPost(demoProduct);
         setIsLoading(false);
+        return;
+      }
+
+      try {
+        const response = await fetch('/api/showPostById', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+          body: JSON.stringify({ id }),
+          signal: controller.signal,
+        });
+        const data = await response.json().catch(() => null);
+
+        if (!response.ok || !data || data.id !== id) {
+          throw new Error('لم يتم العثور على الإعلان');
+        }
+
+        setPost(data);
+      } catch (loadError) {
+        if (loadError?.name === 'AbortError') return;
+
+        // Fall back to a matching cached item only if the API is unavailable.
+        try {
+          const itemData = localStorage.getItem('item');
+          const storedItem = itemData ? JSON.parse(itemData) : null;
+          if (storedItem?.id === id && !storedItem?.isDemo) {
+            setPost(storedItem);
+          } else {
+            setError(loadError?.message || 'تعذر تحميل الإعلان');
+          }
+        } catch {
+          setError('تعذر تحميل الإعلان');
+        }
+      } finally {
+        if (!controller.signal.aborted) setIsLoading(false);
       }
     };
+
     loadData();
+    return () => controller.abort();
   }, [id]);
 
   useEffect(() => {
