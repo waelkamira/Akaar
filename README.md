@@ -54,7 +54,7 @@ An issue may be marked **Verified fixed** only after the relevant code change is
 | AK-010 | P2 | Architecture/maintainability | The homepage file `app/(shop)/page.js` is exceptionally large and includes substantial legacy/commented implementation; a backup copy is committed as `page.js.backup`. | Still requires incremental extraction after functional/API contracts and regression tests are established. | Open |
 | AK-011 | P2 | Global layout | Global navigation and homepage-level header/hero composition may overlap. | Still requires route-by-route UI review and responsive verification. | Open |
 | AK-012 | P2 | Search and filters | Search, suggestions, category routes, and client search context remain separate implementations with legacy code and potentially inconsistent filter semantics. | Still requires a shared query contract and end-to-end tests across query, category, dynamic fields, location, price, sort, and pagination. | Open |
-| AK-013 | P2 | Configuration/operations | The project uses optional integrations and environment-dependent services; no repeatable CI/test result has yet been established during this audit. | Check required/optional environment variables, add CI validation where feasible, and document blocked external-service checks explicitly. | Open |
+| AK-013 | P2 | Configuration/operations | The project uses optional integrations and environment-dependent services. The first CI run established that install and Prisma checks work but ESLint still had errors at that commit. | Keep the quality workflow running; fix each reported failure and record the successful result; test external integrations only when credentials are available. | In progress |
 
 ## Ordered remediation plan
 
@@ -71,5 +71,6 @@ An issue may be marked **Verified fixed** only after the relevant code change is
 
 | Date | Scope | Command / method | Result |
 |---|---|---|---|
-| 2026-10-27 | Initial static repository inspection | GitHub source/tree review | Initial findings recorded above. No build, lint, database, or browser test has been claimed as run. |
+| 2026-10-27 | Initial static repository inspection | GitHub source/tree review | Initial findings recorded above. No build, lint, database, or browser test had yet been claimed as run. |
+| 2026-10-27 | First CI run | GitHub Actions run `40425041806` | `npm ci`, `prisma validate`, and `prisma generate` passed. ESLint failed with 8 errors at that commit: a product-route parse error, unescaped quotes in two JSX views, nested component creation in dynamic filters, and the intentional CommonJS seed import. The product route was rebuilt; JSX/component issues were corrected; the seed import received a targeted lint directive. Follow-up CI is pending; these changes are not marked verified until a run passes. |
 | 2026-10-27 | First remediation pass | Source-level review and GitHub branch updates | Added server-side identity/role helpers; protected selected user/profile/favorite/product/post APIs; standardized Prisma in inspected routes; fixed selected cache invalidation, pagination, dynamic params, and visibility consistency; removed a duplicate auth-options route; added shared validation helpers and unit tests. |
