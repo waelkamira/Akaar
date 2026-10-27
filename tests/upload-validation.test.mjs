@@ -47,5 +47,7 @@ test('upload request size guard rejects oversized or malformed Content-Length', 
   assert.equal(isUploadRequestTooLarge(request(String(MAX_UPLOAD_REQUEST_SIZE))), false);
   assert.equal(isUploadRequestTooLarge(request(String(MAX_UPLOAD_REQUEST_SIZE + 1))), true);
   assert.equal(isUploadRequestTooLarge(request('not-a-number')), true);
+  assert.equal(isUploadRequestTooLarge(request('')), true);
+  assert.equal(isUploadRequestTooLarge(request('   ')), true);
   assert.equal(isUploadRequestTooLarge({ headers: { get: () => null } }), false);
 });
