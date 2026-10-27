@@ -4,6 +4,7 @@ import { prisma } from '@/lib/db/prisma';
 import { getAuthenticatedUser } from '@/lib/auth/require-auth';
 import { getPagination, isPaginationOffsetOutOfRange, isPlainObject, parseOptionalNumber } from '@/lib/api/validation.mjs';
 import { readJsonBody } from '@/lib/api/read-json-body.mjs';
+import { getCategoryById } from '@/lib/catalog/categories.mjs';
 
 const cache = new LRUCache({ max: 100, ttl: 60_000 });
 const MAX_PAGE_SIZE = 50;
@@ -29,7 +30,7 @@ export async function GET(request) {
   if (cached) return NextResponse.json(cached);
 
   try {
-    const where = { isDeleted: false, isActive: true, category: { isActive: true } };
+    const where = { isDeleted: false };
     // Avoid an extra COUNT query for normal catalog pages; verify unusually deep
     // offsets before asking PostgreSQL to skip through a large result set.
     if (skip > 1000) {
@@ -77,12 +78,12 @@ export async function POST(request) {
   }
 
   try {
-    const [owner, category] = await Promise.all([
+    const [owner] = await Promise.all([
       prisma.user.findUnique({ where: { id: user.id }, select: productOwnerSelect }),
-      prisma.category.findUnique({ where: { id: categoryId }, select: { id: true, name: true, isActive: true } }),
     ]);
+    const category = getCategoryById(categoryId);
     if (!owner) return NextResponse.json({ error: 'المستخدم غير موجود' }, { status: 401 });
-    if (!category || !category.isActive) return NextResponse.json({ error: 'الفئة غير موجودة أو غير مفعلة' }, { status: 400 });
+    if (!category) return NextResponse.json({ error: 'الفئة غير موجودة' }, { status: 400 });
 
     const product = await prisma.product.create({
       data: {
@@ -91,9 +92,7 @@ export async function POST(request) {
         userName: owner.userName,
         userImage: owner.userImage,
         categoryId,
-        categoryName: typeof body.categoryName === 'string' && body.categoryName.trim()
-          ? body.categoryName.trim().slice(0, 120)
-          : category.name,
+        categoryName: category.name,
         images,
         basePrice: Math.floor(basePrice),
         adCategory: typeof body.adCategory === 'string' ? body.adCategory.slice(0, 80) : null,
@@ -143,8 +142,8 @@ export async function PUT(request) {
     if (body.categoryId !== undefined) {
       const categoryId = parseOptionalNumber(body.categoryId, { integer: true, min: 1 });
       if (categoryId === null || categoryId === undefined) return NextResponse.json({ error: 'الفئة غير صالحة' }, { status: 400 });
-      const category = await prisma.category.findUnique({ where: { id: categoryId }, select: { id: true, name: true, isActive: true } });
-      if (!category || !category.isActive) return NextResponse.json({ error: 'الفئة غير موجودة أو غير مفعلة' }, { status: 400 });
+      const category = getCategoryById(categoryId);
+      if (!category) return NextResponse.json({ error: 'الفئة غير موجودة' }, { status: 400 });
       data.categoryId = category.id;
       data.categoryName = category.name;
     }
