@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
+import { getPagination } from '@/lib/api/validation.mjs';
 import { LRUCache } from 'lru-cache';
 
 // إنشاء كائن LRU Cache للتخزين المؤقت
@@ -17,12 +18,11 @@ export async function GET(req, { params }) {
   const url = new URL(req.url);
   const searchParams = url.searchParams;
 
-  // الحصول على قيم الصفحة والحد الأقصى مع قيم افتراضية
-  const requestedPage = Number.parseInt(searchParams.get('page') || '1', 10);
-  const requestedLimit = Number.parseInt(searchParams.get('limit') || '8', 10);
-  const page = Number.isInteger(requestedPage) && requestedPage > 0 ? requestedPage : 1;
-  const limit = Number.isInteger(requestedLimit) && requestedLimit > 0 ? Math.min(requestedLimit, 50) : 8;
-  const skip = (page - 1) * limit;
+  const { page, limit, skip } = getPagination(searchParams, {
+    defaultPage: 1,
+    defaultLimit: 8,
+    maxLimit: 50,
+  });
 
   // إنشاء مفتاح للتخزين المؤقت
   const cacheKey = `category_${categoryId}_page_${page}_limit_${limit}`;
