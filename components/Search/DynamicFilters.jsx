@@ -425,7 +425,7 @@ export default function StaticFilters() {
         transition={{ delay: 0.4 }}
       >
         <label className={labelClass}>
-          <FaMoneyBillWave className="text-[#C99B70]" /> نطاق السعر (ر.س)
+          <FaMoneyBillWave className="text-[#C99B70]" /> نطاق السعر
         </label>
         <div className="grid grid-cols-2 gap-3">
           <div>
