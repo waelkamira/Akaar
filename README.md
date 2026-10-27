@@ -67,9 +67,9 @@ An issue may be marked **Verified fixed** only after the relevant code change is
 4. **Database safety:** resolve migration drift with a generated/reviewed data-preserving migration (AK-015), then run clean-database and existing-data migration checks.
 5. **Regression safety:** add tests and run the available checks (AK-008 and AK-013).
 6. **Data layer:** validate schema/migration compatibility and document database-dependent results (AK-009).
-6. **Search system:** unify the search contract and verify UI/API/filter interoperability (AK-012).
-7. **Architecture and design:** modularize the homepage/layout, then apply the unified luxury visual system without losing existing functionality (AK-010 and AK-011).
-8. **Final regression pass:** test routes, links, buttons, responsive layouts, error/loading/empty states, and all available API/DB flows before proposing merge.
+7. **Search system:** unify the search contract and verify UI/API/filter interoperability (AK-012).
+8. **Architecture and design:** modularize the homepage/layout, then apply the unified luxury visual system without losing existing functionality (AK-010 and AK-011).
+9. **Final regression pass:** test routes, links, buttons, responsive layouts, error/loading/empty states, and all available API/DB flows before proposing merge.
 
 ## Verification log
 
