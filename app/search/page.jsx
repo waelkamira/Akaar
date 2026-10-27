@@ -309,7 +309,7 @@
 //                     <h1 className="text-2xl font-bold text-neutral-400">
 //                       نتائج البحث عن{' '}
 //                       <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-400">
-//                         "{searchQuery}"
+//                         &quot;{searchQuery}&quot;
 //                       </span>
 //                     </h1>
 //                   )}
