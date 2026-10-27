@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { LRUCache } from 'lru-cache';
 import { prisma } from '@/lib/db/prisma';
 import { getAuthenticatedUser } from '@/lib/auth/require-auth';
-import { getPagination, isPlainObject, parseOptionalNumber } from '@/lib/api/validation.mjs';
+import { getPagination, isPaginationOffsetOutOfRange, isPlainObject, parseOptionalNumber } from '@/lib/api/validation.mjs';
 import { readJsonBody } from '@/lib/api/read-json-body.mjs';
 
 const cache = new LRUCache({ max: 100, ttl: 60_000 });
@@ -29,8 +29,17 @@ export async function GET(request) {
   if (cached) return NextResponse.json(cached);
 
   try {
+    const where = { isDeleted: false, isActive: true, category: { isActive: true } };
+    // Avoid an extra COUNT query for normal catalog pages; verify unusually deep
+    // offsets before asking PostgreSQL to skip through a large result set.
+    if (skip > 1000) {
+      const totalCount = await prisma.product.count({ where });
+      if (isPaginationOffsetOutOfRange(skip, totalCount)) {
+        return NextResponse.json([]);
+      }
+    }
     const products = await prisma.product.findMany({
-      where: { isDeleted: false, isActive: true, category: { isActive: true } },
+      where,
       skip,
       take: limit,
       orderBy: { createdAt: 'desc' },
