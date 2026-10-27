@@ -47,26 +47,29 @@ function textConditions(terms) {
 }
 
 function addDetailsFilters(where, details = {}) {
-  for (const [key, value] of Object.entries(details)) {
+  // Bound filter count and value size so clients cannot construct an
+  // arbitrarily large Prisma AND query.
+  for (const [key, value] of Object.entries(details).slice(0, 30)) {
     if (
       typeof key !== 'string' ||
       !/^[\w-]{1,80}$/.test(key) ||
-      value === undefined ||
-      value === null ||
+      (typeof value !== 'string' && typeof value !== 'number' && typeof value !== 'boolean') ||
       value === ''
     ) {
       continue;
     }
 
+    const normalizedValue = String(value).trim();
+    if (!normalizedValue || normalizedValue.length > 200) continue;
+
     where.AND.push({
       details: {
         path: [key],
-        equals: String(value),
+        equals: normalizedValue,
       },
     });
   }
 }
-
 function buildWhere({ categoryId, filters }) {
   const where = { isDeleted: false, isActive: true, category: { isActive: true }, AND: [] };
 
