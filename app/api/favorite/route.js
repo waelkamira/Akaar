@@ -158,7 +158,6 @@ export async function DELETE(req) {
     }
 
     // تنظيف الذاكرة المؤقتة للمستخدم
-    await clearUserFavoritesCache(userId);
 
     return NextResponse.json({
       message: 'removed from favorite',
