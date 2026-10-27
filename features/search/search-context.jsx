@@ -209,6 +209,11 @@ export function SearchProvider({ children }) {
           return next;
         });
         setCategory(null);
+        const nextParams = new URLSearchParams(searchParams.toString());
+        nextParams.delete('categoryId');
+        const queryString = nextParams.toString();
+        router.replace(queryString ? `/search?${queryString}` : '/search', { scroll: false });
+        setPage(1);
         return;
       }
       if (key.startsWith('details.')) {
@@ -223,7 +228,7 @@ export function SearchProvider({ children }) {
       });
       setPage(1);
     },
-    [setFilter]
+    [setFilter, searchParams, router]
   );
 
   const clearFilters = useCallback(() => {
