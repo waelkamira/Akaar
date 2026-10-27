@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
 import { getPagination, isPaginationOffsetOutOfRange } from '@/lib/api/validation.mjs';
 import { LRUCache } from 'lru-cache';
+import { parseCategoryRouteId } from '@/lib/api/category-route-id.mjs';
 
 // إنشاء كائن LRU Cache للتخزين المؤقت
 const cache = new LRUCache({
@@ -11,8 +12,8 @@ const cache = new LRUCache({
 
 export async function GET(req, { params }) {
   const { id } = await params;
-  const categoryId = Number(id);
-  if (!Number.isInteger(categoryId) || categoryId < 1) {
+  const categoryId = parseCategoryRouteId(id);
+  if (categoryId === null) {
     return NextResponse.json({ error: 'معرف الفئة غير صالح.' }, { status: 400 });
   }
   const url = new URL(req.url);
