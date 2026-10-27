@@ -3,6 +3,7 @@ import { prisma } from '@/lib/db/prisma';
 import { getAuthenticatedUser } from '@/lib/auth/require-auth';
 import { parsePositiveInteger } from '@/lib/api/validation.mjs';
 import { publicProductWhere } from '@/lib/api/public-product-where.mjs';
+import { readJsonBody } from '@/lib/api/read-json-body.mjs';
 
 export async function GET(req) {
   const { searchParams } = new URL(req.url);
@@ -67,10 +68,11 @@ export async function GET(req) {
 
 export async function POST(req) {
   try {
-    let body;
-    try { body = await req.json(); } catch {
-      return NextResponse.json({ error: 'Invalid JSON body.' }, { status: 400 });
+    const parsedBody = await readJsonBody(req, 16 * 1024);
+    if (!parsedBody.ok) {
+      return NextResponse.json({ error: parsedBody.error }, { status: parsedBody.status });
     }
+    const body = parsedBody.value;
     const { id, userId } = body || {};
     const authenticatedUser = await getAuthenticatedUser();
     if (!authenticatedUser || authenticatedUser.id !== userId) {
@@ -134,10 +136,11 @@ export async function POST(req) {
 
 export async function DELETE(req) {
   try {
-    let body;
-    try { body = await req.json(); } catch {
-      return NextResponse.json({ error: 'Invalid JSON body.' }, { status: 400 });
+    const parsedBody = await readJsonBody(req, 16 * 1024);
+    if (!parsedBody.ok) {
+      return NextResponse.json({ error: parsedBody.error }, { status: parsedBody.status });
     }
+    const body = parsedBody.value;
     const { id, userId } = body || {};
     const authenticatedUser = await getAuthenticatedUser();
     if (!authenticatedUser || authenticatedUser.id !== userId) {
