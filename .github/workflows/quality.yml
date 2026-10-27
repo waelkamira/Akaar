@@ -73,35 +73,8 @@ jobs:
 
       - name: Fail if migration history drifts from Prisma schema
         run: |
-          # Prisma reports pg_trgm extension creation even when it is already present
-          # in the committed migration history; ignore that known extension-only diff.
-          if grep -vE '^CREATE EXTENSION IF NOT EXISTS "pg_trgm";
-
-      - name: Upload schema drift report
-        uses: actions/upload-artifact@v4
-        with:
-          name: prisma-schema-drift
-          path: prisma-schema-drift.sql
-          if-no-files-found: error
-
-      - name: Create isolated search integration database
-        run: PGPASSWORD=postgres psql -h localhost -U postgres -d postgres -c "CREATE DATABASE akaar_search_test;"
-
-      - name: Prepare isolated search database from Prisma schema
-        run: DATABASE_URL='postgresql://postgres:postgres@localhost:5432/akaar_search_test?schema=public' npx prisma db push --schema=prisma/schema.prisma --accept-data-loss
-
-      - name: Run search/filter integration tests against PostgreSQL
-        run: SEARCH_DB_INTEGRATION=1 DATABASE_URL='postgresql://postgres:postgres@localhost:5432/akaar_search_test?schema=public' npm run test:search-db
-
-      - name: Run unit tests
-        run: npm test
-
-      - name: Run ESLint
-        run: npm run lint
-
-      - name: Build production app
-        run: npm run build
- prisma-schema-drift.sql | grep -Eq '^(CREATE|ALTER|DROP|COMMENT ON|GRANT|REVOKE)'; then
+          # Prisma reports an extension-only pg_trgm statement in this comparison.
+          if grep -v 'CREATE EXTENSION IF NOT EXISTS "pg_trgm";' prisma-schema-drift.sql | grep -Eq '^(CREATE|ALTER|DROP|COMMENT ON|GRANT|REVOKE)'; then
             echo 'Committed migrations do not match prisma/schema.prisma:'
             cat prisma-schema-drift.sql
             exit 1
