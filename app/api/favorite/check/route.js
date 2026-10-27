@@ -23,7 +23,7 @@ export async function POST(req) {
     }
 
         const favorites = await prisma.favorite.findMany({
-      where: { userId, isDeleted: false, product: { isDeleted: false, isActive: true, category: { isActive: true } } },
+      where: { userId, isDeleted: false, product: { isDeleted: false } },
       select: { productId: true },
     });
 
