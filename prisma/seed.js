@@ -28,6 +28,7 @@ const categories = [
   { id: '22', name: 'وظائف', description: 'فرص عمل، وظائف شاغرة، وتوظيف' },
 ];
 
+// This seed targets the legacy text-ID Category model. Never run it as a production schema diagnostic.
 async function main() {
   for (const category of categories) {
     await prisma.category.upsert({
