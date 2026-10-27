@@ -258,3 +258,6 @@ This section is the operational checkpoint for continuing the audit. It records 
 | ID | Priority | Area | Finding | Change and verification | Status |
 |---|---|---|---|---|---|
 | AK-028 | P1 | Product/category data integrity | Product creation accepted a client-supplied `categoryName` even after loading the canonical category record by ID. This allowed stored `categoryId` and `categoryName` to disagree and could corrupt category-based filtering/display. | Product create/update now derive both persisted category fields from the server-loaded category record through `getCanonicalCategoryFields()`. Added focused unit tests for canonical mapping and invalid records. CI and API/database integration verification are pending. | Code changed; verification pending |
+
+
+| AK-029 | P2 | Fallback listing fixture | The fallback listing in `app/posts/page.jsx` labeled a real-estate listing as category ID 20, which is the jewelry category in the shared category catalog (real estate is ID 1). If the API fetch failed, the stale fixture could show an internally inconsistent category. | Corrected the fixture to category ID 1. Latest change is on PR #28; CI must rerun against the new head. | Code changed; verification pending |
