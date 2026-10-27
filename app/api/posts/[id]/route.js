@@ -20,20 +20,18 @@ function generatePostsCacheKey(userId, page, limit) {
 }
 
 // تنظيف ذاكرة التخزين المؤقت عند التعديلات
-async function clearUserPostsCache(userId) {
-  const keys = cache.keys();
-  keys.forEach((key) => {
-    if (key.startsWith(`posts_${userId}`)) {
-      cache.delete(key);
-    }
-  });
+async function clearUserPostsCache() {
+  // Keys are hashed, so prefix matching by userId cannot invalidate them reliably.
+  cache.clear();
 }
 
 export async function GET(req, { params }) {
   const { id } = await params;
   const url = new URL(req.url);
-  const page = parseInt(url.searchParams.get('page')) || 1;
-  const limit = parseInt(url.searchParams.get('limit')) || 5;
+  const requestedPage = Number.parseInt(url.searchParams.get('page') || '1', 10);
+  const requestedLimit = Number.parseInt(url.searchParams.get('limit') || '5', 10);
+  const page = Number.isInteger(requestedPage) && requestedPage > 0 ? requestedPage : 1;
+  const limit = Number.isInteger(requestedLimit) && requestedLimit > 0 ? Math.min(requestedLimit, 50) : 5;
 
   console.log('id', id);
   try {
@@ -106,7 +104,7 @@ export async function GET(req, { params }) {
 }
 
 export async function DELETE(req, { params }) {
-  const { id } = params;
+  const { id } = await params;
   const url = new URL(req.url);
   const searchParams = url.searchParams;
 
@@ -136,7 +134,7 @@ export async function DELETE(req, { params }) {
     await prisma.product.delete({ where: { id } });
 
     // تنظيف الذاكرة المؤقتة للمستخدم
-    await clearUserPostsCache(id);
+    await clearUserPostsCache();
 
     return new Response(JSON.stringify({ message: 'تم الحذف بنجاح ✔' }), {
       status: 200,
