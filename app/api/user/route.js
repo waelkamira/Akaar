@@ -1,7 +1,4 @@
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
-
+import { prisma } from '@/lib/db/prisma';
 export async function GET(req) {
   const { searchParams } = new URL(req.url);
   const email = searchParams.get('email') || '';
