@@ -39,7 +39,7 @@ export async function GET(req) {
     const where = {
       userId,
       isDeleted: false,
-      product: { isDeleted: false, isActive: true, category: { isActive: true } },
+      product: { isDeleted: false },
     };
     const totalCount = await prisma.favorite.count({ where });
     if (isPaginationOffsetOutOfRange(skip, totalCount)) {
