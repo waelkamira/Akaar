@@ -47,16 +47,16 @@ jobs:
         run: npm ci
 
       - name: Validate Prisma schema
-        run: npx prisma validate
+        run: npx prisma validate --schema=prisma/schema.prisma
 
       - name: Generate Prisma client
-        run: npx prisma generate
+        run: npx prisma generate --schema=prisma/schema.prisma
 
       - name: Create Prisma shadow database
         run: PGPASSWORD=postgres psql -h localhost -U postgres -d postgres -c "CREATE DATABASE akaar_shadow;"
 
       - name: Apply committed migrations to clean PostgreSQL
-        run: npx prisma migrate deploy
+        run: npx prisma migrate deploy --schema=prisma/schema.prisma
 
       - name: Generate schema-to-migration drift SQL
         run: npx prisma migrate diff --from-migrations prisma/migrations --to-schema-datamodel prisma/schema.prisma --script --shadow-database-url "$SHADOW_DATABASE_URL" > prisma-schema-drift.sql
@@ -67,6 +67,15 @@ jobs:
           name: prisma-schema-drift
           path: prisma-schema-drift.sql
           if-no-files-found: error
+
+      - name: Create isolated search integration database
+        run: PGPASSWORD=postgres psql -h localhost -U postgres -d postgres -c "CREATE DATABASE akaar_search_test;"
+
+      - name: Prepare isolated search database from Prisma schema
+        run: DATABASE_URL='postgresql://postgres:postgres@localhost:5432/akaar_search_test?schema=public' npx prisma db push --schema=prisma/schema.prisma --accept-data-loss
+
+      - name: Run search/filter integration tests against PostgreSQL
+        run: SEARCH_DB_INTEGRATION=1 DATABASE_URL='postgresql://postgres:postgres@localhost:5432/akaar_search_test?schema=public' npm run test:search-db
 
       - name: Run unit tests
         run: npm test

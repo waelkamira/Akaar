@@ -220,3 +220,13 @@ This section is the operational checkpoint for continuing the audit. It records 
 | 2026-10-27 | Search request-body bound CI passed | PR #13 head `4308cf5828d9b7b1092a6966458ae1f304de71a4` applies the shared streaming JSON reader to `POST /api/search` with a 64 KiB cap; PR title updated to reflect registration and search. | GitHub Actions run `40474142483` passed on this exact head, including tests, lint, Prisma validation/generation, clean migration checks, schema-drift artifact generation, and production build. Route/database integration, browser tests, and durable rate limiting remain open. |
 
 | 2026-10-27 | Correction to earlier pending CI entries | The pending/in-progress notes above are historical snapshots. Run `40443286398` subsequently completed successfully on the same PR #16 head `66b6953f77a1b43e4297edb728092a4d2cafdbd3`. | Use the successful run record above as the current CI state. Remaining verification is route-level DB integration, browser/E2E, and production migration safety. |
+
+
+### 2026-10-27 — Search/filter PostgreSQL integration coverage (PR pending)
+- Extracted the search query/filter builder into a shared module so route behavior and tests use the same predicates and sort definitions.
+- Added an isolated PostgreSQL integration database in CI, created from the current Prisma schema (separate from the clean-migration/drift check database).
+- Added seeded integration coverage for combined text + price + city + brand + subcategory filters, exclusion of inactive/deleted products, sort order, pagination, and result counts.
+- This test validates the shared Prisma query predicates against PostgreSQL, not a live production database or a browser-driven end-to-end request. The historical migration/schema drift remains a separate release blocker; the isolated test database intentionally uses `prisma db push` and is never the production database.
+
+- **Important schema discovery:** the repository also contains a legacy root-level `schema.prisma` that differs from `prisma/schema.prisma`. CI and package installation now explicitly generate/validate against `prisma/schema.prisma`, the schema used by migrations and the search code. The root-level legacy schema still needs a separately reviewed retirement or reconciliation; it must not silently drive Prisma Client generation.
+- Do not merge this change unless the CI integration step, unit tests, lint, and production build pass.
