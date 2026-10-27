@@ -258,9 +258,9 @@ export default function StaticFilters() {
   };
 
   const inputClass =
-    'w-full rounded-xl border border-stone-200/60 bg-stone-50/50 px-4 py-2.5 text-sm text-stone-900 placeholder-stone-400 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/10 focus:bg-white transition-all duration-300 outline-none';
+    'w-full rounded-xl border border-white/10 bg-[#171512] px-4 py-2.5 text-sm text-[#F5F0E9] placeholder-stone-400 focus:border-[#C99B70] focus:ring-2 focus:ring-[#C99B70]/20 focus:bg-[#171512] transition-all duration-300 outline-none';
   const labelClass =
-    'flex items-center gap-2 text-sm font-semibold text-stone-700 mb-2';
+    'flex items-center gap-2 text-sm font-semibold text-stone-300 mb-2';
 
   const renderFiltersContent = () => (
     <div className="space-y-6">
@@ -270,7 +270,7 @@ export default function StaticFilters() {
         transition={{ delay: 0.1 }}
       >
         <label htmlFor="search-sort" className={labelClass}>
-          <FaSortAmountDown className="text-orange-600" /> ترتيب النتائج
+          <FaSortAmountDown className="text-[#C99B70]" /> ترتيب النتائج
         </label>
         <select
           id="search-sort"
@@ -290,7 +290,7 @@ export default function StaticFilters() {
         transition={{ delay: 0.15 }}
       >
         <label htmlFor="search-rating" className={labelClass}>
-          <FaStar className="text-orange-600" /> متوسط التقييم الأدنى
+          <FaStar className="text-[#C99B70]" /> متوسط التقييم الأدنى
         </label>
         <select
           id="search-rating"
@@ -307,7 +307,7 @@ export default function StaticFilters() {
         </select>
       </motion.div>
 
-      <div className="border-t border-stone-200/60 my-4" />
+      <div className="border-t border-white/10/60 my-4" />
 
       <div className="space-y-5">
         <motion.div
@@ -316,7 +316,7 @@ export default function StaticFilters() {
           transition={{ delay: 0.2 }}
         >
           <label htmlFor="search-brand" className={labelClass}>
-            <FaTag className="text-orange-600" /> الماركة
+            <FaTag className="text-[#C99B70]" /> الماركة
           </label>
           <input
             id="search-brand"
@@ -334,7 +334,7 @@ export default function StaticFilters() {
           transition={{ delay: 0.25 }}
         >
           <label htmlFor="search-subcategory" className={labelClass}>
-            <FaLayerGroup className="text-orange-600" /> الفئة الفرعية
+            <FaLayerGroup className="text-[#C99B70]" /> الفئة الفرعية
           </label>
           <input
             id="search-subcategory"
@@ -352,7 +352,7 @@ export default function StaticFilters() {
           transition={{ delay: 0.3 }}
         >
           <label htmlFor="search-vendor" className={labelClass}>
-            <FaStore className="text-orange-600" /> معرّف البائع
+            <FaStore className="text-[#C99B70]" /> معرّف البائع
           </label>
           <input
             id="search-vendor"
@@ -373,7 +373,7 @@ export default function StaticFilters() {
         transition={{ delay: 0.35 }}
       >
         <label className={labelClass}>
-          <FaMapMarkerAlt className="text-orange-600" /> المدينة
+          <FaMapMarkerAlt className="text-[#C99B70]" /> المدينة
         </label>
         <select
           value={filters.city || ''}
@@ -399,7 +399,7 @@ export default function StaticFilters() {
             className="overflow-hidden"
           >
             <label className={labelClass}>
-              <FaMapMarkerAlt className="text-orange-600/70" /> المنطقة
+              <FaMapMarkerAlt className="text-[#C99B70]/70" /> المنطقة
             </label>
             <select
               value={filters.town || ''}
@@ -425,11 +425,11 @@ export default function StaticFilters() {
         transition={{ delay: 0.4 }}
       >
         <label className={labelClass}>
-          <FaMoneyBillWave className="text-orange-600" /> نطاق السعر (ر.س)
+          <FaMoneyBillWave className="text-[#C99B70]" /> نطاق السعر (ر.س)
         </label>
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="text-xs text-stone-500 mb-1.5 block font-medium">
+            <label className="text-xs text-stone-400 mb-1.5 block font-medium">
               أدنى سعر
             </label>
             <input
@@ -465,7 +465,7 @@ export default function StaticFilters() {
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
         onClick={handleReset}
-        className="w-full mt-4 flex items-center justify-center gap-2 rounded-xl border border-stone-200 bg-stone-100 py-3 text-sm font-semibold text-stone-600 transition-colors hover:bg-orange-50 hover:border-orange-200 hover:text-orange-700"
+        className="w-full mt-4 flex items-center justify-center gap-2 rounded-xl border border-stone-200 bg-[#29251F] py-3 text-sm font-semibold text-stone-300 transition-colors hover:bg-[#C99B70]/10 hover:border-[#C99B70]/30 hover:text-[#E5C5A5]"
       >
         <FaUndo className="text-xs" />
         إعادة تعيين جميع الفلاتر
@@ -478,19 +478,19 @@ export default function StaticFilters() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="bg-white/70 backdrop-blur-xl border border-stone-200/60 rounded-3xl shadow-sm shadow-stone-900/5"
+      className="bg-[#211F1B]/90 backdrop-blur-xl border border-white/10 rounded-3xl shadow-xl shadow-black/20"
       dir="rtl"
     >
       {/* عرض الموبايل (قابل للطي) */}
       <div className="sm:hidden">
         <div className="p-5 flex items-center justify-between border-b border-stone-100">
           <h3 className="text-base font-bold text-stone-900 flex items-center gap-2">
-            <FaLayerGroup className="text-orange-600" />
+            <FaLayerGroup className="text-[#C99B70]" />
             تصفية النتائج
           </h3>
           <button
             onClick={() => setIsMobileOpen(!isMobileOpen)}
-            className="p-2 rounded-lg bg-stone-100 text-stone-600 hover:bg-orange-50 hover:text-orange-600 transition-colors"
+            className="p-2 rounded-lg bg-stone-100 text-stone-600 hover:bg-[#C99B70]/10 hover:text-[#C99B70] transition-colors"
             aria-label="تبديل عرض الفلاتر"
           >
             <FaChevronDown
@@ -520,12 +520,12 @@ export default function StaticFilters() {
       <div className="hidden sm:block p-6">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-lg font-bold text-stone-900 flex items-center gap-2">
-            <FaLayerGroup className="text-orange-600" />
+            <FaLayerGroup className="text-[#C99B70]" />
             تصفية النتائج
           </h3>
           <button
             onClick={handleReset}
-            className="text-xs font-medium text-stone-500 hover:text-orange-600 transition-colors flex items-center gap-1.5 px-3 py-1.5 rounded-lg hover:bg-orange-50"
+            className="text-xs font-medium text-stone-500 hover:text-[#C99B70] transition-colors flex items-center gap-1.5 px-3 py-1.5 rounded-lg hover:bg-[#C99B70]/10"
           >
             <FaUndo /> إعادة تعيين
           </button>
