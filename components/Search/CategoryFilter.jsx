@@ -114,7 +114,7 @@ const CategoryCard = ({ item, selected, onClick }) => {
 
 const CategoriesNavBar = () => {
   const router = useRouter();
-  const { category, setCategory, performSearch } = useSearch();
+  const { category, setCategory, searchQuery } = useSearch();
 
   const selectedCategory = useMemo(
     () => categories?.find((item) => item.id === category?.id) || null,
@@ -134,13 +134,11 @@ const CategoriesNavBar = () => {
         // Storage may be unavailable in private browsing.
       }
 
-      router.push(
-        `/search?categoryId=${encodeURIComponent(item.id)}`
-      );
-
-      performSearch();
+      const query = searchQuery.trim();
+      const queryParam = query ? `&query=${encodeURIComponent(query)}` : '';
+      router.push(`/search?categoryId=${encodeURIComponent(item.id)}${queryParam}`);
     },
-    [setCategory, router, performSearch]
+    [setCategory, router, searchQuery]
   );
 
   return (
