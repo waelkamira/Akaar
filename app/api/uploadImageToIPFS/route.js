@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getAuthenticatedUser } from '@/lib/auth/require-auth';
-import { safeImageFileName, validateImageContent, validateImageFile } from '@/lib/uploads/validate-image.mjs';
+import { isUploadRequestTooLarge, safeImageFileName, validateImageContent, validateImageFile } from '@/lib/uploads/validate-image.mjs';
 
 export const runtime = 'nodejs';
 export const maxDuration = 60;
@@ -9,6 +9,7 @@ export const dynamic = 'force-dynamic';
 export async function POST(request) {
   const user = await getAuthenticatedUser();
   if (!user) return NextResponse.json({ success: false, error: 'يجب تسجيل الدخول لرفع الصور.' }, { status: 401 });
+  if (isUploadRequestTooLarge(request)) return NextResponse.json({ success: false, error: 'حجم طلب الرفع أكبر من الحد المسموح.' }, { status: 413 });
 
   const apiKey = process.env.PINATA_API_KEY;
   const secretKey = process.env.PINATA_SECRET_API_KEY;
