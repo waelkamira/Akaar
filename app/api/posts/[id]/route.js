@@ -67,7 +67,7 @@ export async function GET(req, { params }) {
 
     // جلب البيانات من قاعدة البيانات
     const [totalCount, products] = await Promise.all([
-      prisma.product.count({ where: { userId: id, isDeleted: false, isActive: true } }),
+      prisma.product.count({ where: { userId: id, isDeleted: false, isActive: true, category: { isActive: true } } }),
       prisma.product.findMany({
         where: { userId: id },
         skip,
