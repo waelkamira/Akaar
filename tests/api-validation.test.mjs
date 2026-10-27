@@ -39,6 +39,11 @@ test('pagination avoids querying offsets outside the result set', () => {
   assert.equal(isPaginationOffsetOutOfRange(19, 20), false);
   assert.equal(isPaginationOffsetOutOfRange(Number.MAX_SAFE_INTEGER + 1, 100), true);
   assert.equal(isPaginationOffsetOutOfRange(-1, 100), true);
+  assert.equal(isPaginationOffsetOutOfRange(Number.NaN, 100), true);
+  assert.equal(isPaginationOffsetOutOfRange(0.5, 100), true);
+  assert.equal(isPaginationOffsetOutOfRange(0, Number.NaN), true);
+  assert.equal(isPaginationOffsetOutOfRange(0, Number.POSITIVE_INFINITY), true);
+  assert.equal(isPaginationOffsetOutOfRange(0, -1), true);
 });
 
 test('parseOptionalNumber rejects invalid, negative and non-integer integer fields', () => {
