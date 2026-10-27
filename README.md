@@ -194,7 +194,7 @@ This section is the operational checkpoint for continuing the audit. It records 
 - [x] Merge documentation ledger PR #18 after its latest README diff and CI passed in run `40477333557`; the updated ledger is now on `main`.
 - [x] Complete PR #20's test-only decimal-MB refinement: run `40477648240` passed on reviewed head `e95c33fec5280c67a365c8ae8045895ebb2aea29`, and PR #20 merged as `417b79e11d5d30ebbd8132a88c9c873351e2ac7e`.
 - [ ] Run route/database integration tests for pagination boundaries and request-size responses; run browser tests for owner/admin/unrelated-user deletion behavior, soft-deleted product visibility, and UI refresh.
-- [ ] Design a data-preserving Prisma migration from the generated drift report. Map legacy product images, safely convert Category IDs and backfill slugs/timestamps, preserve foreign keys, and test against a clean DB plus representative existing data. Do not apply the diagnostic diff directly.
+- [ ] Design a data-preserving Prisma migration from the generated drift report. The new read-only inventory script `prisma/schema-inventory-readonly.sql` reports missing canonical tables/columns and legacy image slots without changing data; run it against a restored copy and retain its results. Map legacy product images, safely convert Category IDs and backfill slugs/timestamps, preserve foreign keys, and test against a clean DB plus representative existing data. Do not apply the diagnostic diff directly.
 - [ ] Rotate all previously committed provider credentials in provider dashboards and deployment secrets; configure/test upstream body limits and durable rate limiting.
 - [ ] Keep the release blocked until credential rotation, migration safety, API-wide security, browser/E2E, and real checkout blockers are addressed. Run final checks on the exact resulting `main` commit after remaining changes merge.
 
@@ -242,11 +242,12 @@ This section is the operational checkpoint for continuing the audit. It records 
 | 2026-10-27 | Correction to earlier pending CI entries | The pending/in-progress notes above are historical snapshots. Run `40443286398` subsequently completed successfully on the same PR #16 head `66b6953f77a1b43e4297edb728092a4d2cafdbd3`. | Use the successful run record above as the current CI state. Remaining verification is route-level DB integration, browser/E2E, and production migration safety. |
 
 
-### 2026-10-27 — Search/filter PostgreSQL integration coverage (PR pending)
+### 2026-10-27 — Search/filter PostgreSQL integration coverage (PR #22 merged)
 - Extracted the search query/filter builder into a shared module so route behavior and tests use the same predicates and sort definitions.
 - Added an isolated PostgreSQL integration database in CI, created from the current Prisma schema (separate from the clean-migration/drift check database).
 - Added seeded integration coverage for combined text + price + city + brand + subcategory filters, exclusion of inactive/deleted products, sort order, pagination, and result counts.
 - This test validates the shared Prisma query predicates against PostgreSQL, not a live production database or a browser-driven end-to-end request. The historical migration/schema drift remains a separate release blocker; the isolated test database intentionally uses `prisma db push` and is never the production database.
 
 - **Important schema discovery:** the repository also contains a legacy root-level `schema.prisma` that differs from `prisma/schema.prisma`. CI and package installation now explicitly generate/validate against `prisma/schema.prisma`, the schema used by migrations and the search code. The root-level legacy schema still needs a separately reviewed retirement or reconciliation; it must not silently drive Prisma Client generation.
-- Do not merge this change unless the CI integration step, unit tests, lint, and production build pass.
+- PR #22 merged after the PostgreSQL search/filter integration tests and required CI checks passed. PR #26 subsequently merged the documented local Docker/PostgreSQL test database workflow after Quality checks run `40484294756` passed on its exact head. This does not verify an existing production database migration or browser-driven API flows.
+- The read-only schema inventory added in the current audit branch has not yet been run against a restored legacy database; no migration SQL should be inferred from its expected-table list alone.
