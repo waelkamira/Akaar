@@ -59,7 +59,7 @@ jobs:
         run: npx prisma migrate deploy --schema=prisma/schema.prisma
 
       - name: Generate schema-to-migration drift SQL
-        run: npx prisma migrate diff --schema=prisma/schema.prisma --from-migrations prisma/migrations --to-schema-datamodel prisma/schema.prisma --script --shadow-database-url "$SHADOW_DATABASE_URL" > prisma-schema-drift.sql
+        run: npx prisma migrate diff --from-migrations prisma/migrations --to-schema-datamodel prisma/schema.prisma --script --shadow-database-url "$SHADOW_DATABASE_URL" > prisma-schema-drift.sql
 
       - name: Upload schema drift report
         uses: actions/upload-artifact@v4
