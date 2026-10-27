@@ -10,7 +10,6 @@ const suffix = randomUUID();
 const userId = `search-test-user-${suffix}`;
 const categoryId = 900000 + Math.floor(Math.random() * 90000);
 const productIds = [];
-let categoryCreated = false;
 let userCreated = false;
 
 before(async () => {
@@ -19,30 +18,21 @@ before(async () => {
     data: { id: userId, email: `search-test-${suffix}@example.invalid`, userName: 'Search Test Seller' },
   });
   userCreated = true;
-  await prisma.category.create({
-    data: { id: categoryId, name: `Search Test ${suffix}`, slug: `search-test-${suffix}` },
-  });
-  categoryCreated = true;
   const fixtures = [
     {
       id: `search-alpha-${suffix}`, title: 'Akaar Phone Alpha', basePrice: 100,
       city: 'Damascus', town: 'Midan', details: { brand: 'Acme', subCategory: 'Phones', year: 2024 },
-      isActive: true, isDeleted: false, salesCount: 5,
+      isDeleted: false,
     },
     {
       id: `search-beta-${suffix}`, title: 'Akaar Phone Beta', basePrice: 200,
       city: 'Damascus', town: 'Qadam', details: { brand: 'Acme', subCategory: 'Tablets' },
-      isActive: true, isDeleted: false, salesCount: 15,
+      isDeleted: false,
     },
     {
       id: `search-deleted-${suffix}`, title: 'Akaar Phone Deleted', basePrice: 50,
       city: 'Damascus', town: 'Midan', details: { brand: 'Acme', subCategory: 'Phones' },
-      isActive: true, isDeleted: true, salesCount: 100,
-    },
-    {
-      id: `search-inactive-${suffix}`, title: 'Akaar Phone Inactive', basePrice: 75,
-      city: 'Damascus', town: 'Midan', details: { brand: 'Acme', subCategory: 'Phones' },
-      isActive: false, isDeleted: false, salesCount: 80,
+      isDeleted: true,
     },
   ];
   for (const fixture of fixtures) {
@@ -58,7 +48,6 @@ before(async () => {
 
 after(async () => {
   if (productIds.length) await prisma.product.deleteMany({ where: { id: { in: productIds } } });
-  if (categoryCreated) await prisma.category.delete({ where: { id: categoryId } });
   if (userCreated) await prisma.user.delete({ where: { id: userId } });
   await prisma.$disconnect();
 });
