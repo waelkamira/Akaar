@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
 import { getAdminUser } from '@/lib/auth/require-auth';
+import { parsePositiveInteger } from '@/lib/api/validation.mjs';
 
 const MAX_PAGE_SIZE = 100;
 const userSelect = {
@@ -13,11 +14,6 @@ const userSelect = {
   createdAt: true,
   updatedAt: true,
 };
-
-function parsePositiveInteger(value, fallback, max = Number.MAX_SAFE_INTEGER) {
-  const parsed = Number.parseInt(value ?? '', 10);
-  return Number.isInteger(parsed) && parsed > 0 ? Math.min(parsed, max) : fallback;
-}
 
 export async function GET(request) {
   try {
