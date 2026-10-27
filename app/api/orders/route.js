@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
 import { getAuthenticatedUser } from '@/lib/auth/require-auth';
-import { getPagination } from '@/lib/api/validation.mjs';
+import { getPagination, isPaginationOffsetOutOfRange } from '@/lib/api/validation.mjs';
 
 export async function GET(request) {
   const user = await getAuthenticatedUser();
@@ -15,8 +15,13 @@ export async function GET(request) {
   });
 
   try {
-    const [orders, totalCount] = await Promise.all([
-      prisma.order.findMany({
+    const where = { userId: user.id };
+    const totalCount = await prisma.order.count({ where });
+    if (isPaginationOffsetOutOfRange(skip, totalCount)) {
+      return NextResponse.json({ orders: [], page, limit, totalCount, hasMore: false });
+    }
+
+    const orders = await prisma.order.findMany({
         where: { userId: user.id },
         orderBy: { createdAt: 'desc' },
         skip,
@@ -50,16 +55,14 @@ export async function GET(request) {
             orderBy: { createdAt: 'desc' },
           },
         },
-      }),
-      prisma.order.count({ where: { userId: user.id } }),
-    ]);
+      });
 
     return NextResponse.json({
       orders,
       page,
       limit,
       totalCount,
-      hasMore: page * limit < totalCount,
+      hasMore: skip + orders.length < totalCount,
     });
   } catch (error) {
     console.error('Unable to load order history:', error);
