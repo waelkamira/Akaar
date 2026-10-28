@@ -149,12 +149,10 @@ model Product {
   category        Category              @relation(fields: [categoryId], references: [id], onDelete: Restrict)
   favorites       Favorite[]
   reviews         Review[]
-  orders          Order[]
   orderItems      OrderItem[]
   cartItems       CartItem[]
   recommendations Recommendation[]
   priceHistory    ProductPriceHistory[]
-  inventory       Inventory?
   discounts       Discount[]
   translations    ProductTranslation[]
   media           ProductImage[]
@@ -284,17 +282,6 @@ model Supplier {
   @@index([cityId])
 }
 
-model Inventory {
-  id          String  @id @default(uuid())
-  productId   String  @unique
-  quantity    Int
-  isAvailable Boolean @default(true)
-
-  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-
-  @@index([isAvailable])
-}
-
 model ProductTranslation {
   id          String  @id @default(uuid())
   productId   String
@@ -368,6 +355,7 @@ model CartItem {
 }
 
 model Order {
+<<<<<<< HEAD
   id                String      @id @default(uuid())
   userId            String
   productId         String
@@ -379,9 +367,18 @@ model Order {
   fulfillmentStatus OrderStatus @default(PENDING)
   createdAt         DateTime    @default(now())
   updatedAt         DateTime    @updatedAt
+=======
+  id               String      @id @default(uuid())
+  userId           String
+  discountId       String?
+  shippingMethodId String?
+  totalPrice       Int
+  status           OrderStatus
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+>>>>>>> f472f15612eb21f7899dac652471b08e7ead0314
 
   user           User            @relation(fields: [userId], references: [id], onDelete: Restrict)
-  product        Product         @relation(fields: [productId], references: [id], onDelete: Restrict)
   payments       Payment[]
   discount       Discount?       @relation(fields: [discountId], references: [id], onDelete: SetNull)
   shipping       Shipping[]
@@ -390,8 +387,6 @@ model Order {
   items          OrderItem[]
 
   @@index([status])
-  @@index([fulfillmentStatus])
-  @@index([productId])
   @@index([userId])
   @@index([userId, status])
   @@index([createdAt])
@@ -420,8 +415,13 @@ model Payment {
   userId    String
   amount    Int
   method    String
+<<<<<<< HEAD
   status    String
   createdAt DateTime @default(now())
+=======
+  status    PaymentStatus
+  createdAt DateTime      @default(now())
+>>>>>>> f472f15612eb21f7899dac652471b08e7ead0314
 
   order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
   user  User  @relation(fields: [userId], references: [id], onDelete: Restrict)

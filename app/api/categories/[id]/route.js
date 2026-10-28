@@ -1,7 +1,9 @@
 import { NextResponse } from 'next/server';
+import { consumeDurableRateLimit } from '@/lib/api/durable-rate-limit.mjs';
 import { prisma } from '@/lib/db/prisma';
 import { getPagination, isPaginationOffsetOutOfRange } from '@/lib/api/validation.mjs';
 import { LRUCache } from 'lru-cache';
+import { parseCategoryRouteId } from '@/lib/api/category-route-id.mjs';
 
 // إنشاء كائن LRU Cache للتخزين المؤقت
 const cache = new LRUCache({
@@ -10,9 +12,17 @@ const cache = new LRUCache({
 });
 
 export async function GET(req, { params }) {
+  const rateLimit = await consumeDurableRateLimit({ request: req, scope: 'category-detail', limit: 60, windowMs: 60_000 });
+  if (!rateLimit.allowed) {
+    const status = rateLimit.reason || !rateLimit.configured ? 503 : 429;
+    const headers = rateLimit.retryAfterSeconds ? { 'Retry-After': String(rateLimit.retryAfterSeconds) } : undefined;
+    return NextResponse.json({ error: status === 429 ? 'تم تجاوز حد طلبات الفئات. حاول بعد قليل.' : 'خدمة الحماية غير متاحة حاليًا.' }, { status, headers });
+  }
+
+
   const { id } = await params;
-  const categoryId = Number(id);
-  if (!Number.isInteger(categoryId) || categoryId < 1) {
+  const categoryId = parseCategoryRouteId(id);
+  if (categoryId === null) {
     return NextResponse.json({ error: 'معرف الفئة غير صالح.' }, { status: 400 });
   }
   const url = new URL(req.url);

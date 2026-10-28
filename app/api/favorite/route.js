@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
 import { getAuthenticatedUser } from '@/lib/auth/require-auth';
-import { parsePositiveInteger, isPaginationOffsetOutOfRange } from '@/lib/api/validation.mjs';
+import { parsePositiveInteger, isPaginationOffsetOutOfRange, isValidIdentifier } from '@/lib/api/validation.mjs';
 import { publicProductWhere } from '@/lib/api/public-product-where.mjs';
 import { readJsonBody } from '@/lib/api/read-json-body.mjs';
 
@@ -90,17 +90,18 @@ export async function POST(req) {
     if (!authenticatedUser || authenticatedUser.id !== userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
-    if (!id || !userId) {
+    if (!isValidIdentifier(id) || !userId) {
       return NextResponse.json(
-        { error: 'Post ID and userId are required' },
+        { error: 'معرف المنتج غير صالح أو مفقود' },
         { status: 400 }
       );
     }
+    const productId = id.trim();
 
     // التحقق من وجود المستخدم والمنتج
     const [userExists, productExists] = await Promise.all([
       prisma.user.findUnique({ where: { id: userId } }),
-      prisma.product.findFirst({ where: publicProductWhere({ id }) }),
+      prisma.product.findFirst({ where: publicProductWhere({ id: productId }) }),
     ]);
 
     if (!userExists || !productExists) {
@@ -112,7 +113,7 @@ export async function POST(req) {
 
     // التحقق من وجود المفضلة
     const existingFavorite = await prisma.favorite.findFirst({
-      where: { userId, productId: id },
+      where: { userId, productId },
       select: { id: true },
     });
 
@@ -128,7 +129,7 @@ export async function POST(req) {
       await prisma.favorite.create({
         data: {
           user: { connect: { id: userId } },
-          product: { connect: { id } },
+          product: { connect: { id: productId } },
         },
       });
       result = { message: 'تم إضافته إلى المفضلة بنجاح', favorited: true };
@@ -158,11 +159,12 @@ export async function DELETE(req) {
     if (!authenticatedUser || authenticatedUser.id !== userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
-    if (!id || !userId) {
-      return NextResponse.json({ error: 'Favorite ID and user ID are required.' }, { status: 400 });
+    if (!isValidIdentifier(id) || !userId) {
+      return NextResponse.json({ error: 'معرف المفضلة غير صالح أو مفقود.' }, { status: 400 });
     }
+    const favoriteId = id.trim();
     const existingFavorite = await prisma.favorite.findFirst({
-      where: { id, userId },
+      where: { id: favoriteId, userId },
       select: { id: true },
     });
 

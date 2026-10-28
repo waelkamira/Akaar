@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { consumeDurableRateLimit } from '@/lib/api/durable-rate-limit.mjs';
 import { prisma } from '@/lib/db/prisma';
 import { parseCategoryIds } from '@/lib/api/category-ids.mjs';
 
@@ -7,6 +8,14 @@ const MAX_CATEGORIES = 24;
 const PREVIEW_SIZE = 2;
 
 export async function GET(request) {
+  const rateLimit = await consumeDurableRateLimit({ request, scope: 'category-bulk', limit: 60, windowMs: 60_000 });
+  if (!rateLimit.allowed) {
+    const status = rateLimit.reason || !rateLimit.configured ? 503 : 429;
+    const headers = rateLimit.retryAfterSeconds ? { 'Retry-After': String(rateLimit.retryAfterSeconds) } : undefined;
+    return NextResponse.json({ error: status === 429 ? 'تم تجاوز حد طلبات الفئات. حاول بعد قليل.' : 'خدمة الحماية غير متاحة حاليًا.' }, { status, headers });
+  }
+
+
   try {
     const { searchParams } = new URL(request.url);
     const requestedCategories = searchParams.get('categories');

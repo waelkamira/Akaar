@@ -3,6 +3,7 @@ import { prisma } from '@/lib/db/prisma';
 import { getAdminUser } from '@/lib/auth/require-auth';
 import { getPagination, isPaginationOffsetOutOfRange } from '@/lib/api/validation.mjs';
 import { readJsonBody } from '@/lib/api/read-json-body.mjs';
+import { isValidAdminUserId } from '@/lib/api/admin-user-validation.mjs';
 
 const MAX_PAGE_SIZE = 100;
 const userSelect = {
@@ -76,8 +77,8 @@ export async function PUT(request) {
     }
     const body = parsedBody.value;
 
-    const id = typeof body?.id === 'string' ? body.id.trim() : '';
-    if (!id) {
+    const id = body?.id;
+    if (!isValidAdminUserId(id)) {
       return NextResponse.json({ error: 'A valid user id is required.' }, { status: 400 });
     }
 

@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { consumeDurableRateLimit } from '@/lib/api/durable-rate-limit.mjs';
 import { prisma } from '@/lib/db/prisma';
 import { sanitizeSearchText } from '@/lib/api/search-filters.mjs';
 import { buildWhere, getQueryTerms, textConditions, SORT_ORDERS, validPositiveInteger } from '@/lib/api/search-query.mjs';
@@ -8,6 +9,21 @@ import { isPaginationOffsetOutOfRange } from '@/lib/api/validation.mjs';
 const MAX_QUERY_LENGTH = 120;
 const MAX_PAGE_SIZE = 50;
 export async function POST(request) {
+  const rateLimit = await consumeDurableRateLimit({
+    request,
+    scope: 'catalog-search',
+    limit: 60,
+    windowMs: 60_000,
+  });
+  if (!rateLimit.allowed) {
+    const status = rateLimit.reason || !rateLimit.configured ? 503 : 429;
+    const headers = rateLimit.retryAfterSeconds ? { 'Retry-After': String(rateLimit.retryAfterSeconds) } : undefined;
+    return NextResponse.json(
+      { error: status === 429 ? 'تم تجاوز حد البحث. حاول بعد قليل.' : 'خدمة الحماية غير متاحة حاليًا.' },
+      { status, headers },
+    );
+  }
+
   const parsedBody = await readJsonBody(request, 64 * 1024);
   if (!parsedBody.ok) {
     return NextResponse.json(

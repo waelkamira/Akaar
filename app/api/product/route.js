@@ -1,9 +1,12 @@
 import { NextResponse } from 'next/server';
+import { consumeDurableRateLimit } from '@/lib/api/durable-rate-limit.mjs';
 import { LRUCache } from 'lru-cache';
 import { prisma } from '@/lib/db/prisma';
 import { getAuthenticatedUser } from '@/lib/auth/require-auth';
 import { getPagination, isPaginationOffsetOutOfRange, isPlainObject, parseOptionalNumber } from '@/lib/api/validation.mjs';
+import { isValidProductMutationIdentifier } from '@/lib/api/product-mutation-validation.mjs';
 import { readJsonBody } from '@/lib/api/read-json-body.mjs';
+import { areValidProductImageUrls, isValidProductLink } from '@/lib/api/product-media-validation.mjs';
 
 const cache = new LRUCache({ max: 100, ttl: 60_000 });
 const MAX_PAGE_SIZE = 50;
@@ -22,6 +25,14 @@ async function readJson(request) {
 
 
 export async function GET(request) {
+  const rateLimit = await consumeDurableRateLimit({ request, scope: 'product-catalog', limit: 120, windowMs: 60_000 });
+  if (!rateLimit.allowed) {
+    const status = rateLimit.reason || !rateLimit.configured ? 503 : 429;
+    const headers = rateLimit.retryAfterSeconds ? { 'Retry-After': String(rateLimit.retryAfterSeconds) } : undefined;
+    return NextResponse.json({ error: status === 429 ? 'تم تجاوز حد طلبات المنتجات. حاول بعد قليل.' : 'خدمة الحماية غير متاحة حاليًا.' }, { status, headers });
+  }
+
+
   const { searchParams } = new URL(request.url);
   const { page, limit, skip } = readPageParams(searchParams);
   const cacheKey = `products-page-${page}-limit-${limit}`;
@@ -72,7 +83,8 @@ export async function POST(request) {
 
   if (!title || title.length > 200 || categoryId === undefined || categoryId === null ||
       basePrice === undefined || basePrice === null || stockQuantity === undefined || stockQuantity === null ||
-      !Array.isArray(images) || images.length > 20 || images.some((item) => typeof item !== 'string')) {
+      !areValidProductImageUrls(images) ||
+      (body.link !== undefined && !isValidProductLink(body.link))) {
     return NextResponse.json({ error: 'يرجى التحقق من العنوان والفئة والسعر والمخزون والصور' }, { status: 400 });
   }
 
@@ -102,7 +114,7 @@ export async function POST(request) {
         phoneNumber: typeof body.phoneNumber === 'string' ? body.phoneNumber.slice(0, 40) : null,
         lng: parseOptionalNumber(body.lng) ?? null,
         lat: parseOptionalNumber(body.lat) ?? null,
-        link: typeof body.link === 'string' ? body.link.slice(0, 2000) : '',
+        link: typeof body.link === 'string' ? body.link.trim() : '',
         description: typeof body.description === 'string' ? body.description.slice(0, 10000) : null,
         details: body.details && typeof body.details === 'object' && !Array.isArray(body.details) ? body.details : undefined,
         stockQuantity,
@@ -124,8 +136,8 @@ export async function PUT(request) {
   if (!parsedBody.ok) return NextResponse.json({ error: parsedBody.error }, { status: parsedBody.status });
   if (!isPlainObject(parsedBody.value)) return NextResponse.json({ error: 'صيغة الطلب غير صالحة' }, { status: 400 });
   const body = parsedBody.value;
-  const id = typeof body.id === 'string' ? body.id.trim() : '';
-  if (!id) return NextResponse.json({ error: 'معرف المنتج مطلوب' }, { status: 400 });
+  const id = body.id;
+  if (!isValidProductMutationIdentifier(id)) return NextResponse.json({ error: 'معرف المنتج غير صالح' }, { status: 400 });
 
   try {
     const existing = await prisma.product.findFirst({
@@ -159,13 +171,19 @@ export async function PUT(request) {
       data.stockQuantity = stock;
     }
     if (body.images !== undefined) {
-      if (!Array.isArray(body.images) || body.images.length > 20 || body.images.some((item) => typeof item !== 'string')) {
+      if (!areValidProductImageUrls(body.images)) {
         return NextResponse.json({ error: 'قائمة الصور غير صالحة' }, { status: 400 });
       }
       data.images = body.images;
     }
-    for (const field of ['adCategory', 'city', 'town', 'phoneNumber', 'link', 'description']) {
+    for (const field of ['adCategory', 'city', 'town', 'phoneNumber', 'description']) {
       if (body[field] === null || typeof body[field] === 'string') data[field] = body[field];
+    }
+    if (body.link !== undefined) {
+      if (!isValidProductLink(body.link)) {
+        return NextResponse.json({ error: 'رابط المنتج غير صالح؛ استخدم رابط HTTP أو HTTPS صحيحًا.' }, { status: 400 });
+      }
+      data.link = typeof body.link === 'string' ? body.link.trim() : body.link;
     }
     if (body.details && typeof body.details === 'object' && !Array.isArray(body.details)) data.details = body.details;
     if (!Object.keys(data).length) return NextResponse.json({ error: 'لا توجد حقول صالحة للتحديث' }, { status: 400 });
@@ -187,8 +205,8 @@ export async function DELETE(request) {
   if (!parsedBody.ok) return NextResponse.json({ error: parsedBody.error }, { status: parsedBody.status });
   if (!isPlainObject(parsedBody.value)) return NextResponse.json({ error: 'صيغة الطلب غير صالحة' }, { status: 400 });
   const body = parsedBody.value;
-  const id = typeof body.id === 'string' ? body.id.trim() : '';
-  if (!id) return NextResponse.json({ error: 'معرف المنتج مطلوب' }, { status: 400 });
+  const id = body.id;
+  if (!isValidProductMutationIdentifier(id)) return NextResponse.json({ error: 'معرف المنتج غير صالح' }, { status: 400 });
 
   try {
     const existing = await prisma.product.findFirst({

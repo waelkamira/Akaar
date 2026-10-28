@@ -1,18 +1,28 @@
+import { consumeDurableRateLimit } from '@/lib/api/durable-rate-limit.mjs';
 import { prisma } from '@/lib/db/prisma';
 import { getAuthenticatedUser } from '@/lib/auth/require-auth';
 import { publicProductWhere } from '@/lib/api/public-product-where.mjs';
 import { getPagination, isPaginationOffsetOutOfRange } from '@/lib/api/validation.mjs';
+import { isValidListingIdentifier } from '@/lib/api/listing-identifier-validation.mjs';
 
 export async function GET(req) {
+  const rateLimit = await consumeDurableRateLimit({ request: req, scope: 'seller-listings', limit: 60, windowMs: 60_000 });
+  if (!rateLimit.allowed) {
+    const status = rateLimit.reason || !rateLimit.configured ? 503 : 429;
+    const headers = rateLimit.retryAfterSeconds ? { 'Retry-After': String(rateLimit.retryAfterSeconds) } : undefined;
+    return Response.json({ error: status === 429 ? 'تم تجاوز حد طلبات إعلانات البائعين. حاول بعد قليل.' : 'خدمة الحماية غير متاحة حاليًا.' }, { status, headers });
+  }
+
+
   const url = new URL(req.url);
   const { page, limit, skip } = getPagination(url.searchParams, {
     defaultPage: 1,
     defaultLimit: 5,
     maxLimit: 50,
   });
-  const userId = (url.searchParams.get('userId') || '').trim();
+  const userId = url.searchParams.get('userId');
   try {
-    if (!userId || userId.length > 128) {
+    if (!isValidListingIdentifier(userId)) {
       return new Response(
         JSON.stringify({ message: 'يجب توفير معرف المستخدم' }),
         { status: 400 }
@@ -76,7 +86,7 @@ export async function DELETE(req) {
   const id = searchParams.get('id');
   const userId = searchParams.get('userId');
 
-  if (!id || !userId) {
+  if (!isValidListingIdentifier(id) || !isValidListingIdentifier(userId)) {
     return new Response(
       JSON.stringify({ error: 'يجب توفير معرف الإعلان ومعرف المستخدم' }),
       { status: 400 }
