@@ -12,7 +12,7 @@ Set these server-side environment variables in the deployment environment:
 
 Do not prefix these variables with `NEXT_PUBLIC_`, commit their values, or paste tokens into logs/issues. Use separate credentials for development and production.
 
-Production fails closed with HTTP 503 if the shared store is missing, unreachable, misconfigured, or proxy trust is not explicitly enabled. This prevents silently running sensitive endpoints without a durable limiter. Local development and tests bypass the limiter when the shared store is not configured. A configured store failure in non-production is logged and bypassed to keep local development usable.
+Production fails closed with HTTP 503 if the shared store is missing, unreachable, misconfigured, proxy trust is not explicitly enabled, or a trusted client IP cannot be resolved. This prevents silently running sensitive endpoints without a durable limiter. Local development and tests bypass the limiter when the shared store is not configured. A configured store failure in non-production is logged and bypassed to keep local development usable.
 
 If the platform does not guarantee trustworthy forwarding headers, do not set `TRUST_PROXY_HEADERS=true`; configure a trusted client-IP integration before enabling the production endpoints. When forwarding headers are trusted, the first `X-Forwarded-For` address is validated as an IP literal and hashed before being used in a Redis key.
 
