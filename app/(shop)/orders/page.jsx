@@ -124,9 +124,7 @@ export default function OrdersPage() {
         ) : (
           <div className="space-y-4">
             {orders.map((order) => {
-              const orderItems = Array.isArray(order.items) && order.items.length
-                ? order.items
-                : [{ id: `legacy-${order.id}`, product: order.product, productId: order.productId, quantity: order.quantity, totalPrice: order.totalPrice }];
+              const orderItems = Array.isArray(order.items) ? order.items : [];
               return (
                 <article key={order.id} className="rounded-2xl border border-white/[.08] bg-[#211F1B] p-4 sm:p-6">
                   <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/[.07] pb-4">
@@ -134,10 +132,12 @@ export default function OrdersPage() {
                       <p className="text-[10px] text-stone-500">رقم الطلب</p>
                       <p className="mt-1 break-all text-xs font-semibold text-stone-200">{order.id}</p>
                     </div>
-                    <StatusBadge value={order.fulfillmentStatus || order.status} />
+                    <StatusBadge value={order.status} />
                   </div>
                   <div className="divide-y divide-white/[.06]">
-                    {orderItems.map((item) => (
+                    {orderItems.length === 0 ? (
+                      <p className="py-4 text-sm text-stone-400">لا توجد تفاصيل منتجات محفوظة لهذا الطلب.</p>
+                    ) : orderItems.map((item) => (
                       <div key={item.id} className="flex items-center gap-3 py-4">
                         <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-white/10 bg-[#171512]">
                           {item.product?.images?.[0] ? (

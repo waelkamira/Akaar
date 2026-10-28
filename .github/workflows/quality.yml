@@ -58,8 +58,27 @@ jobs:
       - name: Apply committed migrations to clean PostgreSQL
         run: npx prisma migrate deploy --schema=prisma/schema.prisma
 
+      - name: Generate canonical schema baseline SQL for review
+        run: npx prisma migrate diff --from-empty --to-schema-datamodel prisma/schema.prisma --script > prisma-schema-baseline.sql
+
+      - name: Upload canonical schema baseline
+        uses: actions/upload-artifact@v4
+        with:
+          name: prisma-schema-baseline
+          path: prisma-schema-baseline.sql
+          if-no-files-found: error
+
       - name: Generate schema-to-migration drift SQL
         run: npx prisma migrate diff --from-migrations prisma/migrations --to-schema-datamodel prisma/schema.prisma --script --shadow-database-url "$SHADOW_DATABASE_URL" > prisma-schema-drift.sql
+
+      - name: Fail if migration history drifts from Prisma schema
+        run: |
+          # Prisma reports an extension-only pg_trgm statement in this comparison.
+          if grep -v 'CREATE EXTENSION IF NOT EXISTS "pg_trgm";' prisma-schema-drift.sql | grep -Eq '^(CREATE|ALTER|DROP|COMMENT ON|GRANT|REVOKE)'; then
+            echo 'Committed migrations do not match prisma/schema.prisma:'
+            cat prisma-schema-drift.sql
+            exit 1
+          fi
 
       - name: Upload schema drift report
         uses: actions/upload-artifact@v4
