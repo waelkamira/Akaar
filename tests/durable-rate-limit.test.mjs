@@ -95,3 +95,19 @@ test('rejects invalid policy configuration', async () => {
     /scope is invalid/,
   );
 });
+
+test('supports plain Node/NextAuth request headers', async () => {
+  const result = await consumeDurableRateLimit({
+    request: { headers: { 'x-real-ip': '203.0.113.9' } },
+    scope: 'login-ip',
+    limit: 20,
+    windowMs: 900_000,
+    env: configuredEnv,
+    fetchImpl: async (_url, options) => {
+      const command = JSON.parse(options.body);
+      assert.match(command[3], /^akaar:rate:login-ip:/);
+      return { ok: true, json: async () => ({ result: [1, 800_000] }) };
+    },
+  });
+  assert.equal(result.allowed, true);
+});
