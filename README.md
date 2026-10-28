@@ -171,7 +171,7 @@ This section supersedes the older handoff notes below the verification log. Hist
 ### Current open pull requests observed during this review
 
 - [PR #28 — Prevent client-supplied product category name mismatches](https://github.com/waelkamira/Akaar/pull/28): open; rerun CI on the latest head before merge.
-- [PR #29 — Document modular marketplace architecture and safe migration plan](https://github.com/waelkamira/Akaar/pull/29): open; documentation updated to reflect greenfield schema design and no production database; latest Quality CI pending on head `0c92bcd0a61f2ec959d8dee0c801e5fb66b2964a` (run [40606548642](https://github.com/waelkamira/Akaar/actions/runs/40606548642)).
+- [PR #29 — Document modular marketplace architecture and safe migration plan](https://github.com/waelkamira/Akaar/pull/29): open; documentation updated to reflect greenfield schema design and no production database; Quality CI passed on exact head `0c92bcd0a61f2ec959d8dee0c801e5fb66b2964a` (run [40606548642](https://github.com/waelkamira/Akaar/actions/runs/40606548642)).
 - [PR #31 — Refresh README remediation status](https://github.com/waelkamira/Akaar/pull/31): open; documentation/status cleanup.
 - [PR #33 — Reconcile Prisma schema, migration history, and canonical source](https://github.com/waelkamira/Akaar/pull/33): open; Quality CI passed on exact head 2974f9f9c64a145460b6c4fc1d524580485a56ea, including clean migration deploy, no schema DDL drift, PostgreSQL integration tests, unit tests, lint, and build.
 - [PR #34 — Ignore local environment files](https://github.com/waelkamira/Akaar/pull/34): open; Quality CI passed on exact head 8a062a16f2d9f7f373f71d4fe19971baccfd90f9.
