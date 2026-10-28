@@ -10,6 +10,7 @@ Configure these server-side environment variables in every production deployment
 
 - `UPSTASH_REDIS_REST_URL`: the HTTPS REST endpoint for the Redis database.
 - `UPSTASH_REDIS_REST_TOKEN`: a write-capable token for that database. Keep it server-only; never use a `NEXT_PUBLIC_` prefix or commit a real token.
+- `TRUST_PROXY_HEADERS=true`: set only after verifying that the hosting ingress overwrites `x-real-ip` and does not pass through a client-supplied value. If this cannot be guaranteed, leave it unset and protected routes will fail closed in production.
 
 The helper rejects non-HTTPS endpoints. Do not use a local or in-memory substitute in production.
 
@@ -26,7 +27,7 @@ Upload limits combine the client address and authenticated user ID. Registration
 
 ## Proxy and client IP requirements
 
-The helper reads `x-real-ip` first and otherwise the first address in `x-forwarded-for`. These headers are trustworthy only when the deployment's ingress/reverse proxy overwrites or sanitizes them. Configure the hosting proxy so clients cannot choose the value used for rate limiting. If this cannot be guaranteed, use a trusted platform-specific client-IP mechanism before deploying.
+The helper accepts only a syntactically valid IP address from `x-real-ip`, and only when `TRUST_PROXY_HEADERS=true`. It deliberately does not use `x-forwarded-for`, whose leftmost address may be caller-controlled when a proxy appends to that header. Set the flag only after confirming that the hosting ingress overwrites `x-real-ip`; otherwise keep it disabled. In production, a missing/invalid address or untrusted proxy configuration fails closed with HTTP 503.
 
 ## Failure behavior
 
@@ -42,6 +43,7 @@ The helper reads `x-real-ip` first and otherwise the first address in `x-forward
 2. Verify proxy IP header sanitization with the actual hosting provider.
 3. Test simultaneous requests from multiple instances, the exact boundary, reset after expiry, 429 `Retry-After`, 503 behavior for registration/uploads when Redis is unavailable, and denied credentials sign-in when the limiter is unavailable.
 4. Monitor Redis latency/availability and set a budget appropriate for registration and uploads.
-5. Revisit policy values against expected legitimate traffic and provider upload quotas.
+5. Confirm `TRUST_PROXY_HEADERS=true` is safe for the actual hosting ingress and that `x-real-ip` cannot be spoofed by a client.
+6. Revisit policy values against expected legitimate traffic and provider upload quotas.
 
 This implementation is not considered production-ready until the shared store and trusted client-IP configuration have been tested in the target deployment.
