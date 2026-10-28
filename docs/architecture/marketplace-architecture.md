@@ -14,7 +14,7 @@ The repository currently uses the Next.js App Router and contains 377 entries in
 - `lib/`: API helpers, auth, database access, uploads, and validation.
 - `prisma/`, `tests/`, `scripts/`, and `docs/`.
 
-Existing route examples include `app/api/product/route.js`, `app/api/search/route.js`, `app/posts/[id]`, `app/categories/[id]`, and `app/seller/dashboard`. There is also a root-level `schema.prisma` in addition to `prisma/schema.prisma`.
+Existing route examples include `app/api/product/route.js`, `app/api/search/route.js`, `app/posts/[id]`, `app/categories/[id]`, and `app/seller/dashboard`. There is also a root-level `schema.prisma` in addition to `prisma/schema.prisma`; these are conflicting source artifacts and should not both remain canonical.
 
 This inventory is based on repository files, not a full browser-based acceptance test.
 
@@ -197,26 +197,27 @@ This is a target shape. Empty directories and speculative modules should not be 
 
 ## Database and release safety gate
 
-The repository currently has both a root-level `schema.prisma` and `prisma/schema.prisma`. Existing repository investigation also found legacy database differences involving category IDs/fields, product flags, and product image storage. This is a release-blocking compatibility concern, not a directory-layout issue.
+The project owner confirmed that the site is still under development and **there is no production database**. Treat Prisma schema and migration work as a greenfield design: the schema, keys, relations, enums, and migrations may be corrected to fit the intended commerce domain. Do not preserve a flawed legacy shape solely for compatibility with a database that does not exist.
 
-Before any schema migration:
-1. Capture a read-only inventory from a restored copy of the actual database schema.
-2. Compare the live schema, both Prisma schemas, migration history, and application query assumptions.
-3. Choose and document a single canonical schema strategy.
-4. Produce a reviewed migration plan with explicit data-preservation and rollback steps.
-5. Test the migration on a disposable database and a representative restored backup.
-6. Verify row counts, foreign keys, nullability, indexes, category mapping, and image preservation.
-7. Only then schedule a production migration with a backup and recovery plan.
+The repository does contain conflicting historical artifacts: a root-level `schema.prisma`, `prisma/schema.prisma`, and migration history. These must be reconciled as source-control artifacts, not assumed to describe a live production database.
 
-Do not run `prisma db push`, `migrate reset`, or inferred SQL against production as a shortcut.
+Before adopting the canonical schema:
+1. Choose `prisma/schema.prisma` as the single canonical schema and remove the duplicate root schema in the reviewed change.
+2. Review the domain model deliberately: money/currency, product image representation, inventory source of truth, multi-item and multi-seller orders, payment states, fulfillment states, and referential integrity.
+3. Reconcile migration history with that canonical schema. For a genuinely empty development database, a clean migration chain should build the schema from zero.
+4. Test the full migration chain on a disposable PostgreSQL database and enforce schema-to-migration drift checks in CI.
+5. Add domain-level tests for order/payment transitions, inventory concurrency, uniqueness, and deletion/soft-deletion semantics.
+6. Document setup/reset commands so they are explicitly local/test-only and cannot accidentally target an external database.
+
+Do not run destructive commands against an unknown database URL. If a shared development database is introduced later, inventory and back it up before changing it; that future precaution does not imply a production database currently exists.
 
 ## Incremental migration plan
 
 ### Phase 0 — baseline and safety
-- Keep the current production schema unchanged.
-- Ensure CI uses an isolated PostgreSQL database.
-- Record current behavior and add regression tests before moving code.
-- Resolve the canonical Prisma schema and legacy DB compatibility first.
+- Confirm there is no production database; schema design is greenfield.
+- Ensure CI uses an isolated PostgreSQL database and can deploy the migrations from an empty database.
+- Choose the canonical schema, remove duplicate schema artifacts, and align migration history.
+- Review commerce-domain semantics before treating the schema as final.
 
 ### Phase 1 — shared infrastructure
 - Consolidate the Prisma client entry point.
