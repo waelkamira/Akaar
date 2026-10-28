@@ -28,16 +28,10 @@ export async function GET(request) {
       take: limit,
       select: {
         id: true,
-        productId: true,
-        quantity: true,
         totalPrice: true,
         status: true,
-        fulfillmentStatus: true,
         createdAt: true,
         updatedAt: true,
-        product: {
-          select: { id: true, title: true, images: true, basePrice: true, categoryName: true },
-        },
         items: {
           select: {
             id: true,
