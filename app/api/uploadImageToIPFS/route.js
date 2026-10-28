@@ -8,6 +8,9 @@ export const maxDuration = 60;
 export const dynamic = 'force-dynamic';
 
 export async function POST(request) {
+  const user = await getAuthenticatedUser();
+  if (!user) return NextResponse.json({ success: false, error: 'يجب تسجيل الدخول لرفع الصور.' }, { status: 401 });
+
   const rateLimit = await consumeDurableRateLimit({
     request: request,
     scope: 'image-upload',
@@ -20,9 +23,6 @@ export async function POST(request) {
     const headers = rateLimit.retryAfterSeconds ? { 'Retry-After': String(rateLimit.retryAfterSeconds) } : undefined;
     return NextResponse.json({ success: false, error: status === 429 ? 'تم تجاوز حد رفع الصور. حاول لاحقًا.' : 'خدمة الحماية غير متاحة حاليًا.' }, { status, headers });
   }
-
-  const user = await getAuthenticatedUser();
-  if (!user) return NextResponse.json({ success: false, error: 'يجب تسجيل الدخول لرفع الصور.' }, { status: 401 });
   if (isUploadRequestTooLarge(request)) return NextResponse.json({ success: false, error: 'حجم طلب الرفع أكبر من الحد المسموح.' }, { status: 413 });
 
   const apiKey = process.env.PINATA_API_KEY;
