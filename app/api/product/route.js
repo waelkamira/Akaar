@@ -6,6 +6,7 @@ import { getAuthenticatedUser } from '@/lib/auth/require-auth';
 import { getPagination, isPaginationOffsetOutOfRange, isPlainObject, parseOptionalNumber } from '@/lib/api/validation.mjs';
 import { isValidProductMutationIdentifier } from '@/lib/api/product-mutation-validation.mjs';
 import { readJsonBody } from '@/lib/api/read-json-body.mjs';
+import { areValidProductImageUrls, isValidProductLink } from '@/lib/api/product-media-validation.mjs';
 
 const cache = new LRUCache({ max: 100, ttl: 60_000 });
 const MAX_PAGE_SIZE = 50;
@@ -82,7 +83,8 @@ export async function POST(request) {
 
   if (!title || title.length > 200 || categoryId === undefined || categoryId === null ||
       basePrice === undefined || basePrice === null || stockQuantity === undefined || stockQuantity === null ||
-      !Array.isArray(images) || images.length > 20 || images.some((item) => typeof item !== 'string')) {
+      !areValidProductImageUrls(images) ||
+      (body.link !== undefined && !isValidProductLink(body.link))) {
     return NextResponse.json({ error: 'يرجى التحقق من العنوان والفئة والسعر والمخزون والصور' }, { status: 400 });
   }
 
@@ -112,7 +114,7 @@ export async function POST(request) {
         phoneNumber: typeof body.phoneNumber === 'string' ? body.phoneNumber.slice(0, 40) : null,
         lng: parseOptionalNumber(body.lng) ?? null,
         lat: parseOptionalNumber(body.lat) ?? null,
-        link: typeof body.link === 'string' ? body.link.slice(0, 2000) : '',
+        link: typeof body.link === 'string' ? body.link.trim() : '',
         description: typeof body.description === 'string' ? body.description.slice(0, 10000) : null,
         details: body.details && typeof body.details === 'object' && !Array.isArray(body.details) ? body.details : undefined,
         stockQuantity,
@@ -169,13 +171,19 @@ export async function PUT(request) {
       data.stockQuantity = stock;
     }
     if (body.images !== undefined) {
-      if (!Array.isArray(body.images) || body.images.length > 20 || body.images.some((item) => typeof item !== 'string')) {
+      if (!areValidProductImageUrls(body.images)) {
         return NextResponse.json({ error: 'قائمة الصور غير صالحة' }, { status: 400 });
       }
       data.images = body.images;
     }
-    for (const field of ['adCategory', 'city', 'town', 'phoneNumber', 'link', 'description']) {
+    for (const field of ['adCategory', 'city', 'town', 'phoneNumber', 'description']) {
       if (body[field] === null || typeof body[field] === 'string') data[field] = body[field];
+    }
+    if (body.link !== undefined) {
+      if (!isValidProductLink(body.link)) {
+        return NextResponse.json({ error: 'رابط المنتج غير صالح؛ استخدم رابط HTTP أو HTTPS صحيحًا.' }, { status: 400 });
+      }
+      data.link = typeof body.link === 'string' ? body.link.trim() : body.link;
     }
     if (body.details && typeof body.details === 'object' && !Array.isArray(body.details)) data.details = body.details;
     if (!Object.keys(data).length) return NextResponse.json({ error: 'لا توجد حقول صالحة للتحديث' }, { status: 400 });
