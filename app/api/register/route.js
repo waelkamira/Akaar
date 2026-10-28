@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/db/prisma';
+import { enforceRateLimit } from '@/lib/api/durable-rate-limit.mjs';
 import bcrypt from 'bcrypt';
 import { validateRegistrationInput } from '@/lib/auth/registration-validation.mjs';
 import { readJsonBody } from '@/lib/api/read-json-body.mjs';
@@ -6,6 +7,14 @@ import { readJsonBody } from '@/lib/api/read-json-body.mjs';
 const MAX_REGISTRATION_BODY_BYTES = 16 * 1024;
 
 export async function POST(req) {
+  const rateLimit = await enforceRateLimit(req, { namespace: 'register', limit: 5, windowSeconds: 900 });
+  if (!rateLimit.allowed) {
+    return new Response(JSON.stringify({ error: rateLimit.status === 429 ? 'تم تجاوز عدد محاولات التسجيل. حاول لاحقًا.' : 'خدمة الحماية من الطلبات غير متاحة حاليًا.' }), {
+      status: rateLimit.status,
+      headers: { 'Content-Type': 'application/json', ...(rateLimit.retryAfter ? { 'Retry-After': String(rateLimit.retryAfter) } : {}) },
+    });
+  }
+
   const parsedBody = await readJsonBody(req, MAX_REGISTRATION_BODY_BYTES);
   if (!parsedBody.ok) {
     return new Response(JSON.stringify({ error: parsedBody.error }), {
