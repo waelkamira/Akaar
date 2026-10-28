@@ -14,7 +14,7 @@ export async function POST(req) {
     windowMs: 900000,
   });
   if (!rateLimit.allowed) {
-    const status = rateLimit.reason === 'store_unavailable' || !rateLimit.configured ? 503 : 429;
+    const status = Boolean(rateLimit.reason) || !rateLimit.configured ? 503 : 429;
     const headers = rateLimit.retryAfterSeconds ? { 'Retry-After': String(rateLimit.retryAfterSeconds) } : undefined;
     return new Response(JSON.stringify({ error: status === 429 ? 'تم تجاوز عدد محاولات إنشاء الحساب. حاول لاحقًا.' : 'خدمة الحماية غير متاحة حاليًا.' }), { status, headers: { 'Content-Type': 'application/json', ...(headers || {}) } });
   }
