@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { consumeDurableRateLimit } from '@/lib/api/durable-rate-limit.mjs';
 import { LRUCache } from 'lru-cache';
 import { prisma } from '@/lib/db/prisma';
 import { getAuthenticatedUser } from '@/lib/auth/require-auth';
@@ -22,6 +23,14 @@ async function readJson(request) {
 
 
 export async function GET(request) {
+  const rateLimit = await consumeDurableRateLimit({ request, scope: 'product-catalog', limit: 120, windowMs: 60_000 });
+  if (!rateLimit.allowed) {
+    const status = rateLimit.reason || !rateLimit.configured ? 503 : 429;
+    const headers = rateLimit.retryAfterSeconds ? { 'Retry-After': String(rateLimit.retryAfterSeconds) } : undefined;
+    return NextResponse.json({ error: status === 429 ? 'تم تجاوز حد طلبات المنتجات. حاول بعد قليل.' : 'خدمة الحماية غير متاحة حاليًا.' }, { status, headers });
+  }
+
+
   const { searchParams } = new URL(request.url);
   const { page, limit, skip } = readPageParams(searchParams);
   const cacheKey = `products-page-${page}-limit-${limit}`;

@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { consumeDurableRateLimit } from '@/lib/api/durable-rate-limit.mjs';
 import ImageKit from 'imagekit';
 import { getAuthenticatedUser } from '@/lib/auth/require-auth';
 import { isUploadRequestTooLarge, safeImageFileName, validateImageContent, validateImageFile } from '@/lib/uploads/validate-image.mjs';
@@ -8,6 +9,19 @@ export const runtime = 'nodejs';
 export async function POST(request) {
   const user = await getAuthenticatedUser();
   if (!user) return NextResponse.json({ success: false, error: 'يجب تسجيل الدخول لرفع الصور.' }, { status: 401 });
+
+  const rateLimit = await consumeDurableRateLimit({
+    request: request,
+    scope: 'image-upload',
+    limit: 20,
+    windowMs: 600000,
+    identity: user.id,
+  });
+  if (!rateLimit.allowed) {
+    const status = Boolean(rateLimit.reason) || !rateLimit.configured ? 503 : 429;
+    const headers = rateLimit.retryAfterSeconds ? { 'Retry-After': String(rateLimit.retryAfterSeconds) } : undefined;
+    return NextResponse.json({ success: false, error: status === 429 ? 'تم تجاوز حد رفع الصور. حاول لاحقًا.' : 'خدمة الحماية غير متاحة حاليًا.' }, { status, headers });
+  }
   if (isUploadRequestTooLarge(request)) return NextResponse.json({ success: false, error: 'حجم طلب الرفع أكبر من الحد المسموح.' }, { status: 413 });
 
   const { IMAGEKIT_PUBLIC_KEY, IMAGEKIT_PRIVATE_KEY, IMAGEKIT_URL_ENDPOINT } = process.env;

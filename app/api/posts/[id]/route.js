@@ -1,3 +1,4 @@
+import { consumeDurableRateLimit } from '@/lib/api/durable-rate-limit.mjs';
 import { prisma } from '@/lib/db/prisma';
 import { getAuthenticatedUser } from '@/lib/auth/require-auth';
 import { deleteProductAction } from '@/lib/api/delete-product-action.mjs';
@@ -5,6 +6,14 @@ import { publicProductWhere } from '@/lib/api/public-product-where.mjs';
 import { getPagination, isPaginationOffsetOutOfRange } from '@/lib/api/validation.mjs';
 
 export async function GET(req, { params }) {
+  const rateLimit = await consumeDurableRateLimit({ request: req, scope: 'seller-listing-detail', limit: 60, windowMs: 60_000 });
+  if (!rateLimit.allowed) {
+    const status = rateLimit.reason || !rateLimit.configured ? 503 : 429;
+    const headers = rateLimit.retryAfterSeconds ? { 'Retry-After': String(rateLimit.retryAfterSeconds) } : undefined;
+    return Response.json({ error: status === 429 ? 'تم تجاوز حد طلبات إعلانات البائعين. حاول بعد قليل.' : 'خدمة الحماية غير متاحة حاليًا.' }, { status, headers });
+  }
+
+
   const { id } = await params;
   const url = new URL(req.url);
   const { page, limit, skip } = getPagination(url.searchParams, {
