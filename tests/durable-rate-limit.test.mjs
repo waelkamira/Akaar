@@ -9,6 +9,7 @@ const configuredEnv = {
   NODE_ENV: 'production',
   UPSTASH_REDIS_REST_URL: 'https://redis.example.test',
   UPSTASH_REDIS_REST_TOKEN: 'test-token',
+  TRUST_PROXY_HEADERS: 'true',
 };
 
 test('allows a request below the configured fixed-window limit', async () => {
@@ -35,7 +36,7 @@ test('allows a request below the configured fixed-window limit', async () => {
 
 test('blocks requests over the limit and returns a retry delay', async () => {
   const result = await consumeDurableRateLimit({
-    request: request({ 'x-forwarded-for': '198.51.100.4, 10.0.0.1' }),
+    request: request({ 'x-real-ip': '198.51.100.4', 'x-forwarded-for': '203.0.113.7, 10.0.0.1' }),
     scope: 'register',
     limit: 5,
     windowMs: 60_000,
@@ -110,4 +111,45 @@ test('supports plain Node/NextAuth request headers', async () => {
     },
   });
   assert.equal(result.allowed, true);
+});
+
+test('fails closed in production unless trusted proxy headers are explicitly enabled', async () => {
+  const result = await consumeDurableRateLimit({
+    request: request({ 'x-real-ip': '192.0.2.1' }),
+    scope: 'register',
+    limit: 5,
+    windowMs: 60_000,
+    env: { ...configuredEnv, TRUST_PROXY_HEADERS: 'false' },
+    fetchImpl: async () => { throw new Error('must not call store without trusted IP configuration'); },
+  });
+  assert.equal(result.allowed, false);
+  assert.equal(result.reason, 'untrusted_client_ip');
+});
+
+test('fails closed for missing or malformed trusted client IPs', async () => {
+  for (const headers of [{}, { 'x-real-ip': 'not-an-ip' }, { 'x-real-ip': '203.0.113.1, 198.51.100.1' }]) {
+    const result = await consumeDurableRateLimit({
+      request: request(headers),
+      scope: 'register',
+      limit: 5,
+      windowMs: 60_000,
+      env: configuredEnv,
+      fetchImpl: async () => { throw new Error('must not call store without a valid IP'); },
+    });
+    assert.equal(result.allowed, false);
+    assert.equal(result.reason, 'untrusted_client_ip');
+  }
+});
+
+test('does not use X-Forwarded-For as a client identity', async () => {
+  const result = await consumeDurableRateLimit({
+    request: request({ 'x-forwarded-for': '198.51.100.4, 10.0.0.1' }),
+    scope: 'register',
+    limit: 5,
+    windowMs: 60_000,
+    env: configuredEnv,
+    fetchImpl: async () => { throw new Error('X-Forwarded-For alone must not be trusted'); },
+  });
+  assert.equal(result.allowed, false);
+  assert.equal(result.reason, 'untrusted_client_ip');
 });
