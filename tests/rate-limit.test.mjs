@@ -97,11 +97,28 @@ test('fails closed in production when the configured shared store is unavailable
   process.env.UPSTASH_REDIS_REST_URL = 'https://redis.example.test';
   process.env.UPSTASH_REDIS_REST_TOKEN = 'test-token';
   process.env.NODE_ENV = 'production';
+  process.env.TRUST_PROXY_HEADERS = 'true';
   globalThis.fetch = async () => { throw new Error('network unavailable'); };
   const result = await checkRateLimit(new Request('https://example.test'), {
     scope: 'image-upload', limit: 20, windowSeconds: 3600,
   });
   assert.equal(result.allowed, false);
   assert.equal(result.status, 503);
+  restoreEnv();
+});
+
+test('fails closed in production until proxy headers are explicitly trusted', async () => {
+  process.env.UPSTASH_REDIS_REST_URL = 'https://redis.example.test';
+  process.env.UPSTASH_REDIS_REST_TOKEN = 'test-token';
+  process.env.NODE_ENV = 'production';
+  process.env.TRUST_PROXY_HEADERS = 'false';
+  let fetchCalled = false;
+  globalThis.fetch = async () => { fetchCalled = true; throw new Error('should not call Redis'); };
+  const result = await checkRateLimit(new Request('https://example.test'), {
+    scope: 'registration', limit: 5, windowSeconds: 900,
+  });
+  assert.equal(result.allowed, false);
+  assert.equal(result.status, 503);
+  assert.equal(fetchCalled, false);
   restoreEnv();
 });
