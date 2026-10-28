@@ -32,7 +32,7 @@ The helper reads `x-real-ip` first and otherwise the first address in `x-forward
 
 - When the counter is within the limit, the request proceeds.
 - When the limit is exceeded, the route returns HTTP 429 and a `Retry-After` header.
-- In production, missing Redis configuration, an invalid endpoint, or a Redis/network failure returns HTTP 503 for these sensitive routes. This is intentionally fail-closed; registration and image uploads remain unavailable until the shared limiter is configured and healthy.
+- In production, missing Redis configuration, an invalid endpoint, or a Redis/network failure fails closed. Registration and image-upload handlers return HTTP 503; credentials sign-in is denied through NextAuth's normal sign-in error flow until the shared limiter is configured and healthy.
 - Outside production, missing configuration or store failure is fail-open to keep local development usable. Tests cover both behaviors.
 - The limiter does not log or store raw IP addresses in its keys; the address and identity are SHA-256 hashed.
 
@@ -40,7 +40,7 @@ The helper reads `x-real-ip` first and otherwise the first address in `x-forward
 
 1. Set the two Upstash variables in the deployment environment and verify they are available to server-side route handlers.
 2. Verify proxy IP header sanitization with the actual hosting provider.
-3. Test simultaneous requests from multiple instances, the exact boundary, reset after expiry, 429 `Retry-After`, and 503 behavior when Redis is unavailable.
+3. Test simultaneous requests from multiple instances, the exact boundary, reset after expiry, 429 `Retry-After`, 503 behavior for registration/uploads when Redis is unavailable, and denied credentials sign-in when the limiter is unavailable.
 4. Monitor Redis latency/availability and set a budget appropriate for registration and uploads.
 5. Revisit policy values against expected legitimate traffic and provider upload quotas.
 
