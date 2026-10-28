@@ -4,6 +4,7 @@ import { LRUCache } from 'lru-cache';
 import { prisma } from '@/lib/db/prisma';
 import { getAuthenticatedUser } from '@/lib/auth/require-auth';
 import { getPagination, isPaginationOffsetOutOfRange, isPlainObject, parseOptionalNumber } from '@/lib/api/validation.mjs';
+import { isValidProductMutationIdentifier } from '@/lib/api/product-mutation-validation.mjs';
 import { readJsonBody } from '@/lib/api/read-json-body.mjs';
 
 const cache = new LRUCache({ max: 100, ttl: 60_000 });
@@ -133,8 +134,8 @@ export async function PUT(request) {
   if (!parsedBody.ok) return NextResponse.json({ error: parsedBody.error }, { status: parsedBody.status });
   if (!isPlainObject(parsedBody.value)) return NextResponse.json({ error: 'صيغة الطلب غير صالحة' }, { status: 400 });
   const body = parsedBody.value;
-  const id = typeof body.id === 'string' ? body.id.trim() : '';
-  if (!id) return NextResponse.json({ error: 'معرف المنتج مطلوب' }, { status: 400 });
+  const id = body.id;
+  if (!isValidProductMutationIdentifier(id)) return NextResponse.json({ error: 'معرف المنتج غير صالح' }, { status: 400 });
 
   try {
     const existing = await prisma.product.findFirst({
@@ -196,8 +197,8 @@ export async function DELETE(request) {
   if (!parsedBody.ok) return NextResponse.json({ error: parsedBody.error }, { status: parsedBody.status });
   if (!isPlainObject(parsedBody.value)) return NextResponse.json({ error: 'صيغة الطلب غير صالحة' }, { status: 400 });
   const body = parsedBody.value;
-  const id = typeof body.id === 'string' ? body.id.trim() : '';
-  if (!id) return NextResponse.json({ error: 'معرف المنتج مطلوب' }, { status: 400 });
+  const id = body.id;
+  if (!isValidProductMutationIdentifier(id)) return NextResponse.json({ error: 'معرف المنتج غير صالح' }, { status: 400 });
 
   try {
     const existing = await prisma.product.findFirst({
