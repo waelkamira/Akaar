@@ -4,6 +4,7 @@ import { getAuthenticatedUser } from '@/lib/auth/require-auth';
 import { deleteProductAction } from '@/lib/api/delete-product-action.mjs';
 import { publicProductWhere } from '@/lib/api/public-product-where.mjs';
 import { getPagination, isPaginationOffsetOutOfRange } from '@/lib/api/validation.mjs';
+import { isValidListingIdentifier } from '@/lib/api/listing-identifier-validation.mjs';
 
 export async function GET(req, { params }) {
   const rateLimit = await consumeDurableRateLimit({ request: req, scope: 'seller-listing-detail', limit: 60, windowMs: 60_000 });
@@ -23,7 +24,7 @@ export async function GET(req, { params }) {
   });
 
   try {
-    if (typeof id !== 'string' || !id.trim() || id.length > 128) {
+    if (!isValidListingIdentifier(id)) {
       return new Response(
         JSON.stringify({ message: 'يجب توفير معرف المستخدم' }),
         { status: 400 }
@@ -75,6 +76,9 @@ export async function GET(req, { params }) {
 export async function DELETE(req, { params }) {
   try {
     const { id: productId } = await params;
+    if (!isValidListingIdentifier(productId)) {
+      return new Response(JSON.stringify({ error: 'A valid product ID is required.' }), { status: 400, headers: { 'Content-Type': 'application/json' } });
+    }
     const authenticatedUser = await getAuthenticatedUser();
     const result = await deleteProductAction({
       productId,
