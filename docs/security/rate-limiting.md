@@ -1,6 +1,6 @@
 # Shared API rate limiting
 
-Registration and image-upload endpoints use a shared Upstash Redis REST store. The limiter uses a Redis Lua script (`INCR` plus first-hit `EXPIRE`) so each request is counted atomically across application instances and restarts.
+Registration, image-upload and public search endpoints use a shared Upstash Redis REST store. The limiter uses a Redis Lua script (`INCR` plus first-hit `EXPIRE`) so each request is counted atomically across application instances and restarts.
 
 ## Production configuration
 
@@ -21,7 +21,9 @@ If the platform does not guarantee trustworthy forwarding headers, do not set `T
 | Endpoint group | Limit | Window |
 | --- | ---: | --- |
 | `POST /api/register` | 5 requests | 15 minutes |
-| Authenticated image upload providers (`/api/uploadImageToIPFS`, `/api/uploadImageToImageKit`, `/api/uploadImageToImgbb`, `/api/uploadImageToImgur`) | 20 requests shared across providers | 1 hour |
+| Image-upload endpoints (`/api/uploadImageToIPFS`, `/api/uploadImageToImageKit`, `/api/uploadImageToImgbb`, `/api/uploadImageToImgur`; all requests before authentication) | 20 requests shared across providers | 1 hour |
+| `POST /api/search` | 60 requests | 1 minute |
+| `GET /api/search/suggestions` | 120 requests | 1 minute |
 
 A blocked request returns HTTP 429 with `Retry-After`. If the limiter cannot safely run in production, the endpoint returns HTTP 503 rather than pretending that rate limiting succeeded.
 
