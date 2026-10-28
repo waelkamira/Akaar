@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { rateLimitResponse } from '@/lib/api/rate-limit.mjs';
 import { prisma } from '@/lib/db/prisma';
 
 const CATEGORY_SEARCH_TERM_IDS = {
@@ -11,6 +12,9 @@ const CATEGORY_SEARCH_TERM_IDS = {
 };
 
 export async function GET(request) {
+  const rateLimit = await rateLimitResponse(request, {"scope":"search-suggestions","limit":120,"windowSeconds":60});
+  if (rateLimit) return rateLimit;
+
   const { searchParams } = new URL(request.url);
   const query = searchParams.get('query')?.trim().slice(0, 120) || '';
 
