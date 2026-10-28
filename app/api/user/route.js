@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
 import { getAuthenticatedUser } from '@/lib/auth/require-auth';
 import { readJsonBody } from '@/lib/api/read-json-body.mjs';
+import { isValidProfileImage } from '@/lib/api/profile-image.mjs';
 
 const publicUserSelect = {
   id: true,
@@ -57,8 +58,11 @@ export async function PUT(request) {
       }
       data.userName = userName;
     }
-    if (typeof body?.userImage === 'string' || body?.userImage === null) {
-      data.userImage = body.userImage;
+    if (Object.prototype.hasOwnProperty.call(body ?? {}, 'userImage')) {
+      if (!isValidProfileImage(body.userImage)) {
+        return NextResponse.json({ error: 'Profile image must be a valid HTTP(S) URL or a same-origin path under 2048 characters.' }, { status: 400 });
+      }
+      data.userImage = body.userImage === null ? null : body.userImage.trim();
     }
     if (!Object.keys(data).length) {
       return NextResponse.json({ error: 'No valid profile fields supplied.' }, { status: 400 });
