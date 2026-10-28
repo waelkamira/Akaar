@@ -4,6 +4,7 @@ import { getAdminUser } from '@/lib/auth/require-auth';
 import { getPagination, isPaginationOffsetOutOfRange } from '@/lib/api/validation.mjs';
 import { readJsonBody } from '@/lib/api/read-json-body.mjs';
 import { isValidAdminUserId } from '@/lib/api/admin-user-validation.mjs';
+import { isValidProfileImage } from '@/lib/api/profile-image.mjs';
 
 const MAX_PAGE_SIZE = 100;
 const userSelect = {
@@ -84,7 +85,12 @@ export async function PUT(request) {
 
     const data = {};
     if (typeof body.userName === 'string') data.userName = body.userName.trim().slice(0, 100);
-    if (typeof body.userImage === 'string' || body.userImage === null) data.userImage = body.userImage;
+    if (Object.prototype.hasOwnProperty.call(body ?? {}, 'userImage')) {
+      if (!isValidProfileImage(body.userImage)) {
+        return NextResponse.json({ error: 'Profile image must be a valid HTTP(S) URL or a same-origin path under 2048 characters.' }, { status: 400 });
+      }
+      data.userImage = body.userImage === null ? null : body.userImage.trim();
+    }
     if (body.role && ['CUSTOMER', 'SELLER', 'ADMIN', 'GUEST'].includes(body.role)) data.role = body.role;
     if (body.status && ['ACTIVE', 'SUSPENDED', 'DELETED'].includes(body.status)) data.status = body.status;
 
