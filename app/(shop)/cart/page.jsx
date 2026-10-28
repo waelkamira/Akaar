@@ -37,7 +37,7 @@ export default function CartPage() {
 
   if (orderPlaced) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-neutral-950 via-orange-950/10 to-neutral-950 relative overflow-hidden mt-60 flex items-center justify-center p-4" dir="rtl">
+      <div className="min-h-screen bg-gradient-to-br from-neutral-950 via-orange-950/10 to-neutral-950 relative overflow-hidden  flex items-center justify-center p-4" dir="rtl">
         {/* Animated Background Elements */}
         <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
           <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-orange-600/20 rounded-full blur-[120px] animate-pulse" />
@@ -70,7 +70,7 @@ export default function CartPage() {
 
   if (!hasHydrated) {
     return (
-      <div className="min-h-screen bg-neutral-950 flex items-center justify-center mt-60" dir="rtl" aria-busy="true">
+      <div className="min-h-screen bg-neutral-950 flex items-center justify-center " dir="rtl" aria-busy="true">
         <div className="flex flex-col items-center gap-4">
           <div className="w-12 h-12 border-4 border-orange-600/30 border-t-orange-500 rounded-full animate-spin" />
           <p className="text-neutral-400 font-medium animate-pulse">جارٍ تحميل سلة التسوق...</p>
@@ -80,7 +80,7 @@ export default function CartPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-neutral-950 via-orange-950/10 to-neutral-950 relative overflow-hidden mt-60" dir="rtl">
+    <div className="min-h-screen bg-gradient-to-br from-neutral-950 via-orange-950/10 to-neutral-950 relative overflow-hidden " dir="rtl">
       {/* Animated Background Elements */}
       <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-orange-600/20 rounded-full blur-[120px] animate-pulse" />

@@ -1,0 +1,306 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String           @id @default(uuid())
+  userName        String?
+  email           String           @unique
+  googleId        String?          @unique
+  password        String?
+  roleId          String?
+  userImage       String?
+  favorites       Favorite[]
+  notifications   Notification[]
+  orders          Order[]
+  payments        Payment[]
+  recommendations Recommendation[]
+  reports         Report[]
+  reviews         Review[]
+  products        Product[]
+  role            Role?            @relation(fields: [roleId], references: [id])
+
+  @@index([userName])
+  @@index([email])
+  @@map("users")
+}
+
+model Product {
+  id              String                @id @default(uuid())
+  title           String
+  userId          String
+  userImage       String?
+  userName        String?
+  categoryId      Int                   @default(1)
+  categoryName    String
+  images          String[]
+  basePrice       Int?
+  adCategory      String?
+  city            String?
+  town            String?
+  phoneNumber     String?
+  lng             Float?
+  lat             Float?
+  link            String?               @default("")
+  details         Json?
+  description     String?
+  stockQuantity   Int?                  @default(1)
+  isDeleted       Boolean               @default(false)
+  deletedAt       DateTime?
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+  discounts       Discount[]
+  favorites       Favorite[]
+  inventory       Inventory[]
+  orders          Order[]
+  priceHistory    ProductPriceHistory[]
+  translations    ProductTranslation[]
+  recommendations Recommendation[]
+  reviews         Review[]
+  user            User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([categoryId])
+  @@index([basePrice])
+  @@index([city])
+  @@index([isDeleted])
+  @@index([createdAt])
+  @@map("products")
+}
+
+model Favorite {
+  id        String   @id @default(uuid())
+  userId    String
+  productId String
+  createdAt DateTime @default(now())
+  isDeleted Boolean  @default(false)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+}
+
+model ProductImage {
+  id        String  @id @default(uuid())
+  productId String
+  image1    String
+  image2    String
+  image3    String
+  image4    String
+  image5    String
+  isPrimary Boolean @default(false)
+}
+
+model Role {
+  id          String       @id @default(uuid())
+  name        String       @unique
+  users       User[]
+  permissions Permission[] @relation("PermissionToRole")
+}
+
+model Permission {
+  id    String @id @default(uuid())
+  name  String @unique
+  roles Role[] @relation("PermissionToRole")
+}
+
+model Category {
+  id          String  @id @default(uuid())
+  name        String  @unique
+  description String?
+
+  @@index([name])
+}
+
+model Country {
+  id        String     @id @default(uuid())
+  name      String     @unique
+  code      String     @unique
+  cities    City[]
+  suppliers Supplier[]
+
+  @@index([name])
+  @@index([code])
+}
+
+model City {
+  id        String     @id @default(uuid())
+  name      String     @unique
+  countryId String
+  country   Country    @relation(fields: [countryId], references: [id], onDelete: Cascade)
+  suppliers Supplier[]
+
+  @@index([name])
+}
+
+model Supplier {
+  id        String  @id @default(uuid())
+  name      String  @unique
+  email     String  @unique
+  phone     String?
+  address   String?
+  countryId String
+  cityId    String?
+  city      City?   @relation(fields: [cityId], references: [id])
+  country   Country @relation(fields: [countryId], references: [id], onDelete: Cascade)
+
+  @@index([name])
+  @@index([email])
+}
+
+model Inventory {
+  id          String  @id @default(uuid())
+  productId   String
+  quantity    Int
+  isAvailable Boolean @default(true)
+  product     Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model ProductTranslation {
+  id          String  @id @default(uuid())
+  productId   String
+  language    String
+  title       String
+  description String?
+  product     Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([productId, language])
+  @@index([language])
+  @@index([title])
+  @@index([description])
+}
+
+model ProductPriceHistory {
+  id        String   @id @default(uuid())
+  productId String
+  price     Int
+  changedAt DateTime @default(now())
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model Review {
+  id        String   @id @default(uuid())
+  userId    String
+  productId String
+  rating    Int
+  comment   String?
+  createdAt DateTime @default(now())
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Order {
+  id               String          @id @default(uuid())
+  userId           String
+  productId        String
+  discountId       String?
+  shippingMethodId String?
+  quantity         Int
+  totalPrice       Int
+  status           String
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  discount         Discount?       @relation(fields: [discountId], references: [id])
+  product          Product         @relation(fields: [productId], references: [id], onDelete: Cascade)
+  shippingMethod   ShippingMethod? @relation(fields: [shippingMethodId], references: [id])
+  user             User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  payments         Payment[]
+  returns          Return[]
+  shipping         Shipping[]
+
+  @@index([status])
+}
+
+model Payment {
+  id        String   @id @default(uuid())
+  orderId   String
+  userId    String
+  amount    Int
+  method    String
+  status    String
+  createdAt DateTime @default(now())
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([status])
+}
+
+model Discount {
+  id         String   @id @default(uuid())
+  productId  String
+  code       String   @unique
+  percentage Int
+  validFrom  DateTime
+  validTo    DateTime
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  orders     Order[]
+
+  @@index([code])
+}
+
+model Shipping {
+  id             String   @id @default(uuid())
+  orderId        String
+  status         String
+  trackingNumber String?
+  createdAt      DateTime @default(now())
+  order          Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([status])
+}
+
+model Return {
+  id           String   @id @default(uuid())
+  orderId      String
+  reason       String
+  status       String
+  refundAmount Float?
+  createdAt    DateTime @default(now())
+  order        Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([status])
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  type      String
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Report {
+  id        String   @id @default(uuid())
+  userId    String
+  type      String
+  data      Json
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Recommendation {
+  id        String  @id @default(uuid())
+  userId    String
+  productId String
+  score     Float
+  reason    String?
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ShippingMethod {
+  id     String  @id @default(uuid())
+  name   String
+  cost   Float
+  orders Order[]
+}
+
+
