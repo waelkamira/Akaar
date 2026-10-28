@@ -490,12 +490,12 @@ export default function EnhancedSearch() {
   return (
     <div className="w-full flex flex-col justify-center items-center gap-4 sm:p-0 z-10 relative ">
       {/* حاوية شريط البحث: تم تقليل الارتفاع على الهواتف من h-20 إلى h-14 وإعادته sm:h-20 */}
-      <div className="w-full border border-white/10 bg-[#211F1B]/95 backdrop-blur-xl rounded-2xl shadow-2xl shadow-black/20 flex justify-center items-center gap-2 min-h-14 sm:min-h-20 px-2 sm:px-3 py-2">
+      <div className="w-full border border-ak-line-strong bg-ak-surface/90 backdrop-blur-2xl rounded-2xl shadow-ak-panel flex justify-center items-center gap-2 min-h-14 sm:min-h-20 px-2 sm:px-3 py-2">
         {/* زر البحث: تم تقليل الارتفاع والخط على الشاشات الصغيرة h-8 والخط text-xs */}
         <button
           onClick={() => handleSearch(currentInputValue)}
           disabled={isSearching}
-          className="flex justify-center items-center bg-[#C99B70] text-[#171512] text-nowrap rounded-xl h-9 sm:h-11 px-3 sm:px-6 hover:bg-[#D9B18C] transition-all cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed text-xs sm:text-base"
+          className="flex justify-center items-center bg-ak-brand text-ak-ink text-nowrap rounded-xl h-9 sm:h-11 px-3 sm:px-6 shadow-ak-glow hover:brightness-105 transition-all cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed text-xs sm:text-base"
           aria-label="بحث"
         >
           {isSearching ? (
@@ -523,7 +523,7 @@ export default function EnhancedSearch() {
               onKeyDown={handleKeyDown}
               onFocus={handleInputFocus}
               placeholder="ابحث عن عقار، سيارة، أو أي منتج..."
-              className="flex-grow w-full rounded-xl h-9 sm:h-11 p-2 text-xs sm:text-base border border-white/10 bg-[#171512] text-[#F5F0E9] focus:outline-none focus:ring-2 focus:ring-[#C99B70]/40 placeholder:text-[11px] sm:placeholder:text-sm lg:placeholder:text-base placeholder:text-stone-500 pr-6 pl-6 sm:pr-8 sm:pl-8 text-right"
+              className="flex-grow w-full rounded-xl h-9 sm:h-11 p-2 text-xs sm:text-base border border-ak-line bg-ak-ink/70 text-ak-cream focus:outline-none focus:ring-2 focus:ring-ak-amber/40 placeholder:text-[11px] sm:placeholder:text-sm lg:placeholder:text-base placeholder:text-ak-quiet pr-6 pl-6 sm:pr-8 sm:pl-8 text-right"
               aria-autocomplete="list"
               aria-controls="search-suggestions"
               aria-expanded={showSuggestions}
@@ -534,7 +534,7 @@ export default function EnhancedSearch() {
             {currentInputValue && (
               <button
                 onClick={clearSearch}
-                className="absolute left-1.5 sm:left-2 top-1/2 -translate-y-1/2 text-stone-400 hover:text-[#D9B18C] transition-colors"
+                className="absolute left-1.5 sm:left-2 top-1/2 -translate-y-1/2 text-stone-400 hover:text-ak-honey transition-colors"
                 aria-label="مسح البحث"
               >
                 <ImCross className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5" />
@@ -552,20 +552,20 @@ export default function EnhancedSearch() {
           {showSuggestions && suggestions.length > 0 && (
             <div
               id="search-suggestions"
-              className="absolute z-50 w-full mt-2 bg-[#211F1B] border border-white/10 rounded-xl shadow-2xl max-h-60 overflow-y-auto text-xs sm:text-sm text-[#F5F0E9]"
+              className="absolute z-[2000] w-full mt-2 bg-ak-raised/95 border border-ak-line-strong rounded-xl shadow-ak-panel max-h-60 overflow-y-auto text-xs sm:text-sm text-ak-cream backdrop-blur-2xl"
               role="listbox"
             >
               {suggestions.map((suggestion, index) => (
                 <div
                   key={`${suggestion.text}-${index}`}
                   onClick={() => handleSuggestionClick(suggestion)}
-                  className="px-3 py-2.5 sm:px-4 sm:py-3 hover:bg-[#C99B70]/10 cursor-pointer text-right flex justify-between items-center transition-colors"
+                  className="px-3 py-2.5 sm:px-4 sm:py-3 hover:bg-ak-brand-soft cursor-pointer text-right flex justify-between items-center transition-colors"
                   role="option"
                   aria-selected="false"
                 >
                   <span>{suggestion.text}</span>
                   {suggestion.type === 'recent' && (
-                    <span className="text-[10px] sm:text-xs text-gray-400 whitespace-nowrap mr-2">
+                    <span className="text-[10px] sm:text-xs text-ak-muted whitespace-nowrap mr-2">
                       حديث
                     </span>
                   )}

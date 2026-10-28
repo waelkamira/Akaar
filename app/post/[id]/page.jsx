@@ -284,12 +284,12 @@ export default function Page() {
           className="bg-neutral-900/80 backdrop-blur-xl border border-orange-500/20 p-8 rounded-3xl text-center max-w-md w-full shadow-2xl"
         >
           <div className="text-5xl mb-4">⚠️</div>
-          <h2 className="text-2xl font-bold text-white mb-2">حدث خطأ</h2>
+          <h2 className="text-2xl font-bold text-ak-cream mb-2">حدث خطأ</h2>
           <p className="text-neutral-400 mb-6">{error || 'لم يتم العثور على الإعلان'}</p>
           <Button
             title="العودة للرئيسية"
             path="/"
-            style="w-full bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white font-bold py-3 px-6 rounded-xl transition-all shadow-lg shadow-orange-600/20"
+            style="w-full bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-ak-cream font-bold py-3 px-6 rounded-xl transition-all shadow-lg shadow-orange-600/20"
           />
         </motion.div>
       </div>
@@ -327,7 +327,7 @@ export default function Page() {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={handleShare}
-                  className="p-3 bg-neutral-800/80 hover:bg-neutral-700 border border-neutral-700 rounded-2xl transition-all text-neutral-300 hover:text-white backdrop-blur-xl"
+                  className="p-3 bg-neutral-800/80 hover:bg-neutral-700 border border-neutral-700 rounded-2xl transition-all text-neutral-300 hover:text-ak-cream backdrop-blur-xl"
                 >
                   {copied ? <FiCheck className="text-emerald-500" /> : <FaShareAlt className="text-lg" />}
                 </motion.button>
@@ -356,7 +356,7 @@ export default function Page() {
               <div className="absolute top-0 right-0 w-8 h-8 bg-neutral-950/20 rounded-full translate-x-1/2 -translate-y-1/2" />
               <div className="relative z-10">
                 <span className="text-sm text-orange-100 font-medium block mb-1">السعر</span>
-                <span className="text-4xl font-black text-white tracking-tight">
+                <span className="text-4xl font-black text-ak-cream tracking-tight">
                   {post.basePrice?.toLocaleString()}
                   <span className="text-lg font-bold mr-2">ل.س</span>
                 </span>
@@ -405,7 +405,7 @@ export default function Page() {
                   </div>
                   <div>
                     <h3 className="text-neutral-400 text-sm font-medium mb-1">الموقع</h3>
-                    <p className="text-white font-bold text-lg">{post.city}</p>
+                    <p className="text-ak-cream font-bold text-lg">{post.city}</p>
                     {post.town && <p className="text-neutral-400 text-sm">{post.town}</p>}
                   </div>
                 </div>
@@ -423,7 +423,7 @@ export default function Page() {
                   </div>
                   <div>
                     <h3 className="text-neutral-400 text-sm font-medium mb-1">تاريخ النشر</h3>
-                    <p className="text-white font-bold">{post.createdAt}</p>
+                    <p className="text-ak-cream font-bold">{post.createdAt}</p>
                   </div>
                 </div>
               </motion.div>
@@ -441,8 +441,8 @@ export default function Page() {
                   onClick={() => setActiveTab('details')}
                   className={`flex-1 py-3.5 px-6 font-bold text-sm rounded-2xl transition-all ${
                     activeTab === 'details'
-                      ? 'bg-gradient-to-r from-orange-600 to-amber-600 text-white shadow-lg shadow-orange-600/20'
-                      : 'text-neutral-400 hover:text-white hover:bg-neutral-800/50'
+                      ? 'bg-gradient-to-r from-orange-600 to-amber-600 text-ak-cream shadow-lg shadow-orange-600/20'
+                      : 'text-neutral-400 hover:text-ak-cream hover:bg-neutral-800/50'
                   }`}
                 >
                   التفاصيل
@@ -451,8 +451,8 @@ export default function Page() {
                   onClick={() => setActiveTab('description')}
                   className={`flex-1 py-3.5 px-6 font-bold text-sm rounded-2xl transition-all ${
                     activeTab === 'description'
-                      ? 'bg-gradient-to-r from-orange-600 to-amber-600 text-white shadow-lg shadow-orange-600/20'
-                      : 'text-neutral-400 hover:text-white hover:bg-neutral-800/50'
+                      ? 'bg-gradient-to-r from-orange-600 to-amber-600 text-ak-cream shadow-lg shadow-orange-600/20'
+                      : 'text-neutral-400 hover:text-ak-cream hover:bg-neutral-800/50'
                   }`}
                 >
                   الوصف
@@ -462,8 +462,8 @@ export default function Page() {
                     onClick={() => setActiveTab('map')}
                     className={`flex-1 py-3.5 px-6 font-bold text-sm rounded-2xl transition-all ${
                       activeTab === 'map'
-                        ? 'bg-gradient-to-r from-orange-600 to-amber-600 text-white shadow-lg shadow-orange-600/20'
-                        : 'text-neutral-400 hover:text-white hover:bg-neutral-800/50'
+                        ? 'bg-gradient-to-r from-orange-600 to-amber-600 text-ak-cream shadow-lg shadow-orange-600/20'
+                        : 'text-neutral-400 hover:text-ak-cream hover:bg-neutral-800/50'
                     }`}
                   >
                     الخريطة
@@ -504,7 +504,7 @@ export default function Page() {
                   <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="rounded-2xl overflow-hidden border border-neutral-700 h-96 relative">
                     <SyriaMap lng={post.lng} lat={post.lat} />
                     <div className="absolute top-4 right-4 bg-neutral-900/90 backdrop-blur-xl px-4 py-2 rounded-xl border border-neutral-700">
-                      <p className="text-white font-bold text-sm">{post.city}</p>
+                      <p className="text-ak-cream font-bold text-sm">{post.city}</p>
                     </div>
                   </motion.div>
                 )}
@@ -523,7 +523,7 @@ export default function Page() {
                   <div className="w-10 h-10 rounded-xl bg-red-500/20 flex items-center justify-center">
                     <span className="text-red-500 text-lg">▶</span>
                   </div>
-                  <h3 className="text-xl font-bold text-white">فيديو توضيحي</h3>
+                  <h3 className="text-xl font-bold text-ak-cream">فيديو توضيحي</h3>
                 </div>
                 <div className="aspect-video bg-black">
                   <iframe
@@ -557,7 +557,7 @@ export default function Page() {
                   </span>
                 </div>
                 
-                <h1 className="text-2xl sm:text-3xl font-black text-white leading-tight mb-6">
+                <h1 className="text-2xl sm:text-3xl font-black text-ak-cream leading-tight mb-6">
                   {post.title}
                 </h1>
 
@@ -567,7 +567,7 @@ export default function Page() {
                   {post?.phoneNumber && (
                     <a
                       href={`tel:${post.phoneNumber}`}
-                      className="flex items-center justify-center gap-3 w-full bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white font-bold py-4 px-6 rounded-2xl transition-all shadow-lg shadow-orange-600/30 hover:shadow-orange-600/50 group hover:scale-[1.02] active:scale-[0.98]"
+                      className="flex items-center justify-center gap-3 w-full bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-ak-cream font-bold py-4 px-6 rounded-2xl transition-all shadow-lg shadow-orange-600/30 hover:shadow-orange-600/50 group hover:scale-[1.02] active:scale-[0.98]"
                     >
                       <FaPhone className="group-hover:rotate-12 transition-transform" />
                       اتصل الآن
@@ -578,7 +578,7 @@ export default function Page() {
                     <button
                       type="button"
                       onClick={handleAddToCart}
-                      className="w-full rounded-2xl bg-neutral-800 hover:bg-neutral-700 px-6 py-4 font-bold text-white transition border border-neutral-700"
+                      className="w-full rounded-2xl bg-neutral-800 hover:bg-neutral-700 px-6 py-4 font-bold text-ak-cream transition border border-neutral-700"
                     >
                       أضف إلى السلة
                     </button>
@@ -587,7 +587,7 @@ export default function Page() {
                   <Button
                     title="العودة للرئيسية"
                     path="/"
-                    style="w-full bg-neutral-800/50 hover:bg-neutral-700/50 text-neutral-300 hover:text-white font-bold py-4 px-6 rounded-2xl transition-all border border-neutral-700"
+                    style="w-full bg-neutral-800/50 hover:bg-neutral-700/50 text-neutral-300 hover:text-ak-cream font-bold py-4 px-6 rounded-2xl transition-all border border-neutral-700"
                   />
                 </div>
               </div>
@@ -600,7 +600,7 @@ export default function Page() {
               transition={{ delay: 0.3 }}
               className="bg-neutral-900/50 backdrop-blur-xl rounded-3xl p-6 border border-neutral-800"
             >
-              <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+              <h3 className="text-lg font-bold text-ak-cream mb-4 flex items-center gap-2">
                 <span className="w-1.5 h-6 bg-gradient-to-b from-orange-500 to-amber-500 rounded-full" />
                 معلومات سريعة
               </h3>
@@ -610,21 +610,21 @@ export default function Page() {
                     <FaMapMarkerAlt className="text-orange-500" />
                     المدينة
                   </span>
-                  <span className="text-white font-bold">{post.city}</span>
+                  <span className="text-ak-cream font-bold">{post.city}</span>
                 </div>
                 <div className="flex justify-between items-center py-3 px-4 bg-neutral-800/50 rounded-xl border border-neutral-700/50">
                   <span className="text-neutral-400 flex items-center gap-2">
                     <FaBuilding className="text-amber-500" />
                     المنطقة
                   </span>
-                  <span className="text-white font-bold">{post.town || 'غير محدد'}</span>
+                  <span className="text-ak-cream font-bold">{post.town || 'غير محدد'}</span>
                 </div>
                 <div className="flex justify-between items-center py-3 px-4 bg-neutral-800/50 rounded-xl border border-neutral-700/50">
                   <span className="text-neutral-400 flex items-center gap-2">
                     <FaClock className="text-emerald-500" />
                     التاريخ
                   </span>
-                  <span className="text-white font-bold text-sm">{post.createdAt}</span>
+                  <span className="text-ak-cream font-bold text-sm">{post.createdAt}</span>
                 </div>
               </div>
             </motion.div>

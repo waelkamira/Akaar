@@ -49,17 +49,17 @@ function AdditionalFields({ item, category }) {
           className="flex gap-1"
         >
           <div className="flex items-center gap-2 transition-all ">
-            <span className="text-gray-500 whitespace-nowrap line-clamp-1">
+            <span className="text-ak-muted whitespace-nowrap line-clamp-1">
               {categoryFields[index]?.label || categoryFields[index]?.name}
             </span>
-            <span className="text-gray-900 font-medium ">
+            <span className="text-ak-cream font-medium ">
               {displayValue || '—'}
             </span>
           </div>
 
           {/* فاصل عمودي */}
           {/* {index < displayValues.length - 1 && (
-            <div className="w-1 h-1 rounded-full bg-gray-300" />
+            <div className="w-1 h-1 rounded-full bg-ak-elevated" />
           )} */}
         </motion.div>
       ))}

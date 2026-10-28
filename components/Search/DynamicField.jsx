@@ -41,7 +41,7 @@ export default function DynamicField({ field, value, onChange, onBlur }) {
         <select
           value={value?.toString() || ''}
           onChange={handleChange}
-          className="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
+          className="w-full p-2 border border-ak-line rounded-lg shadow-sm focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
         >
           <option value="">{field.placeholder || 'اختر...'}</option>
           {Object.entries(field.options).map(([optionValue, optionLabel]) => (
@@ -67,7 +67,7 @@ export default function DynamicField({ field, value, onChange, onBlur }) {
         onChange={handleChange}
         onBlur={handleBlur}
         placeholder={field.placeholder}
-        className="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
+        className="w-full p-2 border border-ak-line rounded-lg shadow-sm focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
       />
     </div>
   );

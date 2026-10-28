@@ -14,7 +14,7 @@ export default function SideBar({ Button, path }) {
     <div className="relative xl:hidden flex justify-between items-center w-full gap-2 bg-three p-2 border-b-[5px] border-primary-500 ">
       <div>
         <TfiMenuAlt
-          className="text-[30px] lg:text-5xl text-white cursor-pointer "
+          className="text-[30px] lg:text-5xl text-ak-cream cursor-pointer "
           onClick={() => {
             setIsOpen(!isOpen);
           }}
@@ -26,7 +26,7 @@ export default function SideBar({ Button, path }) {
       {Button && (
         <button
           onClick={() => router.push(`/Cars/newPost`)}
-          className="relative text-sm lg:text-xl bg-white h-9 lg:h-11 w-3/4 border-r-[30%] shadow-lg border-primary-500 rounded hover:scale-[101%]"
+          className="relative text-sm lg:text-xl bg-ak-surface h-9 lg:h-11 w-3/4 border-r-[30%] shadow-lg border-primary-500 rounded hover:scale-[101%]"
         >
           إعلان جديد
           <span className="absolute left-3/4 top-1/4 mx-auto my-auto">

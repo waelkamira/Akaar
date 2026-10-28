@@ -21,7 +21,7 @@ export default function SearchCategoryRedirect() {
   }, [params, router]);
 
   return (
-    <main dir="rtl" className="flex min-h-[50vh] items-center justify-center bg-[#141311] px-4 text-[#F5F0E9]" aria-live="polite">
+    <main dir="rtl" className="flex min-h-[50vh] items-center justify-center bg-ak-ink px-4 text-ak-cream" aria-live="polite">
       <p className="text-sm text-stone-400">جارٍ فتح نتائج الفئة...</p>
     </main>
   );

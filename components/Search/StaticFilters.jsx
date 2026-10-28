@@ -98,13 +98,13 @@
 //       initial={{ opacity: 0, y: 20 }}
 //       animate={{ opacity: 1, y: 0 }}
 //       transition={{ duration: 0.3 }}
-//       className="bg-white shadow-sm p-4 space-y-6 border border-gray-100 rounded-lg"
+//       className="bg-ak-surface shadow-sm p-4 space-y-6 border border-ak-line rounded-lg"
 //     >
 //       <div className="space-y-6">
 //         <div>
 //           <label
 //             htmlFor="search-sort"
-//             className="mb-2 block text-sm font-medium text-gray-700"
+//             className="mb-2 block text-sm font-medium text-ak-cream"
 //           >
 //             ترتيب النتائج
 //           </label>
@@ -112,7 +112,7 @@
 //             id="search-sort"
 //             value={filters.sortBy || 'newest'}
 //             onChange={(event) => setFilter('sortBy', event.target.value)}
-//             className="w-full rounded-lg border-gray-200 bg-gray-50 px-3 py-2 shadow-sm"
+//             className="w-full rounded-lg border-ak-line bg-ak-canvas px-3 py-2 shadow-sm"
 //           >
 //             <option value="newest">الأحدث</option>
 //             <option value="cheapest">الأقل سعرًا</option>
@@ -123,7 +123,7 @@
 //         <div>
 //           <label
 //             htmlFor="search-rating"
-//             className="mb-2 block text-sm font-medium text-gray-700"
+//             className="mb-2 block text-sm font-medium text-ak-cream"
 //           >
 //             متوسط التقييم الأدنى
 //           </label>
@@ -131,7 +131,7 @@
 //             id="search-rating"
 //             value={filters.rating || ''}
 //             onChange={(event) => setFilter('rating', event.target.value)}
-//             className="w-full rounded-lg border-gray-200 bg-gray-50 px-3 py-2 shadow-sm"
+//             className="w-full rounded-lg border-ak-line bg-ak-canvas px-3 py-2 shadow-sm"
 //           >
 //             <option value="">كل التقييمات</option>
 //             {[5, 4, 3, 2, 1].map((rating) => (
@@ -145,7 +145,7 @@
 //         <div>
 //           <label
 //             htmlFor="search-brand"
-//             className="mb-2 block text-sm font-medium text-gray-700"
+//             className="mb-2 block text-sm font-medium text-ak-cream"
 //           >
 //             الماركة
 //           </label>
@@ -154,7 +154,7 @@
 //             type="search"
 //             value={filters.brand || ''}
 //             onChange={(event) => setFilter('brand', event.target.value)}
-//             className="w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm"
+//             className="w-full rounded-lg border border-ak-line bg-ak-canvas px-3 py-2 text-sm"
 //             placeholder="ابحث باسم الماركة"
 //           />
 //         </div>
@@ -162,7 +162,7 @@
 //         <div>
 //           <label
 //             htmlFor="search-subcategory"
-//             className="mb-2 block text-sm font-medium text-gray-700"
+//             className="mb-2 block text-sm font-medium text-ak-cream"
 //           >
 //             الفئة الفرعية
 //           </label>
@@ -171,7 +171,7 @@
 //             type="search"
 //             value={filters.subCategory || ''}
 //             onChange={(event) => setFilter('subCategory', event.target.value)}
-//             className="w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm"
+//             className="w-full rounded-lg border border-ak-line bg-ak-canvas px-3 py-2 text-sm"
 //             placeholder="ابحث بالفئة الفرعية"
 //           />
 //         </div>
@@ -179,7 +179,7 @@
 //         <div>
 //           <label
 //             htmlFor="search-vendor"
-//             className="mb-2 block text-sm font-medium text-gray-700"
+//             className="mb-2 block text-sm font-medium text-ak-cream"
 //           >
 //             معرّف البائع
 //           </label>
@@ -188,7 +188,7 @@
 //             type="search"
 //             value={filters.vendorId || ''}
 //             onChange={(event) => setFilter('vendorId', event.target.value)}
-//             className="w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm"
+//             className="w-full rounded-lg border border-ak-line bg-ak-canvas px-3 py-2 text-sm"
 //             placeholder="معرّف حساب البائع"
 //           />
 //         </div>
@@ -199,7 +199,7 @@
 //           animate={{ opacity: 1 }}
 //           transition={{ duration: 0.3, delay: 0.1 }}
 //         >
-//           <label className="block text-sm font-medium text-gray-700 mb-2">
+//           <label className="block text-sm font-medium text-ak-cream mb-2">
 //             <span className="flex items-center gap-1">
 //               <svg
 //                 xmlns="http://www.w3.org/2000/svg"
@@ -219,7 +219,7 @@
 //           <select
 //             value={filters.city || ''}
 //             onChange={handleCityChange}
-//             className="w-full rounded-lg border-gray-200 shadow-sm focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all duration-300 py-2 px-3 bg-gray-50 hover:bg-gray-100"
+//             className="w-full rounded-lg border-ak-line shadow-sm focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all duration-300 py-2 px-3 bg-ak-canvas hover:bg-ak-brand-soft"
 //           >
 //             <option value="">اختر المدينة</option>
 //             {staticFilters.cities.map((city) => (
@@ -237,7 +237,7 @@
 //             animate={{ opacity: 1 }}
 //             transition={{ duration: 0.3, delay: 0.2 }}
 //           >
-//             <label className="block text-sm font-medium text-gray-700 mb-2">
+//             <label className="block text-sm font-medium text-ak-cream mb-2">
 //               <span className="flex items-center gap-1">
 //                 <svg
 //                   xmlns="http://www.w3.org/2000/svg"
@@ -257,7 +257,7 @@
 //             <select
 //               value={filters.town || ''}
 //               onChange={handleTownChange}
-//               className="w-full rounded-lg border-gray-200 shadow-sm focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all duration-300 py-2 px-3 bg-gray-50 hover:bg-gray-100"
+//               className="w-full rounded-lg border-ak-line shadow-sm focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all duration-300 py-2 px-3 bg-ak-canvas hover:bg-ak-brand-soft"
 //             >
 //               <option value="">اختر المنطقة</option>
 //               {availableTowns.map((town) => (
@@ -275,7 +275,7 @@
 //           animate={{ opacity: 1 }}
 //           transition={{ duration: 0.3, delay: 0.3 }}
 //         >
-//           <label className="block text-sm font-medium text-gray-700 mb-3">
+//           <label className="block text-sm font-medium text-ak-cream mb-3">
 //             <span className="flex items-center gap-1">
 //               <svg
 //                 xmlns="http://www.w3.org/2000/svg"
@@ -297,7 +297,7 @@
 //           {/* Price Inputs فقط - بدون slider */}
 //           <div className="flex flex-col gap-3">
 //             <div className="flex-1">
-//               <label className="text-xs text-gray-500 mb-1 block">
+//               <label className="text-xs text-ak-muted mb-1 block">
 //                 أدنى سعر
 //               </label>
 //               <input
@@ -307,12 +307,12 @@
 //                 onChange={(e) => handlePriceInputChange('min', e.target.value)}
 //                 onBlur={handlePriceInputBlur}
 //                 onKeyPress={handleKeyPress}
-//                 className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
+//                 className="w-full rounded-lg border border-ak-line px-3 py-2 text-sm focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
 //                 placeholder="0"
 //               />
 //             </div>
 //             <div className="flex-1">
-//               <label className="text-xs text-gray-500 mb-1 block">
+//               <label className="text-xs text-ak-muted mb-1 block">
 //                 أعلى سعر
 //               </label>
 //               <input
@@ -322,7 +322,7 @@
 //                 onChange={(e) => handlePriceInputChange('max', e.target.value)}
 //                 onBlur={handlePriceInputBlur}
 //                 onKeyPress={handleKeyPress}
-//                 className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
+//                 className="w-full rounded-lg border border-ak-line px-3 py-2 text-sm focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
 //                 placeholder="0"
 //               />
 //             </div>
@@ -435,7 +435,7 @@ export default function StaticFilters() {
   };
 
   // ✅ فئة موحدة لحقول الإدخال والقوائم لضمان التناسق
-  const inputClass = "w-full rounded-xl border border-white/10 bg-[#171512] px-4 py-2.5 text-sm text-[#F5F0E9] placeholder-stone-400 focus:border-[#C99B70] focus:ring-2 focus:ring-[#C99B70]/20 focus:bg-[#171512] transition-all duration-300 outline-none";
+  const inputClass = "w-full rounded-xl border border-ak-line bg-ak-canvas px-4 py-2.5 text-sm text-ak-cream placeholder-stone-400 focus:border-ak-amber focus:ring-2 focus:ring-ak-amber/20 focus:bg-ak-canvas transition-all duration-300 outline-none";
   const labelClass = "flex items-center gap-2 text-sm font-medium text-stone-300 mb-2";
 
   return (
@@ -443,7 +443,7 @@ export default function StaticFilters() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="bg-[#211F1B]/90 backdrop-blur-xl border border-white/10 rounded-3xl p-6 shadow-xl shadow-black/20"
+      className="bg-ak-surface/90 backdrop-blur-xl border border-ak-line rounded-3xl p-6 shadow-xl shadow-black/20"
       dir="rtl"
     >
       <div className="space-y-6">
@@ -451,7 +451,7 @@ export default function StaticFilters() {
         {/* ==================== ترتيب النتائج ==================== */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }}>
           <label htmlFor="search-sort" className={labelClass}>
-            <FaSortAmountDown className="text-[#C99B70]" />
+            <FaSortAmountDown className="text-ak-amber" />
             ترتيب النتائج
           </label>
           <select
@@ -469,7 +469,7 @@ export default function StaticFilters() {
         {/* ==================== التقييم ==================== */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.15 }}>
           <label htmlFor="search-rating" className={labelClass}>
-            <FaStar className="text-[#C99B70]" />
+            <FaStar className="text-ak-amber" />
             متوسط التقييم الأدنى
           </label>
           <select
@@ -491,7 +491,7 @@ export default function StaticFilters() {
         <div className="space-y-5">
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
             <label htmlFor="search-brand" className={labelClass}>
-              <FaTag className="text-[#C99B70]" />
+              <FaTag className="text-ak-amber" />
               الماركة
             </label>
             <input
@@ -506,7 +506,7 @@ export default function StaticFilters() {
 
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.25 }}>
             <label htmlFor="search-subcategory" className={labelClass}>
-              <FaLayerGroup className="text-[#C99B70]" />
+              <FaLayerGroup className="text-ak-amber" />
               الفئة الفرعية
             </label>
             <input
@@ -521,7 +521,7 @@ export default function StaticFilters() {
 
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
             <label htmlFor="search-vendor" className={labelClass}>
-              <FaStore className="text-[#C99B70]" />
+              <FaStore className="text-ak-amber" />
               معرّف البائع
             </label>
             <input
@@ -535,12 +535,12 @@ export default function StaticFilters() {
           </motion.div>
         </div>
 
-        <div className="border-t border-white/10/60 my-2" />
+        <div className="border-t border-ak-line/60 my-2" />
 
         {/* ==================== الموقع (المدينة والمنطقة) ==================== */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.35 }}>
           <label className={labelClass}>
-            <FaMapMarkerAlt className="text-[#C99B70]" />
+            <FaMapMarkerAlt className="text-ak-amber" />
             المدينة
           </label>
           <select
@@ -565,7 +565,7 @@ export default function StaticFilters() {
             transition={{ duration: 0.3 }}
           >
             <label className={labelClass}>
-              <FaMapMarkerAlt className="text-[#C99B70]/70" />
+              <FaMapMarkerAlt className="text-ak-amber/70" />
               المنطقة
             </label>
             <select
@@ -588,7 +588,7 @@ export default function StaticFilters() {
         {/* ==================== نطاق السعر ==================== */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}>
           <label className={labelClass}>
-            <FaMoneyBillWave className="text-[#C99B70]" />
+            <FaMoneyBillWave className="text-ak-amber" />
             نطاق السعر
           </label>
 

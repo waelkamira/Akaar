@@ -18,8 +18,6 @@ export default function SideBarMenu() {
   const session = useSession();
 
 
-  const secondaryColor = '#F5F0E9';
-
   // if (session?.status === 'unauthenticated') {
   //   return;
   // }
@@ -33,7 +31,7 @@ export default function SideBarMenu() {
           aria-label={isOpen ? 'إغلاق القائمة' : 'فتح القائمة'}
           aria-expanded={isOpen}
           onClick={() => setIsOpen((open) => !open)}
-          className="z-50 flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-[#211F1B] text-2xl text-[#D9B18C] transition hover:scale-105 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C99B70]"
+          className="z-50 flex h-11 w-11 items-center justify-center rounded-xl border border-ak-line-strong bg-ak-surface text-2xl text-ak-honey shadow-ak-card transition hover:scale-105 hover:text-ak-cream focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ak-amber"
         >
           <TfiMenuAlt aria-hidden="true" />
         </button>
@@ -46,14 +44,13 @@ export default function SideBarMenu() {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', stiffness: 120, damping: 15 }}
-              className="fixed right-0 top-0 z-50 flex h-screen w-72 flex-col items-center overflow-y-auto border-l border-white/10 bg-[#171512] p-6 text-[#F5F0E9] shadow-2xl backdrop-blur-xl"
-              style={{ color: secondaryColor }}
+              className="fixed right-0 top-0 z-50 flex h-screen w-72 flex-col items-center overflow-y-auto border-l border-ak-line-strong bg-ak-ink/95 p-6 text-ak-cream shadow-ak-panel backdrop-blur-2xl"
             >
               {/* زر الإغلاق */}
               <div className="w-full flex justify-end">
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="text-2xl font-bold text-stone-300 transition hover:text-[#D9B18C]"
+                  className="text-2xl font-bold text-ak-muted transition hover:text-ak-honey"
                 >
                   <IoCloseOutline />
                 </button>
@@ -67,17 +64,23 @@ export default function SideBarMenu() {
                 )}
 
                 {session?.status === 'authenticated' && session?.data?.user?.role === 'ADMIN' && (
-                  <Button path={'/users'} title={'المستخدمين'} />
+                  <>
+                    <Button path={'/admin/dashboard'} title={'لوحة الإدارة'} />
+                    <Button path={'/users'} title={'المستخدمين'} />
+                  </>
+                )}
+                {session?.status === 'authenticated' && (
+                  <Button path={'/seller/dashboard'} title={'متجري ولوحة البائع'} />
                 )}
                 {/* User Profile Section */}
 
                 <Link href={'/profile'}>
                   <motion.div
-                    className="flex flex-col items-center justify-center gap-2 rounded-full transition-colors"
+                    className="flex flex-col items-center justify-center gap-2 rounded-2xl border border-ak-line bg-ak-surface/60 p-4 transition-colors"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
-                    <div className="relative size-24 overflow-hidden rounded-full border-2 border-white/20">
+                    <div className="relative size-24 overflow-hidden rounded-full border-2 border-ak-line-strong/20">
                       {!session?.data?.user?.image ? (
                         <LoadingPhoto />
                       ) : (
@@ -90,7 +93,7 @@ export default function SideBarMenu() {
                         />
                       )}
                     </div>
-                    <h1 className="text-white">
+                    <h1 className="text-ak-cream">
                       {session?.data?.user?.name || 'مستخدم'}
                     </h1>
                   </motion.div>
@@ -124,7 +127,7 @@ export default function SideBarMenu() {
                         setIsOpen(false);
                         signOut({ callbackUrl: '/' });
                       }}
-                      className="my-2 flex max-h-12 w-full items-center justify-between rounded-full border border-white/20 bg-transparent p-2 text-nowrap text-white shadow-lg transition-all duration-300 hover:scale-[102%] hover:shadow-lg sm:text-lg"
+                      className="my-2 flex max-h-12 w-full items-center justify-between rounded-xl border border-ak-line-strong bg-ak-surface/60 p-2 text-nowrap text-ak-cream shadow-ak-card transition-all duration-300 hover:border-ak-amber/40 hover:bg-ak-brand-soft sm:text-lg"
                     >
                       <FaSignOutAlt className="mx-2" />
                       <span className="w-full text-center lg:text-base">
@@ -135,7 +138,7 @@ export default function SideBarMenu() {
                     <Link
                       href="/login"
                       onClick={() => setIsOpen(false)}
-                      className="my-2 flex max-h-12 w-full items-center justify-between rounded-full border border-white/20 bg-transparent p-2 text-nowrap text-white shadow-lg transition-all duration-300 hover:scale-[102%] hover:shadow-lg sm:text-lg"
+                      className="my-2 flex max-h-12 w-full items-center justify-between rounded-xl border border-ak-line-strong bg-ak-surface/60 p-2 text-nowrap text-ak-cream shadow-ak-card transition-all duration-300 hover:border-ak-amber/40 hover:bg-ak-brand-soft sm:text-lg"
                     >
                       <FaSignInAlt className="mx-2" />
                       <span className="w-full text-center lg:text-base">
@@ -147,8 +150,7 @@ export default function SideBarMenu() {
               </div>
               {/* اختيار الفئات */}
               <h1
-                className="mt-8 text-lg border-b pb-2 w-full text-center"
-                style={{ color: primaryColor }}
+                className="mt-8 w-full border-b border-ak-line pb-2 text-center text-lg text-ak-honey"
               >
                 اختر فئة:
               </h1>
@@ -164,9 +166,9 @@ export default function SideBarMenu() {
                   >
                     <Link
                       href={category?.path}
-                      className="flex items-center justify-center gap-2 p-2 rounded-full border bg-gray-100 hover:bg-blue-100 hover:text-gray-700 transition-all duration-300"
+                      className="flex items-center justify-center gap-2 rounded-xl border border-ak-line bg-ak-surface/70 p-3 text-ak-cream transition-all duration-300 hover:border-ak-amber/40 hover:bg-ak-brand-soft"
                     >
-                      <span className="text-lg sm:text-xl text-gray-500">
+                      <span className="text-lg text-ak-honey sm:text-xl">
                         {category?.icon}
                       </span>
                       <span className="text-sm font-medium">
@@ -184,7 +186,7 @@ export default function SideBarMenu() {
                   onClick={() => setIsOpen(false)}
                   emoji={<IoCloseOutline />}
                   style={' '}
-                  className="bg-red-500 hover:bg-red-600 text-white w-full min-w-[200px]" // هنا نحدد عرض زر الإغلاق
+                  className="bg-red-500 hover:bg-red-600 text-ak-cream w-full min-w-[200px]" // هنا نحدد عرض زر الإغلاق
                 />
               </div>
             </motion.div>
@@ -197,7 +199,7 @@ export default function SideBarMenu() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40 h-screen top-0"
+          className="fixed inset-0 top-0 z-40 h-screen bg-ak-ink/65 backdrop-blur-sm"
           onClick={() => setIsOpen(false)}
         />
       )}

@@ -23,10 +23,13 @@ export async function GET() {
 
     const user = await prisma.user.findUnique({
       where: { id: authenticatedUser.id },
-      select: publicUserSelect,
+      select: { ...publicUserSelect, password: true },
     });
     if (!user) return NextResponse.json({ error: 'User not found' }, { status: 404 });
-    return NextResponse.json({ ...user, isAdmin: user.role === 'ADMIN' });
+    const { password, ...safeUser } = user;
+    return NextResponse.json({ ...safeUser, hasPassword: Boolean(password), isAdmin: user.role === 'ADMIN' }, {
+      headers: { 'Cache-Control': 'private, no-store' },
+    });
   } catch (error) {
     console.error('Unable to fetch current user:', error);
     return NextResponse.json({ error: 'Unable to fetch user.' }, { status: 500 });

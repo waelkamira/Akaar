@@ -123,7 +123,7 @@
 //   return (
 //     <div className="flex flex-col justify-center items-center w-full px-2 sm:px-8 h-full my-8">
 //       {/* الصورة الكبيرة في الأعلى */}
-//       <div className="flex justify-center items-center relative w-full min-h-72 lg:h-[500px] border border-gray-300 rounded-lg mb-4 bg-white">
+//       <div className="flex justify-center items-center relative w-full min-h-72 lg:h-[500px] border border-ak-line rounded-lg mb-4 bg-ak-surface">
 //         {isLoading ? (
 //           <LoadingPhoto />
 //         ) : filteredImages[0] ? (
@@ -141,13 +141,13 @@
 //             </Link>
 //             <label
 //               htmlFor="file-upload"
-//               className="absolute bottom-2 right-2 bg-black text-white bg-opacity-50 p-2 rounded-full cursor-pointer"
+//               className="absolute bottom-2 right-2 bg-black text-ak-cream bg-opacity-50 p-2 rounded-full cursor-pointer"
 //             >
 //               <MdOutlineAddPhotoAlternate className="text-xl" />
 //             </label>
 //             <button
 //               onClick={() => handleRemoveImage(0)}
-//               className="absolute top-2 right-2 bg-black text-white bg-opacity-50 p-2 rounded-full cursor-pointer"
+//               className="absolute top-2 right-2 bg-black text-ak-cream bg-opacity-50 p-2 rounded-full cursor-pointer"
 //             >
 //               <MdClose className="text-xl" />
 //             </button>
@@ -155,7 +155,7 @@
 //         ) : (
 //           <label
 //             htmlFor="file-upload"
-//             className="flex flex-col items-center justify-center h-full cursor-pointer bg-white"
+//             className="flex flex-col items-center justify-center h-full cursor-pointer bg-ak-surface"
 //           >
 //             <MdOutlineAddPhotoAlternate className="text-primary-500 text-3xl" />
 //             <h1 className="text-sm sm:text-lg">أضف صورة رئيسية</h1>
@@ -168,7 +168,7 @@
 //         {Array.from({ length: 4 }).map((_, index) => (
 //           <div
 //             key={index}
-//             className="relative size-16 sm:size-32 border border-gray-300 rounded-lg flex justify-center items-center bg-white"
+//             className="relative size-16 sm:size-32 border border-ak-line rounded-lg flex justify-center items-center bg-ak-surface"
 //           >
 //             {isLoading ? (
 //               <LoadingPhoto />
@@ -185,13 +185,13 @@
 //                 />
 //                 <label
 //                   htmlFor="file-upload"
-//                   className="absolute bottom-2 right-2 bg-black text-white bg-opacity-50 p-2 rounded-full cursor-pointer"
+//                   className="absolute bottom-2 right-2 bg-black text-ak-cream bg-opacity-50 p-2 rounded-full cursor-pointer"
 //                 >
 //                   <MdOutlineAddPhotoAlternate className="text-xl" />
 //                 </label>
 //                 <button
 //                   onClick={() => handleRemoveImage(index + 1)}
-//                   className="absolute top-2 right-2 bg-black text-white bg-opacity-50 p-2 rounded-full cursor-pointer"
+//                   className="absolute top-2 right-2 bg-black text-ak-cream bg-opacity-50 p-2 rounded-full cursor-pointer"
 //                 >
 //                   <MdClose className="text-xl" />
 //                 </button>
@@ -241,7 +241,7 @@ const GlassUploadLoader = ({ current, total, fileName }) => {
   if (typeof window === 'undefined') return null;
 
   return createPortal(
-    <div className="fixed top-24 left-1/2 -translate-x-1/2 z-[9999] flex items-center gap-4 px-6 py-4 rounded-2xl bg-white/90 backdrop-blur-2xl border border-orange-200/60 shadow-2xl shadow-orange-500/20 animate-in fade-in slide-in-from-top-4 duration-500">
+    <div className="fixed top-24 left-1/2 -translate-x-1/2 z-[9999] flex items-center gap-4 px-6 py-4 rounded-2xl bg-ak-surface/90 backdrop-blur-2xl border border-orange-200/60 shadow-2xl shadow-orange-500/20 animate-in fade-in slide-in-from-top-4 duration-500">
       <div className="relative w-12 h-12 flex items-center justify-center">
         {/* الحلقة الخلفية */}
         <svg
@@ -273,11 +273,11 @@ const GlassUploadLoader = ({ current, total, fileName }) => {
         </span>
       </div>
       <div className="flex flex-col">
-        <span className="text-sm font-bold text-gray-800">
+        <span className="text-sm font-bold text-ak-cream">
           جاري رفع الصورة <span className="text-orange-600">{current}</span> من{' '}
-          <span className="text-gray-500">{total}</span>
+          <span className="text-ak-muted">{total}</span>
         </span>
-        <span className="text-xs text-gray-500 mt-1 truncate max-w-[200px] font-medium">
+        <span className="text-xs text-ak-muted mt-1 truncate max-w-[200px] font-medium">
           {fileName}
         </span>
       </div>
@@ -470,7 +470,7 @@ export default function UploadingAndDisplayingImage({ images = [] }) {
       )}
 
       {/* 🖼️ الصورة الكبيرة الرئيسية */}
-      <div className="relative w-full aspect-[16/9] sm:aspect-[2/1] rounded-2xl overflow-hidden shadow-xl shadow-gray-200/50 border border-gray-100 bg-gray-50 group">
+      <div className="relative w-full aspect-[16/9] sm:aspect-[2/1] rounded-2xl overflow-hidden shadow-xl shadow-black/25/50 border border-ak-line bg-ak-canvas group">
         {filteredImages[0] ? (
           <>
             <Image
@@ -486,7 +486,7 @@ export default function UploadingAndDisplayingImage({ images = [] }) {
 
             <label
               htmlFor="file-upload"
-              className="absolute bottom-4 right-4 bg-white/20 backdrop-blur-md text-white border border-white/30 p-3 rounded-full cursor-pointer shadow-lg hover:bg-orange-500 hover:border-orange-500 hover:scale-110 transition-all duration-300 z-20"
+              className="absolute bottom-4 right-4 bg-ak-surface/20 backdrop-blur-md text-ak-cream border border-ak-line-strong/30 p-3 rounded-full cursor-pointer shadow-lg hover:bg-orange-500 hover:border-orange-500 hover:scale-110 transition-all duration-300 z-20"
               title="إضافة صورة"
             >
               <MdOutlineAddPhotoAlternate className="text-xl" />
@@ -494,7 +494,7 @@ export default function UploadingAndDisplayingImage({ images = [] }) {
 
             <button
               onClick={() => handleRemoveImage(filteredImages[0])}
-              className="absolute top-4 right-4 bg-white/20 backdrop-blur-md text-white border border-white/30 p-3 rounded-full cursor-pointer shadow-lg hover:bg-rose-500 hover:border-rose-500 hover:scale-110 transition-all duration-300 z-20"
+              className="absolute top-4 right-4 bg-ak-surface/20 backdrop-blur-md text-ak-cream border border-ak-line-strong/30 p-3 rounded-full cursor-pointer shadow-lg hover:bg-rose-500 hover:border-rose-500 hover:scale-110 transition-all duration-300 z-20"
               title="حذف الصورة"
             >
               <MdClose className="text-xl" />
@@ -505,13 +505,13 @@ export default function UploadingAndDisplayingImage({ images = [] }) {
             htmlFor="file-upload"
             className="absolute inset-0 flex flex-col items-center justify-center cursor-pointer border-2 border-dashed border-orange-200 rounded-2xl bg-orange-50/30 hover:bg-orange-100/50 hover:border-orange-400 transition-all duration-300 group"
           >
-            <div className="bg-white p-4 rounded-full mb-3 shadow-sm group-hover:scale-110 group-hover:shadow-md transition-all duration-300">
+            <div className="bg-ak-surface p-4 rounded-full mb-3 shadow-sm group-hover:scale-110 group-hover:shadow-md transition-all duration-300">
               <MdCloudUpload className="text-orange-500 text-4xl" />
             </div>
-            <h1 className="text-gray-700 font-bold text-lg">
+            <h1 className="text-ak-cream font-bold text-lg">
               اضغط لإضافة الصورة الرئيسية
             </h1>
-            <p className="text-gray-500 text-sm mt-1">PNG, JPG, WEBP حتى 5MB</p>
+            <p className="text-ak-muted text-sm mt-1">PNG, JPG, WEBP حتى 5MB</p>
           </label>
         )}
       </div>
@@ -524,7 +524,7 @@ export default function UploadingAndDisplayingImage({ images = [] }) {
           return (
             <div
               key={index}
-              className="relative aspect-square rounded-xl overflow-hidden border border-gray-200 bg-gray-50 shadow-sm group hover:shadow-lg hover:border-orange-200 transition-all duration-300"
+              className="relative aspect-square rounded-xl overflow-hidden border border-ak-line bg-ak-canvas shadow-sm group hover:shadow-lg hover:border-orange-200 transition-all duration-300"
             >
               {imgUrl ? (
                 <>
@@ -540,14 +540,14 @@ export default function UploadingAndDisplayingImage({ images = [] }) {
 
                   <label
                     htmlFor="file-upload"
-                    className="absolute bottom-2 right-2 bg-white/30 backdrop-blur-md text-white border border-white/40 p-1.5 rounded-full cursor-pointer opacity-0 group-hover:opacity-100 hover:bg-orange-500 hover:border-orange-500 transition-all duration-300"
+                    className="absolute bottom-2 right-2 bg-ak-surface/30 backdrop-blur-md text-ak-cream border border-ak-line-strong/40 p-1.5 rounded-full cursor-pointer opacity-0 group-hover:opacity-100 hover:bg-orange-500 hover:border-orange-500 transition-all duration-300"
                   >
                     <MdOutlineAddPhotoAlternate className="text-sm" />
                   </label>
 
                   <button
                     onClick={() => handleRemoveImage(imgUrl)}
-                    className="absolute top-2 right-2 bg-white/30 backdrop-blur-md text-white border border-white/40 p-1.5 rounded-full cursor-pointer opacity-0 group-hover:opacity-100 hover:bg-rose-500 hover:border-rose-500 transition-all duration-300"
+                    className="absolute top-2 right-2 bg-ak-surface/30 backdrop-blur-md text-ak-cream border border-ak-line-strong/40 p-1.5 rounded-full cursor-pointer opacity-0 group-hover:opacity-100 hover:bg-rose-500 hover:border-rose-500 transition-all duration-300"
                   >
                     <MdClose className="text-sm" />
                   </button>
@@ -555,10 +555,10 @@ export default function UploadingAndDisplayingImage({ images = [] }) {
               ) : (
                 <label
                   htmlFor="file-upload"
-                  className="absolute inset-0 flex flex-col items-center justify-center cursor-pointer border-2 border-dashed border-gray-200 rounded-xl hover:border-orange-300 hover:bg-orange-50/40 transition-all duration-300"
+                  className="absolute inset-0 flex flex-col items-center justify-center cursor-pointer border-2 border-dashed border-ak-line rounded-xl hover:border-orange-300 hover:bg-orange-50/40 transition-all duration-300"
                 >
-                  <MdOutlineAddPhotoAlternate className="text-gray-400 text-2xl mb-1 group-hover:text-orange-500 transition-colors duration-300" />
-                  <span className="text-[10px] sm:text-xs text-gray-500 font-semibold">
+                  <MdOutlineAddPhotoAlternate className="text-ak-muted text-2xl mb-1 group-hover:text-orange-500 transition-colors duration-300" />
+                  <span className="text-[10px] sm:text-xs text-ak-muted font-semibold">
                     إضافة
                   </span>
                 </label>

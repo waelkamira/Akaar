@@ -7,13 +7,14 @@ import ImageComponent from './ImageComponent';
 import FavoriteButton from './FavoriteButton';
 import { formatDistanceToNow } from 'date-fns';
 import { FaArrowLeft, FaMapMarkerAlt, FaClock, FaTag } from 'react-icons/fa';
-import { WiDaySunny } from 'react-icons/wi';
 
-const SmallCard = React.memo(function SmallCard({
-  item,
-  category,
-  priority = false,
-}) {
+const SmallCard = React.memo(
+  /** @param {{ item: { id: string; createdAt?: string | Date; basePrice?: number | null; location?: string; subLocation?: string; description?: string; title?: string; stockQuantity?: number; images?: string[] }; category?: { id?: string; name?: string | null; slug?: string; categoryName?: string | null }; priority?: boolean }} props */
+  function SmallCard({
+    item,
+    category,
+    priority = false,
+  }) {
   const router = useRouter();
 
   const formatDate = useCallback((dateString) => {
@@ -44,7 +45,8 @@ const SmallCard = React.memo(function SmallCard({
           }
         }
         return value;
-      });
+        }
+      );
     } catch (error) {
       console.error('Error stringifying:', error);
       return '{}';
@@ -76,11 +78,11 @@ const SmallCard = React.memo(function SmallCard({
       className="group cursor-pointer"
     >
       {/* البطاقة الرئيسية بتصميم عصري */}
-      <div className="relative bg-gradient-to-br from-neutral-900 to-neutral-950 rounded-[2rem] overflow-hidden border border-neutral-800/50 shadow-2xl shadow-black/50 hover:shadow-orange-500/10 hover:border-[#C99B70]/20 transition-all duration-500">
+      <div className="relative overflow-hidden rounded-[1.75rem] border border-ak-line bg-gradient-to-br from-ak-raised to-ak-surface shadow-ak-card transition-all duration-500 hover:-translate-y-1 hover:border-ak-amber/35 hover:shadow-ak-panel">
         
         {/* ================= قسم الصورة ================= */}
         <div className="relative w-full aspect-[4/3] overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 to-amber-500/10 z-10" />
+          <div className="absolute inset-0 z-10 bg-gradient-to-br from-ak-amber/10 to-transparent" />
           <ImageComponent
             item={item}
             priority={priority}
@@ -88,18 +90,18 @@ const SmallCard = React.memo(function SmallCard({
           />
 
           {/* Overlay متدرج */}
-          <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/20 to-transparent z-10" />
+          <div className="absolute inset-0 z-10 bg-gradient-to-t from-ak-ink via-ak-ink/25 to-transparent" />
 
           {/* الشريط العلوي - معلومات سريعة */}
           <div className="absolute top-0 left-0 right-0 p-4 z-20 flex justify-between items-start">
             {/* زر المفضلة - تصميم عصري */}
             <div
               onClick={(e) => e.stopPropagation()}
-              className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-2.5 hover:bg-white/20 transition-all duration-300 shadow-lg"
+              className="rounded-2xl border border-ak-line-strong/20 bg-ak-ink/35 p-2.5 shadow-ak-card backdrop-blur-xl transition-all duration-300 hover:bg-ak-surface/75"
             >
               <FavoriteButton
                 item={item}
-                className="text-white hover:text-red-400 transition-colors"
+                className="text-ak-cream hover:text-red-400 transition-colors"
               />
             </div>
 
@@ -108,7 +110,7 @@ const SmallCard = React.memo(function SmallCard({
               <motion.div 
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
-                className="bg-gradient-to-r from-orange-500 to-amber-500 text-white font-bold text-xs px-4 py-2 rounded-2xl shadow-lg shadow-orange-500/30 flex items-center gap-2"
+                className="flex items-center gap-2 rounded-full bg-ak-brand px-4 py-2 text-xs font-bold text-ak-ink shadow-ak-glow"
               >
                 <FaTag className="text-[10px]" />
                 {category.name}
@@ -119,8 +121,8 @@ const SmallCard = React.memo(function SmallCard({
           {/* بطاقة الوقت - أسفل اليسار */}
           {item?.createdAt && (
             <div className="absolute bottom-4 left-4 z-20">
-              <div className="bg-neutral-900/80 backdrop-blur-xl border border-neutral-700/50 text-neutral-300 text-xs font-bold px-3 py-2 rounded-2xl flex items-center gap-2 shadow-lg">
-                <FaClock className="text-[#C99B70] text-[10px]" />
+              <div className="flex items-center gap-2 rounded-full border border-ak-line-strong bg-ak-ink/75 px-3 py-2 text-xs font-bold text-ak-cream/85 shadow-ak-card backdrop-blur-xl">
+                <FaClock className="text-[10px] text-ak-honey" />
                 {formatDate(item.createdAt)}
               </div>
             </div>
@@ -128,7 +130,7 @@ const SmallCard = React.memo(function SmallCard({
 
           {/* مؤشر السعر العائم - أسفل اليمين */}
           <div className="absolute bottom-4 right-4 z-20">
-            <div className="bg-gradient-to-br from-emerald-500 to-teal-600 text-white font-black text-lg px-4 py-2.5 rounded-2xl shadow-lg shadow-emerald-500/30 flex items-center gap-1">
+            <div className="flex items-center gap-1 rounded-2xl border border-ak-honey/30 bg-ak-brand px-4 py-2.5 text-lg font-black text-ak-ink shadow-ak-glow">
               {item.basePrice?.toLocaleString() || '0'}
               <span className="text-xs font-bold opacity-80">ل.س</span>
             </div>
@@ -138,21 +140,21 @@ const SmallCard = React.memo(function SmallCard({
         {/* ================= قسم المحتوى ================= */}
         <div className="p-5 space-y-4 relative">
           {/* خط زخرفي علوي */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-1 bg-gradient-to-r from-orange-500 to-amber-500 rounded-full opacity-50" />
+          <div className="absolute left-1/2 top-0 h-1 w-12 -translate-x-1/2 rounded-full bg-ak-brand opacity-75" />
 
           {/* العنوان والموقع */}
           <div className="space-y-3">
             {/* الموقع بتصميم أنيق */}
-            <div className="flex items-center gap-2 text-neutral-400 text-sm group/location">
-              <div className="w-8 h-8 rounded-xl bg-neutral-800/50 flex items-center justify-center group-hover/location:bg-[#C99B70]/20 transition-colors">
-                <FaMapMarkerAlt className="w-3.5 h-3.5 text-[#C99B70]" />
+            <div className="group/location flex items-center gap-2 text-sm text-ak-muted">
+              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-ak-elevated/70 transition-colors group-hover/location:bg-ak-amber/15">
+                <FaMapMarkerAlt className="h-3.5 w-3.5 text-ak-amber" />
               </div>
               <div className="flex-1 min-w-0">
-                <span className="text-neutral-300 font-medium block truncate">
+                <span className="block truncate font-medium text-ak-cream/90">
                   {item?.location || 'غير محدد'}
                 </span>
                 {item?.subLocation && (
-                  <span className="text-neutral-500 text-xs block">
+                  <span className="block text-xs text-ak-quiet">
                     {item.subLocation}
                   </span>
                 )}
@@ -160,13 +162,13 @@ const SmallCard = React.memo(function SmallCard({
             </div>
 
             {/* الوصف */}
-            <p className="text-neutral-400 text-sm leading-relaxed line-clamp-2 min-h-[2.5rem]">
+            <p className="line-clamp-2 min-h-[2.5rem] text-sm leading-relaxed text-ak-muted">
               {item?.description || item?.title || 'لا يوجد وصف متاح'}
             </p>
           </div>
 
           {/* معلومات إضافية */}
-          <div className="flex items-center justify-between pt-3 border-t border-neutral-800/50">
+          <div className="flex items-center justify-between border-t border-ak-line pt-3">
             {/* حالة التوفر */}
             {item?.stockQuantity !== undefined && (
               <div className="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-xl">
@@ -183,7 +185,7 @@ const SmallCard = React.memo(function SmallCard({
                 e.stopPropagation();
                 handleClick();
               }}
-              className="group/btn flex items-center gap-2 bg-gradient-to-r from-[#C99B70] to-[#A8754D] hover:from-[#D9B18C] hover:to-[#C99B70] text-[#171512] font-bold text-sm py-2.5 px-5 rounded-xl transition-all duration-300 shadow-lg shadow-[#C99B70]/20 hover:shadow-[#C99B70]/30 hover:scale-105 active:scale-95"
+              className="group/btn flex items-center gap-2 rounded-xl bg-ak-brand px-5 py-2.5 text-sm font-bold text-ak-ink shadow-ak-glow transition-all duration-300 hover:scale-105 hover:brightness-105 active:scale-95"
             >
               <span>التفاصيل</span>
               <FaArrowLeft className="group-hover/btn:-translate-x-1 transition-transform duration-300" />
@@ -192,7 +194,7 @@ const SmallCard = React.memo(function SmallCard({
         </div>
 
         {/* تأثير ضوئي عند التمرير */}
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 pointer-events-none" />
+        <div className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-ak-honey/5 to-transparent transition-transform duration-1000 group-hover:translate-x-full" />
       </div>
     </motion.div>
   );

@@ -13,7 +13,7 @@ export default function ErrorState({ error, reset }) {
       dir="rtl"
       className="flex min-h-[60vh] items-center justify-center px-4 py-16 text-center"
     >
-      <div className="w-full max-w-xl rounded-2xl border border-neutral-200 bg-white p-8 shadow-lg">
+      <div className="w-full max-w-xl rounded-2xl border border-neutral-200 bg-ak-surface p-8 shadow-lg">
         <p className="text-sm font-bold text-primary-600">500</p>
         <h1 className="mt-2 text-3xl font-black text-neutral-900">
           حدث خطأ غير متوقع
@@ -26,7 +26,7 @@ export default function ErrorState({ error, reset }) {
           <button
             type="button"
             onClick={reset}
-            className="rounded-lg bg-primary-600 px-6 py-3 font-bold text-white hover:bg-primary-700"
+            className="rounded-lg bg-primary-600 px-6 py-3 font-bold text-ak-cream hover:bg-primary-700"
           >
             المحاولة مرة أخرى
           </button>

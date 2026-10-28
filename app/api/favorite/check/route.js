@@ -28,7 +28,7 @@ export async function POST(request) {
       where: {
         userId,
         isDeleted: false,
-        product: { isDeleted: false, isActive: true, category: { isActive: true } },
+        product: { isDeleted: false, isActive: true, approvalStatus: 'APPROVED', category: { isActive: true } },
       },
       select: { productId: true },
     });

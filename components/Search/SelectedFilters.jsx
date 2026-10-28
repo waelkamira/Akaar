@@ -201,7 +201,7 @@ export default function SelectedFilters() {
         bg: 'bg-blue-50',
         border: 'border-blue-200',
         text: 'text-blue-700',
-        hover: 'hover:bg-blue-100',
+        hover: 'hover:bg-ak-brand-soft',
         icon: 'bg-blue-100',
       },
       green: {
@@ -219,10 +219,10 @@ export default function SelectedFilters() {
         icon: 'bg-yellow-100',
       },
       orange: {
-        bg: 'bg-[#C99B70]/10',
-        border: 'border-[#C99B70]/20',
-        text: 'text-[#E5C5A5]',
-        hover: 'hover:bg-[#C99B70]/15',
+        bg: 'bg-ak-amber/10',
+        border: 'border-ak-amber/20',
+        text: 'text-ak-honey',
+        hover: 'hover:bg-ak-amber/15',
         icon: 'bg-orange-100',
       },
       gray: {
@@ -257,25 +257,25 @@ export default function SelectedFilters() {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -15 }}
       transition={{ duration: 0.3, ease: 'easeOut' }}
-      className="bg-[#211F1B]/90 backdrop-blur-xl border border-white/10 rounded-2xl p-5 shadow-xl shadow-black/20"
+      className="bg-ak-surface/90 backdrop-blur-xl border border-ak-line rounded-2xl p-5 shadow-xl shadow-black/20"
       dir="rtl"
     >
       {/* ==================== رأس القسم ==================== */}
-      <div className="flex items-center justify-between mb-4 border-b border-white/10 pb-3">
+      <div className="flex items-center justify-between mb-4 border-b border-ak-line pb-3">
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2 text-stone-800">
             <div className="relative">
-              <Filter className="w-5 h-5 text-[#C99B70]" />
+              <Filter className="w-5 h-5 text-ak-amber" />
               {/* شارة عدد الفلاتر */}
               <motion.span
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                className="absolute -top-2 -right-2 bg-[#C99B70] text-[#171512] text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-md"
+                className="absolute -top-2 -right-2 bg-ak-amber text-ak-canvas text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-md"
               >
                 {selectedFilters.length}
               </motion.span>
             </div>
-            <span className="text-sm font-bold text-[#F5F0E9]">
+            <span className="text-sm font-bold text-ak-cream">
               الفلاتر النشطة
             </span>
           </div>
@@ -287,7 +287,7 @@ export default function SelectedFilters() {
           onClick={handleClearAll}
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-300 ${
             showClearConfirm
-              ? 'bg-red-500 text-white hover:bg-red-600 shadow-md'
+              ? 'bg-red-500 text-ak-cream hover:bg-red-600 shadow-md'
               : 'text-stone-400 hover:text-red-600 hover:bg-red-50/80 border border-transparent hover:border-red-100'
           }`}
         >
@@ -357,7 +357,7 @@ export default function SelectedFilters() {
         <motion.div
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: 'auto' }}
-          className="mt-3 pt-3 border-t border-white/10"
+          className="mt-3 pt-3 border-t border-ak-line"
         >
           <p className="text-xs text-stone-400 text-center">
             يتم عرض {selectedFilters.length} فلتر نشط. انقر على أي فلتر لإزالته.

@@ -26,7 +26,7 @@ export async function POST(request) {
 
   try {
     const product = await prisma.product.findFirst({
-      where: { id, isDeleted: false, isActive: true, category: { isActive: true } },
+      where: { id, isDeleted: false, isActive: true, approvalStatus: 'APPROVED', category: { isActive: true } },
       include: {
         user: { select: { id: true, userName: true, userImage: true } },
       },

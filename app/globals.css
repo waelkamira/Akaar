@@ -3,9 +3,13 @@
 @tailwind utilities;
 
 body {
-  @apply rubik select-none;
-  background-color: #141311;
-  color: #F5F0E9;
+  @apply rubik;
+  background-color: #120b07;
+  background-image:
+    radial-gradient(ellipse at 50% -18%, rgba(166, 91, 42, 0.22), transparent 52%),
+    linear-gradient(180deg, #17100b 0%, #120b07 48%, #100906 100%);
+  background-attachment: fixed;
+  color: #f8ebdd;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
@@ -60,14 +64,14 @@ pre {
 }
 
 :root {
-  --akaar-bg: #141311;
-  --akaar-surface: #211F1B;
-  --akaar-surface-raised: #29251F;
-  --akaar-copper: #C99B70;
-  --akaar-copper-light: #D9B18C;
-  --akaar-ivory: #F5F0E9;
-  --btn-background: #C99B70;
-  --btn-hover-background: #D9B18C;
+  --akaar-bg: #120b07;
+  --akaar-surface: #21160f;
+  --akaar-surface-raised: #2d1d13;
+  --akaar-copper: #e79a4b;
+  --akaar-copper-light: #ffc477;
+  --akaar-ivory: #f8ebdd;
+  --btn-background: #e79a4b;
+  --btn-hover-background: #ffc477;
 }
 
 .btn {
@@ -351,116 +355,114 @@ input[type='file'] {
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    color-scheme: dark;
+    --background: 24 38% 6%;
+    --foreground: 32 64% 95%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 26 36% 13%;
+    --card-foreground: 32 64% 95%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 26 36% 13%;
+    --popover-foreground: 32 64% 95%;
 
-    --primary: 25 95% 50%; /* Updated to orange-ish */
-    --primary-foreground: 210 40% 98%;
+    --primary: 31 76% 60%;
+    --primary-foreground: 24 38% 6%;
 
-    --secondary: 30 20% 90%; /* Lighter, complementary to orange */
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 25 30% 18%;
+    --secondary-foreground: 32 64% 95%;
 
-    --muted: 30 10% 95%; /* Even lighter */
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 25 25% 16%;
+    --muted-foreground: 27 18% 65%;
 
-    --accent: 30 10% 95%; /* Even lighter */
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 28 30% 21%;
+    --accent-foreground: 32 64% 95%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 25 95% 50%; /* Matches primary */
+    --border: 28 24% 24%;
+    --input: 28 24% 24%;
+    --ring: 31 76% 60%;
 
     --radius: 0.5rem;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    --background: 24 38% 6%;
+    --foreground: 32 64% 95%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 26 36% 13%;
+    --card-foreground: 32 64% 95%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 26 36% 13%;
+    --popover-foreground: 32 64% 95%;
 
-    --primary: 25 95% 50%; /* Updated to orange-ish */
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 31 76% 60%;
+    --primary-foreground: 24 38% 6%;
 
-    --secondary: 30 25% 20%; /* Darker, complementary to orange */
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 25 30% 18%;
+    --secondary-foreground: 32 64% 95%;
 
-    --muted: 30 20% 20%; /* Darker */
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 25 25% 16%;
+    --muted-foreground: 27 18% 65%;
 
-    --accent: 30 20% 20%; /* Darker */
-    --accent-foreground: 210 40% 98%;
+    --accent: 28 30% 21%;
+    --accent-foreground: 32 64% 95%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 25 95% 50%; /* Matches primary */
+    --border: 28 24% 24%;
+    --input: 28 24% 24%;
+    --ring: 31 76% 60%;
   }
 }
 
 :root {
-  /* Primary Colors */
-  --color-primary-50: #fff1e6;
-  --color-primary-100: #ffe8d9;
-  --color-primary-200: #ffd0b5;
-  --color-primary-300: #ffb088;
-  --color-primary-400: #ff9466;
-  --color-primary-500: #ff7c34;
-  --color-primary-600: #f25d1e;
-  --color-primary-700: #cc4b18;
-  --color-primary-800: #9c3915;
-  --color-primary-900: #7a2e12;
+  /* Shared brand tokens for legacy components. */
+  --color-primary-50: #fff7eb;
+  --color-primary-100: #ffe8cb;
+  --color-primary-200: #ffd39f;
+  --color-primary-300: #ffc477;
+  --color-primary-400: #f2ac5e;
+  --color-primary-500: #e79a4b;
+  --color-primary-600: #c77a3e;
+  --color-primary-700: #a55e31;
+  --color-primary-800: #754125;
+  --color-primary-900: #4a2b1c;
 
-  /* Secondary Colors */
-  --color-secondary-50: #f0f4f8;
-  --color-secondary-100: #d9e2ec;
-  --color-secondary-200: #bcccdc;
-  --color-secondary-300: #9fb3c8;
-  --color-secondary-400: #829ab1;
-  --color-secondary-500: #627d98;
-  --color-secondary-600: #486581;
-  --color-secondary-700: #334e68;
-  --color-secondary-800: #243b53;
-  --color-secondary-900: #102a43;
+  --color-secondary-50: #f8ebdd;
+  --color-secondary-100: #e6d1bd;
+  --color-secondary-200: #cfb39c;
+  --color-secondary-300: #b99a82;
+  --color-secondary-400: #9f806a;
+  --color-secondary-500: #826653;
+  --color-secondary-600: #674d3d;
+  --color-secondary-700: #503a2e;
+  --color-secondary-800: #39291f;
+  --color-secondary-900: #241910;
 
-  /* Accent Colors */
-  --color-accent-50: #e3f8ff;
-  --color-accent-100: #b3ecff;
-  --color-accent-200: #81defd;
-  --color-accent-300: #5ed0fa;
-  --color-accent-400: #40c3f7;
-  --color-accent-500: #2bb0ed;
-  --color-accent-600: #1992d4;
-  --color-accent-700: #127fbf;
-  --color-accent-800: #0b69a3;
-  --color-accent-900: #035388;
+  --color-accent-50: #fff6e8;
+  --color-accent-100: #ffedcf;
+  --color-accent-200: #ffdfa9;
+  --color-accent-300: #ffd18a;
+  --color-accent-400: #ffc477;
+  --color-accent-500: #e79a4b;
+  --color-accent-600: #c77a3e;
+  --color-accent-700: #a55e31;
+  --color-accent-800: #754125;
+  --color-accent-900: #4a2b1c;
 
-  /* Neutral Colors */
-  --color-neutral-50: #f5f7fa;
-  --color-neutral-100: #e4e7eb;
-  --color-neutral-200: #cbd2d9;
-  --color-neutral-300: #9aa5b1;
-  --color-neutral-400: #7b8794;
-  --color-neutral-500: #616e7c;
-  --color-neutral-600: #52606d;
-  --color-neutral-700: #3e4c59;
-  --color-neutral-800: #323f4b;
-  --color-neutral-900: #1f2933;
+  --color-neutral-50: #f8ebdd;
+  --color-neutral-100: #e8d8c8;
+  --color-neutral-200: #d0baa7;
+  --color-neutral-300: #b9a393;
+  --color-neutral-400: #a18b7a;
+  --color-neutral-500: #897362;
+  --color-neutral-600: #705b4b;
+  --color-neutral-700: #594637;
+  --color-neutral-800: #39281d;
+  --color-neutral-900: #21150e;
 
   /* Status Colors */
   --color-success: #27ae60;
@@ -469,9 +471,9 @@ input[type='file'] {
   --color-info: #3498db;
 
   /* Background Colors */
-  --color-background-light: #ffffff;
-  --color-background-dark: #1f2933;
-  --color-background-accent: #fff8f0;
+  --color-background-light: #f8ebdd;
+  --color-background-dark: #120b07;
+  --color-background-accent: #2d1d13;
 
   /* Legacy color mapping for backward compatibility */
   --color-primary: var(--color-primary-500);
@@ -504,18 +506,51 @@ input[type='file'] {
   }
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-rubik), sans-serif;
   }
 }
 
 body {
-  @apply bg-neutral-50 text-neutral-800 rubik;
+  @apply bg-background text-foreground rubik;
   font-feature-settings:
     'rlig' 1,
     'calt' 1;
 }
 
-body {
-  font-family: 'Rubik', sans-serif;
+@layer base {
+  input:not([type='checkbox']):not([type='radio']):not([type='file']),
+  select,
+  textarea {
+    @apply rounded-xl border border-ak-line bg-ak-surface text-ak-cream placeholder:text-ak-quiet;
+  }
+
+  input:not([type='checkbox']):not([type='radio']):not([type='file']):focus,
+  select:focus,
+  textarea:focus {
+    @apply outline-none ring-2 ring-primary-500/30 border-primary-400;
+  }
+
+  ::selection {
+    @apply bg-primary-500/35 text-ak-cream;
+  }
+}
+
+@layer components {
+  .ak-panel {
+    @apply rounded-2xl border border-ak-line bg-ak-surface shadow-ak-card;
+  }
+
+  .ak-panel-raised {
+    @apply rounded-2xl border border-ak-line-strong bg-ak-surface shadow-ak-panel backdrop-blur-xl;
+  }
+
+  .ak-button-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-ak-brand px-5 py-3 font-bold text-ak-ink shadow-ak-glow transition duration-200 hover:-translate-y-0.5 hover:brightness-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ak-olive focus-visible:ring-offset-2 focus-visible:ring-offset-ak-ink disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  .ak-eyebrow {
+    @apply text-[10px] font-semibold uppercase tracking-[.22em] text-ak-olive;
+  }
 }
 
 html {

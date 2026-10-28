@@ -58,7 +58,7 @@ export default function UserNameAndPhoto({ post, size, rounded }) {
             )}
           </div>
           <div className="flex flex-col justify-center">
-            <h6 className={` text-eight select-none font-medium text-white`}>
+            <h6 className={` text-eight select-none font-medium text-ak-cream`}>
               {post?.userName || user?.username}
             </h6>
           </div>

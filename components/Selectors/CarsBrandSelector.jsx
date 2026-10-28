@@ -72,7 +72,7 @@ export default function CarsBrandSelector({ check }) {
   const CustomPlaceholder = (props) => {
     return (
       <components.Placeholder {...props}>
-        <div className="flex items-center gap-2 text-gray-400">
+        <div className="flex items-center gap-2 text-ak-muted">
           <FaCar className="text-primary-500 text-lg sm:text-xl" />
           <span>الماركة تويوتا</span>
         </div>
@@ -81,7 +81,7 @@ export default function CarsBrandSelector({ check }) {
   };
 
   return (
-    <div className="flex flex-col w-full justify-start items-center text-black">
+    <div className="flex flex-col w-full justify-start items-center text-ak-ink">
       <div className="w-full">
         <Select
           value={brand}
@@ -95,7 +95,7 @@ export default function CarsBrandSelector({ check }) {
           classNamePrefix="select"
           classNames={{
             control: (state) =>
-              `${state.isFocused ? 'border-primary-500' : 'border-gray-300'} `,
+              `${state.isFocused ? 'border-primary-500' : 'border-ak-line'} `,
           }}
           components={{ Placeholder: CustomPlaceholder }}
         />

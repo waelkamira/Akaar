@@ -40,6 +40,7 @@ export async function GET(request) {
       where: {
         isDeleted: false,
         isActive: true,
+        approvalStatus: 'APPROVED',
         category: { isActive: true },
         OR: [
           { title: { contains: query, mode: 'insensitive' } },

@@ -77,7 +77,7 @@
 //           <div className="px-4 mt-2">
 //             <button
 //               onClick={() => router.push(path)}
-//               className={`relative w-full my-2 text-white rounded-lg hover:scale-[101%] text-md sm:text-lg hover:shadow-sm hover:bg-${colors.hover} p-1 lg:p-2 transition-all duration-200 ease-in-out`}
+//               className={`relative w-full my-2 text-ak-cream rounded-lg hover:scale-[101%] text-md sm:text-lg hover:shadow-sm hover:bg-${colors.hover} p-1 lg:p-2 transition-all duration-200 ease-in-out`}
 //               style={{
 //                 backgroundColor: colors.bg,
 //               }}
@@ -105,60 +105,8 @@ import LoadingPhoto from '../photos/LoadingPhoto';
 import { motion } from 'framer-motion';
 import { FaArrowLeft } from 'react-icons/fa';
 
-export default function Card({ cardName, path, image, text, color = 'default', emoji }) {
+export default function Card({ cardName, path, image, text, emoji }) {
   const router = useRouter();
-
-  // قاموس الألوان الفاخرة المتناسقة مع الثيم الداكن
-  const getTheme = (colorType) => {
-    switch (colorType?.toLowerCase()) {
-      case 'green':
-        return {
-          borderHover: 'group-hover:border-emerald-500/40',
-          shadowHover: 'group-hover:shadow-emerald-500/15',
-          iconBg: 'bg-emerald-500/10',
-          iconText: 'text-emerald-400',
-          btnFrom: 'from-emerald-600',
-          btnTo: 'to-teal-600',
-          btnHoverFrom: 'hover:from-emerald-500',
-          btnHoverTo: 'hover:to-teal-500',
-        };
-      case 'purple':
-        return {
-          borderHover: 'group-hover:border-violet-500/40',
-          shadowHover: 'group-hover:shadow-violet-500/15',
-          iconBg: 'bg-violet-500/10',
-          iconText: 'text-violet-400',
-          btnFrom: 'from-violet-600',
-          btnTo: 'to-fuchsia-600',
-          btnHoverFrom: 'hover:from-violet-500',
-          btnHoverTo: 'hover:to-fuchsia-500',
-        };
-      case 'orange':
-        return {
-          borderHover: 'group-hover:border-orange-500/40',
-          shadowHover: 'group-hover:shadow-orange-500/15',
-          iconBg: 'bg-orange-500/10',
-          iconText: 'text-orange-400',
-          btnFrom: 'from-orange-600',
-          btnTo: 'to-amber-600',
-          btnHoverFrom: 'hover:from-orange-500',
-          btnHoverTo: 'hover:to-amber-500',
-        };
-      default: // fallback أنيق
-        return {
-          borderHover: 'group-hover:border-neutral-600',
-          shadowHover: 'group-hover:shadow-neutral-500/10',
-          iconBg: 'bg-neutral-500/10',
-          iconText: 'text-neutral-400',
-          btnFrom: 'from-neutral-700',
-          btnTo: 'to-neutral-600',
-          btnHoverFrom: 'hover:from-neutral-600',
-          btnHoverTo: 'hover:to-neutral-500',
-        };
-    }
-  };
-
-  const theme = getTheme(color);
 
   return (
     <motion.div
@@ -167,12 +115,12 @@ export default function Card({ cardName, path, image, text, color = 'default', e
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.5, ease: "easeOut" }}
       onClick={() => router.push(path)}
-      className={`group relative w-full max-w-sm mx-auto cursor-pointer rounded-3xl bg-neutral-900/60 backdrop-blur-xl border border-neutral-800 ${theme.borderHover} ${theme.shadowHover} shadow-xl transition-all duration-500 hover:-translate-y-2 overflow-hidden`}
+      className="group relative mx-auto w-full max-w-sm cursor-pointer overflow-hidden rounded-3xl border border-ak-line bg-gradient-to-br from-ak-raised to-ak-surface shadow-ak-card backdrop-blur-xl transition-all duration-500 hover:-translate-y-2 hover:border-ak-amber/40 hover:shadow-ak-panel"
     >
       {/* ================= قسم الصورة ================= */}
       <div className="relative w-full h-52 sm:h-60 overflow-hidden">
         {!image ? (
-          <div className="w-full h-full flex items-center justify-center bg-neutral-800/50">
+          <div className="flex h-full w-full items-center justify-center bg-ak-raised/70">
             <LoadingPhoto />
           </div>
         ) : (
@@ -185,25 +133,25 @@ export default function Card({ cardName, path, image, text, color = 'default', e
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             />
             {/* تدرج لوني لدمج الصورة مع المحتوى بسلاسة */}
-            <div className="absolute inset-0 bg-gradient-to-t from-neutral-900 via-neutral-900/20 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-ak-ink via-ak-ink/20 to-transparent" />
           </>
         )}
         
         {/* شارة الأيقونة العائمة */}
-        <div className={`absolute top-4 right-4 w-12 h-12 ${theme.iconBg} backdrop-blur-md rounded-2xl border border-neutral-700/50 flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-all duration-300`}>
-          {React.cloneElement(emoji, { className: `text-2xl ${theme.iconText}` })}
+        <div className="absolute right-4 top-4 flex h-12 w-12 items-center justify-center rounded-2xl border border-ak-amber/25 bg-ak-ink/60 shadow-ak-glow backdrop-blur-md transition-all duration-300 group-hover:scale-110 group-hover:rotate-3">
+          {React.cloneElement(emoji, { className: 'text-2xl text-ak-honey' })}
         </div>
       </div>
 
       {/* ================= قسم المحتوى ================= */}
       <div className="p-5 sm:p-6 space-y-4">
         {/* العنوان */}
-        <h2 className="text-xl font-black text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-neutral-400 transition-all duration-300">
+        <h2 className="text-xl font-black text-ak-cream transition-all duration-300 group-hover:bg-ak-brand group-hover:bg-clip-text group-hover:text-transparent">
           {cardName}
         </h2>
         
         {/* الوصف */}
-        <p className="text-sm sm:text-base text-neutral-400 leading-relaxed line-clamp-3 min-h-[4.5rem]">
+        <p className="line-clamp-3 min-h-[4.5rem] text-sm leading-relaxed text-ak-muted sm:text-base">
           {text}
         </p>
 
@@ -213,7 +161,7 @@ export default function Card({ cardName, path, image, text, color = 'default', e
             e.stopPropagation(); // منع تكرار حدث النقر
             router.push(path);
           }}
-          className={`w-full mt-2 flex items-center justify-center gap-2 bg-gradient-to-r ${theme.btnFrom} ${theme.btnTo} ${theme.btnHoverFrom} ${theme.btnHoverTo} text-white font-bold py-3.5 px-4 rounded-xl transition-all duration-300 shadow-lg group-hover:shadow-xl group/btn`}
+          className="group/btn mt-2 flex w-full items-center justify-center gap-2 rounded-xl bg-ak-brand px-4 py-3.5 font-bold text-ak-ink shadow-ak-glow transition-all duration-300 hover:brightness-105 group-hover:shadow-ak-panel"
         >
           <span>استكشف المزيد</span>
           <FaArrowLeft className="group-hover/btn:-translate-x-1 transition-transform duration-300" />

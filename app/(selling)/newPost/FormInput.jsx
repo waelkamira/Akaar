@@ -58,7 +58,7 @@ const FormInput = ({
       {/* 🏷️ التسمية (Label) */}
       <label
         htmlFor={name}
-        className="text-sm font-semibold text-gray-700 flex items-center gap-2 mr-1 transition-colors duration-300 text-white"
+        className="text-sm font-semibold text-ak-cream flex items-center gap-2 mr-1 transition-colors duration-300 text-ak-cream"
       >
         {icon && <span className="text-orange-500 text-lg">{icon}</span>}
         {label}
@@ -69,10 +69,10 @@ const FormInput = ({
 
       {/* 📦 حاوية الحقل (تجمع الأيقونة وحقل الإدخال معاً) */}
       <div
-        className={`relative group flex items-center w-full h-12 sm:h-14 rounded-xl border bg-white transition-all duration-300 ${
+        className={`relative group flex items-center w-full h-12 sm:h-14 rounded-xl border bg-ak-surface transition-all duration-300 ${
           hasError
             ? 'border-rose-300 bg-rose-50/40 focus-within:ring-4 focus-within:ring-rose-500/10'
-            : 'border-gray-200 hover:border-orange-300 focus-within:border-orange-500 focus-within:ring-4 focus-within:ring-orange-500/10'
+            : 'border-ak-line hover:border-orange-300 focus-within:border-orange-500 focus-within:ring-4 focus-within:ring-orange-500/10'
         }`}
       >
         {/* الأيقونة الداخلية */}
@@ -81,7 +81,7 @@ const FormInput = ({
             className={`absolute right-4 flex items-center justify-center transition-all duration-300 ${
               hasError
                 ? 'text-rose-400'
-                : 'text-gray-400 group-focus-within:text-orange-500 group-focus-within:scale-110'
+                : 'text-ak-muted group-focus-within:text-orange-500 group-focus-within:scale-110'
             }`}
           >
             {icon}
@@ -96,7 +96,7 @@ const FormInput = ({
           placeholder={placeholder}
           onChange={onChange}
           required={name === 'link' ? false : required}
-          className={`w-full h-full bg-transparent text-gray-800 placeholder:text-gray-400 focus:outline-none rounded-xl transition-all duration-300 ${
+          className={`w-full h-full bg-transparent text-ak-cream placeholder:text-ak-muted focus:outline-none rounded-xl transition-all duration-300 ${
             icon ? 'pr-12 pl-4' : 'px-4'
           }`}
         />

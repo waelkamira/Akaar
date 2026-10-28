@@ -44,7 +44,7 @@ export default function DemoProductCard({ product }) {
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
           className="object-cover"
         />
-        <span className="absolute right-3 top-3 bg-orange-500 px-2 py-1 text-xs font-bold text-black">
+        <span className="absolute right-3 top-3 bg-orange-500 px-2 py-1 text-xs font-bold text-ak-ink">
           منتج تجريبي
         </span>
         <button
@@ -65,12 +65,12 @@ export default function DemoProductCard({ product }) {
         <button
           type="button"
           onClick={openProduct}
-          className="min-h-12 w-full text-right text-base font-bold text-white hover:text-orange-400"
+          className="min-h-12 w-full text-right text-base font-bold text-ak-cream hover:text-orange-400"
         >
           {product.title}
         </button>
         <div className="flex items-baseline gap-2">
-          <span className="text-lg font-black text-white">
+          <span className="text-lg font-black text-ak-cream">
             {product.basePrice.toLocaleString('ar-SY')} ل.س
           </span>
           {product.oldPrice && (
@@ -86,7 +86,7 @@ export default function DemoProductCard({ product }) {
           <button
             type="button"
             onClick={handleAddToCart}
-            className="flex items-center justify-center gap-2 border border-orange-500 px-3 py-2 text-sm font-bold text-orange-400 transition hover:bg-orange-500 hover:text-black"
+            className="flex items-center justify-center gap-2 border border-orange-500 px-3 py-2 text-sm font-bold text-orange-400 transition hover:bg-orange-500 hover:text-ak-ink"
           >
             <FaShoppingCart aria-hidden="true" />
             أضف للسلة
@@ -94,7 +94,7 @@ export default function DemoProductCard({ product }) {
           <button
             type="button"
             onClick={handleBuyNow}
-            className="bg-orange-500 px-3 py-2 text-sm font-bold text-black transition hover:bg-orange-400"
+            className="bg-orange-500 px-3 py-2 text-sm font-bold text-ak-ink transition hover:bg-orange-400"
           >
             اشترِ الآن
           </button>

@@ -4,7 +4,7 @@
 // export default function LoadingPhoto() {
 //   return (
 //     <div className="flex items-center justify-center h-full ">
-//       <FaGear className="animate-spin text-xl transition duration-300 text-gray-500" />
+//       <FaGear className="animate-spin text-xl transition duration-300 text-ak-muted" />
 //     </div>
 //   );
 // }

@@ -16,7 +16,7 @@ const PostForm = ({
       {/* الحقول الأساسية */}
       {commonFields.map((field, index) => (
         <div key={index} className="flex flex-col gap-2">
-          <label className="flex justify-start items-center gap-1 text-gray-700 text-nowrap">
+          <label className="flex justify-start items-center gap-1 text-ak-cream text-nowrap">
             <span>{field?.icon}</span> {field?.label || field?.name}
           </label>
 
@@ -24,7 +24,7 @@ const PostForm = ({
             type="text"
             value={field.value}
             onChange={(e) => handleFieldChange(field.name, e.target.value)}
-            className="p-2 border border-gray-300 rounded"
+            className="p-2 border border-ak-line rounded"
           />
         </div>
       ))}
@@ -32,20 +32,20 @@ const PostForm = ({
       {/* الحقول الفرعية */}
       {categoryFields.map((field, index) => (
         <div key={index} className="flex flex-col gap-2">
-          <label className="flex justify-start items-center gap-1 text-gray-700 text-nowrap">
+          <label className="flex justify-start items-center gap-1 text-ak-cream text-nowrap">
             <span>{field?.icon}</span> {field?.label || field?.name}
           </label>{' '}
           <input
             type="text"
             value={fields.details?.[field.name] || ''}
             onChange={(e) => handleFieldChange(field.name, e.target.value)}
-            className="p-2 border border-gray-300 rounded"
+            className="p-2 border border-ak-line rounded"
           />
         </div>
       ))}
 
       {/* وصف الإعلان */}
-      <label className="flex justify-start items-center gap-1 text-gray-700 text-nowrap">
+      <label className="flex justify-start items-center gap-1 text-ak-cream text-nowrap">
         <TbFileDescription className="text-primary-500 text-lg sm:text-xl" />
         وصف الإعلان
       </label>
@@ -53,14 +53,14 @@ const PostForm = ({
         value={fields.description}
         onChange={(e) => handleFieldChange('description', e.target.value)}
         placeholder="وصف الإعلان"
-        className="p-2 border border-gray-300 rounded mb-4 min-h-44"
+        className="p-2 border border-ak-line rounded mb-4 min-h-44"
       />
       {/* الخريطة */}
       <div className="my-4">
         <OnClickMap lat={post?.lat} lng={post?.lng} />
       </div>
       {/* زر الحفظ */}
-      <button onClick={handleSave} className="btn text-white p-2 rounded my-4">
+      <button onClick={handleSave} className="btn text-ak-cream p-2 rounded my-4">
         حفظ التعديلات
       </button>
     </div>

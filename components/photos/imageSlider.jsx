@@ -353,7 +353,7 @@ export default function ImageSlider({
 
               {/* عداد الصور */}
               <div className="absolute top-4 right-4 bg-neutral-950/80 backdrop-blur-md border border-neutral-800 px-4 py-2 rounded-full">
-                <span className="text-white font-bold text-sm">
+                <span className="text-ak-cream font-bold text-sm">
                   {idx + 1}{' '}
                   <span className="text-neutral-500">/ {images.length}</span>
                 </span>
@@ -367,14 +367,14 @@ export default function ImageSlider({
           <>
             <button
               onClick={prevSlide}
-              className="absolute left-4 top-1/2 -translate-y-1/2 bg-neutral-950/90 backdrop-blur-md hover:bg-orange-600 border border-neutral-800 hover:border-orange-500 text-white p-3 rounded-xl transition-all duration-300 opacity-0 group-hover:opacity-100 disabled:opacity-0 shadow-xl z-10"
+              className="absolute left-4 top-1/2 -translate-y-1/2 bg-neutral-950/90 backdrop-blur-md hover:bg-orange-600 border border-neutral-800 hover:border-orange-500 text-ak-cream p-3 rounded-xl transition-all duration-300 opacity-0 group-hover:opacity-100 disabled:opacity-0 shadow-xl z-10"
               aria-label="Previous image"
             >
               <FaChevronLeft className="text-lg" />
             </button>
             <button
               onClick={nextSlide}
-              className="absolute right-4 top-1/2 -translate-y-1/2 bg-neutral-950/90 backdrop-blur-md hover:bg-orange-600 border border-neutral-800 hover:border-orange-500 text-white p-3 rounded-xl transition-all duration-300 opacity-0 group-hover:opacity-100 disabled:opacity-0 shadow-xl z-10"
+              className="absolute right-4 top-1/2 -translate-y-1/2 bg-neutral-950/90 backdrop-blur-md hover:bg-orange-600 border border-neutral-800 hover:border-orange-500 text-ak-cream p-3 rounded-xl transition-all duration-300 opacity-0 group-hover:opacity-100 disabled:opacity-0 shadow-xl z-10"
               aria-label="Next image"
             >
               <FaChevronRight className="text-lg" />

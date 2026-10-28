@@ -51,12 +51,12 @@ export async function GET(request) {
     const [groupedCounts, previews] = await Promise.all([
       prisma.product.groupBy({
         by: ['categoryId'],
-        where: { categoryId: { in: categoryIds }, isDeleted: false, isActive: true },
+        where: { categoryId: { in: categoryIds }, isDeleted: false, isActive: true, approvalStatus: 'APPROVED' },
         _count: { _all: true },
       }),
       Promise.all(categoryIds.map(async (categoryId) => {
         const products = await prisma.product.findMany({
-          where: { categoryId, isDeleted: false, isActive: true },
+          where: { categoryId, isDeleted: false, isActive: true, approvalStatus: 'APPROVED' },
           select: {
             id: true,
             title: true,

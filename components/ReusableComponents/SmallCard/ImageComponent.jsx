@@ -34,9 +34,9 @@ function ImageComponent({ item, priority = false }) {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="absolute bottom-2 right-2 w-fit flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-3 py-1 shadow-lg"
+                className="absolute bottom-2 right-2 w-fit flex items-center gap-2 bg-ak-surface/20 backdrop-blur-sm rounded-full px-3 py-1 shadow-lg"
               >
-                <span className="text-xs font-medium text-white">
+                <span className="text-xs font-medium text-ak-cream">
                   <FormatDate dateString={item?.createdAt} />
                 </span>
               </motion.div>
@@ -47,7 +47,7 @@ function ImageComponent({ item, priority = false }) {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
-                className="absolute top-2 right-2 flex items-center gap-2 bg-primary/90 backdrop-blur-sm text-white rounded-full px-4 py-0.5 shadow-lg"
+                className="absolute top-2 right-2 flex items-center gap-2 bg-primary/90 backdrop-blur-sm text-ak-cream rounded-full px-4 py-0.5 shadow-lg"
               >
                 <span className="text-xs font-medium">
                   {item?.details?.propertyType === '1' ? 'بيع' : 'إجار'}

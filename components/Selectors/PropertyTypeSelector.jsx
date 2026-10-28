@@ -41,7 +41,7 @@ export default function PropertyTypeSelector({ check }) {
   }
 
   return (
-    <div className="flex flex-col w-full justify-start items-center text-black ">
+    <div className="flex flex-col w-full justify-start items-center text-ak-ink ">
       <div className="w-full">
         <div className="flex items-center gap-2 w-full justify-start my-2">
           <h1 className={`flex text-right text-md select-none text-nowrap `}>
@@ -59,12 +59,12 @@ export default function PropertyTypeSelector({ check }) {
           isSearchable
           options={options}
           theme={customTheme}
-          className="w-full text-md rounded text-start text-black z-[9] select-none"
+          className="w-full text-md rounded text-start text-ak-ink z-[9] select-none"
           classNamePrefix="select"
           classNames={{
             control: (state) =>
               `${
-                state.isFocused ? 'border-primary-500' : 'border-gray-300'
+                state.isFocused ? 'border-primary-500' : 'border-ak-line'
               } sm:h-12 h-8`, // ارتفاع مختلف بناءً على عرض النافذة
           }}
         ></Select>

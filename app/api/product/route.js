@@ -2,7 +2,8 @@ import { NextResponse } from 'next/server';
 import { consumeDurableRateLimit } from '@/lib/api/durable-rate-limit.mjs';
 import { LRUCache } from 'lru-cache';
 import { prisma } from '@/lib/db/prisma';
-import { getAuthenticatedUser } from '@/lib/auth/require-auth';
+import { getActiveSeller } from '@/lib/auth/require-seller';
+import { isMarketplaceEnabled } from '@/lib/marketplace/settings';
 import { getPagination, isPaginationOffsetOutOfRange, isPlainObject, parseOptionalNumber } from '@/lib/api/validation.mjs';
 import { isValidProductMutationIdentifier } from '@/lib/api/product-mutation-validation.mjs';
 import { readJsonBody } from '@/lib/api/read-json-body.mjs';
@@ -41,7 +42,7 @@ export async function GET(request) {
   if (cached) return NextResponse.json(cached);
 
   try {
-    const where = { isDeleted: false, isActive: true, category: { isActive: true } };
+    const where = { isDeleted: false, isActive: true, approvalStatus: 'APPROVED', category: { isActive: true } };
     // Avoid an extra COUNT query for normal catalog pages; verify unusually deep
     // offsets before asking PostgreSQL to skip through a large result set.
     if (skip > 1000) {
@@ -66,8 +67,12 @@ export async function GET(request) {
 }
 
 export async function POST(request) {
-  const user = await getAuthenticatedUser();
+  const { user, seller } = await getActiveSeller();
   if (!user) return NextResponse.json({ error: 'يجب تسجيل الدخول لإنشاء منتج' }, { status: 401 });
+  if (!seller) return NextResponse.json({ error: 'يتطلب نشر المنتجات متجرًا معتمدًا.' }, { status: 403 });
+  if (!(await isMarketplaceEnabled('marketplaceEnabled'))) {
+    return NextResponse.json({ error: 'النشر متوقف مؤقتًا.' }, { status: 503 });
+  }
 
   const parsedBody = await readJson(request);
   if (!parsedBody.ok) return NextResponse.json({ error: parsedBody.error }, { status: parsedBody.status });
@@ -90,6 +95,7 @@ export async function POST(request) {
   }
 
   try {
+    const approvalRequired = await isMarketplaceEnabled('productApprovalEnabled');
     const [owner, category] = await Promise.all([
       prisma.user.findUnique({ where: { id: user.id }, select: productOwnerSelect }),
       prisma.category.findUnique({ where: { id: categoryId }, select: { id: true, name: true, isActive: true } }),
@@ -103,6 +109,7 @@ export async function POST(request) {
       data: {
         title,
         userId: user.id,
+        sellerId: seller.id,
         userName: owner.userName,
         userImage: owner.userImage,
         ...categoryFields,
@@ -118,6 +125,8 @@ export async function POST(request) {
         description: typeof body.description === 'string' ? body.description.slice(0, 10000) : null,
         details: body.details && typeof body.details === 'object' && !Array.isArray(body.details) ? body.details : undefined,
         stockQuantity,
+        approvalStatus: approvalRequired ? 'PENDING' : 'APPROVED',
+        isActive: !approvalRequired,
       },
     });
     cache.clear();
@@ -129,8 +138,9 @@ export async function POST(request) {
 }
 
 export async function PUT(request) {
-  const user = await getAuthenticatedUser();
+  const { user, seller } = await getActiveSeller();
   if (!user) return NextResponse.json({ error: 'يجب تسجيل الدخول لتحديث المنتج' }, { status: 401 });
+  if (!seller) return NextResponse.json({ error: 'صلاحيات البائع المفعّل مطلوبة.' }, { status: 403 });
 
   const parsedBody = await readJson(request);
   if (!parsedBody.ok) return NextResponse.json({ error: parsedBody.error }, { status: parsedBody.status });
@@ -141,7 +151,7 @@ export async function PUT(request) {
 
   try {
     const existing = await prisma.product.findFirst({
-      where: { id, userId: user.id, isDeleted: false },
+      where: { id, userId: user.id, sellerId: seller.id, isDeleted: false },
       select: { id: true },
     });
     if (!existing) return NextResponse.json({ error: 'المنتج غير موجود أو لا تملك صلاحية تعديله' }, { status: 404 });
@@ -199,8 +209,9 @@ export async function PUT(request) {
 }
 
 export async function DELETE(request) {
-  const user = await getAuthenticatedUser();
+  const { user, seller } = await getActiveSeller();
   if (!user) return NextResponse.json({ error: 'يجب تسجيل الدخول لحذف المنتج' }, { status: 401 });
+  if (!seller) return NextResponse.json({ error: 'صلاحيات البائع المفعّل مطلوبة.' }, { status: 403 });
 
   const parsedBody = await readJson(request);
   if (!parsedBody.ok) return NextResponse.json({ error: parsedBody.error }, { status: parsedBody.status });
@@ -211,7 +222,7 @@ export async function DELETE(request) {
 
   try {
     const existing = await prisma.product.findFirst({
-      where: { id, userId: user.id, isDeleted: false },
+      where: { id, userId: user.id, sellerId: seller.id, isDeleted: false },
       select: { id: true },
     });
     if (!existing) return NextResponse.json({ error: 'المنتج غير موجود أو لا تملك صلاحية حذفه' }, { status: 404 });

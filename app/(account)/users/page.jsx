@@ -87,7 +87,7 @@ export default function Users() {
         />
         {isOpen && <SideBarMenu setIsOpen={setIsOpen} />}
       </div>
-      <div className="flex gap-4 justify-center items-center bg-gray-700  text-lg  w-full p-4 mt-16 xl:mt-24 shadow-sm shadow-gray-300 ">
+      <div className="flex gap-4 justify-center items-center bg-gray-700  text-lg  w-full p-4 mt-16 xl:mt-24 shadow-sm shadow-black/25 ">
         <input
           value={findUser}
           onChange={(e) => setFindUser(e.target.value)}
@@ -115,7 +115,7 @@ export default function Users() {
           {users.length > 0 ? (
             users.map((user, index) => (
               <div
-                className="flex justify-between items-center bg-gray-700 my-2  w-full h-24 border-[3px] border-primary-500 p-2  shadow-sm shadow-gray-300 hover:shadow-sm shadow-gray-300  transition-shadow duration-300"
+                className="flex justify-between items-center bg-gray-700 my-2  w-full h-24 border-[3px] border-primary-500 p-2  shadow-sm shadow-black/25 hover:shadow-sm shadow-black/25  transition-shadow duration-300"
                 key={index}
               >
                 <div>

@@ -32,7 +32,7 @@
 // const OnClickMap = dynamic(() => import('../../../components/map/onClickMap'), {
 //   ssr: false,
 //   loading: () => (
-//     <div className="w-full h-72 sm:h-[400px] flex flex-col items-center justify-center bg-neutral-800/50 rounded-2xl text-white border border-neutral-700 animate-pulse gap-3">
+//     <div className="w-full h-72 sm:h-[400px] flex flex-col items-center justify-center bg-neutral-800/50 rounded-2xl text-ak-cream border border-neutral-700 animate-pulse gap-3">
 //       <FaMapLocationDot className="text-3xl text-orange-500/50" />
 //       <span className="text-sm font-medium">جاري تحميل الخريطة...</span>
 //     </div>
@@ -233,11 +233,11 @@
 //           >
 //             {/* Header */}
 //             <div className="border-b border-neutral-800 pb-6 mb-6">
-//               <h1 className="text-2xl sm:text-3xl font-black text-white flex items-center gap-3">
+//               <h1 className="text-2xl sm:text-3xl font-black text-ak-cream flex items-center gap-3">
 //                 <span className="w-1.5 h-8 bg-gradient-to-b from-orange-500 to-amber-500 rounded-full" />
 //                 إنشاء إعلان جديد
 //               </h1>
-//               <p className="text-white mt-2 mr-5 text-sm">قم بتعبئة جميع الحقول المطلوبة لإضافة إعلانك إلى المنصة</p>
+//               <p className="text-ak-cream mt-2 mr-5 text-sm">قم بتعبئة جميع الحقول المطلوبة لإضافة إعلانك إلى المنصة</p>
 //             </div>
 
 //             {/* Image Upload Section */}
@@ -331,7 +331,7 @@
 //             {/* Dynamic Category Fields */}
 //             {selectedCategory && Array.isArray(categoryFields) && categoryFields.length > 0 && (
 //               <div className="space-y-6 pt-4 border-t border-neutral-800">
-//                 <h3 className="text-lg font-bold text-white flex items-center gap-2">
+//                 <h3 className="text-lg font-bold text-ak-cream flex items-center gap-2">
 //                   <span className="w-1.5 h-5 bg-amber-500 rounded-full" />
 //                   تفاصيل إضافية ({selectedCategory.name})
 //                 </h3>
@@ -343,7 +343,7 @@
 //                       </label>
 //                       {field?.options ? (
 //                         <select
-//                           className={`w-full bg-neutral-800/50 border rounded-xl px-4 py-3 text-white placeholder-neutral-500 focus:outline-none transition-all appearance-none ${
+//                           className={`w-full bg-neutral-800/50 border rounded-xl px-4 py-3 text-ak-cream placeholder-neutral-500 focus:outline-none transition-all appearance-none ${
 //                             emptyFields.includes(field?.name)
 //                               ? 'border-red-500/50 focus:border-red-500/50 focus:ring-1 focus:ring-red-500/20'
 //                               : 'border-neutral-700/50 focus-within:border-orange-500/50 focus:ring-1 focus:ring-orange-500/20'
@@ -362,7 +362,7 @@
 //                         <input
 //                           type="text"
 //                           placeholder={field?.placeholder || 'أدخل القيمة'}
-//                           className={`w-full bg-neutral-800/50 border rounded-xl px-4 py-3 text-white placeholder-neutral-500 focus:outline-none transition-all ${
+//                           className={`w-full bg-neutral-800/50 border rounded-xl px-4 py-3 text-ak-cream placeholder-neutral-500 focus:outline-none transition-all ${
 //                             emptyFields.includes(field?.name)
 //                               ? 'border-red-500/50 focus:border-red-500/50 focus:ring-1 focus:ring-red-500/20'
 //                               : 'border-neutral-700/50 focus-within:border-orange-500/50 focus:ring-1 focus:ring-orange-500/20'
@@ -432,7 +432,7 @@
 //               {/* 
 //               <button
 //                 type="submit"
-//                 className="w-full bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white font-bold py-4 px-6 rounded-xl transition-all shadow-lg shadow-orange-600/20 hover:shadow-orange-600/40 hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2"
+//                 className="w-full bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-ak-cream font-bold py-4 px-6 rounded-xl transition-all shadow-lg shadow-orange-600/20 hover:shadow-orange-600/40 hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2"
 //               >
 //                 <MdCheckCircle className="text-xl" />
 //                 نشر الإعلان
@@ -455,6 +455,7 @@ import UploadingAndDisplayingImage from '@/components/photos/UploadingAndDisplay
 import { inputsContext } from '@/features/auth/inputs-context';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import {
   MdCategory,
   MdTitle,
@@ -477,7 +478,7 @@ import dynamic from 'next/dynamic';
 const OnClickMap = dynamic(() => import('../../../components/map/onClickMap'), {
   ssr: false,
   loading: () => (
-    <div className="w-full h-64 flex flex-col items-center justify-center bg-neutral-800/50 rounded-2xl text-white border border-neutral-700 animate-pulse gap-3">
+    <div className="w-full h-64 flex flex-col items-center justify-center bg-neutral-800/50 rounded-2xl text-ak-cream border border-neutral-700 animate-pulse gap-3">
       <FaMapLocationDot className="text-3xl text-orange-500/50" />
       <span className="text-sm font-medium">جاري تحميل الخريطة...</span>
     </div>
@@ -495,9 +496,6 @@ export default function NewPost() {
   const [error, setError] = useState(null);
 
   const [formState, setFormState] = useState({
-    userId: 'b2a4f3fa-2bb7-4f97-95db-4fa53c581bb4',
-    userImage: '/placeholder.jpg',
-    userName: 'wael',
     title: '',
     categoryId: '',
     categoryName: '',
@@ -568,7 +566,7 @@ export default function NewPost() {
   };
 
   const validateForm = () => {
-    const requiredFields = ['userId', 'title', 'categoryId', 'categoryName', 'city', 'town', 'phoneNumber', 'basePrice', 'description'];
+    const requiredFields = ['title', 'categoryId', 'categoryName', 'city', 'town', 'phoneNumber', 'basePrice', 'description'];
     let emptyFieldsList = [];
 
     const hasEmptyRequiredField = requiredFields.some((field) => {
@@ -610,12 +608,13 @@ export default function NewPost() {
         body: JSON.stringify(formData),
       });
 
+      const payload = await response.json().catch(() => ({}));
       if (response.ok) {
         toast.success('تم إنشاء الإعلان بنجاح', { icon: <MdCheckCircle className="text-emerald-500" /> });
         dispatch({ type: 'ADD_IMAGE', payload: [] });
         router.push('/posts');
       } else {
-        toast.error('حدث خطأ ما، حاول مرة أخرى');
+        toast.error(payload?.error || 'حدث خطأ ما، حاول مرة أخرى');
       }
     } catch (error) {
       console.error('Error:', error);
@@ -623,8 +622,27 @@ export default function NewPost() {
     }
   };
 
-  if (session?.status === 'unauthenticated') {
-    // return <LoginButton />;
+  if (session.status === 'loading') {
+    return <main className="min-h-screen bg-neutral-950 p-10 text-center text-ak-cream" aria-busy="true">جارٍ التحقق من الحساب...</main>;
+  }
+
+  if (session.status === 'unauthenticated') {
+    return (
+      <main className="min-h-[60vh] bg-neutral-950 p-10 text-center text-ak-cream">
+        <h1 className="text-2xl font-bold">سجّل الدخول للمتابعة</h1>
+        <Link href="/login?callbackUrl=%2FnewPost" className="mt-5 inline-block rounded-xl bg-orange-500 px-5 py-3 font-bold text-ak-ink">تسجيل الدخول</Link>
+      </main>
+    );
+  }
+
+  if (session.data?.user?.role !== 'SELLER') {
+    return (
+      <main className="min-h-[60vh] bg-neutral-950 p-10 text-center text-ak-cream">
+        <h1 className="text-2xl font-bold">النشر متاح للبائعين المعتمدين</h1>
+        <p className="mt-3 text-neutral-400">قدّم طلب فتح متجر أو تابع حالة طلبك من لوحة البائع.</p>
+        <Link href="/seller/dashboard" className="mt-5 inline-block rounded-xl bg-orange-500 px-5 py-3 font-bold text-ak-ink">لوحة البائع</Link>
+      </main>
+    );
   }
 
   return (
@@ -642,8 +660,8 @@ export default function NewPost() {
           <div className="mb-8 flex items-center gap-4">
             <div className="w-1.5 h-12 bg-gradient-to-b from-orange-500 to-amber-500 rounded-full" />
             <div>
-              <h1 className="text-3xl sm:text-4xl font-black text-white">إنشاء إعلان جديد</h1>
-              <p className="text-white mt-1">قم بتعبئة البيانات بدقة لضمان ظهور إعلانك بشكل احترافي</p>
+              <h1 className="text-3xl sm:text-4xl font-black text-ak-cream">إنشاء إعلان جديد</h1>
+              <p className="text-ak-cream mt-1">قم بتعبئة البيانات بدقة لضمان ظهور إعلانك بشكل احترافي</p>
             </div>
           </div>
 
@@ -664,7 +682,7 @@ export default function NewPost() {
                 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
                 className="bg-neutral-900/60 backdrop-blur-xl border border-neutral-800 rounded-3xl p-6"
               >
-                <h2 className="text-lg font-bold text-white flex items-center gap-2 mb-4">
+                <h2 className="text-lg font-bold text-ak-cream flex items-center gap-2 mb-4">
                   <MdImage className="text-orange-500 text-xl" /> صور الإعلان
                 </h2>
                 <div className="bg-neutral-800/30 rounded-2xl p-4 border border-neutral-700/50">
@@ -677,7 +695,7 @@ export default function NewPost() {
                 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
                 className="bg-neutral-900/60 backdrop-blur-xl border border-neutral-800 rounded-3xl p-6 space-y-6"
               >
-                <h2 className="text-lg font-bold text-white flex items-center gap-2">
+                <h2 className="text-lg font-bold text-ak-cream flex items-center gap-2">
                   <MdTitle className="text-orange-500 text-xl" /> المعلومات الأساسية
                 </h2>
                 
@@ -719,7 +737,7 @@ export default function NewPost() {
                   initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
                   className="bg-neutral-900/60 backdrop-blur-xl border border-neutral-800 rounded-3xl p-6 space-y-6"
                 >
-                  <h2 className="text-lg font-bold text-white flex items-center gap-2">
+                  <h2 className="text-lg font-bold text-ak-cream flex items-center gap-2">
                     <span className="w-1.5 h-5 bg-amber-500 rounded-full" />
                     تفاصيل إضافية ({selectedCategory.name})
                   </h2>
@@ -731,7 +749,7 @@ export default function NewPost() {
                         </label>
                         {field?.options ? (
                           <select
-                            className={`w-full bg-neutral-800/50 border rounded-xl px-4 py-3 text-white placeholder-neutral-500 focus:outline-none transition-all appearance-none ${
+                            className={`w-full bg-neutral-800/50 border rounded-xl px-4 py-3 text-ak-cream placeholder-neutral-500 focus:outline-none transition-all appearance-none ${
                               emptyFields.includes(field?.name)
                                 ? 'border-red-500/50 focus:border-red-500/50 focus:ring-1 focus:ring-red-500/20'
                                 : 'border-neutral-700/50 focus-within:border-orange-500/50 focus:ring-1 focus:ring-orange-500/20'
@@ -748,7 +766,7 @@ export default function NewPost() {
                           <input
                             type="text"
                             placeholder={field?.placeholder || 'أدخل القيمة'}
-                            className={`w-full bg-neutral-800/50 border rounded-xl px-4 py-3 text-white placeholder-neutral-500 focus:outline-none transition-all ${
+                            className={`w-full bg-neutral-800/50 border rounded-xl px-4 py-3 text-ak-cream placeholder-neutral-500 focus:outline-none transition-all ${
                               emptyFields.includes(field?.name)
                                 ? 'border-red-500/50 focus:border-red-500/50 focus:ring-1 focus:ring-red-500/20'
                                 : 'border-neutral-700/50 focus-within:border-orange-500/50 focus:ring-1 focus:ring-orange-500/20'
@@ -793,7 +811,7 @@ export default function NewPost() {
                 initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }}
                 className="bg-gradient-to-br from-neutral-900 to-neutral-950 backdrop-blur-xl border border-neutral-800 rounded-3xl p-6 shadow-xl"
               >
-                <h2 className="text-lg font-bold text-white flex items-center gap-2 mb-4">
+                <h2 className="text-lg font-bold text-ak-cream flex items-center gap-2 mb-4">
                   <MdAttachMoney className="text-amber-500 text-xl" /> التسعير والمخزون
                 </h2>
                 <div className="space-y-4">
@@ -826,7 +844,7 @@ export default function NewPost() {
                 initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 }}
                 className="bg-neutral-900/60 backdrop-blur-xl border border-neutral-800 rounded-3xl p-6 shadow-xl"
               >
-                <h2 className="text-lg font-bold text-white flex items-center gap-2 mb-4">
+                <h2 className="text-lg font-bold text-ak-cream flex items-center gap-2 mb-4">
                   <FaMapLocationDot className="text-orange-500 text-xl" /> الموقع الجغرافي
                 </h2>
                 <div className="space-y-4">
@@ -851,7 +869,7 @@ export default function NewPost() {
                   
                   {/* Map Component */}
                   <div className="pt-2">
-                    <label className="block text-xs font-bold text-white mb-2">تحديد دقيق على الخريطة</label>
+                    <label className="block text-xs font-bold text-ak-cream mb-2">تحديد دقيق على الخريطة</label>
                     <div className="rounded-2xl overflow-hidden border border-neutral-700/50 shadow-inner">
                       <OnClickMap
                         chosenCity={formState.city}
@@ -894,7 +912,7 @@ export default function NewPost() {
                 
                 <button
                   type="submit"
-                  className="w-full bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white font-black py-4 px-6 rounded-2xl transition-all shadow-lg shadow-orange-600/20 hover:shadow-orange-600/40 hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2 text-lg"
+                  className="w-full bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-ak-cream font-black py-4 px-6 rounded-2xl transition-all shadow-lg shadow-orange-600/20 hover:shadow-orange-600/40 hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2 text-lg"
                 >
                   <MdCheckCircle className="text-2xl" />
                   نشر الإعلان

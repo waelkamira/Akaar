@@ -149,16 +149,16 @@ export default function RotatedCard({ number, text }) {
         scale: 1.08,
         boxShadow: '0px 15px 25px rgba(0, 0, 0, 0.25)',
       }}
-      className={`relative flex items-center justify-between w-full xl:w-80 h-10 xl:h-12 bg-gradient-to-r ${gradient} text-white rounded-full shadow-xl p-5 cursor-pointer hover:shadow-2xl transition-all duration-300`}
+      className={`relative flex items-center justify-between w-full xl:w-80 h-10 xl:h-12 bg-gradient-to-r ${gradient} text-ak-cream rounded-full shadow-xl p-5 cursor-pointer hover:shadow-2xl transition-all duration-300`}
     >
       <div className="flex items-center justify-center gap-3">
         {/* الأيقونة داخل دائرة بتدرج لوني */}
         <motion.div
           whileHover={{ rotate: 10 }}
-          className="size-8 md:size-16 xl:size-20 bg-white/20 backdrop-blur-lg flex items-center justify-center rounded-full shadow-lg border border-white/40"
+          className="size-8 md:size-16 xl:size-20 bg-ak-surface/20 backdrop-blur-lg flex items-center justify-center rounded-full shadow-lg border border-ak-line-strong/40"
         >
           <span
-            className="text-xl lg:text-4xl text-white"
+            className="text-xl lg:text-4xl text-ak-cream"
             style={{ textShadow: '3px 3px 6px rgba(0, 0, 0, 0.3)' }}
           >
             {icon}
@@ -169,7 +169,7 @@ export default function RotatedCard({ number, text }) {
         <div className="flex items-center">
           {/* <motion.span
             whileHover={{ scale: 1.1 }}
-            className="text-7xl lg:text-8xl font-bold opacity-90 text-white leading-none ml-2"
+            className="text-7xl lg:text-8xl font-bold opacity-90 text-ak-cream leading-none ml-2"
             style={{ textShadow: '2px 2px 5px rgba(0, 0, 0, 0.3)' }}
           >
             {number}
@@ -183,7 +183,7 @@ export default function RotatedCard({ number, text }) {
           </motion.span>
           <motion.span
             whileHover={{ scale: 1.05 }}
-            className="text-2xl xl:text-3xl font-medium text-white/90"
+            className="text-2xl xl:text-3xl font-medium text-ak-cream/90"
             style={{ textShadow: '1px 1px 4px rgba(0, 0, 0, 0.3)' }}
           >
             {text}

@@ -37,7 +37,7 @@ export default function Selector({
   const CustomPlaceholder = (props) => {
     return (
       <components.Placeholder {...props}>
-        <div className="flex items-center gap-2 text-gray-400">
+        <div className="flex items-center gap-2 text-ak-muted">
           {icon}
           <span>{placeholder}</span>
         </div>
@@ -46,7 +46,7 @@ export default function Selector({
   };
 
   return (
-    <div className="flex flex-col w-full justify-start items-center text-black z-50">
+    <div className="flex flex-col w-full justify-start items-center text-ak-ink z-50">
       <div className="w-full">
         <Select
           value={list?.find((c) => c.id === category?.id) || null}
@@ -58,12 +58,12 @@ export default function Selector({
           getOptionLabel={(e) => e.name} // تحديد كيفية عرض الخيارات
           getOptionValue={(e) => e.id} // تحديد كيفية اختيار القيم
           theme={customTheme}
-          className="w-full text-md rounded text-start text-black z-[9] select-none"
+          className="w-full text-md rounded text-start text-ak-ink z-[9] select-none"
           classNamePrefix="select"
           classNames={{
             control: (state) =>
               `${
-                state.isFocused ? 'border-primary-500' : 'border-gray-300'
+                state.isFocused ? 'border-primary-500' : 'border-ak-line'
               } sm:h-12 h-8`,
           }}
           components={{ Placeholder: CustomPlaceholder }}

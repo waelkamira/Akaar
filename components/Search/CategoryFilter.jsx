@@ -26,11 +26,11 @@ const CategoryCard = ({ item, selected, onClick }) => {
         'overflow-hidden rounded-xl border p-4 text-right',
         'transition-all duration-300',
         'focus-visible:outline-none focus-visible:ring-2',
-        'focus-visible:ring-orange-300 focus-visible:ring-offset-2',
-        'focus-visible:ring-offset-[#54251c]',
+        'focus-visible:ring-ak-honey focus-visible:ring-offset-2',
+        'focus-visible:ring-offset-ak-ink',
         selected
-          ? 'border-orange-200/70 bg-[#ffb17c]/20 shadow-lg shadow-black/10'
-          : 'border-white/15 bg-white/[0.055] hover:border-orange-200/50 hover:bg-white/[0.11]'
+          ? 'border-ak-honey/70 bg-ak-brand-soft shadow-ak-glow'
+          : 'border-ak-line-strong bg-ak-ink/25 hover:border-ak-honey/50 hover:bg-ak-surface/70'
       )}
     >
       {/* خلفية متوهجة للقسم المحدد */}
@@ -38,7 +38,7 @@ const CategoryCard = ({ item, selected, onClick }) => {
         {selected && (
           <motion.div
             layoutId="category-active-glow"
-            className="absolute inset-0 -z-10 bg-gradient-to-br from-[#C99B70]/25 via-[#C99B70]/10 to-transparent"
+            className="absolute inset-0 -z-10 bg-ak-brand-soft"
             transition={{
               type: 'spring',
               stiffness: 300,
@@ -54,7 +54,7 @@ const CategoryCard = ({ item, selected, onClick }) => {
         className={cn(
           'pointer-events-none absolute -bottom-8 -left-5',
           'h-20 w-20 rounded-full border',
-          'border-white/[0.07] transition-transform duration-500',
+          'border-ak-line-strong/[0.07] transition-transform duration-500',
           'group-hover:scale-125'
         )}
       />
@@ -65,8 +65,8 @@ const CategoryCard = ({ item, selected, onClick }) => {
           'relative flex h-12 w-12 shrink-0 items-center justify-center',
           'rounded-xl border transition-all duration-300',
           selected
-            ? 'border-white/40 bg-gradient-to-br from-[#ffb06e] to-[#e85c25] text-white shadow-lg shadow-orange-950/20'
-            : 'border-white/15 bg-[#572b21]/40 text-[#E5C5A5] group-hover:border-orange-200/50 group-hover:bg-[#a8492b]/50 group-hover:text-white'
+            ? 'border-ak-honey/60 bg-ak-brand text-ak-ink shadow-ak-glow'
+            : 'border-ak-line-strong bg-ak-surface/70 text-ak-honey group-hover:border-ak-honey/50 group-hover:bg-ak-brand-soft group-hover:text-ak-cream'
         )}
       >
         <span className="text-xl">
@@ -81,8 +81,8 @@ const CategoryCard = ({ item, selected, onClick }) => {
             'w-full text-center text-[10px] font-bold',
             'transition-colors duration-300',
             selected
-              ? 'text-white'
-              : 'text-[#E5C5A5]/85 group-hover:text-white'
+              ? 'text-ak-cream'
+              : 'text-ak-cream/75 group-hover:text-ak-cream'
           )}
         >
           {item?.name}
@@ -92,8 +92,8 @@ const CategoryCard = ({ item, selected, onClick }) => {
           className={cn(
             'h-px transition-all duration-300',
             selected
-              ? 'w-10 bg-[#D9B18C]'
-              : 'w-0 bg-[#D9B18C] group-hover:w-8'
+              ? 'w-10 bg-ak-honey'
+              : 'w-0 bg-ak-honey group-hover:w-8'
           )}
         />
       </div>
@@ -104,8 +104,8 @@ const CategoryCard = ({ item, selected, onClick }) => {
           'absolute right-2 top-2 h-1.5 w-1.5 rounded-full',
           'transition-all duration-300',
           selected
-            ? 'bg-[#D9B18C] shadow-[0_0_9px_rgba(255,207,157,0.9)]'
-            : 'bg-white/15 group-hover:bg-[#D9B18C]/70'
+            ? 'bg-ak-honey shadow-ak-glow'
+            : 'bg-ak-line-strong group-hover:bg-ak-honey/70'
         )}
       />
     </motion.button>
@@ -147,43 +147,43 @@ const CategoriesNavBar = () => {
       aria-label="تصفح الأقسام"
       className={cn(
         'sticky top-0 z-40 w-full overflow-hidden',
-        'border-b border-white/10',
-        'bg-gradient-to-br from-[#e97842] via-[#a94e31] to-[#54291f]',
-        'text-white shadow-xl shadow-black/10'
+        'border-b border-ak-line-strong',
+        'bg-ak-surface shadow-ak-panel',
+        'text-ak-cream'
       )}
     >
       {/* توهجات زخرفية في الخلفية */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -right-24 -top-28 h-72 w-72 rounded-full bg-orange-300/15 blur-3xl"
+        className="pointer-events-none absolute -right-24 -top-28 h-72 w-72 rounded-full bg-ak-amber/15 blur-3xl"
       />
 
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -bottom-36 left-0 h-72 w-72 rounded-full bg-[#351b19]/30 blur-3xl"
+        className="pointer-events-none absolute -bottom-36 left-0 h-72 w-72 rounded-full bg-ak-honey/5 blur-3xl"
       />
 
       <div className="relative mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         {/* رأس الأقسام */}
         <div className="mb-6 flex items-center justify-between gap-3">
           <div className="flex min-w-0 items-center gap-3">
-            <div className="h-11 w-1 shrink-0 rounded-full bg-gradient-to-b from-orange-100 to-orange-300/30" />
+            <div className="h-11 w-1 shrink-0 rounded-full bg-gradient-to-b from-ak-honey to-ak-copper/30" />
 
             <div className="min-w-0">
-              <h2 className="text-lg font-black tracking-tight text-white sm:text-xl">
+              <h2 className="text-lg font-black tracking-tight text-ak-cream sm:text-xl">
                 تصفح الأقسام
               </h2>
 
-              <p className="mt-1 text-xs text-[#E5C5A5]/75 sm:text-sm">
+              <p className="mt-1 text-xs text-ak-muted sm:text-sm">
                 اكتشف ما تبحث عنه بسهولة
               </p>
             </div>
           </div>
 
-          <div className="hidden shrink-0 items-center gap-2 rounded-full border border-white/15 bg-black/[0.10] px-3 py-2 sm:flex">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#D9B18C] shadow-[0_0_8px_rgba(255,220,180,0.7)]" />
+          <div className="hidden shrink-0 items-center gap-2 rounded-full border border-ak-line-strong bg-ak-ink/25 px-3 py-2 sm:flex">
+            <span className="h-1.5 w-1.5 rounded-full bg-ak-honey shadow-ak-glow" />
 
-            <span className="text-xs font-medium text-[#E5C5A5]/90">
+            <span className="text-xs font-medium text-ak-cream/90">
               {categories?.length || 0} قسم
             </span>
           </div>
@@ -211,12 +211,12 @@ const CategoriesNavBar = () => {
         </div>
 
         {/* تذييل بسيط */}
-        <div className="mt-5 flex items-center justify-between border-t border-white/10 pt-3">
-          <span className="text-[10px] font-medium tracking-[0.18em] text-[#E5C5A5]/50">
+        <div className="mt-5 flex items-center justify-between border-t border-ak-line pt-3">
+          <span className="text-[10px] font-medium tracking-[0.18em] text-ak-quiet">
             DISCOVER YOUR CATEGORY
           </span>
 
-          <span className="text-xs text-orange-50/60">
+          <span className="text-xs text-ak-muted">
             {selectedCategory?.name || 'اختر قسماً للبدء'}
           </span>
         </div>

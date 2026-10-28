@@ -55,8 +55,8 @@ const PostActions = ({ post, session, fetchposts }) => {
     <>
       {/* نافذة تأكيد الحذف */}
       {isVisible && (
-        <div className="absolute flex flex-col items-center p-4 z-50 inset-0 bg-five/70 text-white">
-          <div className="sticky top-44 w-full sm:w-3/4/2 border border-white rounded bg-three">
+        <div className="absolute flex flex-col items-center p-4 z-50 inset-0 bg-five/70 text-ak-cream">
+          <div className="sticky top-44 w-full sm:w-3/4/2 border border-ak-line-strong rounded bg-three">
             <h1 className="text-center text-lg sm:text-xl mt-4">
               هل تريد حذف هذه الإعلان نهائيا؟
             </h1>
@@ -67,7 +67,7 @@ const PostActions = ({ post, session, fetchposts }) => {
                   handleDeletePost(post?.id);
                   setIsVisible(false);
                 }}
-                className="btn rounded-lg w-full h-full border border-white hover:border-0"
+                className="btn rounded-lg w-full h-full border border-ak-line-strong hover:border-0"
               >
                 حذف
               </button>
@@ -76,7 +76,7 @@ const PostActions = ({ post, session, fetchposts }) => {
                   e.stopPropagation();
                   setIsVisible(false);
                 }}
-                className="btn rounded-lg w-full h-full border border-white hover:border-0"
+                className="btn rounded-lg w-full h-full border border-ak-line-strong hover:border-0"
               >
                 تراجع
               </button>
@@ -86,7 +86,7 @@ const PostActions = ({ post, session, fetchposts }) => {
       )}
 
       {/* أزرار التعديل والحذف */}
-      <div className="flex justify-between items-center w-full p-2 bg-primary-500 h-24 text-white">
+      <div className="flex justify-between items-center w-full p-2 bg-primary-500 h-24 text-ak-cream">
         <div
           className="flex flex-col items-center justify-center cursor-pointer rounded p-1 md:text-xl hover:bg-three hover:scale-[105%] transition-transform duration-150 ease-in-out"
           onClick={(e) => {

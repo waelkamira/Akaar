@@ -15,8 +15,8 @@ const AnimatedCard = ({ children, isSelected, onClick, isHovered }) => (
     className={cn(
       'relative flex flex-col items-center justify-center p-2 rounded-xl w-fit h-24 cursor-pointer overflow-hidden transition-all duration-300',
       isSelected
-        ? 'text-[#F5F0E9] shadow-lg shadow-[#C99B70]/15'
-        : 'text-stone-400 hover:text-[#F5F0E9]',
+        ? 'text-ak-cream shadow-ak-glow'
+        : 'text-ak-muted hover:text-ak-cream',
     )}
     initial={{ opacity: 0, y: 15 }}
     animate={{ opacity: 1, y: 0 }}
@@ -27,7 +27,7 @@ const AnimatedCard = ({ children, isSelected, onClick, isHovered }) => (
     {/* الخلفية المحددة (تنتقل بسلاسة بين الكاردات بفضل layoutId) */}
     {isSelected && (
       <motion.div
-        className="absolute inset-0 rounded-xl bg-gradient-to-br from-[#C99B70] to-[#A8754D]"
+        className="absolute inset-0 rounded-xl bg-ak-brand"
         layoutId="categoryIdBackground"
         transition={{ type: 'spring', stiffness: 300, damping: 30 }}
       />
@@ -37,7 +37,7 @@ const AnimatedCard = ({ children, isSelected, onClick, isHovered }) => (
     <AnimatePresence>
       {isHovered && !isSelected && (
         <motion.div
-          className="absolute inset-0 rounded-xl border border-[#C99B70]/30 bg-[#C99B70]/10 backdrop-blur-sm"
+          className="absolute inset-0 rounded-xl border border-ak-amber/30 bg-ak-brand-soft backdrop-blur-sm"
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
@@ -54,7 +54,7 @@ const AnimatedCard = ({ children, isSelected, onClick, isHovered }) => (
     {/* مؤشر نقطي سفلي ناعم عند التحديد */}
     {isSelected && (
       <motion.div
-        className="absolute bottom-1.5 w-1.5 h-1.5 bg-white rounded-full"
+        className="absolute bottom-1.5 h-1.5 w-1.5 rounded-full bg-ak-ink"
         layoutId="activeDot"
         transition={{ type: 'spring', stiffness: 300, damping: 30 }}
       />
@@ -87,7 +87,7 @@ const CategoriesNavBar = () => {
   }, [category]);
 
   return (
-    <div className="w-full border-b border-white/10 bg-[#171512]/85 backdrop-blur-sm">
+    <div className="w-full border-b border-ak-line bg-ak-ink/85 backdrop-blur-xl">
       {/* ديسكتوب (Desktop View - يبقى كما هو تماماً دون تغيير */}
       <div className="hidden w-full sm:flex mx-auto px-1 overflow-x-auto gap-1 py-3 scrollbar-none justify-start items-center">
         {categories?.length > 0 &&
@@ -112,10 +112,10 @@ const CategoriesNavBar = () => {
                     className={cn(
                       'flex items-center justify-center w-11 h-11 rounded-xl transition-all duration-300 transform group-hover:-translate-y-0.5',
                       isSelected
-                        ? 'bg-white/20 border border-white/30 text-white'
+                        ? 'border border-ak-honey/40 bg-ak-ink/35 text-ak-honey'
                         : isHovered
-                          ? 'bg-orange-500 text-white shadow-md shadow-orange-500/20'
-                          : 'bg-white border border-slate-200 text-slate-500 shadow-sm',
+                          ? 'bg-ak-brand text-ak-ink shadow-ak-glow'
+                          : 'border border-ak-line bg-ak-raised text-ak-muted shadow-ak-card',
                     )}
                   >
                     <div className="text-xl">
@@ -128,8 +128,8 @@ const CategoriesNavBar = () => {
                     className={cn(
                       'text-xs font-semibold mt-2 transition-colors duration-200 tracking-wide select-none',
                       isSelected
-                        ? 'text-white font-bold'
-                        : 'text-white/70 group-hover:text-orange-600',
+                        ? 'font-bold text-ak-ink'
+                        : 'text-ak-cream/70 group-hover:text-ak-honey',
                     )}
                   >
                     {categoryItem?.name}
@@ -141,7 +141,7 @@ const CategoriesNavBar = () => {
       </div>
 
       {/* موبايل (Mobile View) - 🟢 تم تصغير الأيقونات والحشوات هنا */}
-      <div className="sm:hidden flex overflow-x-auto gap-2 p-2 bg-white/80 backdrop-blur-md scrollbar-none snap-x">
+      <div className="flex snap-x gap-2 overflow-x-auto bg-ak-ink/85 p-2 backdrop-blur-xl scrollbar-none sm:hidden">
         {categories?.length > 0 &&
           categories.map((categoryItem) => {
             const isSelected = selectedCategory?.id === categoryItem?.id;
@@ -155,8 +155,8 @@ const CategoriesNavBar = () => {
                   // 🟢 تم تقليل الـ padding من p-3 إلى p-2 والـ min-w من 84px إلى 72px لتوفير مساحة
                   'flex-shrink-0 flex flex-col items-center justify-center p-2 rounded-xl lg:min-w-[72px] sm:w-6 snap-center transition-all duration-300 border',
                   isSelected
-                    ? 'bg-gradient-to-br from-[#FDAA05] to-[#FA6D0B] text-white border-transparent shadow-md shadow-orange-500/25'
-                    : 'bg-slate-50 text-slate-600 border-slate-100',
+                    ? 'bg-ak-brand text-ak-ink border-transparent shadow-ak-glow'
+                    : 'border-ak-line bg-ak-surface text-ak-muted',
                 )}
               >
                 {/* حاوية الأيقونة للموبايل */}
@@ -164,7 +164,7 @@ const CategoriesNavBar = () => {
                   className={cn(
                     // 🟢 تم تصغير حجم الأيقونة من text-xl إلى text-base (أو text-lg حسب رغبتك) وتقليل الهامش السفلي mb-1
                     'text-base mb-1',
-                    isSelected ? 'text-white' : 'text-slate-500',
+                    isSelected ? 'text-ak-ink' : 'text-ak-honey',
                   )}
                 >
                   {categoryItem?.icon || <FaHome />}
@@ -175,7 +175,7 @@ const CategoriesNavBar = () => {
                   className={cn(
                     // 🟢 تم تصغير الخط قليلاً من 11px إلى 10px ليناسب الحجم الجديد للبطاقة
                     'text-[10px] font-medium tracking-tight whitespace-nowrap',
-                    isSelected ? 'font-bold text-white' : 'text-slate-600',
+                    isSelected ? 'font-bold text-ak-ink' : 'text-ak-cream/75',
                   )}
                 >
                   {categoryItem?.name}

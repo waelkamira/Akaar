@@ -44,7 +44,7 @@ export default function CitySelector({ check }) {
         <select
           value={selectedCity}
           onChange={handleCityChange}
-          className="w-full sm:w-28 border rounded focus:outline-2 focus:outline-primary-500 bg-white text-black h-9 sm:h-[27px] px-2"
+          className="w-full sm:w-28 border rounded focus:outline-2 focus:outline-primary-500 bg-ak-surface text-ak-ink h-9 sm:h-[27px] px-2"
         >
           <option value="" disabled>
             المدينة
@@ -62,7 +62,7 @@ export default function CitySelector({ check }) {
         <select
           value={selectedTown}
           onChange={handleTownChange}
-          className="w-full sm:w-28 border rounded focus:outline-2 focus:outline-primary-500 bg-white text-black h-9 sm:h-[27px] px-2"
+          className="w-full sm:w-28 border rounded focus:outline-2 focus:outline-primary-500 bg-ak-surface text-ak-ink h-9 sm:h-[27px] px-2"
         >
           <option value="" disabled>
             المنطقة

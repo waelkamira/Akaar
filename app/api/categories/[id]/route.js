@@ -46,10 +46,10 @@ export async function GET(req, { params }) {
   try {
     // جلب العدد الإجمالي للمنتجات
     const totalCount = await prisma.product.count({
-      where: { categoryId, isDeleted: false, isActive: true, category: { isActive: true } },
+      where: { categoryId, isDeleted: false, isActive: true, approvalStatus: 'APPROVED', category: { isActive: true } },
     });
 
-    const where = { categoryId, isDeleted: false, isActive: true, category: { isActive: true } };
+    const where = { categoryId, isDeleted: false, isActive: true, approvalStatus: 'APPROVED', category: { isActive: true } };
     if (isPaginationOffsetOutOfRange(skip, totalCount)) {
       const response = { data: [], hasMore: false, totalCount };
       cache.set(cacheKey, response);

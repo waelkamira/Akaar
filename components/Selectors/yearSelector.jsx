@@ -74,7 +74,7 @@ export default function YearsSelector() {
   const CustomPlaceholder = (props) => {
     return (
       <components.Placeholder {...props}>
-        <div className="flex items-center gap-2 text-gray-400">
+        <div className="flex items-center gap-2 text-ak-muted">
           <FaCalendarAlt className="text-primary-500 text-lg sm:text-xl" />
           <span>السنة</span>
         </div>
@@ -83,7 +83,7 @@ export default function YearsSelector() {
   };
 
   return (
-    <div className="flex flex-col w-full justify-start items-center text-black">
+    <div className="flex flex-col w-full justify-start items-center text-ak-ink">
       <div className="w-full">
         <Select
           value={year}
@@ -97,7 +97,7 @@ export default function YearsSelector() {
           classNamePrefix="select"
           classNames={{
             control: (state) =>
-              `${state.isFocused ? 'border-primary-500' : 'border-gray-300'} `,
+              `${state.isFocused ? 'border-primary-500' : 'border-ak-line'} `,
           }}
           components={{ Placeholder: CustomPlaceholder }}
         />

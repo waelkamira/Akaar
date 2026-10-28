@@ -81,7 +81,7 @@ export default function CategoryComponent({ check }) {
     }),
   };
   return (
-    <div className="flex flex-col w-full justify-start items-center text-black ">
+    <div className="flex flex-col w-full justify-start items-center text-ak-ink ">
       <div className="w-full">
         <div className="flex items-center gap-2 w-full justify-start my-2">
           <h1 className={`flex text-right text-md select-none text-nowrap `}>
@@ -100,12 +100,12 @@ export default function CategoryComponent({ check }) {
           options={options}
           theme={customTheme}
           styles={customStyles}
-          className="w-full text-md text-start text-black z-[11]"
+          className="w-full text-md text-start text-ak-ink z-[11]"
           classNamePrefix="select"
           classNames={{
             control: (state) =>
               `${
-                state.isFocused ? 'border-primary-500' : 'border-gray-300'
+                state.isFocused ? 'border-primary-500' : 'border-ak-line'
               } sm:h-12 h-9 w-full`, // ارتفاع مختلف بناءً على عرض النافذة
           }}
         />

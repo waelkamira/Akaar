@@ -1,90 +1,102 @@
-// FavoriteButton.jsx
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TbHeartFilled } from 'react-icons/tb';
 import { FaRegHeart } from 'react-icons/fa6';
 import toast from 'react-hot-toast';
 import { useSession } from 'next-auth/react';
 
+const favoriteCacheDuration = 30_000;
+const favoriteIdsCache = new Map();
+const favoriteIdsRequests = new Map();
+const favoriteUpdateEvent = 'marketplace:favorite-updated';
+
+function getFavoriteIds(userId) {
+  const cached = favoriteIdsCache.get(userId);
+  if (cached && cached.expiresAt > Date.now()) return Promise.resolve(cached.ids);
+
+  const pendingRequest = favoriteIdsRequests.get(userId);
+  if (pendingRequest) return pendingRequest;
+
+  const request = fetch(`/api/favorite/ids?userId=${encodeURIComponent(userId)}`, {
+    headers: { Accept: 'application/json' },
+  })
+    .then(async (response) => {
+      const result = await response.json();
+      if (!response.ok) throw new Error(result?.error || 'تعذر تحميل حالة المفضلة.');
+      const ids = Array.isArray(result?.productIds) ? result.productIds : [];
+      favoriteIdsCache.set(userId, { ids, expiresAt: Date.now() + favoriteCacheDuration });
+      return ids;
+    })
+    .finally(() => favoriteIdsRequests.delete(userId));
+
+  favoriteIdsRequests.set(userId, request);
+  return request;
+}
+
 function FavoriteButton({ item }) {
-  const [isFavorited, setIsFavorited] = useState(false);
+  const [favoriteStatus, setFavoriteStatus] = useState(null);
+  const [loadedFavoriteKey, setLoadedFavoriteKey] = useState(null);
   const session = useSession();
   const userId = session?.data?.user?.id;
-  const sessionStatus = session.status;
-  const [favoriteIds, setFavoriteIds] = useState([]);
-  const isMounted = useRef(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const favoriteKey = JSON.stringify([userId, item?.id]);
+  const isLoading = Boolean(userId) && loadedFavoriteKey !== favoriteKey;
+  const isFavorited = favoriteStatus?.userId === userId
+    && favoriteStatus?.productId === item?.id
+    && favoriteStatus.favorited;
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-    try {
-      const storedFavoriteIds = localStorage.getItem('favoriteIds');
-      const parsedFavoriteIds = storedFavoriteIds ? JSON.parse(storedFavoriteIds) : [];
-      setFavoriteIds(Array.isArray(parsedFavoriteIds) ? parsedFavoriteIds : []);
-    } catch {
-      localStorage.removeItem('favoriteIds');
-      setFavoriteIds([]);
-    }
-  }, []);
-
-  const fetchAndStoreUserFavoriteIds = useCallback(
-    async (userId) => {
-      if (!userId) return;
-
-      try {
-        const response = await fetch(`/api/favorite/ids?userId=${userId}`);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const json = await response.json();
-        const productIds = json?.productIds || [];
-        if (typeof window !== 'undefined') {
-          localStorage.setItem('favoriteIds', JSON.stringify(productIds));
-          setFavoriteIds(productIds);
-        }
-      } catch (error) {
-        console.error('Failed to fetch or store favorites data:', error);
-        toast.error('فشل في جلب بيانات المفضلة');
-      }
-    },
-    []
-  );
-
-  useEffect(() => {
-    if (sessionStatus === 'loading') return;
     if (!userId) {
-      setFavoriteIds([]);
-      setIsFavorited(false);
-      if (typeof window !== 'undefined') localStorage.removeItem('favoriteIds');
-      return;
+      return undefined;
     }
-    fetchAndStoreUserFavoriteIds(userId);
-  }, [userId, sessionStatus, fetchAndStoreUserFavoriteIds]);
 
-  const checkFavoriteStatus = useCallback(() => {
-    if (item?.id) {
-      const favorited = favoriteIds.includes(item?.id);
-      if (favorited) {
-        setIsFavorited(true);
-      } else {
-        setIsFavorited(false);
+    let active = true;
+    const handleFavoriteUpdate = (event) => {
+      const detail = event.detail;
+      if (detail?.userId === userId && detail.productId === item?.id) {
+        setFavoriteStatus({
+          userId,
+          productId: item?.id,
+          favorited: detail.favorited,
+        });
+        setLoadedFavoriteKey(favoriteKey);
       }
-    }
-  }, [item?.id, favoriteIds]);
+    };
 
-  useEffect(() => {
-    if (isMounted.current) {
-      checkFavoriteStatus();
-    } else {
-      isMounted.current = true;
-    }
-  }, [checkFavoriteStatus]);
+    window.addEventListener(favoriteUpdateEvent, handleFavoriteUpdate);
+    getFavoriteIds(userId)
+      .then((ids) => {
+        if (active) {
+          setFavoriteStatus({
+            userId,
+            productId: item?.id,
+            favorited: ids.includes(item?.id),
+          });
+          setLoadedFavoriteKey(favoriteKey);
+        }
+      })
+      .catch((error) => {
+        if (active) {
+          console.error('Unable to load favorite status:', error);
+          toast.error('تعذر تحميل حالة المفضلة.');
+          setLoadedFavoriteKey(favoriteKey);
+        }
+      });
 
-  const handleFavorite = useCallback(async () => {
+    return () => {
+      active = false;
+      window.removeEventListener(favoriteUpdateEvent, handleFavoriteUpdate);
+    };
+  }, [favoriteKey, item?.id, userId]);
+
+  const handleFavorite = async () => {
     if (!item?.id) return;
     if (!userId) {
       toast.error('سجّل الدخول لإضافة المنتج إلى المفضلة');
       return;
     }
+    if (isSaving) return;
 
+    setIsSaving(true);
     try {
       const response = await fetch('/api/favorite', {
         method: 'POST',
@@ -95,36 +107,48 @@ function FavoriteButton({ item }) {
       });
 
       const data = await response.json();
-
-      if (response.ok) {
-        setIsFavorited(data?.favorited);
-        fetchAndStoreUserFavoriteIds(userId);
-        toast.success(data?.message);
-      } else {
-        toast.error('حدث خطأ أثناء إضافته إلى المفضلة');
+      if (!response.ok) throw new Error(data?.error || 'تعذر تحديث المفضلة.');
+      const favorited = Boolean(data?.favorited);
+      setFavoriteStatus({ userId, productId: item.id, favorited });
+      const cached = favoriteIdsCache.get(userId);
+      if (cached) {
+        const ids = new Set(cached.ids);
+        if (favorited) ids.add(item.id);
+        else ids.delete(item.id);
+        favoriteIdsCache.set(userId, {
+          ids: [...ids],
+          expiresAt: Date.now() + favoriteCacheDuration,
+        });
       }
+      window.dispatchEvent(new CustomEvent(favoriteUpdateEvent, {
+        detail: { userId, productId: item.id, favorited },
+      }));
+      toast.success(data?.message || 'تم تحديث المفضلة');
     } catch (error) {
       console.error('Error handling favorite:', error);
-      toast.error('حدث خطأ أثناء إضافته إلى المفضلة');
+      toast.error(error instanceof Error ? error.message : 'تعذر تحديث المفضلة.');
+    } finally {
+      setIsSaving(false);
     }
-  }, [item?.id, userId, fetchAndStoreUserFavoriteIds]);
+  };
 
   return (
     <button
       type="button"
       aria-label={isFavorited ? 'إزالة من المفضلة' : 'إضافة إلى المفضلة'}
       aria-pressed={isFavorited}
+      disabled={isLoading || isSaving}
       className="absolute top-0 left-2 z-10 flex size-10 items-center justify-center p-2"
       onClick={(event) => {
         event.stopPropagation();
-        handleFavorite();
+        void handleFavorite();
       }}
     >
       <span className="flex size-8 items-center justify-center rounded-full p-2 backdrop-blur-sm transition-transform duration-300 hover:scale-110">
         {isFavorited ? (
           <TbHeartFilled className="size-4 text-red-600 transition-colors duration-300" />
         ) : (
-          <FaRegHeart className="size-4 bg-transparent text-clip text-gray-600 transition-colors duration-300 hover:text-red-500" />
+          <FaRegHeart className="size-4 bg-transparent text-clip text-ak-muted transition-colors duration-300 hover:text-red-500" />
         )}
       </span>
     </button>

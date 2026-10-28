@@ -220,9 +220,9 @@ export default function EditePost() {
   }
 
   return (
-    <div className="flex flex-col justify-center items-center w-full bg-five mt-16 text-black">
+    <div className="flex flex-col justify-center items-center w-full bg-five mt-16 text-ak-ink">
       {post && (
-        <div className="w-full xl:w-[80%] 2xl:w-[70%] p-3 bg-gray-100">
+        <div className="w-full xl:w-[80%] 2xl:w-[70%] p-3 bg-ak-surface">
           {session?.status === 'authenticated' && (
             <div className="flex flex-col justify-center items-center w-full h-full sm:px-16 pt-8 overflow-y-auto z-10 px-2 border">
               <UserNameAndPhoto post={post} />

@@ -39,7 +39,7 @@ export default function Item({ fields }) {
       {session?.status === 'authenticated' && (
         <div className="flex flex-col justify-center items-center w-full h-full sm:px-16 pt-2 overflow-y-auto z-10 px-2">
           <div className="flex justify-center w-full ">
-            <div className="flex flex-col w-full p-2 sm:p-8 my-2 bg-white border-t-[10px] border-primary-500 rounded-t-lg">
+            <div className="flex flex-col w-full p-2 sm:p-8 my-2 bg-ak-surface border-t-[10px] border-primary-500 rounded-t-lg">
               <UserNameAndPhoto
                 post={{
                   createdAt: fields?.createdAt,
@@ -94,8 +94,8 @@ export default function Item({ fields }) {
                     </h1>
                   </div>
 
-                  <div className="bg-white  p-4 w-full rounded-lg">
-                    <pre className="flex justify-start items-start bg-white rounded-lg h-72 overflow-y-auto text-md sm:text-xl w-full shadow-sm shadow-gray-300 min-h-20 my-2 p-2 select-none">
+                  <div className="bg-ak-surface  p-4 w-full rounded-lg">
+                    <pre className="flex justify-start items-start bg-ak-surface rounded-lg h-72 overflow-y-auto text-md sm:text-xl w-full shadow-sm shadow-black/25 min-h-20 my-2 p-2 select-none">
                       {fields?.description}
                     </pre>
                   </div>

@@ -13,7 +13,7 @@ export async function GET(request) {
   try {
     const categoryCounts = await prisma.product.groupBy({
       by: ['categoryId'],
-      where: { isDeleted: false, isActive: true, category: { isActive: true } },
+      where: { isDeleted: false, isActive: true, approvalStatus: 'APPROVED', category: { isActive: true } },
       _count: { _all: true },
     });
 
