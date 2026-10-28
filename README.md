@@ -251,3 +251,66 @@ This section is the operational checkpoint for continuing the audit. It records 
 - **Important schema discovery:** the repository also contains a legacy root-level `schema.prisma` that differs from `prisma/schema.prisma`. CI and package installation now explicitly generate/validate against `prisma/schema.prisma`, the schema used by migrations and the search code. The root-level legacy schema still needs a separately reviewed retirement or reconciliation; it must not silently drive Prisma Client generation.
 - PR #22 merged after the PostgreSQL search/filter integration tests and required CI checks passed. PR #26 subsequently merged the documented local Docker/PostgreSQL test database workflow after Quality checks run `40484294756` passed on its exact head. This does not verify an existing production database migration or browser-driven API flows.
 - The read-only schema inventory added in the current audit branch has not yet been run against a restored legacy database; no migration SQL should be inferred from its expected-table list alone.
+
+---
+
+## Execution plan and live checkpoint — 2026-10-28 (refreshed)
+
+This is the active execution plan. Older handoff notes above are historical snapshots; always re-check GitHub before relying on a PR state or a test result. The owner confirmed there is no production database, so Prisma design is greenfield. This does not make the checkout, secrets, or deployment ready for production.
+
+### Execution rules
+
+1. Work sequentially in small, focused changes; do not duplicate fixes already covered by an open PR.
+2. Check the live PR state, current head SHA, dependencies, and latest Quality CI before merging.
+3. Include focused regression tests with every behavior change.
+4. A green check on an earlier commit is not proof for a newer head. Record the exact SHA and run.
+5. Distinguish code changed, CI verified, DB/API integration verified, browser verified, and external owner action required.
+6. After merges, verify the merged commit and update this ledger.
+7. Do not claim production readiness while any P0/P1 release blocker remains.
+
+### Work completed in this continuation
+
+- [x] Reviewed the current README, package scripts, and Quality CI workflow.
+- [x] Added an initial execution-plan PR (#47), then refreshed the plan after the security merge to avoid stale state.
+- [x] Re-checked PR #46's recorded latest code head `caea60e733da7b68d331fb23c5aa6c267d302c08`; Quality CI run [40675206391](https://github.com/waelkamira/Akaar/actions/runs/40675206391) completed successfully.
+- [x] Merged PR #46 (durable rate limiting and NextAuth redirect/token hardening) as merge commit `6a23b15f0a2e42463730d2f736ffdbbbbe814bd4`. **This does not mean runtime rate limiting is verified**: Upstash credentials and trusted ingress configuration still need a live smoke test.
+
+### Current PR inventory — checked 2026-10-28
+
+| PR | Scope | Next action |
+|---|---|---|
+| [#47 — execution plan (superseded)](https://github.com/waelkamira/Akaar/pull/47) | Initial README plan based before PR #46 merged | Close as superseded by this refreshed README PR after it is opened. |
+| [#43 — product mutation identifiers](https://github.com/waelkamira/Akaar/pull/43) | Validate product IDs on update/delete | Re-fetch exact head and Quality CI; merge only if current head is green and no conflict. |
+| [#42 — seller/product route identifiers](https://github.com/waelkamira/Akaar/pull/42) | Validate seller/product IDs on listing/detail routes | Re-fetch exact head and Quality CI; avoid duplicating its changes on main. |
+| [#40 — admin user identifiers](https://github.com/waelkamira/Akaar/pull/40) | Validate IDs on admin user update/delete | Historical CI passed on head `0794204862a18905186c33fceac154d83547fdfc`, run [40606369548](https://github.com/waelkamira/Akaar/actions/runs/40606369548); re-check current head/state. |
+| [#39 — category route identifiers](https://github.com/waelkamira/Akaar/pull/39) | Strict positive integer category IDs | Re-fetch exact head and CI; merge only if current head is green. |
+| [#38 — favorite identifiers](https://github.com/waelkamira/Akaar/pull/38) | Bound favorite read/write identifiers | Re-fetch exact head and CI; merge only if current head is green. |
+| [#37 — product image/external URL validation](https://github.com/waelkamira/Akaar/pull/37) | Validate image arrays and external links | Historical CI passed on head `5eb29286a84750fc65f2a702c2db9569396144cc`, run [40604823663](https://github.com/waelkamira/Akaar/actions/runs/40604823663); re-check current head/state. |
+| [#36 — profile image URL validation](https://github.com/waelkamira/Akaar/pull/36) | Validate profile-image fields in user APIs | Re-fetch exact head and CI; merge only if current head is green. |
+| [#34 — environment file ignore rules](https://github.com/waelkamira/Akaar/pull/34) | Prevent accidental commits of local environment files | Historical CI passed on head `8a062a16f2d9f7f373f71d4fe19971baccfd90f9`, run [40602587075](https://github.com/waelkamira/Akaar/actions/runs/40602587075); re-check current state. |
+| [#33 — Prisma/schema reconciliation](https://github.com/waelkamira/Akaar/pull/33) | Canonical Prisma schema, clean migrations, normalized order line items | Historical CI passed on head `5cbeee5c7fee114b13c89bca165a07856488cc17`, run [40610959277](https://github.com/waelkamira/Akaar/actions/runs/40610959277); re-check current state and main after merge. |
+| [#31 — previous README ledger](https://github.com/waelkamira/Akaar/pull/31) | Earlier remediation documentation | Check current state; avoid duplicating this refreshed ledger. |
+| [#29 — architecture/greenfield policy](https://github.com/waelkamira/Akaar/pull/29) | Target architecture and database policy | Historical CI passed on head `0c92bcd0a61f2ec959d8dee0c801e5fb66b2964a`, run [40606548642](https://github.com/waelkamira/Akaar/actions/runs/40606548642); re-check current state. |
+
+GitHub search can return incomplete status metadata. The table is a checkpoint, not permission to merge: inspect the live PR head/checks first.
+
+### Ordered remaining plan
+
+| Order | Priority | Task | Acceptance criteria | Status |
+|---:|---|---|---|---|
+| 1 | P1 | Refresh all open security PRs and merge safe, tested changes in dependency order | Current head SHA known; exact-head Quality CI green; no unresolved conflict/dependency; post-merge state recorded | In progress |
+| 2 | P1 | Complete API-wide authorization/input audit | Every private/admin/mutation route enforces server identity and role/ownership; bounded IDs and bodies; safe errors/logging; regression tests | Partial; existing PRs cover selected routes only |
+| 3 | P1 | Validate durable rate limiter in deployment | Configure `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` as server secrets; set `TRUST_PROXY_HEADERS=true` only if ingress overwrites `x-real-ip`; verify 429/`Retry-After` and fail-closed behavior | Code + CI verified; live smoke test pending |
+| 4 | P1 | Verify Prisma greenfield schema and migrations on main | Canonical `prisma/schema.prisma`; clean PostgreSQL migration and drift gates pass; order/money schema documented; never deploy generated diagnostic drift SQL blindly | PR #33 recorded green; current merge state/main verification pending |
+| 5 | P1 | Search/filter/pagination integration and browser QA | PostgreSQL tests for combined filters, visibility, sort, page/count; browser checks for URL sync, clearing filters, empty/error states, and direct product links | Partial automated coverage; browser tests pending |
+| 6 | P1 | Real checkout/order lifecycle | Currency-aware money, persisted order transitions, inventory reservation, payment provider, verified webhooks, idempotency/refunds and end-to-end tests | Not implemented; checkout remains demo-only |
+| 7 | P1 | Rotate historical provider credentials and verify hosting controls | Revoke/rotate ImageKit, ImgBB, and Imgur keys found in history; update deployment secrets; verify upload/request limits | Owner/deployment action required |
+| 8 | P2 | Responsive/accessibility QA and design cleanup | Verify important actions, keyboard/focus, RTL, mobile/desktop, loading/error/empty states, and product deep links | Pending |
+| 9 | P1 | Final release gate | Full checks on exact final main; review unresolved risks; no production-ready claim while P0/P1 blockers remain | Blocked |
+
+### External release blockers
+
+- **Historical provider keys:** repository cleanup does not revoke ImageKit, ImgBB, or Imgur keys previously committed. The owner must rotate them in provider dashboards and update deployment secrets.
+- **Rate-limiter deployment:** the merged code requires server-side Upstash configuration and a trusted ingress policy. CI mocks Redis; it cannot replace a live hosting smoke test.
+- **Database:** clean-database CI is not proof of compatibility with any populated database. No production database is currently assumed.
+- **Checkout:** the current checkout is demo-only and does not represent a real purchase. Do not launch as production commerce until payment, inventory, orders, and failure recovery are complete.
