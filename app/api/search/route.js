@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { rateLimitResponse } from '@/lib/api/rate-limit.mjs';
 import { prisma } from '@/lib/db/prisma';
 import { sanitizeSearchText } from '@/lib/api/search-filters.mjs';
 import { buildWhere, getQueryTerms, textConditions, SORT_ORDERS, validPositiveInteger } from '@/lib/api/search-query.mjs';
@@ -8,6 +9,9 @@ import { isPaginationOffsetOutOfRange } from '@/lib/api/validation.mjs';
 const MAX_QUERY_LENGTH = 120;
 const MAX_PAGE_SIZE = 50;
 export async function POST(request) {
+  const rateLimit = await rateLimitResponse(request, {"scope":"catalog-search","limit":60,"windowSeconds":60});
+  if (rateLimit) return rateLimit;
+
   const parsedBody = await readJsonBody(request, 64 * 1024);
   if (!parsedBody.ok) {
     return NextResponse.json(
