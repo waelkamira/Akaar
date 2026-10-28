@@ -61,7 +61,7 @@ test('fails closed in production when the shared store is not configured', async
 
 test('fails closed in production when the shared store errors', async () => {
   const result = await consumeDurableRateLimit({
-    request: request(),
+    request: request({ 'x-real-ip': '192.0.2.2' }),
     scope: 'upload',
     limit: 20,
     windowMs: 60_000,
