@@ -22,8 +22,10 @@ The helper rejects non-HTTPS endpoints. Do not use a local or in-memory substitu
 | `login-ip` | Credentials sign-in through NextAuth | 20 | 15 minutes per client address |
 | `login-account` | Credentials sign-in through NextAuth | 5 | 15 minutes per client address + normalized email |
 | `image-upload` | `POST /api/uploadImageToIPFS`, `/api/uploadImageToImageKit`, `/api/uploadImageToImgbb`, `/api/uploadImageToImgur` | 20 | 10 minutes per client address + authenticated user |
+| `catalog-search` | `POST /api/search` | 60 | 1 minute per client address |
+| `search-suggestions` | `GET /api/search/suggestions` | 120 | 1 minute per client address |
 
-Upload limits combine the client address and authenticated user ID. Registration is limited by client address. Credentials sign-in has both an IP-wide cap and a tighter cap for each normalized email/IP pair. When the address cannot be determined, requests share an `unknown` bucket rather than bypassing the limit.
+Upload limits combine the client address and authenticated user ID. Registration is limited by client address. Credentials sign-in has both an IP-wide cap and a tighter cap for each normalized email/IP pair. When a trusted client address cannot be determined, protected API routes fail closed with HTTP 503 rather than trusting caller-supplied headers or sharing an `unknown` bucket.
 
 ## Proxy and client IP requirements
 
@@ -33,7 +35,7 @@ The helper accepts only a syntactically valid IP address from `x-real-ip`, and o
 
 - When the counter is within the limit, the request proceeds.
 - When the limit is exceeded, the route returns HTTP 429 and a `Retry-After` header.
-- In production, missing Redis configuration, an invalid endpoint, or a Redis/network failure fails closed. Registration and image-upload handlers return HTTP 503; credentials sign-in is denied through NextAuth's normal sign-in error flow until the shared limiter is configured and healthy.
+- In production, missing Redis configuration, an invalid endpoint, or a Redis/network failure fails closed. Registration, image-upload, and public search handlers return HTTP 503; credentials sign-in is denied through NextAuth's normal sign-in error flow until the shared limiter and trusted IP configuration are available.
 - Outside production, missing configuration or store failure is fail-open to keep local development usable. Tests cover both behaviors.
 - The limiter does not log or store raw IP addresses in its keys; the address and identity are SHA-256 hashed.
 
