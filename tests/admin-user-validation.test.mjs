@@ -8,7 +8,7 @@ test('accepts bounded, non-empty user IDs without surrounding whitespace', () =>
 });
 
 test('rejects malformed user IDs before admin mutations', () => {
-  for (const value of ['', ' user ', 'a'.repeat(129), 'user\\nadmin', 'user\\u0000', null, 123, {}, undefined]) {
+  for (const value of ['', ' user ', 'a'.repeat(129), 'user\nadmin', 'user\u0000', null, 123, {}, undefined]) {
     assert.equal(isValidAdminUserId(value), false);
   }
 });
