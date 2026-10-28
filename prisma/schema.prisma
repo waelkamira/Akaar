@@ -149,7 +149,7 @@ model Product {
   category        Category             @relation(fields: [categoryId], references: [id], onDelete: Restrict)
   favorites       Favorite[]
   reviews         Review[]
-    orderItems      OrderItem[]
+  orderItems      OrderItem[]
   cartItems       CartItem[]
   recommendations Recommendation[]
   priceHistory    ProductPriceHistory[]
