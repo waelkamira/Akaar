@@ -18,9 +18,11 @@ The helper rejects non-HTTPS endpoints. Do not use a local or in-memory substitu
 | Scope | Routes | Limit | Window |
 |---|---|---:|---:|
 | `register` | `POST /api/register` | 5 | 15 minutes |
-| `image-upload` | `POST /api/uploadImageToIPFS`, `/api/uploadImageToImageKit`, `/api/uploadImageToImgbb`, `/api/uploadImageToImgur` | 20 | 10 minutes |
+| `login-ip` | Credentials sign-in through NextAuth | 20 | 15 minutes per client address |
+| `login-account` | Credentials sign-in through NextAuth | 5 | 15 minutes per client address + normalized email |
+| `image-upload` | `POST /api/uploadImageToIPFS`, `/api/uploadImageToImageKit`, `/api/uploadImageToImgbb`, `/api/uploadImageToImgur` | 20 | 10 minutes per client address + authenticated user |
 
-Upload limits combine the client address and authenticated user ID. Registration is limited by client address. When the address cannot be determined, requests share an `unknown` bucket rather than bypassing the limit.
+Upload limits combine the client address and authenticated user ID. Registration is limited by client address. Credentials sign-in has both an IP-wide cap and a tighter cap for each normalized email/IP pair. When the address cannot be determined, requests share an `unknown` bucket rather than bypassing the limit.
 
 ## Proxy and client IP requirements
 
