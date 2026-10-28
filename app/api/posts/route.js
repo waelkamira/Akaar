@@ -1,8 +1,7 @@
 import { prisma } from '@/lib/db/prisma';
 import { getAuthenticatedUser } from '@/lib/auth/require-auth';
 import { publicProductWhere } from '@/lib/api/public-product-where.mjs';
-import { getPagination, isPaginationOffsetOutOfRange } from '@/lib/api/validation.mjs';
-import { isValidIdentifier } from '@/lib/api/validation.mjs';
+import { getPagination, isPaginationOffsetOutOfRange, isValidIdentifier } from '@/lib/api/validation.mjs';
 
 export async function GET(req) {
   const url = new URL(req.url);
