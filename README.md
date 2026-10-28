@@ -251,3 +251,137 @@ This section is the operational checkpoint for continuing the audit. It records 
 - **Important schema discovery:** the repository also contains a legacy root-level `schema.prisma` that differs from `prisma/schema.prisma`. CI and package installation now explicitly generate/validate against `prisma/schema.prisma`, the schema used by migrations and the search code. The root-level legacy schema still needs a separately reviewed retirement or reconciliation; it must not silently drive Prisma Client generation.
 - PR #22 merged after the PostgreSQL search/filter integration tests and required CI checks passed. PR #26 subsequently merged the documented local Docker/PostgreSQL test database workflow after Quality checks run `40484294756` passed on its exact head. This does not verify an existing production database migration or browser-driven API flows.
 - The read-only schema inventory added in the current audit branch has not yet been run against a restored legacy database; no migration SQL should be inferred from its expected-table list alone.
+
+---
+
+## Execution plan and live checkpoint — 2026-10-28 (refreshed)
+
+This is the active execution plan. Older handoff notes above are historical snapshots; always re-check GitHub before relying on a PR state or a test result. The owner confirmed there is no production database, so Prisma design is greenfield. This does not make the checkout, secrets, or deployment ready for production.
+
+### Execution rules
+
+1. Work sequentially in small, focused changes; do not duplicate fixes already covered by an open PR.
+2. Check the live PR state, current head SHA, dependencies, and latest Quality CI before merging.
+3. Include focused regression tests with every behavior change.
+4. A green check on an earlier commit is not proof for a newer head. Record the exact SHA and run.
+5. Distinguish code changed, CI verified, DB/API integration verified, browser verified, and external owner action required.
+6. After merges, verify the merged commit and update this ledger.
+7. Do not claim production readiness while any P0/P1 release blocker remains.
+
+### Work completed in this continuation
+
+- [x] Reviewed the current README, package scripts, and Quality CI workflow.
+- [x] Added an initial execution-plan PR (#47), then refreshed the plan after the security merge to avoid stale state.
+- [x] Re-checked PR #46's recorded latest code head `caea60e733da7b68d331fb23c5aa6c267d302c08`; Quality CI run [40675206391](https://github.com/waelkamira/Akaar/actions/runs/40675206391) completed successfully.
+- [x] Merged PR #46 (durable rate limiting and NextAuth redirect/token hardening) as merge commit `6a23b15f0a2e42463730d2f736ffdbbbbe814bd4`. **This does not mean runtime rate limiting is verified**: Upstash credentials and trusted ingress configuration still need a live smoke test.
+
+### Current PR inventory — checked 2026-10-28
+
+| PR | Scope | Next action |
+|---|---|---|
+| [#47 — execution plan (superseded)](https://github.com/waelkamira/Akaar/pull/47) | Initial README plan based before PR #46 merged | Close as superseded by this refreshed README PR after it is opened. |
+| [#43 — product mutation identifiers](https://github.com/waelkamira/Akaar/pull/43) | Validate product IDs on update/delete | Re-fetch exact head and Quality CI; merge only if current head is green and no conflict. |
+| [#42 — seller/product route identifiers](https://github.com/waelkamira/Akaar/pull/42) | Validate seller/product IDs on listing/detail routes | Re-fetch exact head and Quality CI; avoid duplicating its changes on main. |
+| [#40 — admin user identifiers](https://github.com/waelkamira/Akaar/pull/40) | Validate IDs on admin user update/delete | Historical CI passed on head `0794204862a18905186c33fceac154d83547fdfc`, run [40606369548](https://github.com/waelkamira/Akaar/actions/runs/40606369548); re-check current head/state. |
+| [#39 — category route identifiers](https://github.com/waelkamira/Akaar/pull/39) | Strict positive integer category IDs | Re-fetch exact head and CI; merge only if current head is green. |
+| [#38 — favorite identifiers](https://github.com/waelkamira/Akaar/pull/38) | Bound favorite read/write identifiers | Re-fetch exact head and CI; merge only if current head is green. |
+| [#37 — product image/external URL validation](https://github.com/waelkamira/Akaar/pull/37) | Validate image arrays and external links | Historical CI passed on head `5eb29286a84750fc65f2a702c2db9569396144cc`, run [40604823663](https://github.com/waelkamira/Akaar/actions/runs/40604823663); re-check current head/state. |
+| [#36 — profile image URL validation](https://github.com/waelkamira/Akaar/pull/36) | Validate profile-image fields in user APIs | Re-fetch exact head and CI; merge only if current head is green. |
+| [#34 — environment file ignore rules](https://github.com/waelkamira/Akaar/pull/34) | Prevent accidental commits of local environment files | Historical CI passed on head `8a062a16f2d9f7f373f71d4fe19971baccfd90f9`, run [40602587075](https://github.com/waelkamira/Akaar/actions/runs/40602587075); re-check current state. |
+| [#33 — Prisma/schema reconciliation](https://github.com/waelkamira/Akaar/pull/33) | Canonical Prisma schema, clean migrations, normalized order line items | Historical CI passed on head `5cbeee5c7fee114b13c89bca165a07856488cc17`, run [40610959277](https://github.com/waelkamira/Akaar/actions/runs/40610959277); re-check current state and main after merge. |
+| [#31 — previous README ledger](https://github.com/waelkamira/Akaar/pull/31) | Earlier remediation documentation | Check current state; avoid duplicating this refreshed ledger. |
+| [#29 — architecture/greenfield policy](https://github.com/waelkamira/Akaar/pull/29) | Target architecture and database policy | Historical CI passed on head `0c92bcd0a61f2ec959d8dee0c801e5fb66b2964a`, run [40606548642](https://github.com/waelkamira/Akaar/actions/runs/40606548642); re-check current state. |
+
+GitHub search can return incomplete status metadata. The table is a checkpoint, not permission to merge: inspect the live PR head/checks first.
+
+### Ordered remaining plan
+
+| Order | Priority | Task | Acceptance criteria | Status |
+|---:|---|---|---|---|
+| 1 | P1 | Refresh all open security PRs and merge safe, tested changes in dependency order | Current head SHA known; exact-head Quality CI green; no unresolved conflict/dependency; post-merge state recorded | In progress |
+| 2 | P1 | Complete API-wide authorization/input audit | Every private/admin/mutation route enforces server identity and role/ownership; bounded IDs and bodies; safe errors/logging; regression tests | Partial; existing PRs cover selected routes only |
+| 3 | P1 | Validate durable rate limiter in deployment | Configure `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` as server secrets; set `TRUST_PROXY_HEADERS=true` only if ingress overwrites `x-real-ip`; verify 429/`Retry-After` and fail-closed behavior | Code + CI verified; live smoke test pending |
+| 4 | P1 | Verify Prisma greenfield schema and migrations on main | Canonical `prisma/schema.prisma`; clean PostgreSQL migration and drift gates pass; order/money schema documented; never deploy generated diagnostic drift SQL blindly | PR #33 recorded green; current merge state/main verification pending |
+| 5 | P1 | Search/filter/pagination integration and browser QA | PostgreSQL tests for combined filters, visibility, sort, page/count; browser checks for URL sync, clearing filters, empty/error states, and direct product links | Partial automated coverage; browser tests pending |
+| 6 | P1 | Real checkout/order lifecycle | Currency-aware money, persisted order transitions, inventory reservation, payment provider, verified webhooks, idempotency/refunds and end-to-end tests | Not implemented; checkout remains demo-only |
+| 7 | P1 | Rotate historical provider credentials and verify hosting controls | Revoke/rotate ImageKit, ImgBB, and Imgur keys found in history; update deployment secrets; verify upload/request limits | Owner/deployment action required |
+| 8 | P2 | Responsive/accessibility QA and design cleanup | Verify important actions, keyboard/focus, RTL, mobile/desktop, loading/error/empty states, and product deep links | Pending |
+| 9 | P1 | Final release gate | Full checks on exact final main; review unresolved risks; no production-ready claim while P0/P1 blockers remain | Blocked |
+
+### External release blockers
+
+- **Historical provider keys:** repository cleanup does not revoke ImageKit, ImgBB, or Imgur keys previously committed. The owner must rotate them in provider dashboards and update deployment secrets.
+- **Rate-limiter deployment:** the merged code requires server-side Upstash configuration and a trusted ingress policy. CI mocks Redis; it cannot replace a live hosting smoke test.
+- **Database:** clean-database CI is not proof of compatibility with any populated database. No production database is currently assumed.
+- **Checkout:** the current checkout is demo-only and does not represent a real purchase. Do not launch as production commerce until payment, inventory, orders, and failure recovery are complete.
+
+
+---
+
+## خطة التنفيذ النشطة — 2026-10-28
+
+> هذه الخطة هي نقطة المتابعة الحالية. الحالات القديمة في سجل التدقيق أدناه تحفظ التاريخ ولا تعني أن التحقق ما زال حديثاً. الفرع المرجعي هو `main`، وآخر commit تمت مراجعته أثناء هذا التحديث هو `6a23b15f0a2e42463730d2f736ffdbbbbe814bd4`.
+
+### قواعد التنفيذ والتحقق
+
+1. تنفيذ مهمة واحدة في كل مرة، مع فحص الفرع وPR وSHA الحالي قبل تعديل أي كود.
+2. لا تكرار إصلاح موجود في PR مفتوح؛ مراجعة التغييرات التابعة لنفس الملف قبل الدمج أو إعادة التطبيق.
+3. لا تعتبر الاختبارات ناجحة إلا على SHA نفسه الذي نراجع أو ندمج.
+4. حالات الإنجاز منفصلة: **تعديل كود**، **CI ناجح**، **اختبار تكامل قاعدة بيانات/API**، **اختبار متصفح**، **إجراء خارجي مطلوب**.
+5. لا تستخدم `prisma db push --accept-data-loss` ولا تطبق SQL مولداً من تقرير drift على أي قاعدة مشتركة أو إنتاجية.
+6. لا نعلن جاهزية الإنتاج حتى تنتهي جميع موانع P0/P1، بما فيها الإعدادات الخارجية والدفع الحقيقي.
+
+### ما تم تأكيده في تحديث 2026-10-28
+
+- [x] قراءة README الحالي و`package.json` وملفات فحص مخطط Prisma.
+- [x] تأكيد أن قاعدة البيانات ما زالت greenfield وفق سياق العمل؛ لا توجد قاعدة إنتاج حالية يجري ترحيلها. لذلك يتم تقييم اتساق المخطط والترحيلات على قاعدة جديدة، ويجب إبقاء أي فحص لقاعدة مستقبلية عملية مستقلة.
+- [x] PR #46 دمج محدد معدل الطلبات الدائم وتحسين إعادة توجيه المصادقة/إزالة access token غير المستخدم، بدمج `6a23b15f0a2e42463730d2f736ffdbbbbe814bd4`.
+- [x] CI للجودة على SHA التوثيق `f1ca9140afcff400f675d135d00c4d8f5733d505` نجح في run [40676690906](https://github.com/waelkamira/Akaar/actions/runs/40676690906).
+- [ ] إعداد Upstash وموثوقية عنوان العميل في منصة الاستضافة وفحص live rate-limit لم يثبت بعد. فشل Vercel الحالي بسبب حد النشر اليومي ليس فشلاً في اختبار الكود ولا نجاحاً في اختبار النشر.
+
+### الخطوات المرتبة
+
+| الترتيب | الأولوية | العمل | معيار الإغلاق | الحالة |
+|---:|---|---|---|---|
+| 1 | P1 | متابعة PRs الأمان المفتوحة #43 و#42 و#40 و#39 و#38 و#37 و#36، وفحص الرأس وCI والتعارضات لكل PR قبل دمجها بالتتابع | كل PR يراجع على SHA الحالي، مع CI أخضر وتعليقات/اختبارات واضحة؛ لا تكرار للتغييرات التابعة | قيد التنفيذ |
+| 2 | P1 | إصلاح/تدقيق بقية معرّفات API وتدفقات التفويض | كل مسار خاص/إداري/تعديل يتحقق من هوية المستخدم والدور/الملكية، ومعرفات محددة الطول والصيغة، واختبارات رفض | جزئي؛ PRs تغطي مسارات منتقاة |
+| 3 | P1 | تدقيق قواعد الأسرار والبيئة | دمج قاعدة تجاهل ملفات البيئة بعد التحقق من عدم تعريض أسرار، مراجعة المستودع وتاريخه، وتدوير المفاتيح التاريخية خارج Git | PR #34 مفتوح؛ التدوير إجراء مالك |
+| 4 | P1 | توحيد Prisma ومصدر المخطط | مراجعة PR #33 على أحدث SHA؛ التأكد أن `prisma/schema.prisma` هو المصدر الوحيد الذي تستخدمه scripts وCI؛ اجتياز migration/drift gate من قاعدة فارغة؛ حسم مصير `schema.prisma` الجذري | PR #33 مفتوح، CI سابق لا يكفي وحده |
+| 5 | P1 | اختبارات البحث والتصفح والمفضلة والحذف | تكامل PostgreSQL للمرشحات والترقيم والظهور؛ متصفح لاختبار الروابط المباشرة ومسح الفلاتر والحالات الفارغة والأخطاء والملكية | اختبارات آلية جزئية؛ المتصفح معلق |
+| 6 | P1 | تشغيل محدد معدل الطلبات في البيئة الفعلية | إعداد `UPSTASH_REDIS_REST_URL` و`UPSTASH_REDIS_REST_TOKEN` كأسرار خادمية، وضبط `TRUST_PROXY_HEADERS=true` فقط بعد تأكيد أن ingress يكتب `x-real-ip` من جديد؛ اختبار 429 و`Retry-After` وحالات تعطل المخزن | الكود وCI موجودان؛ اختبار الاستضافة معلق |
+| 7 | P1 | بناء دورة التجارة الحقيقية | عملة مخزنة مع كل مبلغ، طلبات دائمة وحالات انتقال، حجز مخزون، مزود دفع، تحقق webhooks، idempotency، استرداد واختبارات E2E | غير مكتمل؛ checkout تجريبي فقط |
+| 8 | P2 | مراجعة واجهة RTL وإمكانية الوصول | اختبار الجوال/سطح المكتب، لوحة المفاتيح والتركيز، جميع الأزرار المهمة، وحالات التحميل والخطأ/الفراغ | معلق |
+| 9 | P1 | قرار الإطلاق | جميع بوابات الجودة على SHA نهائي، لا مخاطر P0/P1 مفتوحة، والمهام الخارجية موثقة ومؤكدة | محجوب |
+
+### فهرس PRs المرصودة عند تحديث الخطة
+
+| PR | النطاق | الإجراء التالي |
+|---|---|---|
+| [#48 — تحديث الخطة](https://github.com/waelkamira/Akaar/pull/48) | هذا التحديث التوثيقي | فحص CI ودمجه ثم إغلاق/تمييز أي خطة توثيق سابقة متقادمة |
+| [#43](https://github.com/waelkamira/Akaar/pull/43) | معرّفات تعديل/حذف المنتج | فحص أحدث SHA وCI |
+| [#42](https://github.com/waelkamira/Akaar/pull/42) | معرّفات مسارات البائع والمنتج | فحص أحدث SHA وCI |
+| [#40](https://github.com/waelkamira/Akaar/pull/40) | معرّفات المستخدم الإداري | فحص أحدث SHA وCI |
+| [#39](https://github.com/waelkamira/Akaar/pull/39) | معرّفات الفئات | فحص أحدث SHA وCI |
+| [#38](https://github.com/waelkamira/Akaar/pull/38) | مدخلات معرّف المفضلة | فحص أحدث SHA وCI |
+| [#37](https://github.com/waelkamira/Akaar/pull/37) | روابط صور المنتج والروابط الخارجية | فحص أحدث SHA وCI |
+| [#36](https://github.com/waelkamira/Akaar/pull/36) | روابط صور الملف الشخصي | فحص أحدث SHA وCI |
+| [#34](https://github.com/waelkamira/Akaar/pull/34) | تجاهل ملفات البيئة المحلية | فحص أحدث SHA وCI، والتأكد من عدم حذف `.env.example` |
+| [#33](https://github.com/waelkamira/Akaar/pull/33) | توحيد Prisma والترحيلات | فحص أحدث SHA وCI على قاعدة جديدة |
+| [#29](https://github.com/waelkamira/Akaar/pull/29) | معمارية السوق المستهدفة | اعتبارها وثيقة تصميم حتى اعتمادها وتنفيذها |
+| [#28](https://github.com/waelkamira/Akaar/pull/28) | منع عدم تطابق اسم الفئة القادم من العميل | فحص أحدث SHA وCI |
+
+قد تتغير حالات PR والرؤوس؛ هذا الفهرس لقطة تدقيق لا إذن تلقائي بالدمج.
+
+### موانع الإطلاق التي لا بد من إغلاقها
+
+- **P0 — مفاتيح مزودي الصور القديمة:** تدوير ImageKit وImgBB وImgur التي ظهرت سابقاً في تاريخ Git وتحديث أسرار النشر. إزالة المفاتيح من الملفات الحالية لا يبطلها.
+- **P1 — الأمان:** اكتمال مراجعة كل مسارات API، مع حماية التفويض والملكية ومحددات المعدل ومدخلات المعرفات والروابط.
+- **P1 — قاعدة البيانات:** اختبار مخطط Prisma والترحيلات من قاعدة فارغة. لا توجد قاعدة إنتاجية حالية حسب سياق المشروع؛ عند إنشاء قاعدة فعلية يجب فحصها وتوثيقها قبل أي ترحيل.
+- **P1 — التجارة:** checkout الحالي تجريبي؛ يجب عدم ادعاء بيع حقيقي قبل اكتمال الطلبات والدفع والمخزون وفشل المعاملات واسترداد الأموال.
+- **P1 — الاستضافة:** فشل فحوصات Vercel المسجلة على commit `6a23b15f0a2e42463730d2f736ffdbbbbe814bd4` بسبب حد النشر اليومي. افصل مشكلة الحصة عن CI، وأعد اختبار النشر بعد عودة الحصة أو عبر مسار معتمد آخر.
+
+### سجل هذا التحديث
+
+| التاريخ | العمل | نتيجة التحقق |
+|---|---|---|
+| 2026-10-28 | إنشاء خطة تنفيذ مرتبة وتحديث لقطة الحالة بناءً على main وPRs المفتوحة | تعديل توثيقي؛ CI لفرع PR #48 نجح في [run 40676690906](https://github.com/waelkamira/Akaar/actions/runs/40676690906)، SHA `f1ca9140afcff400f675d135d00c4d8f5733d505`. الدمج النهائي ما زال منفصلاً عن نجاح CI. |
