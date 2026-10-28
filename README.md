@@ -385,3 +385,44 @@ GitHub search can return incomplete status metadata. The table is a checkpoint, 
 | التاريخ | العمل | نتيجة التحقق |
 |---|---|---|
 | 2026-10-28 | إنشاء خطة تنفيذ مرتبة وتحديث لقطة الحالة بناءً على main وPRs المفتوحة | تعديل توثيقي؛ CI لفرع PR #48 نجح في [run 40676690906](https://github.com/waelkamira/Akaar/actions/runs/40676690906)، SHA `f1ca9140afcff400f675d135d00c4d8f5733d505`. الدمج النهائي ما زال منفصلاً عن نجاح CI. |
+
+
+---
+
+## نقطة متابعة التنفيذ بعد عمليات الدمج — 2026-10-28
+
+هذا القسم أحدث من جدول PRs الوارد في خطة التنفيذ أعلاه، ويعكس ما تحقق بعد تحديثها. يرجى اعتماد هذه النقطة عند المتابعة، لأن جدول PR الأصلي يمثل لقطة سابقة.
+
+### دمج مؤكّد مع CI ناجح على الرأس المحدد
+
+| PR | التغيير | CI على SHA المراجع | commit الدمج |
+|---|---|---|---|
+| [#34](https://github.com/waelkamira/Akaar/pull/34) | تجاهل ملفات البيئة المحلية مع إبقاء `.env.example` | [40602587075](https://github.com/waelkamira/Akaar/actions/runs/40602587075) على `8a062a16f2d9f7f373f71d4fe19971baccfd90f9` | `eb3c87576d967f5d5611fed4a1750d6ac4446bd3` |
+| [#39](https://github.com/waelkamira/Akaar/pull/39) | التحقق الصارم من معرّفات مسارات الفئات | [40605632854](https://github.com/waelkamira/Akaar/actions/runs/40605632854) على `fa05d87235bec394324486a81bfd5f288ed8a559` | `8b4ee5163bc3aad6a36529a14c459f8e3dbc513d` |
+| [#40](https://github.com/waelkamira/Akaar/pull/40) | التحقق من معرّفات المستخدمين الإداريين | [40606369548](https://github.com/waelkamira/Akaar/actions/runs/40606369548) على `0794204862a18905186c33fceac154d83547fdfc` | `9fd2500e14aaae636f5e6194fcd82be826d7ddca` |
+| [#42](https://github.com/waelkamira/Akaar/pull/42) | التحقق من معرّفات مسارات البائع والمنتج | [40607308242](https://github.com/waelkamira/Akaar/actions/runs/40607308242) على `d4c95d4a3e87cbaa2e587085f0f320252e0d3501` | `d8b7e2cf6c0e15814e5477ea7c07e9f0f5aa2e93` |
+| [#43](https://github.com/waelkamira/Akaar/pull/43) | التحقق من معرّفات تعديل/حذف المنتج | [40608579261](https://github.com/waelkamira/Akaar/actions/runs/40608579261) على `5badd4b9123a2f14a06d62912a684a2b56fe281c` | `96375e43cf611b8972b5c8fd2e26f8365100f898` |
+| [#37](https://github.com/waelkamira/Akaar/pull/37) | التحقق من روابط صور المنتج والروابط الخارجية | [40604823663](https://github.com/waelkamira/Akaar/actions/runs/40604823663) على `5eb29286a84750fc65f2a702c2db9569396144cc` | `9df7aff3926de61cf59fdeba7414c82479ca1e7a` |
+| [#33](https://github.com/waelkamira/Akaar/pull/33) | توحيد Prisma على المخطط المعتمد، بوابة drift، وترحيلات قاعدة جديدة، وتطبيع عناصر الطلب | [40610959277](https://github.com/waelkamira/Akaar/actions/runs/40610959277) على `5cbeee5c7fee114b13c89bca165a07856488cc17` | `72de7426ad305a2bdaa9c5355bfaa2d74fc97d3a` |
+| [#38](https://github.com/waelkamira/Akaar/pull/38) | التحقق من معرّفات عمليات المفضلة | [40605467832](https://github.com/waelkamira/Akaar/actions/runs/40605467832) على `ed39e7bb74efd9cc203b7d35eb4a4cefe2d749f3` | `b2ba5a81ec37e8bc4ba698c041cf04051725b124` |
+| [#48](https://github.com/waelkamira/Akaar/pull/48) | خطة تنفيذ مرتبة ونقطة متابعة | [40677018931](https://github.com/waelkamira/Akaar/actions/runs/40677018931) على `1322fdfd0173c28dfe2450167863f6e097d7ca68` | `cd602b7fbbe6ddd94cb3b3a9346ee5699fd5cb6a` |
+
+**حدود التحقق:** النتائج أعلاه تثبت CI على رؤوس PR المحددة، وليست اختبارات متصفح أو إعداداً حياً على Vercel/Upstash. دمج تغييرات متعددة في المسار نفسه يتطلب مراجعة التكامل على `main` أيضاً.
+
+### المتابعة الحالية ذات الأولوية
+
+| الترتيب | المهمة | الحالة الحالية والإجراء التالي |
+|---:|---|---|
+| 1 | صور الملف الشخصي في API | PR #36 ما زال مفتوحاً ويبلّغ GitHub عن تعارض دمج بعد تغييرات المستخدمين الإداريين. يلزم إعادة دمجه على `main` الحالي وتشغيل CI على الرأس الجديد؛ لا تتجاوز التعارضات. |
+| 2 | سلامة الفئات | PR #28 يمنع عدم تطابق `categoryId` و`categoryName` ويصلح بيانات fallback، لكنه ما زال مفتوحاً ومتعارضاً؛ أعد تطبيقه على أحدث `main` ثم شغّل CI على الرأس الجديد. |
+| 3 | فحص نهائي لـ Prisma وطلبات البحث | تحقّق من CI على commit `72de7426ad305a2bdaa9c5355bfaa2d74fc97d3a`، وأن بوابة drift تنجح عند تشغيل Quality workflow على `main`. لا توجد قاعدة إنتاجية وفق قرار المشروع؛ قاعدة فارغة واختبارات PostgreSQL المعزولة هي معيار الكود الحالي. |
+| 4 | مراجعة المعمارية | PR #29 وثيقة تصميم معمارية وليست ميزة منفذة؛ راجعها بعد حسم الإصلاحات الأمنية ووافق على أجزاء التنفيذ تدريجياً. |
+| 5 | تشغيل rate limit | الكود مدمج، لكن يجب إضافة أسرار Upstash إلى بيئة النشر وفحص trusted ingress ثم تنفيذ اختبار حي يتأكد من 429 و`Retry-After` وفشل الحماية المغلق عند فقدان الهوية الموثوقة. |
+| 6 | المفاتيح السرية التاريخية | يتعين على مالك الحساب إبطال/تدوير مفاتيح ImageKit وImgBB وImgur التي ظهرت في تاريخ Git ثم تحديث أسرار النشر. قواعد `.gitignore` لا تلغي المفاتيح القديمة. |
+| 7 | اختبارات واجهة المتصفح | لم يثبت بعد اختبار الرحلات الأساسية في متصفح حقيقي: البحث والفلاتر، صفحة المنتج عبر رابط مباشر، المفضلة، صلاحيات الحذف، RTL، والجوال. |
+| 8 | دورة الدفع والطلب | ما زالت غير مكتملة؛ لا تطلق المتجر بوصفه تجارة حقيقية قبل الدفع الموثوق والـ webhooks والطلبات والمخزون والاسترداد واختبارات E2E. |
+
+### ملاحظة حول النشر
+
+على commit `cd602b7fbbe6ddd94cb3b3a9346ee5699fd5cb6a` أبلغت حالات Vercel عن `Deployment rate limited — retry in 24 hours`. هذا قيد حصة نشر خارجي، وليس فشلاً في Quality CI. يبقى النشر والتحقق الحي غير مثبتين حتى نجاح نشر جديد واختباره.
+
