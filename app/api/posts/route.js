@@ -2,6 +2,7 @@ import { prisma } from '@/lib/db/prisma';
 import { getAuthenticatedUser } from '@/lib/auth/require-auth';
 import { publicProductWhere } from '@/lib/api/public-product-where.mjs';
 import { getPagination, isPaginationOffsetOutOfRange } from '@/lib/api/validation.mjs';
+import { isValidListingIdentifier } from '@/lib/api/listing-identifier-validation.mjs';
 
 export async function GET(req) {
   const url = new URL(req.url);
@@ -10,9 +11,9 @@ export async function GET(req) {
     defaultLimit: 5,
     maxLimit: 50,
   });
-  const userId = (url.searchParams.get('userId') || '').trim();
+  const userId = url.searchParams.get('userId');
   try {
-    if (!userId || userId.length > 128) {
+    if (!isValidListingIdentifier(userId)) {
       return new Response(
         JSON.stringify({ message: 'يجب توفير معرف المستخدم' }),
         { status: 400 }
@@ -76,7 +77,7 @@ export async function DELETE(req) {
   const id = searchParams.get('id');
   const userId = searchParams.get('userId');
 
-  if (!id || !userId) {
+  if (!isValidListingIdentifier(id) || !isValidListingIdentifier(userId)) {
     return new Response(
       JSON.stringify({ error: 'يجب توفير معرف الإعلان ومعرف المستخدم' }),
       { status: 400 }
