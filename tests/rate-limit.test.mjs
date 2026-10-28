@@ -122,3 +122,19 @@ test('fails closed in production until proxy headers are explicitly trusted', as
   assert.equal(fetchCalled, false);
   restoreEnv();
 });
+
+test('fails closed in production when a trusted client IP cannot be resolved', async () => {
+  process.env.UPSTASH_REDIS_REST_URL = 'https://redis.example.test';
+  process.env.UPSTASH_REDIS_REST_TOKEN = 'test-token';
+  process.env.NODE_ENV = 'production';
+  process.env.TRUST_PROXY_HEADERS = 'true';
+  let fetchCalled = false;
+  globalThis.fetch = async () => { fetchCalled = true; throw new Error('should not call Redis'); };
+  const result = await checkRateLimit(new Request('https://example.test'), {
+    scope: 'registration', limit: 5, windowSeconds: 900,
+  });
+  assert.equal(result.allowed, false);
+  assert.equal(result.status, 503);
+  assert.equal(fetchCalled, false);
+  restoreEnv();
+});
