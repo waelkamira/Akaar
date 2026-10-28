@@ -19,7 +19,7 @@ export async function POST(request) {
     identity: user.id,
   });
   if (!rateLimit.allowed) {
-    const status = rateLimit.reason === 'store_unavailable' || !rateLimit.configured ? 503 : 429;
+    const status = Boolean(rateLimit.reason) || !rateLimit.configured ? 503 : 429;
     const headers = rateLimit.retryAfterSeconds ? { 'Retry-After': String(rateLimit.retryAfterSeconds) } : undefined;
     return NextResponse.json({ success: false, error: status === 429 ? 'تم تجاوز حد رفع الصور. حاول لاحقًا.' : 'خدمة الحماية غير متاحة حاليًا.' }, { status, headers });
   }
