@@ -9,16 +9,16 @@
 export const colors = {
   // Primary colors
   primary: {
-    50: '#fff1e6',
-    100: '#ffe8d9',
-    200: '#ffd0b5',
-    300: '#ffb088',
-    400: '#ff9466',
-    500: '#ff7c34', // Main brand color
-    600: '#f25d1e',
-    700: '#cc4b18',
-    800: '#9c3915',
-    900: '#7a2e12',
+    50: '#FFF4EF',
+    100: '#FCE5DC',
+    200: '#F6C8B5',
+    300: '#EFB091',
+    400: '#E8A07C',
+    500: '#E0926B', // Persian Orange
+    600: '#C87753',
+    700: '#A95F3E',
+    800: '#82472F',
+    900: '#5D3224',
   },
 
   // Secondary colors
@@ -72,8 +72,8 @@ export const colors = {
   // Background colors
   background: {
     light: '#ffffff',
-    dark: '#1f2933',
-    accent: '#fff8f0',
+    dark: '#454545', // Onyx
+    accent: '#FCE5DC',
   },
 };
 

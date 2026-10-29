@@ -32,14 +32,14 @@ export const metadata = {
 export const viewport = {
   width: 'device-width',
   initialScale: 1,
-  themeColor: '#120b07',
+  themeColor: '#454545',
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="ar" className="!scroll-smooth" dir="rtl">
       <head>
-        <meta name="theme-color" content="#120b07" />
+        <meta name="theme-color" content="#454545" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="Akaar" />

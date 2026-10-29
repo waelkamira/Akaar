@@ -31,7 +31,7 @@ export default function SideBarMenu() {
           aria-label={isOpen ? 'إغلاق القائمة' : 'فتح القائمة'}
           aria-expanded={isOpen}
           onClick={() => setIsOpen((open) => !open)}
-          className="z-50 flex h-11 w-11 items-center justify-center rounded-xl border border-ak-line-strong bg-ak-surface text-2xl text-ak-honey shadow-ak-card transition hover:scale-105 hover:text-ak-cream focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ak-amber"
+          className="ak-glass z-50 flex h-11 w-11 items-center justify-center rounded-xl border border-ak-line-strong text-2xl text-ak-honey transition hover:scale-105 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ak-amber"
         >
           <TfiMenuAlt aria-hidden="true" />
         </button>
@@ -44,13 +44,13 @@ export default function SideBarMenu() {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', stiffness: 120, damping: 15 }}
-              className="fixed right-0 top-0 z-50 flex h-screen w-72 flex-col items-center overflow-y-auto border-l border-ak-line-strong bg-ak-ink/95 p-6 text-ak-cream shadow-ak-panel backdrop-blur-2xl"
+              className="ak-glass-strong fixed right-0 top-0 z-50 flex h-screen w-72 flex-col items-center overflow-y-auto border-l border-ak-line-strong p-6 text-white backdrop-blur-2xl"
             >
               {/* زر الإغلاق */}
               <div className="w-full flex justify-end">
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="text-2xl font-bold text-ak-muted transition hover:text-ak-honey"
+                  className="text-2xl font-bold text-white transition hover:text-ak-honey"
                 >
                   <IoCloseOutline />
                 </button>
@@ -93,7 +93,7 @@ export default function SideBarMenu() {
                         />
                       )}
                     </div>
-                    <h1 className="text-ak-cream">
+                    <h1 className="text-white">
                       {session?.data?.user?.name || 'مستخدم'}
                     </h1>
                   </motion.div>
@@ -127,7 +127,7 @@ export default function SideBarMenu() {
                         setIsOpen(false);
                         signOut({ callbackUrl: '/' });
                       }}
-                      className="my-2 flex max-h-12 w-full items-center justify-between rounded-xl border border-ak-line-strong bg-ak-surface/60 p-2 text-nowrap text-ak-cream shadow-ak-card transition-all duration-300 hover:border-ak-amber/40 hover:bg-ak-brand-soft sm:text-lg"
+                      className="my-2 flex max-h-12 w-full items-center justify-between rounded-xl border border-ak-line-strong bg-ak-surface/60 p-2 text-nowrap text-white shadow-ak-card transition-all duration-300 hover:border-ak-amber/40 hover:bg-ak-brand-soft sm:text-lg"
                     >
                       <FaSignOutAlt className="mx-2" />
                       <span className="w-full text-center lg:text-base">
@@ -138,7 +138,7 @@ export default function SideBarMenu() {
                     <Link
                       href="/login"
                       onClick={() => setIsOpen(false)}
-                      className="my-2 flex max-h-12 w-full items-center justify-between rounded-xl border border-ak-line-strong bg-ak-surface/60 p-2 text-nowrap text-ak-cream shadow-ak-card transition-all duration-300 hover:border-ak-amber/40 hover:bg-ak-brand-soft sm:text-lg"
+                      className="my-2 flex max-h-12 w-full items-center justify-between rounded-xl border border-ak-line-strong bg-ak-surface/60 p-2 text-nowrap text-white shadow-ak-card transition-all duration-300 hover:border-ak-amber/40 hover:bg-ak-brand-soft sm:text-lg"
                     >
                       <FaSignInAlt className="mx-2" />
                       <span className="w-full text-center lg:text-base">
@@ -166,7 +166,7 @@ export default function SideBarMenu() {
                   >
                     <Link
                       href={category?.path}
-                      className="flex items-center justify-center gap-2 rounded-xl border border-ak-line bg-ak-surface/70 p-3 text-ak-cream transition-all duration-300 hover:border-ak-amber/40 hover:bg-ak-brand-soft"
+                      className="flex items-center justify-center gap-2 rounded-xl border border-ak-line bg-ak-surface/70 p-3 text-white transition-all duration-300 hover:border-ak-amber/40 hover:bg-ak-brand-soft"
                     >
                       <span className="text-lg text-ak-honey sm:text-xl">
                         {category?.icon}
@@ -186,7 +186,7 @@ export default function SideBarMenu() {
                   onClick={() => setIsOpen(false)}
                   emoji={<IoCloseOutline />}
                   style={' '}
-                  className="bg-red-500 hover:bg-red-600 text-ak-cream w-full min-w-[200px]" // هنا نحدد عرض زر الإغلاق
+                  className="bg-red-500 hover:bg-red-600 text-white w-full min-w-[200px]" // هنا نحدد عرض زر الإغلاق
                 />
               </div>
             </motion.div>

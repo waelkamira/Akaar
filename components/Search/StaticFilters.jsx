@@ -104,7 +104,7 @@
 //         <div>
 //           <label
 //             htmlFor="search-sort"
-//             className="mb-2 block text-sm font-medium text-ak-cream"
+//             className="mb-2 block text-sm font-medium text-white"
 //           >
 //             ترتيب النتائج
 //           </label>
@@ -123,7 +123,7 @@
 //         <div>
 //           <label
 //             htmlFor="search-rating"
-//             className="mb-2 block text-sm font-medium text-ak-cream"
+//             className="mb-2 block text-sm font-medium text-white"
 //           >
 //             متوسط التقييم الأدنى
 //           </label>
@@ -145,7 +145,7 @@
 //         <div>
 //           <label
 //             htmlFor="search-brand"
-//             className="mb-2 block text-sm font-medium text-ak-cream"
+//             className="mb-2 block text-sm font-medium text-white"
 //           >
 //             الماركة
 //           </label>
@@ -162,7 +162,7 @@
 //         <div>
 //           <label
 //             htmlFor="search-subcategory"
-//             className="mb-2 block text-sm font-medium text-ak-cream"
+//             className="mb-2 block text-sm font-medium text-white"
 //           >
 //             الفئة الفرعية
 //           </label>
@@ -179,7 +179,7 @@
 //         <div>
 //           <label
 //             htmlFor="search-vendor"
-//             className="mb-2 block text-sm font-medium text-ak-cream"
+//             className="mb-2 block text-sm font-medium text-white"
 //           >
 //             معرّف البائع
 //           </label>
@@ -199,7 +199,7 @@
 //           animate={{ opacity: 1 }}
 //           transition={{ duration: 0.3, delay: 0.1 }}
 //         >
-//           <label className="block text-sm font-medium text-ak-cream mb-2">
+//           <label className="block text-sm font-medium text-white mb-2">
 //             <span className="flex items-center gap-1">
 //               <svg
 //                 xmlns="http://www.w3.org/2000/svg"
@@ -237,7 +237,7 @@
 //             animate={{ opacity: 1 }}
 //             transition={{ duration: 0.3, delay: 0.2 }}
 //           >
-//             <label className="block text-sm font-medium text-ak-cream mb-2">
+//             <label className="block text-sm font-medium text-white mb-2">
 //               <span className="flex items-center gap-1">
 //                 <svg
 //                   xmlns="http://www.w3.org/2000/svg"
@@ -275,7 +275,7 @@
 //           animate={{ opacity: 1 }}
 //           transition={{ duration: 0.3, delay: 0.3 }}
 //         >
-//           <label className="block text-sm font-medium text-ak-cream mb-3">
+//           <label className="block text-sm font-medium text-white mb-3">
 //             <span className="flex items-center gap-1">
 //               <svg
 //                 xmlns="http://www.w3.org/2000/svg"
@@ -297,7 +297,7 @@
 //           {/* Price Inputs فقط - بدون slider */}
 //           <div className="flex flex-col gap-3">
 //             <div className="flex-1">
-//               <label className="text-xs text-ak-muted mb-1 block">
+//               <label className="text-xs text-white mb-1 block">
 //                 أدنى سعر
 //               </label>
 //               <input
@@ -312,7 +312,7 @@
 //               />
 //             </div>
 //             <div className="flex-1">
-//               <label className="text-xs text-ak-muted mb-1 block">
+//               <label className="text-xs text-white mb-1 block">
 //                 أعلى سعر
 //               </label>
 //               <input
@@ -435,7 +435,7 @@ export default function StaticFilters() {
   };
 
   // ✅ فئة موحدة لحقول الإدخال والقوائم لضمان التناسق
-  const inputClass = "w-full rounded-xl border border-ak-line bg-ak-canvas px-4 py-2.5 text-sm text-ak-cream placeholder-stone-400 focus:border-ak-amber focus:ring-2 focus:ring-ak-amber/20 focus:bg-ak-canvas transition-all duration-300 outline-none";
+  const inputClass = "w-full rounded-xl border border-ak-line bg-ak-canvas px-4 py-2.5 text-sm text-white placeholder-stone-400 focus:border-ak-amber focus:ring-2 focus:ring-ak-amber/20 focus:bg-ak-canvas transition-all duration-300 outline-none";
   const labelClass = "flex items-center gap-2 text-sm font-medium text-stone-300 mb-2";
 
   return (

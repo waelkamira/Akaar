@@ -26,7 +26,7 @@ export default function ErrorState({ error, reset }) {
           <button
             type="button"
             onClick={reset}
-            className="rounded-lg bg-primary-600 px-6 py-3 font-bold text-ak-cream hover:bg-primary-700"
+            className="rounded-lg bg-primary-600 px-6 py-3 font-bold text-white hover:bg-primary-700"
           >
             المحاولة مرة أخرى
           </button>

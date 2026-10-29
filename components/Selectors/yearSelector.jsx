@@ -41,8 +41,8 @@ export default function YearsSelector() {
       ...theme,
       colors: {
         ...theme.colors,
-        primary: '#FF7C34',
-        primary25: '#fadfae',
+        primary: '#E0926B',
+        primary25: '#FCE5DC',
       },
     };
   }
@@ -53,9 +53,9 @@ export default function YearsSelector() {
       minHeight: minHeight,
       height: 'auto',
       backgroundColor: 'white',
-      borderColor: state.isFocused ? '#FF7C34' : '#A1A5AD',
+      borderColor: state.isFocused ? '#E0926B' : '#A1A5AD',
       '&:hover': {
-        borderColor: '#FF7C34',
+        borderColor: '#E0926B',
       },
     }),
     valueContainer: (provided) => ({
@@ -74,7 +74,7 @@ export default function YearsSelector() {
   const CustomPlaceholder = (props) => {
     return (
       <components.Placeholder {...props}>
-        <div className="flex items-center gap-2 text-ak-muted">
+        <div className="flex items-center gap-2 text-white">
           <FaCalendarAlt className="text-primary-500 text-lg sm:text-xl" />
           <span>السنة</span>
         </div>

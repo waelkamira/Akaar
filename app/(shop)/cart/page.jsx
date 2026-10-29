@@ -84,14 +84,14 @@ export default function CartPage() {
           <div className="w-20 h-20 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
             <FaCheckCircle className="text-4xl text-emerald-400" />
           </div>
-          <h1 className="mb-3 text-3xl font-black text-ak-cream">تم تسجيل طلبك</h1>
+          <h1 className="mb-3 text-3xl font-black text-white">تم تسجيل طلبك</h1>
           <p className="mb-8 text-neutral-400 leading-relaxed">
             تم تسجيل الطلب للدفع عند الاستلام. لم يتم تحصيل أي مبلغ إلكتروني.
           </p>
           <p className="mb-5 break-all text-xs text-neutral-500">رقم الطلب: {createdOrderId}</p>
           <div className="grid gap-3 sm:grid-cols-2">
-            <Link href="/orders" className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 px-6 py-4 font-bold text-ak-cream">طلباتي</Link>
-            <Link href={`/orders/${encodeURIComponent(createdOrderId)}/invoice`} className="inline-flex items-center justify-center rounded-xl border border-ak-line px-6 py-4 font-bold text-ak-cream">الإيصال</Link>
+            <Link href="/orders" className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 px-6 py-4 font-bold text-white">طلباتي</Link>
+            <Link href={`/orders/${encodeURIComponent(createdOrderId)}/invoice`} className="inline-flex items-center justify-center rounded-xl border border-ak-line px-6 py-4 font-bold text-white">الإيصال</Link>
           </div>
         </motion.div>
       </div>
@@ -135,7 +135,7 @@ export default function CartPage() {
             <span className="inline-block px-3 py-1 bg-orange-600/20 border border-orange-500/30 rounded-full text-orange-400 text-xs font-bold mb-3">
               الدفع عند الاستلام
             </span>
-            <h1 className="text-3xl sm:text-4xl font-black text-ak-cream">سلة التسوق</h1>
+            <h1 className="text-3xl sm:text-4xl font-black text-white">سلة التسوق</h1>
           </div>
           <p className="text-sm text-neutral-400 bg-neutral-900/50 px-4 py-2 rounded-xl border border-neutral-800">
             يتم تأكيد السعر والمخزون من الخادم قبل تسجيل الطلب
@@ -153,7 +153,7 @@ export default function CartPage() {
             <p className="mb-6 text-xl font-bold text-neutral-300">سلتك فارغة حاليًا.</p>
             <Link
               href="/#demo-products"
-              className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-ak-cream font-bold py-3.5 px-8 rounded-xl transition-all shadow-lg shadow-orange-600/20 hover:shadow-orange-600/40 hover:scale-[1.02] active:scale-[0.98]"
+              className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white font-bold py-3.5 px-8 rounded-xl transition-all shadow-lg shadow-orange-600/20 hover:shadow-orange-600/40 hover:scale-[1.02] active:scale-[0.98]"
             >
               استكشف المنتجات
             </Link>
@@ -179,7 +179,7 @@ export default function CartPage() {
                   </div>
                   
                   <div className="space-y-3 flex flex-col justify-center">
-                    <h2 className="font-bold text-ak-cream text-lg line-clamp-1">{item.title}</h2>
+                    <h2 className="font-bold text-white text-lg line-clamp-1">{item.title}</h2>
                     <p className="text-lg font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-400">
                       {item.basePrice.toLocaleString('ar-SY')} <span className="text-sm font-bold text-neutral-400">ل.س</span>
                     </p>
@@ -191,17 +191,17 @@ export default function CartPage() {
                           aria-label="زيادة الكمية"
                           disabled={item.quantity >= item.stockQuantity}
                           onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                          className="w-8 h-8 flex items-center justify-center rounded-lg bg-neutral-700 hover:bg-orange-600 hover:text-ak-cream text-neutral-300 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                          className="w-8 h-8 flex items-center justify-center rounded-lg bg-neutral-700 hover:bg-orange-600 hover:text-white text-neutral-300 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                         >
                           <FaPlus className="text-xs" />
                         </button>
-                        <span className="w-8 text-center font-bold text-ak-cream">{item.quantity}</span>
+                        <span className="w-8 text-center font-bold text-white">{item.quantity}</span>
                         <button
                           type="button"
                           aria-label="تقليل الكمية"
                           disabled={item.quantity <= 1}
                           onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                          className="w-8 h-8 flex items-center justify-center rounded-lg bg-neutral-700 hover:bg-orange-600 hover:text-ak-cream text-neutral-300 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                          className="w-8 h-8 flex items-center justify-center rounded-lg bg-neutral-700 hover:bg-orange-600 hover:text-white text-neutral-300 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                         >
                           <FaMinus className="text-xs" />
                         </button>
@@ -229,7 +229,7 @@ export default function CartPage() {
               animate="visible"
               className="h-fit bg-neutral-900/60 backdrop-blur-xl border border-neutral-800 rounded-3xl p-6 sticky top-24"
             >
-              <h2 className="mb-6 text-xl font-black text-ak-cream flex items-center gap-2">
+              <h2 className="mb-6 text-xl font-black text-white flex items-center gap-2">
                 <span className="w-1.5 h-6 bg-gradient-to-b from-orange-500 to-amber-500 rounded-full" />
                 ملخص الطلب
               </h2>
@@ -237,14 +237,14 @@ export default function CartPage() {
               <div className="space-y-3 mb-6">
                 <div className="flex justify-between text-neutral-400">
                   <span>المجموع الفرعي</span>
-                  <span className="text-ak-cream font-bold">{cartTotal.toLocaleString('ar-SY')} ل.س</span>
+                  <span className="text-white font-bold">{cartTotal.toLocaleString('ar-SY')} ل.س</span>
                 </div>
                 <div className="flex justify-between text-neutral-400">
                   <span>الشحن التجريبي</span>
                   <span className="text-emerald-400 font-bold">مجاني</span>
                 </div>
                 <div className="flex justify-between border-t border-neutral-800 pt-4 mt-4">
-                  <span className="text-lg font-black text-ak-cream">الإجمالي</span>
+                  <span className="text-lg font-black text-white">الإجمالي</span>
                   <span className="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-400">
                     {cartTotal.toLocaleString('ar-SY')} ل.س
                   </span>
@@ -259,7 +259,7 @@ export default function CartPage() {
                     required
                     autoComplete="name"
                     placeholder="أدخل اسمك الثلاثي"
-                    className="w-full bg-neutral-800/50 border border-neutral-700/50 focus-within:border-orange-500/50 focus-within:ring-1 focus-within:ring-orange-500/20 rounded-xl px-4 py-3 text-ak-cream placeholder-neutral-500 focus:outline-none transition-all"
+                    className="w-full bg-neutral-800/50 border border-neutral-700/50 focus-within:border-orange-500/50 focus-within:ring-1 focus-within:ring-orange-500/20 rounded-xl px-4 py-3 text-white placeholder-neutral-500 focus:outline-none transition-all"
                   />
                 </div>
                 
@@ -271,7 +271,7 @@ export default function CartPage() {
                     required
                     autoComplete="tel"
                     placeholder="09xxxxxxxx"
-                    className="w-full bg-neutral-800/50 border border-neutral-700/50 focus-within:border-orange-500/50 focus-within:ring-1 focus-within:ring-orange-500/20 rounded-xl px-4 py-3 text-ak-cream placeholder-neutral-500 focus:outline-none transition-all"
+                    className="w-full bg-neutral-800/50 border border-neutral-700/50 focus-within:border-orange-500/50 focus-within:ring-1 focus-within:ring-orange-500/20 rounded-xl px-4 py-3 text-white placeholder-neutral-500 focus:outline-none transition-all"
                   />
                 </div>
                 
@@ -282,7 +282,7 @@ export default function CartPage() {
                     required
                     autoComplete="address-level2"
                     placeholder="مثال: دمشق"
-                    className="w-full bg-neutral-800/50 border border-neutral-700/50 focus-within:border-orange-500/50 focus-within:ring-1 focus-within:ring-orange-500/20 rounded-xl px-4 py-3 text-ak-cream placeholder-neutral-500 focus:outline-none transition-all"
+                    className="w-full bg-neutral-800/50 border border-neutral-700/50 focus-within:border-orange-500/50 focus-within:ring-1 focus-within:ring-orange-500/20 rounded-xl px-4 py-3 text-white placeholder-neutral-500 focus:outline-none transition-all"
                   />
                 </div>
 
@@ -294,7 +294,7 @@ export default function CartPage() {
                     maxLength={300}
                     autoComplete="street-address"
                     placeholder="الحي والشارع ورقم البناء"
-                    className="w-full rounded-xl border border-neutral-700/50 bg-neutral-800/50 px-4 py-3 text-ak-cream placeholder-neutral-500 transition-all focus-within:border-orange-500/50 focus-within:ring-1 focus-within:ring-orange-500/20 focus:outline-none"
+                    className="w-full rounded-xl border border-neutral-700/50 bg-neutral-800/50 px-4 py-3 text-white placeholder-neutral-500 transition-all focus-within:border-orange-500/50 focus-within:ring-1 focus-within:ring-orange-500/20 focus:outline-none"
                   />
                 </div>
 
@@ -307,7 +307,7 @@ export default function CartPage() {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 px-6 py-4 font-black text-ak-cream transition-all hover:from-orange-700 hover:to-amber-700 disabled:cursor-wait disabled:opacity-60"
+                  className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 px-6 py-4 font-black text-white transition-all hover:from-orange-700 hover:to-amber-700 disabled:cursor-wait disabled:opacity-60"
                 >
                   <FaCheckCircle />
                   {submitting ? 'جارٍ تسجيل الطلب...' : 'تأكيد الطلب والدفع عند الاستلام'}

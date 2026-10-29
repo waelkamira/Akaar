@@ -62,7 +62,7 @@ export default function SearchResults() {
         animate={{ y: 0 }}
         className="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3"
       >
-        <motion.p className="text-sm text-ak-muted bg-ak-surface border border-ak-line-strong/[.08] px-4 py-2 rounded-full inline-flex items-center">
+        <motion.p className="text-sm text-white bg-ak-surface border border-ak-line-strong/[.08] px-4 py-2 rounded-full inline-flex items-center">
           <span className="font-medium text-ak-honey mx-1">{totalCount}</span>
           نتيجة متاحة
           {category && (
@@ -70,7 +70,7 @@ export default function SearchResults() {
               <span className="mx-2 text-stone-500">|</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-4 w-4 text-ak-muted mr-1"
+                className="h-4 w-4 text-white mr-1"
                 viewBox="0 0 20 20"
                 fill="currentColor"
               >

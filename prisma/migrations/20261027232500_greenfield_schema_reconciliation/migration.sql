@@ -1,7 +1,28 @@
--- Greenfield reconciliation generated from prisma/schema.prisma by Prisma 6.4.1.
--- Project owner confirmed there is no production database. This migration reconciles the
--- development migration history with the canonical schema before first deployment.
--- Do not treat it as a data-preserving migration for any database containing user data.
+-- Reconcile the legacy development schema with the canonical Prisma schema.
+-- Refuse to discard legacy rows from tables whose representation changes.
+
+DO $migration$
+BEGIN
+  IF EXISTS (SELECT 1 FROM "Category") THEN
+    RAISE EXCEPTION 'Category contains rows; migrate category IDs explicitly before continuing.';
+  END IF;
+  IF EXISTS (SELECT 1 FROM "ProductImage") THEN
+    RAISE EXCEPTION 'ProductImage contains rows; migrate legacy image columns before continuing.';
+  END IF;
+  IF EXISTS (
+    SELECT 1
+    FROM (
+      SELECT MIN("categoryName") AS name
+      FROM "products"
+      GROUP BY "categoryId"
+    ) AS product_categories
+    GROUP BY name
+    HAVING COUNT(*) > 1
+  ) THEN
+    RAISE EXCEPTION 'Product category names are not unique; reconcile categories before continuing.';
+  END IF;
+END
+$migration$;
 
 CREATE EXTENSION IF NOT EXISTS "pg_trgm";
 
@@ -30,6 +51,15 @@ ALTER TABLE "Category"
   ADD COLUMN "id" INTEGER NOT NULL,
   ADD CONSTRAINT "Category_pkey" PRIMARY KEY ("id");
 
+INSERT INTO "Category" ("id", "name", "slug", "updatedAt")
+SELECT
+  "categoryId",
+  MIN("categoryName"),
+  'category-' || "categoryId"::TEXT,
+  CURRENT_TIMESTAMP
+FROM "products"
+GROUP BY "categoryId";
+
 ALTER TABLE "Order"
   ADD COLUMN "fulfillmentStatus" "OrderStatus" NOT NULL DEFAULT 'PENDING';
 
@@ -53,7 +83,9 @@ ALTER TABLE "users"
   ADD COLUMN "lastLoginAt" TIMESTAMP(3),
   ADD COLUMN "role" "UserRole" NOT NULL DEFAULT 'CUSTOMER',
   ADD COLUMN "status" "UserStatus" NOT NULL DEFAULT 'ACTIVE',
-  ADD COLUMN "updatedAt" TIMESTAMP(3) NOT NULL;
+  ADD COLUMN "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;
+
+ALTER TABLE "users" ALTER COLUMN "updatedAt" DROP DEFAULT;
 
 CREATE TABLE "sellers" (
   "id" TEXT NOT NULL,

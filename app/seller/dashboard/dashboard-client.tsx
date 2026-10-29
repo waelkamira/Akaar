@@ -1,7 +1,24 @@
 'use client';
 
 import Link from 'next/link';
-import { FormEvent, useCallback, useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
+import { ChangeEvent, FormEvent, useCallback, useEffect, useState } from 'react';
+import {
+  ArrowLeft,
+  BadgeCheck,
+  Box,
+  Building2,
+  Facebook,
+  FileImage,
+  Mail,
+  MapPin,
+  MapPinned,
+  Phone,
+  ShieldCheck,
+  Store,
+  UserRound,
+  Youtube,
+} from 'lucide-react';
 
 type Product = {
   id: string;
@@ -49,6 +66,18 @@ type DashboardPayload = {
     logo: string | null;
     status: 'PENDING' | 'ACTIVE' | 'SUSPENDED' | 'REJECTED';
     isVerified?: boolean;
+    contactName?: string | null;
+    contactEmail?: string | null;
+    phoneNumber?: string | null;
+    residence?: string | null;
+    latitude?: number | null;
+    longitude?: number | null;
+    businessType?: string | null;
+    sellingCategories?: string | null;
+    intendedProducts?: string | null;
+    facebookUrl?: string | null;
+    youtubeUrl?: string | null;
+    twitterUrl?: string | null;
   };
   metrics?: { productCount: number; stockCount: number; revenue: number; pendingFulfillment: number; propertyCount: number; activePropertyCount: number };
   products?: Product[];
@@ -67,6 +96,53 @@ const statusNames: Record<string, string> = {
   REJECTED: 'مرفوض',
 };
 
+type SellerApplication = {
+  contactName: string;
+  storeName: string;
+  contactEmail: string;
+  phoneNumber: string;
+  residence: string;
+  businessType: string;
+  sellingCategories: string;
+  intendedProducts: string;
+  description: string;
+  identityDocumentFileId: string;
+  facebookUrl: string;
+  youtubeUrl: string;
+  twitterUrl: string;
+  latitude: number | null;
+  longitude: number | null;
+};
+
+const initialApplication: SellerApplication = {
+  contactName: '',
+  storeName: '',
+  contactEmail: '',
+  phoneNumber: '',
+  residence: '',
+  businessType: '',
+  sellingCategories: '',
+  intendedProducts: '',
+  description: '',
+  identityDocumentFileId: '',
+  facebookUrl: '',
+  youtubeUrl: '',
+  twitterUrl: '',
+  latitude: null,
+  longitude: null,
+};
+
+const OnClickMap = dynamic(() => import('../../../components/map/onClickMap'), {
+  ssr: false,
+  loading: () => (
+    <div className="flex h-72 items-center justify-center rounded-2xl border border-white/10 bg-[#454545] text-sm text-white/60">
+      جاري تحميل الخريطة...
+    </div>
+  ),
+});
+
+const fieldClassName = 'mt-2 w-full rounded-2xl border border-white/10 bg-[#454545] px-4 py-3.5 text-sm text-white outline-none transition placeholder:text-white/35 focus:border-[#E0926B] focus:ring-4 focus:ring-[#E0926B]/15';
+
 async function requestJson<T>(response: Response): Promise<T> {
   const payload = await response.json().catch(() => ({}));
   if (!response.ok) throw new Error(payload?.error || 'تعذر إكمال العملية.');
@@ -78,7 +154,8 @@ export default function SellerDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState('');
-  const [application, setApplication] = useState({ storeName: '', description: '' });
+  const [application, setApplication] = useState<SellerApplication>(initialApplication);
+  const [identityDocumentName, setIdentityDocumentName] = useState('');
   const [storeForm, setStoreForm] = useState({ storeName: '', slug: '', description: '', logo: '' });
   const [tracking, setTracking] = useState<Record<string, string>>({});
 
@@ -107,6 +184,10 @@ export default function SellerDashboard() {
 
   async function submitApplication(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (application.latitude === null || application.longitude === null) {
+      setError('حدد موقع إقامتك على الخريطة قبل إرسال الطلب.');
+      return;
+    }
     setBusy('application');
     setError('');
     try {
@@ -119,6 +200,39 @@ export default function SellerDashboard() {
     } catch (submitError) {
       setError(submitError instanceof Error ? submitError.message : 'تعذر إرسال الطلب.');
     } finally {
+      setBusy('');
+    }
+  }
+
+  async function uploadIdentityDocument(event: ChangeEvent<HTMLInputElement>) {
+    const input = event.currentTarget;
+    const file = input.files?.[0];
+    if (!file) return;
+    if (file.size > 4 * 1024 * 1024) {
+      setError('يجب ألا يتجاوز حجم صورة الهوية 4 ميغابايت.');
+      input.value = '';
+      return;
+    }
+
+    setBusy('identity-document');
+    setError('');
+    setApplication((current) => ({ ...current, identityDocumentFileId: '' }));
+    setIdentityDocumentName('');
+    try {
+      const body = new FormData();
+      body.append('file', file);
+      const result = await requestJson<{ fileId: string }>(
+        await fetch('/api/seller/application/identity-document', {
+          method: 'POST',
+          body,
+        }),
+      );
+      setApplication((current) => ({ ...current, identityDocumentFileId: result.fileId }));
+      setIdentityDocumentName(file.name);
+    } catch (uploadError) {
+      setError(uploadError instanceof Error ? uploadError.message : 'تعذر رفع صورة الهوية.');
+    } finally {
+      input.value = '';
       setBusy('');
     }
   }
@@ -252,22 +366,171 @@ export default function SellerDashboard() {
 
   if (!data.seller) {
     return (
-      <main dir="rtl" className="mx-auto max-w-3xl px-4 py-12 text-ak-cream">
-        <section className="ak-panel-raised p-6 sm:p-9">
-          <p className="ak-eyebrow">SELLER PROGRAM</p>
-          <h1 className="mt-2 text-3xl font-black">افتح متجرك على Akaar</h1>
-          <p className="mt-3 text-sm leading-7 text-stone-400">أرسل بيانات المتجر للمراجعة. ستصبح أدوات النشر والطلبات متاحة بعد اعتماد الطلب.</p>
-          {error && <p role="alert" className="mt-4 rounded-xl bg-rose-400/10 p-3 text-sm text-rose-200">{error}</p>}
-          <form onSubmit={submitApplication} className="mt-6 space-y-4">
-            <label className="block text-sm">اسم المتجر
-              <input required maxLength={100} value={application.storeName} onChange={(event) => setApplication((current) => ({ ...current, storeName: event.target.value }))} className="mt-2 w-full rounded-xl border border-ak-line bg-ak-ink/70 px-4 py-3" />
-            </label>
-            <label className="block text-sm">وصف مختصر
-              <textarea maxLength={2000} rows={4} value={application.description} onChange={(event) => setApplication((current) => ({ ...current, description: event.target.value }))} className="mt-2 w-full rounded-xl border border-ak-line bg-ak-ink/70 px-4 py-3" />
-            </label>
-            <button disabled={busy === 'application'} className="ak-button-primary">{busy === 'application' ? 'جارٍ الإرسال...' : 'إرسال طلب البائع'}</button>
-          </form>
-        </section>
+      <main dir="rtl" className="relative min-h-screen overflow-hidden bg-[#454545] px-4 py-8 text-white sm:px-6 sm:py-12">
+        <div aria-hidden="true" className="pointer-events-none absolute -left-32 top-12 size-96 rounded-full bg-[#E0926B]/15 blur-[110px]" />
+        <div aria-hidden="true" className="pointer-events-none absolute -right-40 bottom-0 size-[28rem] rounded-full bg-orange-300/10 blur-[130px]" />
+        <div className="relative mx-auto max-w-7xl">
+          <header className="relative mb-8 overflow-hidden rounded-[2rem] border border-white/10 bg-[#383838] p-6 shadow-2xl sm:p-10">
+            <div aria-hidden="true" className="absolute inset-y-0 left-0 hidden w-1/3 bg-gradient-to-r from-[#E0926B]/20 to-transparent sm:block" />
+            <div className="relative flex flex-wrap items-end justify-between gap-6">
+              <div className="max-w-2xl">
+                <p className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.22em] text-[#E0926B]">
+                  <Store className="size-4" /> Akaar seller program
+                </p>
+                <h1 className="mt-4 text-3xl font-black leading-tight sm:text-5xl">حوّل خبرتك إلى<br className="hidden sm:block" /> متجر يثق به الجميع.</h1>
+                <p className="mt-4 max-w-xl text-sm leading-7 text-white/65 sm:text-base">
+                  أخبرنا عنك وعن المنتجات التي ستقدمها. نراجع بياناتك لحماية مجتمع أكار ومساعدة العملاء على الوصول إلى بائعين موثوقين.
+                </p>
+              </div>
+              <div className="flex items-center gap-3 rounded-2xl border border-[#E0926B]/25 bg-[#E0926B]/10 px-4 py-3">
+                <span className="flex size-11 items-center justify-center rounded-xl bg-[#E0926B] text-lg font-black text-ak-ink">01</span>
+                <span><span className="block text-xs text-white/50">الخطوة الأولى</span><span className="mt-1 block text-sm font-bold">ملف البائع والمتجر</span></span>
+              </div>
+            </div>
+          </header>
+
+          {error && <p role="alert" className="mb-6 rounded-2xl border border-rose-300/20 bg-rose-500/10 p-4 text-sm text-rose-100">{error}</p>}
+
+          <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_19rem]">
+            <form onSubmit={submitApplication} className="space-y-5">
+              <section className="rounded-[1.75rem] border border-white/10 bg-[#383838] p-5 shadow-xl sm:p-7">
+                <div className="mb-6 flex items-start gap-4">
+                  <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-[#E0926B]/15 text-[#E0926B]"><UserRound className="size-5" /></span>
+                  <div><p className="text-xs font-bold tracking-widest text-[#E0926B]">01 / معلومات أساسية</p><h2 className="mt-1 text-xl font-black">من أنت؟</h2><p className="mt-1 text-sm text-white/50">بيانات التواصل والموقع الذي تعمل منه.</p></div>
+                </div>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <label className="text-sm font-semibold">الاسم الكامل <span className="text-[#E0926B]">*</span>
+                    <input required maxLength={120} autoComplete="name" value={application.contactName} onChange={(event) => setApplication((current) => ({ ...current, contactName: event.target.value }))} className={fieldClassName} placeholder="الاسم كما يظهر في وثيقة الهوية" />
+                  </label>
+                  <label className="text-sm font-semibold">اسم المتجر أو النشاط <span className="text-[#E0926B]">*</span>
+                    <input required maxLength={100} value={application.storeName} onChange={(event) => setApplication((current) => ({ ...current, storeName: event.target.value }))} className={fieldClassName} placeholder="مثال: متجر البيت الأنيق" />
+                  </label>
+                  <label className="text-sm font-semibold">البريد الإلكتروني <span className="text-[#E0926B]">*</span>
+                    <span className="relative mt-2 block"><Mail className="pointer-events-none absolute right-4 top-1/2 size-4 -translate-y-1/2 text-[#E0926B]" /><input required type="email" autoComplete="email" maxLength={254} value={application.contactEmail} onChange={(event) => setApplication((current) => ({ ...current, contactEmail: event.target.value }))} dir="ltr" className={`${fieldClassName} mt-0 pr-11 text-left`} placeholder="you@example.com" /></span>
+                  </label>
+                  <label className="text-sm font-semibold">رقم الهاتف <span className="text-[#E0926B]">*</span>
+                    <span className="relative mt-2 block"><Phone className="pointer-events-none absolute right-4 top-1/2 size-4 -translate-y-1/2 text-[#E0926B]" /><input required type="tel" inputMode="tel" autoComplete="tel" maxLength={25} value={application.phoneNumber} onChange={(event) => setApplication((current) => ({ ...current, phoneNumber: event.target.value }))} dir="ltr" className={`${fieldClassName} mt-0 pr-11 text-left`} placeholder="+963 9xx xxx xxx" /></span>
+                  </label>
+                  <label className="text-sm font-semibold">نوع النشاط <span className="text-[#E0926B]">*</span>
+                    <select required value={application.businessType} onChange={(event) => setApplication((current) => ({ ...current, businessType: event.target.value }))} className={fieldClassName}>
+                      <option value="" className="bg-[#454545]">اختر نوع النشاط</option>
+                      <option value="INDIVIDUAL" className="bg-[#454545]">بائع فردي</option>
+                      <option value="STORE" className="bg-[#454545]">متجر أو شركة</option>
+                      <option value="ARTISAN" className="bg-[#454545]">حرفي أو صانع</option>
+                      <option value="AGENCY" className="bg-[#454545]">وكالة أو موزع</option>
+                      <option value="OTHER" className="bg-[#454545]">أخرى</option>
+                    </select>
+                  </label>
+                  <label className="text-sm font-semibold">مكان الإقامة / مقر النشاط <span className="text-[#E0926B]">*</span>
+                    <span className="relative mt-2 block"><MapPin className="pointer-events-none absolute right-4 top-1/2 size-4 -translate-y-1/2 text-[#E0926B]" /><input required maxLength={240} autoComplete="street-address" value={application.residence} onChange={(event) => setApplication((current) => ({ ...current, residence: event.target.value }))} className={`${fieldClassName} mt-0 pr-11`} placeholder="المدينة، المنطقة، الشارع" /></span>
+                  </label>
+                  <label className="text-sm font-semibold sm:col-span-2">نبذة عنك وعن نشاطك
+                    <textarea maxLength={2000} rows={3} value={application.description} onChange={(event) => setApplication((current) => ({ ...current, description: event.target.value }))} className={fieldClassName} placeholder="خبرتك، مصادر المنتجات، وما يميز متجرك..." />
+                  </label>
+                </div>
+              </section>
+
+              <section className="rounded-[1.75rem] border border-white/10 bg-[#383838] p-5 shadow-xl sm:p-7">
+                <div className="mb-6 flex items-start gap-4">
+                  <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-[#E0926B]/15 text-[#E0926B]"><Box className="size-5" /></span>
+                  <div><p className="text-xs font-bold tracking-widest text-[#E0926B]">02 / كتالوجك</p><h2 className="mt-1 text-xl font-black">ماذا تنوي أن تبيع؟</h2><p className="mt-1 text-sm text-white/50">ساعدنا على فهم نوعية المنتجات التي ستعرضها للعملاء.</p></div>
+                </div>
+                <div className="space-y-4">
+                  <label className="block text-sm font-semibold">فئات المنتجات <span className="text-[#E0926B]">*</span>
+                    <input required maxLength={300} value={application.sellingCategories} onChange={(event) => setApplication((current) => ({ ...current, sellingCategories: event.target.value }))} className={fieldClassName} placeholder="مثال: أثاث منزلي، أجهزة كهربائية، ملابس..." />
+                  </label>
+                  <label className="block text-sm font-semibold">المنتجات وخطة البيع <span className="text-[#E0926B]">*</span>
+                    <textarea required minLength={20} maxLength={4000} rows={5} value={application.intendedProducts} onChange={(event) => setApplication((current) => ({ ...current, intendedProducts: event.target.value }))} className={fieldClassName} placeholder="اذكر أمثلة على المنتجات، حالتها أو مصدرها، والكميات المتوقعة. مثال: أجهزة منزلية جديدة مع كفالة، وتتوفر لديّ 10–20 قطعة شهريًا..." />
+                    <span className="mt-2 block text-xs text-white/40">20 حرفًا على الأقل · {application.intendedProducts.length}/4000</span>
+                  </label>
+                </div>
+              </section>
+
+              <section className="rounded-[1.75rem] border border-white/10 bg-[#383838] p-5 shadow-xl sm:p-7">
+                <div className="mb-5 flex items-start gap-4">
+                  <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-[#E0926B]/15 text-[#E0926B]"><MapPinned className="size-5" /></span>
+                  <div><p className="text-xs font-bold tracking-widest text-[#E0926B]">03 / موقعك</p><h2 className="mt-1 text-xl font-black">أين تعمل؟</h2><p className="mt-1 text-sm text-white/50">انقر على الخريطة لتحديد موقعك بدقة. هذا الموقع للمراجعة والتواصل.</p></div>
+                </div>
+                <div className="overflow-hidden rounded-2xl border border-white/10">
+                  <OnClickMap
+                    chosenCity={null}
+                    chosentown={null}
+                    propertyCityLocation={null}
+                    propertyTownLocation={null}
+                    lat={application.latitude ?? undefined}
+                    lng={application.longitude ?? undefined}
+                    onCoordinatesChange={(coordinates: [number, number]) => setApplication((current) => ({
+                      ...current,
+                      latitude: coordinates[0],
+                      longitude: coordinates[1],
+                    }))}
+                  />
+                </div>
+                {application.latitude !== null && application.longitude !== null ? (
+                  <p className="mt-3 flex items-center gap-2 text-xs text-emerald-300"><BadgeCheck className="size-4" />تم تحديد الموقع: {application.latitude.toFixed(5)}, {application.longitude.toFixed(5)}</p>
+                ) : (
+                  <p className="mt-3 text-xs text-[#E0926B]">تحديد الموقع على الخريطة مطلوب لإرسال الطلب.</p>
+                )}
+              </section>
+
+              <section className="rounded-[1.75rem] border border-white/10 bg-[#383838] p-5 shadow-xl sm:p-7">
+                <div className="mb-6 flex items-start gap-4">
+                  <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-[#E0926B]/15 text-[#E0926B]"><ShieldCheck className="size-5" /></span>
+                  <div><p className="text-xs font-bold tracking-widest text-[#E0926B]">04 / اختياري</p><h2 className="mt-1 text-xl font-black">وثيقة الهوية والحضور الرقمي</h2><p className="mt-1 text-sm text-white/50">يمكنك إرفاق صورة الهوية الآن أو تقديم الطلب بدونها.</p></div>
+                </div>
+                <label className="flex cursor-pointer flex-col items-center justify-center rounded-2xl border border-dashed border-[#E0926B]/45 bg-[#E0926B]/[.06] px-5 py-8 text-center transition hover:bg-[#E0926B]/[.11]">
+                  <span className="flex size-12 items-center justify-center rounded-2xl bg-[#E0926B]/15 text-[#E0926B]"><FileImage className="size-6" /></span>
+                  <span className="mt-3 text-sm font-bold">{identityDocumentName || 'ارفع صورة وثيقة الهوية (اختياري)'}</span>
+                  <span className="mt-1 text-xs text-white/45">JPG أو PNG أو WebP · الحد الأقصى 4 ميغابايت</span>
+                  <input type="file" accept="image/jpeg,image/png,image/webp,image/avif" onChange={uploadIdentityDocument} className="sr-only" />
+                </label>
+                <p className="mt-3 flex items-start gap-2 text-xs leading-5 text-white/45"><ShieldCheck className="mt-0.5 size-4 shrink-0 text-[#E0926B]" />إذا أرفقتها، تُحفظ في تخزين خاص ولا يمكن فتحها إلا للمسؤول المخوّل بمراجعة الطلب.</p>
+
+                <div className="mt-6 grid gap-4 sm:grid-cols-3">
+                  <label className="text-sm font-semibold">Facebook
+                    <span className="relative mt-2 block"><Facebook className="pointer-events-none absolute right-4 top-1/2 size-4 -translate-y-1/2 text-[#E0926B]" /><input type="url" maxLength={2048} value={application.facebookUrl} onChange={(event) => setApplication((current) => ({ ...current, facebookUrl: event.target.value }))} dir="ltr" className={`${fieldClassName} mt-0 pr-11 text-left`} placeholder="https://facebook.com/..." /></span>
+                  </label>
+                  <label className="text-sm font-semibold">YouTube
+                    <span className="relative mt-2 block"><Youtube className="pointer-events-none absolute right-4 top-1/2 size-4 -translate-y-1/2 text-[#E0926B]" /><input type="url" maxLength={2048} value={application.youtubeUrl} onChange={(event) => setApplication((current) => ({ ...current, youtubeUrl: event.target.value }))} dir="ltr" className={`${fieldClassName} mt-0 pr-11 text-left`} placeholder="https://youtube.com/..." /></span>
+                  </label>
+                  <label className="text-sm font-semibold">Twitter / X
+                    <span className="relative mt-2 block"><span aria-hidden="true" className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-sm font-black text-[#E0926B]">X</span><input type="url" maxLength={2048} value={application.twitterUrl} onChange={(event) => setApplication((current) => ({ ...current, twitterUrl: event.target.value }))} dir="ltr" className={`${fieldClassName} mt-0 pr-11 text-left`} placeholder="https://x.com/..." /></span>
+                  </label>
+                </div>
+              </section>
+
+              <div className="flex flex-wrap items-center justify-between gap-4 rounded-[1.5rem] border border-white/10 bg-[#383838] p-5 sm:p-6">
+                <p className="max-w-lg text-xs leading-5 text-white/45">بإرسال الطلب، تؤكد أن المعلومات صحيحة وتوافق على استخدامها لمراجعة أهلية البائع.</p>
+                <button disabled={busy === 'application' || busy === 'identity-document'} className="inline-flex items-center gap-3 rounded-2xl bg-[#E0926B] px-6 py-3.5 text-sm font-black text-ak-ink shadow-[0_12px_30px_rgba(224,146,107,0.25)] transition hover:bg-[#F0AE8E] disabled:cursor-wait disabled:opacity-50">
+                  {busy === 'application' ? 'جارٍ إرسال الطلب...' : 'إرسال الطلب للمراجعة'} <ArrowLeft className="size-4" />
+                </button>
+              </div>
+            </form>
+
+            <aside className="space-y-4 lg:sticky lg:top-8">
+              <section className="overflow-hidden rounded-[1.75rem] border border-white/10 bg-[#383838] shadow-xl">
+                <div className="bg-gradient-to-bl from-[#E0926B] to-[#bd4600] p-5">
+                  <p className="text-xs font-bold text-white/70">ملف البائع</p>
+                  <h2 className="mt-2 text-xl font-black">{application.storeName || 'متجرك الجديد'}</h2>
+                  <p className="mt-1 text-sm text-white/75">{application.contactName || 'أضف اسمك الكامل'}</p>
+                </div>
+                <div className="space-y-4 p-5">
+                  <div className="flex items-start gap-3"><Mail className="mt-0.5 size-4 shrink-0 text-[#E0926B]" /><span className="min-w-0 break-all text-xs text-white/65">{application.contactEmail || 'البريد الإلكتروني مطلوب'}</span></div>
+                  <div className="flex items-start gap-3"><Phone className="mt-0.5 size-4 shrink-0 text-[#E0926B]" /><span className="text-xs text-white/65" dir="ltr">{application.phoneNumber || 'رقم الهاتف مطلوب'}</span></div>
+                  <div className="flex items-start gap-3"><Building2 className="mt-0.5 size-4 shrink-0 text-[#E0926B]" /><span className="text-xs text-white/65">{application.sellingCategories || 'فئات المنتجات التي ستبيعها'}</span></div>
+                  <div className="flex items-start gap-3"><MapPin className="mt-0.5 size-4 shrink-0 text-[#E0926B]" /><span className="text-xs text-white/65">{application.residence || 'مكان الإقامة / النشاط'}</span></div>
+                </div>
+              </section>
+              <section className="rounded-[1.75rem] border border-white/10 bg-[#383838] p-5">
+                <div className="flex items-center gap-2"><ShieldCheck className="size-4 text-[#E0926B]" /><h3 className="text-sm font-bold">خصوصيتك مهمة</h3></div>
+                <p className="mt-3 text-xs leading-6 text-white/50">تُستخدم معلومات التواصل والموقع لمراجعة الطلب. إرفاق صورة الهوية اختياري الآن؛ وإذا أرفقتها فلن تظهر على صفحة متجرك.</p>
+              </section>
+              <Link href="/newPost" className="flex items-center justify-between rounded-2xl border border-white/10 bg-[#383838] p-4 text-xs text-white/65 transition hover:border-[#E0926B]/35 hover:text-white">
+                هل لديك متجر بالفعل؟ ابدأ بإضافة منتجك <ArrowLeft className="size-4 text-[#E0926B]" />
+              </Link>
+            </aside>
+          </div>
+        </div>
       </main>
     );
   }
@@ -280,7 +543,43 @@ export default function SellerDashboard() {
         : data.seller.status === 'ACTIVE'
           ? 'لم يكتمل اعتماد المتجر بعد. تواصل مع الإدارة.'
           : 'تم تعليق المتجر مؤقتًا. تواصل مع الإدارة.';
-    return <main dir="rtl" className="mx-auto max-w-3xl px-4 py-16 text-ak-cream"><section className="ak-panel-raised p-8 text-center"><h1 className="text-2xl font-bold">{data.seller.storeName}</h1><p className="mt-3 leading-7 text-ak-muted">{message}</p></section></main>;
+    return (
+        <main dir="rtl" className="min-h-screen bg-[#454545] px-4 py-12 text-white sm:px-6">
+          <section className="mx-auto max-w-4xl overflow-hidden rounded-[2rem] border border-white/10 bg-[#383838] shadow-2xl">
+            <div className="bg-gradient-to-l from-[#E0926B] to-[#a93d00] p-7 sm:p-10">
+              <p className="text-xs font-black uppercase tracking-[0.2em] text-white/70">Akaar seller review</p>
+              <h1 className="mt-3 text-3xl font-black">{data.seller.storeName}</h1>
+              <p className="mt-3 max-w-2xl text-sm leading-7 text-white/85">{message}</p>
+            </div>
+            <div className="grid gap-6 p-6 sm:grid-cols-2 sm:p-9">
+              <div>
+                <h2 className="text-lg font-black">ملف البائع</h2>
+                <dl className="mt-4 space-y-3 text-sm">
+                  <div><dt className="text-xs text-white/40">الاسم</dt><dd className="mt-1">{data.seller.contactName || '—'}</dd></div>
+                  <div><dt className="text-xs text-white/40">البريد الإلكتروني</dt><dd className="mt-1 break-all" dir="ltr">{data.seller.contactEmail || '—'}</dd></div>
+                  <div><dt className="text-xs text-white/40">رقم الهاتف</dt><dd className="mt-1" dir="ltr">{data.seller.phoneNumber || '—'}</dd></div>
+                  <div><dt className="text-xs text-white/40">مكان الإقامة / النشاط</dt><dd className="mt-1">{data.seller.residence || '—'}</dd></div>
+                  <div><dt className="text-xs text-white/40">نوع النشاط</dt><dd className="mt-1">{data.seller.businessType || '—'}</dd></div>
+                  {data.seller.latitude != null && data.seller.longitude != null && (
+                    <div><dt className="text-xs text-white/40">الموقع على الخريطة</dt><dd className="mt-1" dir="ltr">{data.seller.latitude.toFixed(5)}, {data.seller.longitude.toFixed(5)}</dd></div>
+                  )}
+                </dl>
+              </div>
+              <div>
+                <h2 className="text-lg font-black">المنتجات المخطط بيعها</h2>
+                <p className="mt-3 text-sm font-semibold text-[#E0926B]">{data.seller.sellingCategories || 'لم تُحدد الفئات'}</p>
+                <p className="mt-2 whitespace-pre-wrap text-sm leading-7 text-white/65">{data.seller.intendedProducts || 'لا توجد تفاصيل للمنتجات.'}</p>
+                {data.seller.description && <p className="mt-4 border-t border-white/10 pt-4 text-sm leading-7 text-white/50">{data.seller.description}</p>}
+                <div className="mt-4 flex flex-wrap gap-3 text-xs">
+                  {data.seller.facebookUrl && <a href={data.seller.facebookUrl} target="_blank" rel="noreferrer" className="text-[#E0926B] underline">Facebook</a>}
+                  {data.seller.youtubeUrl && <a href={data.seller.youtubeUrl} target="_blank" rel="noreferrer" className="text-[#E0926B] underline">YouTube</a>}
+                  {data.seller.twitterUrl && <a href={data.seller.twitterUrl} target="_blank" rel="noreferrer" className="text-[#E0926B] underline">Twitter / X</a>}
+                </div>
+              </div>
+            </div>
+          </section>
+        </main>
+    );
   }
 
   const metrics = data.metrics || {
@@ -295,11 +594,15 @@ export default function SellerDashboard() {
   const orders = data.vendorOrders || [];
 
   return (
-    <main dir="rtl" className="mx-auto max-w-7xl space-y-8 px-4 py-8 text-ak-cream sm:py-12">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div><p className="ak-eyebrow">VENDOR CENTER</p><h1 className="mt-2 text-3xl font-black">متجري / وكالتي</h1><p className="mt-2 text-sm text-ak-muted">إدارة {data.seller.storeName} ومتابعة منتجاتك وإعلاناتك العقارية.</p></div>
-        <Link href={`/shop/${encodeURIComponent(data.seller.slug)}`} className="rounded-xl border border-ak-line px-4 py-3 text-sm transition hover:border-ak-amber/50 hover:bg-ak-brand-soft">عرض متجري العام</Link>
-      </div>
+    <main dir="rtl" className="min-h-screen bg-[#454545] px-4 py-8 text-white sm:px-6 sm:py-12">
+      <div className="mx-auto max-w-7xl space-y-8">
+      <header className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-[#383838] p-6 shadow-2xl sm:p-9">
+        <div aria-hidden="true" className="absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-[#E0926B]/20 to-transparent" />
+        <div className="relative flex flex-wrap items-end justify-between gap-5">
+          <div><p className="text-xs font-black uppercase tracking-[0.2em] text-[#E0926B]">Akaar vendor center</p><h1 className="mt-3 text-3xl font-black sm:text-4xl">متجري / وكالتي</h1><p className="mt-2 text-sm text-white/60">إدارة {data.seller.storeName} ومتابعة منتجاتك وإعلاناتك العقارية.</p></div>
+          <Link href={`/shop/${encodeURIComponent(data.seller.slug)}`} className="rounded-xl bg-[#E0926B] px-4 py-3 text-sm font-bold text-ak-ink transition hover:bg-[#F0AE8E]">عرض متجري العام</Link>
+        </div>
+      </header>
       {error && <p role="alert" className="rounded-xl border border-rose-400/20 bg-rose-400/10 p-4 text-sm text-rose-200">{error}</p>}
 
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
@@ -310,7 +613,29 @@ export default function SellerDashboard() {
           ['طلبات تحتاج متابعة', money(metrics.pendingFulfillment)],
           ['إعلانات العقارات', money(metrics.propertyCount)],
           ['إعلانات عقارية نشطة', money(metrics.activePropertyCount)],
-        ].map(([label, value]) => <article key={label} className="ak-panel p-5"><p className="text-sm text-ak-muted">{label}</p><p className="mt-3 text-2xl font-black text-ak-honey">{value}</p></article>)}
+        ].map(([label, value]) => <article key={label} className="rounded-2xl border border-white/10 border-t-2 border-t-[#E0926B] bg-[#383838] p-5 shadow-lg"><p className="text-sm text-white/55">{label}</p><p className="mt-3 text-2xl font-black text-[#E0926B]">{value}</p></article>)}
+      </section>
+
+      <section className="grid gap-6 rounded-[1.75rem] border border-white/10 bg-[#383838] p-5 shadow-xl sm:grid-cols-2 sm:p-7">
+        <div>
+          <div className="flex items-center gap-3"><span className="flex size-10 items-center justify-center rounded-xl bg-[#E0926B]/15 text-[#E0926B]"><UserRound className="size-5" /></span><h2 className="text-lg font-black">بيانات البائع</h2></div>
+          <dl className="mt-4 grid gap-4 text-sm sm:grid-cols-2">
+            <div><dt className="text-xs text-white/40">الاسم</dt><dd className="mt-1">{data.seller.contactName || '—'}</dd></div>
+            <div><dt className="text-xs text-white/40">البريد</dt><dd className="mt-1 break-all" dir="ltr">{data.seller.contactEmail || '—'}</dd></div>
+            <div><dt className="text-xs text-white/40">الهاتف</dt><dd className="mt-1" dir="ltr">{data.seller.phoneNumber || '—'}</dd></div>
+            <div><dt className="text-xs text-white/40">مكان الإقامة</dt><dd className="mt-1">{data.seller.residence || '—'}</dd></div>
+          </dl>
+        </div>
+        <div className="border-t border-white/10 pt-5 sm:border-r sm:border-t-0 sm:pr-6 sm:pt-0">
+          <div className="flex items-center gap-3"><span className="flex size-10 items-center justify-center rounded-xl bg-[#E0926B]/15 text-[#E0926B]"><Box className="size-5" /></span><h2 className="text-lg font-black">ما يقدمه متجرك</h2></div>
+          <p className="mt-4 text-sm font-bold text-[#E0926B]">{data.seller.sellingCategories || 'لم تُحدد فئات المنتجات'}</p>
+          <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-white/60">{data.seller.intendedProducts || data.seller.description || 'أضف تفاصيل المنتجات التي تعرضها.'}</p>
+          <div className="mt-4 flex flex-wrap gap-3 text-xs">
+            {data.seller.facebookUrl && <a href={data.seller.facebookUrl} target="_blank" rel="noreferrer" className="text-[#E0926B] underline">Facebook</a>}
+            {data.seller.youtubeUrl && <a href={data.seller.youtubeUrl} target="_blank" rel="noreferrer" className="text-[#E0926B] underline">YouTube</a>}
+            {data.seller.twitterUrl && <a href={data.seller.twitterUrl} target="_blank" rel="noreferrer" className="text-[#E0926B] underline">Twitter / X</a>}
+          </div>
+        </div>
       </section>
 
       <section className="ak-panel p-5">
@@ -362,13 +687,14 @@ export default function SellerDashboard() {
               return <article key={order.id} className="rounded-xl border border-ak-line-strong/[.08] p-4">
                 <div className="flex flex-wrap items-center justify-between gap-3"><div><p className="text-xs text-stone-500">طلب {order.order.id.slice(0, 12)} · {new Date(order.order.createdAt).toLocaleDateString('ar')}</p><p className="mt-1 font-semibold">{order.items.map((item) => `${item.product.title} × ${item.quantity}`).join('، ')}</p><p className="mt-2 text-xs text-stone-400">التوصيل إلى: {order.order.customerName || '—'} · {order.order.phoneNumber || '—'} · {order.order.shippingCity || '—'} {order.order.shippingAddress || ''}</p></div><span className="rounded-full bg-ak-amber/10 px-3 py-1 text-xs text-ak-honey">{statusNames[order.status] || order.status}</span></div>
                 <div className="mt-3 flex flex-wrap items-center justify-between gap-3 border-t border-ak-line-strong/[.06] pt-3"><span className="text-sm text-stone-400">الإجمالي: {money(order.items.reduce((sum, item) => sum + item.totalPrice, 0))} ل.س{order.trackingNumber ? ` · التتبع: ${order.trackingNumber}` : ''}</span>
-                  {nextLabel && <div className="flex flex-wrap gap-2"><input aria-label="رقم التتبع" placeholder="رقم التتبع (اختياري)" value={tracking[order.id] ?? order.trackingNumber ?? ''} onChange={(event) => setTracking((current) => ({ ...current, [order.id]: event.target.value }))} className="w-44 rounded-lg border border-ak-line bg-ak-canvas px-3 py-2 text-xs" /><button disabled={busy === order.id} onClick={() => void advanceOrder(order)} className="rounded-lg bg-ak-amber px-3 py-2 text-xs font-bold text-ak-canvas disabled:opacity-50">{busy === order.id ? 'جارٍ التحديث...' : nextLabel}</button></div>}
+                  {nextLabel && <div className="flex flex-wrap gap-2"><input aria-label="رقم التتبع" placeholder="رقم التتبع (اختياري)" value={tracking[order.id] ?? order.trackingNumber ?? ''} onChange={(event) => setTracking((current) => ({ ...current, [order.id]: event.target.value }))} className="w-44 rounded-lg border border-ak-line bg-ak-canvas px-3 py-2 text-xs" /><button disabled={busy === order.id} onClick={() => void advanceOrder(order)} className="rounded-lg bg-ak-amber px-3 py-2 text-xs font-bold text-ak-ink disabled:opacity-50">{busy === order.id ? 'جارٍ التحديث...' : nextLabel}</button></div>}
                 </div>
               </article>;
             })}
           </div>
         )}
       </section>
+      </div>
     </main>
   );
 }
@@ -412,13 +738,13 @@ function AgencyPropertyCard({
           }}
           className="grid gap-3 sm:grid-cols-2"
         >
-          <label className="text-xs text-stone-400">عنوان الإعلان<input required maxLength={180} value={title} onChange={(event) => setTitle(event.target.value)} className="mt-1 w-full rounded-lg border border-ak-line bg-ak-canvas px-3 py-2 text-sm text-ak-cream" /></label>
-          <label className="text-xs text-stone-400">السعر<input required inputMode="decimal" pattern="\\d+(\\.\\d{1,2})?" value={price} onChange={(event) => setPrice(event.target.value)} className="mt-1 w-full rounded-lg border border-ak-line bg-ak-canvas px-3 py-2 text-sm text-ak-cream" /></label>
-          <label className="text-xs text-stone-400 sm:col-span-2">الموقع<input required maxLength={240} value={location} onChange={(event) => setLocation(event.target.value)} className="mt-1 w-full rounded-lg border border-ak-line bg-ak-canvas px-3 py-2 text-sm text-ak-cream" /></label>
-          <label className="text-xs text-stone-400">حالة العقار<select value={status} onChange={(event) => setStatus(event.target.value as PropertyListing['status'])} className="mt-1 w-full rounded-lg border border-ak-line bg-ak-canvas px-3 py-2 text-sm text-ak-cream"><option value="AVAILABLE">متاح</option><option value="SOLD">مباع</option><option value="RENTED">مؤجر</option></select></label>
+          <label className="text-xs text-stone-400">عنوان الإعلان<input required maxLength={180} value={title} onChange={(event) => setTitle(event.target.value)} className="mt-1 w-full rounded-lg border border-ak-line bg-ak-canvas px-3 py-2 text-sm text-white" /></label>
+          <label className="text-xs text-stone-400">السعر<input required inputMode="decimal" pattern="\\d+(\\.\\d{1,2})?" value={price} onChange={(event) => setPrice(event.target.value)} className="mt-1 w-full rounded-lg border border-ak-line bg-ak-canvas px-3 py-2 text-sm text-white" /></label>
+          <label className="text-xs text-stone-400 sm:col-span-2">الموقع<input required maxLength={240} value={location} onChange={(event) => setLocation(event.target.value)} className="mt-1 w-full rounded-lg border border-ak-line bg-ak-canvas px-3 py-2 text-sm text-white" /></label>
+          <label className="text-xs text-stone-400">حالة العقار<select value={status} onChange={(event) => setStatus(event.target.value as PropertyListing['status'])} className="mt-1 w-full rounded-lg border border-ak-line bg-ak-canvas px-3 py-2 text-sm text-white"><option value="AVAILABLE">متاح</option><option value="SOLD">مباع</option><option value="RENTED">مؤجر</option></select></label>
           <label className="flex items-center gap-2 self-end pb-2 text-xs text-stone-300"><input type="checkbox" checked={isPublished} onChange={(event) => setIsPublished(event.target.checked)} className="accent-ak-amber" />منشور للعامة</label>
           <div className="flex gap-2 sm:col-span-2">
-            <button type="submit" disabled={busy} className="rounded-lg bg-ak-amber px-3 py-2 text-xs font-bold text-ak-canvas disabled:opacity-50">{busy ? 'جارٍ الحفظ...' : 'حفظ التعديلات'}</button>
+            <button type="submit" disabled={busy} className="rounded-lg bg-ak-amber px-3 py-2 text-xs font-bold text-ak-ink disabled:opacity-50">{busy ? 'جارٍ الحفظ...' : 'حفظ التعديلات'}</button>
             <button type="button" onClick={() => setEditing(false)} className="rounded-lg border border-ak-line px-3 py-2 text-xs">إلغاء</button>
           </div>
         </form>

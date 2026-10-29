@@ -52,8 +52,8 @@ export default function CategoryComponent({ check }) {
       borderRadius: 5,
       colors: {
         ...theme.colors,
-        primary: '#FF7C34',
-        primary25: '#fadfae',
+        primary: '#E0926B',
+        primary25: '#FCE5DC',
       },
     };
   }
@@ -63,9 +63,9 @@ export default function CategoryComponent({ check }) {
       minHeight: minHeight,
       height: 'auto',
       backgroundColor: 'white',
-      // // borderColor: state.isFocused ? '#FF7C34' : '#A1A5AD',
+      // // borderColor: state.isFocused ? '#E0926B' : '#A1A5AD',
       '&:hover': {
-        borderColor: '#FF7C34',
+        borderColor: '#E0926B',
       },
     }),
     valueContainer: (provided) => ({

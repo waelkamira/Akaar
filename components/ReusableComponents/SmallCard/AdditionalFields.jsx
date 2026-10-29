@@ -49,10 +49,10 @@ function AdditionalFields({ item, category }) {
           className="flex gap-1"
         >
           <div className="flex items-center gap-2 transition-all ">
-            <span className="text-ak-muted whitespace-nowrap line-clamp-1">
+            <span className="text-white whitespace-nowrap line-clamp-1">
               {categoryFields[index]?.label || categoryFields[index]?.name}
             </span>
-            <span className="text-ak-cream font-medium ">
+            <span className="text-white font-medium ">
               {displayValue || '—'}
             </span>
           </div>

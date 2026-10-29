@@ -149,8 +149,8 @@
 //     borderRadius: 5,
 //     colors: {
 //       ...theme.colors,
-//       primary: '#FF7C34',
-//       primary25: '#fadfae',
+//       primary: '#E0926B',
+//       primary25: '#FCE5DC',
 //     },
 //   });
 
@@ -160,9 +160,9 @@
 //       minHeight: minHeight,
 //       height: 'auto',
 //       backgroundColor: 'white',
-//       // borderColor: state.isFocused ? '#FF7C34' : '#A1A5AD',
+//       // borderColor: state.isFocused ? '#E0926B' : '#A1A5AD',
 //       '&:hover': {
-//         borderColor: '#FF7C34',
+//         borderColor: '#E0926B',
 //       },
 //     }),
 //     valueContainer: (provided) => ({
@@ -213,7 +213,7 @@
 //             isSearchable
 //             theme={customTheme}
 //             styles={customStyles}
-//             className="w-full text-md text-start text-black rounded select-none z-40"
+//             className="w-full text-md text-start text-white rounded select-none z-40"
 //             classNamePrefix="select"
 //             classNames={{
 //               control: (state) =>
@@ -242,7 +242,7 @@
 //               isSearchable
 //               theme={customTheme}
 //               styles={customStyles}
-//               className="w-full text-md text-start text-black rounded select-none z-30"
+//               className="w-full text-md text-start text-white rounded select-none z-30"
 //               classNamePrefix="select"
 //               classNames={{
 //                 control: (state) =>
@@ -261,7 +261,7 @@
 //             e.preventDefault();
 //             setMapType(mapType === 'normal' ? 'satellite' : 'normal');
 //           }}
-//           className="absolute top-3 right-3 bg-white p-1 sm:p-2 rounded shadow-md text-black text-[10px] sm:text-md z-20"
+//           className="absolute top-3 right-3 bg-white p-1 sm:p-2 rounded shadow-md text-white text-[10px] sm:text-md z-20"
 //         >
 //           {mapType === 'normal' ? 'عرض القمر الصناعي' : 'عرض الخريطة العادية'}
 //         </button>
@@ -369,6 +369,7 @@ export default function OnClickMap({
   propertyTownLocation,
   lat,
   lng,
+  onCoordinatesChange,
 }) {
   const redIcon = icon({
     iconUrl: 'https://cdn-icons-png.flaticon.com/512/684/684908.png',
@@ -421,8 +422,9 @@ export default function OnClickMap({
     (location) => {
       setSelectedLocation(location);
       dispatch({ type: 'LOCATION', payload: location });
+      onCoordinatesChange?.(location);
     },
-    [dispatch],
+    [dispatch, onCoordinatesChange],
   );
 
   const handleCityChange = useCallback((selectedOption) => {
@@ -432,8 +434,9 @@ export default function OnClickMap({
     if (city && mapRef?.current) {
       mapRef.current.setView(city?.latlng, 12);
       setSelectedLocation(city.latlng);
+      onCoordinatesChange?.(city.latlng);
     }
-  }, []);
+  }, [onCoordinatesChange]);
 
   const handleTownChange = useCallback(
     (selectedOption) => {
@@ -444,9 +447,10 @@ export default function OnClickMap({
       if (town && mapRef?.current) {
         mapRef.current.setView(town?.latlng, 14);
         setSelectedLocation(town?.latlng);
+        onCoordinatesChange?.(town.latlng);
       }
     },
-    [selectedCity],
+    [onCoordinatesChange, selectedCity],
   );
 
   const cityOptions = cities?.map((city) => ({
@@ -465,8 +469,8 @@ export default function OnClickMap({
     borderRadius: 5,
     colors: {
       ...theme.colors,
-      primary: '#FF7C34',
-      primary25: '#fadfae',
+      primary: '#E0926B',
+      primary25: '#FCE5DC',
     },
   });
 
@@ -476,7 +480,7 @@ export default function OnClickMap({
       minHeight: minHeight,
       height: 'auto',
       backgroundColor: 'white',
-      '&:hover': { borderColor: '#FF7C34' },
+      '&:hover': { borderColor: '#E0926B' },
     }),
     valueContainer: (provided) => ({
       ...provided,
@@ -535,7 +539,7 @@ export default function OnClickMap({
           isSearchable
           theme={customTheme}
           styles={customStyles}
-          className="w-full text-md text-start text-black rounded select-none z-40"
+          className="w-full text-md text-start text-white rounded select-none z-40"
           classNamePrefix="select"
           classNames={{
             control: (state) =>
@@ -563,7 +567,7 @@ export default function OnClickMap({
             isSearchable
             theme={customTheme}
             styles={customStyles}
-            className="w-full text-md text-start text-black rounded select-none z-30"
+            className="w-full text-md text-start text-white rounded select-none z-30"
             classNamePrefix="select"
             classNames={{
               control: (state) =>
@@ -581,7 +585,7 @@ export default function OnClickMap({
             e.preventDefault();
             setMapType(mapType === 'normal' ? 'satellite' : 'normal');
           }}
-          className="absolute top-3 right-3 bg-white p-1 sm:p-2 rounded shadow-md text-black text-[10px] sm:text-md z-20"
+          className="absolute top-3 right-3 bg-white p-1 sm:p-2 rounded shadow-md text-white text-[10px] sm:text-md z-20"
         >
           {mapType === 'normal' ? 'عرض القمر الصناعي' : 'عرض الخريطة العادية'}
         </button>

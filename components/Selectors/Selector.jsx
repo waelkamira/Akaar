@@ -28,8 +28,8 @@ export default function Selector({
       borderRadius: 5,
       colors: {
         ...theme.colors,
-        primary: '#FF7C34',
-        primary25: '#fadfae',
+        primary: '#E0926B',
+        primary25: '#FCE5DC',
       },
     };
   }
@@ -37,7 +37,7 @@ export default function Selector({
   const CustomPlaceholder = (props) => {
     return (
       <components.Placeholder {...props}>
-        <div className="flex items-center gap-2 text-ak-muted">
+        <div className="flex items-center gap-2 text-white">
           {icon}
           <span>{placeholder}</span>
         </div>

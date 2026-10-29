@@ -34,22 +34,22 @@ function FilterPanel({ onApply, onClose, mobile = false }) {
         <div className="flex items-center justify-between border-b border-ak-line pb-4">
           <div className="flex items-center gap-3">
             <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-ak-amber/10 text-ak-honey"><FaSlidersH aria-hidden="true" /></span>
-            <div><h2 className="font-bold text-ak-cream">فلاتر البحث</h2><p className="mt-1 text-xs text-stone-400">خصص النتائج حسب احتياجك</p></div>
+            <div><h2 className="font-bold text-white">فلاتر البحث</h2><p className="mt-1 text-xs text-stone-400">خصص النتائج حسب احتياجك</p></div>
           </div>
-          <button type="button" onClick={onClose} aria-label="إغلاق الفلاتر" className="rounded-lg p-2 text-stone-400 hover:bg-ak-brand-soft hover:text-ak-cream"><FaTimes /></button>
+          <button type="button" onClick={onClose} aria-label="إغلاق الفلاتر" className="rounded-lg p-2 text-stone-400 hover:bg-ak-brand-soft hover:text-white"><FaTimes /></button>
         </div>
       )}
 
       <section className="overflow-hidden rounded-2xl border border-ak-line-strong/[.08] bg-ak-surface">
         <button type="button" onClick={() => toggle('category')} aria-expanded={expanded.category} className="flex w-full items-center justify-between px-4 py-4 text-right transition hover:bg-ak-surface/[.03]">
-          <span className="font-semibold text-ak-cream">الفئة</span><FaFilter className="text-xs text-ak-amber" aria-hidden="true" />
+          <span className="font-semibold text-white">الفئة</span><FaFilter className="text-xs text-ak-amber" aria-hidden="true" />
         </button>
         {expanded.category && <div className="border-t border-ak-line-strong/[.06] p-4"><CategoryFilter /></div>}
       </section>
 
       <section className="overflow-hidden rounded-2xl border border-ak-line-strong/[.08] bg-ak-surface">
         <button type="button" onClick={() => toggle('basic')} aria-expanded={expanded.basic} className="flex w-full items-center justify-between px-4 py-4 text-right transition hover:bg-ak-surface/[.03]">
-          <span className="font-semibold text-ak-cream">الفلاتر الأساسية</span><FaFilter className="text-xs text-ak-amber" aria-hidden="true" />
+          <span className="font-semibold text-white">الفلاتر الأساسية</span><FaFilter className="text-xs text-ak-amber" aria-hidden="true" />
         </button>
         {expanded.basic && <div className="border-t border-ak-line-strong/[.06] p-4"><StaticFilters /></div>}
       </section>
@@ -57,7 +57,7 @@ function FilterPanel({ onApply, onClose, mobile = false }) {
       {category && (
         <section className="overflow-hidden rounded-2xl border border-ak-line-strong/[.08] bg-ak-surface">
           <button type="button" onClick={() => toggle('dynamic')} aria-expanded={expanded.dynamic} className="flex w-full items-center justify-between px-4 py-4 text-right transition hover:bg-ak-surface/[.03]">
-            <span className="font-semibold text-ak-cream">مواصفات الفئة</span><FaFilter className="text-xs text-ak-amber" aria-hidden="true" />
+            <span className="font-semibold text-white">مواصفات الفئة</span><FaFilter className="text-xs text-ak-amber" aria-hidden="true" />
           </button>
           {expanded.dynamic && <div className="border-t border-ak-line-strong/[.06] p-4"><DynamicFilters /></div>}
         </section>
@@ -67,7 +67,7 @@ function FilterPanel({ onApply, onClose, mobile = false }) {
         <button type="button" onClick={clear} className="inline-flex items-center justify-center gap-2 rounded-xl border border-ak-line px-3 py-3 text-xs font-semibold text-stone-300 transition hover:border-rose-400/30 hover:text-rose-300">
           <FaTrashAlt aria-hidden="true" /> مسح الفلاتر
         </button>
-        <button type="button" onClick={apply} className="inline-flex items-center justify-center gap-2 rounded-xl bg-ak-amber px-3 py-3 text-xs font-bold text-ak-canvas transition hover:bg-ak-honey">
+        <button type="button" onClick={apply} className="inline-flex items-center justify-center gap-2 rounded-xl bg-ak-amber px-3 py-3 text-xs font-bold text-ak-ink transition hover:bg-ak-honey">
           <FaSearch aria-hidden="true" /> تطبيق النتائج
         </button>
       </div>
@@ -81,7 +81,7 @@ export default function SearchPage() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   return (
-    <main dir="rtl" className="min-h-[70vh] bg-ak-ink px-4 py-8 text-ak-cream sm:px-6 sm:py-12 lg:px-8">
+    <main dir="rtl" className="min-h-[70vh] bg-ak-ink px-4 py-8 text-white sm:px-6 sm:py-12 lg:px-8">
       <div className="mx-auto max-w-[1600px]">
         <div className="mb-8 flex flex-wrap items-end justify-between gap-4 border-b border-ak-line-strong/[.08] pb-6">
           <div>
@@ -111,7 +111,7 @@ export default function SearchPage() {
           <section className="min-w-0">
             <div className="mb-5 rounded-2xl border border-ak-line bg-ak-surface p-4 shadow-ak-card sm:p-5">
               <div className="flex flex-wrap items-center justify-between gap-3">
-                <div><h2 className="font-bold text-ak-cream">نتائج البحث</h2><p className="mt-1 text-xs text-stone-400">النتائج تتحدث عند تعديل معايير البحث</p></div>
+                <div><h2 className="font-bold text-white">نتائج البحث</h2><p className="mt-1 text-xs text-stone-400">النتائج تتحدث عند تعديل معايير البحث</p></div>
                 <div className="rounded-full border border-ak-line bg-ak-surface px-3 py-2 text-xs text-stone-300">
                   {Array.isArray(results) ? results.length : 0} من {typeof totalCount === 'number' ? totalCount : 0}
                 </div>

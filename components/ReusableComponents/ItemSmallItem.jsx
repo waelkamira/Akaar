@@ -8,10 +8,10 @@ export default function ItemSmallItem({ icon, text, value }) {
         {icon}
       </span>
       <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
-        <span className="text-ak-cream text-sm sm:text-base lg:text-lg">
+        <span className="text-white text-sm sm:text-base lg:text-lg">
           {text}:
         </span>
-        <span className="text-ak-cream text-sm sm:text-base lg:text-lg line-clamp-1">
+        <span className="text-white text-sm sm:text-base lg:text-lg line-clamp-1">
           {text === 'تاريخ الإعلان' ? <FormatDate dateString={value} /> : value}
         </span>
       </div>

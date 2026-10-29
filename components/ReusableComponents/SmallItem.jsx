@@ -72,8 +72,8 @@ export default function SmallItem({ post, index }) {
 
         {/* Title */}
         <h1
-          className="text-2xl font-bold text-ak-cream/90 line-clamp-1 mb-4
-    group-hover:text-ak-cream transition-colors duration-300"
+          className="text-2xl font-bold text-white/90 line-clamp-1 mb-4
+    group-hover:text-white transition-colors duration-300"
         >
           {post?.title}
         </h1>
@@ -85,8 +85,8 @@ export default function SmallItem({ post, index }) {
 
         {/* Description */}
         <pre
-          className="text-base text-ak-cream/70 line-clamp-2 mb-6 font-sans
-    group-hover:text-ak-cream/90 transition-colors duration-300"
+          className="text-base text-white/70 line-clamp-2 mb-6 font-sans
+    group-hover:text-white/90 transition-colors duration-300"
         >
           {post?.description}
         </pre>
@@ -110,7 +110,7 @@ export default function SmallItem({ post, index }) {
               ));
             }
           }}
-          className="w-full bg-gradient-to-r from-white/20 to-white/10 text-ak-cream py-3 px-6
+          className="w-full bg-gradient-to-r from-white/20 to-white/10 text-white py-3 px-6
       rounded-lg font-medium hover:from-white/30 hover:to-white/20 
       transition-all duration-300 transform hover:shadow-lg"
         >

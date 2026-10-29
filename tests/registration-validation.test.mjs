@@ -7,12 +7,34 @@ test('normalizes valid registration fields', () => {
     name: '  Test Seller  ',
     email: '  SELLER@example.com ',
     password: 'secure-pass-123',
+    accountType: 'SELLER',
   }), {
     ok: true,
     name: 'Test Seller',
     email: 'seller@example.com',
     password: 'secure-pass-123',
+    accountType: 'SELLER',
   });
+});
+
+test('defaults to a customer account and rejects privileged or unknown account types', () => {
+  assert.equal(validateRegistrationInput({
+    name: 'Test User',
+    email: 'user@example.com',
+    password: 'secure-pass-123',
+  }).accountType, 'CUSTOMER');
+  assert.equal(validateRegistrationInput({
+    name: 'Test User',
+    email: 'user@example.com',
+    password: 'secure-pass-123',
+    accountType: 'ADMIN',
+  }).ok, false);
+  assert.equal(validateRegistrationInput({
+    name: 'Test User',
+    email: 'user@example.com',
+    password: 'secure-pass-123',
+    accountType: 'UNKNOWN',
+  }).ok, false);
 });
 
 test('rejects short and oversized names', () => {

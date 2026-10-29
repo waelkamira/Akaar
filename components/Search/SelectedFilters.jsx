@@ -270,12 +270,12 @@ export default function SelectedFilters() {
               <motion.span
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                className="absolute -top-2 -right-2 bg-ak-amber text-ak-canvas text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-md"
+                className="absolute -top-2 -right-2 bg-ak-amber text-ak-ink text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-md"
               >
                 {selectedFilters.length}
               </motion.span>
             </div>
-            <span className="text-sm font-bold text-ak-cream">
+            <span className="text-sm font-bold text-white">
               الفلاتر النشطة
             </span>
           </div>
@@ -287,7 +287,7 @@ export default function SelectedFilters() {
           onClick={handleClearAll}
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-300 ${
             showClearConfirm
-              ? 'bg-red-500 text-ak-cream hover:bg-red-600 shadow-md'
+              ? 'bg-red-500 text-white hover:bg-red-600 shadow-md'
               : 'text-stone-400 hover:text-red-600 hover:bg-red-50/80 border border-transparent hover:border-red-100'
           }`}
         >

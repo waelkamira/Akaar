@@ -15,8 +15,8 @@ const AnimatedCard = ({ children, isSelected, onClick, isHovered }) => (
     className={cn(
       'relative flex flex-col items-center justify-center p-2 rounded-xl w-fit h-24 cursor-pointer overflow-hidden transition-all duration-300',
       isSelected
-        ? 'text-ak-cream shadow-ak-glow'
-        : 'text-ak-muted hover:text-ak-cream',
+        ? 'text-white shadow-ak-glow'
+        : 'text-white hover:text-white',
     )}
     initial={{ opacity: 0, y: 15 }}
     animate={{ opacity: 1, y: 0 }}
@@ -115,7 +115,7 @@ const CategoriesNavBar = () => {
                         ? 'border border-ak-honey/40 bg-ak-ink/35 text-ak-honey'
                         : isHovered
                           ? 'bg-ak-brand text-ak-ink shadow-ak-glow'
-                          : 'border border-ak-line bg-ak-raised text-ak-muted shadow-ak-card',
+                          : 'border border-ak-line bg-ak-raised text-white shadow-ak-card',
                     )}
                   >
                     <div className="text-xl">
@@ -129,7 +129,7 @@ const CategoriesNavBar = () => {
                       'text-xs font-semibold mt-2 transition-colors duration-200 tracking-wide select-none',
                       isSelected
                         ? 'font-bold text-ak-ink'
-                        : 'text-ak-cream/70 group-hover:text-ak-honey',
+                        : 'text-white/70 group-hover:text-ak-honey',
                     )}
                   >
                     {categoryItem?.name}
@@ -156,7 +156,7 @@ const CategoriesNavBar = () => {
                   'flex-shrink-0 flex flex-col items-center justify-center p-2 rounded-xl lg:min-w-[72px] sm:w-6 snap-center transition-all duration-300 border',
                   isSelected
                     ? 'bg-ak-brand text-ak-ink border-transparent shadow-ak-glow'
-                    : 'border-ak-line bg-ak-surface text-ak-muted',
+                    : 'border-ak-line bg-ak-surface text-white',
                 )}
               >
                 {/* حاوية الأيقونة للموبايل */}
@@ -175,7 +175,7 @@ const CategoriesNavBar = () => {
                   className={cn(
                     // 🟢 تم تصغير الخط قليلاً من 11px إلى 10px ليناسب الحجم الجديد للبطاقة
                     'text-[10px] font-medium tracking-tight whitespace-nowrap',
-                    isSelected ? 'font-bold text-ak-ink' : 'text-ak-cream/75',
+                    isSelected ? 'font-bold text-ak-ink' : 'text-white/75',
                   )}
                 >
                   {categoryItem?.name}

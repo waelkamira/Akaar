@@ -47,7 +47,7 @@
 //           onClick={() => onToggleFavorite(product)}
 //           aria-label={favorite ? 'إزالة من المفضلة' : 'إضافة إلى المفضلة'}
 //           aria-pressed={favorite}
-//           className="absolute left-3 top-3 z-10 flex h-10 w-10 items-center justify-center rounded-full border border-ak-line bg-ak-canvas/90 text-ak-cream transition hover:border-ak-amber/60"
+//           className="absolute left-3 top-3 z-10 flex h-10 w-10 items-center justify-center rounded-full border border-ak-line bg-ak-canvas/90 text-white transition hover:border-ak-amber/60"
 //         >
 //           <FaHeart className={favorite ? 'text-rose-400' : 'text-stone-300'} aria-hidden="true" />
 //         </button>
@@ -67,7 +67,7 @@
 //         </Link>
 //         <div className="mt-3 flex min-h-8 items-center justify-between gap-2">
 //           {price !== null ? (
-//             <span className="text-base font-bold text-ak-cream">{price}</span>
+//             <span className="text-base font-bold text-white">{price}</span>
 //           ) : (
 //             <span className="text-xs text-stone-400">السعر عند البائع</span>
 //           )}
@@ -80,7 +80,7 @@
 //             type="button"
 //             onClick={() => onAddToCart(product)}
 //             disabled={!available || price === null}
-//             className="inline-flex items-center justify-center gap-2 rounded-xl bg-ak-amber px-3 py-2.5 text-xs font-bold text-ak-canvas transition hover:bg-ak-honey disabled:cursor-not-allowed disabled:opacity-40"
+//             className="inline-flex items-center justify-center gap-2 rounded-xl bg-ak-amber px-3 py-2.5 text-xs font-bold text-ak-ink transition hover:bg-ak-honey disabled:cursor-not-allowed disabled:opacity-40"
 //           >
 //             <FaShoppingBag aria-hidden="true" />
 //             أضف للسلة
@@ -88,7 +88,7 @@
 //           <Link
 //             href={href}
 //             aria-label={`تفاصيل ${product.title}`}
-//             className="inline-flex items-center justify-center rounded-xl border border-ak-line px-3 text-stone-200 transition hover:border-ak-amber/50 hover:text-ak-cream"
+//             className="inline-flex items-center justify-center rounded-xl border border-ak-line px-3 text-stone-200 transition hover:border-ak-amber/50 hover:text-white"
 //           >
 //             <FaArrowLeft aria-hidden="true" />
 //           </Link>
@@ -103,11 +103,11 @@
 //     <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
 //       <div>
 //         <p className="mb-2 text-[10px] font-semibold uppercase tracking-[.24em] text-ak-amber">{eyebrow}</p>
-//         <h2 className="text-2xl font-bold tracking-tight text-ak-cream sm:text-3xl">{title}</h2>
+//         <h2 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">{title}</h2>
 //         {description && <p className="mt-2 max-w-2xl text-sm leading-7 text-stone-400">{description}</p>}
 //       </div>
 //       {href && (
-//         <Link href={href} className="inline-flex items-center gap-2 text-xs font-semibold text-ak-honey transition hover:text-ak-cream">
+//         <Link href={href} className="inline-flex items-center gap-2 text-xs font-semibold text-ak-honey transition hover:text-white">
 //           {linkText}<FaArrowLeft aria-hidden="true" />
 //         </Link>
 //       )}
@@ -180,7 +180,7 @@
 //   const categoryItems = categories.slice(0, 12);
 
 //   return (
-//     <main dir="rtl" className="min-h-screen overflow-x-clip bg-ak-ink text-ak-cream selection:bg-ak-amber/30">
+//     <main dir="rtl" className="min-h-screen overflow-x-clip bg-ak-ink text-ak-ink selection:bg-ak-amber/30">
 //       <Hero />
 
 //       <section className="border-y border-ak-line-strong/[.06] bg-[#1B1916]">
@@ -216,7 +216,7 @@
 //               className="group flex min-h-28 items-center justify-between gap-3 rounded-2xl border border-ak-line-strong/[.08] bg-gradient-to-br from-[#29231D] to-[#1B1916] p-4 transition duration-300 hover:-translate-y-1 hover:border-ak-amber/40 sm:min-h-32 sm:p-5"
 //             >
 //               <div className="min-w-0">
-//                 <h3 className="truncate text-sm font-bold text-ak-cream sm:text-base">{category.name}</h3>
+//                 <h3 className="truncate text-sm font-bold text-white sm:text-base">{category.name}</h3>
 //                 <span className="mt-3 inline-flex items-center gap-2 text-[10px] text-ak-honey">تصفح الفئة <FaArrowLeft aria-hidden="true" /></span>
 //               </div>
 //               <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-ak-line bg-black/15 text-xl text-ak-honey transition group-hover:scale-110">
@@ -244,7 +244,7 @@
 //           ) : loadError ? (
 //             <div className="rounded-2xl border border-rose-400/20 bg-rose-400/[.05] px-5 py-10 text-center">
 //               <p className="font-semibold">تعذر تحميل المنتجات حاليًا</p>
-//               <button type="button" onClick={() => loadProducts()} className="mt-4 rounded-xl bg-ak-amber px-5 py-3 text-sm font-bold text-ak-canvas hover:bg-ak-honey">إعادة المحاولة</button>
+//               <button type="button" onClick={() => loadProducts()} className="mt-4 rounded-xl bg-ak-amber px-5 py-3 text-sm font-bold text-ak-ink hover:bg-ak-honey">إعادة المحاولة</button>
 //             </div>
 //           ) : products.length === 0 ? (
 //             <div className="rounded-2xl border border-ak-line-strong/[.08] bg-ak-surface px-5 py-12 text-center">
@@ -276,7 +276,7 @@
 //             <p className="mb-3 text-[10px] font-semibold uppercase tracking-[.25em] text-ak-honey">للبائعين وأصحاب المتاجر</p>
 //             <h2 className="text-2xl font-bold leading-tight sm:text-3xl">حوّل منتجاتك إلى فرص جديدة</h2>
 //             <p className="mt-3 text-sm leading-7 text-stone-300">أنشئ إعلانك، أضف تفاصيل واضحة وصورًا جيدة، وساعد المشترين على اكتشاف ما تقدمه.</p>
-//             <Link href="/newPost" className="mt-6 inline-flex items-center gap-2 rounded-xl bg-ak-amber px-5 py-3 text-sm font-bold text-ak-canvas transition hover:bg-ak-honey">
+//             <Link href="/newPost" className="mt-6 inline-flex items-center gap-2 rounded-xl bg-ak-amber px-5 py-3 text-sm font-bold text-ak-ink transition hover:bg-ak-honey">
 //               ابدأ بنشر منتج <FaArrowLeft aria-hidden="true" />
 //             </Link>
 //           </div>
@@ -341,13 +341,13 @@ function ProductCard({ product, onAddToCart }) {
       <div className="p-4">
         <p className="mb-1.5 text-[11px] text-ak-amber">{product.categoryName || 'منتجات متنوعة'}</p>
         <Link href={href} className="block">
-          <h3 className="line-clamp-2 min-h-12 text-sm font-semibold leading-6 text-ak-cream transition hover:text-ak-honey">
+          <h3 className="line-clamp-2 min-h-12 text-sm font-semibold leading-6 text-white transition hover:text-ak-honey">
             {product.title}
           </h3>
         </Link>
         <div className="mt-3 flex min-h-8 items-center justify-between gap-2">
           {price !== null ? (
-            <span className="text-base font-bold text-ak-cream">{price}</span>
+            <span className="text-base font-bold text-white">{price}</span>
           ) : (
             <span className="text-xs text-stone-400">السعر عند البائع</span>
           )}
@@ -368,7 +368,7 @@ function ProductCard({ product, onAddToCart }) {
           <Link
             href={href}
             aria-label={`تفاصيل ${product.title}`}
-            className="inline-flex items-center justify-center rounded-xl border border-ak-line px-3 text-ak-muted transition hover:border-ak-amber/50 hover:text-ak-cream"
+            className="inline-flex items-center justify-center rounded-xl border border-ak-line px-3 text-white transition hover:border-ak-amber/50 hover:text-white"
           >
             <FaArrowLeft aria-hidden="true" />
           </Link>
@@ -383,11 +383,11 @@ function SectionHeading({ eyebrow, title, description, href, linkText = 'عرض 
     <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
       <div>
         <p className="ak-eyebrow mb-2">{eyebrow}</p>
-        <h2 className="text-2xl font-bold tracking-tight text-ak-cream sm:text-3xl">{title}</h2>
-        {description && <p className="mt-2 max-w-2xl text-sm leading-7 text-ak-muted">{description}</p>}
+        <h2 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">{title}</h2>
+        {description && <p className="mt-2 max-w-2xl text-sm leading-7 text-white">{description}</p>}
       </div>
       {href && (
-        <Link href={href} className="inline-flex items-center gap-2 text-xs font-semibold text-ak-honey transition hover:text-ak-cream">
+        <Link href={href} className="inline-flex items-center gap-2 text-xs font-semibold text-ak-honey transition hover:text-white">
           {linkText}<FaArrowLeft aria-hidden="true" />
         </Link>
       )}
@@ -402,33 +402,35 @@ export default function HomePage() {
   const { addToCart } = useCommerce();
 
   useEffect(() => {
-    const controller = new AbortController();
+    let active = true;
 
     const fetchProducts = async () => {
       try {
         const response = await fetch(`/api/product?page=1&limit=${PAGE_SIZE}`, {
-          signal: controller.signal,
           headers: { Accept: 'application/json' },
         });
         if (!response.ok) throw new Error('Unable to load catalog');
         
         const payload = await response.json();
         if (!Array.isArray(payload)) throw new Error('Unexpected catalog response');
-        
+        if (!active) return;
+
         setProducts(payload);
         setLoadError(false);
       } catch (error) {
-        if (!controller.signal.aborted) {
+        if (active) {
           console.error('Homepage catalog load failed:', error);
           setLoadError(true);
         }
       } finally {
-        if (!controller.signal.aborted) setLoading(false);
+        if (active) setLoading(false);
       }
     };
 
     void fetchProducts();
-    return () => controller.abort();
+    return () => {
+      active = false;
+    };
   }, []);
 
   const handleAddToCart = (product) => {
@@ -450,7 +452,7 @@ export default function HomePage() {
   const categoryItems = categories.slice(0, 12);
 
   return (
-    <main dir="rtl" className="min-h-screen overflow-x-clip bg-ak-canvas text-ak-cream selection:bg-ak-amber/30">
+    <main dir="rtl" className="min-h-screen overflow-x-clip bg-ak-canvas text-ak-ink selection:bg-ak-amber/30">
       <Hero />
 
       <section className="border-y border-ak-line bg-ak-surface/65">
@@ -486,7 +488,7 @@ export default function HomePage() {
               className="group flex min-h-28 items-center justify-between gap-3 rounded-2xl border border-ak-line bg-gradient-to-br from-ak-raised to-ak-surface p-4 shadow-ak-card transition duration-300 hover:-translate-y-1 hover:border-ak-amber/40 hover:shadow-ak-panel sm:min-h-32 sm:p-5"
             >
               <div className="min-w-0">
-                <h3 className="truncate text-sm font-bold text-ak-cream sm:text-base">{category.name}</h3>
+                <h3 className="truncate text-sm font-bold text-white sm:text-base">{category.name}</h3>
                 <span className="mt-3 inline-flex items-center gap-2 text-[10px] text-ak-honey">تصفح الفئة <FaArrowLeft aria-hidden="true" /></span>
               </div>
               <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-ak-line bg-ak-ink/35 text-xl text-ak-honey transition group-hover:scale-110">
@@ -517,7 +519,7 @@ export default function HomePage() {
               <button 
                 type="button" 
                 onClick={() => window.location.reload()} 
-                className="mt-4 rounded-xl bg-ak-amber px-5 py-3 text-sm font-bold text-ak-canvas hover:bg-ak-honey"
+                className="mt-4 rounded-xl bg-ak-amber px-5 py-3 text-sm font-bold text-ak-ink hover:bg-ak-honey"
               >
                 إعادة المحاولة
               </button>
@@ -526,7 +528,7 @@ export default function HomePage() {
             <div className="ak-panel px-5 py-12 text-center">
               <FaShoppingBag className="mx-auto text-3xl text-ak-amber" aria-hidden="true" />
               <p className="mt-4 font-semibold">لا توجد منتجات منشورة بعد</p>
-              <p className="mt-2 text-sm text-ak-muted">عندما ينشر البائعون منتجاتهم ستظهر هنا.</p>
+              <p className="mt-2 text-sm text-white">عندما ينشر البائعون منتجاتهم ستظهر هنا.</p>
               <Link href="/search" className="mt-5 inline-flex rounded-xl border border-ak-amber/40 px-5 py-3 text-sm font-semibold text-ak-honey transition hover:bg-ak-brand-soft">تصفح البحث</Link>
             </div>
           ) : (
@@ -549,7 +551,7 @@ export default function HomePage() {
           <div className="relative z-10 max-w-2xl">
             <p className="ak-eyebrow mb-3">للبائعين وأصحاب المتاجر</p>
             <h2 className="text-2xl font-bold leading-tight sm:text-3xl">حوّل منتجاتك إلى فرص جديدة</h2>
-            <p className="mt-3 text-sm leading-7 text-ak-muted">أنشئ إعلانك، أضف تفاصيل واضحة وصورًا جيدة، وساعد المشترين على اكتشاف ما تقدمه.</p>
+            <p className="mt-3 text-sm leading-7 text-white">أنشئ إعلانك، أضف تفاصيل واضحة وصورًا جيدة، وساعد المشترين على اكتشاف ما تقدمه.</p>
             <Link href="/newPost" className="ak-button-primary mt-6">
               ابدأ بنشر منتج <FaArrowLeft aria-hidden="true" />
             </Link>

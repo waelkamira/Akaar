@@ -58,7 +58,7 @@ const FormInput = ({
       {/* 🏷️ التسمية (Label) */}
       <label
         htmlFor={name}
-        className="text-sm font-semibold text-ak-cream flex items-center gap-2 mr-1 transition-colors duration-300 text-ak-cream"
+        className="text-sm font-semibold text-white flex items-center gap-2 mr-1 transition-colors duration-300 text-white"
       >
         {icon && <span className="text-orange-500 text-lg">{icon}</span>}
         {label}
@@ -81,7 +81,7 @@ const FormInput = ({
             className={`absolute right-4 flex items-center justify-center transition-all duration-300 ${
               hasError
                 ? 'text-rose-400'
-                : 'text-ak-muted group-focus-within:text-orange-500 group-focus-within:scale-110'
+                : 'text-white group-focus-within:text-orange-500 group-focus-within:scale-110'
             }`}
           >
             {icon}
@@ -96,7 +96,7 @@ const FormInput = ({
           placeholder={placeholder}
           onChange={onChange}
           required={name === 'link' ? false : required}
-          className={`w-full h-full bg-transparent text-ak-cream placeholder:text-ak-muted focus:outline-none rounded-xl transition-all duration-300 ${
+          className={`w-full h-full bg-transparent text-white placeholder:text-white focus:outline-none rounded-xl transition-all duration-300 ${
             icon ? 'pr-12 pl-4' : 'px-4'
           }`}
         />

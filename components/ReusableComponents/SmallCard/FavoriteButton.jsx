@@ -148,7 +148,7 @@ function FavoriteButton({ item }) {
         {isFavorited ? (
           <TbHeartFilled className="size-4 text-red-600 transition-colors duration-300" />
         ) : (
-          <FaRegHeart className="size-4 bg-transparent text-clip text-ak-muted transition-colors duration-300 hover:text-red-500" />
+          <FaRegHeart className="size-4 bg-transparent text-clip text-white transition-colors duration-300 hover:text-red-500" />
         )}
       </span>
     </button>

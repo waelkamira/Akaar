@@ -107,7 +107,7 @@ export async function POST(request) {
       user: {
         select: { id: true, userName: true, userImage: true },
       },
-      _count: { select: { orders: true, reviews: true } },
+      _count: { select: { orderItems: true, reviews: true } },
     };
 
     let products;
@@ -182,12 +182,16 @@ export async function POST(request) {
       ]);
     }
 
-    const normalizedProducts = products.map((product) => ({
-      ...product,
-      image1: product.images?.[0] || null,
-      userName: product.userName || product.user?.userName || null,
-      userImage: product.userImage || product.user?.userImage || null,
-    }));
+    const normalizedProducts = products.map((product) => {
+      const { orderItems, ...counts } = product._count;
+      return {
+        ...product,
+        _count: { ...counts, orders: orderItems },
+        image1: product.images?.[0] || null,
+        userName: product.userName || product.user?.userName || null,
+        userImage: product.userImage || product.user?.userImage || null,
+      };
+    });
 
     return NextResponse.json({
       products: normalizedProducts,

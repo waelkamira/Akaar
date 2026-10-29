@@ -27,7 +27,7 @@ export default function Footer() {
   };
 
   return (
-    <footer dir="rtl" className="border-t border-ak-line bg-ak-ink/95 text-ak-cream">
+    <footer dir="rtl" className="border-t border-ak-line bg-ak-ink/95 text-white">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid gap-10 md:grid-cols-[1.2fr_1fr_1fr]">
           <div>
@@ -38,17 +38,17 @@ export default function Footer() {
             <p className="mt-4 max-w-sm text-sm leading-7 text-stone-400">
               سوق عقاري يجمع المشترين والوسطاء والوكالات لاكتشاف المساحات المناسبة بكل وضوح.
             </p>
-            <Link href="/contactUs" className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-ak-honey transition hover:text-ak-cream">
+            <Link href="/contactUs" className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-ak-honey transition hover:text-white">
               <FaEnvelope aria-hidden="true" /> تواصل مع فريق أكار
             </Link>
           </div>
 
           <div>
-            <h2 className="text-sm font-bold text-ak-cream">روابط سريعة</h2>
+            <h2 className="text-sm font-bold text-white">روابط سريعة</h2>
             <ul className="mt-4 space-y-3">
               {FOOTER_LINKS.map(({ href, label, icon: Icon }) => (
                 <li key={href}>
-                  <Link href={href} className="inline-flex items-center gap-2 text-sm text-ak-muted transition hover:text-ak-honey">
+                  <Link href={href} className="inline-flex items-center gap-2 text-sm text-white transition hover:text-ak-honey">
                     <Icon className="text-[11px] text-ak-amber" aria-hidden="true" />
                     {label}
                   </Link>
@@ -58,12 +58,12 @@ export default function Footer() {
           </div>
 
           <div>
-            <h2 className="text-sm font-bold text-ak-cream">المعلومات والسياسات</h2>
+            <h2 className="text-sm font-bold text-white">المعلومات والسياسات</h2>
             <ul className="mt-4 space-y-3 text-sm">
-              <li><Link href="/about" className="text-ak-muted transition hover:text-ak-honey">من نحن</Link></li>
-              <li><Link href="/terms" className="text-ak-muted transition hover:text-ak-honey">الشروط والأحكام</Link></li>
-              <li><Link href="/privacy" className="text-ak-muted transition hover:text-ak-honey">سياسة الخصوصية</Link></li>
-              <li><Link href="/contactUs" className="text-ak-muted transition hover:text-ak-honey">الدعم والتواصل</Link></li>
+              <li><Link href="/about" className="text-white transition hover:text-ak-honey">من نحن</Link></li>
+              <li><Link href="/terms" className="text-white transition hover:text-ak-honey">الشروط والأحكام</Link></li>
+              <li><Link href="/privacy" className="text-white transition hover:text-ak-honey">سياسة الخصوصية</Link></li>
+              <li><Link href="/contactUs" className="text-white transition hover:text-ak-honey">الدعم والتواصل</Link></li>
             </ul>
           </div>
         </div>

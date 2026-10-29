@@ -84,7 +84,7 @@
 //                 ))
 //               : !loading && (
 //                   <div className="col-span-full text-center py-12 mb-8 bg-ak-surface rounded-lg shadow-md">
-//                     <p className="text-ak-muted text-lg">
+//                     <p className="text-white text-lg">
 //                       لا توجد منتجات متاحة
 //                     </p>
 //                   </div>
@@ -227,7 +227,7 @@
 //                 ))
 //               : !loading && (
 //                   <div className="col-span-full text-center py-12 mb-8 bg-ak-surface rounded-lg shadow-md">
-//                     <p className="text-ak-muted text-lg">
+//                     <p className="text-white text-lg">
 //                       لا توجد منتجات متاحة
 //                     </p>
 //                   </div>
@@ -360,7 +360,7 @@ const CategoryPage = () => {
         >
           <div className="inline-flex items-center gap-3 bg-neutral-900/60 backdrop-blur-xl border border-neutral-800 rounded-2xl px-6 py-4 shadow-xl">
             <FaLayerGroup className="text-2xl text-orange-500" />
-            <h1 className="text-2xl sm:text-3xl font-black text-ak-cream">
+            <h1 className="text-2xl sm:text-3xl font-black text-white">
               أحدث إعلانات <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-400">{categoryName}</span>
             </h1>
           </div>
@@ -405,7 +405,7 @@ const CategoryPage = () => {
               <div className="w-20 h-20 bg-neutral-800 rounded-full flex items-center justify-center mb-6">
                 <FaBoxOpen className="text-4xl text-neutral-600" />
               </div>
-              <h3 className="text-xl font-bold text-ak-cream mb-2">لا توجد إعلانات حالياً</h3>
+              <h3 className="text-xl font-bold text-white mb-2">لا توجد إعلانات حالياً</h3>
               <p className="text-neutral-400 text-center max-w-md">
                 لم يتم إضافة أي إعلانات في قسم <span className="text-orange-400 font-bold">{categoryName}</span> حتى الآن.
               </p>
@@ -442,11 +442,11 @@ const CategoryPage = () => {
               <button
                 onClick={handleNextPage}
                 disabled={loading}
-                className="group flex items-center gap-3 bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-ak-cream font-bold py-4 px-8 rounded-2xl transition-all duration-300 shadow-lg shadow-orange-600/20 hover:shadow-orange-600/40 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100"
+                className="group flex items-center gap-3 bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white font-bold py-4 px-8 rounded-2xl transition-all duration-300 shadow-lg shadow-orange-600/20 hover:shadow-orange-600/40 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100"
               >
                 {loading ? (
                   <>
-                    <svg className="animate-spin h-5 w-5 text-ak-cream" viewBox="0 0 24 24">
+                    <svg className="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                     </svg>

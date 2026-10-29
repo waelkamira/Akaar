@@ -65,12 +65,12 @@ export default function DemoProductCard({ product }) {
         <button
           type="button"
           onClick={openProduct}
-          className="min-h-12 w-full text-right text-base font-bold text-ak-cream hover:text-orange-400"
+          className="min-h-12 w-full text-right text-base font-bold text-white hover:text-orange-400"
         >
           {product.title}
         </button>
         <div className="flex items-baseline gap-2">
-          <span className="text-lg font-black text-ak-cream">
+          <span className="text-lg font-black text-white">
             {product.basePrice.toLocaleString('ar-SY')} ل.س
           </span>
           {product.oldPrice && (

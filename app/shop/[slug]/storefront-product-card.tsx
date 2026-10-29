@@ -45,7 +45,7 @@ export default function StorefrontProductCard({ product }: { product: Product })
           <p className="mt-1 text-xs text-stone-500">{available ? `المتوفر: ${product.stockQuantity}` : 'نفد المخزون'}</p>
         </div>
       </Link>
-      <button type="button" disabled={!available || product.basePrice === null} onClick={addProduct} className="m-4 mt-0 flex w-[calc(100%-2rem)] items-center justify-center gap-2 rounded-xl bg-ak-amber px-4 py-3 text-sm font-bold text-ak-canvas disabled:cursor-not-allowed disabled:opacity-40">
+      <button type="button" disabled={!available || product.basePrice === null} onClick={addProduct} className="m-4 mt-0 flex w-[calc(100%-2rem)] items-center justify-center gap-2 rounded-xl bg-ak-amber px-4 py-3 text-sm font-bold text-ak-ink disabled:cursor-not-allowed disabled:opacity-40">
         <FaShoppingCart aria-hidden="true" /> أضف للسلة
       </button>
     </article>

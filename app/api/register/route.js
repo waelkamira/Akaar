@@ -34,7 +34,7 @@ export async function POST(req) {
       headers: { 'Content-Type': 'application/json' },
     });
   }
-  const { name, email, password } = validation;
+  const { name, email, password, accountType } = validation;
 
   try {
     const existingUser = await prisma.user.findUnique({ where: { email } });
@@ -58,6 +58,7 @@ export async function POST(req) {
         email,
         password: hashedPassword,
         userImage: '/placeholder.jpg',
+        role: accountType,
       },
       select: { id: true, userName: true, email: true, userImage: true },
     });

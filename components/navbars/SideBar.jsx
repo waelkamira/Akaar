@@ -14,7 +14,7 @@ export default function SideBar({ Button, path }) {
     <div className="relative xl:hidden flex justify-between items-center w-full gap-2 bg-three p-2 border-b-[5px] border-primary-500 ">
       <div>
         <TfiMenuAlt
-          className="text-[30px] lg:text-5xl text-ak-cream cursor-pointer "
+          className="text-[30px] lg:text-5xl text-white cursor-pointer "
           onClick={() => {
             setIsOpen(!isOpen);
           }}

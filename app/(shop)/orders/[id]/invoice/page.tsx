@@ -66,10 +66,10 @@ export default async function OrderInvoicePage({ params }: Props) {
 
   const payment = order.payments[0];
   return (
-    <main dir="rtl" className="min-h-screen bg-ak-ink px-4 py-10 text-ak-cream">
-      <article className="mx-auto max-w-3xl rounded-2xl border border-white/10 bg-ak-surface p-6 sm:p-10 print:max-w-none print:border-0 print:bg-white print:text-black print:shadow-none">
+    <main dir="rtl" className="min-h-screen bg-ak-ink px-4 py-10 text-white">
+      <article className="mx-auto max-w-3xl rounded-2xl border border-white/10 bg-ak-surface p-6 sm:p-10 print:max-w-none print:border-0 print:bg-white print:text-white print:shadow-none">
         <header className="flex flex-wrap items-start justify-between gap-5 border-b border-white/10 pb-6 print:border-black/20">
-          <div><p className="text-sm font-bold tracking-widest text-ak-amber print:text-black">AKAAR</p><h1 className="mt-3 text-2xl font-black">إيصال طلب</h1><p className="mt-2 text-sm text-stone-400 print:text-gray-600">إثبات تسجيل الطلب — ليس فاتورة ضريبية.</p></div>
+          <div><p className="text-sm font-bold tracking-widest text-ak-amber print:text-white">AKAAR</p><h1 className="mt-3 text-2xl font-black">إيصال طلب</h1><p className="mt-2 text-sm text-stone-400 print:text-gray-600">إثبات تسجيل الطلب — ليس فاتورة ضريبية.</p></div>
           <div className="text-left text-sm"><p className="text-stone-400 print:text-gray-600">رقم الطلب</p><p className="mt-1 break-all font-semibold">{order.id}</p><p className="mt-2 text-stone-400 print:text-gray-600">التاريخ</p><p className="mt-1">{new Intl.DateTimeFormat('ar', { dateStyle: 'long', timeStyle: 'short' }).format(order.createdAt)}</p></div>
         </header>
 
@@ -92,7 +92,7 @@ export default async function OrderInvoicePage({ params }: Props) {
           </table>
         </div>
 
-        <footer className="mt-5 flex justify-end border-t border-white/10 pt-5 text-lg font-black print:border-black/20">الإجمالي: <span className="mr-3 text-ak-honey print:text-black">{price(order.totalPrice)}</span></footer>
+        <footer className="mt-5 flex justify-end border-t border-white/10 pt-5 text-lg font-black print:border-black/20">الإجمالي: <span className="mr-3 text-ak-honey print:text-white">{price(order.totalPrice)}</span></footer>
         <div className="mt-8 flex flex-wrap justify-between gap-3 print:hidden"><Link href="/orders" className="rounded-xl border border-white/10 px-4 py-3 text-sm">العودة إلى طلباتي</Link><PrintReceiptButton /></div>
       </article>
     </main>

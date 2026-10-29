@@ -66,7 +66,7 @@ const CategoryCard = ({ item, selected, onClick }) => {
           'rounded-xl border transition-all duration-300',
           selected
             ? 'border-ak-honey/60 bg-ak-brand text-ak-ink shadow-ak-glow'
-            : 'border-ak-line-strong bg-ak-surface/70 text-ak-honey group-hover:border-ak-honey/50 group-hover:bg-ak-brand-soft group-hover:text-ak-cream'
+            : 'border-ak-line-strong bg-ak-surface/70 text-ak-honey group-hover:border-ak-honey/50 group-hover:bg-ak-brand-soft group-hover:text-white'
         )}
       >
         <span className="text-xl">
@@ -81,8 +81,8 @@ const CategoryCard = ({ item, selected, onClick }) => {
             'w-full text-center text-[10px] font-bold',
             'transition-colors duration-300',
             selected
-              ? 'text-ak-cream'
-              : 'text-ak-cream/75 group-hover:text-ak-cream'
+              ? 'text-white'
+              : 'text-white/75 group-hover:text-white'
           )}
         >
           {item?.name}
@@ -149,7 +149,7 @@ const CategoriesNavBar = () => {
         'sticky top-0 z-40 w-full overflow-hidden',
         'border-b border-ak-line-strong',
         'bg-ak-surface shadow-ak-panel',
-        'text-ak-cream'
+        'text-white'
       )}
     >
       {/* توهجات زخرفية في الخلفية */}
@@ -170,11 +170,11 @@ const CategoriesNavBar = () => {
             <div className="h-11 w-1 shrink-0 rounded-full bg-gradient-to-b from-ak-honey to-ak-copper/30" />
 
             <div className="min-w-0">
-              <h2 className="text-lg font-black tracking-tight text-ak-cream sm:text-xl">
+              <h2 className="text-lg font-black tracking-tight text-white sm:text-xl">
                 تصفح الأقسام
               </h2>
 
-              <p className="mt-1 text-xs text-ak-muted sm:text-sm">
+              <p className="mt-1 text-xs text-white sm:text-sm">
                 اكتشف ما تبحث عنه بسهولة
               </p>
             </div>
@@ -183,7 +183,7 @@ const CategoriesNavBar = () => {
           <div className="hidden shrink-0 items-center gap-2 rounded-full border border-ak-line-strong bg-ak-ink/25 px-3 py-2 sm:flex">
             <span className="h-1.5 w-1.5 rounded-full bg-ak-honey shadow-ak-glow" />
 
-            <span className="text-xs font-medium text-ak-cream/90">
+            <span className="text-xs font-medium text-white/90">
               {categories?.length || 0} قسم
             </span>
           </div>
@@ -216,7 +216,7 @@ const CategoriesNavBar = () => {
             DISCOVER YOUR CATEGORY
           </span>
 
-          <span className="text-xs text-ak-muted">
+          <span className="text-xs text-white">
             {selectedCategory?.name || 'اختر قسماً للبدء'}
           </span>
         </div>

@@ -5,10 +5,34 @@ import { prisma } from '@/lib/db/prisma';
 export async function GET() {
   const { user, seller } = await getSellerAccount();
   if (!user) return NextResponse.json({ error: 'سجّل الدخول لفتح لوحة البائع.' }, { status: 401 });
-  if (user.role !== 'SELLER') return NextResponse.json({ seller: null });
-  if (!seller) return NextResponse.json({ seller: null });
+  if (!seller || (user.role !== 'SELLER' && seller.status === 'ACTIVE')) {
+    return NextResponse.json({ seller: null });
+  }
+
+  const sellerProfile = {
+    id: seller.id,
+    storeName: seller.storeName,
+    slug: seller.slug,
+    description: seller.description,
+    logo: seller.logo,
+    status: seller.status,
+    isVerified: seller.isVerified,
+    contactName: seller.contactName,
+    contactEmail: seller.contactEmail,
+    phoneNumber: seller.phoneNumber,
+    residence: seller.residence,
+    latitude: seller.latitude,
+    longitude: seller.longitude,
+    businessType: seller.businessType,
+    sellingCategories: seller.sellingCategories,
+    intendedProducts: seller.intendedProducts,
+    facebookUrl: seller.facebookUrl,
+    youtubeUrl: seller.youtubeUrl,
+    twitterUrl: seller.twitterUrl,
+  };
+
   if (seller.status !== 'ACTIVE' || !seller.isVerified) {
-    return NextResponse.json({ seller: { id: seller.id, storeName: seller.storeName, slug: seller.slug, status: seller.status } });
+    return NextResponse.json({ seller: sellerProfile });
   }
 
   try {
@@ -100,7 +124,7 @@ export async function GET() {
     ]);
 
     return NextResponse.json({
-      seller,
+      seller: sellerProfile,
       metrics: {
         productCount,
         stockCount: stock._sum.stockQuantity || 0,

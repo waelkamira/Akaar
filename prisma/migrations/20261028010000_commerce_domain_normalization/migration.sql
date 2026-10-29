@@ -1,7 +1,17 @@
 -- Normalize order persistence for a multi-item marketplace.
--- The owner confirmed there is no production database; this migration is part of
--- the greenfield schema setup. Unknown legacy status strings intentionally fail
--- the enum cast rather than being silently rewritten.
+-- Refuse to discard legacy order and inventory rows; unknown legacy status strings
+-- intentionally fail the enum cast rather than being silently rewritten.
+
+DO $migration$
+BEGIN
+  IF EXISTS (SELECT 1 FROM "Order") THEN
+    RAISE EXCEPTION 'Order contains rows; migrate legacy order items before continuing.';
+  END IF;
+  IF EXISTS (SELECT 1 FROM "Inventory") THEN
+    RAISE EXCEPTION 'Inventory contains rows; migrate inventory into products before continuing.';
+  END IF;
+END
+$migration$;
 
 DROP INDEX "Order_fulfillmentStatus_idx";
 DROP INDEX "Order_productId_idx";

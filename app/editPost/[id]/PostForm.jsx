@@ -16,7 +16,7 @@ const PostForm = ({
       {/* الحقول الأساسية */}
       {commonFields.map((field, index) => (
         <div key={index} className="flex flex-col gap-2">
-          <label className="flex justify-start items-center gap-1 text-ak-cream text-nowrap">
+          <label className="flex justify-start items-center gap-1 text-white text-nowrap">
             <span>{field?.icon}</span> {field?.label || field?.name}
           </label>
 
@@ -32,7 +32,7 @@ const PostForm = ({
       {/* الحقول الفرعية */}
       {categoryFields.map((field, index) => (
         <div key={index} className="flex flex-col gap-2">
-          <label className="flex justify-start items-center gap-1 text-ak-cream text-nowrap">
+          <label className="flex justify-start items-center gap-1 text-white text-nowrap">
             <span>{field?.icon}</span> {field?.label || field?.name}
           </label>{' '}
           <input
@@ -45,7 +45,7 @@ const PostForm = ({
       ))}
 
       {/* وصف الإعلان */}
-      <label className="flex justify-start items-center gap-1 text-ak-cream text-nowrap">
+      <label className="flex justify-start items-center gap-1 text-white text-nowrap">
         <TbFileDescription className="text-primary-500 text-lg sm:text-xl" />
         وصف الإعلان
       </label>
@@ -60,7 +60,7 @@ const PostForm = ({
         <OnClickMap lat={post?.lat} lng={post?.lng} />
       </div>
       {/* زر الحفظ */}
-      <button onClick={handleSave} className="btn text-ak-cream p-2 rounded my-4">
+      <button onClick={handleSave} className="btn text-white p-2 rounded my-4">
         حفظ التعديلات
       </button>
     </div>

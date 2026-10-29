@@ -15,7 +15,7 @@ const FormSelect = ({
 }) => {
   return (
     <div>
-      <label className="font-medium mb-2 flex items-center gap-2 text-ak-cream">
+      <label className="font-medium mb-2 flex items-center gap-2 text-white">
         {icon} {label}
       </label>
       <select

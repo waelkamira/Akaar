@@ -25,6 +25,20 @@ type SellerQueueItem = {
   storeName: string;
   slug: string;
   createdAt: string;
+  contactName: string | null;
+  contactEmail: string | null;
+  phoneNumber: string | null;
+  residence: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  businessType: string | null;
+  sellingCategories: string | null;
+  intendedProducts: string | null;
+  description: string | null;
+  facebookUrl: string | null;
+  youtubeUrl: string | null;
+  twitterUrl: string | null;
+  hasIdentityDocument: boolean;
   user: { email: string };
 };
 
@@ -313,12 +327,44 @@ export default function AdminDashboard() {
           </div>
           <div className="space-y-3">
             {sellers.items.map((item) => (
-              <article key={item.id} className="flex flex-wrap items-center justify-between gap-3 border-t border-ak-line-strong/[.06] pt-3">
-                <div className="min-w-0"><p className="truncate font-semibold">{item.storeName}</p><p className="truncate text-xs text-stone-500">{item.user.email} · /shop/{item.slug}</p></div>
-                <div className="flex gap-2">
-                  <button disabled={pendingAction === `sellers:${item.id}`} onClick={() => void review('sellers', item.id, 'ACTIVE')} className="rounded-lg bg-emerald-500/15 px-3 py-2 text-xs text-emerald-200 disabled:opacity-50">اعتماد</button>
-                  <button disabled={pendingAction === `sellers:${item.id}`} onClick={() => void review('sellers', item.id, 'REJECTED')} className="rounded-lg bg-rose-500/15 px-3 py-2 text-xs text-rose-200 disabled:opacity-50">رفض</button>
+              <article key={item.id} className="rounded-2xl border border-ak-line-strong/[.08] bg-ak-ink/30 p-4">
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="truncate font-bold">{item.storeName}</p>
+                    <p className="mt-1 truncate text-xs text-stone-500">{item.contactName || 'اسم غير مقدم'} · {item.contactEmail || item.user.email} · /shop/{item.slug}</p>
+                  </div>
+                  <div className="flex gap-2">
+                    {item.hasIdentityDocument && (
+                      <a
+                        href={`/api/admin/sellers/${encodeURIComponent(item.id)}/identity-document`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="rounded-lg border border-ak-amber/30 px-3 py-2 text-xs font-semibold text-ak-honey transition hover:bg-ak-brand-soft"
+                      >
+                        عرض وثيقة الهوية
+                      </a>
+                    )}
+                    <button disabled={pendingAction === `sellers:${item.id}`} onClick={() => void review('sellers', item.id, 'ACTIVE')} className="rounded-lg bg-emerald-500/15 px-3 py-2 text-xs text-emerald-200 disabled:opacity-50">اعتماد</button>
+                    <button disabled={pendingAction === `sellers:${item.id}`} onClick={() => void review('sellers', item.id, 'REJECTED')} className="rounded-lg bg-rose-500/15 px-3 py-2 text-xs text-rose-200 disabled:opacity-50">رفض</button>
+                  </div>
                 </div>
+                <dl className="mt-4 grid gap-3 text-xs sm:grid-cols-2">
+                  <div><dt className="text-stone-500">البريد الإلكتروني</dt><dd className="mt-1 break-all">{item.contactEmail || item.user.email}</dd></div>
+                  <div><dt className="text-stone-500">رقم الهاتف</dt><dd className="mt-1" dir="ltr">{item.phoneNumber || '—'}</dd></div>
+                  <div><dt className="text-stone-500">نوع النشاط</dt><dd className="mt-1">{item.businessType || '—'}</dd></div>
+                  <div><dt className="text-stone-500">مكان الإقامة</dt><dd className="mt-1">{item.residence || '—'}</dd></div>
+                  <div className="sm:col-span-2"><dt className="text-stone-500">فئات المنتجات</dt><dd className="mt-1">{item.sellingCategories || '—'}</dd></div>
+                  <div className="sm:col-span-2"><dt className="text-stone-500">المنتجات وخطة البيع</dt><dd className="mt-1 whitespace-pre-wrap leading-6">{item.intendedProducts || '—'}</dd></div>
+                  {item.description && <div className="sm:col-span-2"><dt className="text-stone-500">نبذة عن المتجر</dt><dd className="mt-1 whitespace-pre-wrap leading-6">{item.description}</dd></div>}
+                  {item.latitude !== null && item.longitude !== null && (
+                    <div className="sm:col-span-2"><dt className="text-stone-500">الموقع المحدد على الخريطة</dt><dd className="mt-1" dir="ltr">{item.latitude.toFixed(5)}, {item.longitude.toFixed(5)}</dd></div>
+                  )}
+                  <div className="flex flex-wrap gap-3 sm:col-span-2">
+                    {item.facebookUrl && <a href={item.facebookUrl} target="_blank" rel="noreferrer" className="text-ak-honey underline">Facebook</a>}
+                    {item.youtubeUrl && <a href={item.youtubeUrl} target="_blank" rel="noreferrer" className="text-ak-honey underline">YouTube</a>}
+                    {item.twitterUrl && <a href={item.twitterUrl} target="_blank" rel="noreferrer" className="text-ak-honey underline">Twitter / X</a>}
+                  </div>
+                </dl>
               </article>
             ))}
             {!sellers.items.length && <p className="py-4 text-sm text-stone-500">لا توجد طلبات بانتظار المراجعة.</p>}

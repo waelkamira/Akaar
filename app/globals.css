@@ -3,15 +3,14 @@
 @tailwind utilities;
 
 body {
-  @apply rubik;
-  background-color: #120b07;
+  @apply rubik select-none;
+  min-height: 100vh;
+  background-color: #454545;
   background-image:
-    radial-gradient(ellipse at 50% -18%, rgba(166, 91, 42, 0.22), transparent 52%),
-    linear-gradient(180deg, #17100b 0%, #120b07 48%, #100906 100%);
+    radial-gradient(ellipse at 50% -18%, rgba(224, 146, 107, 0.12), transparent 52%),
+    linear-gradient(180deg, #4A4A4A 0%, #454545 48%, #3E3E3E 100%);
   background-attachment: fixed;
-  color: #f8ebdd;
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
+  color: #F7F1EE;
 }
 
 html {
@@ -42,7 +41,7 @@ html {
 
 /* ✅ تغيير لون شريط التمرير */
 ::-webkit-scrollbar-thumb {
-  background: #C99B70; /* Akaar copper accent */
+  background: #fb923c; /* لون شريط التمرير */
   border-radius: 20px; /* زوايا دائرية */
 }
 
@@ -64,14 +63,48 @@ pre {
 }
 
 :root {
-  --akaar-bg: #120b07;
-  --akaar-surface: #21160f;
-  --akaar-surface-raised: #2d1d13;
-  --akaar-copper: #e79a4b;
-  --akaar-copper-light: #ffc477;
-  --akaar-ivory: #f8ebdd;
-  --btn-background: #e79a4b;
-  --btn-hover-background: #ffc477;
+  --akaar-onyx: #454545;
+  --akaar-persian-orange: #E0926B;
+  --akaar-surface: rgba(86, 86, 86, 0.62);
+  --akaar-glass-border: rgba(255, 255, 255, 0.16);
+  --btn-background: var(--akaar-persian-orange);
+  --btn-hover-background: #F0AE8E;
+}
+
+@layer components {
+  .ak-glass {
+    border: 1px solid var(--akaar-glass-border);
+    background:
+      linear-gradient(145deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.025)),
+      var(--akaar-surface);
+    box-shadow:
+      0 18px 48px rgba(0, 0, 0, 0.24),
+      inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    -webkit-backdrop-filter: blur(18px) saturate(135%);
+    backdrop-filter: blur(18px) saturate(135%);
+  }
+
+  .ak-glass-strong {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background:
+      linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.035)),
+      rgba(37, 37, 37, 0.76);
+    box-shadow:
+      0 24px 70px rgba(0, 0, 0, 0.36),
+      inset 0 1px 0 rgba(255, 255, 255, 0.14);
+    -webkit-backdrop-filter: blur(24px) saturate(145%);
+    backdrop-filter: blur(24px) saturate(145%);
+  }
+
+  @supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+    .ak-glass {
+      background: #505050;
+    }
+
+    .ak-glass-strong {
+      background: #303030;
+    }
+  }
 }
 
 .btn {
@@ -197,13 +230,13 @@ input[type='file'] {
     border-color: transparent;
   }
   50% {
-    border-color: #ff7c34;
+    border-color: #E0926B;
   }
 }
 
 .akar {
   overflow: hidden; /* إخفاء النص الزائد */
-  border-left: 0.05em solid #ff7c34; /* محاكاة مؤشر الكتابة على اليسار */
+  border-left: 0.05em solid #E0926B; /* محاكاة مؤشر الكتابة على اليسار */
   white-space: nowrap; /* منع التفاف النص */
   direction: rtl; /* ضبط اتجاه النص من اليمين إلى اليسار */
   text-align: right;
@@ -267,7 +300,7 @@ input[type='file'] {
 
 /* كلاس يتحكم في تصميم كل بطاقة فردية */
 .item {
-  --color: #ff7c34; /* متغير لون مخصص للبطاقة */
+  --color: #E0926B; /* متغير لون مخصص للبطاقة */
   background-color: var(--color); /* لون خلفية البطاقة */
   border-radius: 10px; /* يجعل زوايا البطاقة مستديرة */
   padding: 20px; /* مسافة داخلية حول محتوى البطاقة */
@@ -356,113 +389,116 @@ input[type='file'] {
 @layer base {
   :root {
     color-scheme: dark;
-    --background: 24 38% 6%;
-    --foreground: 32 64% 95%;
+    --background: 0 0% 27.1%;
+    --foreground: 0 0% 96.8%;
 
-    --card: 26 36% 13%;
-    --card-foreground: 32 64% 95%;
+    --card: 0 0% 31%;
+    --card-foreground: 0 0% 96.8%;
 
-    --popover: 26 36% 13%;
-    --popover-foreground: 32 64% 95%;
+    --popover: 0 0% 29%;
+    --popover-foreground: 0 0% 96.8%;
 
-    --primary: 31 76% 60%;
-    --primary-foreground: 24 38% 6%;
+    --primary: 19.5 66.8% 65.7%;
+    --primary-foreground: 0 0% 15%;
 
-    --secondary: 25 30% 18%;
-    --secondary-foreground: 32 64% 95%;
+    --secondary: 0 0% 36%;
+    --secondary-foreground: 0 0% 96.8%;
 
-    --muted: 25 25% 16%;
-    --muted-foreground: 27 18% 65%;
+    --muted: 0 0% 32%;
+    --muted-foreground: 0 0% 78%;
 
-    --accent: 28 30% 21%;
-    --accent-foreground: 32 64% 95%;
+    --accent: 19.5 24% 25%;
+    --accent-foreground: 30 42% 94%;
 
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 28 24% 24%;
-    --input: 28 24% 24%;
-    --ring: 31 76% 60%;
+    --border: 0 0% 100% / 0.14;
+    --input: 0 0% 100% / 0.18;
+    --ring: 19.5 66.8% 65.7%;
 
     --radius: 0.5rem;
   }
 
   .dark {
-    --background: 24 38% 6%;
-    --foreground: 32 64% 95%;
+    --background: 0 0% 27.1%;
+    --foreground: 0 0% 96.8%;
 
-    --card: 26 36% 13%;
-    --card-foreground: 32 64% 95%;
+    --card: 0 0% 31%;
+    --card-foreground: 0 0% 96.8%;
 
-    --popover: 26 36% 13%;
-    --popover-foreground: 32 64% 95%;
+    --popover: 0 0% 29%;
+    --popover-foreground: 0 0% 96.8%;
 
-    --primary: 31 76% 60%;
-    --primary-foreground: 24 38% 6%;
+    --primary: 19.5 66.8% 65.7%;
+    --primary-foreground: 0 0% 15%;
 
-    --secondary: 25 30% 18%;
-    --secondary-foreground: 32 64% 95%;
+    --secondary: 0 0% 36%;
+    --secondary-foreground: 0 0% 96.8%;
 
-    --muted: 25 25% 16%;
-    --muted-foreground: 27 18% 65%;
+    --muted: 0 0% 32%;
+    --muted-foreground: 0 0% 78%;
 
-    --accent: 28 30% 21%;
-    --accent-foreground: 32 64% 95%;
+    --accent: 19.5 24% 25%;
+    --accent-foreground: 30 42% 94%;
 
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 28 24% 24%;
-    --input: 28 24% 24%;
-    --ring: 31 76% 60%;
+    --border: 0 0% 100% / 0.14;
+    --input: 0 0% 100% / 0.18;
+    --ring: 19.5 66.8% 65.7%;
   }
 }
 
 :root {
-  /* Shared brand tokens for legacy components. */
-  --color-primary-50: #fff7eb;
-  --color-primary-100: #ffe8cb;
-  --color-primary-200: #ffd39f;
-  --color-primary-300: #ffc477;
-  --color-primary-400: #f2ac5e;
-  --color-primary-500: #e79a4b;
-  --color-primary-600: #c77a3e;
-  --color-primary-700: #a55e31;
-  --color-primary-800: #754125;
-  --color-primary-900: #4a2b1c;
+  /* Primary Colors */
+  --color-primary-50: #fff1e6;
+  --color-primary-100: #ffe8d9;
+  --color-primary-200: #ffd0b5;
+  --color-primary-300: #ffb088;
+  --color-primary-400: #ff9466;
+  --color-primary-500: #E0926B;
+  --color-primary-600: #f25d1e;
+  --color-primary-700: #cc4b18;
+  --color-primary-800: #9c3915;
+  --color-primary-900: #7a2e12;
 
-  --color-secondary-50: #f8ebdd;
-  --color-secondary-100: #e6d1bd;
-  --color-secondary-200: #cfb39c;
-  --color-secondary-300: #b99a82;
-  --color-secondary-400: #9f806a;
-  --color-secondary-500: #826653;
-  --color-secondary-600: #674d3d;
-  --color-secondary-700: #503a2e;
-  --color-secondary-800: #39291f;
-  --color-secondary-900: #241910;
+  /* Secondary Colors */
+  --color-secondary-50: #f0f4f8;
+  --color-secondary-100: #d9e2ec;
+  --color-secondary-200: #bcccdc;
+  --color-secondary-300: #9fb3c8;
+  --color-secondary-400: #829ab1;
+  --color-secondary-500: #627d98;
+  --color-secondary-600: #486581;
+  --color-secondary-700: #334e68;
+  --color-secondary-800: #243b53;
+  --color-secondary-900: #102a43;
 
-  --color-accent-50: #fff6e8;
-  --color-accent-100: #ffedcf;
-  --color-accent-200: #ffdfa9;
-  --color-accent-300: #ffd18a;
-  --color-accent-400: #ffc477;
-  --color-accent-500: #e79a4b;
-  --color-accent-600: #c77a3e;
-  --color-accent-700: #a55e31;
-  --color-accent-800: #754125;
-  --color-accent-900: #4a2b1c;
+  /* Accent Colors */
+  --color-accent-50: #e3f8ff;
+  --color-accent-100: #b3ecff;
+  --color-accent-200: #81defd;
+  --color-accent-300: #5ed0fa;
+  --color-accent-400: #40c3f7;
+  --color-accent-500: #2bb0ed;
+  --color-accent-600: #1992d4;
+  --color-accent-700: #127fbf;
+  --color-accent-800: #0b69a3;
+  --color-accent-900: #035388;
 
-  --color-neutral-50: #f8ebdd;
-  --color-neutral-100: #e8d8c8;
-  --color-neutral-200: #d0baa7;
-  --color-neutral-300: #b9a393;
-  --color-neutral-400: #a18b7a;
-  --color-neutral-500: #897362;
-  --color-neutral-600: #705b4b;
-  --color-neutral-700: #594637;
-  --color-neutral-800: #39281d;
-  --color-neutral-900: #21150e;
+  /* Neutral Colors */
+  --color-neutral-50: #f5f7fa;
+  --color-neutral-100: #e4e7eb;
+  --color-neutral-200: #cbd2d9;
+  --color-neutral-300: #9aa5b1;
+  --color-neutral-400: #7b8794;
+  --color-neutral-500: #616e7c;
+  --color-neutral-600: #52606d;
+  --color-neutral-700: #3e4c59;
+  --color-neutral-800: #323f4b;
+  --color-neutral-900: #1f2933;
 
   /* Status Colors */
   --color-success: #27ae60;
@@ -471,9 +507,9 @@ input[type='file'] {
   --color-info: #3498db;
 
   /* Background Colors */
-  --color-background-light: #f8ebdd;
-  --color-background-dark: #120b07;
-  --color-background-accent: #2d1d13;
+  --color-background-light: #ffffff;
+  --color-background-dark: #1f2933;
+  --color-background-accent: #fff8f0;
 
   /* Legacy color mapping for backward compatibility */
   --color-primary: var(--color-primary-500);
@@ -506,51 +542,18 @@ input[type='file'] {
   }
   body {
     @apply bg-background text-foreground;
-    font-family: var(--font-rubik), sans-serif;
   }
 }
 
 body {
-  @apply bg-background text-foreground rubik;
+  @apply bg-neutral-50 text-neutral-800 rubik;
   font-feature-settings:
     'rlig' 1,
     'calt' 1;
 }
 
-@layer base {
-  input:not([type='checkbox']):not([type='radio']):not([type='file']),
-  select,
-  textarea {
-    @apply rounded-xl border border-ak-line bg-ak-surface text-ak-cream placeholder:text-ak-quiet;
-  }
-
-  input:not([type='checkbox']):not([type='radio']):not([type='file']):focus,
-  select:focus,
-  textarea:focus {
-    @apply outline-none ring-2 ring-primary-500/30 border-primary-400;
-  }
-
-  ::selection {
-    @apply bg-primary-500/35 text-ak-cream;
-  }
-}
-
-@layer components {
-  .ak-panel {
-    @apply rounded-2xl border border-ak-line bg-ak-surface shadow-ak-card;
-  }
-
-  .ak-panel-raised {
-    @apply rounded-2xl border border-ak-line-strong bg-ak-surface shadow-ak-panel backdrop-blur-xl;
-  }
-
-  .ak-button-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-ak-brand px-5 py-3 font-bold text-ak-ink shadow-ak-glow transition duration-200 hover:-translate-y-0.5 hover:brightness-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ak-olive focus-visible:ring-offset-2 focus-visible:ring-offset-ak-ink disabled:pointer-events-none disabled:opacity-50;
-  }
-
-  .ak-eyebrow {
-    @apply text-[10px] font-semibold uppercase tracking-[.22em] text-ak-olive;
-  }
+body {
+  font-family: 'Rubik', sans-serif;
 }
 
 html {

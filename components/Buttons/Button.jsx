@@ -16,10 +16,10 @@ export default function Button({ style, title, onClick, path = '', emoji }) {
           (style
             ? 'sm:text-lg p-2 text-sm lg:p-3 ' + style
             : ' text-sm p-0.5') +
-          ' flex justify-between text-ak-cream items-center border border-ak-line-strong/20 my-2 text-nowrap select-none rounded-full w-full max-h-12 transition-all duration-300 ease-in-out bg-transparent transform hover:scale-[102%] shadow-lg hover:shadow-lg'
+          ' flex justify-between text-white items-center border border-ak-line-strong/20 my-2 text-nowrap select-none rounded-full w-full max-h-12 transition-all duration-300 ease-in-out bg-transparent transform hover:scale-[102%] shadow-lg hover:shadow-lg'
         }
         // style={{
-        //   background: 'linear-gradient(90deg, #FF7C34, #fb923c)',
+        //   background: 'linear-gradient(90deg, #E0926B, #fb923c)',
         //   border: 'none',
         //   boxShadow:
         //     '0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06)',

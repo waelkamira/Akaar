@@ -87,7 +87,7 @@ export default async function PublicShopPage({ params, searchParams }: Props) {
   ]);
 
   return (
-    <main dir="rtl" className="min-h-screen bg-ak-ink px-4 py-8 text-ak-cream sm:py-12">
+    <main dir="rtl" className="min-h-screen bg-ak-ink px-4 py-8 text-white sm:py-12">
       <div className="mx-auto max-w-7xl">
         <header className="relative overflow-hidden rounded-3xl border border-ak-line bg-gradient-to-br from-ak-raised via-ak-surface to-ak-canvas p-6 sm:p-10 shadow-ak-panel">
           <div className="absolute -left-12 -top-20 h-64 w-64 rounded-full bg-ak-amber/10 blur-3xl" />

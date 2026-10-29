@@ -389,8 +389,8 @@ export default function ContactUs() {
               </div>
             )}
           </div>
-          <h1 className="text-3xl sm:text-4xl font-black text-ak-cream mb-3">موقع متجر</h1>
-          <p className="text-ak-cream max-w-2xl mx-auto">
+          <h1 className="text-3xl sm:text-4xl font-black text-white mb-3">موقع متجر</h1>
+          <p className="text-white max-w-2xl mx-auto">
             وجهتك المثالية لكل من يبحث عن خدمات البيع والتأجير للعقارات والسيارات والمنتجات بمختلف أنواعها.
           </p>
         </motion.div>
@@ -427,7 +427,7 @@ export default function ContactUs() {
             className="lg:col-span-2 space-y-6"
           >
             <div className="bg-neutral-900/60 backdrop-blur-xl border border-neutral-800 rounded-3xl p-6 sm:p-8">
-              <h2 className="text-2xl font-black text-ak-cream mb-6 flex items-center gap-3">
+              <h2 className="text-2xl font-black text-white mb-6 flex items-center gap-3">
                 <span className="w-1.5 h-8 bg-gradient-to-b from-orange-500 to-amber-500 rounded-full" />
                 لماذا تختار موقع متجر؟
               </h2>
@@ -439,8 +439,8 @@ export default function ContactUs() {
                       {feature.icon}
                     </div>
                     <div>
-                      <h3 className="font-bold text-ak-cream mb-1">{feature.title}</h3>
-                      <p className="text-sm text-ak-cream leading-relaxed">{feature.desc}</p>
+                      <h3 className="font-bold text-white mb-1">{feature.title}</h3>
+                      <p className="text-sm text-white leading-relaxed">{feature.desc}</p>
                     </div>
                   </div>
                 ))}
@@ -463,7 +463,7 @@ export default function ContactUs() {
           >
             {/* Contact Info Card */}
             <div className="bg-neutral-900/60 backdrop-blur-xl border border-neutral-800 rounded-3xl p-6 shadow-xl">
-              <h2 className="text-xl font-black text-ak-cream mb-6 flex items-center gap-2">
+              <h2 className="text-xl font-black text-white mb-6 flex items-center gap-2">
                 <MdOutlineAlternateEmail className="text-orange-500 text-2xl" />
                 معلومات الاتصال
               </h2>
@@ -474,7 +474,7 @@ export default function ContactUs() {
                       <div className="w-10 h-10 rounded-xl bg-neutral-800 flex items-center justify-center shrink-0">
                         {info.icon}
                       </div>
-                      <span className="text-neutral-300 font-medium group-hover:text-ak-cream transition-colors">
+                      <span className="text-neutral-300 font-medium group-hover:text-white transition-colors">
                         {info.text}
                       </span>
                     </div>
@@ -504,7 +504,7 @@ export default function ContactUs() {
 
             {/* Working Hours Card */}
             <div className="bg-neutral-900/60 backdrop-blur-xl border border-neutral-800 rounded-3xl p-6 shadow-xl lg:sticky lg:top-24">
-              <h2 className="text-xl font-black text-ak-cream mb-6 flex items-center gap-2">
+              <h2 className="text-xl font-black text-white mb-6 flex items-center gap-2">
                 <FaCalendarDays className="text-amber-500 text-xl" />
                 ساعات العمل
               </h2>

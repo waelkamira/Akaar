@@ -9,7 +9,7 @@ export default async function AdminLayout({ children }: Readonly<{ children: Rea
   if (user.role !== 'ADMIN') redirect('/');
 
   return (
-    <div dir="rtl" className="min-h-screen bg-ak-canvas text-ak-cream">
+    <div dir="rtl" className="min-h-screen bg-ak-canvas text-white">
       <header className="border-b border-ak-line bg-ak-surface/90 shadow-ak-card backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-4 py-4">
           <div>

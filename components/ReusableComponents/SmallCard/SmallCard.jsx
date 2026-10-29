@@ -72,129 +72,116 @@ const SmallCard = React.memo(
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      whileHover={{ y: -8 }}
-      transition={{ duration: 0.4, ease: "easeOut" }}
+      whileHover={{ y: -6 }}
+      transition={{ duration: 0.35, ease: 'easeOut' }}
       onClick={handleClick}
-      className="group cursor-pointer"
+      className="group h-full cursor-pointer"
     >
-      {/* البطاقة الرئيسية بتصميم عصري */}
-      <div className="relative overflow-hidden rounded-[1.75rem] border border-ak-line bg-gradient-to-br from-ak-raised to-ak-surface shadow-ak-card transition-all duration-500 hover:-translate-y-1 hover:border-ak-amber/35 hover:shadow-ak-panel">
-        
-        {/* ================= قسم الصورة ================= */}
-        <div className="relative w-full aspect-[4/3] overflow-hidden">
-          <div className="absolute inset-0 z-10 bg-gradient-to-br from-ak-amber/10 to-transparent" />
-          <ImageComponent
-            item={item}
-            priority={priority}
-            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
-          />
-
-          {/* Overlay متدرج */}
-          <div className="absolute inset-0 z-10 bg-gradient-to-t from-ak-ink via-ak-ink/25 to-transparent" />
-
-          {/* الشريط العلوي - معلومات سريعة */}
-          <div className="absolute top-0 left-0 right-0 p-4 z-20 flex justify-between items-start">
-            {/* زر المفضلة - تصميم عصري */}
-            <div
-              onClick={(e) => e.stopPropagation()}
-              className="rounded-2xl border border-ak-line-strong/20 bg-ak-ink/35 p-2.5 shadow-ak-card backdrop-blur-xl transition-all duration-300 hover:bg-ak-surface/75"
-            >
-              <FavoriteButton
+      <div className="h-full rounded-[2rem] border-4 border-white/90 bg-white p-1.5 shadow-[0_18px_48px_rgba(15,23,42,0.22)] transition-shadow duration-300 group-hover:shadow-[0_24px_60px_rgba(15,23,42,0.32)]">
+        <div className="flex h-full flex-col overflow-hidden rounded-[1.45rem] border border-ak-line bg-ak-surface">
+          <div className="relative aspect-[4/3] shrink-0 overflow-hidden rounded-[1.3rem] bg-gradient-to-br from-orange-400 via-pink-500 to-violet-500 p-1.5">
+            <div className="relative h-full overflow-hidden rounded-[1.05rem] bg-ak-raised">
+              <ImageComponent
                 item={item}
-                className="text-ak-cream hover:text-red-400 transition-colors"
+                priority={priority}
+                className="absolute inset-0 h-full w-full"
               />
-            </div>
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ak-ink/80 via-ak-ink/10 to-ak-ink/10" />
 
-            {/* بطاقة التصنيف - تصميم عائم */}
-            {category?.name && (
-              <motion.div 
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                className="flex items-center gap-2 rounded-full bg-ak-brand px-4 py-2 text-xs font-bold text-ak-ink shadow-ak-glow"
-              >
-                <FaTag className="text-[10px]" />
-                {category.name}
-              </motion.div>
-            )}
-          </div>
+              <div className="absolute inset-x-3 top-3 z-20 flex items-start justify-between gap-3">
+                <div
+                  onClick={(event) => event.stopPropagation()}
+                  className="flex size-10 items-center justify-center rounded-2xl border border-white/40 bg-ak-ink/55 shadow-lg backdrop-blur-md"
+                >
+                  <FavoriteButton item={item} />
+                </div>
+                {category?.name && (
+                  <motion.div
+                    initial={{ opacity: 0, x: 12 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    className="flex max-w-[65%] items-center gap-2 truncate rounded-full border border-white/50 bg-white/90 px-3.5 py-2 text-xs font-bold text-ak-ink shadow-lg backdrop-blur-md"
+                  >
+                    <FaTag className="shrink-0 text-[10px] text-rose-500" />
+                    <span className="truncate">{category.name}</span>
+                  </motion.div>
+                )}
+              </div>
 
-          {/* بطاقة الوقت - أسفل اليسار */}
-          {item?.createdAt && (
-            <div className="absolute bottom-4 left-4 z-20">
-              <div className="flex items-center gap-2 rounded-full border border-ak-line-strong bg-ak-ink/75 px-3 py-2 text-xs font-bold text-ak-cream/85 shadow-ak-card backdrop-blur-xl">
-                <FaClock className="text-[10px] text-ak-honey" />
-                {formatDate(item.createdAt)}
+              {item?.createdAt && (
+                <div className="absolute bottom-3 left-3 z-20 max-w-[34%]">
+                  <div className="flex items-center gap-2 overflow-hidden rounded-full border border-white/35 bg-ak-ink/60 px-3 py-2 text-[11px] font-semibold text-white shadow-lg backdrop-blur-md">
+                    <FaClock className="text-[10px] text-ak-honey" />
+                    <span className="truncate">{formatDate(item.createdAt)}</span>
+                  </div>
+                </div>
+              )}
+
+              <div className="absolute bottom-3 right-3 z-20 min-w-32 max-w-[58%] rounded-[1.15rem] bg-gradient-to-br from-orange-500 via-rose-500 to-fuchsia-600 px-4 py-3 text-white shadow-[0_10px_28px_rgba(190,24,93,0.35)]">
+                <span className="block text-[10px] font-bold text-white/75">السعر</span>
+                <span className="mt-1 flex min-w-0 items-baseline gap-1.5">
+                  <span className="truncate text-2xl font-black leading-none tracking-tight">
+                    {item.basePrice?.toLocaleString() || '0'}
+                  </span>
+                  <span className="text-[11px] font-bold text-white/80">ل.س</span>
+                </span>
               </div>
             </div>
-          )}
-
-          {/* مؤشر السعر العائم - أسفل اليمين */}
-          <div className="absolute bottom-4 right-4 z-20">
-            <div className="flex items-center gap-1 rounded-2xl border border-ak-honey/30 bg-ak-brand px-4 py-2.5 text-lg font-black text-ak-ink shadow-ak-glow">
-              {item.basePrice?.toLocaleString() || '0'}
-              <span className="text-xs font-bold opacity-80">ل.س</span>
-            </div>
           </div>
-        </div>
 
-        {/* ================= قسم المحتوى ================= */}
-        <div className="p-5 space-y-4 relative">
-          {/* خط زخرفي علوي */}
-          <div className="absolute left-1/2 top-0 h-1 w-12 -translate-x-1/2 rounded-full bg-ak-brand opacity-75" />
+          <div className="flex flex-1 flex-col gap-3 p-4 sm:p-5">
+            <div className="flex items-start justify-between gap-3">
+              <h2 className="line-clamp-2 min-h-12 flex-1 text-base font-black leading-6 text-white transition-colors group-hover:text-ak-honey sm:text-lg">
+                {item?.title || 'إعلان جديد'}
+              </h2>
+              <span className="flex size-10 shrink-0 items-center justify-center rounded-2xl border border-violet-300/20 bg-gradient-to-br from-violet-500/20 to-cyan-400/10 text-violet-200 shadow-inner">
+                <FaTag className="text-sm" />
+              </span>
+            </div>
 
-          {/* العنوان والموقع */}
-          <div className="space-y-3">
-            {/* الموقع بتصميم أنيق */}
-            <div className="group/location flex items-center gap-2 text-sm text-ak-muted">
-              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-ak-elevated/70 transition-colors group-hover/location:bg-ak-amber/15">
-                <FaMapMarkerAlt className="h-3.5 w-3.5 text-ak-amber" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <span className="block truncate font-medium text-ak-cream/90">
+            <div className="flex min-w-0 items-center gap-2 text-sm">
+              <span className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-ak-amber/10 text-ak-amber">
+                <FaMapMarkerAlt className="text-xs" />
+              </span>
+              <div className="min-w-0">
+                <span className="block truncate font-semibold text-white/90">
                   {item?.location || 'غير محدد'}
                 </span>
                 {item?.subLocation && (
-                  <span className="block text-xs text-ak-quiet">
+                  <span className="block truncate text-xs text-ak-quiet">
                     {item.subLocation}
                   </span>
                 )}
               </div>
             </div>
 
-            {/* الوصف */}
-            <p className="line-clamp-2 min-h-[2.5rem] text-sm leading-relaxed text-ak-muted">
-              {item?.description || item?.title || 'لا يوجد وصف متاح'}
+            <p className="line-clamp-2 min-h-10 text-sm leading-5 text-white/70">
+              {item?.description || 'اكتشف تفاصيل هذا الإعلان والمزيد.'}
             </p>
-          </div>
 
-          {/* معلومات إضافية */}
-          <div className="flex items-center justify-between border-t border-ak-line pt-3">
-            {/* حالة التوفر */}
-            {item?.stockQuantity !== undefined && (
-              <div className="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-xl">
-                <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-                <span className="text-emerald-400 text-xs font-bold">
+            <div className="mt-auto flex items-center justify-between gap-3 border-t border-ak-line pt-3">
+              {item?.stockQuantity !== undefined ? (
+                <div className="inline-flex items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-2 text-[11px] font-bold text-emerald-300">
+                  <span className="size-1.5 rounded-full bg-emerald-400" />
                   متاح ({item.stockQuantity})
+                </div>
+              ) : (
+                <span className="text-xs font-medium text-ak-quiet">
+                  اضغط لاكتشاف المزيد
                 </span>
-              </div>
-            )}
-
-            {/* زر التفاصيل - تصميم عصري */}
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                handleClick();
-              }}
-              className="group/btn flex items-center gap-2 rounded-xl bg-ak-brand px-5 py-2.5 text-sm font-bold text-ak-ink shadow-ak-glow transition-all duration-300 hover:scale-105 hover:brightness-105 active:scale-95"
-            >
-              <span>التفاصيل</span>
-              <FaArrowLeft className="group-hover/btn:-translate-x-1 transition-transform duration-300" />
-            </button>
+              )}
+              <button
+                onClick={(event) => {
+                  event.stopPropagation();
+                  handleClick();
+                }}
+                className="group/btn inline-flex items-center gap-2 rounded-xl bg-ak-brand px-4 py-2.5 text-xs font-black text-ak-ink shadow-ak-glow transition-all duration-300 hover:brightness-110 active:scale-95 sm:text-sm"
+              >
+                <span>التفاصيل</span>
+                <FaArrowLeft className="transition-transform duration-300 group-hover/btn:-translate-x-1" />
+              </button>
+            </div>
           </div>
         </div>
-
-        {/* تأثير ضوئي عند التمرير */}
-        <div className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-ak-honey/5 to-transparent transition-transform duration-1000 group-hover:translate-x-full" />
       </div>
     </motion.div>
   );

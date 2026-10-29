@@ -99,7 +99,7 @@ export default function ContactUs() {
         </div>
 
         <button
-          className=" btn flex justify-center items-center my-2 sm:text-lg text-sm p-0.5 lg:p-3 text-ak-cream text-nowrap select-none rounded-lg w-full max-h-12 hover:scale-[101%]"
+          className=" btn flex justify-center items-center my-2 sm:text-lg text-sm p-0.5 lg:p-3 text-white text-nowrap select-none rounded-lg w-full max-h-12 hover:scale-[101%]"
           type="submit"
         >
           ارسال

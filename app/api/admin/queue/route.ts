@@ -32,13 +32,41 @@ export async function GET(request: Request) {
             orderBy: { createdAt: 'asc' },
             skip,
             take: limit,
-            select: { id: true, storeName: true, slug: true, createdAt: true, user: { select: { email: true } } },
+            select: {
+              id: true,
+              storeName: true,
+              slug: true,
+              createdAt: true,
+              contactName: true,
+              contactEmail: true,
+              phoneNumber: true,
+              residence: true,
+              latitude: true,
+              longitude: true,
+              businessType: true,
+              sellingCategories: true,
+              intendedProducts: true,
+              description: true,
+              facebookUrl: true,
+              youtubeUrl: true,
+              twitterUrl: true,
+              identityDocumentFileId: true,
+              user: { select: { email: true } },
+            },
           }),
           prisma.seller.count({ where: { status: 'PENDING' } }),
         ]);
 
+    const responseItems = type === 'sellers'
+      ? items.map((item) => {
+          if (!('identityDocumentFileId' in item)) return item;
+          const { identityDocumentFileId, ...seller } = item;
+          return { ...seller, hasIdentityDocument: Boolean(identityDocumentFileId) };
+        })
+      : items;
+
     return NextResponse.json({
-      items,
+      items: responseItems,
       page,
       limit,
       totalCount,

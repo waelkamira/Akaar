@@ -523,7 +523,7 @@ export default function EnhancedSearch() {
               onKeyDown={handleKeyDown}
               onFocus={handleInputFocus}
               placeholder="ابحث عن عقار، سيارة، أو أي منتج..."
-              className="flex-grow w-full rounded-xl h-9 sm:h-11 p-2 text-xs sm:text-base border border-ak-line bg-ak-ink/70 text-ak-cream focus:outline-none focus:ring-2 focus:ring-ak-amber/40 placeholder:text-[11px] sm:placeholder:text-sm lg:placeholder:text-base placeholder:text-ak-quiet pr-6 pl-6 sm:pr-8 sm:pl-8 text-right"
+              className="flex-grow w-full rounded-xl h-9 sm:h-11 p-2 text-xs sm:text-base border border-ak-line bg-ak-ink/70 text-white focus:outline-none focus:ring-2 focus:ring-ak-amber/40 placeholder:text-[11px] sm:placeholder:text-sm lg:placeholder:text-base placeholder:text-ak-quiet pr-6 pl-6 sm:pr-8 sm:pl-8 text-right"
               aria-autocomplete="list"
               aria-controls="search-suggestions"
               aria-expanded={showSuggestions}
@@ -552,7 +552,7 @@ export default function EnhancedSearch() {
           {showSuggestions && suggestions.length > 0 && (
             <div
               id="search-suggestions"
-              className="absolute z-[2000] w-full mt-2 bg-ak-raised/95 border border-ak-line-strong rounded-xl shadow-ak-panel max-h-60 overflow-y-auto text-xs sm:text-sm text-ak-cream backdrop-blur-2xl"
+              className="absolute z-[2000] w-full mt-2 bg-ak-raised/95 border border-ak-line-strong rounded-xl shadow-ak-panel max-h-60 overflow-y-auto text-xs sm:text-sm text-white backdrop-blur-2xl"
               role="listbox"
             >
               {suggestions.map((suggestion, index) => (
@@ -565,7 +565,7 @@ export default function EnhancedSearch() {
                 >
                   <span>{suggestion.text}</span>
                   {suggestion.type === 'recent' && (
-                    <span className="text-[10px] sm:text-xs text-ak-muted whitespace-nowrap mr-2">
+                    <span className="text-[10px] sm:text-xs text-white whitespace-nowrap mr-2">
                       حديث
                     </span>
                   )}

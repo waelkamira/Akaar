@@ -56,9 +56,9 @@ export default function BookingCheckout({ property }: { property: PropertySummar
   }
 
   return (
-    <main dir="rtl" className="min-h-screen bg-ak-ink px-4 py-10 text-ak-cream sm:py-14">
+    <main dir="rtl" className="min-h-screen bg-ak-ink px-4 py-10 text-white sm:py-14">
       <div className="mx-auto max-w-4xl">
-        <Link href={`/properties/${encodeURIComponent(property.id)}`} className="text-sm text-ak-honey hover:text-ak-cream">← العودة إلى العقار</Link>
+        <Link href={`/properties/${encodeURIComponent(property.id)}`} className="text-sm text-ak-honey hover:text-white">← العودة إلى العقار</Link>
         <header className="mt-7"><p className="text-xs font-semibold tracking-[.22em] text-ak-amber">BOOKING REQUEST</p><h1 className="mt-2 text-3xl font-black">طلب حجز العقار</h1><p className="mt-2 text-sm text-stone-400">خطوة آمنة لمراجعة بياناتك قبل إرسال الطلب.</p></header>
 
         <ol className="mt-7 grid grid-cols-3 gap-2 text-xs">
@@ -76,7 +76,7 @@ export default function BookingCheckout({ property }: { property: PropertySummar
               <div><dt className="text-xs text-stone-500">سعر العقار وقت الطلب</dt><dd className="mt-1">{Number(booking.quotedPrice).toLocaleString()} {property.currency}</dd></div>
               <div><dt className="text-xs text-stone-500">الحالة</dt><dd className="mt-1">{booking.status === 'PENDING' ? 'قيد المراجعة' : booking.status}</dd></div>
             </dl>
-            <Link href="/profile" className="mt-6 inline-flex rounded-xl bg-ak-amber px-5 py-3 text-sm font-bold text-ak-canvas">العودة إلى الملف الشخصي</Link>
+            <Link href="/profile" className="mt-6 inline-flex rounded-xl bg-ak-amber px-5 py-3 text-sm font-bold text-ak-ink">العودة إلى الملف الشخصي</Link>
           </section>
         ) : (
           <section className="mt-7 grid gap-6 rounded-3xl border border-ak-line bg-ak-surface p-5 sm:p-8 lg:grid-cols-[1fr_.8fr]">
@@ -95,7 +95,7 @@ export default function BookingCheckout({ property }: { property: PropertySummar
                     <div className="flex justify-between gap-3"><dt className="text-stone-400">رسوم طلب الحجز التجريبية</dt><dd className="font-bold">1.00 USD</dd></div>
                     <div className="border-t border-ak-line pt-3 text-xs leading-6 text-stone-500">سيعيد الخادم قراءة سعر العقار الحالي ويخزّن نسخة السعر عند إنشاء الطلب. لا نقبل السعر أو الرسوم من المتصفح.</div>
                   </dl>
-                  <button type="button" onClick={() => { setStep(1); setError(''); }} className="mt-auto rounded-xl bg-ak-amber px-5 py-3 font-bold text-ak-canvas">متابعة</button>
+                  <button type="button" onClick={() => { setStep(1); setError(''); }} className="mt-auto rounded-xl bg-ak-amber px-5 py-3 font-bold text-ak-ink">متابعة</button>
                 </>
               ) : (
                 <>
@@ -107,7 +107,7 @@ export default function BookingCheckout({ property }: { property: PropertySummar
                   {error && <p role="alert" className="mt-4 rounded-xl border border-rose-400/20 bg-rose-400/10 p-3 text-sm text-rose-200">{error}</p>}
                   <div className="mt-auto flex gap-3 pt-6">
                     <button type="button" disabled={loading} onClick={() => { setStep(0); setError(''); }} className="rounded-xl border border-ak-line px-4 py-3 text-sm disabled:opacity-50">السابق</button>
-                    <button type="button" disabled={loading || !accepted} onClick={() => void submitRequest()} className="flex-1 rounded-xl bg-ak-amber px-4 py-3 text-sm font-bold text-ak-canvas disabled:opacity-50">{loading ? 'جارٍ إرسال الطلب...' : 'إرسال طلب الحجز'}</button>
+                    <button type="button" disabled={loading || !accepted} onClick={() => void submitRequest()} className="flex-1 rounded-xl bg-ak-amber px-4 py-3 text-sm font-bold text-ak-ink disabled:opacity-50">{loading ? 'جارٍ إرسال الطلب...' : 'إرسال طلب الحجز'}</button>
                   </div>
                 </>
               )}

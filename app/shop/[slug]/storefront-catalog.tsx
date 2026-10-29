@@ -53,7 +53,7 @@ export default function StorefrontCatalog({
           <option value="">كل الفئات</option>
           {categories.map((item) => <option key={item} value={item}>{item}</option>)}
         </select>
-        <button type="submit" className="rounded-xl bg-ak-amber px-5 py-3 text-sm font-bold text-ak-canvas">تصفية</button>
+        <button type="submit" className="rounded-xl bg-ak-amber px-5 py-3 text-sm font-bold text-ak-ink">تصفية</button>
       </form>
       {products.length ? (
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">

@@ -19,9 +19,9 @@
 //         };
 //       case 'orange':
 //         return {
-//           border: 'border-[#FF7C34]',
-//           bg: 'bg-[#FF7C34]',
-//           btn: '#FF7C34',
+//           border: 'border-[#E0926B]',
+//           bg: 'bg-[#E0926B]',
+//           btn: '#E0926B',
 //           hover: '#FF9D65', // لون أفتح للبرتقالي
 //         };
 //       case 'purple':
@@ -77,7 +77,7 @@
 //           <div className="px-4 mt-2">
 //             <button
 //               onClick={() => router.push(path)}
-//               className={`relative w-full my-2 text-ak-cream rounded-lg hover:scale-[101%] text-md sm:text-lg hover:shadow-sm hover:bg-${colors.hover} p-1 lg:p-2 transition-all duration-200 ease-in-out`}
+//               className={`relative w-full my-2 text-white rounded-lg hover:scale-[101%] text-md sm:text-lg hover:shadow-sm hover:bg-${colors.hover} p-1 lg:p-2 transition-all duration-200 ease-in-out`}
 //               style={{
 //                 backgroundColor: colors.bg,
 //               }}
@@ -115,7 +115,7 @@ export default function Card({ cardName, path, image, text, emoji }) {
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.5, ease: "easeOut" }}
       onClick={() => router.push(path)}
-      className="group relative mx-auto w-full max-w-sm cursor-pointer overflow-hidden rounded-3xl border border-ak-line bg-gradient-to-br from-ak-raised to-ak-surface shadow-ak-card backdrop-blur-xl transition-all duration-500 hover:-translate-y-2 hover:border-ak-amber/40 hover:shadow-ak-panel"
+      className="ak-glass group relative mx-auto w-full max-w-sm cursor-pointer overflow-hidden rounded-3xl border border-ak-line transition-all duration-500 hover:-translate-y-2 hover:border-ak-amber/40 hover:shadow-ak-panel"
     >
       {/* ================= قسم الصورة ================= */}
       <div className="relative w-full h-52 sm:h-60 overflow-hidden">
@@ -146,12 +146,12 @@ export default function Card({ cardName, path, image, text, emoji }) {
       {/* ================= قسم المحتوى ================= */}
       <div className="p-5 sm:p-6 space-y-4">
         {/* العنوان */}
-        <h2 className="text-xl font-black text-ak-cream transition-all duration-300 group-hover:bg-ak-brand group-hover:bg-clip-text group-hover:text-transparent">
+        <h2 className="text-xl font-black text-white transition-all duration-300 group-hover:bg-ak-brand group-hover:bg-clip-text group-hover:text-transparent">
           {cardName}
         </h2>
         
         {/* الوصف */}
-        <p className="line-clamp-3 min-h-[4.5rem] text-sm leading-relaxed text-ak-muted sm:text-base">
+        <p className="line-clamp-3 min-h-[4.5rem] text-sm leading-relaxed text-white sm:text-base">
           {text}
         </p>
 

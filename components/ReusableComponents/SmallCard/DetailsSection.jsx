@@ -10,7 +10,7 @@ const DetailsSection = ({ item, className }) => {
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: 0.1 }}
-      className={cn('flex flex-col w-full', 'text-ak-cream', className)}
+      className={cn('flex flex-col w-full', 'text-white', className)}
     >
       {/* العنوان */}
       {item?.title && (
@@ -29,14 +29,14 @@ const DetailsSection = ({ item, className }) => {
         initial={{ opacity: 0, x: -5 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.3, delay: 0.2 }}
-        className="flex items-center gap-2 text-sm text-ak-muted hover:text-primary-600 transition-colors duration-200 rounded-t-lg  p-2"
+        className="flex items-center gap-2 text-sm text-white hover:text-primary-600 transition-colors duration-200 rounded-t-lg  p-2"
       >
         <MapPin className="w-4 h-4 text-primary" strokeWidth={2.5} />
         <span className="font-medium">{item?.city || 'غير محدد'}</span>
         {item?.town && (
           <>
-            <ChevronRight className="w-3 h-3 text-ak-muted" />
-            <span className="text-ak-muted">{item.town}</span>
+            <ChevronRight className="w-3 h-3 text-white" />
+            <span className="text-white">{item.town}</span>
           </>
         )}
       </motion.div>
@@ -47,7 +47,7 @@ const DetailsSection = ({ item, className }) => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="text-sm text-ak-muted line-clamp-1 leading-relaxed transition-all duration-300 p-2"
+          className="text-sm text-white line-clamp-1 leading-relaxed transition-all duration-300 p-2"
         >
           {item.description}
         </motion.p>

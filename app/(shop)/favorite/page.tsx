@@ -61,7 +61,7 @@ export default async function FavoritesPage({ searchParams }: {
   const hasMore = page * limit < totalCount;
 
   return (
-    <main dir="rtl" className="min-h-screen bg-ak-ink px-4 py-10 text-ak-cream sm:py-14">
+    <main dir="rtl" className="min-h-screen bg-ak-ink px-4 py-10 text-white sm:py-14">
       <div className="mx-auto max-w-7xl">
         <header className="mb-8 flex flex-wrap items-end justify-between gap-4">
           <div><p className="text-xs font-semibold tracking-widest text-ak-amber">SAVED ITEMS</p><h1 className="mt-2 text-3xl font-black">قائمة المفضلة</h1><p className="mt-2 text-sm text-stone-400">{new Intl.NumberFormat('ar').format(totalCount)} منتج محفوظ من قاعدة البيانات.</p></div>
@@ -75,7 +75,7 @@ export default async function FavoritesPage({ searchParams }: {
         ) : (
           <section className="rounded-3xl border border-ak-line bg-ak-surface px-6 py-14 text-center">
             <h2 className="text-xl font-bold">قائمة المفضلة فارغة</h2><p className="mt-3 text-sm text-stone-400">احفظ المنتجات التي تود العودة إليها لاحقًا.</p>
-            <Link href="/search" className="mt-6 inline-flex rounded-xl bg-ak-amber px-6 py-3 text-sm font-bold text-ak-canvas">استكشف المنتجات</Link>
+            <Link href="/search" className="mt-6 inline-flex rounded-xl bg-ak-amber px-6 py-3 text-sm font-bold text-ak-ink">استكشف المنتجات</Link>
           </section>
         )}
 

@@ -34,8 +34,8 @@ export default function PropertyTypeSelector({ check }) {
       borderRadius: 5,
       colors: {
         ...theme.colors,
-        primary: '#FF7C34',
-        primary25: '#fadfae',
+        primary: '#E0926B',
+        primary25: '#FCE5DC',
       },
     };
   }

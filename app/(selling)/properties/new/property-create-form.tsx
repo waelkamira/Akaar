@@ -143,13 +143,13 @@ export default function PropertyCreateForm() {
   }
 
   return (
-    <main dir="rtl" className="min-h-screen bg-ak-canvas px-4 py-8 text-ak-cream sm:py-12">
+    <main dir="rtl" className="min-h-screen bg-ak-canvas px-4 py-8 text-white sm:py-12">
       <div className="mx-auto max-w-4xl">
-        <Link href="/seller/dashboard" className="text-sm text-ak-honey transition hover:text-ak-cream">← العودة إلى لوحة الوكالة</Link>
+        <Link href="/seller/dashboard" className="text-sm text-ak-honey transition hover:text-white">← العودة إلى لوحة الوكالة</Link>
         <header className="mt-7">
           <p className="ak-eyebrow">PROPERTY LISTING</p>
           <h1 className="mt-2 text-3xl font-black sm:text-4xl">أضف عقارك إلى Akaar</h1>
-          <p className="mt-3 max-w-2xl text-sm leading-7 text-ak-muted">أنشئ إعلانًا واضحًا ليساعد المشترين على العثور على العقار المناسب.</p>
+          <p className="mt-3 max-w-2xl text-sm leading-7 text-white">أنشئ إعلانًا واضحًا ليساعد المشترين على العثور على العقار المناسب.</p>
         </header>
 
         <section className="ak-panel-raised mt-8 p-5 sm:p-8">
@@ -216,7 +216,7 @@ export default function PropertyCreateForm() {
                 <p className="mt-1 text-xs text-stone-500">حتى 8 صور، 8 ميغابايت للصورة. معاينة محلية فقط؛ الملفات لن تُرفع أو تُحفظ ضمن الإعلان.</p>
               </label>
               {!!images.length && <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-                {images.map((image) => <div key={image.id} className="relative aspect-square overflow-hidden rounded-xl border border-ak-line"><Image src={image.url} alt={`معاينة ${image.name}`} fill unoptimized sizes="25vw" className="object-cover" /><button type="button" onClick={() => removeImage(image.id)} aria-label={`إزالة ${image.name}`} className="absolute left-2 top-2 rounded-full bg-black/70 px-2 py-1 text-xs text-ak-cream">إزالة</button></div>)}
+                {images.map((image) => <div key={image.id} className="relative aspect-square overflow-hidden rounded-xl border border-ak-line"><Image src={image.url} alt={`معاينة ${image.name}`} fill unoptimized sizes="25vw" className="object-cover" /><button type="button" onClick={() => removeImage(image.id)} aria-label={`إزالة ${image.name}`} className="absolute left-2 top-2 rounded-full bg-black/70 px-2 py-1 text-xs text-white">إزالة</button></div>)}
               </div>}
             </div>
           )}
@@ -239,8 +239,8 @@ export default function PropertyCreateForm() {
           <div className="mt-8 flex flex-wrap items-center justify-between gap-3 border-t border-ak-line pt-5">
             <button type="button" disabled={step === 0 || submitting} onClick={() => { setError(''); setStep((current) => Math.max(0, current - 1)); }} className="rounded-xl border border-ak-line px-5 py-3 text-sm disabled:opacity-40">السابق</button>
             {step < 2
-              ? <button type="button" onClick={nextStep} className="rounded-xl bg-ak-amber px-6 py-3 text-sm font-bold text-ak-canvas transition hover:bg-ak-honey">متابعة</button>
-              : <button type="button" disabled={submitting} onClick={() => void submitProperty()} className="rounded-xl bg-ak-amber px-6 py-3 text-sm font-bold text-ak-canvas disabled:opacity-50">{submitting ? 'جارٍ نشر الإعلان...' : 'نشر الإعلان'}</button>}
+              ? <button type="button" onClick={nextStep} className="rounded-xl bg-ak-amber px-6 py-3 text-sm font-bold text-ak-ink transition hover:bg-ak-honey">متابعة</button>
+              : <button type="button" disabled={submitting} onClick={() => void submitProperty()} className="rounded-xl bg-ak-amber px-6 py-3 text-sm font-bold text-ak-ink disabled:opacity-50">{submitting ? 'جارٍ نشر الإعلان...' : 'نشر الإعلان'}</button>}
           </div>
         </section>
       </div>

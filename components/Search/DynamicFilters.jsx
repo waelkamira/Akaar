@@ -113,7 +113,7 @@ export default function StaticFilters() {
   };
 
   const inputClass =
-    'w-full rounded-xl border border-ak-line bg-ak-canvas px-4 py-2.5 text-sm text-ak-cream placeholder-stone-400 focus:border-ak-amber focus:ring-2 focus:ring-ak-amber/20 focus:bg-ak-canvas transition-all duration-300 outline-none';
+    'w-full rounded-xl border border-ak-line bg-ak-canvas px-4 py-2.5 text-sm text-white placeholder-stone-400 focus:border-ak-amber focus:ring-2 focus:ring-ak-amber/20 focus:bg-ak-canvas transition-all duration-300 outline-none';
   const labelClass =
     'flex items-center gap-2 text-sm font-semibold text-stone-300 mb-2';
 

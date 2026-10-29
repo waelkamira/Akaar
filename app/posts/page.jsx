@@ -149,10 +149,10 @@ const PostsContent = () => {
         >
           <div className="flex items-center gap-4">
             <div className="w-14 h-14 bg-gradient-to-br from-orange-500 to-amber-500 rounded-2xl flex items-center justify-center shadow-lg shadow-orange-500/20">
-              <FaLayerGroup className="text-2xl text-ak-cream" />
+              <FaLayerGroup className="text-2xl text-white" />
             </div>
             <div>
-              <h1 className="text-2xl sm:text-3xl font-black text-ak-cream">إعلاناتي</h1>
+              <h1 className="text-2xl sm:text-3xl font-black text-white">إعلاناتي</h1>
               <p className="text-neutral-400 text-sm mt-1">
                 إجمالي الإعلانات المنشورة: <span className="text-orange-400 font-bold text-lg">{userPostsCount}</span>
               </p>
@@ -161,7 +161,7 @@ const PostsContent = () => {
           
           <Link
             href="/new-post"
-            className="flex items-center gap-2 bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-ak-cream font-bold py-3 px-6 rounded-xl transition-all shadow-lg shadow-orange-600/20 hover:shadow-orange-600/40 hover:scale-[1.02] active:scale-[0.98]"
+            className="flex items-center gap-2 bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white font-bold py-3 px-6 rounded-xl transition-all shadow-lg shadow-orange-600/20 hover:shadow-orange-600/40 hover:scale-[1.02] active:scale-[0.98]"
           >
             <FaPlus className="text-sm" />
             إنشاء إعلان جديد
@@ -186,13 +186,13 @@ const PostsContent = () => {
             <div className="w-20 h-20 bg-neutral-800 rounded-full flex items-center justify-center mb-6">
               <FaBoxOpen className="text-4xl text-neutral-600" />
             </div>
-            <h3 className="text-xl font-bold text-ak-cream mb-2">لا توجد إعلانات بعد</h3>
+            <h3 className="text-xl font-bold text-white mb-2">لا توجد إعلانات بعد</h3>
             <p className="text-neutral-400 mb-8 text-center max-w-md">
               ابدأ بإضافة إعلانك الأول ليظهر هنا ويتمكن الآخرون من رؤيته.
             </p>
             <Link
               href="/new-post"
-              className="flex items-center gap-2 bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-ak-cream font-bold py-3 px-8 rounded-xl transition-all shadow-lg shadow-orange-600/20"
+              className="flex items-center gap-2 bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white font-bold py-3 px-8 rounded-xl transition-all shadow-lg shadow-orange-600/20"
             >
               <FaPlus className="text-sm" />
               إنشاء أول إعلان

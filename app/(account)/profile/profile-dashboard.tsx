@@ -126,21 +126,21 @@ export default function ProfileDashboard() {
   }
 
   if (loading) {
-    return <main className="min-h-[70vh] bg-ak-canvas px-4 py-16 text-center text-ak-muted" aria-busy="true"><span className="inline-block size-8 animate-spin rounded-full border-2 border-ak-amber/30 border-t-ak-honey" /><p className="mt-4">جارٍ تحميل ملفك الشخصي...</p></main>;
+    return <main className="min-h-[70vh] bg-ak-canvas px-4 py-16 text-center text-white" aria-busy="true"><span className="inline-block size-8 animate-spin rounded-full border-2 border-ak-amber/30 border-t-ak-honey" /><p className="mt-4">جارٍ تحميل ملفك الشخصي...</p></main>;
   }
   if (!profile) {
-    return <main className="min-h-[70vh] bg-ak-canvas px-4 py-16 text-center text-rose-200"><p role="alert">{error || 'تعذر تحميل الملف الشخصي.'}</p><button onClick={() => void load()} className="mt-4 rounded-xl border border-ak-line px-4 py-2 text-ak-cream transition hover:border-ak-amber/40 hover:bg-ak-brand-soft">إعادة المحاولة</button></main>;
+    return <main className="min-h-[70vh] bg-ak-canvas px-4 py-16 text-center text-rose-200"><p role="alert">{error || 'تعذر تحميل الملف الشخصي.'}</p><button onClick={() => void load()} className="mt-4 rounded-xl border border-ak-line px-4 py-2 text-white transition hover:border-ak-amber/40 hover:bg-ak-brand-soft">إعادة المحاولة</button></main>;
   }
 
   return (
-    <main dir="rtl" className="min-h-screen bg-ak-canvas px-4 py-8 text-ak-cream sm:py-12">
+    <main dir="rtl" className="min-h-screen bg-ak-canvas px-4 py-8 text-white sm:py-12">
       <div className="mx-auto max-w-6xl">
         <header className="flex flex-wrap items-center gap-4 rounded-3xl border border-ak-line-strong bg-gradient-to-br from-ak-raised to-ak-surface p-5 shadow-ak-panel sm:p-7">
           <div className="relative size-16 overflow-hidden rounded-2xl border border-ak-line bg-ak-ink">
             <Image src={profile.userImage || '/placeholder.jpg'} alt="" fill sizes="64px" unoptimized className="object-cover" />
           </div>
-          <div className="flex-1"><p className="ak-eyebrow">ACCOUNT CENTER</p><h1 className="mt-1 text-2xl font-black">{profile.userName || 'مرحبًا بك'}</h1><p className="mt-1 text-sm text-ak-muted">{profile.email}</p></div>
-          <Link href="/seller/dashboard" className="rounded-xl border border-ak-line px-4 py-3 text-sm text-ak-cream transition hover:border-ak-amber/40 hover:bg-ak-brand-soft">لوحة متجري / وكالتي</Link>
+          <div className="flex-1"><p className="ak-eyebrow">ACCOUNT CENTER</p><h1 className="mt-1 text-2xl font-black">{profile.userName || 'مرحبًا بك'}</h1><p className="mt-1 text-sm text-white">{profile.email}</p></div>
+          <Link href="/seller/dashboard" className="rounded-xl border border-ak-line px-4 py-3 text-sm text-white transition hover:border-ak-amber/40 hover:bg-ak-brand-soft">لوحة متجري / وكالتي</Link>
         </header>
 
         {(error || message) && <p role={error ? 'alert' : 'status'} className={`mt-5 rounded-xl border p-4 text-sm ${error ? 'border-rose-400/20 bg-rose-400/10 text-rose-200' : 'border-emerald-400/20 bg-emerald-400/10 text-emerald-200'}`}>{error || message}</p>}
@@ -151,7 +151,7 @@ export default function ProfileDashboard() {
               <h2 className="text-lg font-bold">المعلومات الشخصية</h2>
               <form onSubmit={saveProfile} className="mt-5 space-y-4">
                 <label className="block text-sm">الاسم الظاهر<input value={name} onChange={(event) => setName(event.target.value)} minLength={2} maxLength={100} required className="mt-2 w-full rounded-xl border border-ak-line bg-ak-ink/70 px-4 py-3 outline-none focus:border-ak-amber" /></label>
-                <label className="block text-sm">البريد الإلكتروني<input value={profile.email} readOnly className="mt-2 w-full rounded-xl border border-ak-line bg-ak-ink/50 px-4 py-3 text-ak-muted" /></label>
+                <label className="block text-sm">البريد الإلكتروني<input value={profile.email} readOnly className="mt-2 w-full rounded-xl border border-ak-line bg-ak-ink/50 px-4 py-3 text-white" /></label>
                 <label className="block text-sm">رابط صورة الملف (اختياري)<input type="url" value={image} onChange={(event) => setImage(event.target.value)} maxLength={2048} placeholder="https://" dir="ltr" className="mt-2 w-full rounded-xl border border-ak-line bg-ak-ink/70 px-4 py-3 outline-none focus:border-ak-amber" /></label>
                 <button disabled={savingProfile} className="ak-button-primary">{savingProfile ? 'جارٍ الحفظ...' : 'حفظ المعلومات'}</button>
               </form>
@@ -172,7 +172,7 @@ export default function ProfileDashboard() {
 
           <section className="rounded-3xl border border-ak-line bg-ak-surface p-5 sm:p-6">
             <div className="mb-5 flex items-end justify-between gap-3"><div><p className="text-xs tracking-widest text-ak-amber">SAVED HOMES</p><h2 className="mt-1 text-xl font-bold">العقارات المفضلة</h2></div><span className="text-xs text-stone-500">{properties.length} عقار</span></div>
-            {!properties.length ? <div className="rounded-2xl border border-dashed border-ak-line px-5 py-14 text-center"><p className="text-stone-400">لم تحفظ أي عقار بعد.</p><Link href="/search" className="mt-4 inline-flex rounded-xl bg-ak-amber px-4 py-3 text-sm font-bold text-ak-canvas">استكشف العقارات</Link></div> : (
+            {!properties.length ? <div className="rounded-2xl border border-dashed border-ak-line px-5 py-14 text-center"><p className="text-stone-400">لم تحفظ أي عقار بعد.</p><Link href="/search" className="mt-4 inline-flex rounded-xl bg-ak-amber px-4 py-3 text-sm font-bold text-ak-ink">استكشف العقارات</Link></div> : (
               <div className="grid gap-4 sm:grid-cols-2">
                 {properties.map((property) => (
                   <article key={property.id} className="overflow-hidden rounded-2xl border border-ak-line bg-ak-canvas">
@@ -180,7 +180,7 @@ export default function ProfileDashboard() {
                       <div className="relative aspect-[4/3] bg-ak-raised">{property.images[0] && <Image src={property.images[0]} alt={property.title} fill sizes="(max-width: 640px) 100vw, 40vw" unoptimized className="object-cover" />}</div>
                       <div className="p-4"><h3 className="line-clamp-1 font-bold">{property.title}</h3><p className="mt-1 text-xs text-stone-400">{property.city ? `${property.city} · ` : ''}{property.location}</p><p className="mt-3 font-bold text-ak-honey">{new Intl.NumberFormat('ar').format(Number(property.price))} {property.currency}</p></div>
                     </Link>
-                    <div className="flex items-center justify-between border-t border-ak-line px-4 py-3"><Link href={`/properties/${encodeURIComponent(property.id)}/book`} className="text-xs text-ak-honey hover:text-ak-cream">طلب حجز تجريبي</Link><button type="button" disabled={removingProperty === property.id} onClick={() => void removeFavorite(property)} className="text-xs text-rose-200 disabled:opacity-50">{removingProperty === property.id ? 'جارٍ الإزالة...' : 'إزالة من المفضلة'}</button></div>
+                    <div className="flex items-center justify-between border-t border-ak-line px-4 py-3"><Link href={`/properties/${encodeURIComponent(property.id)}/book`} className="text-xs text-ak-honey hover:text-white">طلب حجز تجريبي</Link><button type="button" disabled={removingProperty === property.id} onClick={() => void removeFavorite(property)} className="text-xs text-rose-200 disabled:opacity-50">{removingProperty === property.id ? 'جارٍ الإزالة...' : 'إزالة من المفضلة'}</button></div>
                   </article>
                 ))}
               </div>

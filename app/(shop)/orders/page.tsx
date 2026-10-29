@@ -68,7 +68,7 @@ export default async function OrdersPage({ searchParams }: {
   const hasMore = page * limit < totalCount;
 
   return (
-    <main dir="rtl" className="min-h-screen bg-ak-ink px-4 py-10 text-ak-cream sm:py-14">
+    <main dir="rtl" className="min-h-screen bg-ak-ink px-4 py-10 text-white sm:py-14">
       <div className="mx-auto max-w-5xl">
         <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
           <div><p className="mb-2 text-[10px] font-semibold uppercase tracking-[.24em] text-ak-amber">حسابك</p><h1 className="text-3xl font-black sm:text-4xl">طلباتي</h1><p className="mt-3 text-sm text-stone-400">تابع حالة الطلبات والشحنات والإيصالات.</p></div>
@@ -79,7 +79,7 @@ export default async function OrdersPage({ searchParams }: {
           <section className="rounded-3xl border border-ak-line bg-ak-surface px-6 py-14 text-center">
             <h2 className="text-xl font-bold">لا توجد طلبات مسجلة</h2>
             <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-stone-400">تظهر الطلبات التي أُنشئت من خلال عملية إتمام الشراء بعد تسجيل الدخول.</p>
-            <Link href="/search" className="mt-6 inline-flex rounded-xl bg-ak-amber px-6 py-3 text-sm font-bold text-ak-canvas">اكتشف المنتجات</Link>
+            <Link href="/search" className="mt-6 inline-flex rounded-xl bg-ak-amber px-6 py-3 text-sm font-bold text-ak-ink">اكتشف المنتجات</Link>
           </section>
         ) : (
           <div className="space-y-4">
