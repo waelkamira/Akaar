@@ -24,14 +24,20 @@ export default function CategorySelector({ check }) {
       borderRadius: 5,
       colors: {
         ...theme.colors,
-        primary: '#E0926B',
-        primary25: '#FCE5DC',
+        primary: '#FF8500',
+        primary25: '#4C321A',
+        neutral0: '#242A28',
+        neutral5: '#303936',
+        neutral10: '#414B48',
+        neutral20: '#53605C',
+        neutral30: '#73817D',
+        neutral80: '#F4F4EF',
       },
     };
   }
 
   return (
-    <div className="flex flex-col w-full justify-start items-center text-ak-ink z-50">
+    <div className="flex flex-col w-full justify-start items-center text-ak-cream z-50">
       <div className="w-full">
         <div className="flex items-center gap-2 w-full justify-start my-2">
           <h1 className={`flex text-right text-md select-none text-nowrap `}>
@@ -51,7 +57,7 @@ export default function CategorySelector({ check }) {
           getOptionLabel={(e) => e.name} // تحديد كيفية عرض الخيارات
           getOptionValue={(e) => e.id} // تحديد كيفية اختيار القيم
           theme={customTheme}
-          className="w-full text-md rounded text-start text-ak-ink z-[9] select-none"
+          className="w-full text-md rounded text-start text-ak-cream z-[9] select-none"
           classNamePrefix="select"
           classNames={{
             control: (state) =>

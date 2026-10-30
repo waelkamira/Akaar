@@ -88,9 +88,9 @@ function number(value: number) {
 
 function Metric({ label, value, detail }: { label: string; value: number; detail: string }) {
   return (
-    <article className="ak-panel p-5">
+    <article className="ak-metric-card">
       <p className="text-sm text-stone-400">{label}</p>
-      <p className="mt-3 text-3xl font-black text-ak-honey">{number(value)}</p>
+      <p className="mt-3 text-3xl font-black tracking-tight text-ak-honey">{number(value)}</p>
       <p className="mt-2 text-xs text-stone-500">{detail}</p>
     </article>
   );

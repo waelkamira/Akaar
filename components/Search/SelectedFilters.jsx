@@ -263,7 +263,7 @@ export default function SelectedFilters() {
       {/* ==================== رأس القسم ==================== */}
       <div className="flex items-center justify-between mb-4 border-b border-ak-line pb-3">
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 text-stone-800">
+          <div className="flex items-center gap-2 text-ak-muted">
             <div className="relative">
               <Filter className="w-5 h-5 text-ak-amber" />
               {/* شارة عدد الفلاتر */}

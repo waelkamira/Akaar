@@ -1,6 +1,10 @@
+
+
+
 'use client';
 import { signOut, useSession } from 'next-auth/react';
 import React, { useState } from 'react';
+import { usePathname } from 'next/navigation';
 import Button from '../Buttons/Button';
 import UserNameAndPhoto from '../ReusableComponents/userNameAndPhoto';
 import categories from '../Categories/categories';
@@ -9,14 +13,22 @@ import Link from 'next/link';
 import { IoCloseOutline } from 'react-icons/io5';
 import { TfiMenuAlt } from 'react-icons/tfi';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaSignInAlt, FaSignOutAlt } from 'react-icons/fa';
+import { FaHeart, FaHome, FaSearch, FaShoppingCart, FaSignInAlt, FaSignOutAlt } from 'react-icons/fa';
 import Image from 'next/image';
 import LoadingPhoto from '../photos/LoadingPhoto';
+import { useCommerce } from '@/features/cart/commerce-context';
 
 export default function SideBarMenu() {
   const [isOpen, setIsOpen] = useState(false);
   const session = useSession();
-
+  const pathname = usePathname();
+  const { cartCount } = useCommerce();
+  const dockLinks = [
+    { title: 'الرئيسية', path: '/', icon: FaHome },
+    { title: 'البحث', path: '/search', icon: FaSearch },
+    { title: 'المفضلة', path: '/favorite', icon: FaHeart },
+    { title: 'السلة', path: '/cart', icon: FaShoppingCart },
+  ];
 
   // if (session?.status === 'unauthenticated') {
   //   return;
@@ -24,27 +36,55 @@ export default function SideBarMenu() {
 
   return (
     <>
-      <div className="lg:hidden fixed right-3 top-3 z-[1001] flex w-fit flex-col items-start justify-start gap-3 p-2">
-        {/* زر فتح القائمة */}
-        <button
-          type="button"
-          aria-label={isOpen ? 'إغلاق القائمة' : 'فتح القائمة'}
-          aria-expanded={isOpen}
-          onClick={() => setIsOpen((open) => !open)}
-          className="ak-glass z-50 flex h-11 w-11 items-center justify-center rounded-xl border border-ak-line-strong text-2xl text-ak-honey transition hover:scale-105 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ak-amber"
-        >
-          <TfiMenuAlt aria-hidden="true" />
-        </button>
+      <div className="lg:hidden">
+        <nav aria-label="التنقل السريع" className="ak-mobile-dock fixed inset-x-0 bottom-0 z-[1001]">
+          <div className="mx-auto flex max-w-xl items-stretch justify-around gap-1">
+            {dockLinks.map(({ title, path, icon: Icon }) => {
+              const isActive = path === '/'
+                ? pathname === '/'
+                : pathname === path || pathname.startsWith(`${path}/`);
+              const isCart = path === '/cart';
+              return (
+                <Link
+                  key={path}
+                  href={path}
+                  aria-current={isActive ? 'page' : undefined}
+                  aria-label={isCart && cartCount > 0 ? `${title}، ${cartCount} منتج` : title}
+                  className="ak-dock-link"
+                >
+                  <span className="relative text-lg" aria-hidden="true">
+                    <Icon />
+                    {isCart && cartCount > 0 && (
+                      <span className="absolute -left-2 -top-1 flex min-w-4 items-center justify-center rounded-full bg-ak-amber px-1 text-[9px] font-black text-ak-ink">
+                        {cartCount}
+                      </span>
+                    )}
+                  </span>
+                  <span>{title}</span>
+                </Link>
+              );
+            })}
+            <button
+              type="button"
+              aria-label={isOpen ? 'إغلاق القائمة' : 'المزيد'}
+              aria-expanded={isOpen}
+              onClick={() => setIsOpen((open) => !open)}
+              className={`ak-dock-link ${isOpen ? 'text-ak-honey' : ''}`}
+            >
+              {isOpen ? <IoCloseOutline className="text-xl" aria-hidden="true" /> : <TfiMenuAlt className="text-lg" aria-hidden="true" />}
+              <span>المزيد</span>
+            </button>
+          </div>
+        </nav>
 
-        {/* قائمة جانبية مع تأثيرات */}
         <AnimatePresence>
           {isOpen && (
             <motion.div
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{ type: 'spring', stiffness: 120, damping: 15 }}
-              className="ak-glass-strong fixed right-0 top-0 z-50 flex h-screen w-72 flex-col items-center overflow-y-auto border-l border-ak-line-strong p-6 text-white backdrop-blur-2xl"
+              initial={{ y: '100%', opacity: 0.7 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: '100%', opacity: 0.7 }}
+              transition={{ type: 'spring', stiffness: 150, damping: 20 }}
+              className="ak-glass-strong fixed inset-x-0 bottom-0 z-[1002] mx-auto flex max-h-[88dvh] w-full max-w-2xl flex-col items-center overflow-y-auto rounded-t-[2rem] border-x border-t border-ak-line-strong p-5 pb-[calc(6rem+env(safe-area-inset-bottom))] text-white sm:p-7"
             >
               {/* زر الإغلاق */}
               <div className="w-full flex justify-end">
@@ -192,17 +232,17 @@ export default function SideBarMenu() {
             </motion.div>
           )}
         </AnimatePresence>
-      </div>
       {isOpen && (
         <motion.div
           key="filters-overlay"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 top-0 z-40 h-screen bg-ak-ink/65 backdrop-blur-sm"
+          className="fixed inset-0 z-[1000] bg-ak-ink/65 backdrop-blur-sm"
           onClick={() => setIsOpen(false)}
         />
       )}
+      </div>
     </>
   );
 }

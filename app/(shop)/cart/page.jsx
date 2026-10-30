@@ -69,20 +69,14 @@ export default function CartPage() {
 
   if (orderPlaced) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-neutral-950 via-orange-950/10 to-neutral-950 relative overflow-hidden  flex items-center justify-center p-4" dir="rtl">
-        {/* Animated Background Elements */}
-        <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
-          <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-orange-600/20 rounded-full blur-[120px] animate-pulse" />
-          <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-amber-600/10 rounded-full blur-[100px]" />
-        </div>
-
+      <div className="flex min-h-[70vh] items-center justify-center bg-transparent p-4" dir="rtl">
         <motion.div
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          className="bg-neutral-900/60 backdrop-blur-xl border border-emerald-500/30 p-8 sm:p-12 rounded-3xl text-center max-w-lg w-full shadow-2xl shadow-emerald-900/20"
+          className="ak-panel-raised w-full max-w-lg p-8 text-center sm:p-12"
         >
-          <div className="w-20 h-20 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
-            <FaCheckCircle className="text-4xl text-emerald-400" />
+          <div className="mx-auto mb-6 flex size-20 items-center justify-center rounded-full border border-emerald-300/20 bg-emerald-400/10">
+            <FaCheckCircle className="text-4xl text-emerald-300" />
           </div>
           <h1 className="mb-3 text-3xl font-black text-white">تم تسجيل طلبك</h1>
           <p className="mb-8 text-neutral-400 leading-relaxed">
@@ -90,8 +84,8 @@ export default function CartPage() {
           </p>
           <p className="mb-5 break-all text-xs text-neutral-500">رقم الطلب: {createdOrderId}</p>
           <div className="grid gap-3 sm:grid-cols-2">
-            <Link href="/orders" className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 px-6 py-4 font-bold text-white">طلباتي</Link>
-            <Link href={`/orders/${encodeURIComponent(createdOrderId)}/invoice`} className="inline-flex items-center justify-center rounded-xl border border-ak-line px-6 py-4 font-bold text-white">الإيصال</Link>
+            <Link href="/orders" className="ak-button-primary">طلباتي</Link>
+            <Link href={`/orders/${encodeURIComponent(createdOrderId)}/invoice`} className="ak-button-secondary">الإيصال</Link>
           </div>
         </motion.div>
       </div>
@@ -100,44 +94,31 @@ export default function CartPage() {
 
   if (!hasHydrated) {
     return (
-      <div className="min-h-screen bg-neutral-950 flex items-center justify-center " dir="rtl" aria-busy="true">
+      <div className="flex min-h-[70vh] items-center justify-center bg-transparent" dir="rtl" aria-busy="true">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-4 border-orange-600/30 border-t-orange-500 rounded-full animate-spin" />
-          <p className="text-neutral-400 font-medium animate-pulse">جارٍ تحميل سلة التسوق...</p>
+          <div className="size-12 animate-spin rounded-full border-4 border-ak-amber/20 border-t-ak-honey" />
+          <p className="font-medium text-ak-muted animate-pulse">جارٍ تحميل سلة التسوق...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-neutral-950 via-orange-950/10 to-neutral-950 relative overflow-hidden " dir="rtl">
-      {/* Animated Background Elements */}
-      <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-orange-600/20 rounded-full blur-[120px] animate-pulse" />
-        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-amber-600/10 rounded-full blur-[100px]" />
-      </div>
-
-      {/* Vertical Text Decoration */}
-      <div className="fixed left-8 top-1/2 -translate-y-1/2 -z-10 hidden xl:block">
-        <h1 className="text-[12rem] font-black text-neutral-800/30 writing-vertical-rl tracking-tighter select-none">
-          CART
-        </h1>
-      </div>
-
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+    <div className="min-h-screen overflow-hidden bg-transparent" dir="rtl">
+      <main className="ak-page-shell py-7 sm:py-12">
         <motion.div 
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="mb-8 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4"
+          className="ak-page-heading mb-8"
         >
           <div>
-            <span className="inline-block px-3 py-1 bg-orange-600/20 border border-orange-500/30 rounded-full text-orange-400 text-xs font-bold mb-3">
+            <span className="mb-3 inline-flex rounded-full border border-ak-amber/25 bg-ak-amber/10 px-3 py-1.5 text-xs font-bold text-ak-honey">
               الدفع عند الاستلام
             </span>
-            <h1 className="text-3xl sm:text-4xl font-black text-white">سلة التسوق</h1>
+            <h1 className="text-3xl font-black text-white sm:text-4xl">سلة التسوق</h1>
           </div>
-          <p className="text-sm text-neutral-400 bg-neutral-900/50 px-4 py-2 rounded-xl border border-neutral-800">
+          <p className="rounded-xl border border-ak-line bg-ak-surface/50 px-4 py-3 text-sm text-ak-muted">
             يتم تأكيد السعر والمخزون من الخادم قبل تسجيل الطلب
           </p>
         </motion.div>
@@ -145,15 +126,15 @@ export default function CartPage() {
         {cartItems.length === 0 ? (
           <motion.section 
             variants={itemVariants}
-            className="bg-neutral-900/50 backdrop-blur-xl border border-neutral-800 p-12 text-center rounded-3xl"
+            className="ak-panel p-10 text-center sm:p-12"
           >
-            <div className="w-20 h-20 bg-neutral-800 rounded-full flex items-center justify-center mx-auto mb-6">
-              <FaShoppingCart className="text-3xl text-neutral-500" />
+            <div className="mx-auto mb-6 flex size-20 items-center justify-center rounded-full border border-ak-amber/20 bg-ak-amber/10">
+              <FaShoppingCart className="text-3xl text-ak-honey" />
             </div>
             <p className="mb-6 text-xl font-bold text-neutral-300">سلتك فارغة حاليًا.</p>
             <Link
               href="/#demo-products"
-              className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white font-bold py-3.5 px-8 rounded-xl transition-all shadow-lg shadow-orange-600/20 hover:shadow-orange-600/40 hover:scale-[1.02] active:scale-[0.98]"
+              className="ak-button-primary"
             >
               استكشف المنتجات
             </Link>
@@ -166,7 +147,7 @@ export default function CartPage() {
                 <motion.article
                   key={item.id}
                   variants={itemVariants}
-                  className="grid grid-cols-[80px_1fr] sm:grid-cols-[120px_1fr_auto] gap-4 sm:gap-6 bg-neutral-900/50 backdrop-blur-xl border border-neutral-800 hover:border-orange-500/30 rounded-2xl p-4 transition-all duration-300 group"
+                  className="ak-panel grid grid-cols-[72px_1fr] gap-4 p-3 transition-all duration-300 group hover:border-ak-amber/30 sm:grid-cols-[112px_1fr_auto] sm:gap-5 sm:p-4"
                 >
                   <div className="relative aspect-square rounded-xl overflow-hidden border border-neutral-800 bg-neutral-800">
                     <Image
@@ -227,7 +208,7 @@ export default function CartPage() {
               variants={itemVariants}
               initial="hidden"
               animate="visible"
-              className="h-fit bg-neutral-900/60 backdrop-blur-xl border border-neutral-800 rounded-3xl p-6 sticky top-24"
+              className="ak-panel-raised h-fit p-5 sm:sticky sm:top-24 sm:p-6"
             >
               <h2 className="mb-6 text-xl font-black text-white flex items-center gap-2">
                 <span className="w-1.5 h-6 bg-gradient-to-b from-orange-500 to-amber-500 rounded-full" />

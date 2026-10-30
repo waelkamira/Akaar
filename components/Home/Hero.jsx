@@ -33,58 +33,61 @@ export default function Hero({ images = DEFAULT_IMAGES }) {
   if (!images.length) return null;
 
   return (
-    <section className="relative isolate flex min-h-[520px] items-center overflow-hidden bg-ak-canvas sm:min-h-[600px]" aria-label="واجهة أكار الرئيسية">
-      <div className="absolute inset-0">
-        <Image
-          src={images[currentImageIndex]}
-          fill
-          priority
-          sizes="100vw"
-          alt=""
-          aria-hidden="true"
-          className="object-cover"
-        />
-        <div className="absolute inset-0 bg-ak-hero" />
-        <div className="absolute inset-0 bg-gradient-to-t from-ak-ink via-transparent to-ak-ink/20" />
-      </div>
-
-      <div className="relative z-10 mx-auto w-full px-4 py-16 sm:px-6 lg:px-8">
-        <div className="w-full">
-          <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-ak-amber/30 bg-ak-ink/45 px-4 py-2 text-[10px] font-semibold tracking-[.15em] text-ak-honey shadow-ak-card backdrop-blur-xl sm:text-xs">
-            اكتشف سوقًا من الخيارات
+    <section className="ak-page-shell pt-5 sm:pt-8" aria-label="واجهة أكار الرئيسية">
+      <div className="ak-panel-raised grid overflow-hidden lg:min-h-[430px] lg:grid-cols-[minmax(0,1.05fr)_minmax(0,.95fr)]">
+        <div className="order-1 flex flex-col justify-center p-5 sm:p-8 lg:order-2 lg:p-10 xl:p-12">
+          <p className="ak-eyebrow inline-flex w-fit items-center gap-2 rounded-full border border-ak-amber/25 bg-ak-amber/10 px-3 py-2">
+            اكتشف موقع متجر
           </p>
-          <h1 className="max-w-2xl text-4xl font-black leading-[1.25] tracking-tight text-white sm:text-5xl lg:text-6xl">
+          <h1 className="mt-5 max-w-xl text-3xl font-black leading-[1.35] tracking-tight text-white sm:text-4xl xl:text-5xl">
             كل ما تبحث عنه،
-            <span className="mt-2 block bg-ak-brand bg-clip-text text-transparent">في مكان واحد.</span>
+            <span className="mt-1 block bg-ak-brand bg-clip-text text-transparent">في مكان واحد.</span>
           </h1>
-          <p className="mt-5 max-w-xl text-sm leading-7 text-stone-200 sm:text-base">
+          <p className="mt-4 max-w-xl text-sm leading-7 text-ak-muted sm:text-base">
             اكتشف المنتجات، قارن التفاصيل، وتواصل مع البائع المناسب عبر تجربة تسوق عربية واضحة وسهلة.
           </p>
-          <div className="ak-glass mt-8 w-full rounded-2xl border border-ak-line-strong p-2">
+          <div className="ak-glass-strong mt-6 rounded-2xl p-2 sm:mt-8">
             <Search />
           </div>
-          <div className="mt-5 flex flex-wrap gap-3">
+          <div className="mt-4 flex flex-wrap items-center gap-3">
             <Link href="/search" className="ak-button-primary">
-              استكشف المنتجات
+              استكشف المنتجات <FaChevronLeft aria-hidden="true" />
             </Link>
-            <Link href="/categories/1" className="inline-flex items-center justify-center rounded-xl border border-ak-line-strong bg-ak-surface/40 px-5 py-3 text-sm font-semibold text-white backdrop-blur-lg transition hover:border-ak-amber/60 hover:bg-ak-brand-soft">
+            <Link href="/categories/1" className="ak-button-secondary">
               تصفح الأقسام
             </Link>
           </div>
         </div>
-      </div>
-
-      {images.length > 1 && (
-        <div className="absolute bottom-6 left-4 z-20 flex items-center gap-2 sm:bottom-8 sm:left-8">
-          <button type="button" onClick={goToPreviousSlide} aria-label="الصورة السابقة" className="flex h-10 w-10 items-center justify-center rounded-full border border-ak-line-strong bg-ak-ink/60 text-white backdrop-blur-lg transition hover:border-ak-amber/60 hover:text-ak-honey">
-            <FaChevronRight aria-hidden="true" />
-          </button>
-          <span className="min-w-12 text-center text-xs tabular-nums text-white/80">{currentImageIndex + 1} / {images.length}</span>
-          <button type="button" onClick={goToNextSlide} aria-label="الصورة التالية" className="flex h-10 w-10 items-center justify-center rounded-full border border-ak-line-strong bg-ak-ink/60 text-white backdrop-blur-lg transition hover:border-ak-amber/60 hover:text-ak-honey">
-            <FaChevronLeft aria-hidden="true" />
-          </button>
+        <div className="relative order-2 min-h-64 overflow-hidden lg:order-1 lg:min-h-full">
+          <Image
+            src={images[currentImageIndex]}
+            fill
+            priority
+            sizes="(max-width: 1024px) 100vw, 48vw"
+            alt=""
+            aria-hidden="true"
+            className="object-cover transition-transform duration-1000"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-ak-ink/40 via-transparent to-transparent" />
+          <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between gap-3 sm:bottom-6 sm:left-6 sm:right-6">
+            <span className="rounded-full border border-white/20 bg-ak-ink/55 px-3 py-2 text-xs font-semibold text-white backdrop-blur-xl">
+              سوق واحد، خيارات أكثر
+            </span>
+            {images.length > 1 && (
+              <div className="flex items-center gap-2 rounded-full border border-white/15 bg-ak-ink/55 p-1.5 text-white backdrop-blur-xl">
+                <button type="button" onClick={goToPreviousSlide} aria-label="الصورة السابقة" className="flex size-8 items-center justify-center rounded-full transition hover:bg-white/10 hover:text-ak-honey">
+                  <FaChevronRight aria-hidden="true" />
+                </button>
+                <span className="min-w-9 text-center text-xs tabular-nums">{currentImageIndex + 1} / {images.length}</span>
+                <button type="button" onClick={goToNextSlide} aria-label="الصورة التالية" className="flex size-8 items-center justify-center rounded-full transition hover:bg-white/10 hover:text-ak-honey">
+                  <FaChevronLeft aria-hidden="true" />
+                </button>
+              </div>
+            )}
+          </div>
         </div>
-      )}
+
+      </div>
     </section>
   );
 }

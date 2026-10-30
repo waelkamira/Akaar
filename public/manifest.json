@@ -4,8 +4,8 @@
   "description": "سوق متجر الإلكتروني",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#454545",
-  "theme_color": "#454545",
+  "background_color": "#536663",
+  "theme_color": "#536663",
   "orientation": "portrait",
   "icons": [
     {

@@ -27,15 +27,15 @@ export default function Footer() {
   };
 
   return (
-    <footer dir="rtl" className="border-t border-ak-line bg-ak-ink/95 text-white">
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+    <footer dir="rtl" className="relative mt-8 border-t border-ak-line bg-ak-ink/75 text-white backdrop-blur-xl">
+      <div className="ak-page-shell py-10 sm:py-12">
         <div className="grid gap-10 md:grid-cols-[1.2fr_1fr_1fr]">
           <div>
             <Link href="/" className="inline-flex items-center gap-3" aria-label="Akaar الصفحة الرئيسية">
               <span className="flex h-11 w-11 items-center justify-center rounded-2xl border border-ak-amber/30 bg-ak-brand-soft text-lg font-black text-ak-honey shadow-ak-glow">A</span>
               <span className="text-2xl font-black tracking-wide">Akaar<span className="text-ak-amber">.</span></span>
             </Link>
-            <p className="mt-4 max-w-sm text-sm leading-7 text-stone-400">
+            <p className="mt-4 max-w-sm text-sm leading-7 text-ak-muted">
               سوق عقاري يجمع المشترين والوسطاء والوكالات لاكتشاف المساحات المناسبة بكل وضوح.
             </p>
             <Link href="/contactUs" className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-ak-honey transition hover:text-white">
@@ -48,7 +48,7 @@ export default function Footer() {
             <ul className="mt-4 space-y-3">
               {FOOTER_LINKS.map(({ href, label, icon: Icon }) => (
                 <li key={href}>
-                  <Link href={href} className="inline-flex items-center gap-2 text-sm text-white transition hover:text-ak-honey">
+                  <Link href={href} className="inline-flex items-center gap-2 text-sm text-ak-muted transition hover:text-ak-honey">
                     <Icon className="text-[11px] text-ak-amber" aria-hidden="true" />
                     {label}
                   </Link>
@@ -60,10 +60,10 @@ export default function Footer() {
           <div>
             <h2 className="text-sm font-bold text-white">المعلومات والسياسات</h2>
             <ul className="mt-4 space-y-3 text-sm">
-              <li><Link href="/about" className="text-white transition hover:text-ak-honey">من نحن</Link></li>
-              <li><Link href="/terms" className="text-white transition hover:text-ak-honey">الشروط والأحكام</Link></li>
-              <li><Link href="/privacy" className="text-white transition hover:text-ak-honey">سياسة الخصوصية</Link></li>
-              <li><Link href="/contactUs" className="text-white transition hover:text-ak-honey">الدعم والتواصل</Link></li>
+              <li><Link href="/about" className="text-ak-muted transition hover:text-ak-honey">من نحن</Link></li>
+              <li><Link href="/terms" className="text-ak-muted transition hover:text-ak-honey">الشروط والأحكام</Link></li>
+              <li><Link href="/privacy" className="text-ak-muted transition hover:text-ak-honey">سياسة الخصوصية</Link></li>
+              <li><Link href="/contactUs" className="text-ak-muted transition hover:text-ak-honey">الدعم والتواصل</Link></li>
             </ul>
           </div>
         </div>
@@ -79,7 +79,7 @@ export default function Footer() {
           type="button"
           onClick={scrollToTop}
           aria-label="العودة إلى أعلى الصفحة"
-          className="fixed bottom-5 left-5 z-50 flex h-11 w-11 items-center justify-center rounded-full border border-ak-amber/30 bg-ak-surface text-ak-honey shadow-ak-card transition hover:-translate-y-1 hover:bg-ak-brand hover:text-ak-ink"
+          className="fixed bottom-[calc(5.5rem+env(safe-area-inset-bottom))] left-4 z-50 flex h-11 w-11 items-center justify-center rounded-full border border-ak-amber/30 bg-ak-surface text-ak-honey shadow-ak-card transition hover:-translate-y-1 hover:bg-ak-brand hover:text-ak-ink lg:bottom-5 lg:left-5"
         >
           <FaArrowUp aria-hidden="true" />
         </button>

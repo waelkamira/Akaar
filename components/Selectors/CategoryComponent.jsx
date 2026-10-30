@@ -52,8 +52,14 @@ export default function CategoryComponent({ check }) {
       borderRadius: 5,
       colors: {
         ...theme.colors,
-        primary: '#E0926B',
-        primary25: '#FCE5DC',
+        primary: '#FF8500',
+        primary25: '#4C321A',
+        neutral0: '#242A28',
+        neutral5: '#303936',
+        neutral10: '#414B48',
+        neutral20: '#53605C',
+        neutral30: '#73817D',
+        neutral80: '#F4F4EF',
       },
     };
   }
@@ -62,10 +68,9 @@ export default function CategoryComponent({ check }) {
       ...provided,
       minHeight: minHeight,
       height: 'auto',
-      backgroundColor: 'white',
-      // // borderColor: state.isFocused ? '#E0926B' : '#A1A5AD',
+      backgroundColor: '#242A28',
       '&:hover': {
-        borderColor: '#E0926B',
+        borderColor: '#FF8500',
       },
     }),
     valueContainer: (provided) => ({
@@ -81,7 +86,7 @@ export default function CategoryComponent({ check }) {
     }),
   };
   return (
-    <div className="flex flex-col w-full justify-start items-center text-ak-ink ">
+    <div className="flex flex-col w-full justify-start items-center text-ak-cream ">
       <div className="w-full">
         <div className="flex items-center gap-2 w-full justify-start my-2">
           <h1 className={`flex text-right text-md select-none text-nowrap `}>
@@ -100,7 +105,7 @@ export default function CategoryComponent({ check }) {
           options={options}
           theme={customTheme}
           styles={customStyles}
-          className="w-full text-md text-start text-ak-ink z-[11]"
+          className="w-full text-md text-start text-ak-cream z-[11]"
           classNamePrefix="select"
           classNames={{
             control: (state) =>

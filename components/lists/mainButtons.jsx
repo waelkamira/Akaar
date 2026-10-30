@@ -9,19 +9,19 @@ import { FaShoppingCart, FaClipboardList } from 'react-icons/fa';
 const mainButtons = [
   
   {
-    title: 'السلة',
+    title: '',
     path: '/cart',
     icon: <FaShoppingCart />,
-  },
-  {
-    title: 'طلباتي',
-    path: '/orders',
-    icon: <FaClipboardList />,
   },
   {
     title: 'الرئيسية',
     path: '/',
     icon: <FaHome />,
+  },
+  {
+    title: 'طلباتي',
+    path: '/orders',
+    icon: <FaClipboardList />,
   },
   {
     title: 'بروفايل',

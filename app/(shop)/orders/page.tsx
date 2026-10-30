@@ -68,32 +68,32 @@ export default async function OrdersPage({ searchParams }: {
   const hasMore = page * limit < totalCount;
 
   return (
-    <main dir="rtl" className="min-h-screen bg-ak-ink px-4 py-10 text-white sm:py-14">
-      <div className="mx-auto max-w-5xl">
-        <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
-          <div><p className="mb-2 text-[10px] font-semibold uppercase tracking-[.24em] text-ak-amber">حسابك</p><h1 className="text-3xl font-black sm:text-4xl">طلباتي</h1><p className="mt-3 text-sm text-stone-400">تابع حالة الطلبات والشحنات والإيصالات.</p></div>
-          <Link href="/search" className="rounded-xl border border-ak-line px-4 py-3 text-sm hover:border-ak-amber/40">متابعة التسوق</Link>
+    <main dir="rtl" className="min-h-screen bg-transparent py-7 text-white sm:py-12">
+      <div className="ak-page-shell max-w-5xl">
+        <div className="ak-page-heading mb-8">
+          <div><p className="ak-eyebrow mb-2">حسابك</p><h1 className="text-3xl font-black sm:text-4xl">طلباتي</h1><p className="mt-3 text-sm text-stone-400">تابع حالة الطلبات والشحنات والإيصالات.</p></div>
+          <Link href="/search" className="ak-button-secondary">متابعة التسوق</Link>
         </div>
 
         {orders.length === 0 ? (
-          <section className="rounded-3xl border border-ak-line bg-ak-surface px-6 py-14 text-center">
+          <section className="ak-panel px-6 py-14 text-center">
             <h2 className="text-xl font-bold">لا توجد طلبات مسجلة</h2>
             <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-stone-400">تظهر الطلبات التي أُنشئت من خلال عملية إتمام الشراء بعد تسجيل الدخول.</p>
-            <Link href="/search" className="mt-6 inline-flex rounded-xl bg-ak-amber px-6 py-3 text-sm font-bold text-ak-ink">اكتشف المنتجات</Link>
+            <Link href="/search" className="ak-button-primary mt-6">اكتشف المنتجات</Link>
           </section>
         ) : (
           <div className="space-y-4">
             {orders.map((order) => (
-              <article key={order.id} className="rounded-2xl border border-ak-line-strong/[.08] bg-ak-surface p-4 sm:p-6">
+              <article key={order.id} className="ak-panel p-4 sm:p-6">
                 <header className="flex flex-wrap items-center justify-between gap-3 border-b border-ak-line-strong/[.07] pb-4">
                   <div><p className="text-[10px] text-stone-500">رقم الطلب</p><p className="mt-1 break-all text-xs font-semibold">{order.id}</p><p className="mt-1 text-xs text-stone-500">{new Intl.DateTimeFormat('ar', { dateStyle: 'medium' }).format(order.createdAt)}</p></div>
                   <div className="flex flex-wrap items-center gap-3"><span className="rounded-full border border-ak-amber/20 bg-ak-amber/10 px-3 py-1 text-xs text-ak-honey">{statusNames[order.status] || order.status}</span><Link href={`/orders/${encodeURIComponent(order.id)}/invoice`} className="rounded-lg border border-ak-line px-3 py-2 text-xs hover:border-ak-amber/40">الإيصال</Link></div>
                 </header>
-                <div className="divide-y divide-white/[.06]">
+                <div className="space-y-2 py-4">
                   {order.items.map((item) => {
                     const fulfillment = item.vendorOrder;
                     return (
-                      <div key={item.id} className="flex flex-wrap items-center justify-between gap-3 py-4">
+                      <div key={item.id} className="ak-activity-row flex-wrap">
                         <div className="min-w-0 flex-1">
                           <p className="font-semibold">{item.product.title}</p>
                           <p className="mt-1 text-xs text-stone-500">{fulfillment?.seller.storeName || 'البائع'} · الكمية {item.quantity} · {formatPrice(item.unitPrice)} للوحدة</p>
@@ -104,7 +104,7 @@ export default async function OrdersPage({ searchParams }: {
                     );
                   })}
                 </div>
-                <footer className="border-t border-ak-line-strong/[.07] pt-4 text-left text-sm font-bold">الإجمالي: <span className="text-ak-honey">{formatPrice(order.totalPrice)}</span></footer>
+                <footer className="flex items-center justify-between border-t border-ak-line-strong/[.07] pt-4 text-sm font-bold"><span>الإجمالي</span><span className="text-ak-honey">{formatPrice(order.totalPrice)}</span></footer>
               </article>
             ))}
           </div>

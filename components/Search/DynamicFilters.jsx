@@ -339,13 +339,13 @@ export default function StaticFilters() {
       {/* عرض الموبايل (قابل للطي) */}
       <div className="sm:hidden">
         <div className="p-5 flex items-center justify-between border-b border-stone-100">
-          <h3 className="text-base font-bold text-stone-900 flex items-center gap-2">
+          <h3 className="flex items-center gap-2 text-base font-bold text-white">
             <FaLayerGroup className="text-ak-amber" />
             تصفية النتائج
           </h3>
           <button
             onClick={() => setIsMobileOpen(!isMobileOpen)}
-            className="p-2 rounded-lg bg-stone-100 text-stone-600 hover:bg-ak-amber/10 hover:text-ak-amber transition-colors"
+            className="rounded-lg border border-ak-line bg-ak-ink/50 p-2 text-ak-muted transition-colors hover:bg-ak-amber/10 hover:text-ak-honey"
             aria-label="تبديل عرض الفلاتر"
           >
             <FaChevronDown
@@ -374,7 +374,7 @@ export default function StaticFilters() {
       {/* عرض الديسكتوب (ثابت ومفتوح دائماً) */}
       <div className="hidden sm:block p-6">
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-lg font-bold text-stone-900 flex items-center gap-2">
+          <h3 className="flex items-center gap-2 text-lg font-bold text-white">
             <FaLayerGroup className="text-ak-amber" />
             تصفية النتائج
           </h3>

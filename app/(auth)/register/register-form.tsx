@@ -48,7 +48,7 @@ export default function RegisterForm() {
 
   return (
     <main dir="rtl" className="min-h-[calc(100vh-5rem)] bg-ak-canvas px-4 py-8 text-white sm:px-6 lg:grid lg:place-items-center lg:py-12">
-      <div className="mx-auto grid w-full max-w-6xl overflow-hidden rounded-[2rem] border border-ak-line-strong bg-gradient-to-br from-ak-raised to-ak-surface shadow-ak-panel lg:min-h-[700px] lg:grid-cols-2">
+      <div className="ak-glass mx-auto grid w-full max-w-6xl overflow-hidden rounded-[2rem] shadow-ak-panel lg:min-h-[700px] lg:grid-cols-2">
         <section className="flex items-center px-5 py-10 sm:px-10 lg:px-14">
           <div className="mx-auto w-full max-w-md">
             <Link href="/" className="inline-flex items-center gap-2 text-sm text-ak-honey"><span className="text-2xl">⌂</span> Akaar</Link>

@@ -28,7 +28,7 @@ const CategoriesNavBar = () => {
   };
 
   return (
-    <div className="relative w-full sm:h-[27px] bg-ak-surface border rounded text-ak-ink">
+    <div className="relative w-full sm:h-[27px] bg-ak-surface border rounded text-ak-cream">
       {/* قائمة Select */}
       <select
         value={selectedCategory}

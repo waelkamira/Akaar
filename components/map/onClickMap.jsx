@@ -469,8 +469,14 @@ export default function OnClickMap({
     borderRadius: 5,
     colors: {
       ...theme.colors,
-      primary: '#E0926B',
-      primary25: '#FCE5DC',
+      primary: '#FF8500',
+      primary25: '#4C321A',
+      neutral0: '#242A28',
+      neutral5: '#303936',
+      neutral10: '#414B48',
+      neutral20: '#53605C',
+      neutral30: '#73817D',
+      neutral80: '#F4F4EF',
     },
   });
 
@@ -479,8 +485,10 @@ export default function OnClickMap({
       ...provided,
       minHeight: minHeight,
       height: 'auto',
-      backgroundColor: 'white',
-      '&:hover': { borderColor: '#E0926B' },
+      backgroundColor: '#242A28',
+      color: '#F4F4EF',
+      borderColor: state.isFocused ? '#FF8500' : '#53605C',
+      '&:hover': { borderColor: '#FF8500' },
     }),
     valueContainer: (provided) => ({
       ...provided,
@@ -498,7 +506,7 @@ export default function OnClickMap({
   // ✅ 4. عرض شاشة تحميل أنيقة حتى يتم التأكد من بيئة المتصفح وتوليد المفتاح
   if (!isMounted) {
     return (
-      <div className="w-full h-72 sm:h-[500px] flex items-center justify-center bg-gray-100 rounded-lg text-gray-500 border border-gray-300 animate-pulse">
+      <div className="w-full h-72 sm:h-[500px] flex items-center justify-center bg-ak-raised rounded-lg text-ak-muted border border-ak-line animate-pulse">
         جاري تحضير الخريطة...
       </div>
     );

@@ -41,8 +41,14 @@ export default function YearsSelector() {
       ...theme,
       colors: {
         ...theme.colors,
-        primary: '#E0926B',
-        primary25: '#FCE5DC',
+        primary: '#FF8500',
+        primary25: '#4C321A',
+        neutral0: '#242A28',
+        neutral5: '#303936',
+        neutral10: '#414B48',
+        neutral20: '#53605C',
+        neutral30: '#73817D',
+        neutral80: '#F4F4EF',
       },
     };
   }
@@ -52,10 +58,10 @@ export default function YearsSelector() {
       ...provided,
       minHeight: minHeight,
       height: 'auto',
-      backgroundColor: 'white',
-      borderColor: state.isFocused ? '#E0926B' : '#A1A5AD',
+      backgroundColor: '#242A28',
+      borderColor: state.isFocused ? '#FF8500' : '#53605C',
       '&:hover': {
-        borderColor: '#E0926B',
+        borderColor: '#FF8500',
       },
     }),
     valueContainer: (provided) => ({
@@ -74,7 +80,7 @@ export default function YearsSelector() {
   const CustomPlaceholder = (props) => {
     return (
       <components.Placeholder {...props}>
-        <div className="flex items-center gap-2 text-white">
+        <div className="flex items-center gap-2 text-ak-cream">
           <FaCalendarAlt className="text-primary-500 text-lg sm:text-xl" />
           <span>السنة</span>
         </div>
@@ -83,7 +89,7 @@ export default function YearsSelector() {
   };
 
   return (
-    <div className="flex flex-col w-full justify-start items-center text-ak-ink">
+    <div className="flex flex-col w-full justify-start items-center text-ak-cream">
       <div className="w-full">
         <Select
           value={year}

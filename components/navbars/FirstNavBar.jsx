@@ -8,6 +8,8 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { FaChevronDown, FaSignInAlt, FaSignOutAlt, FaUser, FaUserCircle } from 'react-icons/fa';
 import mainButtons from '../lists/mainButtons';
 import { useCommerce } from '@/features/cart/commerce-context';
+import Image from 'next/image';
+import LoadingPhoto from '../photos/LoadingPhoto';
 
 export default function FirstNavBar() {
   const pathname = usePathname();
@@ -18,6 +20,7 @@ export default function FirstNavBar() {
   const user = session?.user;
   const userName = user?.userName || user?.name || user?.email?.split('@')[0] || 'مستخدم';
   const userImage = user?.userImage || user?.image;
+  const logoImage = '/images/matjar.png';
 
   useEffect(() => {
     if (!profileOpen) return undefined;
@@ -46,9 +49,9 @@ export default function FirstNavBar() {
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35, ease: 'easeOut' }}
-      className="ak-glass sticky top-0 z-[1000] hidden w-full border-b border-ak-line backdrop-blur-2xl lg:block"
+      className="ak-glass sticky top-0 z-[1000] hidden w-full rounded-b-[1.35rem] border-b border-ak-line backdrop-blur-2xl lg:block"
     >
-      <div className="mx-auto flex h-[76px] w-full max-w-[1600px] items-center justify-between gap-6 px-5 xl:px-8">
+      <div className="mx-auto flex h-[72px] w-full max-w-[1600px] items-center justify-between gap-6 px-5 xl:px-8">
         <div ref={profileRef} className="relative shrink-0">
           {status === 'authenticated' ? (
             <>
@@ -183,7 +186,7 @@ export default function FirstNavBar() {
                     <span className="text-sm" aria-hidden="true">{button.icon}</span>
                     <span className="whitespace-nowrap">{button.title}</span>
                     {isCart && cartCount > 0 && (
-                      <span className="inline-flex min-w-5 items-center justify-center rounded-full bg-ak-brand px-1.5 py-0.5 text-[10px] font-black text-ak-ink">
+                      <span className="inline-flex min-w-5 items-center justify-center rounded-full bg-ak-brand py-0.5 text-[10px] font-black text-ak-ink">
                         {cartCount}
                       </span>
                     )}
@@ -194,10 +197,35 @@ export default function FirstNavBar() {
           </ul>
         </nav>
 
-        <Link href="/" aria-label="Akaar الصفحة الرئيسية" className="flex shrink-0 items-center gap-3">
-          <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-ak-amber/30 bg-ak-brand-soft text-lg font-black text-ak-honey shadow-ak-glow">A</span>
-          <span className="text-2xl font-black tracking-wide text-white">Akaar<span className="text-ak-amber">.</span></span>
-        </Link>
+        {/* <Link href="/" aria-label="Akaar الصفحة الرئيسية" className="flex shrink-0 items-center gap-3">
+          <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-ak-amber/30 bg-ak-brand-soft text-lg font-black text-ak-honey shadow-ak-glow">M</span>
+          <span className="text-2xl font-black tracking-wide text-white">MATJAR<span className="text-ak-amber">.</span></span>
+        </Link> */}
+           {/* شعار الموقع (Logo) */}
+                  <div className="flex items-center justify-end">
+                    <Link
+                      href={'/'}
+                      className="relative flex items-center cursor-pointer group"
+                    >
+                      <motion.div
+                        whileHover={{ scale: 1.01 }}
+                        whileTap={{ scale: 0.99 }}
+                        className="relative h-12 w-40 flex items-center justify-end transition-all duration-500"
+                      >
+                        {/* توهج خافي خلف الشعار يظهر عند تمرير الماوس */}
+                        <div className="absolute inset-0  blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+          
+                        <Image
+                          src="/images/matjar.png"
+                          alt="luxury_logo"
+                          width={145}
+                          height={8}
+                          className="object-contain filter drop-shadow-[0_4px_12px_rgba(0,0,0,0.6)] brightness-105 group-hover:brightness-120 border-0 border-l-8 border-primary transition-all duration-500 "
+                          priority
+                        />
+                      </motion.div>
+                    </Link>
+                  </div>
       </div>
     </motion.header>
   );

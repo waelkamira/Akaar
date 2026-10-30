@@ -313,8 +313,8 @@ function ProductCard({ product, onAddToCart }) {
     : product.stockQuantity > 0;
 
   return (
-    <article className="group min-w-0 overflow-hidden rounded-2xl border border-ak-line bg-gradient-to-br from-ak-raised to-ak-surface shadow-ak-card transition duration-300 hover:-translate-y-1 hover:border-ak-amber/40 hover:shadow-ak-panel">
-      <div className="relative aspect-[4/4.5] overflow-hidden bg-ak-raised">
+    <article className="ak-panel group min-w-0 overflow-hidden transition duration-300 hover:-translate-y-1 hover:border-ak-amber/40">
+      <div className="relative aspect-[4/3] overflow-hidden bg-ak-raised">
         {image ? (
           <Link href={href} aria-label={`عرض ${product.title}`} className="absolute inset-0">
             <Image
@@ -336,21 +336,26 @@ function ProductCard({ product, onAddToCart }) {
             الأكثر طلبًا
           </span>
         )}
+        {price !== null && (
+          <div className="absolute bottom-3 left-3 rounded-2xl border border-white/20 bg-ak-ink/65 px-3.5 py-2.5 text-white shadow-lg backdrop-blur-xl">
+            <span className="block text-[9px] font-semibold text-white/65">السعر</span>
+            <span className="mt-1 flex items-baseline gap-1">
+              <span className="text-xl font-black leading-none">{price}</span>
+              <span className="text-[10px] font-semibold text-white/75">ل.س</span>
+            </span>
+          </div>
+        )}
       </div>
 
-      <div className="p-4">
+      <div className="p-4 sm:p-5">
         <p className="mb-1.5 text-[11px] text-ak-amber">{product.categoryName || 'منتجات متنوعة'}</p>
         <Link href={href} className="block">
-          <h3 className="line-clamp-2 min-h-12 text-sm font-semibold leading-6 text-white transition hover:text-ak-honey">
+          <h3 className="line-clamp-2 min-h-12 text-sm font-bold leading-6 text-white transition hover:text-ak-honey">
             {product.title}
           </h3>
         </Link>
         <div className="mt-3 flex min-h-8 items-center justify-between gap-2">
-          {price !== null ? (
-            <span className="text-base font-bold text-white">{price}</span>
-          ) : (
-            <span className="text-xs text-stone-400">السعر عند البائع</span>
-          )}
+          {price === null && <span className="text-xs text-stone-400">السعر عند البائع</span>}
           <span className={available ? 'text-[10px] text-emerald-300' : 'text-[10px] text-rose-300'}>
             {available ? 'متاح' : 'نفد المخزون'}
           </span>
@@ -452,27 +457,27 @@ export default function HomePage() {
   const categoryItems = categories.slice(0, 12);
 
   return (
-    <main dir="rtl" className="min-h-screen overflow-x-clip bg-ak-canvas text-ak-ink selection:bg-ak-amber/30">
+    <main dir="rtl" className="min-h-screen overflow-x-clip bg-transparent text-ak-cream selection:bg-ak-amber/30">
       <Hero />
 
-      <section className="border-y border-ak-line bg-ak-surface/65">
-        <div className="mx-auto grid max-w-7xl grid-cols-1 gap-px px-4 sm:grid-cols-3 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-3 py-5 sm:justify-center">
-            <span className="flex h-11 w-11 items-center justify-center rounded-xl border border-ak-amber/25 bg-ak-brand-soft text-ak-honey"><FaStore aria-hidden="true" /></span>
-            <div><p className="text-sm font-bold">سوق متنوع</p><p className="mt-1 text-xs text-stone-400">منتجات من فئات متعددة</p></div>
+      <section className="ak-page-shell py-5 sm:py-7">
+        <div className="grid gap-3 sm:grid-cols-3">
+          <div className="ak-activity-row min-w-0">
+            <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-ak-amber/10 text-ak-honey"><FaStore aria-hidden="true" /></span>
+            <div><p className="text-sm font-bold">سوق متنوع</p><p className="mt-1 text-xs text-ak-muted">منتجات من فئات متعددة</p></div>
           </div>
-          <div className="flex items-center gap-3 border-ak-line-strong/[.06] py-5 sm:justify-center sm:border-x">
-            <span className="flex h-11 w-11 items-center justify-center rounded-xl border border-ak-amber/25 bg-ak-brand-soft text-ak-honey"><FaShieldAlt aria-hidden="true" /></span>
-            <div><p className="text-sm font-bold">تسوق بوضوح</p><p className="mt-1 text-xs text-stone-400">تفاصيل المنتج والبائع قبل التواصل</p></div>
+          <div className="ak-activity-row min-w-0">
+            <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-ak-amber/10 text-ak-honey"><FaShieldAlt aria-hidden="true" /></span>
+            <div><p className="text-sm font-bold">تسوق بوضوح</p><p className="mt-1 text-xs text-ak-muted">تفاصيل المنتج والبائع قبل التواصل</p></div>
           </div>
-          <div className="flex items-center gap-3 py-5 sm:justify-center">
-            <span className="flex h-11 w-11 items-center justify-center rounded-xl border border-ak-amber/25 bg-ak-brand-soft text-ak-honey"><FaTruck aria-hidden="true" /></span>
-            <div><p className="text-sm font-bold">خيارات متعددة</p><p className="mt-1 text-xs text-stone-400">قارن بين المنتجات المتاحة</p></div>
+          <div className="ak-activity-row min-w-0">
+            <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-ak-amber/10 text-ak-honey"><FaTruck aria-hidden="true" /></span>
+            <div><p className="text-sm font-bold">خيارات متعددة</p><p className="mt-1 text-xs text-ak-muted">قارن بين المنتجات المتاحة</p></div>
           </div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
+      <section className="ak-page-shell py-10 sm:py-14">
         <SectionHeading
           eyebrow="تسوق حسب الفئة"
           title="اكتشف ما تبحث عنه"
@@ -480,18 +485,18 @@ export default function HomePage() {
           href="/search"
           linkText="كل الفئات والمنتجات"
         />
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 xl:grid-cols-4">
           {categoryItems.map((category) => (
             <Link
               key={category.id}
               href={`/search?categoryId=${encodeURIComponent(category.id)}`}
-              className="group flex min-h-28 items-center justify-between gap-3 rounded-2xl border border-ak-line bg-gradient-to-br from-ak-raised to-ak-surface p-4 shadow-ak-card transition duration-300 hover:-translate-y-1 hover:border-ak-amber/40 hover:shadow-ak-panel sm:min-h-32 sm:p-5"
+              className="ak-panel group flex min-h-28 items-center justify-between gap-3 p-4 transition duration-300 hover:-translate-y-1 hover:border-ak-amber/40 sm:min-h-32 sm:p-5"
             >
               <div className="min-w-0">
                 <h3 className="truncate text-sm font-bold text-white sm:text-base">{category.name}</h3>
                 <span className="mt-3 inline-flex items-center gap-2 text-[10px] text-ak-honey">تصفح الفئة <FaArrowLeft aria-hidden="true" /></span>
               </div>
-              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-ak-line bg-ak-ink/35 text-xl text-ak-honey transition group-hover:scale-110">
+              <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl border border-ak-amber/20 bg-ak-amber/10 text-xl text-ak-honey transition group-hover:scale-110">
                 {category.icon || <FaShoppingBag aria-hidden="true" />}
               </span>
             </Link>
@@ -499,8 +504,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="border-y border-ak-line bg-ak-surface/50">
-        <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
+      <section className="border-y border-white/[.08] bg-ak-ink/20">
+        <div className="ak-page-shell py-10 sm:py-14">
           <SectionHeading
             eyebrow="من الكتالوج الفعلي"
             title="منتجات تستحق الاكتشاف"
@@ -545,17 +550,17 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
-        <div className="relative overflow-hidden rounded-3xl border border-ak-amber/20 bg-ak-surface p-7 shadow-ak-panel sm:p-10 lg:p-14">
-          <div aria-hidden="true" className="pointer-events-none absolute -left-16 -top-20 h-64 w-64 rounded-full border border-ak-amber/15 shadow-ak-glow" />
+      <section className="ak-page-shell py-10 sm:py-14">
+        <div className="ak-panel-raised relative grid items-center gap-7 overflow-hidden p-6 sm:p-9 lg:grid-cols-[1fr_auto] lg:p-12">
+          <div aria-hidden="true" className="pointer-events-none absolute -left-16 -top-20 size-64 rounded-full border border-ak-amber/15 shadow-ak-glow" />
           <div className="relative z-10 max-w-2xl">
             <p className="ak-eyebrow mb-3">للبائعين وأصحاب المتاجر</p>
             <h2 className="text-2xl font-bold leading-tight sm:text-3xl">حوّل منتجاتك إلى فرص جديدة</h2>
-            <p className="mt-3 text-sm leading-7 text-white">أنشئ إعلانك، أضف تفاصيل واضحة وصورًا جيدة، وساعد المشترين على اكتشاف ما تقدمه.</p>
-            <Link href="/newPost" className="ak-button-primary mt-6">
-              ابدأ بنشر منتج <FaArrowLeft aria-hidden="true" />
-            </Link>
+            <p className="mt-3 text-sm leading-7 text-ak-muted">أنشئ إعلانك، أضف تفاصيل واضحة وصورًا جيدة، وساعد المشترين على اكتشاف ما تقدمه.</p>
           </div>
+          <Link href="/newPost" className="ak-button-primary relative z-10 w-fit">
+            ابدأ بنشر منتج <FaArrowLeft aria-hidden="true" />
+          </Link>
         </div>
       </section>
     </main>

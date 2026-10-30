@@ -48,7 +48,7 @@ export default function Loading({ myMessage }) {
         }}
         className="w-12 h-12 border-4 border-primary-200 border-t-primary-500 rounded-full"
       />
-      <p className="mt-4 text-neutral-600">{myMessage || 'جاري التحميل...'}</p>
+      <p className="mt-4 text-ak-muted">{myMessage || 'جاري التحميل...'}</p>
     </div>
   );
 }

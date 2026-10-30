@@ -40,14 +40,14 @@ function FilterPanel({ onApply, onClose, mobile = false }) {
         </div>
       )}
 
-      <section className="overflow-hidden rounded-2xl border border-ak-line-strong/[.08] bg-ak-surface">
+      <section className="ak-panel overflow-hidden">
         <button type="button" onClick={() => toggle('category')} aria-expanded={expanded.category} className="flex w-full items-center justify-between px-4 py-4 text-right transition hover:bg-ak-surface/[.03]">
           <span className="font-semibold text-white">الفئة</span><FaFilter className="text-xs text-ak-amber" aria-hidden="true" />
         </button>
         {expanded.category && <div className="border-t border-ak-line-strong/[.06] p-4"><CategoryFilter /></div>}
       </section>
 
-      <section className="overflow-hidden rounded-2xl border border-ak-line-strong/[.08] bg-ak-surface">
+      <section className="ak-panel overflow-hidden">
         <button type="button" onClick={() => toggle('basic')} aria-expanded={expanded.basic} className="flex w-full items-center justify-between px-4 py-4 text-right transition hover:bg-ak-surface/[.03]">
           <span className="font-semibold text-white">الفلاتر الأساسية</span><FaFilter className="text-xs text-ak-amber" aria-hidden="true" />
         </button>
@@ -55,7 +55,7 @@ function FilterPanel({ onApply, onClose, mobile = false }) {
       </section>
 
       {category && (
-        <section className="overflow-hidden rounded-2xl border border-ak-line-strong/[.08] bg-ak-surface">
+        <section className="ak-panel overflow-hidden">
           <button type="button" onClick={() => toggle('dynamic')} aria-expanded={expanded.dynamic} className="flex w-full items-center justify-between px-4 py-4 text-right transition hover:bg-ak-surface/[.03]">
             <span className="font-semibold text-white">مواصفات الفئة</span><FaFilter className="text-xs text-ak-amber" aria-hidden="true" />
           </button>
@@ -81,11 +81,11 @@ export default function SearchPage() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   return (
-    <main dir="rtl" className="min-h-[70vh] bg-ak-ink px-4 py-8 text-white sm:px-6 sm:py-12 lg:px-8">
-      <div className="mx-auto max-w-[1600px]">
-        <div className="mb-8 flex flex-wrap items-end justify-between gap-4 border-b border-ak-line-strong/[.08] pb-6">
+    <main dir="rtl" className="min-h-[70vh] bg-transparent py-6 text-white sm:py-10">
+      <div className="ak-page-shell">
+        <div className="ak-page-heading mb-7">
           <div>
-            <p className="mb-2 text-[10px] font-semibold uppercase tracking-[.24em] text-ak-amber">اكتشف الكتالوج</p>
+            <p className="ak-eyebrow mb-2">اكتشف الكتالوج</p>
             <h1 className="text-3xl font-black tracking-tight sm:text-4xl">البحث والمنتجات</h1>
             <p className="mt-3 max-w-2xl text-sm leading-7 text-stone-400">
               استخدم الفلاتر للوصول إلى المنتجات المناسبة، وقارن التفاصيل قبل التواصل مع البائع.
@@ -103,13 +103,13 @@ export default function SearchPage() {
 
         <div className="grid gap-6 lg:grid-cols-[300px_minmax(0,1fr)] xl:grid-cols-[340px_minmax(0,1fr)]">
           <aside className="hidden lg:block">
-            <div className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto rounded-2xl border border-ak-line bg-ak-surface p-4 shadow-ak-card">
+            <div className="ak-panel sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto p-4">
               <FilterPanel onApply={() => {}} />
             </div>
           </aside>
 
           <section className="min-w-0">
-            <div className="mb-5 rounded-2xl border border-ak-line bg-ak-surface p-4 shadow-ak-card sm:p-5">
+            <div className="ak-panel mb-5 p-4 sm:p-5">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div><h2 className="font-bold text-white">نتائج البحث</h2><p className="mt-1 text-xs text-stone-400">النتائج تتحدث عند تعديل معايير البحث</p></div>
                 <div className="rounded-full border border-ak-line bg-ak-surface px-3 py-2 text-xs text-stone-300">
@@ -127,7 +127,7 @@ export default function SearchPage() {
         {mobileFiltersOpen && (
           <motion.div className="fixed inset-0 z-[1100] lg:hidden" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <button type="button" aria-label="إغلاق نافذة الفلاتر" onClick={() => setMobileFiltersOpen(false)} className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
-            <motion.aside initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }} transition={{ type: 'spring', damping: 28, stiffness: 280 }} className="absolute right-0 top-0 flex h-full w-[min(92vw,420px)] flex-col overflow-y-auto border-l border-ak-line bg-ak-canvas p-4 shadow-2xl sm:p-5">
+            <motion.aside initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }} transition={{ type: 'spring', damping: 28, stiffness: 280 }} className="ak-glass-strong absolute right-0 top-0 flex h-full w-[min(92vw,420px)] flex-col overflow-y-auto rounded-l-[1.5rem] border-l border-ak-line p-4 shadow-2xl sm:p-5">
               <FilterPanel mobile onClose={() => setMobileFiltersOpen(false)} onApply={() => setMobileFiltersOpen(false)} />
             </motion.aside>
           </motion.div>

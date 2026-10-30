@@ -35,7 +35,7 @@ export default function DemoProductCard({ product }) {
   };
 
   return (
-    <article className="overflow-hidden border border-neutral-800 bg-neutral-900">
+    <article className="ak-glass group overflow-hidden rounded-3xl transition duration-300 hover:-translate-y-1 hover:shadow-ak-panel">
       <div className="relative aspect-[4/3]">
         <Image
           src={product.image1}
@@ -44,7 +44,7 @@ export default function DemoProductCard({ product }) {
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
           className="object-cover"
         />
-        <span className="absolute right-3 top-3 bg-orange-500 px-2 py-1 text-xs font-bold text-ak-ink">
+        <span className="absolute right-3 top-3 rounded-full border border-white/20 bg-ak-ink/70 px-3 py-1.5 text-xs font-bold text-ak-honey backdrop-blur-md">
           منتج تجريبي
         </span>
         <button
@@ -52,20 +52,20 @@ export default function DemoProductCard({ product }) {
           aria-label={liked ? 'إزالة من المفضلة' : 'إضافة إلى المفضلة'}
           aria-pressed={liked}
           onClick={() => toggleFavorite(product)}
-          className="absolute left-3 top-3 rounded-full bg-black/75 p-3 text-red-400 hover:bg-black"
+          className="absolute left-3 top-3 rounded-full border border-white/15 bg-ak-ink/70 p-3 text-red-300 backdrop-blur-md transition hover:bg-ak-ink"
         >
           {liked ? <FaHeart /> : <FaRegHeart />}
         </button>
       </div>
 
       <div className="space-y-3 p-4 text-right">
-        <p className="text-xs font-semibold text-orange-400">
+        <p className="text-xs font-semibold text-ak-honey">
           {product.categoryName} · {product.city}
         </p>
         <button
           type="button"
           onClick={openProduct}
-          className="min-h-12 w-full text-right text-base font-bold text-white hover:text-orange-400"
+          className="min-h-12 w-full text-right text-base font-bold text-white transition-colors hover:text-ak-honey"
         >
           {product.title}
         </button>
@@ -86,7 +86,7 @@ export default function DemoProductCard({ product }) {
           <button
             type="button"
             onClick={handleAddToCart}
-            className="flex items-center justify-center gap-2 border border-orange-500 px-3 py-2 text-sm font-bold text-orange-400 transition hover:bg-orange-500 hover:text-ak-ink"
+            className="ak-button-secondary rounded-xl px-3 py-2 text-sm"
           >
             <FaShoppingCart aria-hidden="true" />
             أضف للسلة
@@ -94,7 +94,7 @@ export default function DemoProductCard({ product }) {
           <button
             type="button"
             onClick={handleBuyNow}
-            className="bg-orange-500 px-3 py-2 text-sm font-bold text-ak-ink transition hover:bg-orange-400"
+            className="ak-button-primary rounded-xl px-3 py-2 text-sm"
           >
             اشترِ الآن
           </button>
