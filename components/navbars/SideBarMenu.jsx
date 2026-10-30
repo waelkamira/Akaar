@@ -87,7 +87,8 @@ export default function SideBarMenu() {
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: '100%', opacity: 0.7 }}
               transition={{ type: 'spring', stiffness: 150, damping: 20 }}
-              className="ak-glass-strong fixed inset-x-0 bottom-0 z-[1002] mx-auto flex max-h-[88dvh] w-full max-w-2xl flex-col items-center overflow-y-auto rounded-t-[2rem] border-x border-t border-ak-line-strong p-5 pb-[calc(6rem+env(safe-area-inset-bottom))] text-white sm:p-7 xl:hidden"
+              className="ak-glass-strong fixed inset-x-0 bottom-0 bg-gradient-to-b from-[#fdba74] to-[#FF5733] backdrop-blur-md shadow-xl z-[1002] mx-auto flex max-h-[88dvh] w-full max-w-2xl flex-col items-center overflow-y-auto rounded-t-[2rem] border-x border-t border-ak-line-strong p-5 pb-[calc(6rem+env(safe-area-inset-bottom))] text-white sm:p-7 xl:hidden"
+
             >
               {/* زر الإغلاق */}
               <div className="w-full flex justify-end">

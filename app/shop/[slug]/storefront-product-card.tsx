@@ -20,7 +20,7 @@ type Product = {
 export default function StorefrontProductCard({ product }: { product: Product }) {
   const { addToCart } = useCommerce();
   const image = product.images[0] || '/placeholder.jpg';
-  const available = (product.stockQuantity ?? 0) > 0;
+  const available = product.stockQuantity === null || product.stockQuantity > 0;
 
   function addProduct() {
     try {

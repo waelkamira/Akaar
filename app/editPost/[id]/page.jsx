@@ -37,26 +37,33 @@ export default function EditePost() {
   });
 
   useEffect(() => {
-    getPost();
-  }, []);
-
-  // دالة جلب البوست
-  async function getPost() {
-    const response = await fetch(`/api/showPostById`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ id }),
-    });
-    if (response.ok) {
-      const json = await response.json();
-      // console.log('json', json);
-      setPost(json);
-    } else {
-      setError(response.statusText);
+    const controller = new AbortController();
+    async function getPost() {
+      try {
+        const response = await fetch('/api/showPostById', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ id }),
+          signal: controller.signal,
+        });
+        if (response.ok) {
+          const json = await response.json();
+          setPost(json);
+        } else {
+          setError(response.statusText || 'تعذر تحميل الإعلان');
+        }
+      } catch (requestError) {
+        if (requestError?.name !== 'AbortError' && !controller.signal.aborted) {
+          setError('تعذر تحميل الإعلان');
+        }
+      }
     }
-  }
+
+    getPost();
+    return () => controller.abort();
+  }, [id]);
 
   // تم دمج الصور الموجودة مع الصور التي سوف تتم اضافتها في مصفوفة واحدة والتحقق من الصور
   useEffect(() => {

@@ -56,6 +56,7 @@ export default function Page() {
   const [categoryFields, setCategoryFields] = useState([]);
   const [error, setError] = useState(null);
   const [isLiked, setIsLiked] = useState(false);
+  const [isSavingLike, setIsSavingLike] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [copied, setCopied] = useState(false);
   const [activeTab, setActiveTab] = useState('details');
@@ -229,8 +230,11 @@ export default function Page() {
       return;
     }
 
+    if (isSavingLike) return;
+
     const previousState = isLiked;
     setIsLiked(!previousState);
+    setIsSavingLike(true);
     try {
       const response = await fetch('/api/favorite', {
         method: 'POST',
@@ -244,6 +248,8 @@ export default function Page() {
     } catch (favoriteError) {
       setIsLiked(previousState);
       toast.error(favoriteError?.message || 'تعذر تحديث المفضلة');
+    } finally {
+      setIsSavingLike(false);
     }
   };
 
@@ -332,9 +338,13 @@ export default function Page() {
                   {copied ? <FiCheck className="text-emerald-500" /> : <FaShareAlt className="text-lg" />}
                 </motion.button>
                 <motion.button
+                  type="button"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={handleLike}
+                  disabled={isSavingLike}
+                  aria-label={isLiked ? 'إزالة من المفضلة' : 'إضافة إلى المفضلة'}
+                  aria-pressed={isLiked}
                   className={`p-3 rounded-2xl border backdrop-blur-xl transition-all ${
                     isLiked
                       ? 'bg-red-500/20 border-red-500/50 text-red-400'
@@ -368,6 +378,19 @@ export default function Page() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Main Content */}
           <div className="lg:col-span-8 space-y-6">
+            <button
+              type="button"
+              onClick={handleAddToCart}
+              disabled={!Number.isFinite(post.basePrice) || post.basePrice < 0 || post.stockQuantity === 0}
+              className="w-full rounded-2xl bg-neutral-800 hover:bg-neutral-700 px-6 py-4 font-bold text-white transition border border-neutral-700 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {post.stockQuantity === 0
+                ? 'نفد المخزون'
+                : Number.isFinite(post.basePrice) && post.basePrice >= 0
+                  ? 'أضف إلى السلة'
+                  : 'السعر غير متاح'}
+            </button>
+
             {/* Image Slider */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
@@ -572,16 +595,6 @@ export default function Page() {
                       <FaPhone className="group-hover:rotate-12 transition-transform" />
                       اتصل الآن
                     </a>
-                  )}
-
-                  {post?.isDemo && (
-                    <button
-                      type="button"
-                      onClick={handleAddToCart}
-                      className="w-full rounded-2xl bg-neutral-800 hover:bg-neutral-700 px-6 py-4 font-bold text-white transition border border-neutral-700"
-                    >
-                      أضف إلى السلة
-                    </button>
                   )}
 
                   <Button

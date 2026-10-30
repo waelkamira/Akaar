@@ -365,11 +365,11 @@ function ProductCard({ product, onAddToCart }) {
           <button
             type="button"
             onClick={() => onAddToCart(product)}
-            disabled={!available || price === null || !product.sellerId}
+            disabled={!available || price === null}
             className="inline-flex items-center justify-center gap-2 rounded-xl bg-ak-brand px-3 py-2.5 text-xs font-bold text-ak-ink shadow-ak-glow transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-40"
           >
             <FaShoppingBag aria-hidden="true" />
-            {product.sellerId ? 'أضف للسلة' : 'غير متاح للشراء'}
+            أضف للسلة
           </button>
           <Link
             href={href}

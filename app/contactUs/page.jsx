@@ -372,7 +372,7 @@ export default function ContactUs() {
         >
           <WebsiteLogo
             containerClassName="mb-6 flex justify-center"
-            className="h-24 w-64"
+            className="h-44 w-144"
             priority
           />
           <h1 className="text-3xl sm:text-4xl font-black text-white mb-3">موقع متجر</h1>

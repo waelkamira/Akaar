@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 
-export default function WebsiteLogo({
+export default function    WebsiteLogo({
   className = 'h-12 w-40',
   containerClassName = 'flex items-center justify-end',
   priority = false,

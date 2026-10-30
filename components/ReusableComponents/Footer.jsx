@@ -33,8 +33,8 @@ export default function Footer() {
         <div className="grid gap-10 md:grid-cols-[1.2fr_1fr_1fr]">
           <div>
             <div className="flex flex-wrap items-center gap-3">
-              <span className="flex h-11 w-11 items-center justify-center rounded-2xl border border-ak-amber/30 bg-ak-brand-soft text-lg font-black text-ak-honey shadow-ak-glow">A</span>
-              <WebsiteLogo className="h-11 w-36" />
+              <span className="flex h-11 w-11 items-center justify-center rounded-2xl border border-ak-amber/30 bg-ak-brand-soft text-lg font-black text-ak-honey shadow-ak-glow">M</span>
+              <WebsiteLogo className="h-44 w-144" />
             </div>
             <p className="mt-4 max-w-sm text-sm leading-7 text-ak-muted">
               سوق عقاري يجمع المشترين والوسطاء والوكالات لاكتشاف المساحات المناسبة بكل وضوح.
