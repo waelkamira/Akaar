@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 import { FormEvent, useState } from 'react';
+import WebsiteLogo from '@/components/Brand/WebsiteLogo';
 
 export default function RegisterForm() {
   const router = useRouter();
@@ -51,9 +52,9 @@ export default function RegisterForm() {
       <div className="ak-glass mx-auto grid w-full max-w-6xl overflow-hidden rounded-[2rem] shadow-ak-panel lg:min-h-[700px] lg:grid-cols-2">
         <section className="flex items-center px-5 py-10 sm:px-10 lg:px-14">
           <div className="mx-auto w-full max-w-md">
-            <Link href="/" className="inline-flex items-center gap-2 text-sm text-ak-honey"><span className="text-2xl">⌂</span> Akaar</Link>
+            <WebsiteLogo className="h-10 w-36" />
             <p className="ak-eyebrow mt-9">حسابك يبدأ هنا</p>
-            <h1 className="mt-2 text-3xl font-black sm:text-4xl">انضم إلى Akaar</h1>
+            <h1 className="mt-2 text-3xl font-black sm:text-4xl">انضم إلينا</h1>
             <p className="mt-3 text-sm text-white">احفظ العقارات التي تحبها وتواصل مع الوكالات بسهولة.</p>
             <form onSubmit={submit} className="mt-8 space-y-5">
               <label className="block text-sm font-semibold">الاسم

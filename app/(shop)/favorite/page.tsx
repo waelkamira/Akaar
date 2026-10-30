@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { getAuthenticatedUser } from '@/lib/auth/require-auth';
 import { prisma } from '@/lib/db/prisma';
-import SmallCard from '@/components/ReusableComponents/SmallCard/SmallCard';
+import FavoriteProducts from './FavoriteProducts';
 
 export const dynamic = 'force-dynamic';
 export const metadata: Metadata = {
@@ -61,28 +61,39 @@ export default async function FavoritesPage({ searchParams }: {
   const hasMore = page * limit < totalCount;
 
   return (
-    <main dir="rtl" className="min-h-screen bg-ak-ink px-4 py-10 text-white sm:py-14">
-      <div className="mx-auto max-w-7xl">
-        <header className="mb-8 flex flex-wrap items-end justify-between gap-4">
-          <div><p className="text-xs font-semibold tracking-widest text-ak-amber">SAVED ITEMS</p><h1 className="mt-2 text-3xl font-black">قائمة المفضلة</h1><p className="mt-2 text-sm text-stone-400">{new Intl.NumberFormat('ar').format(totalCount)} منتج محفوظ من قاعدة البيانات.</p></div>
-          <Link href="/search" className="rounded-xl border border-ak-line px-4 py-3 text-sm hover:border-ak-amber/40">تصفح المنتجات</Link>
+    <main dir="rtl" className="min-h-screen w-full min-w-0 overflow-x-clip bg-transparent py-6 text-white sm:py-10">
+      <div className="ak-page-shell min-w-0">
+        <header className="ak-page-heading mb-7">
+          <div className="min-w-0">
+            <p className="ak-eyebrow mb-2">عناصر محفوظة</p>
+            <h1 className="text-3xl font-black tracking-tight sm:text-4xl">قائمة المفضلة</h1>
+            <p className="mt-3 text-sm leading-6 text-ak-muted">
+              المنتجات التي حفظتها لتعود إليها بسهولة.
+            </p>
+          </div>
+          <Link href="/search" className="ak-button-secondary shrink-0">
+            تصفح المنتجات
+          </Link>
         </header>
 
         {products.length ? (
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {products.map((product) => <SmallCard key={product.id} item={product} category={{ id: product.categoryId, name: product.categoryName }} />)}
-          </div>
+          <FavoriteProducts products={products} page={page} />
         ) : (
-          <section className="rounded-3xl border border-ak-line bg-ak-surface px-6 py-14 text-center">
-            <h2 className="text-xl font-bold">قائمة المفضلة فارغة</h2><p className="mt-3 text-sm text-stone-400">احفظ المنتجات التي تود العودة إليها لاحقًا.</p>
-            <Link href="/search" className="mt-6 inline-flex rounded-xl bg-ak-amber px-6 py-3 text-sm font-bold text-ak-ink">استكشف المنتجات</Link>
+          <section className="ak-panel-raised px-5 py-10 text-center sm:px-8 sm:py-14">
+            <h2 className="text-xl font-bold sm:text-2xl">قائمة المفضلة فارغة</h2>
+            <p className="mx-auto mt-3 max-w-lg text-sm leading-6 text-ak-muted">
+              احفظ المنتجات التي تود العودة إليها لاحقًا، وستجدها هنا.
+            </p>
+            <Link href="/search" className="ak-button-primary mt-6">
+              استكشف المنتجات
+            </Link>
           </section>
         )}
 
         {(page > 1 || hasMore) && <nav aria-label="صفحات المفضلة" className="mt-8 flex justify-center gap-3">
-          {page > 1 && <Link href={`/favorite?page=${page - 1}`} className="rounded-xl border border-ak-line px-4 py-3 text-sm">السابقة</Link>}
-          <span className="rounded-xl bg-ak-amber/10 px-4 py-3 text-sm text-ak-honey">صفحة {page}</span>
-          {hasMore && <Link href={`/favorite?page=${page + 1}`} className="rounded-xl border border-ak-line px-4 py-3 text-sm">التالية</Link>}
+          {page > 1 && <Link href={`/favorite?page=${page - 1}`} className="ak-button-secondary">السابقة</Link>}
+          <span className="inline-flex items-center rounded-xl border border-ak-amber/20 bg-ak-amber/10 px-4 py-3 text-sm text-ak-honey">صفحة {page}</span>
+          {hasMore && <Link href={`/favorite?page=${page + 1}`} className="ak-button-secondary">التالية</Link>}
         </nav>}
       </div>
     </main>

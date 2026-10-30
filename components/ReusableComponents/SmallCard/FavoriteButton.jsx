@@ -32,7 +32,7 @@ function getFavoriteIds(userId) {
   return request;
 }
 
-function FavoriteButton({ item }) {
+function FavoriteButton({ item, onFavoriteChange }) {
   const [favoriteStatus, setFavoriteStatus] = useState(null);
   const [loadedFavoriteKey, setLoadedFavoriteKey] = useState(null);
   const session = useSession();
@@ -123,6 +123,7 @@ function FavoriteButton({ item }) {
       window.dispatchEvent(new CustomEvent(favoriteUpdateEvent, {
         detail: { userId, productId: item.id, favorited },
       }));
+      onFavoriteChange?.(favorited);
       toast.success(data?.message || 'تم تحديث المفضلة');
     } catch (error) {
       console.error('Error handling favorite:', error);

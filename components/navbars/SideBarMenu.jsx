@@ -17,6 +17,7 @@ import { FaHeart, FaHome, FaSearch, FaShoppingCart, FaSignInAlt, FaSignOutAlt } 
 import Image from 'next/image';
 import LoadingPhoto from '../photos/LoadingPhoto';
 import { useCommerce } from '@/features/cart/commerce-context';
+import CategoryThumbnail from '@/components/Categories/CategoryThumbnail';
 
 export default function SideBarMenu() {
   const [isOpen, setIsOpen] = useState(false);
@@ -36,8 +37,10 @@ export default function SideBarMenu() {
 
   return (
     <>
-      <div className="lg:hidden">
-        <nav aria-label="التنقل السريع" className="ak-mobile-dock fixed inset-x-0 bottom-0 z-[1001]">
+      <nav
+        aria-label="التنقل السريع"
+        className="ak-mobile-dock fixed inset-x-0 bottom-0 z-[1001] xl:hidden"
+      >
           <div className="mx-auto flex max-w-xl items-stretch justify-around gap-1">
             {dockLinks.map(({ title, path, icon: Icon }) => {
               const isActive = path === '/'
@@ -84,7 +87,7 @@ export default function SideBarMenu() {
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: '100%', opacity: 0.7 }}
               transition={{ type: 'spring', stiffness: 150, damping: 20 }}
-              className="ak-glass-strong fixed inset-x-0 bottom-0 z-[1002] mx-auto flex max-h-[88dvh] w-full max-w-2xl flex-col items-center overflow-y-auto rounded-t-[2rem] border-x border-t border-ak-line-strong p-5 pb-[calc(6rem+env(safe-area-inset-bottom))] text-white sm:p-7"
+              className="ak-glass-strong fixed inset-x-0 bottom-0 z-[1002] mx-auto flex max-h-[88dvh] w-full max-w-2xl flex-col items-center overflow-y-auto rounded-t-[2rem] border-x border-t border-ak-line-strong p-5 pb-[calc(6rem+env(safe-area-inset-bottom))] text-white sm:p-7 xl:hidden"
             >
               {/* زر الإغلاق */}
               <div className="w-full flex justify-end">
@@ -208,8 +211,8 @@ export default function SideBarMenu() {
                       href={category?.path}
                       className="flex items-center justify-center gap-2 rounded-xl border border-ak-line bg-ak-surface/70 p-3 text-white transition-all duration-300 hover:border-ak-amber/40 hover:bg-ak-brand-soft"
                     >
-                      <span className="text-lg text-ak-honey sm:text-xl">
-                        {category?.icon}
+                      <span className="flex size-8 shrink-0 items-center justify-center">
+                        <CategoryThumbnail category={category} className="size-8" />
                       </span>
                       <span className="text-sm font-medium">
                         {category?.name}
@@ -238,11 +241,10 @@ export default function SideBarMenu() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[1000] bg-ak-ink/65 backdrop-blur-sm"
+          className="fixed inset-0 z-[1000] bg-ak-ink/65 backdrop-blur-sm xl:hidden"
           onClick={() => setIsOpen(false)}
         />
       )}
-      </div>
     </>
   );
 }

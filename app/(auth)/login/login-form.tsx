@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 import { FormEvent, useState } from 'react';
+import WebsiteLogo from '@/components/Brand/WebsiteLogo';
 
 function callbackPath() {
   const requested = new URLSearchParams(window.location.search).get('callbackUrl') || '/';
@@ -49,7 +50,7 @@ export default function LoginForm() {
 
         <section className="flex items-center px-5 py-10 sm:px-10 lg:px-14">
           <div className="mx-auto w-full max-w-md">
-            <Link href="/" className="inline-flex items-center gap-2 text-sm text-ak-honey"><span className="text-2xl">⌂</span> Akaar</Link>
+            <WebsiteLogo className="h-10 w-36" />
             <p className="ak-eyebrow mt-9">مرحبًا بعودتك</p>
             <h1 className="mt-2 text-3xl font-black sm:text-4xl">سجّل الدخول</h1>
             <p className="mt-3 text-sm text-white">أدخل بيانات حسابك للمتابعة.</p>

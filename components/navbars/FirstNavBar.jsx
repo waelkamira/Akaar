@@ -8,8 +8,8 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { FaChevronDown, FaSignInAlt, FaSignOutAlt, FaUser, FaUserCircle } from 'react-icons/fa';
 import mainButtons from '../lists/mainButtons';
 import { useCommerce } from '@/features/cart/commerce-context';
-import Image from 'next/image';
-import LoadingPhoto from '../photos/LoadingPhoto';
+import Search from '@/components/Search/Search';
+import WebsiteLogo from '@/components/Brand/WebsiteLogo';
 
 export default function FirstNavBar() {
   const pathname = usePathname();
@@ -20,7 +20,6 @@ export default function FirstNavBar() {
   const user = session?.user;
   const userName = user?.userName || user?.name || user?.email?.split('@')[0] || 'مستخدم';
   const userImage = user?.userImage || user?.image;
-  const logoImage = '/images/matjar.png';
 
   useEffect(() => {
     if (!profileOpen) return undefined;
@@ -49,9 +48,9 @@ export default function FirstNavBar() {
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35, ease: 'easeOut' }}
-      className="ak-glass sticky top-0 z-[1000] hidden w-full rounded-b-[1.35rem] border-b border-ak-line backdrop-blur-2xl lg:block"
+      className="ak-glass sticky top-0 z-[1000] block w-full rounded-b-[1.35rem] border-b border-ak-line backdrop-blur-2xl"
     >
-      <div className="mx-auto flex h-[72px] w-full max-w-[1600px] items-center justify-between gap-6 px-5 xl:px-8">
+      <div className="mx-auto hidden h-[72px] w-full max-w-[1600px] items-center justify-between gap-6 px-5 xl:flex xl:px-8">
         <div ref={profileRef} className="relative shrink-0">
           {status === 'authenticated' ? (
             <>
@@ -197,35 +196,38 @@ export default function FirstNavBar() {
           </ul>
         </nav>
 
-        {/* <Link href="/" aria-label="Akaar الصفحة الرئيسية" className="flex shrink-0 items-center gap-3">
-          <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-ak-amber/30 bg-ak-brand-soft text-lg font-black text-ak-honey shadow-ak-glow">M</span>
-          <span className="text-2xl font-black tracking-wide text-white">MATJAR<span className="text-ak-amber">.</span></span>
-        </Link> */}
-           {/* شعار الموقع (Logo) */}
-                  <div className="flex items-center justify-end">
-                    <Link
-                      href={'/'}
-                      className="relative flex items-center cursor-pointer group"
-                    >
-                      <motion.div
-                        whileHover={{ scale: 1.01 }}
-                        whileTap={{ scale: 0.99 }}
-                        className="relative h-12 w-40 flex items-center justify-end transition-all duration-500"
-                      >
-                        {/* توهج خافي خلف الشعار يظهر عند تمرير الماوس */}
-                        <div className="absolute inset-0  blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
-          
-                        <Image
-                          src="/images/matjar.png"
-                          alt="luxury_logo"
-                          width={145}
-                          height={8}
-                          className="object-contain filter drop-shadow-[0_4px_12px_rgba(0,0,0,0.6)] brightness-105 group-hover:brightness-120 border-0 border-l-8 border-primary transition-all duration-500 "
-                          priority
-                        />
-                      </motion.div>
-                    </Link>
-                  </div>
+        <WebsiteLogo priority />
+      </div>
+      <div className="mx-auto flex w-full max-w-[1600px] flex-col gap-3 sm:p-3 p-0 xl:hidden">
+        <div className=" hidden sm:flex min-w-0 items-center justify-between gap-3">
+          <WebsiteLogo
+            className="h-10 w-24 min-[360px]:w-32"
+            priority
+          />
+          {status === 'authenticated' ? (
+            <Link
+              href="/profile"
+              aria-label={`الملف الشخصي: ${userName}`}
+              className="flex min-w-0 max-w-[calc(100vw-8rem)] items-center gap-2 rounded-xl border border-ak-line bg-ak-surface/60 px-2.5 py-2 text-sm font-semibold text-white sm:max-w-none sm:px-3"
+            >
+              <FaUserCircle className="shrink-0 text-ak-honey" aria-hidden="true" />
+              <span className="max-w-24 truncate min-[360px]:max-w-28 sm:max-w-36">{userName}</span>
+            </Link>
+          ) : status === 'loading' ? (
+            <span aria-label="جاري تحميل حساب المستخدم" className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-ak-line bg-ak-surface text-lg text-ak-honey">
+              <FaUserCircle aria-hidden="true" />
+            </span>
+          ) : (
+            <Link
+              href="/login"
+              className="inline-flex h-10 shrink-0 items-center gap-2 rounded-xl border border-ak-line px-3 text-xs font-semibold text-white transition hover:border-ak-amber/40 hover:bg-ak-brand-soft"
+            >
+              <FaSignInAlt aria-hidden="true" />
+              تسجيل الدخول
+            </Link>
+          )}
+        </div>
+        {pathname !== '/' && <Search showCategories={false} />}
       </div>
     </motion.header>
   );

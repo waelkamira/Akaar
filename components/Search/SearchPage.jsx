@@ -1,7 +1,6 @@
 'use client';
 
 import { useSearch } from '@/features/search/search-context';
-import CategoryFilter from './CategoryFilter';
 import StaticFilters from './StaticFilters';
 import DynamicFilters from './DynamicFilters';
 import SearchResults from './SearchResults';
@@ -15,7 +14,6 @@ export default function SearchPage() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         {/* Filters Column */}
         <div className="md:col-span-1">
-          <CategoryFilter />
           <StaticFilters />
           {category && <DynamicFilters />}
         </div>

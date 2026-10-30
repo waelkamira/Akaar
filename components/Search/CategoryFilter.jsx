@@ -3,11 +3,11 @@
 import { useRouter } from 'next/navigation';
 import { useCallback, useMemo } from 'react';
 import categories from '../Categories/categories';
-import { FaHome } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '../lib/utils';
 import { useSearch } from '@/features/search/search-context';
 import { serializeCategory } from '../Categories/serializeCategory';
+import CategoryThumbnail from '../Categories/CategoryThumbnail';
 
 const CategoryCard = ({ item, selected, onClick }) => {
   return (
@@ -69,9 +69,7 @@ const CategoryCard = ({ item, selected, onClick }) => {
             : 'border-ak-line-strong bg-ak-surface/70 text-ak-honey group-hover:border-ak-honey/50 group-hover:bg-ak-brand-soft group-hover:text-white'
         )}
       >
-        <span className="text-xl">
-          {item?.icon || <FaHome />}
-        </span>
+        <CategoryThumbnail category={item} className="size-12" />
       </div>
 
       {/* اسم القسم */}
@@ -146,7 +144,7 @@ const CategoriesNavBar = () => {
       dir="rtl"
       aria-label="تصفح الأقسام"
       className={cn(
-        'sticky top-0 z-40 w-full overflow-hidden',
+        'relative z-40 w-full overflow-hidden',
         'border-b border-ak-line-strong',
         'bg-ak-surface shadow-ak-panel',
         'text-white'

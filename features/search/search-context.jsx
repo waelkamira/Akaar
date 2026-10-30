@@ -26,7 +26,7 @@ export function SearchProvider({ children }) {
   const [filters, setFilters] = useState({});
   const [dynamicFilters, setDynamicFilters] = useState([]);
   const [results, setResults] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(isSearchPage);
   const [error, setError] = useState(null);
   const [totalCount, setTotalCount] = useState(0);
   const [page, setPage] = useState(1);
@@ -51,11 +51,7 @@ export function SearchProvider({ children }) {
 
   const safeAbort = (controller) => {
     if (controller && !controller.signal.aborted) {
-      try {
-        controller.abort(new Error('Request aborted by cleanup or superseded'));
-      } catch (e) {
-        // تجاهل الأخطاء
-      }
+      controller.abort();
     }
   };
 
@@ -143,12 +139,14 @@ export function SearchProvider({ children }) {
   useEffect(() => {
     if (!isSearchPage) return undefined;
 
+    const loadingTimer = window.setTimeout(() => setLoading(true), 0);
     searchTimer.current = window.setTimeout(() => {
       setPage(1);
       performSearch(1, false);
     }, 300);
 
     return () => {
+      window.clearTimeout(loadingTimer);
       window.clearTimeout(searchTimer.current);
       safeAbort(requestController.current);
       if (requestController.current) requestController.current = null;

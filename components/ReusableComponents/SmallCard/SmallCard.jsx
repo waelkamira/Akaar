@@ -9,11 +9,12 @@ import { formatDistanceToNow } from 'date-fns';
 import { FaArrowLeft, FaMapMarkerAlt, FaClock, FaTag } from 'react-icons/fa';
 
 const SmallCard = React.memo(
-  /** @param {{ item: { id: string; createdAt?: string | Date; basePrice?: number | null; location?: string; subLocation?: string; description?: string; title?: string; stockQuantity?: number; images?: string[] }; category?: { id?: string; name?: string | null; slug?: string; categoryName?: string | null }; priority?: boolean }} props */
+  /** @param {{ item: { id: string; createdAt?: string | Date; basePrice?: number | null; location?: string; subLocation?: string; description?: string; title?: string; stockQuantity?: number; images?: string[] }; category?: { id?: string; name?: string | null; slug?: string; categoryName?: string | null }; priority?: boolean; onFavoriteChange?: (favorited: boolean) => void }} props */
   function SmallCard({
     item,
     category,
     priority = false,
+    onFavoriteChange,
   }) {
   const router = useRouter();
 
@@ -75,9 +76,9 @@ const SmallCard = React.memo(
       whileHover={{ y: -6 }}
       transition={{ duration: 0.35, ease: 'easeOut' }}
       onClick={handleClick}
-      className="group h-full cursor-pointer"
+      className="group h-full min-w-0 cursor-pointer"
     >
-      <article className="ak-listing-card flex h-full flex-col overflow-hidden rounded-[1.65rem] border border-ak-line bg-ak-surface shadow-ak-card transition duration-300 group-hover:border-ak-amber/35 group-hover:shadow-ak-panel">
+      <article className="ak-listing-card flex h-full min-w-0 flex-col overflow-hidden rounded-[1.65rem] border border-ak-line bg-ak-surface shadow-ak-card transition duration-300 group-hover:border-ak-amber/35 group-hover:shadow-ak-panel">
           <div className="relative aspect-[4/3] shrink-0 overflow-hidden bg-ak-raised">
             <div className="relative h-full">
               <ImageComponent
@@ -92,7 +93,7 @@ const SmallCard = React.memo(
                   onClick={(event) => event.stopPropagation()}
                   className="flex size-10 items-center justify-center rounded-full border border-white/25 bg-ak-ink/55 shadow-lg backdrop-blur-md"
                 >
-                  <FavoriteButton item={item} />
+                  <FavoriteButton item={item} onFavoriteChange={onFavoriteChange} />
                 </div>
                 {category?.name && (
                   <motion.div

@@ -252,15 +252,11 @@ import {
   MdSpeed,
 } from 'react-icons/md';
 import { GiCarKey } from 'react-icons/gi';
-import { useRouter } from 'next/navigation';
 import Card from '../../components/ReusableComponents/Card';
-import Image from 'next/image';
-import LoadingPhoto from '../../components/photos/LoadingPhoto';
 import { motion } from 'framer-motion';
+import WebsiteLogo from '@/components/Brand/WebsiteLogo';
 
 export default function ContactUs() {
-  const router = useRouter();
-  const logoImage = '/images/matjar.png';
 
   const contactInfo = [
     {
@@ -374,21 +370,11 @@ export default function ContactUs() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-12"
         >
-          <div className="relative w-1/2 h-40 mx-auto mb-6 group cursor-pointer" onClick={() => router.push('/')}>
-            {!logoImage ? (
-              <LoadingPhoto />
-            ) : (
-              <div className="w-full h-full relative rounded-3xl overflow-hidden bg-neutral-900/50 border border-neutral-800 p-4 group-hover:border-orange-500/30 transition-all">
-                <Image
-                  src={logoImage}
-                  fill
-                  className="object-contain"
-                  alt="شعار موقع متجر"
-                  priority
-                />
-              </div>
-            )}
-          </div>
+          <WebsiteLogo
+            containerClassName="mb-6 flex justify-center"
+            className="h-24 w-64"
+            priority
+          />
           <h1 className="text-3xl sm:text-4xl font-black text-white mb-3">موقع متجر</h1>
           <p className="text-white max-w-2xl mx-auto">
             وجهتك المثالية لكل من يبحث عن خدمات البيع والتأجير للعقارات والسيارات والمنتجات بمختلف أنواعها.

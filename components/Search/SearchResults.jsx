@@ -5,6 +5,7 @@ import { Loader2 } from 'lucide-react';
 import SmallCard from '../ReusableComponents/SmallCard/SmallCard';
 import { motion, AnimatePresence } from 'framer-motion';
 import Pagination from '../ReusableComponents/Pagination';
+import CategoryFilter from './CategoryFilter';
 
 export default function SearchResults() {
   const {
@@ -40,11 +41,15 @@ export default function SearchResults() {
   // Show empty state
   if (!loading && results.length === 0) {
     return (
-      <div className="rounded-2xl border border-ak-line-strong/[.08] bg-ak-surface py-12 text-center">
-        <p className="text-stone-200 mb-2">لم يتم العثور على نتائج</p>
+      <div className="rounded-2xl border border-ak-line-strong/[.08] bg-ak-surface px-4 py-8 text-center sm:px-6 sm:py-12">
+        <p className="mb-2 text-stone-200">لم يتم العثور على نتائج</p>
         <p className="text-sm text-stone-400">
-          جرب تعديل معايير البحث للحصول على نتائج أفضل
+          جرب تعديل معايير البحث أو اختر فئة أخرى
         </p>
+        <div className="mt-8 text-right">
+          <h2 className="mb-4 text-lg font-bold text-white">تصفح الأقسام</h2>
+          <CategoryFilter />
+        </div>
       </div>
     );
   }

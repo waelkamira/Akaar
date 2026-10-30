@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import categories from '../Categories/categories';
 import { serializeCategory } from '../Categories/serializeCategory';
 import { useRouter } from 'next/navigation';
+import CategoryThumbnail from '../Categories/CategoryThumbnail';
 
 export default function CategoriesSideBar() {
   const router = useRouter();
@@ -49,8 +50,8 @@ export default function CategoriesSideBar() {
               whileTap={{ scale: 0.95 }}
             >
               <div className="absolute inset-0 bg-three rounded-lg shadow-inner opacity-30 w-full" />
-              <span className="text-2xl hover:text-primary-500">
-                {category.icon}
+              <span className="flex size-8 shrink-0 items-center justify-center">
+                <CategoryThumbnail category={category} className="size-8" />
               </span>
               <span className="text-lg font-medium select-none">
                 {category.name}

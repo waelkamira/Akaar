@@ -34,8 +34,8 @@ export default function Hero({ images = DEFAULT_IMAGES }) {
 
   return (
     <section className="ak-page-shell pt-5 sm:pt-8" aria-label="واجهة أكار الرئيسية">
-      <div className="ak-panel-raised grid overflow-hidden lg:min-h-[430px] lg:grid-cols-[minmax(0,1.05fr)_minmax(0,.95fr)]">
-        <div className="order-1 flex flex-col justify-center p-5 sm:p-8 lg:order-2 lg:p-10 xl:p-12">
+      <div className="ak-panel-raised grid min-w-0 grid-cols-1 overflow-hidden lg:min-h-[430px] lg:grid-cols-[minmax(0,1.05fr)_minmax(0,.95fr)]">
+        <div className="order-1 flex min-w-0 flex-col justify-center p-5 sm:p-8 lg:order-2 lg:p-10 xl:p-12">
           <p className="ak-eyebrow inline-flex w-fit items-center gap-2 rounded-full border border-ak-amber/25 bg-ak-amber/10 px-3 py-2">
             اكتشف موقع متجر
           </p>
@@ -46,7 +46,7 @@ export default function Hero({ images = DEFAULT_IMAGES }) {
           <p className="mt-4 max-w-xl text-sm leading-7 text-ak-muted sm:text-base">
             اكتشف المنتجات، قارن التفاصيل، وتواصل مع البائع المناسب عبر تجربة تسوق عربية واضحة وسهلة.
           </p>
-          <div className="ak-glass-strong mt-6 rounded-2xl p-2 sm:mt-8">
+          <div className="ak-glass-strong mt-6 min-w-0 rounded-2xl p-2 sm:mt-8">
             <Search />
           </div>
           <div className="mt-4 flex flex-wrap items-center gap-3">

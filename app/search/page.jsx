@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { FaFilter, FaTimes, FaSearch, FaSlidersH, FaTrashAlt } from 'react-icons/fa';
 import { useSearch } from '@/features/search/search-context';
 import { inputsContext } from '@/features/auth/inputs-context';
-import CategoryFilter from '@/components/Search/CategoryFilter';
 import StaticFilters from '@/components/Search/StaticFilters';
 import DynamicFilters from '@/components/Search/DynamicFilters';
 import SelectedFilters from '@/components/Search/SelectedFilters';
@@ -14,7 +13,7 @@ import SearchResults from '@/components/Search/SearchResults';
 function FilterPanel({ onApply, onClose, mobile = false }) {
   const { category, performSearch, clearFilters } = useSearch();
   const { selected } = useContext(inputsContext);
-  const [expanded, setExpanded] = useState({ category: true, basic: true, dynamic: true });
+  const [expanded, setExpanded] = useState({ basic: true, dynamic: true });
 
   const toggle = (section) => setExpanded((current) => ({ ...current, [section]: !current[section] }));
 
@@ -39,13 +38,6 @@ function FilterPanel({ onApply, onClose, mobile = false }) {
           <button type="button" onClick={onClose} aria-label="إغلاق الفلاتر" className="rounded-lg p-2 text-stone-400 hover:bg-ak-brand-soft hover:text-white"><FaTimes /></button>
         </div>
       )}
-
-      <section className="ak-panel overflow-hidden">
-        <button type="button" onClick={() => toggle('category')} aria-expanded={expanded.category} className="flex w-full items-center justify-between px-4 py-4 text-right transition hover:bg-ak-surface/[.03]">
-          <span className="font-semibold text-white">الفئة</span><FaFilter className="text-xs text-ak-amber" aria-hidden="true" />
-        </button>
-        {expanded.category && <div className="border-t border-ak-line-strong/[.06] p-4"><CategoryFilter /></div>}
-      </section>
 
       <section className="ak-panel overflow-hidden">
         <button type="button" onClick={() => toggle('basic')} aria-expanded={expanded.basic} className="flex w-full items-center justify-between px-4 py-4 text-right transition hover:bg-ak-surface/[.03]">

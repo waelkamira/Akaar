@@ -4,10 +4,10 @@ import { useRouter } from 'next/navigation';
 import { useCallback, useMemo, useState } from 'react';
 import categories from '../Categories/categories';
 import { serializeCategory } from '../Categories/serializeCategory';
-import { FaHome } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '../lib/utils';
 import { useSearch } from '@/features/search/search-context';
+import CategoryThumbnail from '../Categories/CategoryThumbnail';
 
 // تعريف الكومبوننت AnimatedCard بتصميم زجاجي وتأثيرات ناعمة
 const AnimatedCard = ({ children, isSelected, onClick, isHovered }) => (
@@ -118,9 +118,7 @@ const CategoriesNavBar = () => {
                           : 'border border-ak-line bg-ak-raised text-white shadow-ak-card',
                     )}
                   >
-                    <div className="text-xl">
-                      {categoryItem?.icon || <FaHome />}
-                    </div>
+                    <CategoryThumbnail category={categoryItem} className="size-10" />
                   </div>
 
                   {/* اسم القسم في الديسكتوب */}
@@ -167,7 +165,7 @@ const CategoriesNavBar = () => {
                     isSelected ? 'text-ak-ink' : 'text-ak-honey',
                   )}
                 >
-                  {categoryItem?.icon || <FaHome />}
+                  <CategoryThumbnail category={categoryItem} className="size-8" />
                 </div>
 
                 {/* اسم القسم للموبايل */}

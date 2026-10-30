@@ -2,8 +2,11 @@
 import React from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+import { FaRegImage } from 'react-icons/fa';
 
 function ImageComponent({ item, priority = false, className = 'relative h-56' }) {
+  const image = item?.image1 || item?.images?.[0];
+
   return (
     <motion.div
       className={`w-full overflow-hidden bg-gradient-to-br from-ak-raised to-ak-surface ${className}`}
@@ -11,22 +14,19 @@ function ImageComponent({ item, priority = false, className = 'relative h-56' })
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
-      {!item?.image1 && (
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div
-            role="status"
-            aria-label="جاري تحميل الصورة"
-            className="size-10 animate-spin rounded-full border-2 border-ak-amber/20 border-t-ak-amber"
-          />
+      {!image && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-ak-quiet">
+          <FaRegImage className="text-3xl" aria-hidden="true" />
+          <span className="text-xs">لا توجد صورة</span>
         </div>
       )}
-      {item?.image1 && (
+      {image && (
         <div className="absolute inset-0 overflow-hidden">
           <Image
-            src={item?.image1}
+            src={image}
             fill
             priority={priority}
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            sizes="(max-width: 640px) calc(100vw - 2rem), (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
             alt={item?.title || 'عقار'}
             className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
           />

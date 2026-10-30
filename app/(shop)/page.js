@@ -296,6 +296,7 @@ import categories from '@/components/Categories/categories';
 import Hero from '@/components/Home/Hero';
 import FavoriteButton from '@/components/ReusableComponents/SmallCard/FavoriteButton';
 import { useCommerce } from '@/features/cart/commerce-context';
+import CategoryThumbnail from '@/components/Categories/CategoryThumbnail';
 
 const PAGE_SIZE = 12;
 
@@ -496,8 +497,8 @@ export default function HomePage() {
                 <h3 className="truncate text-sm font-bold text-white sm:text-base">{category.name}</h3>
                 <span className="mt-3 inline-flex items-center gap-2 text-[10px] text-ak-honey">تصفح الفئة <FaArrowLeft aria-hidden="true" /></span>
               </div>
-              <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl border border-ak-amber/20 bg-ak-amber/10 text-xl text-ak-honey transition group-hover:scale-110">
-                {category.icon || <FaShoppingBag aria-hidden="true" />}
+              <span className="flex size-14 shrink-0 items-center justify-center transition group-hover:scale-110">
+                <CategoryThumbnail category={category} className="size-14" />
               </span>
             </Link>
           ))}
