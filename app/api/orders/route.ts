@@ -4,8 +4,29 @@ import { prisma } from '@/lib/db/prisma';
 import { isMarketplaceEnabled } from '@/lib/marketplace/settings';
 import { getPagination, isPaginationOffsetOutOfRange } from '@/lib/api/validation.mjs';
 import { readJsonBody } from '@/lib/api/read-json-body.mjs';
+import { isStripeSandboxConfigured } from '@/lib/payments/stripe.mjs';
 
 type CartLine = { id: string; quantity: number };
+
+async function releaseCheckoutReservation(orderId: string, paymentId: string, lines: CartLine[]) {
+  await prisma.$transaction(async (transaction) => {
+    const failed = await transaction.payment.updateMany({
+      where: { id: paymentId, status: 'PENDING' },
+      data: { status: 'FAILED' },
+    });
+    if (failed.count !== 1) return;
+    for (const line of lines) {
+      await transaction.product.update({
+        where: { id: line.id },
+        data: { stockQuantity: { increment: line.quantity } },
+      });
+    }
+    await transaction.order.updateMany({
+      where: { id: orderId, status: 'PENDING' },
+      data: { status: 'CANCELLED' },
+    });
+  });
+}
 
 export async function GET(request: Request) {
   const user = await getAuthenticatedUser();
@@ -70,11 +91,23 @@ export async function POST(request: Request) {
   if (!(await isMarketplaceEnabled('marketplaceEnabled'))) {
     return NextResponse.json({ error: 'الشراء متوقف مؤقتًا.' }, { status: 503 });
   }
-
   const parsed = await readJsonBody(request, 32 * 1024);
   if (!parsed.ok) return NextResponse.json({ error: parsed.error }, { status: parsed.status });
   const body = parsed.value as { items?: unknown };
   const rawBody = parsed.value as Record<string, unknown> | null;
+  const paymentMethod = rawBody?.paymentMethod === undefined ? 'CASH_ON_DELIVERY' : rawBody.paymentMethod;
+  if (paymentMethod !== 'CASH_ON_DELIVERY' && paymentMethod !== 'STRIPE') {
+    return NextResponse.json({ error: 'وسيلة الدفع المحددة غير مدعومة.' }, { status: 400 });
+  }
+  if (paymentMethod === 'CASH_ON_DELIVERY' && !(await isMarketplaceEnabled('cashOnDeliveryEnabled'))) {
+    return NextResponse.json({ error: 'الدفع عند الاستلام متوقف مؤقتًا.' }, { status: 503 });
+  }
+  if (paymentMethod === 'STRIPE' && (
+    !(await isMarketplaceEnabled('stripeSandboxCheckoutEnabled'))
+    || !isStripeSandboxConfigured()
+  )) {
+    return NextResponse.json({ error: 'الدفع بالبطاقة في وضع الاختبار غير متاح حاليًا.' }, { status: 503 });
+  }
   const customerName = typeof rawBody?.customerName === 'string' ? rawBody.customerName.trim() : '';
   const phoneNumber = typeof rawBody?.phoneNumber === 'string' ? rawBody.phoneNumber.trim() : '';
   const shippingCity = typeof rawBody?.shippingCity === 'string' ? rawBody.shippingCity.trim() : '';
@@ -130,6 +163,7 @@ export async function POST(request: Request) {
         id: true,
         title: true,
         basePrice: true,
+        usdPriceCents: true,
         stockQuantity: true,
         sellerId: true,
         seller: { select: { id: true, status: true, isVerified: true } },
@@ -160,7 +194,21 @@ export async function POST(request: Request) {
       return sum + lineTotal;
     }, 0);
 
-    const order = await prisma.$transaction(async (transaction) => {
+    const totalUsdCents = paymentMethod === 'STRIPE'
+      ? products.reduce((sum, product) => {
+        const quantity = quantityById.get(product.id) || 0;
+        if (!Number.isSafeInteger(product.usdPriceCents) || (product.usdPriceCents ?? 0) < 50) {
+          throw new Error('USD_PRICE_UNAVAILABLE');
+        }
+        const lineTotal = product.usdPriceCents * quantity;
+        if (!Number.isSafeInteger(lineTotal) || !Number.isSafeInteger(sum + lineTotal) || sum + lineTotal > 99_999_999) {
+          throw new Error('TOTAL_OUT_OF_RANGE');
+        }
+        return sum + lineTotal;
+      }, 0)
+      : null;
+
+    const created = await prisma.$transaction(async (transaction) => {
       for (const line of lines) {
         const updated = await transaction.product.updateMany({
           where: {
@@ -213,25 +261,93 @@ export async function POST(request: Request) {
           };
         }),
       });
-      await transaction.payment.create({
+      const payment = await transaction.payment.create({
         data: {
           orderId: createdOrder.id,
           userId: user.id,
-          amount: totalPrice,
-          method: 'CASH_ON_DELIVERY',
+          amount: paymentMethod === 'STRIPE' ? totalUsdCents! : totalPrice,
+          currency: paymentMethod === 'STRIPE' ? 'USD' : 'SYP',
+          method: paymentMethod,
           status: 'PENDING',
         },
+        select: { id: true },
       });
-      return createdOrder;
+      return { order: createdOrder, payment };
     });
 
-    return NextResponse.json({ order }, { status: 201 });
+    if (paymentMethod === 'CASH_ON_DELIVERY') {
+      return NextResponse.json({ order: created.order }, { status: 201 });
+    }
+
+    try {
+      const appUrl = process.env.APP_URL || process.env.NEXTAUTH_URL;
+      if (!appUrl) throw new Error('STRIPE_APP_URL_NOT_CONFIGURED');
+      const origin = new URL(appUrl);
+      if (origin.protocol !== 'https:' && process.env.NODE_ENV === 'production') {
+        throw new Error('STRIPE_APP_URL_MUST_USE_HTTPS');
+      }
+      const stripeParams = new URLSearchParams();
+      stripeParams.set('mode', 'payment');
+      stripeParams.set('payment_method_types[0]', 'card');
+      stripeParams.set('success_url', new URL(`/orders?checkout=success&orderId=${encodeURIComponent(created.order.id)}`, origin).toString());
+      stripeParams.set('cancel_url', new URL('/cart?checkout=cancelled', origin).toString());
+      stripeParams.set('customer_email', user.email);
+      stripeParams.set('client_reference_id', created.order.id);
+      stripeParams.set('expires_at', String(Math.floor(Date.now() / 1000) + 60 * 60));
+      stripeParams.set('metadata[paymentId]', created.payment.id);
+      stripeParams.set('metadata[orderId]', created.order.id);
+
+      products.forEach((product, index) => {
+        const prefix = `line_items[${index}]`;
+        stripeParams.set(`${prefix}[quantity]`, String(quantityById.get(product.id)));
+        stripeParams.set(`${prefix}[price_data][currency]`, 'usd');
+        stripeParams.set(`${prefix}[price_data][unit_amount]`, String(product.usdPriceCents));
+        stripeParams.set(`${prefix}[price_data][product_data][name]`, product.title.slice(0, 200));
+      });
+
+      const stripeResponse = await fetch('https://api.stripe.com/v1/checkout/sessions', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${process.env.STRIPE_SECRET_KEY}`,
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Idempotency-Key': created.payment.id,
+        },
+        body: stripeParams,
+        cache: 'no-store',
+        signal: AbortSignal.timeout(15_000),
+      });
+      const stripeSession = await stripeResponse.json().catch(() => ({}));
+      if (!stripeResponse.ok || typeof stripeSession.id !== 'string'
+        || typeof stripeSession.url !== 'string' || stripeSession.livemode !== false) {
+        throw new Error(`STRIPE_CHECKOUT_FAILED_${stripeResponse.status}`);
+      }
+
+      await prisma.payment.update({
+        where: { id: created.payment.id },
+        data: { providerReference: stripeSession.id },
+      });
+      return NextResponse.json({ order: created.order, checkoutUrl: stripeSession.url }, { status: 201 });
+    } catch (stripeError) {
+      try {
+        await releaseCheckoutReservation(created.order.id, created.payment.id, lines);
+      } catch (releaseError) {
+        console.error('Unable to release failed Stripe checkout reservation:', releaseError);
+      }
+      throw stripeError;
+    }
   } catch (error) {
+    if (error instanceof Error && error.message === 'USD_PRICE_UNAVAILABLE') {
+      return NextResponse.json({ error: 'أحد المنتجات لا يملك سعرًا صالحًا بالدولار للدفع الإلكتروني.' }, { status: 400 });
+    }
     if (error instanceof Error && ['PRODUCT_UNAVAILABLE', 'STOCK_CONFLICT'].includes(error.message)) {
       return NextResponse.json({ error: 'أحد المنتجات لم يعد متاحًا بالكمية المطلوبة.' }, { status: 409 });
     }
     if (error instanceof Error && error.message === 'TOTAL_OUT_OF_RANGE') {
       return NextResponse.json({ error: 'إجمالي الطلب خارج النطاق المسموح.' }, { status: 400 });
+    }
+    if (error instanceof Error && error.message.startsWith('STRIPE_')) {
+      console.error('Unable to create Stripe sandbox checkout:', error.message);
+      return NextResponse.json({ error: 'تعذر إنشاء جلسة الدفع. لم يتم تحصيل أي مبلغ.' }, { status: 502 });
     }
     console.error('Unable to place order:', error);
     return NextResponse.json({ error: 'تعذر إنشاء الطلب.' }, { status: 500 });

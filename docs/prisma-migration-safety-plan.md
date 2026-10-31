@@ -64,6 +64,27 @@ The standalone script at `prisma/legacy-repairs/20261031_marketplace_settings_ta
 - The script aborts if the table already exists and does not modify existing application rows.
 - This repair does not reconcile the legacy `orders`/`payments` tables with canonical Prisma model names. The admin dashboard reads those legacy tables when canonical `"Order"`/`"Payment"` tables are absent; legacy revenue is grouped by payment creation time because the old payments table has no `paidAt` column.
 
+## Site content and analytics migration
+
+The committed migration `prisma/migrations/20261031100000_control_panel_content_analytics/migration.sql` creates editable site pages, anonymous daily page-view aggregates, and newsletter subscribers with double opt-in and unsubscribe tokens. The matching standalone script `prisma/legacy-repairs/20261031_site_content_analytics_tables.sql` is an additive repair for a reviewed legacy database; it aborts if any target table already exists.
+
+- Apply the committed migration only to a clean database using the complete migration history.
+- Do not apply the standalone legacy repair to `propertiesdatabase` without a fresh, restore-verified backup and explicit authorization. Re-inspect all target tables immediately before any authorized application.
+- Page-view records contain only UTC day, route path, and aggregate count. Do not add IP addresses or visitor identifiers to this table.
+- The analytics endpoint checks that its aggregate table exists and fails closed with a service-unavailable response until the migration or authorized legacy repair has been applied.
+- Newsletter delivery requires server-side Resend settings (`RESEND_API_KEY`, `RESEND_FROM_EMAIL`, and `APP_URL` or `NEXTAUTH_URL`). The public subscription flow remains unavailable until those settings and the migration are present.
+- External payment checkout remains disabled until the USD-price migration is applied, test credentials and webhook verification are configured, and the control-panel owner explicitly enables it. Environment-key presence alone must never enable payment collection.
+
+## USD prices and Stripe sandbox checkout migration
+
+The committed migration `prisma/migrations/20261031120000_usd_product_prices_stripe_checkout/migration.sql` adds optional product USD prices (integer cents) and payment currency/provider references. The standalone script `prisma/legacy-repairs/20261031_usd_prices_and_stripe_payment_fields.sql` requires both canonical `public.products` and `public."Payment"` tables; it deliberately refuses to run on the currently inspected legacy schema, which has legacy `payments`/`orders` instead of canonical payment/order tables.
+
+- A new USD product price is optional and is required for every item in a Stripe sandbox checkout.
+- Stripe checkout remains disabled by default and accepts only `sk_test_` credentials, a configured `whsec_` webhook secret, and explicit owner enablement. Card payments go through Stripe; this includes Visa/Mastercard where Stripe makes them available.
+- The checkout amount comes from the admin-set USD cents price, never from an automatic exchange-rate conversion. The SYP catalog price remains the amount used for cash-on-delivery orders.
+- Do not apply the standalone USD/Stripe repair to the current legacy database: the canonical Payment table does not exist. Reconcile the legacy order/payment schema in a separate reviewed, data-preserving migration before enabling Stripe.
+- PayPal and Sham Cash remain disabled until their official API/webhook requirements are verified and implemented.
+
 ## Legacy data warning
 
 The repository began with a legacy root schema and an initial migration that differ from the current canonical schema. The greenfield reconciliation migrations intentionally reshape those artifacts and are designed for a clean first deployment. They are **not a data-preserving upgrade plan** for an already populated database.

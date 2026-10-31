@@ -9,6 +9,7 @@ import { Suspense } from 'react';
 import SideBarMenu from '../components/navbars/SideBarMenu';
 import { CommerceProvider } from '@/features/cart/commerce-context';
 import Footer from '../components/ReusableComponents/Footer';
+import PageViewTracker from '@/components/analytics/PageViewTracker';
 
 const rubik = Rubik({
   subsets: ['arabic', 'latin'],
@@ -55,6 +56,7 @@ export default function RootLayout({ children }) {
                 <SearchProvider>
                   <SideBarMenu />
                   <MainNavBar />
+                  <PageViewTracker />
                   {children}
                 </SearchProvider>
               </Suspense>

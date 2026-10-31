@@ -297,6 +297,7 @@ import Hero from '@/components/Home/Hero';
 import FavoriteButton from '@/components/ReusableComponents/SmallCard/FavoriteButton';
 import { useCommerce } from '@/features/cart/commerce-context';
 import CategoryThumbnail from '@/components/Categories/CategoryThumbnail';
+import ManagedSiteBanner from '@/components/site/ManagedSiteBanner';
 
 const PAGE_SIZE = 12;
 
@@ -460,6 +461,7 @@ export default function HomePage() {
   return (
     <main dir="rtl" className="min-h-screen overflow-x-clip bg-transparent text-ak-cream selection:bg-ak-amber/30">
       <Hero />
+      <ManagedSiteBanner slug="home" />
 
       <section className="ak-page-shell py-5 sm:py-7">
         <div className="grid gap-3 sm:grid-cols-3">

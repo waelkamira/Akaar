@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaMinus, FaPlus, FaTrash, FaShoppingCart, FaCheckCircle } from 'react-icons/fa';
 import { useCommerce } from '@/features/cart/commerce-context';
 import { motion } from 'framer-motion';
@@ -21,6 +21,33 @@ export default function CartPage() {
   const [checkoutError, setCheckoutError] = useState('');
   const [requiresLogin, setRequiresLogin] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState('CASH_ON_DELIVERY');
+  const [paymentMethods, setPaymentMethods] = useState({ cashOnDeliveryEnabled: true, stripeSandboxCheckoutEnabled: false });
+
+  useEffect(() => {
+    let active = true;
+    fetch('/api/payments/methods', { cache: 'no-store' })
+      .then(async (response) => {
+        const payload = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(payload?.error || 'تعذر تحميل وسائل الدفع.');
+        return payload;
+      })
+      .then((payload) => {
+        if (active) setPaymentMethods(payload);
+      })
+      .catch((error) => {
+        console.error('Unable to load payment methods:', error);
+      });
+    return () => { active = false; };
+  }, []);
+
+  const stripePricesAvailable = cartItems.length > 0 && cartItems.every(
+    (item) => Number.isSafeInteger(item.usdPriceCents) && item.usdPriceCents >= 50,
+  );
+  const stripeTotalCents = cartItems.reduce(
+    (sum, item) => sum + (Number.isSafeInteger(item.usdPriceCents) ? item.usdPriceCents * item.quantity : 0),
+    0,
+  );
 
   const handleCheckout = async (event) => {
     event.preventDefault();
@@ -39,12 +66,20 @@ export default function CartPage() {
           phoneNumber: formData.get('phone'),
           shippingCity: formData.get('city'),
           shippingAddress: formData.get('address'),
+          paymentMethod,
         }),
       });
       const payload = await response.json().catch(() => ({}));
       if (!response.ok) {
         if (response.status === 401) setRequiresLogin(true);
         throw new Error(payload?.error || 'تعذر تسجيل الطلب.');
+      }
+      if (paymentMethod === 'STRIPE') {
+        if (typeof payload.checkoutUrl !== 'string' || !payload.checkoutUrl.startsWith('https://checkout.stripe.com/')) {
+          throw new Error('تعذر فتح صفحة الدفع الآمنة.');
+        }
+        window.location.assign(payload.checkoutUrl);
+        return;
       }
       setCreatedOrderId(payload.order.id);
       clearCart();
@@ -233,6 +268,29 @@ export default function CartPage() {
               </div>
 
               <form onSubmit={handleCheckout} className="space-y-4">
+                <fieldset className="space-y-2 rounded-xl border border-neutral-700 p-3">
+                  <legend className="px-1 text-sm font-bold text-neutral-300">وسيلة الدفع</legend>
+                  {paymentMethods.cashOnDeliveryEnabled && (
+                    <label className="flex items-center gap-2 text-sm text-neutral-200">
+                      <input type="radio" name="payment-method" value="CASH_ON_DELIVERY" checked={paymentMethod === 'CASH_ON_DELIVERY'} onChange={() => setPaymentMethod('CASH_ON_DELIVERY')} />
+                      الدفع عند الاستلام (ل.س)
+                    </label>
+                  )}
+                  {paymentMethods.stripeSandboxCheckoutEnabled && (
+                    <label className="flex items-start gap-2 text-sm text-neutral-200">
+                      <input type="radio" name="payment-method" value="STRIPE" disabled={!stripePricesAvailable} checked={paymentMethod === 'STRIPE'} onChange={() => setPaymentMethod('STRIPE')} />
+                      <span>
+                        بطاقة بنمط الاختبار عبر Stripe
+                        {stripePricesAvailable
+                          ? <span className="block text-xs text-ak-honey">{(stripeTotalCents / 100).toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</span>
+                          : <span className="block text-xs text-amber-300">أضف سعرًا بالدولار لكل منتج أولًا.</span>}
+                      </span>
+                    </label>
+                  )}
+                  {!paymentMethods.cashOnDeliveryEnabled && !paymentMethods.stripeSandboxCheckoutEnabled && (
+                    <p className="text-xs text-amber-200">لا توجد وسائل دفع متاحة حاليًا.</p>
+                  )}
+                </fieldset>
                 <div className="space-y-1.5">
                   <label className="block text-sm font-bold text-neutral-300">الاسم الكامل</label>
                   <input
@@ -287,16 +345,18 @@ export default function CartPage() {
 
                 <button
                   type="submit"
-                  disabled={submitting}
+                  disabled={submitting || (paymentMethod === 'STRIPE' && !stripePricesAvailable) || (paymentMethod === 'CASH_ON_DELIVERY' && !paymentMethods.cashOnDeliveryEnabled)}
                   className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 px-6 py-4 font-black text-white transition-all hover:from-orange-700 hover:to-amber-700 disabled:cursor-wait disabled:opacity-60"
                 >
                   <FaCheckCircle />
-                  {submitting ? 'جارٍ تسجيل الطلب...' : 'تأكيد الطلب والدفع عند الاستلام'}
+                  {submitting ? 'جارٍ تجهيز الطلب...' : paymentMethod === 'STRIPE' ? 'المتابعة إلى دفع الاختبار الآمن' : 'تأكيد الطلب والدفع عند الاستلام'}
                 </button>
               </form>
               
               <p className="mt-4 text-xs leading-5 text-neutral-500 text-center bg-neutral-800/30 p-3 rounded-xl border border-neutral-800">
-                لا يتم تحصيل الدفع إلكترونيًا؛ سيبقى المبلغ غير مدفوع حتى اكتمال التسليم.
+                {paymentMethod === 'STRIPE'
+                  ? 'سيظهر مبلغ الدولار المحدد من الإدارة. لا يُعد الطلب مدفوعًا حتى يؤكد Stripe الدفع عبر webhook موثّق.'
+                  : 'لا يتم تحصيل الدفع إلكترونيًا؛ سيبقى المبلغ غير مدفوع حتى اكتمال التسليم.'}
               </p>
             </motion.aside>
           </div>

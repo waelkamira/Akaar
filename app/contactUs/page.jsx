@@ -255,6 +255,7 @@ import { GiCarKey } from 'react-icons/gi';
 import Card from '../../components/ReusableComponents/Card';
 import { motion } from 'framer-motion';
 import WebsiteLogo from '@/components/Brand/WebsiteLogo';
+import ManagedSiteBanner from '@/components/site/ManagedSiteBanner';
 
 export default function ContactUs() {
 
@@ -380,6 +381,7 @@ export default function ContactUs() {
             وجهتك المثالية لكل من يبحث عن خدمات البيع والتأجير للعقارات والسيارات والمنتجات بمختلف أنواعها.
           </p>
         </motion.div>
+        <ManagedSiteBanner slug="contact" className="mb-10" />
 
         {/* Services Cards Grid */}
         <motion.div 

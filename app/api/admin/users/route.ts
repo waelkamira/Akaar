@@ -55,12 +55,20 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'صيغة الطلب غير صالحة.' }, { status: 400 });
   }
 
-  const email = payload && typeof payload === 'object' && !Array.isArray(payload)
-    && typeof (payload as Record<string, unknown>).email === 'string'
-    ? (payload as { email: string }).email.trim().toLowerCase()
-    : '';
+  const body = payload && typeof payload === 'object' && !Array.isArray(payload)
+    ? payload as Record<string, unknown>
+    : {};
+  const email = typeof body.email === 'string' ? body.email.trim().toLowerCase() : '';
+  const userName = typeof body.userName === 'string' ? body.userName.trim() : '';
+  const role = body.role ?? 'ADMIN';
   if (!email || email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return NextResponse.json({ error: 'عنوان البريد الإلكتروني غير صالح.' }, { status: 400 });
+  }
+  if (userName.length > 100) {
+    return NextResponse.json({ error: 'الاسم أطول من الحد المسموح.' }, { status: 400 });
+  }
+  if (role !== 'GUEST' && role !== 'CUSTOMER' && role !== 'SELLER' && role !== 'ADMIN') {
+    return NextResponse.json({ error: 'دور المستخدم غير صالح.' }, { status: 400 });
   }
 
   try {
@@ -72,11 +80,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'يوجد حساب بهذا البريد بالفعل. غيّر دوره من قائمة المستخدمين.' }, { status: 409 });
     }
 
-    await prisma.user.create({
-      data: { email, role: 'ADMIN', status: 'ACTIVE' },
-      select: { id: true },
+    const user = await prisma.user.create({
+      data: { email, userName: userName || null, role, status: 'ACTIVE' },
+      select: { id: true, email: true, userName: true, role: true, status: true },
     });
-    return NextResponse.json({ created: true }, { status: 201 });
+    return NextResponse.json({ created: true, user }, { status: 201 });
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
       return NextResponse.json({ error: 'يوجد حساب بهذا البريد بالفعل.' }, { status: 409 });

@@ -8,6 +8,8 @@ type Settings = {
   marketplaceEnabled: boolean;
   sellerApplicationsEnabled: boolean;
   productApprovalEnabled: boolean;
+  cashOnDeliveryEnabled: boolean;
+  stripeSandboxCheckoutEnabled: boolean;
 };
 
 type ProductQueueItem = {
@@ -70,13 +72,23 @@ type AdminProperty = {
 type DashboardData = {
   metrics: {
     users: number;
+    activeUsers: number;
     activeVendors: number;
+    totalVendors: number;
     pendingVendors: number;
     productQueue: number;
     products: number;
     orders: number;
+    completedSales: number;
+    returns: number;
+    pageViews: number;
+    pageViewsLast30Days: number;
+    pageViewsByDay: Array<{ day: string; views: number }>;
+    analyticsEnabled: boolean;
+    subscribers: number;
+    pendingItems: number;
   };
-  monthly: Array<{ month: string; revenue: number; newUsers: number; newVendors: number }>;
+  monthly: Array<{ month: string; revenue: number; sales: number; newUsers: number; newVendors: number }>;
   settings: Settings;
 };
 
@@ -99,7 +111,7 @@ function Metric({ label, value, detail }: { label: string; value: number; detail
 function TrendChart({ title, data, field, color }: {
   title: string;
   data: DashboardData['monthly'];
-  field: 'revenue' | 'newUsers' | 'newVendors';
+  field: 'revenue' | 'sales' | 'newUsers' | 'newVendors';
   color: string;
 }) {
   const values = data.map((item) => item[field]);
@@ -126,6 +138,29 @@ function TrendChart({ title, data, field, color }: {
         {data.filter((_, index) => index % 3 === 0 || index === data.length - 1).map((item) => (
           <span key={item.month}>{item.month}</span>
         ))}
+      </div>
+    </section>
+  );
+}
+
+function VisitsChart({ data }: { data: Array<{ day: string; views: number }> }) {
+  const values = data.map((item) => item.views);
+  const maximum = Math.max(...values, 1);
+  const points = values.map((value, index) => {
+    const x = values.length < 2 ? 150 : 8 + (index * 284) / (values.length - 1);
+    const y = 104 - (value / maximum) * 92;
+    return `${x},${y}`;
+  }).join(' ');
+
+  return (
+    <section className="ak-panel p-5">
+      <h2 className="font-bold">مشاهدات الصفحات يوميًا (آخر 30 يومًا)</h2>
+      <svg viewBox="0 0 300 120" role="img" aria-label="مشاهدات الصفحات اليومية" className="mt-4 h-36 w-full overflow-visible">
+        {[12, 58, 104].map((y) => <line key={y} x1="0" x2="300" y1={y} y2={y} stroke="rgba(255,255,255,.08)" />)}
+        {points && <polyline fill="none" stroke="#C084FC" strokeWidth="3" strokeLinejoin="round" strokeLinecap="round" points={points} />}
+      </svg>
+      <div className="flex justify-between gap-1 text-[10px] text-stone-500">
+        <span>{data[0]?.day || '—'}</span><span>{data[data.length - 1]?.day || '—'}</span>
       </div>
     </section>
   );
@@ -177,7 +212,11 @@ export default function AdminDashboard({ canManageUsers = false }: { canManageUs
     }
   }, []);
 
-  useEffect(() => { void load(); }, [load]);
+  useEffect(() => {
+    let active = true;
+    Promise.resolve().then(() => active ? load() : undefined);
+    return () => { active = false; };
+  }, [load]);
 
   async function loadMore(type: 'products' | 'sellers' | 'users' | 'properties') {
     const queue = type === 'products' ? products : type === 'sellers' ? sellers : type === 'users' ? users : properties;
@@ -268,6 +307,8 @@ export default function AdminDashboard({ canManageUsers = false }: { canManageUs
     { key: 'marketplaceEnabled', label: 'الشراء متاح', description: 'السماح بإنشاء طلبات شراء جديدة.' },
     { key: 'sellerApplicationsEnabled', label: 'طلبات البائعين', description: 'السماح للمستخدمين بالتقديم لفتح متجر.' },
     { key: 'productApprovalEnabled', label: 'مراجعة المنتجات', description: 'تعليق المنتجات الجديدة حتى مراجعتها.' },
+    { key: 'cashOnDeliveryEnabled', label: 'الدفع عند الاستلام', description: 'السماح بتسجيل طلبات الدفع عند الاستلام.' },
+    { key: 'stripeSandboxCheckoutEnabled', label: 'بطاقات Stripe sandbox', description: 'السماح ببطاقات الاختبار فقط عند تهيئة Stripe test keys وwebhook.' },
   ];
 
   return (
@@ -284,14 +325,20 @@ export default function AdminDashboard({ canManageUsers = false }: { canManageUs
       {error && <p role="alert" className="rounded-xl border border-rose-400/20 bg-rose-400/10 p-4 text-sm text-rose-200">{error}</p>}
 
       <section id="overview" className="grid scroll-mt-24 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <Metric label="المستخدمون النشطون" value={data.metrics.users} detail="حسابات نشطة" />
-        <Metric label="البائعون المعتمدون" value={data.metrics.activeVendors} detail={`${number(data.metrics.pendingVendors)} طلب بائع قيد المراجعة`} />
-        <Metric label="المنتجات" value={data.metrics.products} detail={`${number(data.metrics.productQueue)} منتج بانتظار الموافقة`} />
-        <Metric label="الطلبات" value={data.metrics.orders} detail="طلبات محفوظة في قاعدة البيانات" />
+        <Metric label="إجمالي المستخدمين" value={data.metrics.users} detail={`${number(data.metrics.activeUsers)} حساب نشط`} />
+        <Metric label="البائعون" value={data.metrics.totalVendors} detail={`${number(data.metrics.activeVendors)} معتمد · ${number(data.metrics.pendingVendors)} بانتظار المراجعة`} />
+        <Metric label="المنتجات" value={data.metrics.products} detail={`${number(data.metrics.productQueue)} بانتظار الموافقة`} />
+        <Metric label="الطلبات" value={data.metrics.orders} detail={`${number(data.metrics.completedSales)} معاملة مكتملة`} />
+        <Metric label="مشاهدات الصفحات" value={data.metrics.pageViews} detail={data.metrics.analyticsEnabled ? `${number(data.metrics.pageViewsLast30Days)} خلال 30 يومًا` : 'القياس متوقف حتى إعداد قاعدة البيانات'} />
+        <Metric label="مشتركو النشرة" value={data.metrics.subscribers} detail="اشتراكات مؤكدة ونشطة" />
+        <Metric label="المرتجعات" value={data.metrics.returns} detail="طلبات إرجاع مسجلة" />
+        <Metric label="عناصر معلقة" value={data.metrics.pendingItems} detail={`${number(data.metrics.productQueue)} منتجات · ${number(data.metrics.pendingVendors)} متاجر`} />
       </section>
 
-      <section className="grid gap-4 lg:grid-cols-3">
+      <section className="grid gap-4 lg:grid-cols-2">
         <TrendChart title="إجمالي المبيعات الشهرية (ل.س)" data={data.monthly} field="revenue" color="#E79A4B" />
+        <TrendChart title="معاملات البيع المكتملة شهريًا" data={data.monthly} field="sales" color="#F472B6" />
+        <VisitsChart data={data.metrics.pageViewsByDay} />
         <TrendChart title="المستخدمون الجدد شهريًا" data={data.monthly} field="newUsers" color="#60A5FA" />
         <TrendChart title="البائعون الجدد شهريًا" data={data.monthly} field="newVendors" color="#34D399" />
       </section>

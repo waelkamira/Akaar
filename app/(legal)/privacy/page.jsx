@@ -1,13 +1,16 @@
-import InfoPage from '@/components/ReusableComponents/InfoPage';
+import ManagedInfoPage from '@/lib/site/ManagedInfoPage';
+
+export const dynamic = 'force-dynamic';
 
 export const metadata = {
   title: 'سياسة الخصوصية | عقار',
   description: 'معلومات حول البيانات التي تستخدمها منصة عقار.',
 };
 
-export default function PrivacyPage() {
+export default async function PrivacyPage() {
   return (
-    <InfoPage
+    <ManagedInfoPage
+      slug="privacy"
       title="سياسة الخصوصية"
       intro="توضح هذه الصفحة بإيجاز أنواع المعلومات التي قد تعالجها منصة عقار عند استخدامك للخدمة."
       sections={[

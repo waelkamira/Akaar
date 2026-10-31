@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
-import { getAdminUser } from '@/lib/auth/require-auth';
+import { getAdminUser, getControlPanelAdmin } from '@/lib/auth/require-auth';
 import { prisma } from '@/lib/db/prisma';
 import { DEFAULT_MARKETPLACE_SETTINGS } from '@/lib/marketplace/settings';
 import type { MarketplaceSettingKey } from '@/lib/marketplace/settings';
+import { isStripeSandboxConfigured } from '@/lib/payments/stripe.mjs';
 
 export async function GET() {
   const admin = await getAdminUser();
@@ -10,7 +11,7 @@ export async function GET() {
 
   try {
     const records = await prisma.marketplaceSetting.findMany();
-    const settings = { ...DEFAULT_MARKETPLACE_SETTINGS };
+    const settings: Record<MarketplaceSettingKey, boolean> = { ...DEFAULT_MARKETPLACE_SETTINGS };
     for (const record of records) {
       if (record.key in settings) settings[record.key as MarketplaceSettingKey] = record.enabled;
     }
@@ -43,6 +44,12 @@ export async function PUT(request: Request) {
     entries.some(([key, value]) => !allowedKeys.includes(key) || typeof value !== 'boolean')
   ) {
     return NextResponse.json({ error: 'إعدادات المنصة غير صالحة.' }, { status: 400 });
+  }
+  if (entries.some(([key]) => key === 'stripeSandboxCheckoutEnabled')) {
+    if (!(await getControlPanelAdmin())) return NextResponse.json({ error: 'صلاحيات مدير لوحة التحكم مطلوبة لتغيير وسائل الدفع.' }, { status: 403 });
+    if (body.stripeSandboxCheckoutEnabled === true && !isStripeSandboxConfigured()) {
+      return NextResponse.json({ error: 'إعداد Stripe sandbox غير مكتمل.' }, { status: 503 });
+    }
   }
 
   try {

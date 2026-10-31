@@ -4,13 +4,15 @@ export const DEFAULT_MARKETPLACE_SETTINGS = {
   marketplaceEnabled: true,
   sellerApplicationsEnabled: true,
   productApprovalEnabled: true,
+  cashOnDeliveryEnabled: true,
+  stripeSandboxCheckoutEnabled: false,
 } as const;
 
 export type MarketplaceSettingKey = keyof typeof DEFAULT_MARKETPLACE_SETTINGS;
 
 export async function readMarketplaceSettings() {
   const records = await prisma.marketplaceSetting.findMany();
-  const settings = { ...DEFAULT_MARKETPLACE_SETTINGS };
+  const settings: Record<MarketplaceSettingKey, boolean> = { ...DEFAULT_MARKETPLACE_SETTINGS };
 
   for (const record of records) {
     if (record.key in settings) {

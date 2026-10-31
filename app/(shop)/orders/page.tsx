@@ -25,7 +25,7 @@ function formatPrice(value: number) {
 }
 
 export default async function OrdersPage({ searchParams }: {
-  searchParams: Promise<{ page?: string }>;
+  searchParams: Promise<{ page?: string; checkout?: string }>;
 }) {
   const user = await getAuthenticatedUser();
   if (!user) redirect('/login?callbackUrl=%2Forders');
@@ -62,6 +62,10 @@ export default async function OrdersPage({ searchParams }: {
             },
           },
         },
+        payments: {
+          select: { amount: true, currency: true, method: true, status: true, createdAt: true },
+          orderBy: { createdAt: 'desc' },
+        },
       },
     }),
   ]);
@@ -74,6 +78,11 @@ export default async function OrdersPage({ searchParams }: {
           <div><p className="ak-eyebrow mb-2">حسابك</p><h1 className="text-3xl font-black sm:text-4xl">طلباتي</h1><p className="mt-3 text-sm text-stone-400">تابع حالة الطلبات والشحنات والإيصالات.</p></div>
           <Link href="/search" className="ak-button-secondary">متابعة التسوق</Link>
         </div>
+        {params.checkout === 'success' && (
+          <p role="status" className="mb-5 rounded-xl border border-emerald-400/20 bg-emerald-400/10 p-4 text-sm text-emerald-200">
+            عادت صفحة الدفع بنجاح. يظهر الطلب أدناه؛ لا يُعد مدفوعًا حتى يؤكد الخادم إشعار Stripe الموثّق.
+          </p>
+        )}
 
         {orders.length === 0 ? (
           <section className="ak-panel px-6 py-14 text-center">
@@ -104,7 +113,15 @@ export default async function OrdersPage({ searchParams }: {
                     );
                   })}
                 </div>
-                <footer className="flex items-center justify-between border-t border-ak-line-strong/[.07] pt-4 text-sm font-bold"><span>الإجمالي</span><span className="text-ak-honey">{formatPrice(order.totalPrice)}</span></footer>
+                <footer className="space-y-2 border-t border-ak-line-strong/[.07] pt-4 text-sm font-bold">
+                  <div className="flex items-center justify-between"><span>إجمالي السعر الأساسي</span><span className="text-ak-honey">{formatPrice(order.totalPrice)}</span></div>
+                  {order.payments.map((payment, index) => (
+                    <div key={`${payment.method}-${index}`} className="flex items-center justify-between text-xs font-medium text-stone-400">
+                      <span>{payment.method === 'STRIPE' ? 'Stripe card' : 'الدفع عند الاستلام'} · {payment.status === 'COMPLETED' ? 'مدفوع' : payment.status === 'FAILED' ? 'فشل الدفع' : 'بانتظار الدفع'}</span>
+                      <span>{payment.currency === 'USD' ? (payment.amount / 100).toLocaleString('en-US', { style: 'currency', currency: 'USD' }) : formatPrice(payment.amount)}</span>
+                    </div>
+                  ))}
+                </footer>
               </article>
             ))}
           </div>

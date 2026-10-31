@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { FaArrowUp, FaEnvelope, FaHeart, FaSearch, FaShoppingBag, FaStore } from 'react-icons/fa';
 import WebsiteLogo from '@/components/Brand/WebsiteLogo';
+import NewsletterSignup from '@/components/newsletter/NewsletterSignup';
 
 const FOOTER_LINKS = [
   { href: '/search', label: 'تصفح المنتجات', icon: FaSearch },
@@ -42,6 +43,7 @@ export default function Footer() {
             <Link href="/contactUs" className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-ak-honey transition hover:text-white">
               <FaEnvelope aria-hidden="true" /> تواصل مع فريق الدعم
             </Link>
+            <NewsletterSignup />
           </div>
 
           <div>
@@ -65,6 +67,7 @@ export default function Footer() {
               <li><Link href="/terms" className="text-ak-muted transition hover:text-ak-honey">الشروط والأحكام</Link></li>
               <li><Link href="/privacy" className="text-ak-muted transition hover:text-ak-honey">سياسة الخصوصية</Link></li>
               <li><Link href="/contactUs" className="text-ak-muted transition hover:text-ak-honey">الدعم والتواصل</Link></li>
+              <li><Link href="/pages/help" className="text-ak-muted transition hover:text-ak-honey">مركز المساعدة</Link></li>
             </ul>
           </div>
         </div>

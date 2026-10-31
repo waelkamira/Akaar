@@ -1,13 +1,16 @@
-import InfoPage from '@/components/ReusableComponents/InfoPage';
+import ManagedInfoPage from '@/lib/site/ManagedInfoPage';
+
+export const dynamic = 'force-dynamic';
 
 export const metadata = {
   title: 'من نحن | عقار',
   description: 'تعرف على منصة عقار وطريقة استخدامها.',
 };
 
-export default function AboutPage() {
+export default async function AboutPage() {
   return (
-    <InfoPage
+    <ManagedInfoPage
+      slug="about"
       title="من نحن"
       intro="عقار منصة للإعلانات المبوبة تساعد المستخدمين على استكشاف العروض والتواصل مع أصحابها."
       sections={[

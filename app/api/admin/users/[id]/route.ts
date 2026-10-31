@@ -71,13 +71,23 @@ export async function PATCH(request: Request, { params }: RouteContext) {
   } catch {
     return NextResponse.json({ error: 'صيغة الطلب غير صالحة.' }, { status: 400 });
   }
-  const role = payload && typeof payload === 'object' && !Array.isArray(payload)
-    ? (payload as Record<string, unknown>).role
-    : undefined;
-  if (role !== 'GUEST' && role !== 'CUSTOMER' && role !== 'SELLER' && role !== 'ADMIN') {
+  const body = payload && typeof payload === 'object' && !Array.isArray(payload)
+    ? payload as Record<string, unknown>
+    : {};
+  const hasRole = Object.hasOwn(body, 'role');
+  const hasStatus = Object.hasOwn(body, 'status');
+  if (hasRole === hasStatus) {
+    return NextResponse.json({ error: 'يرجى تحديد الدور أو الحالة المطلوب تحديثها.' }, { status: 400 });
+  }
+  const role = body.role;
+  const status = body.status;
+  if (hasRole && role !== 'GUEST' && role !== 'CUSTOMER' && role !== 'SELLER' && role !== 'ADMIN') {
     return NextResponse.json({ error: 'دور المستخدم غير صالح.' }, { status: 400 });
   }
-  if (id === admin.id) return NextResponse.json({ error: 'لا يمكنك تغيير دور حسابك الحالي.' }, { status: 409 });
+  if (hasStatus && status !== 'ACTIVE' && status !== 'SUSPENDED') {
+    return NextResponse.json({ error: 'حالة المستخدم غير صالحة.' }, { status: 400 });
+  }
+  if (id === admin.id) return NextResponse.json({ error: 'لا يمكنك تغيير دور أو حالة حسابك الحالي.' }, { status: 409 });
 
   try {
     const updatedUser = await prisma.$transaction(async (transaction) => {
@@ -86,11 +96,15 @@ export async function PATCH(request: Request, { params }: RouteContext) {
         select: { id: true, email: true, role: true, status: true },
       });
       if (!user) throw new Error('ADMIN_USER_NOT_FOUND');
-      if (isControlPanelAdminEmail(user.email) && role !== 'ADMIN') {
+      if (isControlPanelAdminEmail(user.email)
+        && ((hasRole && role !== 'ADMIN') || (hasStatus && status !== 'ACTIVE'))) {
         throw new Error('PROTECTED_CONTROL_PANEL_ADMIN');
       }
 
-      if (user.role === 'ADMIN' && role !== 'ADMIN' && user.status === 'ACTIVE') {
+      const removingActiveAdmin = user.role === 'ADMIN'
+        && user.status === 'ACTIVE'
+        && ((hasRole && role !== 'ADMIN') || (hasStatus && status === 'SUSPENDED'));
+      if (removingActiveAdmin) {
         const remainingAdmins = await transaction.user.count({
           where: { role: 'ADMIN', status: 'ACTIVE', id: { not: id } },
         });
@@ -99,8 +113,8 @@ export async function PATCH(request: Request, { params }: RouteContext) {
 
       return transaction.user.update({
         where: { id },
-        data: { role },
-        select: { id: true, role: true },
+        data: hasRole ? { role: role as 'GUEST' | 'CUSTOMER' | 'SELLER' | 'ADMIN' } : { status: status as 'ACTIVE' | 'SUSPENDED' },
+        select: { id: true, role: true, status: true },
       });
     }, { isolationLevel: Prisma.TransactionIsolationLevel.Serializable });
 
@@ -113,7 +127,7 @@ export async function PATCH(request: Request, { params }: RouteContext) {
       return NextResponse.json({ error: 'لا يمكن تغيير دور مدير لوحة التحكم.' }, { status: 409 });
     }
     if (error instanceof Error && error.message === 'LAST_ACTIVE_ADMIN') {
-      return NextResponse.json({ error: 'لا يمكن إزالة دور آخر مدير نشط.' }, { status: 409 });
+      return NextResponse.json({ error: 'لا يمكن تغيير دور أو إيقاف آخر مدير نشط.' }, { status: 409 });
     }
     if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2034') {
       return NextResponse.json({ error: 'تغيرت بيانات المستخدم أثناء التحديث. أعد المحاولة.' }, { status: 409 });

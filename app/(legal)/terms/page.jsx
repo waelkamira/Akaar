@@ -1,13 +1,16 @@
-import InfoPage from '@/components/ReusableComponents/InfoPage';
+import ManagedInfoPage from '@/lib/site/ManagedInfoPage';
+
+export const dynamic = 'force-dynamic';
 
 export const metadata = {
   title: 'الشروط والأحكام | عقار',
   description: 'الشروط الأساسية لاستخدام منصة عقار.',
 };
 
-export default function TermsPage() {
+export default async function TermsPage() {
   return (
-    <InfoPage
+    <ManagedInfoPage
+      slug="terms"
       title="الشروط والأحكام"
       intro="باستخدام منصة عقار، فإنك توافق على الالتزام بهذه الشروط عند تصفح الإعلانات أو نشرها."
       sections={[
