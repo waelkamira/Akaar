@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import type { ReactNode } from 'react';
 import { getAuthenticatedUser } from '@/lib/auth/require-auth';
+import { isControlPanelAdmin } from '@/lib/auth/control-panel-access.mjs';
 
 export default async function AdminLayout({ children }: Readonly<{ children: ReactNode }>) {
   const user = await getAuthenticatedUser();
@@ -19,6 +20,7 @@ export default async function AdminLayout({ children }: Readonly<{ children: Rea
           <nav aria-label="تنقل الإدارة" className="flex flex-wrap gap-2 text-sm">
             <Link href="/admin/dashboard" className="rounded-lg px-3 py-2 hover:bg-ak-brand-soft">لوحة المؤشرات</Link>
             <Link href="/users" className="rounded-lg px-3 py-2 hover:bg-ak-brand-soft">إدارة المستخدمين</Link>
+            {isControlPanelAdmin(user) && <Link href="/admin/control-panel" className="rounded-lg px-3 py-2 hover:bg-ak-brand-soft">Control Panel</Link>}
             <Link href="/" className="rounded-lg px-3 py-2 hover:bg-ak-brand-soft">العودة للمتجر</Link>
           </nav>
         </div>

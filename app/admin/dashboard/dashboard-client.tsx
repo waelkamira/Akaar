@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import Image from 'next/image';
+import { isControlPanelAdminEmail } from '@/lib/auth/control-panel-access.mjs';
 
 type Settings = {
   marketplaceEnabled: boolean;
@@ -52,7 +53,6 @@ type AdminUser = {
   seller: { storeName: string } | null;
   _count: { properties: number };
 };
-
 type AdminProperty = {
   id: string;
   title: string;
@@ -137,7 +137,7 @@ async function readJson<T>(response: Response): Promise<T & { error?: string }> 
   return payload;
 }
 
-export default function AdminDashboard() {
+export default function AdminDashboard({ canManageUsers = false }: { canManageUsers?: boolean }) {
   const [data, setData] = useState<DashboardData | null>(null);
   const [products, setProducts] = useState<QueueState<ProductQueueItem>>({ items: [], page: 1, hasMore: false });
   const [sellers, setSellers] = useState<QueueState<SellerQueueItem>>({ items: [], page: 1, hasMore: false });
@@ -283,7 +283,7 @@ export default function AdminDashboard() {
 
       {error && <p role="alert" className="rounded-xl border border-rose-400/20 bg-rose-400/10 p-4 text-sm text-rose-200">{error}</p>}
 
-      <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <section id="overview" className="grid scroll-mt-24 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <Metric label="المستخدمون النشطون" value={data.metrics.users} detail="حسابات نشطة" />
         <Metric label="البائعون المعتمدون" value={data.metrics.activeVendors} detail={`${number(data.metrics.pendingVendors)} طلب بائع قيد المراجعة`} />
         <Metric label="المنتجات" value={data.metrics.products} detail={`${number(data.metrics.productQueue)} منتج بانتظار الموافقة`} />
@@ -296,7 +296,7 @@ export default function AdminDashboard() {
         <TrendChart title="البائعون الجدد شهريًا" data={data.monthly} field="newVendors" color="#34D399" />
       </section>
 
-      <section className="grid gap-6 xl:grid-cols-2">
+      <section id="review-queue" className="grid scroll-mt-24 gap-6 xl:grid-cols-2">
         <div className="ak-panel p-5">
           <div className="mb-4 flex items-center justify-between gap-3">
             <div><h2 className="font-bold">مراجعة المنتجات</h2><p className="mt-1 text-xs text-stone-500">المنتجات الجديدة لا تظهر قبل الموافقة.</p></div>
@@ -374,7 +374,7 @@ export default function AdminDashboard() {
       </section>
 
       <section className="space-y-6">
-        <div className="ak-panel p-5">
+        <div id="users" className="ak-panel scroll-mt-24 p-5">
           <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
             <div><h2 className="text-lg font-bold">إدارة المستخدمين</h2><p className="mt-1 text-xs text-stone-500">حذف الحساب يزيل المتجر والإعلانات والمفضلة. السجلات المالية محفوظة ولا تسمح بالحذف.</p></div>
             <span className="text-xs text-stone-400">{number(users.items.length)} مستخدم في الصفحة الحالية</span>
@@ -390,7 +390,11 @@ export default function AdminDashboard() {
                     <td className="py-3">{user.seller?.storeName || '—'}</td>
                     <td className="py-3">{number(user._count.properties)}</td>
                     <td className="py-3">{user.status}</td>
-                    <td className="py-3"><button type="button" disabled={pendingAction === `user:${user.id}`} onClick={() => void deleteUser(user)} className="rounded-lg border border-rose-400/30 px-3 py-2 text-xs text-rose-200 hover:bg-rose-500/10 disabled:opacity-50">{pendingAction === `user:${user.id}` ? 'جارٍ الحذف...' : 'حذف المستخدم'}</button></td>
+                    <td className="py-3">
+                      {canManageUsers && !isControlPanelAdminEmail(user.email) && (
+                        <button type="button" disabled={pendingAction === `user:${user.id}`} onClick={() => void deleteUser(user)} className="rounded-lg border border-rose-400/30 px-3 py-2 text-xs text-rose-200 hover:bg-rose-500/10 disabled:opacity-50">{pendingAction === `user:${user.id}` ? 'جارٍ الحذف...' : 'حذف المستخدم'}</button>
+                      )}
+                    </td>
                   </tr>
                 ))}
                 {!users.items.length && <tr><td colSpan={6} className="py-5 text-center text-stone-500">لا يوجد مستخدمون لعرضهم.</td></tr>}
@@ -400,7 +404,7 @@ export default function AdminDashboard() {
           {users.hasMore && <button type="button" disabled={Boolean(pendingAction)} onClick={() => void loadMore('users')} className="mt-4 text-sm text-ak-honey underline disabled:opacity-50">تحميل مستخدمين إضافيين</button>}
         </div>
 
-        <div className="ak-panel p-5">
+        <div id="properties" className="ak-panel scroll-mt-24 p-5">
           <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
             <div><h2 className="text-lg font-bold">إعلانات العقارات</h2><p className="mt-1 text-xs text-stone-500">الحذف النهائي يزيل الإعلان وجميع سجلات المفضلة التابعة له.</p></div>
             <span className="text-xs text-stone-400">{number(properties.items.length)} إعلان محمّل</span>
@@ -427,7 +431,7 @@ export default function AdminDashboard() {
         </div>
       </section>
 
-      <section className="ak-panel p-5">
+      <section id="platform-settings" className="ak-panel scroll-mt-24 p-5">
         <h2 className="font-bold">إعدادات المنصة</h2>
         <div className="mt-4 grid gap-3 md:grid-cols-3">
           {toggles.map((toggle) => (

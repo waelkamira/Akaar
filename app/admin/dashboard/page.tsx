@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { getControlPanelAdmin } from '@/lib/auth/require-auth';
 import AdminDashboard from './dashboard-client';
 
 export const metadata: Metadata = {
@@ -6,6 +7,7 @@ export const metadata: Metadata = {
   description: 'مؤشرات المبيعات والمستخدمين والبائعين ومراجعة المنتجات.',
 };
 
-export default function AdminDashboardPage() {
-  return <AdminDashboard />;
+export default async function AdminDashboardPage() {
+  const controlPanelAdmin = await getControlPanelAdmin();
+  return <AdminDashboard canManageUsers={Boolean(controlPanelAdmin)} />;
 }

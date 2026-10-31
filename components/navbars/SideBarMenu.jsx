@@ -18,6 +18,7 @@ import Image from 'next/image';
 import LoadingPhoto from '../photos/LoadingPhoto';
 import { useCommerce } from '@/features/cart/commerce-context';
 import CategoryThumbnail from '@/components/Categories/CategoryThumbnail';
+import { isControlPanelAdmin } from '@/lib/auth/control-panel-access.mjs';
 
 export default function SideBarMenu() {
   const [isOpen, setIsOpen] = useState(false);
@@ -107,6 +108,9 @@ export default function SideBarMenu() {
                   </div>
                 )}
 
+                {session?.status === 'authenticated' && isControlPanelAdmin(session.data?.user) && (
+                  <Button path={'/admin/control-panel'} title={'Control Panel'} />
+                )}
                 {session?.status === 'authenticated' && session?.data?.user?.role === 'ADMIN' && (
                   <>
                     <Button path={'/admin/dashboard'} title={'لوحة الإدارة'} />

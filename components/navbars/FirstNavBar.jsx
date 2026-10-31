@@ -10,6 +10,7 @@ import mainButtons from '../lists/mainButtons';
 import { useCommerce } from '@/features/cart/commerce-context';
 import Search from '@/components/Search/Search';
 import WebsiteLogo from '@/components/Brand/WebsiteLogo';
+import { isControlPanelAdmin } from '@/lib/auth/control-panel-access.mjs';
 
 export default function FirstNavBar() {
   const pathname = usePathname();
@@ -193,6 +194,17 @@ export default function FirstNavBar() {
                 </li>
               );
             })}
+            {isControlPanelAdmin(user) && (
+              <li className="shrink-0">
+                <Link
+                  href="/admin/control-panel"
+                  aria-current={pathname === '/admin/control-panel' ? 'page' : undefined}
+                  className="inline-flex h-11 items-center justify-center rounded-xl border border-ak-amber/30 bg-ak-brand-soft px-3.5 text-xs font-bold text-ak-honey transition hover:bg-ak-amber/20"
+                >
+                  Control Panel
+                </Link>
+              </li>
+            )}
           </ul>
         </nav>
 
