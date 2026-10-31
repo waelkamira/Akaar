@@ -160,7 +160,7 @@ const PostsContent = () => {
           </div>
           
           <Link
-            href="/new-post"
+            href="/newPost"
             className="flex items-center gap-2 bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white font-bold py-3 px-6 rounded-xl transition-all shadow-lg shadow-orange-600/20 hover:shadow-orange-600/40 hover:scale-[1.02] active:scale-[0.98]"
           >
             <FaPlus className="text-sm" />
@@ -191,7 +191,7 @@ const PostsContent = () => {
               ابدأ بإضافة إعلانك الأول ليظهر هنا ويتمكن الآخرون من رؤيته.
             </p>
             <Link
-              href="/new-post"
+              href="/newPost"
               className="flex items-center gap-2 bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white font-bold py-3 px-8 rounded-xl transition-all shadow-lg shadow-orange-600/20"
             >
               <FaPlus className="text-sm" />

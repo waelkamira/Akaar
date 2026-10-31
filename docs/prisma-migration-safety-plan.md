@@ -1,6 +1,6 @@
 # Prisma schema and migration policy
 
-Status: **greenfield setup — no production database exists**.
+Status: **canonical schema for clean deployment; a configured legacy database also exists and has not been migrated**.
 
 The project owner confirmed that Akaar has no production database and that the schema can be corrected before launch. This repository should therefore maintain one canonical Prisma schema and a migration history that builds the intended schema from an empty PostgreSQL database.
 
@@ -29,6 +29,7 @@ Before accepting schema changes:
 - Do not use `prisma db push --accept-data-loss` as the deployment migration strategy.
 - Keep schema changes and their migrations in the same pull request and require passing CI before deployment.
 - Do not claim that CI against a disposable database proves a real deployed runtime is configured; verify deployment environment variables and perform smoke tests separately.
+- For a development sample catalog, run `npm run seed` after creating an active admin account. The seed is idempotent and skips product creation when no active admin exists.
 
 ## Narrow auth repair for the inspected legacy user table
 
@@ -85,8 +86,29 @@ The committed migration `prisma/migrations/20261031120000_usd_product_prices_str
 - Do not apply the standalone USD/Stripe repair to the current legacy database: the canonical Payment table does not exist. Reconcile the legacy order/payment schema in a separate reviewed, data-preserving migration before enabling Stripe.
 - PayPal and Sham Cash remain disabled until their official API/webhook requirements are verified and implemented.
 
+## Payment method drafts
+
+The migration `prisma/migrations/20261031150000_payment_method_drafts/migration.sql` stores editable, disableable payment-method drafts for administrator planning. These records are not payment integrations and do not appear in checkout. Only cash on delivery and the explicitly configured Stripe sandbox are accepted by the current checkout flow. Apply the full migration history to a clean database; use the matching guarded legacy repair only after the backup and schema-inspection gates described above.
+
 ## Legacy data warning
 
 The repository began with a legacy root schema and an initial migration that differ from the current canonical schema. The greenfield reconciliation migrations intentionally reshape those artifacts and are designed for a clean first deployment. They are **not a data-preserving upgrade plan** for an already populated database.
 
-If a populated database is later found and its data must be preserved, stop before applying these migrations. First create and verify a backup, inspect its exact schema and migration history, and prepare a separately reviewed mapping/backfill migration. Do not silently cast category identifiers, discard legacy image columns, or rewrite order state values in a database whose data must be retained.
+For the configured populated legacy database—and any other populated database whose data must be preserved—stop before applying these migrations. First create and verify a backup, inspect its exact schema and migration history, and prepare a separately reviewed mapping/backfill migration. Do not silently cast category identifiers, discard legacy image columns, or rewrite order state values in a database whose data must be retained.
+
+## Product and store ratings
+
+The migration `prisma/migrations/20261031200000_product_and_store_ratings/migration.sql` maps product reviews to the existing lowercase `public.reviews` table (renaming `public."Review"` only when the lowercase table is absent), adds the per-customer/product uniqueness constraint, and creates `public.store_reviews` for customer-submitted store ratings linked to `public.sellers`.
+
+- Do not apply this migration to the configured legacy database without an independently reviewed backup, schema inspection, and explicit authorization. It is part of the clean-deployment migration history, not an automatic repair for a legacy database.
+- Product ratings can be read from `public.reviews` when its expected columns are present. Store-rating features fail closed until `public.store_reviews` exists; storefronts and admin panels show no fabricated ratings while that storage is unavailable.
+- A customer may submit or update one 1–5 star review per product and one per store. The API requires authentication, rejects reviews of the customer's own products or store, and normalizes optional comments. The migration supplies the unique constraints relied on by those upserts.
+- Run the complete committed migration history on an empty disposable PostgreSQL database to validate the rating schema. Never run `prisma migrate deploy` against the configured legacy database as part of this feature.
+
+## Store messaging
+
+The migration `prisma/migrations/20261101000000_store_messaging/migration.sql` creates private customer/store-owner conversations and message records, with participant foreign keys, unread indexes, and one conversation per customer/store pair.
+
+- Conversation APIs verify the signed-in user is either the customer or the owner of the linked store. New customer conversations are accepted only for active, verified stores.
+- Messaging endpoints return a service-unavailable response until both messaging tables exist. Apply the full migration history to a clean database; do not apply it to the configured legacy database without a separately reviewed, backup-verified migration plan.
+- Administrator bulk messages continue to use per-owner in-app notifications. Optional email and SMS delivery is attempted after those notifications are saved, so provider failures do not discard the in-app messages.

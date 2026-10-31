@@ -124,6 +124,22 @@ export default function FirstNavBar() {
                           <FaUserCircle aria-hidden="true" /> لوحة الإدارة
                         </Link>
                       )}
+                      <Link
+                        href="/notifications"
+                        role="menuitem"
+                        onClick={() => setProfileOpen(false)}
+                        className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-semibold text-white transition hover:bg-ak-brand-soft hover:text-ak-honey"
+                      >
+                        إشعاراتي
+                      </Link>
+                      <Link
+                        href="/messages"
+                        role="menuitem"
+                        onClick={() => setProfileOpen(false)}
+                        className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-semibold text-white transition hover:bg-ak-brand-soft hover:text-ak-honey"
+                      >
+                        الرسائل
+                      </Link>
                       {(user?.role === 'SELLER' || user?.role === 'ADMIN') && (
                         <Link
                           href="/seller/dashboard"

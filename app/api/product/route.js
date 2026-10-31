@@ -9,6 +9,7 @@ import { isValidProductMutationIdentifier } from '@/lib/api/product-mutation-val
 import { readJsonBody } from '@/lib/api/read-json-body.mjs';
 import { areValidProductImageUrls, isValidProductLink } from '@/lib/api/product-media-validation.mjs';
 import { getCanonicalCategoryFields } from '@/lib/api/product-category.mjs';
+import { getProductRatingSummaries } from '@/lib/reviews/ratings';
 
 const cache = new LRUCache({ max: 100, ttl: 60_000 });
 const MAX_PAGE_SIZE = 50;
@@ -16,6 +17,18 @@ const productOwnerSelect = { id: true, userName: true, userImage: true };
 
 function readPageParams(searchParams) {
   return getPagination(searchParams, { defaultPage: 1, defaultLimit: 5, maxLimit: MAX_PAGE_SIZE });
+}
+
+async function filterProductsForActiveStores(products) {
+  const sellerIds = [...new Set(products.map((product) => product.sellerId).filter(Boolean))];
+  if (!sellerIds.length) return products;
+
+  const activeSellers = await prisma.seller.findMany({
+    where: { id: { in: sellerIds }, status: 'ACTIVE', isVerified: true },
+    select: { id: true },
+  });
+  const activeSellerIds = new Set(activeSellers.map((seller) => seller.id));
+  return products.filter((product) => !product.sellerId || activeSellerIds.has(product.sellerId));
 }
 
 async function readJson(request) {
@@ -37,12 +50,29 @@ export async function GET(request) {
 
   const { searchParams } = new URL(request.url);
   const { page, limit, skip } = readPageParams(searchParams);
-  const cacheKey = `products-page-${page}-limit-${limit}`;
+  const cacheKey = `products-page-v2-${page}-limit-${limit}`;
   const cached = cache.get(cacheKey);
-  if (cached) return NextResponse.json(cached);
-
   try {
-    const where = { isDeleted: false, isActive: true, approvalStatus: 'APPROVED', category: { isActive: true } };
+    if (cached) {
+      const visibleProducts = await filterProductsForActiveStores(cached);
+      const ratings = await getProductRatingSummaries(visibleProducts.map((product) => product.id));
+      return NextResponse.json(visibleProducts.map(({ sellerId, ...product }) => ({
+        ...product,
+        averageRating: ratings.get(product.id)?.average ?? null,
+        reviewCount: ratings.get(product.id)?.count ?? 0,
+      })));
+    }
+
+    const where = {
+      isDeleted: false,
+      isActive: true,
+      approvalStatus: 'APPROVED',
+      category: { isActive: true },
+      OR: [
+        { sellerId: null },
+        { seller: { is: { status: 'ACTIVE', isVerified: true } } },
+      ],
+    };
     // Avoid an extra COUNT query for normal catalog pages; verify unusually deep
     // offsets before asking PostgreSQL to skip through a large result set.
     if (skip > 1000) {
@@ -56,10 +86,26 @@ export async function GET(request) {
       skip,
       take: limit,
       orderBy: { createdAt: 'desc' },
-      include: { user: { select: productOwnerSelect } },
+      select: {
+        id: true,
+        sellerId: true,
+        title: true,
+        categoryName: true,
+        images: true,
+        basePrice: true,
+        stockQuantity: true,
+        salesCount: true,
+        user: { select: productOwnerSelect },
+      },
     });
     cache.set(cacheKey, products);
-    return NextResponse.json(products);
+    const visibleProducts = await filterProductsForActiveStores(products);
+    const ratings = await getProductRatingSummaries(visibleProducts.map((product) => product.id));
+    return NextResponse.json(visibleProducts.map(({ sellerId, ...product }) => ({
+      ...product,
+      averageRating: ratings.get(product.id)?.average ?? null,
+      reviewCount: ratings.get(product.id)?.count ?? 0,
+    })));
   } catch (error) {
     console.error('Unable to load products:', error);
     return NextResponse.json({ error: 'Unable to load products.' }, { status: 500 });

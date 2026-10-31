@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getAdminUser, getControlPanelAdmin } from '@/lib/auth/require-auth';
-import { prisma } from '@/lib/db/prisma';
-import { DEFAULT_MARKETPLACE_SETTINGS } from '@/lib/marketplace/settings';
+import { DEFAULT_MARKETPLACE_SETTINGS, readMarketplaceSettings, writeMarketplaceSettings } from '@/lib/marketplace/settings';
 import type { MarketplaceSettingKey } from '@/lib/marketplace/settings';
 import { isStripeSandboxConfigured } from '@/lib/payments/stripe.mjs';
 
@@ -10,12 +9,7 @@ export async function GET() {
   if (!admin) return NextResponse.json({ error: 'صلاحيات المدير مطلوبة.' }, { status: 403 });
 
   try {
-    const records = await prisma.marketplaceSetting.findMany();
-    const settings: Record<MarketplaceSettingKey, boolean> = { ...DEFAULT_MARKETPLACE_SETTINGS };
-    for (const record of records) {
-      if (record.key in settings) settings[record.key as MarketplaceSettingKey] = record.enabled;
-    }
-    return NextResponse.json(settings);
+    return NextResponse.json(await readMarketplaceSettings());
   } catch (error) {
     console.error('Unable to load marketplace settings:', error);
     return NextResponse.json({ error: 'تعذر تحميل إعدادات المنصة.' }, { status: 500 });
@@ -53,15 +47,7 @@ export async function PUT(request: Request) {
   }
 
   try {
-    await prisma.$transaction(
-      entries.map(([key, enabled]) =>
-        prisma.marketplaceSetting.upsert({
-          where: { key },
-          create: { key, enabled: enabled as boolean },
-          update: { enabled: enabled as boolean },
-        }),
-      ),
-    );
+    await writeMarketplaceSettings(entries.map(([key, enabled]) => [key as MarketplaceSettingKey, enabled as boolean]));
     return NextResponse.json(Object.fromEntries(entries));
   } catch (error) {
     console.error('Unable to update marketplace settings:', error);

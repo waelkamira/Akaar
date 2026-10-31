@@ -4,6 +4,7 @@ import { prisma } from '@/lib/db/prisma';
 import { getPagination, isPaginationOffsetOutOfRange } from '@/lib/api/validation.mjs';
 import { LRUCache } from 'lru-cache';
 import { parseCategoryRouteId } from '@/lib/api/category-route-id.mjs';
+import { publicProductWhere } from '@/lib/api/public-product-where.mjs';
 
 // إنشاء كائن LRU Cache للتخزين المؤقت
 const cache = new LRUCache({
@@ -45,11 +46,9 @@ export async function GET(req, { params }) {
 
   try {
     // جلب العدد الإجمالي للمنتجات
-    const totalCount = await prisma.product.count({
-      where: { categoryId, isDeleted: false, isActive: true, approvalStatus: 'APPROVED', category: { isActive: true } },
-    });
+    const where = publicProductWhere({ categoryId });
+    const totalCount = await prisma.product.count({ where });
 
-    const where = { categoryId, isDeleted: false, isActive: true, approvalStatus: 'APPROVED', category: { isActive: true } };
     if (isPaginationOffsetOutOfRange(skip, totalCount)) {
       const response = { data: [], hasMore: false, totalCount };
       cache.set(cacheKey, response);

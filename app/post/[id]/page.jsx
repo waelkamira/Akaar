@@ -24,6 +24,7 @@ import { useCommerce } from '@/features/cart/commerce-context';
 import { useParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import demoProducts from '../../../lib/demoProducts';
+import ReviewWidget from '@/components/Reviews/ReviewWidget';
 
 const ImageSlider = dynamic(
   () => import('../../../components/photos/imageSlider'),
@@ -531,6 +532,11 @@ export default function Page() {
                     </div>
                   </motion.div>
                 )}
+                {!post.isDemo && activeTab === 'details' && (
+                  <div className="mt-6">
+                    <ReviewWidget targetType="product" targetId={post.id} title={`تقييم ${post.title}`} />
+                  </div>
+                )}
               </div>
             </motion.div>
 
@@ -583,6 +589,8 @@ export default function Page() {
                 <h1 className="text-2xl sm:text-3xl font-black text-white leading-tight mb-6">
                   {post.title}
                 </h1>
+                <p className="mb-4 text-sm text-amber-300">{post.reviewCount ? `★ ${post.averageRating.toFixed(1)} · ${post.reviewCount} تقييم` : 'لا توجد تقييمات بعد'}</p>
+                {post.seller?.slug && <a href={`/shop/${encodeURIComponent(post.seller.slug)}`} className="mb-4 inline-block text-sm text-orange-300 underline">زيارة متجر {post.seller.storeName}</a>}
 
                 <div className="space-y-4">
                   <UserNameAndPhoto post={post} size="size-12" rounded={true} />

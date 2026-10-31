@@ -3,7 +3,11 @@
 import Link from 'next/link';
 import { useCallback, useEffect, useState, type FormEvent } from 'react';
 
-type UserOption = { id: string; email: string; seller: { phoneNumber: string | null } | null };
+type UserOption = {
+  id: string;
+  email: string;
+  seller: { storeName: string; phoneNumber: string | null; status: string; isVerified: boolean } | null;
+};
 type Message = {
   id: string;
   userId: string;
@@ -35,7 +39,7 @@ export default function MessagesClient() {
   const [data, setData] = useState<MessagePage>({
     items: [], users: [], providers: { emailConfigured: false, smsConfigured: false }, page: 1, hasMore: false,
   });
-  const [userId, setUserId] = useState('');
+  const [selectedUserIds, setSelectedUserIds] = useState<string[]>([]);
   const [message, setMessage] = useState('');
   const [type, setType] = useState('ADMIN');
   const [sendEmail, setSendEmail] = useState(false);
@@ -50,7 +54,6 @@ export default function MessagesClient() {
   const load = useCallback(async (page = 1, append = false) => {
     const result = await readJson<MessagePage>(await fetch(`/api/admin/control-panel/messages?page=${page}&limit=20`, { cache: 'no-store' }));
     setData((current) => ({ ...result, items: append ? [...current.items, ...result.items] : result.items }));
-    setUserId((current) => current || result.users[0]?.id || '');
   }, []);
 
   useEffect(() => {
@@ -69,16 +72,17 @@ export default function MessagesClient() {
     setError('');
     setNotice('');
     try {
-      await readJson(await fetch('/api/admin/control-panel/messages', {
+      const result = await readJson<{ recipientCount: number }>(await fetch('/api/admin/control-panel/messages', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId, message, type, sendEmail, sendSms }),
+        body: JSON.stringify({ userIds: selectedUserIds, message, type, sendEmail, sendSms }),
       }));
       setMessage('');
+      setSelectedUserIds([]);
       setSendEmail(false);
       setSendSms(false);
       await load();
-      setNotice('تم حفظ الرسالة وإرسالها عبر القنوات المحددة.');
+      setNotice(`تم إرسال الرسالة إلى ${result.recipientCount} متجرًا عبر القنوات المحددة.`);
     } catch (sendError) {
       if (sendError instanceof Error && 'deliveredInApp' in sendError && sendError.deliveredInApp) {
         await load();
@@ -137,12 +141,35 @@ export default function MessagesClient() {
       {notice && <p role="status" className="rounded-xl border border-emerald-400/20 bg-emerald-400/10 p-4 text-sm text-emerald-200">{notice}</p>}
 
       <form onSubmit={(event) => void send(event)} className="ak-panel space-y-4 p-5">
-        <h2 className="text-xl font-bold">رسالة جديدة</h2>
-        <label className="block text-sm">المستلم
-          <select required value={userId} onChange={(event) => setUserId(event.target.value)} className="admin-input">
-            {data.users.map((user) => <option key={user.id} value={user.id}>{user.email}{user.seller?.phoneNumber ? ` · ${user.seller.phoneNumber}` : ''}</option>)}
-          </select>
-        </label>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div><h2 className="text-xl font-bold">رسالة إلى أصحاب المتاجر</h2><p className="mt-1 text-xs text-stone-400">اختر متجرًا أو عدة متاجر لإرسال نسخة واحدة من الرسالة لكل مالك.</p></div>
+          <button
+            type="button"
+            disabled={pending || !data.users.length}
+            onClick={() => setSelectedUserIds((current) => current.length === data.users.length ? [] : data.users.map((user) => user.id))}
+            className="rounded-lg border border-ak-amber/30 px-3 py-2 text-xs font-semibold text-ak-honey disabled:opacity-50"
+          >
+            {selectedUserIds.length === data.users.length && data.users.length ? 'إلغاء تحديد الكل' : 'تحديد الكل'}
+          </button>
+        </div>
+        <fieldset className="max-h-64 space-y-2 overflow-y-auto rounded-xl border border-ak-line p-3">
+          <legend className="px-2 text-sm">المتاجر ({selectedUserIds.length} محدد)</legend>
+          {data.users.map((user) => (
+            <label key={user.id} className="flex cursor-pointer items-center gap-3 rounded-lg px-2 py-2 text-sm hover:bg-white/5">
+              <input
+                type="checkbox"
+                checked={selectedUserIds.includes(user.id)}
+                disabled={pending}
+                onChange={(event) => setSelectedUserIds((current) => event.target.checked
+                  ? [...current, user.id]
+                  : current.filter((id) => id !== user.id))}
+              />
+              <span className="min-w-0 flex-1 truncate">{user.seller?.storeName || user.email}<span className="block truncate text-xs text-stone-500">{user.email}</span></span>
+              <span className="text-[11px] text-stone-400">{user.seller?.status === 'ACTIVE' && user.seller.isVerified ? 'معتمد' : 'قيد المراجعة'}</span>
+            </label>
+          ))}
+          {!data.users.length && <p className="p-3 text-center text-sm text-stone-500">لا توجد حسابات متاجر نشطة.</p>}
+        </fieldset>
         <label className="block text-sm">نوع الرسالة
           <input required maxLength={60} value={type} onChange={(event) => setType(event.target.value)} className="admin-input" />
         </label>
@@ -151,10 +178,10 @@ export default function MessagesClient() {
         </label>
         <div className="flex flex-wrap gap-5 text-sm">
           <label className="flex items-center gap-2"><input type="checkbox" checked={sendEmail} disabled={!data.providers.emailConfigured} onChange={(event) => setSendEmail(event.target.checked)} />إرسال عبر البريد {!data.providers.emailConfigured && '(غير مهيأ)'}</label>
-          <label className="flex items-center gap-2"><input type="checkbox" checked={sendSms} disabled={!data.providers.smsConfigured || !data.users.find((user) => user.id === userId)?.seller?.phoneNumber} onChange={(event) => setSendSms(event.target.checked)} />إرسال SMS {!data.providers.smsConfigured && '(غير مهيأ)'}</label>
+          <label className="flex items-center gap-2"><input type="checkbox" checked={sendSms} disabled={!data.providers.smsConfigured || !selectedUserIds.length || selectedUserIds.some((id) => !data.users.find((user) => user.id === id)?.seller?.phoneNumber)} onChange={(event) => setSendSms(event.target.checked)} />إرسال SMS {!data.providers.smsConfigured && '(غير مهيأ)'}</label>
         </div>
-        <p className="text-xs text-stone-500">تُحفظ الرسالة داخل التطبيق أولًا. SMS متاح فقط عند وجود رقم متجر للمستخدم.</p>
-        <button type="submit" disabled={pending || !data.users.length} className="rounded-lg bg-ak-brand px-5 py-3 text-sm font-bold text-white disabled:opacity-50">{pending ? 'جارٍ الإرسال...' : 'إرسال الرسالة'}</button>
+        <p className="text-xs text-stone-500">تُحفظ نسخة مستقلة في إشعارات كل مالك محدد أولًا. الإرسال الجماعي محدود بـ 1000 متجر لكل عملية.</p>
+        <button type="submit" disabled={pending || !selectedUserIds.length || selectedUserIds.length > 1000} className="rounded-lg bg-ak-brand px-5 py-3 text-sm font-bold text-white disabled:opacity-50">{pending ? 'جارٍ الإرسال...' : `إرسال إلى ${selectedUserIds.length || 0} متجر`}</button>
       </form>
 
       <section className="ak-panel overflow-hidden p-5">

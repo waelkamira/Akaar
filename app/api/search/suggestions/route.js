@@ -43,11 +43,17 @@ export async function GET(request) {
         approvalStatus: 'APPROVED',
         category: { isActive: true },
         OR: [
-          { title: { contains: query, mode: 'insensitive' } },
-          { description: { contains: query, mode: 'insensitive' } },
-          { categoryName: { contains: query, mode: 'insensitive' } },
-          ...(categoryId ? [{ categoryId }] : []),
+          { sellerId: null },
+          { seller: { is: { status: 'ACTIVE', isVerified: true } } },
         ],
+        AND: [{
+          OR: [
+            { title: { contains: query, mode: 'insensitive' } },
+            { description: { contains: query, mode: 'insensitive' } },
+            { categoryName: { contains: query, mode: 'insensitive' } },
+            ...(categoryId ? [{ categoryId }] : []),
+          ],
+        }],
       },
       select: { title: true },
       orderBy: { createdAt: 'desc' },

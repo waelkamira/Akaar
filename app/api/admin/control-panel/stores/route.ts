@@ -3,6 +3,8 @@ import { Prisma } from '@prisma/client';
 import { getControlPanelAdmin } from '@/lib/auth/require-auth';
 import { getPagination, isPlainObject } from '@/lib/api/validation.mjs';
 import { prisma } from '@/lib/db/prisma';
+import { isVendorOrderTableAvailable } from '@/lib/admin/review-table-availability';
+import { getStoreRatingSummaries } from '@/lib/reviews/ratings';
 
 const storeSelect = {
   id: true,
@@ -15,14 +17,28 @@ const storeSelect = {
   contactEmail: true,
   phoneNumber: true,
   residence: true,
+  latitude: true,
+  longitude: true,
+  businessType: true,
+  sellingCategories: true,
+  intendedProducts: true,
+  identityDocumentFileId: true,
+  facebookUrl: true,
+  youtubeUrl: true,
+  twitterUrl: true,
   status: true,
   isVerified: true,
   createdAt: true,
   user: { select: { email: true, userName: true } },
-  _count: { select: { products: true, vendorOrders: true } },
+  _count: { select: { products: true } },
 } satisfies Prisma.SellerSelect;
 
 const sellerStatuses = ['PENDING', 'ACTIVE', 'SUSPENDED', 'REJECTED'] as const;
+
+function serializeStore<T extends { identityDocumentFileId: string | null }>(store: T) {
+  const { identityDocumentFileId, ...safeStore } = store;
+  return { ...safeStore, hasIdentityDocument: Boolean(identityDocumentFileId) };
+}
 
 function optionalText(value: unknown, maximum: number) {
   if (value === undefined || value === null || value === '') return null;
@@ -36,29 +52,62 @@ export async function GET(request: Request) {
 
   const { searchParams } = new URL(request.url);
   const { page, limit, skip } = getPagination(searchParams, { defaultPage: 1, defaultLimit: 20, maxLimit: 50 });
+  const query = searchParams.get('q')?.trim().slice(0, 100) || '';
+  const where: Prisma.SellerWhereInput = query
+    ? {
+        OR: [
+          { storeName: { contains: query, mode: 'insensitive' } },
+          { user: { email: { contains: query, mode: 'insensitive' } } },
+        ],
+      }
+    : {};
   try {
-    const [items, totalCount, users] = await Promise.all([
+    const [items, totalCount, users, vendorOrdersAvailable] = await Promise.all([
       prisma.seller.findMany({
+        where,
         skip,
         take: limit,
         orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
         select: storeSelect,
       }),
-      prisma.seller.count(),
+      prisma.seller.count({ where }),
       prisma.user.findMany({
         where: { status: 'ACTIVE', seller: null },
         orderBy: { email: 'asc' },
         select: { id: true, email: true, userName: true },
       }),
+      isVendorOrderTableAvailable(),
     ]);
+    const ratings = await getStoreRatingSummaries(items.map((item) => item.id));
+    const orderCounts = new Map<string, number>();
+    if (vendorOrdersAvailable && items.length) {
+      const sellerOrderCounts = await prisma.$queryRaw<Array<{ sellerId: string; count: bigint }>>`
+        SELECT "sellerId", COUNT(*)::bigint AS "count"
+        FROM public."VendorOrder"
+        WHERE "sellerId" IN (${Prisma.join(items.map((item) => item.id))})
+        GROUP BY "sellerId"
+      `;
+      for (const orderCount of sellerOrderCounts) {
+        orderCounts.set(orderCount.sellerId, Number(orderCount.count));
+      }
+    }
 
     return NextResponse.json({
-      items,
+      items: items.map((item) => ({
+        ...serializeStore(item),
+        averageRating: ratings.get(item.id)?.average ?? null,
+        reviewCount: ratings.get(item.id)?.count ?? 0,
+        _count: {
+          ...item._count,
+          vendorOrders: vendorOrdersAvailable ? orderCounts.get(item.id) || 0 : null,
+        },
+      })),
       users,
       page,
       limit,
       totalCount,
       hasMore: skip + items.length < totalCount,
+      vendorOrdersAvailable,
     }, { headers: { 'Cache-Control': 'private, no-store' } });
   } catch (error) {
     console.error('Unable to load control panel stores:', error);
@@ -127,7 +176,9 @@ export async function POST(request: Request) {
       await transaction.user.update({ where: { id: userId }, data: { role: 'SELLER' } });
       return store;
     });
-    return NextResponse.json({ item }, { status: 201 });
+    return NextResponse.json({
+      item: { ...serializeStore(item), _count: { ...item._count, vendorOrders: 0 } },
+    }, { status: 201 });
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
       return NextResponse.json({ error: 'للمستخدم متجر بالفعل أو أن رابط المتجر مستخدم.' }, { status: 409 });

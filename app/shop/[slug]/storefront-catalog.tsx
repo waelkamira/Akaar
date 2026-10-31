@@ -12,6 +12,8 @@ type Product = {
   stockQuantity: number | null;
   categoryName: string;
   city: string | null;
+  averageRating: number | null;
+  reviewCount: number;
 };
 
 export default function StorefrontCatalog({

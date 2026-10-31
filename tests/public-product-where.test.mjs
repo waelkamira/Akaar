@@ -2,12 +2,18 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { publicProductWhere } from '../lib/api/public-product-where.mjs';
 
+const activeStoreVisibility = [
+  { sellerId: null },
+  { seller: { is: { status: 'ACTIVE', isVerified: true } } },
+];
+
 test('public product predicate excludes deleted and inactive products and hidden categories', () => {
   assert.deepEqual(publicProductWhere(), {
     isDeleted: false,
     isActive: true,
     approvalStatus: 'APPROVED',
     category: { isActive: true },
+    OR: activeStoreVisibility,
   });
 });
 
@@ -19,6 +25,7 @@ test('public product predicate preserves endpoint-specific filters', () => {
     isActive: true,
     approvalStatus: 'APPROVED',
     category: { isActive: true },
+    OR: activeStoreVisibility,
   });
 });
 
@@ -34,5 +41,6 @@ test('endpoint filters cannot weaken public visibility constraints', () => {
     isActive: true,
     approvalStatus: 'APPROVED',
     category: { isActive: true },
+    OR: activeStoreVisibility,
   });
 });

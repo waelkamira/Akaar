@@ -120,6 +120,12 @@ export default function SideBarMenu() {
                 {session?.status === 'authenticated' && (
                   <Button path={'/seller/dashboard'} title={'متجري ولوحة البائع'} />
                 )}
+                {session?.status === 'authenticated' && (
+                  <Button path={'/notifications'} title={'إشعاراتي'} />
+                )}
+                {session?.status === 'authenticated' && (
+                  <Button path={'/messages'} title={'الرسائل'} />
+                )}
                 {/* User Profile Section */}
 
                 <Link href={'/profile'}>

@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/db/prisma';
+import { getProductRatingSummaries, getStoreRatingSummaries } from '@/lib/reviews/ratings';
+import ReviewWidget from '@/components/Reviews/ReviewWidget';
 import StorefrontCatalog from './storefront-catalog';
 
 export const dynamic = 'force-dynamic';
@@ -60,7 +62,7 @@ export default async function PublicShopPage({ params, searchParams }: Props) {
     ...(category ? { categoryName: category } : {}),
     ...(query ? { OR: [{ title: { contains: query, mode: 'insensitive' as const } }, { description: { contains: query, mode: 'insensitive' as const } }] } : {}),
   };
-  const [products, totalCount, categories] = await Promise.all([
+  const [products, totalCount, categories, storeRatings] = await Promise.all([
     prisma.product.findMany({
       where,
       orderBy: { createdAt: 'desc' },
@@ -84,7 +86,15 @@ export default async function PublicShopPage({ params, searchParams }: Props) {
       orderBy: { categoryName: 'asc' },
       select: { categoryName: true },
     }),
+    getStoreRatingSummaries([store.id]),
   ]);
+  const productRatings = await getProductRatingSummaries(products.map((product) => product.id));
+  const storeRating = storeRatings.get(store.id);
+  const ratedProducts = products.map((product) => ({
+    ...product,
+    averageRating: productRatings.get(product.id)?.average ?? null,
+    reviewCount: productRatings.get(product.id)?.count ?? 0,
+  }));
 
   return (
     <main dir="rtl" className="min-h-screen bg-ak-ink px-4 py-8 text-white sm:py-12">
@@ -101,19 +111,32 @@ export default async function PublicShopPage({ params, searchParams }: Props) {
             <div className="min-w-0 flex-1">
               <p className="text-xs font-semibold tracking-widest text-ak-amber">متجر معتمد</p>
               <h1 className="mt-2 text-3xl font-black sm:text-4xl">{store.storeName}</h1>
+              <p className="mt-2 text-sm text-amber-300">{storeRating ? `★ ${storeRating.average.toFixed(1)} · ${storeRating.count} تقييم` : 'لا توجد تقييمات للمتجر بعد'}</p>
               {store.description && <p className="mt-3 max-w-3xl whitespace-pre-wrap text-sm leading-7 text-stone-300">{store.description}</p>}
             </div>
-            <Link href="/search" className="rounded-xl border border-ak-line px-4 py-3 text-sm hover:border-ak-amber/50">اكتشف المزيد</Link>
+            <div className="flex flex-wrap gap-2">
+              <Link
+                href={`/messages?storeId=${encodeURIComponent(store.id)}`}
+                className="rounded-xl bg-ak-amber px-4 py-3 text-sm font-bold text-ak-ink hover:bg-ak-honey"
+              >
+                راسل المتجر
+              </Link>
+              <Link href="/search" className="rounded-xl border border-ak-line px-4 py-3 text-sm hover:border-ak-amber/50">اكتشف المزيد</Link>
+            </div>
           </div>
         </header>
+
+        <div className="mt-6">
+          <ReviewWidget targetType="store" targetId={store.id} title={`قيّم متجر ${store.storeName}`} />
+        </div>
 
         <section className="mt-9">
           <div className="mb-5 flex items-end justify-between gap-4">
             <div><p className="text-xs font-semibold tracking-widest text-ak-amber">STORE CATALOG</p><h2 className="mt-2 text-2xl font-bold">منتجات المتجر</h2></div>
-            <p className="text-sm text-stone-500">{store.products.length} منتج</p>
+            <p className="text-sm text-stone-500">{totalCount} منتج</p>
           </div>
           <StorefrontCatalog
-            products={products}
+            products={ratedProducts}
             categories={categories.map(({ categoryName }) => categoryName)}
             slug={store.slug}
             page={page}

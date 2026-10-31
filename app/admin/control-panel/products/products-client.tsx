@@ -24,6 +24,8 @@ type Product = {
   isDeleted: boolean;
   approvalStatus: 'PENDING' | 'APPROVED' | 'REJECTED';
   createdAt: string;
+  averageRating: number | null;
+  reviewCount: number;
   user: { id: string; email: string };
   seller: { id: string; storeName: string } | null;
 };
@@ -213,13 +215,14 @@ export default function ProductsClient() {
         {loading ? <p aria-busy="true" className="text-sm text-stone-400">جارٍ التحميل...</p> : (
           <div className="overflow-x-auto">
             <table className="w-full min-w-[900px] text-right text-sm">
-              <thead className="text-xs text-stone-400"><tr><th className="pb-3">المنتج</th><th className="pb-3">المالك / المتجر</th><th className="pb-3">الفئة</th><th className="pb-3">السعر</th><th className="pb-3">الحالة</th><th className="pb-3">إجراءات</th></tr></thead>
+              <thead className="text-xs text-stone-400"><tr><th className="pb-3">المنتج</th><th className="pb-3">المالك / المتجر</th><th className="pb-3">الفئة</th><th className="pb-3">السعر</th><th className="pb-3">التقييم</th><th className="pb-3">الحالة</th><th className="pb-3">إجراءات</th></tr></thead>
               <tbody>{data.items.map((product) => (
                 <tr key={product.id} className="border-t border-ak-line-strong/[.08]">
                   <td className="py-3"><p className="font-semibold">{product.title}</p><p className="text-xs text-stone-500">{product.id}</p></td>
                   <td className="py-3"><p>{product.user.email}</p><p className="text-xs text-stone-500">{product.seller?.storeName || 'بدون متجر'}</p></td>
                   <td className="py-3">{product.categoryName}</td>
                   <td className="py-3">{product.basePrice ?? '—'} ل.س{product.usdPriceCents !== null && <p className="text-xs text-stone-500">${(product.usdPriceCents / 100).toFixed(2)}</p>}</td>
+                  <td className="py-3"><span className="text-amber-200">{product.averageRating === null ? '—' : `★ ${product.averageRating.toFixed(1)}`}</span><p className="text-xs text-stone-500">{product.reviewCount} تقييم</p></td>
                   <td className="py-3">{product.isDeleted ? 'محذوف' : !product.isActive ? 'مخفي' : product.approvalStatus === 'APPROVED' ? 'منشور' : product.approvalStatus === 'PENDING' ? 'قيد المراجعة' : 'مرفوض'}</td>
                   <td className="py-3"><div className="flex gap-2"><button type="button" disabled={pending || product.isDeleted} onClick={() => { setEditingId(product.id); setForm(formFromProduct(product)); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="rounded-lg border border-ak-amber/30 px-3 py-2 text-xs text-ak-honey disabled:opacity-50">تعديل</button>{!product.isDeleted && <button type="button" disabled={pending} onClick={() => void deleteProduct(product)} className="rounded-lg border border-rose-400/30 px-3 py-2 text-xs text-rose-200 disabled:opacity-50">إخفاء</button>}</div></td>
                 </tr>

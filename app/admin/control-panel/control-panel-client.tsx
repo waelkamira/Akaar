@@ -8,6 +8,17 @@ type AdminRole = 'GUEST' | 'CUSTOMER' | 'SELLER' | 'ADMIN';
 type UserStatus = 'ACTIVE' | 'SUSPENDED' | 'DELETED';
 type User = { id: string; email: string; userName: string | null; role: AdminRole; status: UserStatus; createdAt: string };
 type UserPage = { items: User[]; page: number; hasMore: boolean };
+type AdminInsights = {
+  metrics: {
+    products: number;
+    pageViewsToday: number;
+    pageViewsLast7Days: number;
+    pageViewsLast30Days: number;
+    pageViewsLast365Days: number;
+    pageViewsThisYear: number;
+  };
+  topSellingProducts: Array<{ id: string; title: string; categoryName: string; unitsSold: number }>;
+};
 
 async function readJson<T>(response: Response): Promise<T & { error?: string }> {
   const payload = await response.json().catch(() => ({}));
@@ -17,8 +28,10 @@ async function readJson<T>(response: Response): Promise<T & { error?: string }> 
 
 export default function ControlPanelClient() {
   const [users, setUsers] = useState<UserPage>({ items: [], page: 1, hasMore: false });
+  const [insights, setInsights] = useState<AdminInsights | null>(null);
   const [email, setEmail] = useState('');
   const [userName, setUserName] = useState('');
+  const [password, setPassword] = useState('');
   const [newUserRole, setNewUserRole] = useState<AdminRole>('CUSTOMER');
   const [roleDrafts, setRoleDrafts] = useState<Record<string, AdminRole>>({});
   const [loading, setLoading] = useState(true);
@@ -53,6 +66,19 @@ export default function ControlPanelClient() {
     };
   }, []);
 
+  useEffect(() => {
+    let active = true;
+    fetch('/api/admin/dashboard', { cache: 'no-store' })
+      .then(readJson<AdminInsights>)
+      .then((result) => {
+        if (active) setInsights(result);
+      })
+      .catch((loadError: unknown) => {
+        if (active) setError(loadError instanceof Error ? loadError.message : 'تعذر تحميل مؤشرات لوحة التحكم.');
+      });
+    return () => { active = false; };
+  }, []);
+
   async function addUser(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setPendingAction('add-user');
@@ -62,12 +88,13 @@ export default function ControlPanelClient() {
       await readJson(await fetch('/api/admin/users', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, userName, role: newUserRole }),
+        body: JSON.stringify({ email, userName, password, role: newUserRole }),
       }));
       setEmail('');
       setUserName('');
+      setPassword('');
       setNewUserRole('CUSTOMER');
-      setNotice('تم إنشاء الحساب. يمكن للمستخدم تسجيل الدخول باستخدام Google بالبريد نفسه.');
+      setNotice('تم إنشاء الحساب بكلمة مرور مشفّرة. أرسل بيانات الدخول للمستخدم عبر قناة آمنة.');
       await loadUsers();
     } catch (actionError) {
       setError(actionError instanceof Error ? actionError.message : 'تعذر إنشاء الحساب.');
@@ -151,27 +178,53 @@ export default function ControlPanelClient() {
         <p className="mt-2 text-sm text-stone-400">إدارة الحسابات والأدوار وحالة المستخدمين وإعدادات المنصة.</p>
       </header>
 
-      <nav aria-label="أقسام الإدارة" className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {[
-          ['/admin/control-panel/products', 'إدارة المنتجات'],
-          ['/admin/control-panel/stores', 'إدارة المتاجر'],
-          ['/admin/control-panel/messages', 'الرسائل للمستخدمين'],
-          ['/admin/control-panel/site-pages', 'صفحات الموقع والمحتوى'],
-          ['/admin/control-panel/subscribers', 'مشتركو النشرة البريدية'],
-          ['/admin/control-panel/payments', 'وسائل الدفع'],
-          ['/admin/dashboard#review-queue', 'مراجعة المنتجات والمتاجر'],
-          ['/admin/dashboard#properties', 'إعلانات العقارات'],
-          ['/admin/dashboard#platform-settings', 'إعدادات المنصة'],
-          ['/admin/dashboard', 'لوحة المؤشرات'],
-        ].map(([href, title]) => (
-          <Link key={href} href={href} className="ak-panel p-4 text-sm font-semibold transition hover:border-ak-amber/40 hover:text-ak-honey">
-            {title}
-          </Link>
-        ))}
-      </nav>
-
       {error && <p role="alert" className="rounded-xl border border-rose-400/20 bg-rose-400/10 p-4 text-sm text-rose-200">{error}</p>}
       {notice && <p role="status" className="rounded-xl border border-emerald-400/20 bg-emerald-400/10 p-4 text-sm text-emerald-200">{notice}</p>}
+
+      <div className="space-y-6" dir="rtl">
+          <section aria-label="نظرة عامة" className="ak-panel space-y-4 p-5">
+            <div className="flex flex-wrap items-end justify-between gap-3">
+              <div><p className="ak-eyebrow">COMMERCE OVERVIEW</p><h2 className="mt-1 text-xl font-bold">مؤشرات المتجر</h2></div>
+              <Link href="/admin/dashboard" className="text-xs text-ak-honey underline">فتح لوحة التحليلات</Link>
+            </div>
+            {insights ? (
+              <>
+                <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+                  {[
+                    ['المنتجات النشطة', insights.metrics.products, 'border-emerald-400/25 bg-emerald-400/10 text-emerald-200'],
+                    ['مشاهدات اليوم', insights.metrics.pageViewsToday, 'border-sky-400/25 bg-sky-400/10 text-sky-200'],
+                    ['مشاهدات 7 أيام', insights.metrics.pageViewsLast7Days, 'border-violet-400/25 bg-violet-400/10 text-violet-200'],
+                    ['مشاهدات 30 يومًا', insights.metrics.pageViewsLast30Days, 'border-amber-400/25 bg-amber-400/10 text-amber-200'],
+                  ].map(([label, value, color]) => (
+                    <article key={String(label)} className={`rounded-xl border p-3 ${color}`}>
+                      <p className="text-xs opacity-80">{label}</p><p className="mt-2 text-xl font-black">{new Intl.NumberFormat('ar').format(Number(value))}</p>
+                      {label !== 'المنتجات النشطة' && <p className="mt-1 text-[10px] opacity-70">مشاهدات صفحات مجمّعة</p>}
+                    </article>
+                  ))}
+                </div>
+                <div className="grid gap-5 lg:grid-cols-2">
+                  <section>
+                    <h3 className="mb-3 text-sm font-bold">أفضل 5 منتجات مبيعًا</h3>
+                    {insights.topSellingProducts.length ? (
+                      <ol className="space-y-2">
+                        {insights.topSellingProducts.map((product, index) => (
+                          <li key={product.id} className="flex items-center justify-between gap-3 rounded-lg bg-white/[.03] px-3 py-2 text-xs">
+                            <span className="min-w-0 truncate"><span className="ml-2 font-black text-ak-honey">{index + 1}.</span>{product.title}<span className="mr-2 text-stone-500">{product.categoryName}</span></span>
+                            <span className="shrink-0 text-emerald-200">{new Intl.NumberFormat('ar').format(product.unitsSold)} وحدة</span>
+                          </li>
+                        ))}
+                      </ol>
+                    ) : <p className="rounded-lg border border-dashed border-ak-line p-3 text-xs text-stone-500">ستظهر المنتجات بعد تسجيل مبيعات مكتملة.</p>}
+                  </section>
+                  <article className="flex flex-col justify-center rounded-xl border border-cyan-400/15 bg-cyan-400/[.04] p-4">
+                    <p className="text-xs text-cyan-200">مشاهدات منذ بداية العام</p>
+                    <p className="mt-2 text-3xl font-black text-cyan-100">{new Intl.NumberFormat('ar').format(insights.metrics.pageViewsThisYear)}</p>
+                    <p className="mt-1 text-[10px] text-stone-500">مشاهدات منذ بداية السنة · دون معرفات زوار</p>
+                  </article>
+                </div>
+              </>
+            ) : <p className="text-sm text-stone-500" aria-busy="true">جارٍ تحميل المؤشرات...</p>}
+          </section>
 
       <section id="users" className="ak-panel scroll-mt-24 space-y-5 p-5">
         <div>
@@ -179,7 +232,7 @@ export default function ControlPanelClient() {
           <p className="mt-1 text-sm text-stone-400">أنشئ حسابًا دون التسجيل المعتاد، وغيّر دوره أو أوقفه مؤقتًا. الحسابات المالية المحفوظة تحمي المستخدم من الحذف.</p>
         </div>
 
-        <form onSubmit={(event) => void addUser(event)} className="flex flex-wrap items-end gap-3 rounded-xl border border-ak-line-strong/[.08] p-4">
+        <form onSubmit={(event) => void addUser(event)} className="grid gap-3 rounded-xl border border-ak-line-strong/[.08] p-4 sm:grid-cols-2 xl:grid-cols-4">
           <label htmlFor="admin-email" className="min-w-60 flex-1 text-sm font-semibold">
             البريد الإلكتروني
             <input id="admin-email" type="email" autoComplete="email" maxLength={254} required value={email} onChange={(event) => setEmail(event.target.value)} className="mt-2 w-full rounded-lg border border-ak-line bg-ak-ink px-3 py-2 text-white" />
@@ -187,6 +240,10 @@ export default function ControlPanelClient() {
           <label htmlFor="new-user-name" className="min-w-48 flex-1 text-sm font-semibold">
             الاسم (اختياري)
             <input id="new-user-name" type="text" maxLength={100} value={userName} onChange={(event) => setUserName(event.target.value)} className="mt-2 w-full rounded-lg border border-ak-line bg-ak-ink px-3 py-2 text-white" />
+          </label>
+          <label htmlFor="new-user-password" className="min-w-48 flex-1 text-sm font-semibold">
+            كلمة المرور الأولية
+            <input id="new-user-password" type="password" autoComplete="new-password" minLength={8} maxLength={72} required value={password} onChange={(event) => setPassword(event.target.value)} className="mt-2 w-full rounded-lg border border-ak-line bg-ak-ink px-3 py-2 text-white" />
           </label>
           <label htmlFor="new-user-role" className="text-sm font-semibold">
             الدور
@@ -197,7 +254,7 @@ export default function ControlPanelClient() {
           <button type="submit" disabled={pendingAction === 'add-user'} className="rounded-lg bg-ak-brand px-4 py-2 text-sm font-bold text-white disabled:opacity-50">
             {pendingAction === 'add-user' ? 'جارٍ الإنشاء...' : 'إنشاء حساب'}
           </button>
-          <p className="w-full text-xs text-stone-500">يُنشأ الحساب نشطًا دون كلمة مرور؛ يمكن للمستخدم تسجيل الدخول عبر Google بالبريد نفسه.</p>
+          <p className="text-xs leading-5 text-stone-500 sm:col-span-2 xl:col-span-4">تُخزّن كلمة المرور بعد تشفيرها ولا يمكن عرضها لاحقًا. أرسلها للمستخدم عبر قناة آمنة واطلب منه تغييرها بعد تسجيل الدخول.</p>
         </form>
 
         {loading ? <p aria-busy="true" className="text-sm text-stone-400">جارٍ تحميل المستخدمين...</p> : (
@@ -250,6 +307,7 @@ export default function ControlPanelClient() {
         )}
         {users.hasMore && <button type="button" disabled={Boolean(pendingAction)} onClick={() => void loadUsers(users.page + 1, true)} className="text-sm text-ak-honey underline disabled:opacity-50">تحميل مستخدمين إضافيين</button>}
       </section>
+      </div>
     </main>
   );
 }

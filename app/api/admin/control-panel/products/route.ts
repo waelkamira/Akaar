@@ -6,6 +6,7 @@ import { areValidProductImageUrls, isValidProductLink } from '@/lib/api/product-
 import { getCanonicalCategoryFields } from '@/lib/api/product-category.mjs';
 import { readJsonBody } from '@/lib/api/read-json-body.mjs';
 import { prisma } from '@/lib/db/prisma';
+import { getProductRatingSummaries } from '@/lib/reviews/ratings';
 
 const productSelect = {
   id: true,
@@ -48,9 +49,14 @@ export async function GET(request: Request) {
       prisma.user.findMany({ where: { status: 'ACTIVE' }, orderBy: { email: 'asc' }, select: { id: true, email: true } }),
       prisma.seller.findMany({ orderBy: { storeName: 'asc' }, select: { id: true, storeName: true, userId: true } }),
     ]);
+    const ratings = await getProductRatingSummaries(items.map((item) => item.id));
 
     return NextResponse.json({
-      items,
+      items: items.map((item) => ({
+        ...item,
+        averageRating: ratings.get(item.id)?.average ?? null,
+        reviewCount: ratings.get(item.id)?.count ?? 0,
+      })),
       categories,
       users,
       stores,

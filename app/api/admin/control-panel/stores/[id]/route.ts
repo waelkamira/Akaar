@@ -3,6 +3,7 @@ import { Prisma } from '@prisma/client';
 import { getControlPanelAdmin } from '@/lib/auth/require-auth';
 import { isPlainObject } from '@/lib/api/validation.mjs';
 import { prisma } from '@/lib/db/prisma';
+import { isVendorOrderTableAvailable } from '@/lib/admin/review-table-availability';
 
 type RouteContext = { params: Promise<{ id: string }> };
 const sellerStatuses = ['PENDING', 'ACTIVE', 'SUSPENDED', 'REJECTED'] as const;
@@ -63,7 +64,6 @@ export async function PATCH(request: Request, { params }: RouteContext) {
       return NextResponse.json({ error: 'حالة المتجر غير صالحة.' }, { status: 400 });
     }
     data.status = body.status as typeof sellerStatuses[number];
-    if (data.status === 'ACTIVE') data.isVerified = true;
   }
   if ('isVerified' in body) {
     if (typeof body.isVerified !== 'boolean') return NextResponse.json({ error: 'حالة التحقق غير صالحة.' }, { status: 400 });
@@ -72,13 +72,109 @@ export async function PATCH(request: Request, { params }: RouteContext) {
   if (!Object.keys(data).length) return NextResponse.json({ error: 'لا توجد تغييرات للحفظ.' }, { status: 400 });
 
   try {
-    const item = await prisma.seller.update({
-      where: { id },
-      data,
-      select: { id: true, storeName: true, slug: true, status: true, isVerified: true },
+    const item = await prisma.$transaction(async (transaction) => {
+      const current = await transaction.seller.findUnique({
+        where: { id },
+        select: {
+          id: true,
+          userId: true,
+          storeName: true,
+          isVerified: true,
+          status: true,
+          user: { select: { email: true } },
+        },
+      });
+      if (!current) throw new Error('ADMIN_STORE_NOT_FOUND');
+      if (data.status === 'ACTIVE' && data.isVerified !== true && !current.isVerified) {
+        throw new Error('ADMIN_STORE_MUST_BE_VERIFIED');
+      }
+
+      const updated = await transaction.seller.update({
+        where: { id },
+        data,
+        select: { id: true, storeName: true, slug: true, status: true, isVerified: true },
+      });
+      if (data.status === 'ACTIVE') {
+        await transaction.user.update({ where: { id: current.userId }, data: { role: 'SELLER' } });
+      } else if (data.status === 'REJECTED' && current.status !== 'REJECTED') {
+        await transaction.user.update({ where: { id: current.userId }, data: { role: 'CUSTOMER' } });
+      }
+
+      const decision = data.status === 'ACTIVE' && current.status !== 'ACTIVE'
+        && current.status !== 'SUSPENDED'
+        ? 'approved'
+        : data.status === 'REJECTED' && current.status !== 'REJECTED'
+          ? 'rejected'
+          : null;
+      const notification = decision
+        ? await transaction.notification.create({
+            data: {
+              userId: current.userId,
+              type: decision === 'approved' ? 'STORE_APPROVED' : 'STORE_REJECTED',
+              message: decision === 'approved'
+                ? `تمت الموافقة على طلب فتح متجر "${current.storeName}". يمكنك الآن بدء نشر منتجاتك.`
+                : `نعتذر، لم تتم الموافقة على طلب فتح متجر "${current.storeName}". يمكنك التواصل مع الدعم لمزيد من المعلومات.`,
+            },
+            select: { id: true, userId: true, type: true, message: true, createdAt: true },
+          })
+        : null;
+
+      return {
+        updated,
+        notification,
+        decision,
+        ownerEmail: current.user.email,
+        storeName: current.storeName,
+      };
     });
-    return NextResponse.json(item);
+    let emailSent: boolean | null = null;
+    let emailError: string | null = null;
+    if (item.decision && item.notification) {
+      if (!process.env.RESEND_API_KEY || !process.env.RESEND_FROM_EMAIL) {
+        emailSent = false;
+        emailError = 'إعداد البريد غير مكتمل؛ أُرسلت رسالة داخل التطبيق فقط.';
+      } else {
+        const approved = item.decision === 'approved';
+        const emailMessage = approved
+          ? `مرحبًا، تمت الموافقة على طلب فتح متجر "${item.storeName}" في Akaar. يمكنك الآن بدء نشر منتجاتك.`
+          : `مرحبًا، نعتذر لعدم الموافقة على طلب فتح متجر "${item.storeName}" في Akaar. يمكنك التواصل مع الدعم لمزيد من المعلومات.`;
+        try {
+          const response = await fetch('https://api.resend.com/emails', {
+            method: 'POST',
+            signal: AbortSignal.timeout(10_000),
+            headers: {
+              Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              from: process.env.RESEND_FROM_EMAIL,
+              to: [item.ownerEmail],
+              subject: approved ? 'تمت الموافقة على متجرك في Akaar' : 'تحديث طلب فتح متجرك في Akaar',
+              text: emailMessage,
+            }),
+          });
+          if (!response.ok) throw new Error(`RESEND_DELIVERY_FAILED_${response.status}`);
+          emailSent = true;
+        } catch (error) {
+          console.error('Store decision email delivery failed:', error);
+          emailSent = false;
+          emailError = 'أُرسلت رسالة داخل التطبيق، لكن تعذر إرسال البريد الإلكتروني.';
+        }
+      }
+    }
+    return NextResponse.json({
+      ...item.updated,
+      notification: item.notification,
+      emailSent,
+      emailError,
+    });
   } catch (error) {
+    if (error instanceof Error && error.message === 'ADMIN_STORE_NOT_FOUND') {
+      return NextResponse.json({ error: 'المتجر غير موجود.' }, { status: 404 });
+    }
+    if (error instanceof Error && error.message === 'ADMIN_STORE_MUST_BE_VERIFIED') {
+      return NextResponse.json({ error: 'يجب توثيق المتجر قبل اعتماده.' }, { status: 409 });
+    }
     if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
       return NextResponse.json({ error: 'المتجر غير موجود.' }, { status: 404 });
     }
@@ -97,13 +193,21 @@ export async function DELETE(_request: Request, { params }: RouteContext) {
   if (!id || id.length > 128) return NextResponse.json({ error: 'معرف المتجر غير صالح.' }, { status: 400 });
 
   try {
+    const vendorOrdersAvailable = await isVendorOrderTableAvailable();
     await prisma.$transaction(async (transaction) => {
       const seller = await transaction.seller.findUnique({
         where: { id },
         select: { id: true, userId: true, user: { select: { role: true } } },
       });
       if (!seller) throw new Error('ADMIN_STORE_NOT_FOUND');
-      if (await transaction.vendorOrder.count({ where: { sellerId: id } })) throw new Error('ADMIN_STORE_HAS_ORDERS');
+      if (vendorOrdersAvailable) {
+        const [orderCount] = await transaction.$queryRaw<Array<{ count: number }>>`
+          SELECT COUNT(*)::int AS count
+          FROM public."VendorOrder"
+          WHERE "sellerId" = ${id}
+        `;
+        if (orderCount.count > 0) throw new Error('ADMIN_STORE_HAS_ORDERS');
+      }
 
       await transaction.seller.delete({ where: { id } });
       if (seller.user.role === 'SELLER') {

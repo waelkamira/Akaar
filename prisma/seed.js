@@ -28,6 +28,14 @@ const categories = [
   { id: 22, name: 'وظائف', slug: 'jobs', description: 'فرص عمل، وظائف شاغرة، وتوظيف' },
 ];
 
+const sampleProducts = [
+  { id: '00000000-0000-4000-8000-000000000001', title: 'هاتف ذكي تجريبي', categoryId: 3, categoryName: 'هواتف', basePrice: 1250000, description: 'هاتف ذكي تجريبي مع مساحة تخزين واسعة وبطارية تدوم طويلًا.' },
+  { id: '00000000-0000-4000-8000-000000000002', title: 'سماعات لاسلكية تجريبية', categoryId: 5, categoryName: 'إلكترونيات', basePrice: 185000, description: 'سماعات لاسلكية تجريبية بصوت واضح وعلبة شحن مدمجة.' },
+  { id: '00000000-0000-4000-8000-000000000003', title: 'حقيبة ظهر يومية', categoryId: 19, categoryName: 'حقائب', basePrice: 95000, description: 'حقيبة عملية تجريبية للاستخدام اليومي مع جيوب متعددة.' },
+  { id: '00000000-0000-4000-8000-000000000004', title: 'مصباح مكتبي قابل للتعديل', categoryId: 6, categoryName: 'أثاث', basePrice: 72000, description: 'مصباح تجريبي بإضاءة مريحة وذراع قابل للتعديل.' },
+  { id: '00000000-0000-4000-8000-000000000005', title: 'كرة تدريب رياضية', categoryId: 10, categoryName: 'رياضة', basePrice: 56000, description: 'كرة تدريب تجريبية مناسبة للتمارين والأنشطة الخارجية.' },
+];
+
 async function main() {
   for (const category of categories) {
     await prisma.category.upsert({
@@ -39,6 +47,35 @@ async function main() {
         isActive: true,
       },
       create: category,
+    });
+  }
+
+  const admin = await prisma.user.findFirst({
+    where: { role: 'ADMIN', status: 'ACTIVE' },
+    orderBy: { createdAt: 'asc' },
+    select: { id: true, userName: true, userImage: true },
+  });
+  if (!admin) {
+    console.info('Skipping sample products: create an active admin user before running the seed.');
+    return;
+  }
+
+  for (const product of sampleProducts) {
+    await prisma.product.upsert({
+      where: { id: product.id },
+      update: {},
+      create: {
+        ...product,
+        userId: admin.id,
+        userName: admin.userName,
+        userImage: admin.userImage,
+        images: [],
+        stockQuantity: 10,
+        salesCount: 0,
+        isActive: true,
+        approvalStatus: 'APPROVED',
+        isDeleted: false,
+      },
     });
   }
 }

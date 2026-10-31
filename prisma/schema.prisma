@@ -96,10 +96,13 @@ model User {
 
   products         Product[]
   reviews          Review[]
+  storeReviews     StoreReview[]
   favorites        Favorite[]
   orders           Order[]
   payments         Payment[]
   notifications    Notification[]
+  customerConversations StoreConversation[] @relation("ConversationCustomer")
+  sentStoreMessages StoreMessage[] @relation("StoreMessageSender")
   reports          Report[]
   recommendations  Recommendation[]
   roleAssignment   Role?                @relation(fields: [roleId], references: [id], onDelete: SetNull)
@@ -147,6 +150,8 @@ model Seller {
   user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   products     Product[]
   vendorOrders VendorOrder[]
+  reviews      StoreReview[]
+  conversations StoreConversation[]
 
   @@index([status])
   @@index([isVerified])
@@ -471,6 +476,24 @@ model Review {
   @@unique([userId, productId])
   @@index([productId, rating])
   @@index([userId])
+  @@map("reviews")
+}
+
+model StoreReview {
+  id        String   @id @default(uuid())
+  userId    String
+  sellerId  String
+  rating    Int
+  comment   String?
+  createdAt DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  seller Seller @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, sellerId])
+  @@index([sellerId, rating])
+  @@index([userId])
+  @@map("store_reviews")
 }
 
 model Cart {
@@ -650,12 +673,56 @@ model Notification {
   @@index([userId, isRead, createdAt])
 }
 
+model StoreConversation {
+  id         String   @id @default(uuid())
+  customerId String
+  sellerId   String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  customer User          @relation("ConversationCustomer", fields: [customerId], references: [id], onDelete: Cascade)
+  seller   Seller        @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  messages StoreMessage[]
+
+  @@unique([customerId, sellerId])
+  @@index([sellerId, updatedAt])
+  @@map("store_conversations")
+}
+
+model StoreMessage {
+  id             String    @id @default(uuid())
+  conversationId String
+  senderId       String
+  body           String
+  readAt         DateTime?
+  createdAt      DateTime  @default(now())
+
+  conversation StoreConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender       User              @relation("StoreMessageSender", fields: [senderId], references: [id], onDelete: Cascade)
+
+  @@index([conversationId, createdAt])
+  @@index([conversationId, senderId, readAt])
+  @@map("store_messages")
+}
+
 model MarketplaceSetting {
   key       String   @id
   enabled   Boolean  @default(true)
   updatedAt DateTime @updatedAt
 
   @@map("marketplace_settings")
+}
+
+model PaymentMethodDraft {
+  id          String   @id @default(uuid())
+  name        String
+  provider    String
+  description String?
+  enabled     Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("payment_method_drafts")
 }
 
 model SitePage {

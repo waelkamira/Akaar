@@ -180,7 +180,10 @@ export default function SellerDashboard() {
     }
   }, []);
 
-  useEffect(() => { void load(); }, [load]);
+  useEffect(() => {
+    const timer = window.setTimeout(() => void load(), 0);
+    return () => window.clearTimeout(timer);
+  }, [load]);
 
   async function submitApplication(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -599,7 +602,7 @@ export default function SellerDashboard() {
       <header className="ak-panel-raised relative overflow-hidden p-6 sm:p-9">
         <div aria-hidden="true" className="absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-primary-300/30 to-transparent" />
         <div className="relative flex flex-wrap items-end justify-between gap-5">
-          <div><p className="text-xs font-black uppercase tracking-[0.2em] text-primary-300">Akaar vendor center</p><h1 className="mt-3 text-3xl font-black sm:text-4xl">متجري / وكالتي</h1><p className="mt-2 text-sm text-ak-muted">إدارة {data.seller.storeName} ومتابعة منتجاتك وإعلاناتك العقارية.</p></div>
+          <div><p className="text-xs font-black uppercase tracking-[0.2em] text-primary-300">Akaar vendor center</p><h1 className="mt-3 text-3xl font-black sm:text-4xl">متجري / وكالتي</h1><p className="mt-2 text-sm text-ak-muted">إدارة {data.seller.storeName} ومتابعة منتجاتك وإعلاناتك العقارية.</p><span className={`mt-3 inline-flex rounded-full border px-3 py-1 text-xs ${data.seller.isVerified ? 'border-emerald-400/25 bg-emerald-400/10 text-emerald-200' : 'border-amber-400/25 bg-amber-400/10 text-amber-200'}`}>{data.seller.isVerified ? 'متجر معتمد' : 'اعتماد المتجر قيد الاستكمال'}</span></div>
           <Link href={`/shop/${encodeURIComponent(data.seller.slug)}`} className="ak-button-primary">عرض متجري العام</Link>
         </div>
       </header>
@@ -607,13 +610,13 @@ export default function SellerDashboard() {
 
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {[
-          ['الإيرادات المسجلة', `${money(metrics.revenue)} ل.س`],
-          ['المنتجات', money(metrics.productCount)],
-          ['المخزون المتاح', money(metrics.stockCount)],
-          ['طلبات تحتاج متابعة', money(metrics.pendingFulfillment)],
-          ['إعلانات العقارات', money(metrics.propertyCount)],
-          ['إعلانات عقارية نشطة', money(metrics.activePropertyCount)],
-        ].map(([label, value]) => <article key={label} className="ak-metric-card"><p className="text-sm text-ak-muted">{label}</p><p className="mt-3 text-2xl font-black tracking-tight text-ak-honey">{value}</p></article>)}
+          ['الإيرادات المسجلة', `${money(metrics.revenue)} ل.س`, 'border-emerald-400/25 bg-emerald-400/10 text-emerald-200'],
+          ['المنتجات', money(metrics.productCount), 'border-sky-400/25 bg-sky-400/10 text-sky-200'],
+          ['المخزون المتاح', money(metrics.stockCount), 'border-violet-400/25 bg-violet-400/10 text-violet-200'],
+          ['طلبات تحتاج متابعة', money(metrics.pendingFulfillment), 'border-amber-400/25 bg-amber-400/10 text-amber-200'],
+          ['إعلانات العقارات', money(metrics.propertyCount), 'border-fuchsia-400/25 bg-fuchsia-400/10 text-fuchsia-200'],
+          ['إعلانات عقارية نشطة', money(metrics.activePropertyCount), 'border-cyan-400/25 bg-cyan-400/10 text-cyan-200'],
+        ].map(([label, value, color]) => <article key={label} className={`rounded-2xl border p-4 ${color}`}><p className="text-sm opacity-80">{label}</p><p className="mt-3 text-2xl font-black tracking-tight">{value}</p><p className="mt-1 text-[10px] opacity-60">مؤشر المتجر</p></article>)}
       </section>
 
       <section className="ak-panel grid gap-6 p-5 sm:grid-cols-2 sm:p-7">
@@ -685,7 +688,7 @@ export default function SellerDashboard() {
             {orders.map((order) => {
               const nextLabel = order.status === 'PENDING' ? 'بدء التجهيز' : order.status === 'PROCESSING' ? 'تأكيد الشحن' : order.status === 'SHIPPED' ? 'تأكيد التسليم' : null;
               return <article key={order.id} className="rounded-xl border border-ak-line-strong/[.08] p-4">
-                <div className="flex flex-wrap items-center justify-between gap-3"><div><p className="text-xs text-stone-500">طلب {order.order.id.slice(0, 12)} · {new Date(order.order.createdAt).toLocaleDateString('ar')}</p><p className="mt-1 font-semibold">{order.items.map((item) => `${item.product.title} × ${item.quantity}`).join('، ')}</p><p className="mt-2 text-xs text-stone-400">التوصيل إلى: {order.order.customerName || '—'} · {order.order.phoneNumber || '—'} · {order.order.shippingCity || '—'} {order.order.shippingAddress || ''}</p></div><span className="rounded-full bg-ak-amber/10 px-3 py-1 text-xs text-ak-honey">{statusNames[order.status] || order.status}</span></div>
+                <div className="flex flex-wrap items-center justify-between gap-3"><div><p className="text-xs text-stone-500">طلب {order.order.id.slice(0, 12)} · {new Date(order.order.createdAt).toLocaleDateString('ar')}</p><p className="mt-1 font-semibold">{order.items.map((item) => `${item.product.title} × ${item.quantity}`).join('، ')}</p><p className="mt-2 text-xs text-stone-400">التوصيل إلى: {order.order.customerName || '—'} · {order.order.phoneNumber || '—'} · {order.order.shippingCity || '—'} {order.order.shippingAddress || ''}</p></div><span className={`rounded-full border px-3 py-1 text-xs ${order.status === 'DELIVERED' ? 'border-emerald-400/25 bg-emerald-400/10 text-emerald-200' : order.status === 'SHIPPED' ? 'border-sky-400/25 bg-sky-400/10 text-sky-200' : order.status === 'CANCELLED' ? 'border-rose-400/25 bg-rose-400/10 text-rose-200' : 'border-amber-400/25 bg-amber-400/10 text-amber-200'}`}>{statusNames[order.status] || order.status}</span></div>
                 <div className="mt-3 flex flex-wrap items-center justify-between gap-3 border-t border-ak-line-strong/[.06] pt-3"><span className="text-sm text-stone-400">الإجمالي: {money(order.items.reduce((sum, item) => sum + item.totalPrice, 0))} ل.س{order.trackingNumber ? ` · التتبع: ${order.trackingNumber}` : ''}</span>
                   {nextLabel && <div className="flex flex-wrap gap-2"><input aria-label="رقم التتبع" placeholder="رقم التتبع (اختياري)" value={tracking[order.id] ?? order.trackingNumber ?? ''} onChange={(event) => setTracking((current) => ({ ...current, [order.id]: event.target.value }))} className="w-44 rounded-lg border border-ak-line bg-ak-canvas px-3 py-2 text-xs" /><button disabled={busy === order.id} onClick={() => void advanceOrder(order)} className="rounded-lg bg-ak-amber px-3 py-2 text-xs font-bold text-ak-cream disabled:opacity-50">{busy === order.id ? 'جارٍ التحديث...' : nextLabel}</button></div>}
                 </div>
@@ -781,8 +784,8 @@ function StockRow({ product, busy, onSave, onDelete }: {
     <tr className="border-t border-ak-line-strong/[.06]">
       <td className="py-3 font-semibold">{product.title}</td>
       <td className="py-3">{money(product.basePrice)} ل.س</td>
-      <td className="py-3">{statusNames[product.approvalStatus] || (product.isActive ? 'ظاهر' : 'غير منشور')}</td>
-      <td className="py-3"><input type="number" min="0" max="1000000" value={value} onChange={(event) => setDraft({ productId: product.id, value: event.target.value })} className="w-24 rounded-lg border border-ak-line bg-ak-canvas px-3 py-2" /></td>
+      <td className="py-3"><span className={`rounded-full px-3 py-1 text-xs ${product.approvalStatus === 'APPROVED' && product.isActive ? 'bg-emerald-400/10 text-emerald-200' : product.approvalStatus === 'PENDING' ? 'bg-amber-400/10 text-amber-200' : 'bg-rose-400/10 text-rose-200'}`}>{statusNames[product.approvalStatus] || (product.isActive ? 'ظاهر' : 'غير منشور')}</span></td>
+      <td className="py-3"><label className="inline-flex items-center gap-2"><input aria-label={`مخزون ${product.title}`} type="number" min="0" max="1000000" value={value} onChange={(event) => setDraft({ productId: product.id, value: event.target.value })} className="w-24 rounded-lg border border-ak-line bg-ak-canvas px-3 py-2" /><span className={`rounded-full px-2 py-1 text-[10px] ${Number(value) > 5 ? 'bg-emerald-400/10 text-emerald-200' : Number(value) > 0 ? 'bg-amber-400/10 text-amber-200' : 'bg-rose-400/10 text-rose-200'}`}>{Number(value) > 5 ? 'متوفر' : Number(value) > 0 ? 'مخزون منخفض' : 'نفد'}</span></label></td>
       <td className="py-3">
         <div className="flex flex-wrap gap-2">
           <button type="button" disabled={busy || value === String(product.stockQuantity ?? 0)} onClick={() => { void onSave(product, value).then(() => setDraft(null)); }} className="rounded-lg border border-ak-line px-3 py-2 text-xs disabled:opacity-40">حفظ المخزون</button>

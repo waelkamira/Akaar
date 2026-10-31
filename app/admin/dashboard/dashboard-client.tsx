@@ -82,13 +82,18 @@ type DashboardData = {
     completedSales: number;
     returns: number;
     pageViews: number;
+    pageViewsToday: number;
+    pageViewsLast7Days: number;
     pageViewsLast30Days: number;
+    pageViewsLast365Days: number;
+    pageViewsThisYear: number;
     pageViewsByDay: Array<{ day: string; views: number }>;
     analyticsEnabled: boolean;
     subscribers: number;
     pendingItems: number;
   };
   monthly: Array<{ month: string; revenue: number; sales: number; newUsers: number; newVendors: number }>;
+  topSellingProducts: Array<{ id: string; title: string; categoryName: string; unitsSold: number }>;
   settings: Settings;
 };
 
@@ -319,7 +324,13 @@ export default function AdminDashboard({ canManageUsers = false }: { canManageUs
           <h1 className="mt-2 text-3xl font-black">لوحة الإدارة</h1>
           <p className="mt-2 text-sm text-stone-400">مؤشرات تشغيل المنصة ومراجعة البائعين والمنتجات.</p>
         </div>
-        <button type="button" onClick={() => void load()} className="rounded-xl border border-ak-line px-4 py-2 text-sm hover:bg-ak-brand-soft">تحديث البيانات</button>
+        <div className="flex flex-wrap justify-end gap-2">
+          <a href="/admin/reviews/products" className="rounded-xl border border-violet-400/25 bg-violet-400/10 px-4 py-2 text-sm text-violet-200 hover:bg-violet-400/15">تقييمات المنتجات</a>
+          <a href="/admin/reviews/stores" className="rounded-xl border border-sky-400/25 bg-sky-400/10 px-4 py-2 text-sm text-sky-200 hover:bg-sky-400/15">تحليلات المتاجر</a>
+          <a href="/admin/properties" className="rounded-xl border border-fuchsia-400/25 bg-fuchsia-400/10 px-4 py-2 text-sm text-fuchsia-200 hover:bg-fuchsia-400/15">الإعلانات العقارية</a>
+          <a href="/admin/settings" className="rounded-xl border border-cyan-400/25 bg-cyan-400/10 px-4 py-2 text-sm text-cyan-200 hover:bg-cyan-400/15">إعدادات المنصة</a>
+          <button type="button" onClick={() => void load()} className="rounded-xl border border-ak-line px-4 py-2 text-sm hover:bg-ak-brand-soft">تحديث البيانات</button>
+        </div>
       </div>
 
       {error && <p role="alert" className="rounded-xl border border-rose-400/20 bg-rose-400/10 p-4 text-sm text-rose-200">{error}</p>}
@@ -335,12 +346,55 @@ export default function AdminDashboard({ canManageUsers = false }: { canManageUs
         <Metric label="عناصر معلقة" value={data.metrics.pendingItems} detail={`${number(data.metrics.productQueue)} منتجات · ${number(data.metrics.pendingVendors)} متاجر`} />
       </section>
 
+      <section aria-label="مشاهدات الصفحات حسب الفترة" className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        {[
+          { label: 'اليوم', value: data.metrics.pageViewsToday, color: 'border-sky-400/25 bg-sky-400/10 text-sky-200' },
+          { label: 'آخر 7 أيام', value: data.metrics.pageViewsLast7Days, color: 'border-violet-400/25 bg-violet-400/10 text-violet-200' },
+          { label: 'آخر 30 يومًا', value: data.metrics.pageViewsLast30Days, color: 'border-amber-400/25 bg-amber-400/10 text-amber-200' },
+          { label: 'منذ بداية العام', value: data.metrics.pageViewsThisYear, color: 'border-emerald-400/25 bg-emerald-400/10 text-emerald-200' },
+        ].map((period) => (
+          <article key={period.label} className={`rounded-2xl border p-4 ${period.color}`}>
+            <p className="text-xs opacity-80">{period.label}</p>
+            <p className="mt-2 text-2xl font-black">{number(period.value)}</p>
+            <p className="mt-1 text-[10px] opacity-70">مشاهدات صفحات مجمّعة</p>
+          </article>
+        ))}
+      </section>
+
       <section className="grid gap-4 lg:grid-cols-2">
         <TrendChart title="إجمالي المبيعات الشهرية (ل.س)" data={data.monthly} field="revenue" color="#E79A4B" />
         <TrendChart title="معاملات البيع المكتملة شهريًا" data={data.monthly} field="sales" color="#F472B6" />
         <VisitsChart data={data.metrics.pageViewsByDay} />
         <TrendChart title="المستخدمون الجدد شهريًا" data={data.monthly} field="newUsers" color="#60A5FA" />
         <TrendChart title="البائعون الجدد شهريًا" data={data.monthly} field="newVendors" color="#34D399" />
+      </section>
+
+      <section className="ak-panel p-5">
+        <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
+          <div><p className="ak-eyebrow">BEST SELLERS</p><h2 className="mt-1 text-lg font-bold">أفضل 5 منتجات مبيعًا</h2></div>
+          <p className="text-xs text-stone-500">حسب الكميات في الطلبات المدفوعة أو المشحونة أو المسلّمة</p>
+        </div>
+        {data.topSellingProducts.length ? (
+          <ol className="space-y-3">
+            {data.topSellingProducts.map((product, index) => {
+              const maxUnits = Math.max(...data.topSellingProducts.map((item) => item.unitsSold), 1);
+              const colors = ['bg-amber-300', 'bg-sky-300', 'bg-violet-300', 'bg-emerald-300', 'bg-rose-300'];
+              return (
+                <li key={product.id} className="grid grid-cols-[2rem_minmax(0,1fr)_auto] items-center gap-3">
+                  <span className={`flex size-8 items-center justify-center rounded-full ${colors[index]} text-xs font-black text-ak-ink`}>{index + 1}</span>
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-semibold">{product.title}</p>
+                    <p className="text-xs text-stone-500">{product.categoryName}</p>
+                    <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/5">
+                      <div className={`h-full rounded-full ${colors[index]}`} style={{ width: `${(product.unitsSold / maxUnits) * 100}%` }} />
+                    </div>
+                  </div>
+                  <span className="text-xs font-bold text-ak-honey">{number(product.unitsSold)} وحدة</span>
+                </li>
+              );
+            })}
+          </ol>
+        ) : <p className="rounded-xl border border-dashed border-ak-line p-5 text-sm text-stone-400">لا توجد مبيعات مكتملة كافية لعرض ترتيب المنتجات بعد.</p>}
       </section>
 
       <section id="review-queue" className="grid scroll-mt-24 gap-6 xl:grid-cols-2">

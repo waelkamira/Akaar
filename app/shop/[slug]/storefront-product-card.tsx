@@ -15,6 +15,8 @@ type Product = {
   stockQuantity: number | null;
   categoryName: string;
   city: string | null;
+  averageRating: number | null;
+  reviewCount: number;
 };
 
 export default function StorefrontProductCard({ product }: { product: Product }) {
@@ -41,6 +43,7 @@ export default function StorefrontProductCard({ product }: { product: Product })
         <div className="p-4">
           <p className="text-xs text-ak-amber">{product.categoryName}{product.city ? ` · ${product.city}` : ''}</p>
           <h3 className="mt-2 line-clamp-2 min-h-12 font-bold">{product.title}</h3>
+          <p className="mt-2 text-xs text-amber-300">{product.averageRating === null ? 'لا توجد تقييمات' : `★ ${product.averageRating.toFixed(1)} · ${product.reviewCount} تقييم`}</p>
           <p className="mt-3 text-lg font-black text-ak-honey">{product.basePrice === null ? 'السعر عند الطلب' : `${new Intl.NumberFormat('ar-SY').format(product.basePrice)} ل.س`}</p>
           <p className="mt-1 text-xs text-stone-500">{available ? `المتوفر: ${product.stockQuantity}` : 'نفد المخزون'}</p>
         </div>

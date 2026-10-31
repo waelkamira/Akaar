@@ -1,13 +1,13 @@
 import { NextResponse } from 'next/server';
 import ImageKit from 'imagekit';
-import { getAdminUser } from '@/lib/auth/require-auth';
+import { getControlPanelAdmin } from '@/lib/auth/require-auth';
 import { prisma } from '@/lib/db/prisma';
 
 export async function GET(
   _request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  const admin = await getAdminUser();
+  const admin = await getControlPanelAdmin();
   if (!admin) {
     return NextResponse.json({ error: 'صلاحيات المدير مطلوبة.' }, { status: 403 });
   }

@@ -5,6 +5,7 @@ import { readMarketplaceSettings } from '@/lib/marketplace/settings';
 
 type MonthlyMetric = { month: string; revenue: bigint; sales: bigint; newUsers: bigint; newVendors: bigint };
 type DailyVisitMetric = { day: string; views: bigint };
+type TopSellingProduct = { id: string; title: string; categoryName: string; unitsSold: bigint };
 
 function toSafeNumber(value: bigint) {
   const result = Number(value);
@@ -94,6 +95,43 @@ async function readMonthlyMetrics(start: Date, hasCanonicalPaymentTable: boolean
   `;
 }
 
+async function readTopSellingProducts(tables: {
+  hasCanonicalOrderItemTable: boolean;
+  hasCanonicalOrderTable: boolean;
+  hasLegacyOrderItemTable: boolean;
+  hasLegacyOrderTable: boolean;
+}) {
+  if (tables.hasCanonicalOrderItemTable && tables.hasCanonicalOrderTable) {
+    return prisma.$queryRaw<TopSellingProduct[]>`
+      SELECT p.id, p.title, p."categoryName",
+        SUM(item.quantity)::bigint AS "unitsSold"
+      FROM public.products p
+      JOIN public."OrderItem" item ON item."productId" = p.id
+      JOIN public."Order" order_record ON order_record.id = item."orderId"
+      WHERE NOT p."isDeleted"
+        AND order_record.status::text IN ('PAID', 'SHIPPED', 'DELIVERED')
+      GROUP BY p.id, p.title, p."categoryName"
+      ORDER BY SUM(item.quantity) DESC, p.title ASC
+      LIMIT 5
+    `;
+  }
+  if (tables.hasLegacyOrderItemTable && tables.hasLegacyOrderTable) {
+    return prisma.$queryRaw<TopSellingProduct[]>`
+      SELECT p.id, p.title, p."categoryName",
+        SUM(item.quantity)::bigint AS "unitsSold"
+      FROM public.products p
+      JOIN public.order_items item ON item."productId" = p.id
+      JOIN public.orders order_record ON order_record.id = item."orderId"
+      WHERE NOT p."isDeleted"
+        AND order_record.status::text IN ('PAID', 'SHIPPED', 'DELIVERED')
+      GROUP BY p.id, p.title, p."categoryName"
+      ORDER BY SUM(item.quantity) DESC, p.title ASC
+      LIMIT 5
+    `;
+  }
+  return [];
+}
+
 export async function GET() {
   const admin = await getAdminUser();
   if (!admin) {
@@ -112,6 +150,8 @@ export async function GET() {
       hasCanonicalReturnTable: boolean;
       hasSiteVisitTable: boolean;
       hasSubscriberTable: boolean;
+      hasCanonicalOrderItemTable: boolean;
+      hasLegacyOrderItemTable: boolean;
     }>>`
       SELECT
         to_regclass('public."Order"') IS NOT NULL AS "hasCanonicalOrderTable",
@@ -121,7 +161,9 @@ export async function GET() {
         to_regclass('public."Return"') IS NOT NULL AS "hasCanonicalReturnTable",
         to_regclass('public.returns') IS NOT NULL AS "hasLegacyReturnTable",
         to_regclass('public.daily_site_visits') IS NOT NULL AS "hasSiteVisitTable",
-        to_regclass('public.newsletter_subscribers') IS NOT NULL AS "hasSubscriberTable"
+        to_regclass('public.newsletter_subscribers') IS NOT NULL AS "hasSubscriberTable",
+        to_regclass('public."OrderItem"') IS NOT NULL AS "hasCanonicalOrderItemTable",
+        to_regclass('public.order_items') IS NOT NULL AS "hasLegacyOrderItemTable"
     `;
     if ((!tables.hasCanonicalOrderTable && !tables.hasLegacyOrderTable)
       || (!tables.hasCanonicalPaymentTable && !tables.hasLegacyPaymentTable)) {
@@ -143,13 +185,31 @@ export async function GET() {
           .then(([{ count }]) => toSafeNumber(count))
         : Promise.resolve(0);
     const visitorMetrics = tables.hasSiteVisitTable
-      ? prisma.$queryRaw<Array<{ total: bigint; last30Days: bigint }>>`
+      ? prisma.$queryRaw<Array<{
+          total: bigint;
+          today: bigint;
+          last7Days: bigint;
+          last30Days: bigint;
+          last365Days: bigint;
+          thisYear: bigint;
+        }>>`
           SELECT
             COALESCE(SUM(views), 0)::bigint AS total,
-            COALESCE(SUM(views) FILTER (WHERE day >= CURRENT_DATE - INTERVAL '29 days'), 0)::bigint AS "last30Days"
+            COALESCE(SUM(views) FILTER (WHERE day = CURRENT_DATE), 0)::bigint AS today,
+            COALESCE(SUM(views) FILTER (WHERE day >= CURRENT_DATE - INTERVAL '6 days'), 0)::bigint AS "last7Days",
+            COALESCE(SUM(views) FILTER (WHERE day >= CURRENT_DATE - INTERVAL '29 days'), 0)::bigint AS "last30Days",
+            COALESCE(SUM(views) FILTER (WHERE day >= CURRENT_DATE - INTERVAL '364 days'), 0)::bigint AS "last365Days",
+            COALESCE(SUM(views) FILTER (WHERE day >= date_trunc('year', CURRENT_DATE)::date), 0)::bigint AS "thisYear"
           FROM public.daily_site_visits
-        `.then(([row]) => ({ total: toSafeNumber(row.total), last30Days: toSafeNumber(row.last30Days) }))
-      : Promise.resolve({ total: 0, last30Days: 0 });
+        `.then(([row]) => ({
+          total: toSafeNumber(row.total),
+          today: toSafeNumber(row.today),
+          last7Days: toSafeNumber(row.last7Days),
+          last30Days: toSafeNumber(row.last30Days),
+          last365Days: toSafeNumber(row.last365Days),
+          thisYear: toSafeNumber(row.thisYear),
+        }))
+      : Promise.resolve({ total: 0, today: 0, last7Days: 0, last30Days: 0, last365Days: 0, thisYear: 0 });
     const dailyVisits = tables.hasSiteVisitTable
       ? prisma.$queryRaw<DailyVisitMetric[]>`
           SELECT to_char(day, 'MM-DD') AS day, SUM(views)::bigint AS views
@@ -186,6 +246,7 @@ export async function GET() {
       settings,
       pendingProducts,
       recentVendors,
+      topSellingProducts,
     ] = await Promise.all([
       prisma.user.count({ where: { status: 'ACTIVE' } }),
       prisma.user.count(),
@@ -214,6 +275,7 @@ export async function GET() {
         take: 8,
         select: { id: true, storeName: true, slug: true, createdAt: true, user: { select: { email: true } } },
       }),
+      readTopSellingProducts(tables),
     ]);
 
     return NextResponse.json({
@@ -229,7 +291,11 @@ export async function GET() {
         completedSales,
         returns,
         pageViews: visitors.total,
+        pageViewsToday: visitors.today,
+        pageViewsLast7Days: visitors.last7Days,
         pageViewsLast30Days: visitors.last30Days,
+        pageViewsLast365Days: visitors.last365Days,
+        pageViewsThisYear: visitors.thisYear,
         pageViewsByDay: visitsByDay.map((row) => ({ day: row.day, views: toSafeNumber(row.views) })),
         analyticsEnabled: tables.hasSiteVisitTable,
         subscribers,
@@ -245,6 +311,10 @@ export async function GET() {
       settings,
       pendingProducts,
       pendingVendorsList: recentVendors,
+      topSellingProducts: topSellingProducts.map((product) => ({
+        ...product,
+        unitsSold: toSafeNumber(product.unitsSold),
+      })),
     });
   } catch (error) {
     console.error('Unable to load admin dashboard:', error);

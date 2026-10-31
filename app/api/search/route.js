@@ -5,6 +5,8 @@ import { sanitizeSearchText } from '@/lib/api/search-filters.mjs';
 import { buildWhere, getQueryTerms, textConditions, SORT_ORDERS, validPositiveInteger } from '@/lib/api/search-query.mjs';
 import { readJsonBody } from '@/lib/api/read-json-body.mjs';
 import { isPaginationOffsetOutOfRange } from '@/lib/api/validation.mjs';
+import { isReviewTableAvailable } from '@/lib/admin/review-table-availability';
+import { getProductRatingSummaries } from '@/lib/reviews/ratings';
 
 const MAX_QUERY_LENGTH = 120;
 const MAX_PAGE_SIZE = 50;
@@ -73,10 +75,19 @@ export async function POST(request) {
       minimumRating >= 1 &&
       minimumRating <= 5
     ) {
-      const ratedProducts = await prisma.review.groupBy({
-        by: ['productId'],
-        having: { rating: { _avg: { gte: minimumRating } } },
-      });
+      if (!(await isReviewTableAvailable())) {
+        return NextResponse.json(
+          { error: 'Product ratings are temporarily unavailable.' },
+          { status: 503 },
+        );
+      }
+
+      const ratedProducts = await prisma.$queryRaw<Array<{ productId: string }>>`
+        SELECT "productId"
+        FROM public.reviews
+        GROUP BY "productId"
+        HAVING AVG(rating)::float8 >= ${minimumRating}
+      `;
       where.AND = [
         ...(where.AND || []),
         { id: { in: ratedProducts.map((item) => item.productId) } },
@@ -103,11 +114,37 @@ export async function POST(request) {
     const remainingWhere = titleCondition
       ? { ...where, AND: [...(where.AND || []), { NOT: titleCondition }] }
       : where;
-    const productInclude = {
+    const productSelect = {
+      id: true,
+      title: true,
+      userId: true,
+      sellerId: true,
+      userImage: true,
+      userName: true,
+      categoryId: true,
+      categoryName: true,
+      images: true,
+      basePrice: true,
+      adCategory: true,
+      city: true,
+      town: true,
+      phoneNumber: true,
+      lng: true,
+      lat: true,
+      link: true,
+      details: true,
+      description: true,
+      stockQuantity: true,
+      salesCount: true,
+      isActive: true,
+      approvalStatus: true,
+      isDeleted: true,
+      deletedAt: true,
+      createdAt: true,
+      updatedAt: true,
       user: {
         select: { id: true, userName: true, userImage: true },
       },
-      _count: { select: { orderItems: true, reviews: true } },
     };
 
     let products;
@@ -120,13 +157,13 @@ export async function POST(request) {
             where: titleMatchWhere,
             take: limit,
             orderBy,
-            include: productInclude,
+            select: productSelect,
           }),
           prisma.product.findMany({
             where: remainingWhere,
             take: limit,
             orderBy,
-            include: productInclude,
+            select: productSelect,
           }),
           prisma.product.count({ where }),
         ]);
@@ -154,7 +191,7 @@ export async function POST(request) {
               skip: titleOffset,
               take: titleLimit,
               orderBy,
-              include: productInclude,
+              select: productSelect,
             })
           : [],
         remainingLimit
@@ -163,7 +200,7 @@ export async function POST(request) {
               skip: remainingOffset,
               take: remainingLimit,
               orderBy,
-              include: productInclude,
+              select: productSelect,
             })
           : [],
       ]);
@@ -176,20 +213,21 @@ export async function POST(request) {
           skip: pageOffset,
           take: limit,
           orderBy,
-          include: productInclude,
+          select: productSelect,
         }),
         prisma.product.count({ where }),
       ]);
     }
 
+    const ratings = await getProductRatingSummaries(products.map((product) => product.id));
     const normalizedProducts = products.map((product) => {
-      const { orderItems, ...counts } = product._count;
       return {
         ...product,
-        _count: { ...counts, orders: orderItems },
         image1: product.images?.[0] || null,
         userName: product.userName || product.user?.userName || null,
         userImage: product.userImage || product.user?.userImage || null,
+        averageRating: ratings.get(product.id)?.average ?? null,
+        reviewCount: ratings.get(product.id)?.count ?? 0,
       };
     });
 

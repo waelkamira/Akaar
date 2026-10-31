@@ -64,9 +64,13 @@ export async function GET(request: Request) {
       }),
       prisma.notification.count(),
       prisma.user.findMany({
-        where: { status: 'ACTIVE' },
+        where: { status: 'ACTIVE', seller: { isNot: null } },
         orderBy: { email: 'asc' },
-        select: { id: true, email: true, seller: { select: { phoneNumber: true } } },
+        select: {
+          id: true,
+          email: true,
+          seller: { select: { storeName: true, phoneNumber: true, status: true, isVerified: true } },
+        },
       }),
     ]);
     return NextResponse.json({
@@ -93,13 +97,28 @@ export async function POST(request: Request) {
   }
   if (!isPlainObject(payload)) return NextResponse.json({ error: 'صيغة الطلب غير صالحة.' }, { status: 400 });
   const body = payload as Record<string, unknown>;
-  const userId = typeof body.userId === 'string' ? body.userId.trim() : '';
+  if (Array.isArray(body.userIds) && body.userIds.some((value) => typeof value !== 'string')) {
+    return NextResponse.json({ error: 'قائمة المتاجر المحددة غير صالحة.' }, { status: 400 });
+  }
+  const requestedUserIds = Array.isArray(body.userIds)
+    ? [...new Set(body.userIds.filter((value): value is string => typeof value === 'string').map((value) => value.trim()).filter(Boolean))]
+    : typeof body.userId === 'string' && body.userId.trim()
+      ? [body.userId.trim()]
+      : [];
   const message = typeof body.message === 'string' ? body.message.trim() : '';
   const type = typeof body.type === 'string' ? body.type.trim() : 'ADMIN';
   const sendEmail = body.sendEmail === true;
   const sendSms = body.sendSms === true;
-  if (!userId || userId.length > 128 || !message || message.length > 4000 || !type || type.length > 60) {
-    return NextResponse.json({ error: 'حدد مستخدمًا ورسالة صالحة لا تتجاوز 4000 حرف.' }, { status: 400 });
+  if (
+    !requestedUserIds.length ||
+    requestedUserIds.length > 1000 ||
+    requestedUserIds.some((id) => id.length > 128) ||
+    !message ||
+    message.length > 4000 ||
+    !type ||
+    type.length > 60
+  ) {
+    return NextResponse.json({ error: 'حدد متجرًا واحدًا على الأقل (وبحد أقصى 1000) واكتب رسالة صالحة لا تتجاوز 4000 حرف.' }, { status: 400 });
   }
   if (sendEmail && !isEmailConfigured()) {
     return NextResponse.json({ error: 'إرسال البريد غير مهيأ. أضف RESEND_API_KEY وRESEND_FROM_EMAIL إلى بيئة الخادم.' }, { status: 503 });
@@ -109,46 +128,48 @@ export async function POST(request: Request) {
   }
 
   try {
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      select: { id: true, email: true, status: true, seller: { select: { phoneNumber: true } } },
+    const users = await prisma.user.findMany({
+      where: { id: { in: requestedUserIds }, status: 'ACTIVE', seller: { isNot: null } },
+      select: { id: true, email: true, seller: { select: { phoneNumber: true } } },
     });
-    if (!user || user.status !== 'ACTIVE') return NextResponse.json({ error: 'المستخدم غير موجود أو غير نشط.' }, { status: 404 });
-    const phoneNumber = user.seller?.phoneNumber?.trim();
-    if (sendSms && !phoneNumber) {
-      return NextResponse.json({ error: 'لا يوجد رقم هاتف موثّق لمتجر المستخدم لإرسال الرسالة.' }, { status: 400 });
+    if (users.length !== requestedUserIds.length) {
+      return NextResponse.json({ error: 'بعض المتاجر المحددة غير موجودة أو لم تعد نشطة.' }, { status: 404 });
+    }
+    if (sendSms && users.some((recipient) => !recipient.seller?.phoneNumber?.trim())) {
+      return NextResponse.json({ error: 'يجب توفر رقم هاتف لكل متجر محدد لإرسال SMS.' }, { status: 400 });
     }
 
-    const notification = await prisma.notification.create({
-      data: { userId: user.id, type, message },
-      select: { id: true, userId: true, type: true, message: true, isRead: true, createdAt: true },
+    await prisma.notification.createMany({
+      data: users.map((recipient) => ({ userId: recipient.id, type, message })),
     });
+
     const deliveryErrors: string[] = [];
-    if (sendEmail) {
-      try {
-        await deliverEmail(user.email, message);
-      } catch (error) {
-        console.error('Admin message email delivery failed:', error);
-        deliveryErrors.push('email');
+    for (const [channel, isEnabled, deliver] of [
+      ['email', sendEmail, (recipient: typeof users[number]) => deliverEmail(recipient.email, message)],
+      ['sms', sendSms, (recipient: typeof users[number]) => deliverSms(recipient.seller?.phoneNumber?.trim() || '', message)],
+    ] as const) {
+      if (!isEnabled) continue;
+      let failedCount = 0;
+      for (let index = 0; index < users.length; index += 10) {
+        const batch = users.slice(index, index + 10);
+        const results = await Promise.allSettled(batch.map(deliver));
+        const failures = results.filter((result) => result.status === 'rejected');
+        failedCount += failures.length;
+        failures.forEach((result) => {
+          if (result.status === 'rejected') console.error(`Admin bulk message ${channel} delivery failed:`, result.reason);
+        });
       }
-    }
-    if (sendSms && phoneNumber) {
-      try {
-        await deliverSms(phoneNumber, message);
-      } catch (error) {
-        console.error('Admin message SMS delivery failed:', error);
-        deliveryErrors.push('sms');
-      }
+      if (failedCount) deliveryErrors.push(`${channel} (${failedCount})`);
     }
     if (deliveryErrors.length) {
       return NextResponse.json({
         error: `حُفظت الرسالة داخل التطبيق، لكن تعذر إرسالها عبر: ${deliveryErrors.join(', ')}.`,
-        notification,
+        recipientCount: users.length,
         deliveredInApp: true,
         deliveryErrors,
       }, { status: 502 });
     }
-    return NextResponse.json({ notification }, { status: 201 });
+    return NextResponse.json({ recipientCount: users.length }, { status: 201 });
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2003') {
       return NextResponse.json({ error: 'المستخدم المحدد غير موجود.' }, { status: 404 });
