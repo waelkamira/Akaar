@@ -1,0 +1,31 @@
+Akaar repository structure snapshot
+Generated: 2026-11-01
+Default branch: main
+
+Top-level application areas
+- app/          Next.js App Router pages and API route handlers
+- components/   Shared UI components
+- features/     Feature-specific client logic and state
+- hooks/        Shared React hooks
+- lib/          Server-side services, validation, auth, database and business logic
+- prisma/       Canonical Prisma schema, migrations and seed scripts
+- public/       Static assets and PWA assets
+- scripts/      Local database and maintenance scripts
+- styles/       Global styles and design tokens
+- tests/        Unit and PostgreSQL-backed integration tests
+- types/        Shared TypeScript declarations
+- docs/         Security, operational and project documentation
+- .github/      CI workflows
+
+Important files
+- README.md                         Canonical audit, issue log and execution plan
+- prisma/schema.prisma              Canonical Prisma schema (always pass --schema explicitly)
+- .github/workflows/quality.yml     Prisma, PostgreSQL integration, unit, lint and build checks
+- docker-compose.test.yml            Disposable PostgreSQL/Redis test services
+- docs/security/request-body-limits.md  API JSON request-size policy
+- docs/security/durable-rate-limiting.md  Durable rate-limit configuration
+
+To regenerate a complete tracked-file list from a checkout:
+  git ls-files > project-structure.txt
+
+This is a high-level guide, not a substitute for the live repository tree.
