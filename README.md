@@ -88,6 +88,7 @@ This structure provides a solid, scalable foundation. It is recommended to build
 | DOC-03 | P2 | `DEBUG_README.md` contains only a report heading and no usable findings or reproduction steps. | Move actionable findings into this README or a linked issue log, and remove the empty placeholder once references are checked. |
 | CI-01 | P1 | **Fix prepared on this audit branch:** `.github/workflows/quality.yml` now includes a `push` trigger for `main` in addition to pull requests and manual dispatch. | Confirm the updated workflow completes successfully on this PR and on a subsequent push to `main` after merge. |
 | TEST-01 | P1 | `tests/search-database.integration.test.mjs` exercises Prisma queries and the search-query helper against PostgreSQL; it does not send requests through the actual Next.js search route. The current tests therefore do not fully verify API response shape, rate limiting, HTTP validation, and end-to-end filtering together. | Add route-level/integration coverage for `POST /api/search` and `GET /api/search/suggestions`, including status codes, malformed payloads, visibility rules, ratings, pagination and sorting. |
+| SEARCH-01 | P1 | The shared search sort definitions did not include a unique final tie-breaker for products sharing the same price, sales count, or creation timestamp. Offset pagination could therefore reorder equal-key products between requests. | Added `id ASC` as the final key for each supported sort and added `tests/search-query.test.mjs`; verify CI passes. Full route-level coverage remains a separate gap. |
 | SEC-01 | P2 | **Partially addressed on this audit branch:** `app/api/reviews/route.ts` now uses the shared bounded JSON reader with a 16 KiB limit. Code search also found direct `request.json()` parsing in seller product/store, admin settings/approval, messages, and bookings routes. This remains a pattern-level risk until those routes are reviewed individually. | Test review requests at and above the limit, then inventory and harden remaining mutation routes using the bounded reader where appropriate. Confirm ingress limits too. |
 | IMG-01 | P2 | `next.config.js` permits remote images from any HTTPS hostname through `hostname: '**'`. This is broader than an explicit provider/domain allowlist and can permit unintended remote image sources. | Replace the wildcard with the real image hosts used by the project (including the configured image provider), then test all existing product/profile/store image URLs before deployment. |
 | DB-01 | P1 | The store/product rating APIs intentionally return HTTP 503 when the corresponding review table is absent. The repository includes migrations for product/store ratings, but code presence does not prove that the deployment database has applied them. | Verify migration status on the intended target database before enabling ratings; apply migrations through the controlled deployment process, then test both product and store rating GET/POST flows. Never claim ratings work based on schema validation alone. |
@@ -141,6 +142,7 @@ These are risk areas requiring targeted tests; they are **not all confirmed runt
 - [ ] Replace empty/stub audit artifacts with real documentation or remove them after checking references.
 
 ### Phase B — Close high-risk data and API gaps
+- [x] Add deterministic `id ASC` tie-breakers to search sorting and unit tests for sort order and core filters (CI verification pending).
 - [ ] Inspect the target database before the favorites table rename migration; confirm its timestamp and starting-state assumptions.
 - [ ] Apply and verify rating migrations in the intended environment; exercise product and store rating APIs.
 - [x] Add bounded body parsing (16 KiB) to review writes; test via existing bounded-reader unit tests and verify CI. [ ] Add/verify appropriate rate limiting to review writes.
@@ -198,6 +200,7 @@ Do not run the destructive test reset against any database containing user or pr
 | Repository tree inventory | Completed; 460 tracked files reported by GitHub tree API |
 | CI trigger fix | Implemented on audit branch; CI validation pending |
 | Review POST body limit | Implemented on audit branch using shared 16 KiB bounded reader; CI validation pending |
+| Stable search sort | Implemented on audit branch with `id ASC` tie-breakers and new unit tests; CI validation pending |
 | Static inspection of project configuration, active Prisma schema, migration workflow, search route, review route, Stripe webhook and selected tests | Completed for this first pass |
 | Current `main` unit tests | Not executed in this review environment |
 | Current `main` lint | Not executed in this review environment |
