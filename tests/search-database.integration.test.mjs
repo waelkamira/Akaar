@@ -1,5 +1,6 @@
 import test, { before, after } from 'node:test';
 import assert from 'node:assert/strict';
+import { rm } from 'node:fs/promises';
 import { randomUUID } from 'node:crypto';
 import { spawn } from 'node:child_process';
 import { once } from 'node:events';
@@ -97,9 +98,13 @@ before(async () => {
 });
 
 after(async () => {
-  if (nextServer && nextServer.exitCode === null) {
-    nextServer.kill('SIGTERM');
-    await Promise.race([once(nextServer, 'exit'), delay(2000)]);
+  if (nextServer) {
+    if (nextServer.exitCode === null) {
+      nextServer.kill('SIGTERM');
+      await Promise.race([once(nextServer, 'exit'), delay(2000)]);
+    }
+    // Next dev and next build share .next; remove dev output before CI's production build.
+    await rm('.next', { recursive: true, force: true });
   }
   if (productIds.length) await prisma.product.deleteMany({ where: { id: { in: productIds } } });
   if (categoryCreated) await prisma.category.delete({ where: { id: categoryId } });
