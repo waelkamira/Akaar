@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
+import { readFile, readdir } from 'node:fs/promises';
+import { join, relative } from 'node:path';
 
 const boundedMutationRoutes = [
   ['app/api/seller/products/[id]/route.ts', 16 * 1024],
@@ -31,3 +32,29 @@ for (const [path, maxBytes] of boundedMutationRoutes) {
     assert.doesNotMatch(source, /request\.json\s*\(\s*\)/);
   });
 }
+
+
+async function listFilesRecursively(directory) {
+  const entries = await readdir(directory, { withFileTypes: true });
+  const nested = await Promise.all(entries.map(async (entry) => {
+    const fullPath = join(directory, entry.name);
+    if (entry.isDirectory()) return listFilesRecursively(fullPath);
+    return [fullPath];
+  }));
+  return nested.flat();
+}
+
+test('API route handlers do not call request.json() without a body-size bound', async () => {
+  const apiDirectory = new URL('../app/api/', import.meta.url);
+  const files = await listFilesRecursively(apiDirectory.pathname);
+  const unboundedRoutes = [];
+
+  for (const file of files.filter((path) => /route\\.(?:js|ts)$/.test(path))) {
+    const source = await readFile(file, 'utf8');
+    if (/request\\.json\\s*\\(\\s*\\)/.test(source)) {
+      unboundedRoutes.push(relative(apiDirectory.pathname, file).replaceAll('\\\\', '/'));
+    }
+  }
+
+  assert.deepEqual(unboundedRoutes, [], `Unbounded JSON parsing remains in: ${unboundedRoutes.join(', ')}`);
+});
