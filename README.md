@@ -200,7 +200,7 @@ Do not run the destructive test reset against any database containing user or pr
 | Repository tree inventory | Completed; 460 tracked files reported by GitHub tree API |
 | CI trigger fix | Passed on audit commit `07ea037`; CI run [41338563737](https://github.com/waelkamira/Akaar/actions/runs/41338563737) succeeded |
 | Review POST body limit and write rate limit | Implemented on audit branch; latest CI run pending after adding the durable `review-write` policy |
-| Stable search sort and route-level coverage | Stable tie-breakers passed in CI run [41338563737](https://github.com/waelkamira/Akaar/actions/runs/41338563737); actual HTTP route tests added after that run and await revalidation |
+| Stable search sort and route-level coverage | Unit sorting tests passed in CI run [41338563737](https://github.com/waelkamira/Akaar/actions/runs/41338563737). Actual HTTP route tests passed in the later integration step, but the subsequent production build failed because Next dev output remained in `.next`; test cleanup now removes that generated cache before build. Re-run CI to verify. |
 | Static inspection of project configuration, active Prisma schema, migration workflow, search route, review route, Stripe webhook and selected tests | Completed for this first pass |
 | Unit tests on audit branch | Passed in CI run [41338563737](https://github.com/waelkamira/Akaar/actions/runs/41338563737) on commit `07ea037` |
 | ESLint on audit branch | Passed in CI run [41338563737](https://github.com/waelkamira/Akaar/actions/runs/41338563737) on commit `07ea037` |
