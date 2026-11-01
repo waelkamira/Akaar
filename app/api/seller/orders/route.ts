@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getActiveSeller } from '@/lib/auth/require-seller';
 import { prisma } from '@/lib/db/prisma';
+import { readJsonBody } from '@/lib/api/read-json-body.mjs';
 
 export async function GET() {
   const { seller } = await getActiveSeller();
@@ -43,12 +44,9 @@ export async function PATCH(request: Request) {
   const { seller } = await getActiveSeller();
   if (!seller) return NextResponse.json({ error: 'صلاحيات البائع المفعّل مطلوبة.' }, { status: 403 });
 
-  let payload: unknown;
-  try {
-    payload = await request.json();
-  } catch {
-    return NextResponse.json({ error: 'صيغة الطلب غير صالحة.' }, { status: 400 });
-  }
+  const parsedBody = await readJsonBody(request, 16 * 1024);
+  if (!parsedBody.ok) return NextResponse.json({ error: parsedBody.error }, { status: parsedBody.status });
+  const payload: unknown = parsedBody.value;
   if (!payload || typeof payload !== 'object' || Array.isArray(payload)) {
     return NextResponse.json({ error: 'صيغة الطلب غير صالحة.' }, { status: 400 });
   }
