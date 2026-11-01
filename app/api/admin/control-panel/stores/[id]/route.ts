@@ -4,6 +4,7 @@ import { getControlPanelAdmin } from '@/lib/auth/require-auth';
 import { isPlainObject } from '@/lib/api/validation.mjs';
 import { prisma } from '@/lib/db/prisma';
 import { isVendorOrderTableAvailable } from '@/lib/admin/review-table-availability';
+import { readJsonBody } from '@/lib/api/read-json-body.mjs';
 
 type RouteContext = { params: Promise<{ id: string }> };
 const sellerStatuses = ['PENDING', 'ACTIVE', 'SUSPENDED', 'REJECTED'] as const;
@@ -20,12 +21,9 @@ export async function PATCH(request: Request, { params }: RouteContext) {
   const { id } = await params;
   if (!id || id.length > 128) return NextResponse.json({ error: 'معرف المتجر غير صالح.' }, { status: 400 });
 
-  let payload: unknown;
-  try {
-    payload = await request.json();
-  } catch {
-    return NextResponse.json({ error: 'صيغة الطلب غير صالحة.' }, { status: 400 });
-  }
+  const parsedBody = await readJsonBody(request, 32 * 1024);
+  if (!parsedBody.ok) return NextResponse.json({ error: parsedBody.error }, { status: parsedBody.status });
+  const payload: unknown = parsedBody.value;
   if (!isPlainObject(payload)) return NextResponse.json({ error: 'صيغة الطلب غير صالحة.' }, { status: 400 });
   const body = payload as Record<string, unknown>;
   const data: Prisma.SellerUpdateInput = {};
