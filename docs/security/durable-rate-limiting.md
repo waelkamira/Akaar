@@ -1,6 +1,6 @@
 # Durable API rate limiting
 
-Status: implementation proposed in PR; requires deployment configuration before production use.
+Status: implemented in application routes; requires deployment configuration and provider verification before production use.
 
 ## Backend
 
@@ -24,6 +24,7 @@ The helper rejects non-HTTPS endpoints. Do not use a local or in-memory substitu
 | `image-upload` | `POST /api/uploadImageToIPFS`, `/api/uploadImageToImageKit`, `/api/uploadImageToImgbb`, `/api/uploadImageToImgur` | 20 | 10 minutes per client address + authenticated user |
 | `catalog-search` | `POST /api/search` | 60 | 1 minute per client address |
 | `search-suggestions` | `GET /api/search/suggestions` | 120 | 1 minute per client address |
+| `review-write` | `POST /api/reviews` | 10 | 10 minutes per client address + authenticated user ID |
 | `product-catalog` | `GET /api/product` | 120 | 1 minute per client address |
 | `category-detail` | `GET /api/categories/[id]` | 60 | 1 minute per client address |
 | `category-bulk` | `GET /api/categories/bulk` | 60 | 1 minute per client address |
