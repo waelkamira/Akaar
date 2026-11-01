@@ -4,6 +4,7 @@ import { prisma } from '@/lib/db/prisma';
 import { getActiveSeller } from '@/lib/auth/require-seller';
 import { getAuthenticatedUser } from '@/lib/auth/require-auth';
 import { propertyInputSchema, propertySearchSchema } from '@/lib/properties/validation';
+import { readJsonBody } from '@/lib/api/read-json-body.mjs';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -83,12 +84,9 @@ export async function POST(request: Request) {
   const actor = await getAuthenticatedUser();
   if (!actor) return NextResponse.json({ error: 'Authentication required.' }, { status: 401 });
 
-  let payload: unknown;
-  try {
-    payload = await request.json();
-  } catch {
-    return NextResponse.json({ error: 'Request body must be valid JSON.' }, { status: 400 });
-  }
+  const parsedBody = await readJsonBody(request, 64 * 1024);
+  if (!parsedBody.ok) return NextResponse.json({ error: parsedBody.error }, { status: parsedBody.status });
+  const payload: unknown = parsedBody.value;
 
   if (!payload || typeof payload !== 'object' || Array.isArray(payload)) {
     return NextResponse.json({ error: 'Request body must be an object.' }, { status: 400 });
