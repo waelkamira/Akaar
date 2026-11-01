@@ -11,6 +11,16 @@ const boundedMutationRoutes = [
   ['app/api/messages/route.ts', 16 * 1024],
   ['app/api/seller/store/route.ts', 32 * 1024],
   ['app/api/bookings/route.ts', 16 * 1024],
+  ['app/api/seller/orders/route.ts', 16 * 1024],
+  ['app/api/properties/route.ts', 64 * 1024],
+  ['app/api/properties/[id]/route.ts', 64 * 1024],
+  ['app/api/messages/[id]/route.ts', 16 * 1024],
+  ['app/api/admin/control-panel/messages/[id]/route.ts', 16 * 1024],
+  ['app/api/admin/users/[id]/route.ts', 16 * 1024],
+  ['app/api/seller/application/route.ts', 16 * 1024],
+  ['app/api/admin/control-panel/stores/route.ts', 32 * 1024],
+  ['app/api/admin/control-panel/messages/route.ts', 64 * 1024],
+  ['app/api/admin/control-panel/stores/[id]/route.ts', 32 * 1024],
 ];
 
 for (const [path, maxBytes] of boundedMutationRoutes) {
