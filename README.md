@@ -199,13 +199,13 @@ Do not run the destructive test reset against any database containing user or pr
 |---|---|
 | Repository tree inventory | Completed; 460 tracked files reported by GitHub tree API |
 | CI trigger fix | Passed on audit commit `07ea037`; CI run [41338563737](https://github.com/waelkamira/Akaar/actions/runs/41338563737) succeeded |
-| Review POST body limit and write rate limit | Implemented on audit branch; latest CI run pending after adding the durable `review-write` policy |
-| Stable search sort and route-level coverage | Unit sorting tests passed in CI run [41338563737](https://github.com/waelkamira/Akaar/actions/runs/41338563737). Actual HTTP route tests passed in the later integration step, but the subsequent production build failed because Next dev output remained in `.next`; test cleanup now removes that generated cache before build. Re-run CI to verify. |
+| Review POST body limit and write rate limit | Passed on audit commit `d752672`; CI run [41339160083](https://github.com/waelkamira/Akaar/actions/runs/41339160083) succeeded |
+| Stable search sort and route-level coverage | Passed on audit commit `d752672`; both HTTP route tests and the production build passed in CI run [41339160083](https://github.com/waelkamira/Akaar/actions/runs/41339160083). The test suite removes the temporary Next dev cache before production build. |
 | Static inspection of project configuration, active Prisma schema, migration workflow, search route, review route, Stripe webhook and selected tests | Completed for this first pass |
 | Unit tests on audit branch | Passed in CI run [41338563737](https://github.com/waelkamira/Akaar/actions/runs/41338563737) on commit `07ea037` |
 | ESLint on audit branch | Passed in CI run [41338563737](https://github.com/waelkamira/Akaar/actions/runs/41338563737) on commit `07ea037` |
-| Production build on audit branch | Passed in CI run [41338563737](https://github.com/waelkamira/Akaar/actions/runs/41338563737) on commit `07ea037` |
-| Clean PostgreSQL migration run against current `main` | Not run on `main` because the fixes are not merged yet. On audit commit `07ea037`, the full migration chain deployed to clean PostgreSQL and the schema-drift check passed in CI run [41338563737](https://github.com/waelkamira/Akaar/actions/runs/41338563737). |
+| Production build on audit branch | Passed in CI run [41339160083](https://github.com/waelkamira/Akaar/actions/runs/41339160083) on commit `d752672` |
+| Clean PostgreSQL migration run against current `main` | Not run on `main` because the fixes are not merged yet. On audit commit `d752672`, the full migration chain deployed to clean PostgreSQL and the schema-drift check passed in CI run [41339160083](https://github.com/waelkamira/Akaar/actions/runs/41339160083). |
 | Search/filter route-level integration tests | Gap identified; not yet added |
 | Production deployment/database/payment configuration | Not accessible / not verified |
 
