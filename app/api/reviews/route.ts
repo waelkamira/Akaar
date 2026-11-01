@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import { getAuthenticatedUser } from '@/lib/auth/require-auth';
 import { prisma } from '@/lib/db/prisma';
 import { parseReviewSubmission } from '@/lib/api/review-validation.mjs';
+import { readJsonBody } from '@/lib/api/read-json-body.mjs';
 import { isReviewTableAvailable, isStoreReviewTableAvailable } from '@/lib/admin/review-table-availability';
 
 type ReviewTargetType = 'product' | 'store';
@@ -104,13 +105,14 @@ export async function POST(request: Request) {
   const user = await getAuthenticatedUser();
   if (!user) return NextResponse.json({ error: 'سجّل الدخول لإضافة تقييم.' }, { status: 401 });
 
-  let payload: unknown;
-  try {
-    payload = await request.json();
-  } catch {
-    return NextResponse.json({ error: 'صيغة الطلب غير صالحة.' }, { status: 400 });
+  const parsedBody = await readJsonBody(request, 16 * 1024);
+  if (!parsedBody.ok) {
+    return NextResponse.json(
+      { error: parsedBody.error },
+      { status: parsedBody.status },
+    );
   }
-  const submission = parseReviewSubmission(payload);
+  const submission = parseReviewSubmission(parsedBody.value);
   if (!submission) return NextResponse.json({ error: 'تحقق من نوع التقييم والنجوم والتعليق.' }, { status: 400 });
 
   try {
