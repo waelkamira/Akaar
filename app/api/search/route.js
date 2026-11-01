@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { consumeDurableRateLimit } from '@/lib/api/durable-rate-limit.mjs';
 import { prisma } from '@/lib/db/prisma';
 import { sanitizeSearchText } from '@/lib/api/search-filters.mjs';
-import { buildWhere, getQueryTerms, textConditions, SORT_ORDERS, validPositiveInteger } from '@/lib/api/search-query.mjs';
+import { buildWhere, getQueryTerms, textConditions, SORT_ORDERS, getSortOrder, validPositiveInteger } from '@/lib/api/search-query.mjs';
 import { readJsonBody } from '@/lib/api/read-json-body.mjs';
 import { isPaginationOffsetOutOfRange } from '@/lib/api/validation.mjs';
 import { isReviewTableAvailable } from '@/lib/admin/review-table-availability';
@@ -56,7 +56,7 @@ export async function POST(request) {
     typeof filters.sortBy === 'string' ? filters.sortBy : body.sortBy,
     32,
   );
-  const orderBy = SORT_ORDERS[sortKey] || [{ createdAt: 'desc' }];
+  const orderBy = getSortOrder(sortKey);
 
   try {
     const queryTerms = getQueryTerms(query);
