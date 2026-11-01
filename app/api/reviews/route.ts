@@ -4,6 +4,7 @@ import { getAuthenticatedUser } from '@/lib/auth/require-auth';
 import { prisma } from '@/lib/db/prisma';
 import { parseReviewSubmission } from '@/lib/api/review-validation.mjs';
 import { readJsonBody } from '@/lib/api/read-json-body.mjs';
+import { consumeDurableRateLimit } from '@/lib/api/durable-rate-limit.mjs';
 import { isReviewTableAvailable, isStoreReviewTableAvailable } from '@/lib/admin/review-table-availability';
 
 type ReviewTargetType = 'product' | 'store';
@@ -104,6 +105,24 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   const user = await getAuthenticatedUser();
   if (!user) return NextResponse.json({ error: 'سجّل الدخول لإضافة تقييم.' }, { status: 401 });
+
+  const rateLimit = await consumeDurableRateLimit({
+    request,
+    scope: 'review-write',
+    limit: 10,
+    windowMs: 10 * 60_000,
+    identity: user.id,
+  });
+  if (!rateLimit.allowed) {
+    const status = rateLimit.reason || !rateLimit.configured ? 503 : 429;
+    const headers = rateLimit.retryAfterSeconds
+      ? { 'Retry-After': String(rateLimit.retryAfterSeconds) }
+      : undefined;
+    return NextResponse.json(
+      { error: status === 429 ? 'تجاوزت الحد المسموح لإرسال التقييمات. حاول لاحقًا.' : 'خدمة الحماية غير متاحة حاليًا.' },
+      { status, headers },
+    );
+  }
 
   const parsedBody = await readJsonBody(request, 16 * 1024);
   if (!parsedBody.ok) {
