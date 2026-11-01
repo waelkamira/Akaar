@@ -5,6 +5,7 @@ import { isPlainObject } from '@/lib/api/validation.mjs';
 import { prisma } from '@/lib/db/prisma';
 import { isStoreMessagingAvailable } from '@/lib/messages/table-availability';
 import { insertStoreMessage } from '@/lib/messages/store-messaging';
+import { readJsonBody } from '@/lib/api/read-json-body.mjs';
 
 type RouteContext = { params: Promise<{ id: string }> };
 
@@ -85,12 +86,9 @@ export async function POST(request: Request, { params }: RouteContext) {
   const { id } = await params;
   if (!id || id.length > 128) return NextResponse.json({ error: 'معرف المحادثة غير صالح.' }, { status: 400 });
 
-  let payload: unknown;
-  try {
-    payload = await request.json();
-  } catch {
-    return NextResponse.json({ error: 'صيغة الطلب غير صالحة.' }, { status: 400 });
-  }
+  const parsedBody = await readJsonBody(request, 16 * 1024);
+  if (!parsedBody.ok) return NextResponse.json({ error: parsedBody.error }, { status: parsedBody.status });
+  const payload: unknown = parsedBody.value;
   if (!isPlainObject(payload)) return NextResponse.json({ error: 'صيغة الطلب غير صالحة.' }, { status: 400 });
   const bodyInput = payload as Record<string, unknown>;
   const body = typeof bodyInput.body === 'string' ? bodyInput.body.trim() : '';

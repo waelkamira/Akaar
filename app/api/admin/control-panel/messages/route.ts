@@ -3,6 +3,7 @@ import { Prisma } from '@prisma/client';
 import { getControlPanelAdmin } from '@/lib/auth/require-auth';
 import { getPagination, isPlainObject } from '@/lib/api/validation.mjs';
 import { prisma } from '@/lib/db/prisma';
+import { readJsonBody } from '@/lib/api/read-json-body.mjs';
 
 function isEmailConfigured() {
   return Boolean(process.env.RESEND_API_KEY && process.env.RESEND_FROM_EMAIL);
@@ -89,12 +90,9 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   const admin = await getControlPanelAdmin();
   if (!admin) return NextResponse.json({ error: 'صلاحيات مدير لوحة التحكم مطلوبة.' }, { status: 403 });
-  let payload: unknown;
-  try {
-    payload = await request.json();
-  } catch {
-    return NextResponse.json({ error: 'صيغة الطلب غير صالحة.' }, { status: 400 });
-  }
+  const parsedBody = await readJsonBody(request, 64 * 1024);
+  if (!parsedBody.ok) return NextResponse.json({ error: parsedBody.error }, { status: parsedBody.status });
+  const payload: unknown = parsedBody.value;
   if (!isPlainObject(payload)) return NextResponse.json({ error: 'صيغة الطلب غير صالحة.' }, { status: 400 });
   const body = payload as Record<string, unknown>;
   if (Array.isArray(body.userIds) && body.userIds.some((value) => typeof value !== 'string')) {

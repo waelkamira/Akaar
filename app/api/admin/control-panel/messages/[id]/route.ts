@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getControlPanelAdmin } from '@/lib/auth/require-auth';
 import { isPlainObject } from '@/lib/api/validation.mjs';
 import { prisma } from '@/lib/db/prisma';
+import { readJsonBody } from '@/lib/api/read-json-body.mjs';
 
 type RouteContext = { params: Promise<{ id: string }> };
 
@@ -11,12 +12,9 @@ export async function PATCH(request: Request, { params }: RouteContext) {
   const { id } = await params;
   if (!id || id.length > 128) return NextResponse.json({ error: 'معرف الرسالة غير صالح.' }, { status: 400 });
 
-  let payload: unknown;
-  try {
-    payload = await request.json();
-  } catch {
-    return NextResponse.json({ error: 'صيغة الطلب غير صالحة.' }, { status: 400 });
-  }
+  const parsedBody = await readJsonBody(request, 16 * 1024);
+  if (!parsedBody.ok) return NextResponse.json({ error: parsedBody.error }, { status: parsedBody.status });
+  const payload: unknown = parsedBody.value;
   if (!isPlainObject(payload)) return NextResponse.json({ error: 'صيغة الطلب غير صالحة.' }, { status: 400 });
   const body = payload as Record<string, unknown>;
   const data: { message?: string; type?: string } = {};

@@ -4,6 +4,7 @@ import { Prisma } from '@prisma/client';
 import { consumeDurableRateLimit } from '@/lib/api/durable-rate-limit.mjs';
 import { getAuthenticatedUser } from '@/lib/auth/require-auth';
 import { prisma } from '@/lib/db/prisma';
+import { readJsonBody } from '@/lib/api/read-json-body.mjs';
 
 const requestSchema = z.object({
   propertyId: z.string().uuid(),
@@ -49,12 +50,11 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: status === 429 ? 'Too many booking requests. Try again shortly.' : 'Booking protection is temporarily unavailable.' }, { status });
   }
 
-  let payload: unknown;
-  try {
-    payload = await request.json();
-  } catch {
-    return NextResponse.json({ error: 'Request body must be valid JSON.' }, { status: 400 });
+  const parsedBody = await readJsonBody(request, 16 * 1024);
+  if (!parsedBody.ok) {
+    return NextResponse.json({ error: parsedBody.error }, { status: parsedBody.status });
   }
+  const payload: unknown = parsedBody.value;
   const parsed = requestSchema.safeParse(payload);
   if (!parsed.success) {
     return NextResponse.json({ error: 'Booking request is invalid.', details: parsed.error.flatten() }, { status: 400 });
