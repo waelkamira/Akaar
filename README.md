@@ -149,6 +149,7 @@ These are risk areas requiring targeted tests; they are **not all confirmed runt
 - [x] Add bounded body parsing (16 KiB) and durable rate limiting to review writes; CI verification pending.
 - [x] Add route-level search/suggestion tests and run them against PostgreSQL (passed in prior CI run).
 - [x] Extend route-level tests for rating filters, malformed/oversized JSON and pagination boundaries (CI passed on commit `07b2982`).
+- [x] Add a route-level 503 test when the product review table is unavailable; validate this added case in the current PR CI before merge.
 - [ ] Exercise Stripe test-mode lifecycle and stock/order consistency, including retries and duplicate events.
 - [ ] Complete server-side authorization checks for admin/seller mutations and upload endpoints.
 
