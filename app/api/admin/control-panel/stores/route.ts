@@ -5,6 +5,7 @@ import { getPagination, isPlainObject } from '@/lib/api/validation.mjs';
 import { prisma } from '@/lib/db/prisma';
 import { isVendorOrderTableAvailable } from '@/lib/admin/review-table-availability';
 import { getStoreRatingSummaries } from '@/lib/reviews/ratings';
+import { readJsonBody } from '@/lib/api/read-json-body.mjs';
 
 const storeSelect = {
   id: true,
@@ -119,12 +120,9 @@ export async function POST(request: Request) {
   const admin = await getControlPanelAdmin();
   if (!admin) return NextResponse.json({ error: 'صلاحيات مدير لوحة التحكم مطلوبة.' }, { status: 403 });
 
-  let payload: unknown;
-  try {
-    payload = await request.json();
-  } catch {
-    return NextResponse.json({ error: 'صيغة الطلب غير صالحة.' }, { status: 400 });
-  }
+  const parsedBody = await readJsonBody(request, 32 * 1024);
+  if (!parsedBody.ok) return NextResponse.json({ error: parsedBody.error }, { status: parsedBody.status });
+  const payload: unknown = parsedBody.value;
   if (!isPlainObject(payload)) return NextResponse.json({ error: 'صيغة الطلب غير صالحة.' }, { status: 400 });
 
   const body = payload as Record<string, unknown>;
