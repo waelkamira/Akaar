@@ -93,7 +93,7 @@ This structure provides a solid, scalable foundation. It is recommended to build
 | IMG-01 | P2 | `next.config.js` permits remote images from any HTTPS hostname through `hostname: '**'`. This is broader than an explicit provider/domain allowlist and can permit unintended remote image sources. | Replace the wildcard with the real image hosts used by the project (including the configured image provider), then test all existing product/profile/store image URLs before deployment. |
 | DB-01 | P1 | The store/product rating APIs intentionally return HTTP 503 when the corresponding review table is absent. The repository includes migrations for product/store ratings, but code presence does not prove that the deployment database has applied them. | Verify migration status on the intended target database before enabling ratings; apply migrations through the controlled deployment process, then test both product and store rating GET/POST flows. Never claim ratings work based on schema validation alone. |
 | DB-02 | P1 | The migration `20261102000000_map_favorites_table` deliberately aborts if both `public.favorites` and `public."Favorite"` exist, or if neither exists. This is a safe guard against silently choosing the wrong data, but makes the starting state important. Its timestamp is also later than the audit date. | Confirm the timestamp is intentional and inspect the actual target schema for both table names before deployment. Resolve any duplicate-table/data situation explicitly; do not bypass the guard or apply the migration blindly to a production database. |
-| DB-03 | P1 | **Confirmed by CI on commit `a1345b2`:** the migration-history drift check failed after the clean migration deploy. Reported differences included the `Order.status` default, the `marketplace_settings.updatedAt` default, and legacy constraint/index names after the `Favorite` / `Review` table renames. The JSONB GIN index was also reported as a drop/recreate pair despite matching SQL text. | Added a follow-up reconciliation migration for metadata/defaults and switched the Prisma JSONB operator class to `JsonbPathOps`. Re-run the full migration-drift check on the updated branch; do not mark resolved until it passes. |
+| DB-03 | P1 | **Initially confirmed by CI on commit `a1345b2`, then reconciled:** the drift check found mismatched `Order.status` and `marketplace_settings.updatedAt` defaults plus legacy constraint/index names after the `Favorite` / `Review` table renames. The JSONB GIN index also appeared as a drop/recreate pair. | Added `20261103000000_reconcile_prisma_migration_drift`, normalized the JSONB operator class to `JsonbPathOps`, and verified that clean migration deployment plus the drift check pass on audit commit `07ea037`. |
 
 ## 3. High-Priority Technical Review Items
 
@@ -198,14 +198,14 @@ Do not run the destructive test reset against any database containing user or pr
 | Check | Status at this audit |
 |---|---|
 | Repository tree inventory | Completed; 460 tracked files reported by GitHub tree API |
-| CI trigger fix | Implemented on audit branch; CI validation pending |
-| Review POST body limit | Implemented on audit branch using shared 16 KiB bounded reader; CI validation pending |
-| Stable search sort | Implemented on audit branch with `id ASC` tie-breakers and new unit tests; CI validation pending |
+| CI trigger fix | Passed on audit commit `07ea037`; CI run [41338563737](https://github.com/waelkamira/Akaar/actions/runs/41338563737) succeeded |
+| Review POST body limit | Passed on audit commit `07ea037` using the shared 16 KiB bounded reader; CI run [41338563737](https://github.com/waelkamira/Akaar/actions/runs/41338563737) succeeded |
+| Stable search sort | Passed on audit commit `07ea037` with `id ASC` tie-breakers and new unit tests; CI run [41338563737](https://github.com/waelkamira/Akaar/actions/runs/41338563737) succeeded |
 | Static inspection of project configuration, active Prisma schema, migration workflow, search route, review route, Stripe webhook and selected tests | Completed for this first pass |
-| Current `main` unit tests | Not executed in this review environment |
-| Current `main` lint | Not executed in this review environment |
-| Current `main` production build | Not executed in this review environment |
-| Clean PostgreSQL migration run against current `main` | GitHub Actions applied the committed migrations successfully before the drift step; drift check failed on commit `a1345b2`. Reconciliation migration added on this audit branch; latest CI must confirm the fix. |
+| Unit tests on audit branch | Passed in CI run [41338563737](https://github.com/waelkamira/Akaar/actions/runs/41338563737) on commit `07ea037` |
+| ESLint on audit branch | Passed in CI run [41338563737](https://github.com/waelkamira/Akaar/actions/runs/41338563737) on commit `07ea037` |
+| Production build on audit branch | Passed in CI run [41338563737](https://github.com/waelkamira/Akaar/actions/runs/41338563737) on commit `07ea037` |
+| Clean PostgreSQL migration run against current `main` | Not run on `main` because the fixes are not merged yet. On audit commit `07ea037`, the full migration chain deployed to clean PostgreSQL and the schema-drift check passed in CI run [41338563737](https://github.com/waelkamira/Akaar/actions/runs/41338563737). |
 | Search/filter route-level integration tests | Gap identified; not yet added |
 | Production deployment/database/payment configuration | Not accessible / not verified |
 
