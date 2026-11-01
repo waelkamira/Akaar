@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { buildWhere, SORT_ORDERS, getQueryTerms, textConditions, validPositiveInteger } from '../lib/api/search-query.mjs';
+import { buildWhere, SORT_ORDERS, getSortOrder, getQueryTerms, textConditions, validPositiveInteger } from '../lib/api/search-query.mjs';
 
 test('all search sort orders end with a unique deterministic tie-breaker', () => {
   for (const [name, orderBy] of Object.entries(SORT_ORDERS)) {
@@ -9,6 +9,7 @@ test('all search sort orders end with a unique deterministic tie-breaker', () =>
   assert.deepEqual(SORT_ORDERS.cheapest[0], { basePrice: { sort: 'asc', nulls: 'last' } });
   assert.deepEqual(SORT_ORDERS.best_sellers[0], { salesCount: 'desc' });
   assert.deepEqual(SORT_ORDERS.newest[0], { createdAt: 'desc' });
+  assert.deepEqual(getSortOrder('unknown-sort'), SORT_ORDERS.newest);
 });
 
 test('search where clause always excludes deleted, inactive, unapproved and ineligible-seller products', () => {
