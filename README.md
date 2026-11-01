@@ -92,6 +92,7 @@ This structure provides a solid, scalable foundation. It is recommended to build
 | IMG-01 | P2 | `next.config.js` permits remote images from any HTTPS hostname through `hostname: '**'`. This is broader than an explicit provider/domain allowlist and can permit unintended remote image sources. | Replace the wildcard with the real image hosts used by the project (including the configured image provider), then test all existing product/profile/store image URLs before deployment. |
 | DB-01 | P1 | The store/product rating APIs intentionally return HTTP 503 when the corresponding review table is absent. The repository includes migrations for product/store ratings, but code presence does not prove that the deployment database has applied them. | Verify migration status on the intended target database before enabling ratings; apply migrations through the controlled deployment process, then test both product and store rating GET/POST flows. Never claim ratings work based on schema validation alone. |
 | DB-02 | P1 | The migration `20261102000000_map_favorites_table` deliberately aborts if both `public.favorites` and `public."Favorite"` exist, or if neither exists. This is a safe guard against silently choosing the wrong data, but makes the starting state important. Its timestamp is also later than the audit date. | Confirm the timestamp is intentional and inspect the actual target schema for both table names before deployment. Resolve any duplicate-table/data situation explicitly; do not bypass the guard or apply the migration blindly to a production database. |
+| DB-03 | P1 | **Confirmed by CI on commit `a1345b2`:** the migration-history drift check failed after the clean migration deploy. Reported differences included the `Order.status` default, the `marketplace_settings.updatedAt` default, and legacy constraint/index names after the `Favorite` / `Review` table renames. The JSONB GIN index was also reported as a drop/recreate pair despite matching SQL text. | Added a follow-up reconciliation migration for metadata/defaults and switched the Prisma JSONB operator class to `JsonbPathOps`. Re-run the full migration-drift check on the updated branch; do not mark resolved until it passes. |
 
 ## 3. High-Priority Technical Review Items
 
@@ -201,7 +202,7 @@ Do not run the destructive test reset against any database containing user or pr
 | Current `main` unit tests | Not executed in this review environment |
 | Current `main` lint | Not executed in this review environment |
 | Current `main` production build | Not executed in this review environment |
-| Clean PostgreSQL migration run against current `main` | Not executed in this review environment |
+| Clean PostgreSQL migration run against current `main` | GitHub Actions applied the committed migrations successfully before the drift step; drift check failed on commit `a1345b2`. Reconciliation migration added on this audit branch; latest CI must confirm the fix. |
 | Search/filter route-level integration tests | Gap identified; not yet added |
 | Production deployment/database/payment configuration | Not accessible / not verified |
 
