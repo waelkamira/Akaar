@@ -295,7 +295,7 @@ model Property {
   @@index([title(ops: raw("gin_trgm_ops"))], type: Gin, map: "properties_title_trgm_idx")
   @@index([description(ops: raw("gin_trgm_ops"))], type: Gin, map: "properties_description_trgm_idx")
   @@index([location(ops: raw("gin_trgm_ops"))], type: Gin, map: "properties_location_trgm_idx")
-  @@index([attributes(ops: raw("jsonb_path_ops"))], type: Gin, map: "properties_attributes_gin_idx")
+  @@index([attributes(ops: JsonbPathOps)], type: Gin, map: "properties_attributes_gin_idx")
   @@map("properties")
 }
 

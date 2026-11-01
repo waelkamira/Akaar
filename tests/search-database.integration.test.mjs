@@ -1,6 +1,10 @@
 import test, { before, after } from 'node:test';
 import assert from 'node:assert/strict';
+import { rm } from 'node:fs/promises';
 import { randomUUID } from 'node:crypto';
+import { spawn } from 'node:child_process';
+import { once } from 'node:events';
+import { setTimeout as delay } from 'node:timers/promises';
 import { PrismaClient } from '@prisma/client';
 import { buildWhere, getQueryTerms, textConditions, SORT_ORDERS } from '../lib/api/search-query.mjs';
 
@@ -12,6 +16,8 @@ const categoryId = 900000 + Math.floor(Math.random() * 90000);
 const productIds = [];
 let categoryCreated = false;
 let userCreated = false;
+let nextServer;
+const searchApiBaseUrl = 'http://127.0.0.1:3101';
 
 before(async () => {
   if (!enabled) return;
@@ -54,9 +60,52 @@ before(async () => {
     });
     productIds.push(fixture.id);
   }
+
+  // Exercise the actual Next.js route handlers against the isolated PostgreSQL database.
+  nextServer = spawn(
+    process.execPath,
+    ['node_modules/next/dist/bin/next', 'dev', '--hostname', '127.0.0.1', '--port', '3101'],
+    {
+      cwd: process.cwd(),
+      env: {
+        ...process.env,
+        NODE_ENV: 'development',
+        DATABASE_URL: process.env.DATABASE_URL,
+        NEXTAUTH_URL: searchApiBaseUrl,
+        NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET || 'ci-only-search-api-secret',
+      },
+      stdio: 'ignore',
+    },
+  );
+
+  let ready = false;
+  for (let attempt = 0; attempt < 90; attempt += 1) {
+    if (nextServer.exitCode !== null) {
+      throw new Error('Next.js development server exited before the search API became ready.');
+    }
+    try {
+      const response = await fetch(`${searchApiBaseUrl}/api/search/suggestions?query=Akaar`);
+      if (response.status === 200) {
+        ready = true;
+        break;
+      }
+    } catch {
+      // The server may still be compiling its first route.
+    }
+    await delay(1000);
+  }
+  if (!ready) throw new Error('Timed out waiting for the Next.js search API test server.');
 });
 
 after(async () => {
+  if (nextServer) {
+    if (nextServer.exitCode === null) {
+      nextServer.kill('SIGTERM');
+      await Promise.race([once(nextServer, 'exit'), delay(2000)]);
+    }
+    // Next dev and next build share .next; remove dev output before CI's production build.
+    await rm('.next', { recursive: true, force: true });
+  }
   if (productIds.length) await prisma.product.deleteMany({ where: { id: { in: productIds } } });
   if (categoryCreated) await prisma.category.delete({ where: { id: categoryId } });
   if (userCreated) await prisma.user.delete({ where: { id: userId } });
@@ -84,4 +133,44 @@ test('PostgreSQL sorting and pagination return stable price-ordered pages and co
   assert.equal(firstPage[0]?.id, productIds[0]);
   assert.equal(secondPage[0]?.id, productIds[1]);
   assert.ok(firstPage[0].basePrice < secondPage[0].basePrice);
+});
+
+
+test('Next.js POST /api/search applies combined filters and returns the expected response shape', { skip: !enabled }, async () => {
+  const response = await fetch(`${searchApiBaseUrl}/api/search`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      query: 'Akaar Phone',
+      categoryId,
+      limit: 10,
+      page: 1,
+      filters: {
+        priceMin: '80',
+        priceMax: '150',
+        city: 'Damascus',
+        brand: 'Acme',
+        subCategory: 'Phones',
+      },
+    }),
+  });
+
+  assert.equal(response.status, 200);
+  const payload = await response.json();
+  assert.deepEqual(payload.products.map((product) => product.id), [productIds[0]]);
+  assert.equal(payload.totalCount, 1);
+  assert.equal(payload.hasMore, false);
+  assert.equal(payload.page, 1);
+  assert.equal(payload.limit, 10);
+});
+
+test('Next.js GET /api/search/suggestions excludes deleted and inactive products', { skip: !enabled }, async () => {
+  const response = await fetch(`${searchApiBaseUrl}/api/search/suggestions?query=Akaar%20Phone`);
+  assert.equal(response.status, 200);
+  const payload = await response.json();
+
+  assert.ok(payload.suggestions.includes('Akaar Phone Alpha'));
+  assert.ok(payload.suggestions.includes('Akaar Phone Beta'));
+  assert.ok(!payload.suggestions.includes('Akaar Phone Deleted'));
+  assert.ok(!payload.suggestions.includes('Akaar Phone Inactive'));
 });
