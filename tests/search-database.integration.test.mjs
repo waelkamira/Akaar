@@ -60,6 +60,12 @@ before(async () => {
     });
     productIds.push(fixture.id);
   }
+  await prisma.review.createMany({
+    data: [
+      { userId, productId: productIds[0], rating: 5, comment: 'Search test high rating' },
+      { userId, productId: productIds[1], rating: 2, comment: 'Search test low rating' },
+    ],
+  });
 
   // Exercise the actual Next.js route handlers against the isolated PostgreSQL database.
   nextServer = spawn(
@@ -106,6 +112,7 @@ after(async () => {
     // Next dev and next build share .next; remove dev output before CI's production build.
     await rm('.next', { recursive: true, force: true });
   }
+  if (productIds.length) await prisma.review.deleteMany({ where: { productId: { in: productIds } } });
   if (productIds.length) await prisma.product.deleteMany({ where: { id: { in: productIds } } });
   if (categoryCreated) await prisma.category.delete({ where: { id: categoryId } });
   if (userCreated) await prisma.user.delete({ where: { id: userId } });
@@ -173,4 +180,61 @@ test('Next.js GET /api/search/suggestions excludes deleted and inactive products
   assert.ok(payload.suggestions.includes('Akaar Phone Beta'));
   assert.ok(!payload.suggestions.includes('Akaar Phone Deleted'));
   assert.ok(!payload.suggestions.includes('Akaar Phone Inactive'));
+});
+
+
+test('Next.js search rating filter returns only products meeting the average-rating threshold', { skip: !enabled }, async () => {
+  const response = await fetch(`${searchApiBaseUrl}/api/search`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      query: 'Akaar Phone',
+      categoryId,
+      limit: 10,
+      page: 1,
+      filters: { rating: '4' },
+    }),
+  });
+
+  assert.equal(response.status, 200);
+  const payload = await response.json();
+  assert.deepEqual(payload.products.map((product) => product.id), [productIds[0]]);
+});
+
+test('Next.js search API rejects malformed and oversized JSON bodies', { skip: !enabled }, async () => {
+  const malformed = await fetch(`${searchApiBaseUrl}/api/search`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: '{',
+  });
+  assert.equal(malformed.status, 400);
+
+  const oversized = await fetch(`${searchApiBaseUrl}/api/search`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ query: 'x'.repeat(70 * 1024) }),
+  });
+  assert.equal(oversized.status, 413);
+});
+
+test('Next.js search API paginates with stable order and accurate hasMore values', { skip: !enabled }, async () => {
+  const requestPage = (page) => fetch(`${searchApiBaseUrl}/api/search`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ categoryId, limit: 1, page, filters: { city: 'Damascus', sortBy: 'cheapest' } }),
+  });
+
+  const firstResponse = await requestPage(1);
+  const secondResponse = await requestPage(2);
+  assert.equal(firstResponse.status, 200);
+  assert.equal(secondResponse.status, 200);
+  const first = await firstResponse.json();
+  const second = await secondResponse.json();
+
+  assert.deepEqual(first.products.map((product) => product.id), [productIds[0]]);
+  assert.deepEqual(second.products.map((product) => product.id), [productIds[1]]);
+  assert.equal(first.totalCount, 2);
+  assert.equal(second.totalCount, 2);
+  assert.equal(first.hasMore, true);
+  assert.equal(second.hasMore, false);
 });
