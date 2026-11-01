@@ -86,9 +86,9 @@ This structure provides a solid, scalable foundation. It is recommended to build
 | DOC-01 | P1 | This README is primarily a generic proposed architecture and recommended stack, not a truthful record of what is implemented, tested, blocked, or deployable. Some described features (for example split payments, real-time currency/tax handling, AI recommendations, 2FA and full fraud detection) must not be interpreted as implemented merely because they appear here. | Keep the architecture overview as a target, but maintain this audit log and mark features as implemented / partial / not implemented only after checking code and tests. |
 | DOC-02 | P2 | `CRITICAL_FIXES_PHASE1.md`, `project-structure.txt`, and `testData.json` are empty tracked files. | Populate only if still needed; otherwise remove them in a separate cleanup change. Do not treat the empty critical-fixes file as a completed plan. |
 | DOC-03 | P2 | `DEBUG_README.md` contains only a report heading and no usable findings or reproduction steps. | Move actionable findings into this README or a linked issue log, and remove the empty placeholder once references are checked. |
-| CI-01 | P1 | `.github/workflows/quality.yml` runs on pull requests targeting `main` and manual dispatch, but has no `push` trigger. A direct push/merge to `main` therefore does not automatically run this workflow after the merge. | Add a `push: branches: [main]` trigger, or explicitly document and enforce another post-merge validation mechanism. |
+| CI-01 | P1 | **Fix prepared on this audit branch:** `.github/workflows/quality.yml` now includes a `push` trigger for `main` in addition to pull requests and manual dispatch. | Confirm the updated workflow completes successfully on this PR and on a subsequent push to `main` after merge. |
 | TEST-01 | P1 | `tests/search-database.integration.test.mjs` exercises Prisma queries and the search-query helper against PostgreSQL; it does not send requests through the actual Next.js search route. The current tests therefore do not fully verify API response shape, rate limiting, HTTP validation, and end-to-end filtering together. | Add route-level/integration coverage for `POST /api/search` and `GET /api/search/suggestions`, including status codes, malformed payloads, visibility rules, ratings, pagination and sorting. |
-| SEC-01 | P2 | Several mutation routes parse request bodies with `request.json()` directly, without a shared explicit body-size limit at the route boundary. This pattern is present in `app/api/reviews/route.ts` and was also returned by code search for seller product, seller store, admin settings/approval, messages, and bookings routes. This is a pattern-level risk; each route's hosting and validation behavior still needs inspection. | Inventory every direct `request.json()` use, replace it with the bounded shared reader where appropriate, and test malformed/oversized payloads. Confirm request-size limits at the hosting ingress too. |
+| SEC-01 | P2 | **Partially addressed on this audit branch:** `app/api/reviews/route.ts` now uses the shared bounded JSON reader with a 16 KiB limit. Code search also found direct `request.json()` parsing in seller product/store, admin settings/approval, messages, and bookings routes. This remains a pattern-level risk until those routes are reviewed individually. | Test review requests at and above the limit, then inventory and harden remaining mutation routes using the bounded reader where appropriate. Confirm ingress limits too. |
 | IMG-01 | P2 | `next.config.js` permits remote images from any HTTPS hostname through `hostname: '**'`. This is broader than an explicit provider/domain allowlist and can permit unintended remote image sources. | Replace the wildcard with the real image hosts used by the project (including the configured image provider), then test all existing product/profile/store image URLs before deployment. |
 | DB-01 | P1 | The store/product rating APIs intentionally return HTTP 503 when the corresponding review table is absent. The repository includes migrations for product/store ratings, but code presence does not prove that the deployment database has applied them. | Verify migration status on the intended target database before enabling ratings; apply migrations through the controlled deployment process, then test both product and store rating GET/POST flows. Never claim ratings work based on schema validation alone. |
 | DB-02 | P1 | The migration `20261102000000_map_favorites_table` deliberately aborts if both `public.favorites` and `public."Favorite"` exist, or if neither exists. This is a safe guard against silently choosing the wrong data, but makes the starting state important. Its timestamp is also later than the audit date. | Confirm the timestamp is intentional and inspect the actual target schema for both table names before deployment. Resolve any duplicate-table/data situation explicitly; do not bypass the guard or apply the migration blindly to a production database. |
@@ -134,7 +134,7 @@ These are risk areas requiring targeted tests; they are **not all confirmed runt
 
 ### Phase A — Establish a trustworthy baseline
 - [ ] Run CI against the latest `main` head and record the exact commit SHA and results.
-- [ ] Add automatic CI on pushes to `main` or document an enforced equivalent.
+- [x] Add automatic CI on pushes to `main` (workflow change is in this audit PR; verify the run before merge).
 - [ ] Validate `prisma/schema.prisma`; generate Prisma Client; deploy the full migration chain into a clean disposable PostgreSQL database.
 - [ ] Verify migration status and schema drift without touching production data.
 - [ ] Replace empty/stub audit artifacts with real documentation or remove them after checking references.
@@ -142,7 +142,7 @@ These are risk areas requiring targeted tests; they are **not all confirmed runt
 ### Phase B — Close high-risk data and API gaps
 - [ ] Inspect the target database before the favorites table rename migration; confirm its timestamp and starting-state assumptions.
 - [ ] Apply and verify rating migrations in the intended environment; exercise product and store rating APIs.
-- [ ] Add bounded body parsing and appropriate rate limiting to review writes.
+- [x] Add bounded body parsing (16 KiB) to review writes; test via existing bounded-reader unit tests and verify CI. [ ] Add/verify appropriate rate limiting to review writes.
 - [ ] Add route-level search/suggestion tests and run them against PostgreSQL.
 - [ ] Exercise Stripe test-mode lifecycle and stock/order consistency, including retries and duplicate events.
 - [ ] Complete server-side authorization checks for admin/seller mutations and upload endpoints.
@@ -195,6 +195,8 @@ Do not run the destructive test reset against any database containing user or pr
 | Check | Status at this audit |
 |---|---|
 | Repository tree inventory | Completed; 460 tracked files reported by GitHub tree API |
+| CI trigger fix | Implemented on audit branch; CI validation pending |
+| Review POST body limit | Implemented on audit branch using shared 16 KiB bounded reader; CI validation pending |
 | Static inspection of project configuration, active Prisma schema, migration workflow, search route, review route, Stripe webhook and selected tests | Completed for this first pass |
 | Current `main` unit tests | Not executed in this review environment |
 | Current `main` lint | Not executed in this review environment |
