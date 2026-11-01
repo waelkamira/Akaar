@@ -5,6 +5,7 @@ import { isPlainObject } from '@/lib/api/validation.mjs';
 import { prisma } from '@/lib/db/prisma';
 import { isStoreMessagingAvailable } from '@/lib/messages/table-availability';
 import { insertStoreMessage } from '@/lib/messages/store-messaging';
+import { readJsonBody } from '@/lib/api/read-json-body.mjs';
 
 export async function GET() {
   const user = await getAuthenticatedUser();
@@ -72,12 +73,11 @@ export async function POST(request: Request) {
   const user = await getAuthenticatedUser();
   if (!user) return NextResponse.json({ error: 'سجّل الدخول لمراسلة المتجر.' }, { status: 401 });
 
-  let payload: unknown;
-  try {
-    payload = await request.json();
-  } catch {
-    return NextResponse.json({ error: 'صيغة الطلب غير صالحة.' }, { status: 400 });
+  const parsedBody = await readJsonBody(request, 16 * 1024);
+  if (!parsedBody.ok) {
+    return NextResponse.json({ error: parsedBody.error }, { status: parsedBody.status });
   }
+  const payload: unknown = parsedBody.value;
   if (!isPlainObject(payload)) return NextResponse.json({ error: 'صيغة الطلب غير صالحة.' }, { status: 400 });
   const bodyInput = payload as Record<string, unknown>;
 
