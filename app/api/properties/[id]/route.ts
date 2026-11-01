@@ -4,6 +4,7 @@ import { prisma } from '@/lib/db/prisma';
 import { getAuthenticatedUser } from '@/lib/auth/require-auth';
 import { getActiveSeller } from '@/lib/auth/require-seller';
 import { propertyPatchSchema } from '@/lib/properties/validation';
+import { readJsonBody } from '@/lib/api/read-json-body.mjs';
 
 type RouteContext = { params: Promise<{ id: string }> };
 
@@ -37,12 +38,9 @@ export async function PATCH(request: Request, { params }: RouteContext) {
     return NextResponse.json({ error: 'Vendor or admin access is required.' }, { status: 403 });
   }
 
-  let payload: unknown;
-  try {
-    payload = await request.json();
-  } catch {
-    return NextResponse.json({ error: 'Request body must be valid JSON.' }, { status: 400 });
-  }
+  const parsedBody = await readJsonBody(request, 64 * 1024);
+  if (!parsedBody.ok) return NextResponse.json({ error: parsedBody.error }, { status: parsedBody.status });
+  const payload: unknown = parsedBody.value;
   if (!payload || typeof payload !== 'object' || Array.isArray(payload)) {
     return NextResponse.json({ error: 'Request body must be an object.' }, { status: 400 });
   }
