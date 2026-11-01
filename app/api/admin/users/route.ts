@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt';
 import { getAdminUser, getControlPanelAdmin } from '@/lib/auth/require-auth';
 import { getPagination } from '@/lib/api/validation.mjs';
 import { prisma } from '@/lib/db/prisma';
+import { readJsonBody } from '@/lib/api/read-json-body.mjs';
 
 export async function GET(request: Request) {
   const admin = await getAdminUser();
@@ -49,12 +50,11 @@ export async function POST(request: Request) {
   const admin = await getControlPanelAdmin();
   if (!admin) return NextResponse.json({ error: 'صلاحيات مدير لوحة التحكم مطلوبة.' }, { status: 403 });
 
-  let payload: unknown;
-  try {
-    payload = await request.json();
-  } catch {
-    return NextResponse.json({ error: 'صيغة الطلب غير صالحة.' }, { status: 400 });
+  const parsedBody = await readJsonBody(request, 16 * 1024);
+  if (!parsedBody.ok) {
+    return NextResponse.json({ error: parsedBody.error }, { status: parsedBody.status });
   }
+  const payload: unknown = parsedBody.value;
 
   const body = payload && typeof payload === 'object' && !Array.isArray(payload)
     ? payload as Record<string, unknown>
