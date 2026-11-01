@@ -10,6 +10,7 @@ import SideBarMenu from '../components/navbars/SideBarMenu';
 import { CommerceProvider } from '@/features/cart/commerce-context';
 import Footer from '../components/ReusableComponents/Footer';
 import PageViewTracker from '@/components/analytics/PageViewTracker';
+import { getSiteUrl } from '@/lib/site-url.mjs';
 
 const rubik = Rubik({
   subsets: ['arabic', 'latin'],
@@ -19,6 +20,7 @@ const rubik = Rubik({
 });
 
 export const metadata = {
+  metadataBase: new URL(getSiteUrl()),
   title: 'Akaar | سوقك الإلكتروني',
   description: 'اكتشف المنتجات، قارن الخيارات، وتسوق من البائعين على منصة أكار.',
   manifest: '/manifest.json',

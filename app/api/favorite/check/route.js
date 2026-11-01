@@ -24,14 +24,20 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const favorites = await prisma.favorite.findMany({
-      where: {
-        userId,
-        isDeleted: false,
-        product: { isDeleted: false, isActive: true, approvalStatus: 'APPROVED', category: { isActive: true } },
-      },
-      select: { productId: true },
-    });
+    const favorites = await prisma.$queryRaw`
+      SELECT favorite."productId"
+      FROM public.favorites AS favorite
+      INNER JOIN public.products AS product
+        ON product.id = favorite."productId"
+      INNER JOIN public."Category" AS category
+        ON category.id = product."categoryId"
+      WHERE favorite."userId" = ${userId}
+        AND favorite."isDeleted" = false
+        AND product."isDeleted" = false
+        AND product."isActive" = true
+        AND product."approvalStatus" = 'APPROVED'
+        AND category."isActive" = true
+    `;
 
     return NextResponse.json({
       favoriteProductIds: favorites.map(({ productId }) => productId),

@@ -1,8 +1,8 @@
+import { randomUUID } from 'node:crypto';
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
 import { getAuthenticatedUser } from '@/lib/auth/require-auth';
 import { parsePositiveInteger, isPaginationOffsetOutOfRange, isValidIdentifier } from '@/lib/api/validation.mjs';
-import { publicProductWhere } from '@/lib/api/public-product-where.mjs';
 import { readJsonBody } from '@/lib/api/read-json-body.mjs';
 
 export async function GET(req) {
@@ -26,22 +26,21 @@ export async function GET(req) {
       );
     }
 
-    // التحقق من وجود المستخدم
-    const userExists = await prisma.user.findUnique({
-      where: { id: userId },
-    });
-
-    if (!userExists) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 });
-    }
-
-    // جلب العدد أولًا لمنع استعلامات الصفحات الخارجة عن نطاق النتائج.
-    const where = {
-      userId,
-      isDeleted: false,
-      product: { isDeleted: false, isActive: true, approvalStatus: 'APPROVED', category: { isActive: true } },
-    };
-    const totalCount = await prisma.favorite.count({ where });
+    const [countRows] = await prisma.$queryRaw`
+      SELECT COUNT(*)::int AS "totalCount"
+      FROM public.favorites AS favorite
+      INNER JOIN public.products AS product
+        ON product.id = favorite."productId"
+      INNER JOIN public."Category" AS category
+        ON category.id = product."categoryId"
+      WHERE favorite."userId" = ${userId}
+        AND favorite."isDeleted" = false
+        AND product."isDeleted" = false
+        AND product."isActive" = true
+        AND product."approvalStatus" = 'APPROVED'
+        AND category."isActive" = true
+    `;
+    const totalCount = countRows.totalCount;
     if (isPaginationOffsetOutOfRange(skip, totalCount)) {
       return NextResponse.json({
         totalCount,
@@ -51,19 +50,29 @@ export async function GET(req) {
         meta: { cached: false, source: 'database' },
       }, { status: 200 });
     }
-    const favorites = await prisma.favorite.findMany({
-      where,
-      skip,
-      take: limit,
-      orderBy: { createdAt: 'desc' },
-      select: { product: true },
-    });
+    const favorites = await prisma.$queryRaw`
+      SELECT product.*
+      FROM public.favorites AS favorite
+      INNER JOIN public.products AS product
+        ON product.id = favorite."productId"
+      INNER JOIN public."Category" AS category
+        ON category.id = product."categoryId"
+      WHERE favorite."userId" = ${userId}
+        AND favorite."isDeleted" = false
+        AND product."isDeleted" = false
+        AND product."isActive" = true
+        AND product."approvalStatus" = 'APPROVED'
+        AND category."isActive" = true
+      ORDER BY favorite."createdAt" DESC, favorite.id DESC
+      LIMIT ${limit}
+      OFFSET ${skip}
+    `;
 
     // تنسيق النتيجة
     const result = {
       totalCount,
       hasMore: skip + favorites.length < totalCount,
-      favorites: favorites.map((fav) => fav.product),
+      favorites,
       message: 'تم جلب المفضلة بنجاح',
       meta: { cached: false, source: 'database' },
     };
@@ -98,42 +107,48 @@ export async function POST(req) {
     }
     const productId = id.trim();
 
-    // التحقق من وجود المستخدم والمنتج
-    const [userExists, productExists] = await Promise.all([
-      prisma.user.findUnique({ where: { id: userId } }),
-      prisma.product.findFirst({ where: publicProductWhere({ id: productId }) }),
-    ]);
-
-    if (!userExists || !productExists) {
+    const [favorite] = await prisma.$queryRaw`
+      INSERT INTO public.favorites ("id", "userId", "productId", "createdAt", "isDeleted")
+      SELECT ${randomUUID()}, ${userId}, product.id, CURRENT_TIMESTAMP, false
+      FROM public.products AS product
+      INNER JOIN public."Category" AS category
+        ON category.id = product."categoryId"
+      WHERE product.id = ${productId}
+        AND product."isDeleted" = false
+        AND product."isActive" = true
+        AND product."approvalStatus" = 'APPROVED'
+        AND category."isActive" = true
+        AND EXISTS (SELECT 1 FROM public.users WHERE id = ${userId})
+        AND (
+          product."sellerId" IS NULL
+          OR EXISTS (
+            SELECT 1
+            FROM public.sellers AS seller
+            WHERE seller.id = product."sellerId"
+              AND seller.status = 'ACTIVE'
+              AND seller."isVerified" = true
+          )
+        )
+      ON CONFLICT ("userId", "productId")
+      DO UPDATE SET
+        "isDeleted" = NOT public.favorites."isDeleted",
+        "createdAt" = CASE
+          WHEN public.favorites."isDeleted" THEN CURRENT_TIMESTAMP
+          ELSE public.favorites."createdAt"
+        END
+      RETURNING "isDeleted"
+    `;
+    if (!favorite) {
       return NextResponse.json(
         { error: 'User or product not found' },
         { status: 404 }
       );
     }
 
-    // التحقق من وجود المفضلة
-    const existingFavorite = await prisma.favorite.findFirst({
-      where: { userId, productId },
-      select: { id: true },
-    });
-
-    let result;
-    if (existingFavorite?.id) {
-      // إزالة من المفضلة
-      await prisma.favorite.delete({
-        where: { id: existingFavorite.id },
-      });
-      result = { message: 'تم حذفه من المفضلة بنجاح', favorited: false };
-    } else {
-      // إضافة للمفضلة
-      await prisma.favorite.create({
-        data: {
-          user: { connect: { id: userId } },
-          product: { connect: { id: productId } },
-        },
-      });
-      result = { message: 'تم إضافته إلى المفضلة بنجاح', favorited: true };
-    }
+    const favorited = !favorite.isDeleted;
+    const result = favorited
+      ? { message: 'تم إضافته إلى المفضلة بنجاح', favorited: true }
+      : { message: 'تم حذفه من المفضلة بنجاح', favorited: false };
 
     // تنظيف الذاكرة المؤقتة للمستخدم
 
@@ -163,16 +178,11 @@ export async function DELETE(req) {
       return NextResponse.json({ error: 'معرف المفضلة غير صالح أو مفقود.' }, { status: 400 });
     }
     const favoriteId = id.trim();
-    const existingFavorite = await prisma.favorite.findFirst({
-      where: { id: favoriteId, userId },
-      select: { id: true },
-    });
-
-    if (existingFavorite?.id) {
-      await prisma.favorite.delete({
-        where: { id: existingFavorite.id },
-      });
-    }
+    await prisma.$executeRaw`
+      DELETE FROM public.favorites
+      WHERE id = ${favoriteId}
+        AND "userId" = ${userId}
+    `;
 
     // تنظيف الذاكرة المؤقتة للمستخدم
 

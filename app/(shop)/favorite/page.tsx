@@ -5,6 +5,20 @@ import { getAuthenticatedUser } from '@/lib/auth/require-auth';
 import { prisma } from '@/lib/db/prisma';
 import FavoriteProducts from './FavoriteProducts';
 
+type FavoriteProduct = {
+  id: string;
+  title: string;
+  description: string | null;
+  images: string[];
+  basePrice: number | null;
+  stockQuantity: number | null;
+  city: string | null;
+  town: string | null;
+  createdAt: Date;
+  categoryId: number;
+  categoryName: string;
+};
+
 export const dynamic = 'force-dynamic';
 export const metadata: Metadata = {
   title: 'المفضلة | Akaar',
@@ -21,43 +35,51 @@ export default async function FavoritesPage({ searchParams }: {
   const requestedPage = Number(params.page);
   const page = Number.isSafeInteger(requestedPage) && requestedPage > 0 ? Math.min(requestedPage, 100_000) : 1;
   const limit = 24;
-  const where = {
-    userId: user.id,
-    isDeleted: false,
-    product: {
-      isDeleted: false,
-      isActive: true,
-      approvalStatus: 'APPROVED' as const,
-      category: { isActive: true },
-    },
-  };
-  const [totalCount, favorites] = await Promise.all([
-    prisma.favorite.count({ where }),
-    prisma.favorite.findMany({
-      where,
-      orderBy: { createdAt: 'desc' },
-      skip: (page - 1) * limit,
-      take: limit,
-      select: {
-        product: {
-          select: {
-            id: true,
-            title: true,
-            description: true,
-            images: true,
-            basePrice: true,
-            stockQuantity: true,
-            city: true,
-            town: true,
-            createdAt: true,
-            categoryId: true,
-            categoryName: true,
-          },
-        },
-      },
-    }),
+  const [countRows, products] = await Promise.all([
+    prisma.$queryRaw<Array<{ totalCount: number }>>`
+      SELECT COUNT(*)::int AS "totalCount"
+      FROM public.favorites AS favorite
+      INNER JOIN public.products AS product
+        ON product.id = favorite."productId"
+      INNER JOIN public."Category" AS category
+        ON category.id = product."categoryId"
+      WHERE favorite."userId" = ${user.id}
+        AND favorite."isDeleted" = false
+        AND product."isDeleted" = false
+        AND product."isActive" = true
+        AND product."approvalStatus" = 'APPROVED'
+        AND category."isActive" = true
+    `,
+    prisma.$queryRaw<FavoriteProduct[]>`
+      SELECT
+        product.id,
+        product.title,
+        product.description,
+        product.images,
+        product."basePrice",
+        product."stockQuantity",
+        product.city,
+        product.town,
+        product."createdAt",
+        product."categoryId",
+        product."categoryName"
+      FROM public.favorites AS favorite
+      INNER JOIN public.products AS product
+        ON product.id = favorite."productId"
+      INNER JOIN public."Category" AS category
+        ON category.id = product."categoryId"
+      WHERE favorite."userId" = ${user.id}
+        AND favorite."isDeleted" = false
+        AND product."isDeleted" = false
+        AND product."isActive" = true
+        AND product."approvalStatus" = 'APPROVED'
+        AND category."isActive" = true
+      ORDER BY favorite."createdAt" DESC, favorite.id DESC
+      LIMIT ${limit}
+      OFFSET ${(page - 1) * limit}
+    `,
   ]);
-  const products = favorites.map(({ product }) => product);
+  const totalCount = countRows[0]?.totalCount ?? 0;
   const hasMore = page * limit < totalCount;
 
   return (

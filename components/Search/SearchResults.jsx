@@ -32,7 +32,7 @@ export default function SearchResults() {
   // Show error message
   if (error) {
     return (
-      <div className="rounded-2xl border border-rose-400/20 bg-rose-400/[.05] text-rose-200 px-4 py-3 rounded-lg">
+      <div className=" border border-rose-400/20 bg-rose-400/[.05] text-rose-200 px-4 py-3 rounded-lg">
         <p>{error}</p>
       </div>
     );
@@ -68,7 +68,7 @@ export default function SearchResults() {
         className="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3"
       >
         <motion.p className="text-sm text-white bg-ak-surface border border-ak-line-strong/[.08] px-4 py-2 rounded-full inline-flex items-center">
-          <span className="font-medium text-ak-honey mx-1">{totalCount}</span>
+          <span className="font-medium text-lime-400 mx-1">{totalCount}</span>
           نتيجة متاحة
           {category && (
             <span className="flex items-center mr-2">
@@ -90,7 +90,7 @@ export default function SearchResults() {
           )}
         </motion.p>
 
-        <motion.div className="text-xs text-stone-400 bg-ak-surface border border-ak-line-strong/[.08] px-3 py-1.5 rounded-full">
+        <motion.div className="text-xs text-yellow-400 bg-ak-surface border border-ak-line-strong/[.08] px-3 py-1.5 rounded-full">
           عرض {results?.length} من {totalCount}
         </motion.div>
       </motion.div>

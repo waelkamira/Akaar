@@ -59,7 +59,7 @@ function FilterPanel({ onApply, onClose, mobile = false }) {
         <button type="button" onClick={clear} className="inline-flex items-center justify-center gap-2 rounded-xl border border-ak-line px-3 py-3 text-xs font-semibold text-stone-300 transition hover:border-rose-400/30 hover:text-rose-300">
           <FaTrashAlt aria-hidden="true" /> مسح الفلاتر
         </button>
-        <button type="button" onClick={apply} className="inline-flex items-center justify-center gap-2 rounded-xl bg-ak-amber px-3 py-3 text-xs font-bold text-ak-ink transition hover:bg-ak-honey">
+        <button type="button" onClick={apply} className="inline-flex items-center justify-center gap-2 rounded-xl bg-lime-400 px-3 py-3 text-xs font-bold text-ak-ink transition hover:bg-ak-honey">
           <FaSearch aria-hidden="true" /> تطبيق النتائج
         </button>
       </div>
@@ -73,7 +73,7 @@ export default function SearchPage() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   return (
-    <main dir="rtl" className="min-h-[70vh] bg-transparent py-6 text-white sm:py-10">
+    <main dir="rtl" className="min-h-[70vh] py-6 text-white sm:py-10 ">
       <div className="ak-page-shell">
         <div className="ak-page-heading mb-7">
           <div>
@@ -100,7 +100,7 @@ export default function SearchPage() {
             </div>
           </aside>
 
-          <section className="min-w-0">
+          <section className="min-w-0 ">
             <div className="ak-panel mb-5 p-4 sm:p-5">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div><h2 className="font-bold text-white">نتائج البحث</h2><p className="mt-1 text-xs text-stone-400">النتائج تتحدث عند تعديل معايير البحث</p></div>

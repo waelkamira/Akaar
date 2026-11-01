@@ -82,7 +82,7 @@ export async function POST(request) {
         );
       }
 
-      const ratedProducts = await prisma.$queryRaw<Array<{ productId: string }>>`
+      const ratedProducts = await prisma.$queryRaw`
         SELECT "productId"
         FROM public.reviews
         GROUP BY "productId"

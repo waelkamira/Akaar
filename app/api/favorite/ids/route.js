@@ -14,29 +14,21 @@ export async function GET(req) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // التحقق من وجود المستخدم
-    const userExists = await prisma.user.findUnique({
-      where: { id: userId },
-    });
-
-    if (!userExists) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 });
-    }
-
-    // جلب معرفات المنتجات فقط من المفضلة
-    const favorites = await prisma.favorite.findMany({
-      where: { userId, isDeleted: false, product: { isDeleted: false, isActive: true, approvalStatus: 'APPROVED', category: { isActive: true } } },
-      select: {
-        product: {
-          select: {
-            id: true, // جلب المعرف فقط
-          },
-        },
-      },
-    });
-
-    // استخراج المعرّفات فقط من النتائج
-    const productIds = favorites.map((fav) => fav.product.id);
+    const favorites = await prisma.$queryRaw`
+      SELECT favorite."productId"
+      FROM public.favorites AS favorite
+      INNER JOIN public.products AS product
+        ON product.id = favorite."productId"
+      INNER JOIN public."Category" AS category
+        ON category.id = product."categoryId"
+      WHERE favorite."userId" = ${userId}
+        AND favorite."isDeleted" = false
+        AND product."isDeleted" = false
+        AND product."isActive" = true
+        AND product."approvalStatus" = 'APPROVED'
+        AND category."isActive" = true
+    `;
+    const productIds = favorites.map(({ productId }) => productId);
 
     return NextResponse.json(
       {

@@ -29,7 +29,8 @@ Before accepting schema changes:
 - Do not use `prisma db push --accept-data-loss` as the deployment migration strategy.
 - Keep schema changes and their migrations in the same pull request and require passing CI before deployment.
 - Do not claim that CI against a disposable database proves a real deployed runtime is configured; verify deployment environment variables and perform smoke tests separately.
-- For a development sample catalog, run `npm run seed` after creating an active admin account. The seed is idempotent and skips product creation when no active admin exists.
+- For a local, disposable, or explicitly designated demo database, run `npm run seed` to upsert five passwordless fictitious sellers and 10 demo products in each of the 22 categories. The seed is idempotent and preserves the IDs from the earlier five-product sample.
+- The seed does not migrate or repair the database schema. It writes the catalog columns available in the inspected legacy database; it does not enable Stripe or reconcile legacy order/payment tables. Production execution is blocked unless `ALLOW_DEMO_SEED_IN_PRODUCTION=true` is explicitly set for an intentional demo environment.
 
 ## Narrow auth repair for the inspected legacy user table
 
@@ -112,3 +113,7 @@ The migration `prisma/migrations/20261101000000_store_messaging/migration.sql` c
 - Conversation APIs verify the signed-in user is either the customer or the owner of the linked store. New customer conversations are accepted only for active, verified stores.
 - Messaging endpoints return a service-unavailable response until both messaging tables exist. Apply the full migration history to a clean database; do not apply it to the configured legacy database without a separately reviewed, backup-verified migration plan.
 - Administrator bulk messages continue to use per-owner in-app notifications. Optional email and SMS delivery is attempted after those notifications are saved, so provider failures do not discard the in-app messages.
+
+## Favorite table mapping
+
+The canonical Prisma `Favorite` model maps to the lowercase `public.favorites` table used by the inspected legacy database. The clean-install migration `prisma/migrations/20261102000000_map_favorites_table/migration.sql` renames the quoted table created by the historical initial migration. It fails if both table names exist so favorite records are never silently merged or discarded. The migration is part of the clean-deployment history; do not run it or the full migration chain against a populated legacy database without the required backup and migration review.

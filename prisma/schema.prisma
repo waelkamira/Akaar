@@ -347,6 +347,7 @@ model Favorite {
   @@unique([userId, productId])
   @@index([userId, isDeleted])
   @@index([productId])
+  @@map("favorites")
 }
 
 model ProductImage {

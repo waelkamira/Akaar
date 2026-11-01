@@ -139,7 +139,7 @@ function FavoriteButton({ item, onFavoriteChange }) {
       aria-label={isFavorited ? 'إزالة من المفضلة' : 'إضافة إلى المفضلة'}
       aria-pressed={isFavorited}
       disabled={isLoading || isSaving}
-      className="absolute top-0 left-2 z-10 flex size-10 items-center justify-center p-2"
+      className="absolute top-0 left-0 z-10 flex size-10 items-center justify-center p-2"
       onClick={(event) => {
         event.stopPropagation();
         void handleFavorite();

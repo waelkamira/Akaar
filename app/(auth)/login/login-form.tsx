@@ -50,7 +50,7 @@ export default function LoginForm() {
 
         <section className="flex items-center px-5 py-10 sm:px-10 lg:px-14">
           <div className="mx-auto w-full max-w-md">
-            <WebsiteLogo className="h-10 w-36" />
+            <WebsiteLogo className="h-20 w-100" />
             <p className="ak-eyebrow mt-9">مرحبًا بعودتك</p>
             <h1 className="mt-2 text-3xl font-black sm:text-4xl">سجّل الدخول</h1>
             <p className="mt-3 text-sm text-white">أدخل بيانات حسابك للمتابعة.</p>

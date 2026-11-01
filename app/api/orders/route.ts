@@ -163,7 +163,7 @@ export async function POST(request: Request) {
         id: true,
         title: true,
         basePrice: true,
-        usdPriceCents: true,
+        ...(paymentMethod === 'STRIPE' ? { usdPriceCents: true } : {}),
         stockQuantity: true,
         sellerId: true,
         seller: { select: { id: true, status: true, isVerified: true } },
@@ -197,10 +197,15 @@ export async function POST(request: Request) {
     const totalUsdCents = paymentMethod === 'STRIPE'
       ? products.reduce((sum, product) => {
         const quantity = quantityById.get(product.id) || 0;
-        if (!Number.isSafeInteger(product.usdPriceCents) || (product.usdPriceCents ?? 0) < 50) {
+        const usdPriceCents = product.usdPriceCents;
+        if (
+          typeof usdPriceCents !== 'number' ||
+          !Number.isSafeInteger(usdPriceCents) ||
+          usdPriceCents < 50
+        ) {
           throw new Error('USD_PRICE_UNAVAILABLE');
         }
-        const lineTotal = product.usdPriceCents * quantity;
+        const lineTotal = usdPriceCents * quantity;
         if (!Number.isSafeInteger(lineTotal) || !Number.isSafeInteger(sum + lineTotal) || sum + lineTotal > 99_999_999) {
           throw new Error('TOTAL_OUT_OF_RANGE');
         }

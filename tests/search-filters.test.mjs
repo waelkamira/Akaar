@@ -1,6 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
 import { sanitizeDetailsFilters } from '../lib/api/search-filters.mjs';
+
+const searchRoute = await readFile(
+  new URL('../app/api/search/route.js', import.meta.url),
+  'utf8',
+);
 
 test('sanitizes valid primitive dynamic filters and trims values', () => {
   assert.deepEqual(sanitizeDetailsFilters({
@@ -45,4 +51,8 @@ test('trims and bounds scalar search text while rejecting non-strings', () => {
   assert.equal(sanitizeSearchText({ value: 'city' }), '');
   assert.equal(sanitizeSearchText(null), '');
   assert.equal(sanitizeSearchText('value', 0), '');
+});
+
+test('keeps the JavaScript search route free of TypeScript generic call syntax', () => {
+  assert.doesNotMatch(searchRoute, /prisma\.\$queryRaw\s*</);
 });

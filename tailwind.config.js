@@ -219,7 +219,7 @@ module.exports = {
           elevated: '#29312F',
           line: 'rgba(235, 243, 239, 0.12)',
           'line-strong': 'rgba(235, 243, 239, 0.22)',
-          amber: '#FF8500',
+          amber: '#f0660d',
           'persian-orange': '#FF8500',
           copper: '#E76F00',
           honey: '#FFC66D',
