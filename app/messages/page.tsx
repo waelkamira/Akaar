@@ -14,7 +14,7 @@ export default async function MessagesPage() {
   if(!user) redirect('/login?callbackUrl=%2Fmessages');
   const conversations=await prisma.storeConversation.findMany({
     where:{OR:[{customerId:user.id},{seller:{userId:user.id}}]},
-    select:{id:true,createdAt:true,updatedAt:true,customer:{select:{id:true,userName:true,userImage:true}},seller:{select:{id:true,userId:true,storeName:true,slug:true}},messages:{select:{id:true,body:true,senderId:true,readAt:true,createdAt:true},orderBy:{createdAt:'desc'},take:1}},
+    select:{id:true,customerId:true,createdAt:true,updatedAt:true,customer:{select:{id:true,userName:true,userImage:true}},seller:{select:{id:true,userId:true,storeName:true,slug:true}},messages:{select:{id:true,body:true,senderId:true,readAt:true,createdAt:true},orderBy:{createdAt:'desc'},take:1}},
     orderBy:{updatedAt:'desc'},take:100,
   });
   return <main dir="rtl" className="min-h-screen bg-[#171c1a] px-4 py-8 text-[#f5f3ed] sm:px-8"><div className="mx-auto max-w-5xl">
