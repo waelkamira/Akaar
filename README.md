@@ -322,3 +322,10 @@ Scope note:
 - Verify the real product-detail add-to-cart flow and cart rendering in a browser session, both signed out and signed in.
 - Verify checkout remains inaccessible to guests and that login does not lose the guest cart.
 - No production database was modified by this work. No destructive migration, `db push`, or reset was run.
+
+
+### Follow-up CI result — 2026-11-02
+- After removing the duplicate dynamic message route, CI no longer reports the earlier Next.js route-conflict startup error.
+- The next run still failed in the integration-test setup because the Next.js dev server did not return HTTP 200 from the search suggestions endpoint within 90 seconds. The test output did not include the server's captured stdout/stderr on timeout, so the actual cause remained hidden.
+- Increased the startup wait to 180 seconds and changed the timeout diagnostic to include the last HTTP status/body and captured Next.js server output. This is a diagnostic change only; it does not claim the search integration test is fixed.
+- Prisma schema validation, client generation, clean PostgreSQL migration deployment and drift checks continued to pass in this run. Unit tests, ESLint and production build were skipped because the integration step failed.
