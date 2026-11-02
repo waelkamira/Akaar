@@ -42,7 +42,7 @@ export async function POST(request: Request) {
     });
     return applyCartCookie(NextResponse.json({ item, message: 'تمت إضافة المنتج إلى السلة.' }, { status: 201 }), ctx);
   } catch (error) {
-    if (error instanceof Error && error.message === 'CART_STOCK_LIMIT') return NextResponse.json({ error: 'الكمية المطلوبة تتجاوز المخزون المتاح.' }, { status: 409 });
+    if (error instanceof Error && error.message === 'CART_STOCK_LIMIT') return ctx ? applyCartCookie(NextResponse.json({ error: 'الكمية المطلوبة تتجاوز المخزون المتاح.' }, { status: 409 }), ctx) : NextResponse.json({ error: 'الكمية المطلوبة تتجاوز المخزون المتاح.' }, { status: 409 });
     console.error('Unable to add product to cart:', error); return NextResponse.json({ error: 'تعذرت إضافة المنتج إلى السلة.' }, { status: 500 });
   }
 }
