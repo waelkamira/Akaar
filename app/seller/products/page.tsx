@@ -24,8 +24,15 @@ export default async function SellerProductsPage() {
   if (user.role === 'ADMIN') redirect('/admin/control-panel');
   if (user.role !== 'SELLER' && user.role !== 'CUSTOMER') redirect('/');
 
+  const seller = await prisma.seller.findUnique({ where: { userId: user.id }, select: { id: true } });
   const products = await prisma.product.findMany({
-    where: { userId: user.id, isDeleted: false },
+    where: {
+      isDeleted: false,
+      OR: [
+        { userId: user.id },
+        ...(seller ? [{ sellerId: seller.id }] : []),
+      ],
+    },
     select: { id: true, title: true, images: true, basePrice: true, stockQuantity: true, isActive: true, approvalStatus: true, categoryName: true, updatedAt: true },
     orderBy: { updatedAt: 'desc' },
     take: 100,
@@ -43,7 +50,7 @@ export default async function SellerProductsPage() {
           {products.map(product=><article key={product.id} className="grid gap-4 border-t border-white/10 bg-[#202725] p-4 md:grid-cols-[minmax(0,2fr)_1fr_1fr_1fr] md:items-center md:px-5">
             <div className="flex min-w-0 items-center gap-3">
               <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-white/5">{product.images?.[0] ? <Image src={product.images[0]} alt={product.title} fill sizes="64px" unoptimized className="object-cover"/> : null}</div>
-              <div className="min-w-0"><Link href={`/posts/${encodeURIComponent(product.id)}`} className="line-clamp-2 font-semibold hover:text-orange-200">{product.title}</Link><p className="mt-1 text-xs text-white/45">{product.categoryName || 'دون تصنيف'}</p></div>
+              <div className="min-w-0"><Link href={`/post/${encodeURIComponent(product.id)}`} className="line-clamp-2 font-semibold hover:text-orange-200">{product.title}</Link><p className="mt-1 text-xs text-white/45">{product.categoryName || 'دون تصنيف'}</p></div>
             </div>
             <div><p className="font-semibold text-orange-200">{priceLabel(product.basePrice)}</p><p className="mt-1 text-xs text-white/50">المخزون: {product.stockQuantity ?? 'غير محدد'}</p></div>
             <div className="flex flex-wrap gap-2"><EntityStatusBadge status={product.approvalStatus}/><EntityStatusBadge status={product.isActive ? 'ACTIVE' : 'SUSPENDED'}/></div>
