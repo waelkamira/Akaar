@@ -19,6 +19,7 @@ import {
   ShoppingCart,
   Star,
   Store,
+  Truck,
   Users,
 } from 'lucide-react';
 
@@ -90,6 +91,15 @@ const sections = [
     keywords: 'الإرجاع الاسترداد refunds returns',
     icon: RotateCcw,
     tone: 'text-rose-300',
+    controlPanel: true,
+  },
+  {
+    href: '/admin/shipping-methods',
+    label: 'وسائل الشحن',
+    description: 'إدارة طرق الشحن والتكاليف',
+    keywords: 'الشحن التوصيل التتبع shipping delivery',
+    icon: Truck,
+    tone: 'text-cyan-300',
     controlPanel: true,
   },
   {
