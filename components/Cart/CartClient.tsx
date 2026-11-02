@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 
 type Item = { id: string; quantity: number; product: { id: string; title: string; images: string[]; basePrice: number | null; stockQuantity: number | null; seller: { storeName: string } | null } };
 
-export default function CartClient({ initialItems }: { initialItems: Item[] }) {
+export default function CartClient({ initialItems, isAuthenticated = false }: { initialItems: Item[]; isAuthenticated?: boolean }) {
   const router = useRouter();
   const [items, setItems] = useState(initialItems);
   const [name, setName] = useState('');
@@ -66,7 +66,7 @@ export default function CartClient({ initialItems }: { initialItems: Item[] }) {
         </div>
       </article>) : <div className="rounded-2xl border border-dashed border-white/15 p-10 text-center text-white/50">سلتك فارغة حاليًا.</div>}
     </section>
-    <form onSubmit={checkout} className="h-fit space-y-4 rounded-2xl border border-white/10 bg-[#202725] p-5">
+    {isAuthenticated ? <form onSubmit={checkout} className="h-fit space-y-4 rounded-2xl border border-white/10 bg-[#202725] p-5">
       <h2 className="text-xl font-bold">ملخص الطلب</h2><div className="flex justify-between text-sm text-white/60"><span>عدد القطع</span><span>{items.reduce((sum, item) => sum + item.quantity, 0)}</span></div>
       <div className="flex justify-between border-t border-white/10 pt-4 text-lg font-bold"><span>الإجمالي</span><span className="text-orange-200">{total.toLocaleString('ar')} ل.س</span></div>
       <h3 className="pt-3 font-semibold">بيانات التوصيل</h3>
@@ -79,6 +79,6 @@ export default function CartClient({ initialItems }: { initialItems: Item[] }) {
       <button disabled={!items.length || busy} className="w-full rounded-xl bg-orange-400 px-4 py-3 font-bold text-[#21180f] disabled:opacity-40">{busy ? 'جارٍ إنشاء الطلب…' : 'تأكيد الطلب'}</button>
       {error ? <p role="alert" className="text-sm text-red-300">{error}</p> : null}
       <p className="text-xs leading-6 text-white/40">يُعاد التحقق من الأسعار والمخزون على الخادم عند إنشاء الطلب. الدفع بالبطاقة متاح فقط إذا فُعّل وضع Stripe التجريبي.</p>
-    </form>
+    </form> : <aside className="h-fit space-y-4 rounded-2xl border border-white/10 bg-[#202725] p-5"><h2 className="text-xl font-bold">سلتك محفوظة</h2><p className="text-sm leading-7 text-white/60">سجّل الدخول لمتابعة بيانات التوصيل وإتمام الشراء مع الاحتفاظ بمنتجاتك.</p><a href="/login?callbackUrl=%2Fcart" className="block rounded-xl bg-orange-400 px-4 py-3 text-center font-bold text-[#21180f]">تسجيل الدخول للشراء</a></aside>}
   </div>;
 }
