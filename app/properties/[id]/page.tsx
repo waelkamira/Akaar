@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/db/prisma';
 import EntityStatusBadge from '@/components/DatabaseUI/EntityStatusBadge';
+import PropertyBookingAction from '@/components/Properties/PropertyBookingAction';
 
 export const dynamic = 'force-dynamic';
 
@@ -33,8 +34,7 @@ export default async function PropertyDetailsPage({ params }: Props) {
       </section>
       <aside className="h-fit rounded-3xl border border-white/10 bg-[#202725] p-6"><div className="flex items-center justify-between gap-3"><span className="text-sm text-white/55">{property.type === 'VILLA' ? 'فيلا' : property.type === 'LAND' ? 'أرض' : 'شقة'}</span><EntityStatusBadge status={property.status}/></div><h1 className="mt-4 text-2xl font-bold leading-relaxed">{property.title}</h1><p className="mt-3 text-3xl font-bold text-orange-200">{new Intl.NumberFormat('en-US',{maximumFractionDigits:0}).format(Number(property.price))} <span className="text-base font-normal">{property.currency}</span></p><p className="mt-4 text-sm leading-7 text-white/55">{[property.location,property.city,property.country].filter(Boolean).join(' · ')}</p>
         <div className="my-6 border-t border-white/10 pt-5"><p className="text-xs text-white/45">المالك</p><p className="mt-2 font-semibold">{property.owner.userName || 'مالك العقار'}</p><p className="mt-1 text-sm text-white/55">المتجر: {property.store.name}</p></div>
-        <Link href={`/login?callbackUrl=${encodeURIComponent(`/properties/${property.id}`)}`} className="block rounded-xl bg-orange-400 px-4 py-3 text-center font-semibold text-[#21180f] hover:bg-orange-300">سجّل الدخول للاستفسار</Link>
-        <p className="mt-3 text-xs leading-6 text-white/40">طلب الحجز الإلكتروني مرتبط بجدول BookingRequest، وسيُفعّل ضمن خطوة ربط نموذج الحجز وواجهة API.</p>
+        <PropertyBookingAction propertyId={property.id} status={property.status} />
       </aside>
     </div>
   </div></main>;
