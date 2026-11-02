@@ -20,6 +20,7 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
 
 export default async function PublicSellerStorePage({params}: Props) {
   const {slug}=await params;
+  const user=await getAuthenticatedUser();
   const seller=await prisma.seller.findFirst({
     where:{slug,status:'ACTIVE'},
     select:{id:true,userId:true,storeName:true,slug:true,description:true,logo:true,isVerified:true,createdAt:true,products:{where:{isDeleted:false,isActive:true,approvalStatus:'APPROVED'},select:{id:true,title:true,images:true,basePrice:true,categoryName:true,city:true,stockQuantity:true},orderBy:{createdAt:'desc'},take:60}},
