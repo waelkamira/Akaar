@@ -21,7 +21,7 @@ export const databaseUiDomains = [
     id: "seller",
     title: "البائعون والمتاجر",
     models: ["Seller", "Store", "VendorOrder"],
-    routes: ["/seller", "/seller/products", "/seller/orders", "/seller/store", "/seller/analytics"],
+    routes: ["/seller/dashboard", "/seller/products", "/seller/orders", "/seller/analytics", "/stores/[slug]"],
     relationships: ["User 1:1 Seller", "User 1:1 Store", "Seller → Product", "Seller → VendorOrder"],
   },
   {
@@ -42,14 +42,14 @@ export const databaseUiDomains = [
     id: "admin",
     title: "الإدارة والحوكمة",
     models: ["User", "Seller", "Product", "Order", "Payment", "Report", "MarketplaceSetting"],
-    routes: ["/admin", "/admin/users", "/admin/sellers", "/admin/products", "/admin/orders", "/admin/settings"],
+    routes: ["/admin/control-panel", "/admin/catalog", "/admin/properties", "/admin/users", "/admin/sellers", "/admin/orders", "/admin/settings"],
     relationships: ["Admin manages users, sellers, product approval, reports, payments and marketplace settings"],
   },
   {
     id: "property",
     title: "العقارات",
     models: ["Property", "BookingRequest", "Store"],
-    routes: ["/properties", "/properties/[id]", "/properties/create", "/properties/my-listings", "/properties/requests"],
+    routes: ["/properties", "/properties/[id]", "/properties/new", "/admin/properties", "/api/bookings"],
     relationships: ["User → Property", "Store → Property", "Property → BookingRequest → User"],
   },
 ];
