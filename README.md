@@ -345,3 +345,12 @@ Scope note:
 - Fixed the public store page's missing `user` binding by resolving the authenticated user in the page component before passing the review eligibility flag.
 - These changes target all TypeScript errors reported by that build. A fresh CI run is still required to confirm the production build passes; no claim of a successful build is made yet.
 - Existing ESLint step reports 90 warnings and zero errors. These warnings are technical-debt items, not a failed lint step.
+
+
+### إعدادات الحساب — 2026-11-02
+- استعادة صفحة إعدادات الحساب على المسار المستقل `/profile/settings` لتجنب تعارض المسارات السابق.
+- ربط الصفحة بواجهة `GET/PUT /api/user` الموجودة؛ تسمح بتعديل اسم العرض ورابط صورة الحساب، وتعرض البريد الإلكتروني للقراءة فقط.
+- إضافة رابط واضح من صفحة `/profile` إلى الإعدادات.
+- لم تتم إضافة تغيير كلمة المرور؛ لم أتمكن من التحقق من وجود مسار خلفي فعلي `/api/user/password` على فرع العمل، ولا يجوز إظهار نموذج يعتمد على endpoint غير موجود.
+- التحقق الأمني المعتمد: الخادم يستخرج هوية المستخدم من الجلسة، ويتجاهل أي هوية يرسلها العميل، ويتحقق من الاسم والصورة قبل التحديث. لم تُضف صلاحيات تعديل حقول الدور أو الحالة.
+- التحقق البرمجي لهذه الدفعة: بانتظار CI الجديد على commit الإعدادات؛ لا تعتبر الصفحة مجتازة build حتى تظهر نتيجة ناجحة.
