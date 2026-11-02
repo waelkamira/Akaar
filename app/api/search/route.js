@@ -43,6 +43,9 @@ export async function POST(request) {
     typeof body.query === 'string'
       ? body.query.trim().slice(0, MAX_QUERY_LENGTH)
       : '';
+  const language = typeof body.language === 'string' && /^[a-z]{2,3}(?:-[A-Za-z0-9]{2,8})*$/i.test(body.language.trim())
+    ? body.language.trim().slice(0, 16)
+    : '';
   const filters =
     body.filters && typeof body.filters === 'object' && !Array.isArray(body.filters)
       ? body.filters
@@ -63,7 +66,7 @@ export async function POST(request) {
     if (queryTerms.length) {
       where.AND = [
         ...(where.AND || []),
-        { AND: textConditions(queryTerms) },
+        { AND: textConditions(queryTerms, language) },
       ];
     }
 
@@ -95,7 +98,10 @@ export async function POST(request) {
     }
 
     const titleCondition = query
-      ? { title: { contains: query, mode: 'insensitive' } }
+      ? { OR: [
+          { title: { contains: query, mode: 'insensitive' } },
+          ...(language ? [{ translations: { some: { language, title: { contains: query, mode: 'insensitive' } } } }] : []),
+        ] }
       : null;
     const titleMatchWhere = titleCondition
       ? { ...where, AND: [...(where.AND || []), titleCondition] }
@@ -145,6 +151,7 @@ export async function POST(request) {
       user: {
         select: { id: true, userName: true, userImage: true },
       },
+      ...(language ? { translations: { where: { language }, take: 1, select: { title: true, description: true } } } : {}),
     };
 
     let products;
@@ -223,6 +230,10 @@ export async function POST(request) {
     const normalizedProducts = products.map((product) => {
       return {
         ...product,
+        ...(product.translations?.[0] ? {
+          title: product.translations[0].title,
+          description: product.translations[0].description ?? product.description,
+        } : {}),
         image1: product.images?.[0] || null,
         userName: product.userName || product.user?.userName || null,
         userImage: product.userImage || product.user?.userImage || null,
