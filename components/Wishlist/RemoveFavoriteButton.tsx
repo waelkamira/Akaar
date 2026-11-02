@@ -3,9 +3,9 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-type Props = { favoriteId: string; userId: string };
+type Props = { favoriteId: string };
 
-export default function RemoveFavoriteButton({ favoriteId, userId }: Props) {
+export default function RemoveFavoriteButton({ favoriteId }: Props) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
@@ -18,7 +18,7 @@ export default function RemoveFavoriteButton({ favoriteId, userId }: Props) {
       const response = await fetch('/api/favorite', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: favoriteId, userId }),
+        body: JSON.stringify({ id: favoriteId }),
       });
       const result = await response.json().catch(() => ({}));
       if (!response.ok) {
