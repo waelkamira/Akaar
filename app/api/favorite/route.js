@@ -163,38 +163,26 @@ export async function POST(req) {
 }
 
 export async function DELETE(req) {
+  const authenticatedUser = await getAuthenticatedUser();
+  if (!authenticatedUser) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
+  const parsedBody = await readJsonBody(req, 16 * 1024);
+  if (!parsedBody.ok) return NextResponse.json({ error: parsedBody.error }, { status: parsedBody.status });
+  const body = parsedBody.value;
+  if (!body || typeof body !== 'object' || Array.isArray(body) || !isValidIdentifier(body.id)) {
+    return NextResponse.json({ error: 'معرف المفضلة غير صالح أو مفقود.' }, { status: 400 });
+  }
+
   try {
-    const parsedBody = await readJsonBody(req, 16 * 1024);
-    if (!parsedBody.ok) {
-      return NextResponse.json({ error: parsedBody.error }, { status: parsedBody.status });
-    }
-    const body = parsedBody.value;
-    const { id, userId } = body || {};
-    const authenticatedUser = await getAuthenticatedUser();
-    if (!authenticatedUser || authenticatedUser.id !== userId) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-    if (!isValidIdentifier(id) || !userId) {
-      return NextResponse.json({ error: 'معرف المفضلة غير صالح أو مفقود.' }, { status: 400 });
-    }
-    const favoriteId = id.trim();
-    await prisma.$executeRaw`
+    const deleted = await prisma.$executeRaw`
       DELETE FROM public.favorites
-      WHERE id = ${favoriteId}
-        AND "userId" = ${userId}
+      WHERE id = ${body.id.trim()}
+        AND "userId" = ${authenticatedUser.id}
     `;
-
-    // تنظيف الذاكرة المؤقتة للمستخدم
-
-    return NextResponse.json({
-      message: 'removed from favorite',
-      favorited: false,
-    });
+    if (!deleted) return NextResponse.json({ error: 'Favorite not found.' }, { status: 404 });
+    return NextResponse.json({ removed: true, favorited: false }, { headers: { 'Cache-Control': 'private, no-store' } });
   } catch (error) {
-    console.error('Error handling favorite:', error);
-    return NextResponse.json(
-      { error: 'Internal Server Error' },
-      { status: 500 }
-    );
+    console.error('Error removing favorite:', error);
+    return NextResponse.json({ error: 'تعذر حذف المنتج من المفضلة.' }, { status: 500 });
   }
 }

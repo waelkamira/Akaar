@@ -214,3 +214,289 @@ Do not run the destructive test reset against any database containing user or pr
 | Production deployment/database/payment configuration | Not accessible / not verified |
 
 **Rule for future updates:** move an item to “fixed” only after a code change and the relevant test pass are recorded with the commit SHA. Keep unresolved findings visible; do not mark a feature operational just because a page or schema model exists.
+
+
+## 6. Database-Driven Frontend Foundation — 2026-11-02
+
+**Branch:** `feat/database-driven-ui-foundation`
+
+Implemented in this branch:
+- Replaced the fully commented storefront home page with an active responsive marketplace landing page. Product cards load through the existing `POST /api/search` endpoint and include loading, empty, retry/error states, search navigation and product links.
+- Added `features/database-ui/model-registry.js` to map the Prisma domain groups to models, relationships, intended routes and shared UI elements.
+- Added `/platform-map`, a browsable Arabic map of the frontend domains, model relationships, planned routes and reusable UI inventory.
+- Added reusable `EntityStatusBadge`, `EntityEmptyState` and `EntitySectionHeading` components for consistent status, empty and section states.
+- Used the existing operational schema and existing route inventory as the basis; this work does not change Prisma models or run database migrations.
+
+Scope note:
+- The registry is an implementation map, not a claim that every listed route is complete. Existing pages should be extended in place rather than duplicated.
+- Runtime build and database-backed rendering have **not yet been run** from this GitHub-only session. The home page depends on the existing search API and its configured rate-limit service; an API configuration error is displayed rather than hidden.
+- Next implementation chunk: connect the shared primitives to existing catalog/product/category pages, then finish the account/cart/order and seller/admin/property gaps using the actual Prisma relations.
+
+
+### Follow-on implementation chunk — pages wired to Prisma relations
+
+- Added `/seller/products`: authenticated product inventory from `Product.userId → User`, including approval/active status, category, price, stock, last update, and links to the existing product detail route.
+- Added `/seller/orders`: authenticated vendor orders scoped to the current `Seller.id`, with order status, tracking number and related products through `VendorOrder → Order → OrderItem → Product`. It shows a setup state if the account has no Seller record.
+- Added `/orders`: authenticated customer orders from `User → Order → OrderItem → Product`, with related payment status.
+- Added `/admin/catalog`: admin-only read view of products, owner, optional seller profile, approval status and activation state. It deliberately has no fake moderation buttons; mutations must be connected to authorized APIs before being offered.
+- Added `/properties` and `/properties/[id]`: published/available property listings and detail pages using `Property → Store` and `Property → User`, including typed attributes when present.
+- These pages use the existing operational Prisma schema and do not change the schema or database. A local Next.js build has not been run from this GitHub session; compile/runtime validation remains pending.
+
+
+- Added `/stores/[slug]`: public seller storefront that exposes only active sellers and active, approved, non-deleted products.
+- Added `/seller/analytics`: database-backed counts for products, recorded sales counts, vendor orders, pending vendor orders and low-stock products. The page explicitly avoids presenting these counts as financial revenue.
+- Added `/notifications`: authenticated notifications list and unread count from `User → Notification`.
+- Added `/messages`: authenticated conversation inbox from `StoreConversation → StoreMessage`, scoped to the current user as customer or seller. The page clearly marks that sending/opening individual conversations still needs its authorized write/read workflow.
+- Corrected seller order item scoping to use `VendorOrder.items` so one seller does not see another seller's items from the same parent order.
+
+
+### Additional frontend coverage — 2026-11-02
+
+- Added `/categories`: active category tree with parent/child links and counts of active, approved products, based on `Category.parentId` and `Category.products`.
+- Added `/wishlist`: authenticated favorites from `User → Favorite → Product`, filtered to visible products.
+- Added `/my-bookings`: authenticated booking history from `User → BookingRequest → Property`, including quoted price, fee and current property status.
+- Added admin read views at `/admin/users`, `/admin/sellers`, and `/admin/orders`, scoped through the existing `getControlPanelAdmin` authorization helper. They expose relationships and counts but do not pretend to approve, suspend, refund, or mutate records.
+- No database migration or Prisma schema change was made. Build/CI remains unverified in this GitHub-only execution environment; the next pass should use CI/build feedback and continue implementing the remaining functional write workflows (wishlist mutations, booking form, review submission, messaging, checkout/order lifecycle) rather than add more read-only pages.
+
+
+- Added `/profile`: account overview using User relations/counts, orders, visible favorites, unread notifications, and optional Seller profile.
+- Added `/my-reviews`: product and store review history through `Review → Product` and `StoreReview → Seller`.
+- Added `/property-wishlist`: saved property list from `PropertyWishlist → Property → Store`, showing only published and available properties.
+
+---
+
+## تنفيذ مبني على مخطط Prisma — تحديث 2026-11-02
+
+### ما أُنجز في هذه الدفعة
+- ربط صفحة تفاصيل العقار `/properties/[id]` بواجهة `POST /api/bookings` الموجودة؛ زر الحجز يرسل `propertyId` ومفتاح idempotency فريد، يعرض أخطاء الخادم، ويوجه المستخدم إلى `/my-bookings` عند نجاح الطلب.
+- توضيح أن الحجز الحالي يسجل طلبًا تجريبيًا فقط ولا يجري تحصيلًا ماليًا.
+- إضافة زر إزالة فعلي إلى `/wishlist` مرتبط بـ `DELETE /api/favorite`، مع تمرير معرف المفضلة ومعرف المستخدم المسجل، وتحديث الصفحة بعد نجاح الحذف.
+- أُبقيت صلاحيات التحقق من المستخدم ومعالجة الملكية داخل واجهات API الحالية؛ لم تُضف تغييرات إلى مخطط Prisma أو قاعدة البيانات في هذه الدفعة.
+
+### التحقق والقيود
+- راجعت مخطط `prisma/schema.prisma` وتأكدت من وجود `Favorite` بمفتاح فريد `[userId, productId]` وحقول `id` و`isDeleted`، ومن وجود واجهة `/api/bookings` التي تسجل طلبات الحجز بمعاملة قاعدة بيانات.
+- لم يُشغّل بناء Next.js أو الاختبارات من خلال اتصال GitHub في هذه الدفعة؛ يلزم تشغيل `npm run build` و`npm test` في بيئة المشروع قبل اعتبار التغييرات متحققة بالكامل.
+- لا تزال دورة الشراء/الدفع منفصلة عن حجز العقارات؛ الحجز لا يعني شراء منتج ولا تحصيل رسوم.
+
+### استكمال ربط الرسائل والتقييمات — 2026-11-02
+- أُضيف المسار `GET/POST /api/messages/[conversationId]`: يتحقق من عضوية المستخدم في المحادثة قبل قراءة الرسائل أو إرسال رد، ويحدّث حالة قراءة الرسائل الواردة.
+- أُضيف مكوّن `ConversationThread` وربط بصندوق `/messages` لعرض الرسائل وإرسال الردود من العميل أو البائع.
+- أُضيف نموذج `StoreReviewForm` في صفحة المتجر العامة، مرتبط بـ `POST /api/reviews`؛ لا يظهر لصاحب المتجر، ويستخدم تحقق الصلاحيات ومحدد المعدل الموجودين في API.
+- اعتمد التنفيذ على علاقات `StoreConversation`, `StoreMessage`, `Seller`, `StoreReview` وحقولها الموجودة في `prisma/schema.prisma` دون تغيير المخطط أو تشغيل ترحيلات.
+
+**التحقق:** تم حفظ الملفات والتعديلات على فرع PR. لم يُنفذ تشغيل محلي لـ TypeScript/Next build أو اختبارات التكامل، لذا يلزم التحقق منها قبل الدمج. كما أن تحميل الرسائل يتم عند فتح المحادثة؛ التحديث اللحظي/الإشعارات الفورية غير مضافين.
+
+### تنفيذ السلة والشراء من مخطط Prisma — 2026-11-02
+- إنشاء `GET/POST/PATCH/DELETE /api/cart` باستخدام `Cart` و`CartItem` وعلاقة المستخدم؛ يدعم جلب السلة، إضافة المنتجات، تعديل الكمية، وحذف المنتج.
+- التحقق على الخادم من حالة المنتج والموافقة عليه وتوفر المتجر والمخزون، وعدم الاعتماد على السعر أو الكمية المرسلين من المتصفح.
+- إنشاء صفحة `/cart` ومكوّن `CartClient` لعرض عناصر السلة وتحديثها وإزالة المنتجات وإدخال بيانات التوصيل.
+- ربط زر إضافة المنتج في `/post/[id]` بواجهة السلة الدائمة للمستخدم المسجل. المنتجات التجريبية فقط تبقى في السلة المحلية ولا تُرسل كمنتجات حقيقية.
+- ربط تأكيد الشراء بواجهة `POST /api/orders` الموجودة؛ وهي تنشئ `Order` و`OrderItem` و`VendorOrder` و`Payment` ضمن معاملة، وتخصم المخزون بعد إعادة التحقق منه. يُزال محتوى السلة بعد نجاح طلب الدفع عند الاستلام أو بعد عودة الدفع الإلكتروني إلى مسار النجاح.
+
+**حدود الدفعة:** واجهة السلة تتطلب تسجيل الدخول حاليًا؛ لم يُفعّل مسار سلة الضيف رغم وجود `GuestSession` في المخطط. الدفع الإلكتروني يظل مشروطًا بإعدادات Stripe التجريبية الموجودة. لم يُشغّل بناء Next.js أو اختبارات التكامل محليًا؛ يجب مراجعة نتيجة CI والتحقق من التطبيق قبل الدمج.
+
+### تشخيص فشل CI — 2026-11-02
+- فشل workflow السابق في خطوة تكامل البحث مع PostgreSQL؛ فشل تشغيل خادم Next.js التجريبي قبل جاهزية API، بينما نجحت خطوات Prisma والتحقق من المخطط والترحيلات.
+- كانت اختبارات التكامل تستخدم `stdio: 'ignore'` لخادم Next.js، ما أخفى سبب خروجه. عُدّلت الاختبارات لالتقاط stdout/stderr وإظهار آخر سجل عند الفشل.
+- لم يتضح بعد السبب الجذري لخروج خادم Next.js؛ يلزم تشغيل CI مجددًا وقراءة السجل التشخيصي قبل اعتبار المشكلة محلولة.
+
+
+## 2026-11-02 — CI diagnosis and guest-cart integration
+
+### Confirmed CI failure and correction
+- CI run `41500299344` passed Prisma validation, client generation, clean PostgreSQL migration deployment, canonical schema generation, and schema/migration drift checks.
+- The PostgreSQL search integration test failed before its HTTP assertions because Next.js detected two route folders for the same dynamic URL: `app/api/messages/[conversationId]` and `app/api/messages/[id]`.
+- The `[conversationId]` handler was a duplicate legacy implementation; the active inbox and conversation components call the `[id]` endpoint and expect its response contract. Removed the conflicting duplicate handler. A fresh CI run is required to verify this correction.
+
+### Guest cart implementation status
+- Added server-managed guest cart sessions using the existing Prisma `GuestSession`, `Cart`, and `CartItem` models; the session token is stored in an HttpOnly cookie.
+- Cart GET/POST/PATCH/DELETE endpoints now resolve the cart from the authenticated user or guest cookie. Client-supplied user/session identifiers are not trusted.
+- Product detail pages now submit real product additions to `POST /api/cart` for both guests and signed-in users. Demo products remain local-only.
+- The cart page loads its items from the API for both account states. Checkout remains restricted to authenticated users; guests are prompted to sign in, with their cart retained for merging.
+- The cart API merges a valid guest cart into the user's cart when the authenticated cart is first resolved. Product eligibility and available stock are rechecked during the merge.
+- The stock-limit error response now also preserves the guest cookie when a guest cart was initialized by that request.
+
+### Remaining verification
+- Re-run CI and inspect the full output; do not mark search integration, unit tests, lint, or production build as passing until their steps complete.
+- Add focused automated tests for guest cart creation, persistence across requests, item update/removal, stock limits, login merge, duplicate product merge, and invalid/expired cookie handling.
+- Verify the real product-detail add-to-cart flow and cart rendering in a browser session, both signed out and signed in.
+- Verify checkout remains inaccessible to guests and that login does not lose the guest cart.
+- No production database was modified by this work. No destructive migration, `db push`, or reset was run.
+
+
+### Follow-up CI result — 2026-11-02
+- After removing the duplicate dynamic message route, CI no longer reports the earlier Next.js route-conflict startup error.
+- The next run still failed in the integration-test setup because the Next.js dev server did not return HTTP 200 from the search suggestions endpoint within 90 seconds. The test output did not include the server's captured stdout/stderr on timeout, so the actual cause remained hidden.
+- Increased the startup wait to 180 seconds and changed the timeout diagnostic to include the last HTTP status/body and captured Next.js server output. This is a diagnostic change only; it does not claim the search integration test is fixed.
+- Prisma schema validation, client generation, clean PostgreSQL migration deployment and drift checks continued to pass in this run. Unit tests, ESLint and production build were skipped because the integration step failed.
+
+
+### Route-collision correction — 2026-11-02
+- CI run `41502761998` confirmed that the extended startup diagnostics were working: the search API returned HTTP 500 because six URLs were defined twice across route groups and top-level route folders.
+- Removed the superseded route-group page files for `/messages`, `/notifications`, `/profile`, `/cart`, `/orders`, and `/properties/[id]`. The canonical top-level pages remain, including the guest-capable cart and property booking action.
+- The duplicate route error is addressed in source, but the latest branch head still requires a fresh CI run. Do not infer that integration tests, lint, or production build pass until that run completes.
+- The former route-group profile editor was removed to unblock the canonical profile overview; restore its edit/password controls under a distinct route such as `/profile/settings` before considering account-management UX complete.
+- Vercel deployment comments reported the account's free-tier daily deployment limit; this is separate from the GitHub Actions validation failure and does not establish an application build result.
+
+
+### Production build type-check correction — 2026-11-02
+- CI run `41508150597` passed Prisma validation/client generation, clean PostgreSQL migration deployment, schema drift checks, PostgreSQL search/filter integration tests, unit tests, and ESLint.
+- Production compilation completed, then TypeScript found incorrect inferred component prop contracts: optional empty-state actions were inferred as required, and the shared section heading's optional eyebrow was inferred as required. Updated the JavaScript component defaults so those props are optional at the TypeScript boundary.
+- Fixed the public store page's missing `user` binding by resolving the authenticated user in the page component before passing the review eligibility flag.
+- These changes target all TypeScript errors reported by that build. A fresh CI run is still required to confirm the production build passes; no claim of a successful build is made yet.
+- Existing ESLint step reports 90 warnings and zero errors. These warnings are technical-debt items, not a failed lint step.
+
+
+### إعدادات الحساب — 2026-11-02
+- استعادة صفحة إعدادات الحساب على المسار المستقل `/profile/settings` لتجنب تعارض المسارات السابق.
+- ربط الصفحة بواجهة `GET/PUT /api/user` الموجودة؛ تسمح بتعديل اسم العرض ورابط صورة الحساب، وتعرض البريد الإلكتروني للقراءة فقط.
+- إضافة رابط واضح من صفحة `/profile` إلى الإعدادات.
+- لم تتم إضافة تغيير كلمة المرور؛ لم أتمكن من التحقق من وجود مسار خلفي فعلي `/api/user/password` على فرع العمل، ولا يجوز إظهار نموذج يعتمد على endpoint غير موجود.
+- التحقق الأمني المعتمد: الخادم يستخرج هوية المستخدم من الجلسة، ويتجاهل أي هوية يرسلها العميل، ويتحقق من الاسم والصورة قبل التحديث. لم تُضف صلاحيات تعديل حقول الدور أو الحالة.
+- التحقق البرمجي لهذه الدفعة: بانتظار CI الجديد على commit الإعدادات؛ لا تعتبر الصفحة مجتازة build حتى تظهر نتيجة ناجحة.
+
+
+### المفضلة وإعدادات الحساب — متابعة 2026-11-02
+- إصلاح رابط المنتج في قائمة المفضلة من `/posts/[id]` إلى المسار الفعلي `/post/[id]`.
+- إزالة اعتماد زر حذف المفضلة على `userId` المرسل من المتصفح؛ أصبح DELETE يستخرج المستخدم من الجلسة ويقيد الحذف بمعرفه، ويرجع 404 عند عدم وجود سجل يخصه.
+- إضافة نموذج تغيير كلمة المرور بعد التحقق من وجود `PUT /api/user/password`: يتحقق الخادم من كلمة المرور الحالية عبر bcrypt ويخزن الجديدة باستخدام bcrypt، والنموذج يطابق التأكيد ويتحقق من حدود الطول.
+- لم يتم بعد إجراء اختبارات متصفح أو اختبارات تكامل مخصصة لهذه المسارات؛ فحوصات CI الحالية هي التحقق المطلوب قبل اعتبار الدفعة مستقرة.
+
+
+### دورة الطلبات — تحسينات واجهات المتابعة — 2026-11-02
+- راجعت صفحات طلبات العميل والإدارة والبائع مقابل المسارات الفعلية في المشروع.
+- صححت روابط عناصر الطلبات في صفحات الإدارة والبائع من المسار القديم `/posts/[id]` إلى المسار المعتمد `/post/[id]`. صفحة العميل كانت تستخدم المسار الصحيح بالفعل.
+- تأكدت من وجود مسار تحديث طلب البائع `PATCH /api/seller/orders`، وهو يقيد التحديث بالبائع المفعّل وملكية `VendorOrder`، ويتحقق من انتقال الحالة بالتسلسل، ويحفظ رقم التتبع وتواريخ الشحن والتسليم، ثم يحدّث حالة الطلب الرئيسي عند اكتمال الشحن.
+- لوحة البائع الحالية تستدعي هذا المسار لتحديث الحالات؛ لم أضف endpoint إداري لتغيير حالة الطلب لأن مساراً موثوقاً لذلك لم يظهر في المراجعة، ولن أضيف تحكماً شكلياً أو تجاوزاً لقواعد دورة الطلب.
+- مسار Stripe webhook الموجود يتحقق من التوقيع ووضع الاختبار ومطابقة المبلغ/العملة/مرجع الجلسة، ويحدّث الدفع والطلب داخل transaction، ويعيد المخزون عند انتهاء جلسة الدفع غير المدفوعة.
+- لم تُجر اختبارات متصفح أو Stripe sandbox فعلية في هذه الدفعة؛ تبقى ضمن مرحلة الاختبار الشامل بعد استكمال البناء.
+
+
+### إدارة البائع والمنتجات — متابعة 2026-11-02
+- راجعت دورة تقديم البائع، رفع وثيقة الهوية الخاصة، اعتماد المتجر من لوحة الإدارة، إنشاء المنتجات، تعديلها، حذفها، وتحديث المخزون.
+- تأكدت من أن تقديم البائع يتطلب جلسة مستخدم، وأن وثيقة الهوية عند رفعها تُتحقق من خصوصيتها وارتباطها بمعرّف صاحب الطلب، مع rate limit لرفع الوثائق.
+- تأكدت من أن إنشاء المنتج يتطلب بائعًا مفعّلًا، وفئة نشطة، ويتحقق من السعر والمخزون والصور، ويضع المنتج في حالة مراجعة عند تفعيل إعداد موافقة المنتجات.
+- أصلحت صفحة `/seller/products` لتعرض المنتجات المرتبطة بمعرّف البائع أو بحساب المستخدم (للتوافق مع السجلات الأقدم)، بدل الاعتماد على `userId` وحده.
+- أصلحت رابط تفاصيل المنتج في الصفحة من `/posts/[id]` إلى المسار الفعلي `/post/[id]`.
+- راجعت واجهة إدارة المتاجر الموجودة في `/admin/control-panel/stores` ومساراتها؛ وهي تدعم مراجعة الطلب، التوثيق، الاعتماد، الرفض، التجميد وإعادة التفعيل مع صلاحية المدير.
+- لم أضف واجهة إدارة مكررة تحت `/admin/sellers`؛ الصفحة الحالية هناك للعرض، بينما مسار الإدارة التشغيلي موجود بالفعل في لوحة التحكم.
+- لم يتم تشغيل اختبارات متصفح أو اختبارات تكامل جديدة لهذه التغييرات بعد؛ ننتظر CI على أحدث commit قبل اعتمادها.
+
+
+## 2026-11-02 — مراجعة الرسائل والإشعارات
+
+### ما تمت مراجعته وإصلاحه
+- راجعت مسارات الرسائل الحالية: `GET/POST /api/messages` و`GET/POST/PATCH /api/messages/[id]`، وصفحة المحادثات ومكوّن `ConversationThread`، وجداول `StoreConversation` و`StoreMessage` وعلاقة `Notification` في `prisma/schema.prisma`.
+- تأكدت أن قراءة المحادثة وإرسال الرد وتحديث حالة القراءة تتحقق من أن المستخدم الحالي أحد طرفي المحادثة؛ كما أن إنشاء الرسائل يستخرج هوية المرسل من الجلسة ويحدد المستلم من علاقة المحادثة.
+- أصلحت استجابة تفاصيل المحادثة لتعيد `currentUserId` و`readAt` لكل رسالة؛ كان المكوّن يعتمد على `currentUserId` لكنه لم يكن يصل إليه من API، كما كان نوع الرسالة يطلب `readAt` دون أن تعيده الاستجابة.
+- ربطت فتح المحادثة في `ConversationThread` بطلب PATCH الموجود لتعليم الرسائل الواردة كمقروءة، بعد نجاح تحميل الرسائل.
+
+### فجوات متبقية
+- كانت صفحة `/notifications` تفتقر إلى إجراءات المستخدم عند تسجيل هذه الملاحظة؛ تمت إضافة API وواجهة تعليم المقروء والحذف في قسم «تنفيذ إدارة إشعارات الحساب» أدناه.
+- لا يوجد تحديث لحظي أو polling للمحادثات؛ تحميل الرسائل يتم عند فتح المحادثة أو تحديثها.
+- لم تُنفذ اختبارات متصفح أو اختبارات تكامل خاصة بالرسائل والإشعارات في هذه الدفعة.
+
+### التحقق
+- فحصت CI run `41514422106` على commit السابق `7dd8e71f8ee364dca60011b122d58a05698327c5`؛ كان لا يزال قيد التنفيذ عند الفحص، وظهر job واحد باسم `validate` بحالة `in_progress`.
+- التعديلات الحالية محفوظة على الفرع، ويلزم تشغيل/انتظار CI على أحدث commit والتحقق من build والاختبارات قبل اعتبارها مكتملة.
+- لم يتم تعديل مخطط Prisma أو تشغيل migrations أو تغيير قاعدة بيانات فعلية.
+
+
+### تنفيذ إدارة إشعارات الحساب — 2026-11-02
+- إضافة `GET/PATCH/DELETE /api/notifications` اعتمادًا على نموذج `Notification` في `prisma/schema.prisma`.
+- جميع عمليات القراءة والتحديث والحذف مقيدة بهوية المستخدم المستخرجة من الجلسة؛ لا يقبل الخادم `userId` من العميل، ولا يمكن لمستخدم التأثير على إشعارات حساب آخر.
+- دعم تعليم إشعار منفرد أو جميع إشعارات المستخدم كمقروءة، وحذف إشعار منفرد أو جميع إشعاراته.
+- ربط صفحة `/notifications` بمكوّن تفاعلي يعرض العدد غير المقروء ويتيح الإجراءات مع حالات انتظار وأخطاء واضحة وتحديث الواجهة بعد نجاح الاستجابة.
+- لا يتطلب هذا التنفيذ أي تعديل على Prisma schema أو migration.
+- هذه دفعة بناء وليست اعتمادًا نهائيًا: لم تُشغّل اختبارات أو lint أو build وفق ترتيب العمل المتفق عليه؛ ستتم مراجعة واختبار جميع الوحدات بعد اكتمال البناء.
+
+
+### بناء دورة طلبات الإرجاع — 2026-11-02
+- إضافة `GET/POST /api/returns` وربطها بنموذج `Return` وعلاقة `Order` في مخطط Prisma المعتمد.
+- يقتصر عرض وإنشاء طلبات الإرجاع على الطلبات التي يملكها المستخدم الحالي؛ هوية المستخدم تُستخرج من الجلسة ولا تُقبل من العميل.
+- يسمح الإصدار الأول بطلب إرجاع على مستوى الطلب بعد تسجيل حالة التسليم، خلال 30 يومًا من تاريخ تحديث الطلب عند التسليم، مع سبب إلزامي من 10 إلى 2000 حرف.
+- يمنع تكرار طلب الإرجاع عندما يوجد طلب سابق في حالة `REQUESTED` أو `UNDER_REVIEW` أو `APPROVED`، وينشئ إشعارًا للمستخدم عند استلام الطلب.
+- إضافة صفحة `/returns` وسجل طلبات الإرجاع وربطها بصفحة `/orders`.
+- حدود المخطط الحالي: نموذج `Return` مرتبط بالطلب ولا يتضمن عناصر إرجاع منفصلة أو حالات typed enum أو سجل تدقيق؛ لذلك لم يتم اختلاق إدارة على مستوى المنتج أو اعتماد استرداد مالي تلقائي. تمت إضافة مراجعة الإدارة لاحقًا كما هو موثق في قسم استكمال مراجعة الإرجاع؛ ويظل تنفيذ رد الأموال الفعلي خاضعًا لتدفق الدفع المعتمد.
+- لم تُشغّل الاختبارات أو lint أو build في هذه المرحلة؛ تم تأجيل التحقق الشامل إلى ما بعد اكتمال وحدات البناء.
+
+
+### استكمال مراجعة الإرجاع من لوحة الإدارة — 2026-11-02
+- إضافة `GET/PATCH /api/admin/returns` مع التحقق من صلاحية مدير لوحة التحكم.
+- إضافة صفحة `/admin/returns` وربطها بالتنقل الإداري؛ تعرض الطلبات والعميل والسبب والقيمة والحالة.
+- يدعم مسار المراجعة الانتقالات المحددة: `REQUESTED → UNDER_REVIEW` ثم `APPROVED` أو `REJECTED`، مع تحديث مشروط بالحالة الحالية لمنع الكتابة فوق قرار متزامن.
+- ينشئ الخادم إشعارًا للعميل عند كل قرار إداري ناجح.
+- لم يتم تنفيذ رد مالي آلي أو تغيير حالة الدفع عند الموافقة؛ الموافقة الإدارية على الإرجاع ليست إثباتًا بأن مزود الدفع أعاد الأموال. يتطلب ذلك تدفق استرداد مستقلًا ومتكاملًا مع مزود الدفع.
+- لم يتم تعديل مخطط Prisma أو إنشاء migration في هذه الدفعة، ولم تُشغّل الاختبارات أو lint أو build؛ سيجري التحقق الشامل بعد اكتمال البناء.
+
+
+### بناء إدارة وسائل الشحن — 2026-11-02
+- إضافة `GET/POST /api/admin/shipping-methods` و`PATCH/DELETE /api/admin/shipping-methods/[id]` باستخدام نموذج `ShippingMethod` الموجود في `prisma/schema.prisma`.
+- إضافة صفحة `/admin/shipping-methods` لإضافة الوسائل وتعديل الاسم والتكلفة وحذفها، مع إظهار عدد الطلبات المرتبطة بكل وسيلة.
+- حماية جميع عمليات الإدارة بصلاحية مدير لوحة التحكم والتحقق من المدخلات وحدود الاسم والتكلفة.
+- إضافة رابط وسائل الشحن إلى تنقل الإدارة.
+- قيد مهم في المخطط: `ShippingMethod.cost` من النوع `Float` دون حقل عملة أو منطقة تغطية أو مدة توصيل أو حالة تفعيل. لذلك أُنجزت إدارة السجلات فقط، ولم تُربط التكلفة بحساب checkout أو Stripe حتى لا تُخلط العملات أو تُفرض تكلفة غير محددة على العميل.
+- لم يتغير مخطط Prisma ولم تُنشأ migration أو تُنفذ تغييرات على قاعدة البيانات.
+- لم تُشغّل الاختبارات أو lint أو build؛ ما زلنا في مرحلة البناء، وسيأتي التحقق بعد اكتمال الوحدات.
+
+
+
+### بناء إدارة الخصومات المرتبطة بالمنتجات — 2026-11-02
+- إضافة `GET/POST /api/admin/discounts` و`PATCH/DELETE /api/admin/discounts/[id]` وفق نموذج `Discount` في مخطط Prisma.
+- إضافة صفحة `/admin/discounts` لإدارة المنتج المرتبط ورمز الخصم ونسبة التخفيض وتاريخ البداية والنهاية، مع عرض عدد الطلبات المرتبطة وحالة الصلاحية الزمنية.
+- التحقق من صيغة الرمز وتفرده، ونطاق النسبة من 1 إلى 100، وصحة الفترة الزمنية، ووجود المنتج وعدم حذفه.
+- حماية واجهات الإدارة بصلاحية مدير لوحة التحكم، وإضافة رابط الخصومات إلى التنقل الإداري.
+- قيد المخطط: الخصم مرتبط بمنتج واحد فقط، ولا توجد حقول لحد الاستخدام أو العملة أو شرائح العملاء أو أنواع الخصومات العامة. عند إنشاء إدارة الخصومات لم يكن رمز الخصم متصلًا بعد بـ checkout؛ تمت إضافة التحقق والحساب الخادمي وربط `discountId` لاحقًا في قسم «ربط رمز الخصم بمسار إتمام الشراء».
+- لا تغيير في Prisma schema أو migrations أو قاعدة البيانات.
+- لم تُشغّل اختبارات أو lint أو build؛ سيأتي الفحص الشامل بعد إكمال البناء.
+
+
+
+### بناء إدارة ترجمات المنتجات — 2026-11-02
+- إضافة `GET/POST /api/admin/product-translations` و`PATCH/DELETE /api/admin/product-translations/[id]` وفق نموذج `ProductTranslation` في Prisma.
+- إضافة صفحة `/admin/product-translations` لإدارة المنتج واللغة والعنوان والوصف المترجم، وربطها بتنقل لوحة الإدارة.
+- التحقق من رمز اللغة بصيغة language tag مبسطة، ومن طول العنوان والوصف ووجود المنتج وعدم حذفه.
+- احترام القيد الفريد `[productId, language]` وإرجاع تعارض واضح عند محاولة تكرار ترجمة اللغة للمنتج نفسه.
+- قيد التكامل: هذه الدفعة تبني إدارة بيانات الترجمة؛ لم يُربط اختيار اللغة بعد بعرض صفحات المنتج أو نتائج البحث أو SEO أو واجهة المتجر. يلزم تنفيذ طبقة locale وتحديد اللغة الاحتياطية وربط الاستعلامات قبل اعتبار المتجر متعدد اللغات فعليًا.
+- لم يتغير مخطط Prisma ولم تُنشأ migration أو تُنفذ تغييرات على قاعدة البيانات.
+- لم تُشغّل الاختبارات أو lint أو build؛ ستتم مراجعة كل المسارات والربط بعد إكمال وحدات البناء.
+
+
+
+### ربط رمز الخصم بمسار إتمام الشراء — 2026-11-02
+- ربط حقل رمز الخصم في سلة التسوق بـ `POST /api/orders`.
+- يتحقق الخادم من الرمز وتاريخ الصلاحية وأن المنتج المرتبط بالخصم موجود ضمن عناصر السلة؛ لا يعتمد على أي سعر أو نسبة يرسلها المتصفح.
+- يطبق التخفيض على سعر الوحدة للمنتج المرتبط فقط، ويعيد حساب إجمالي الطلب وبنود الطلب على الخادم، ويحفظ `discountId` في سجل الطلب.
+- يمنع استخدام الرمز مع Stripe حاليًا لأن نموذج السعر بالدولار ومسار Stripe لا يحتويان بعد على تمثيل موحد لتطبيق الخصم؛ لا يتم خصم قيمة من إجمالي محلي ثم إرسال مبلغ مختلف إلى بوابة الدفع.
+- يظل الرمز الواحد في الطلب مرتبطًا بمنتج واحد وفق بنية `Discount` الحالية؛ لا يدعم هذا التنفيذ تجميع عدة أكواد أو خصومات على مستوى الطلب كله.
+- لم تُشغّل الاختبارات أو lint أو build بعد، ولم تُجر أي تغييرات على قاعدة البيانات أو مخطط Prisma.
+
+
+
+### بناء دليل البلدان والمدن وإدارة الموردين — 2026-11-02
+- إضافة واجهات إدارة البلدان `/api/admin/countries` والمدينة `/api/admin/cities` مع الإنشاء والتعديل والحذف، وصفحة `/admin/locations`.
+- التحقق من رمز البلد بصيغة ISO alpha-2، ومن تفرد اسم البلد ورمزه، ومن تفرد اسم المدينة داخل البلد.
+- حماية حذف البلد إذا كان مرتبطًا بمدن أو موردين، وحماية حذف المدينة إذا كان مرتبطًا بموردين؛ لا نسمح بعمليات حذف متسلسلة قد تمحو بيانات تابعة.
+- إضافة إدارة الموردين `/api/admin/suppliers` وصفحة `/admin/suppliers` مع ربط كل مورد ببلد، وربط اختياري بمدينة تابعة للبلد نفسه، والتحقق من البريد الإلكتروني والحقول.
+- إضافة روابط البلدان والمدن والموردين إلى تنقل الإدارة.
+- تعتمد الوحدات على نماذج `Country` و`City` و`Supplier` الحالية دون تغيير Prisma أو قاعدة البيانات.
+- ما زالت هذه بيانات إدارة داخلية؛ لم يتم بعد ربط اختيار البلد والمدينة بواجهة checkout أو البحث الجغرافي أو قواعد الشحن، كما أن نموذج المورد الحالي لا يتضمن حالة اعتماد أو مستندات أو منتجات توريد.
+- لم تُشغّل الاختبارات أو lint أو build حتى الآن، وفق ترتيب البناء ثم الفحص الشامل.
+
+### ربط الخصومات بإنشاء الطلب
+- أضيف حقل رمز الخصم إلى checkout، ويتحقق الخادم من صلاحيته وارتباطه بمنتج موجود في السلة.
+- يعاد حساب أسعار بنود الطلب والإجمالي على الخادم، ويُحفظ مرجع الخصم في `Order.discountId`.
+- التطبيق الحالي لرموز الخصم يقتصر على الدفع عند الاستلام؛ تكامل Stripe ينتظر توحيد تسعير الخصومات بالدولار، ولا يُسمح بتمرير خصم محلي مع مبلغ غير مخفّض إلى مزود الدفع.
+
+
+
+### تفعيل ترجمات المنتجات في البحث — 2026-11-02
+- ربط نموذج `ProductTranslation` بمسار البحث العام `POST /api/search` بدل بقاء الترجمات محصورة في لوحة الإدارة.
+- يقبل البحث حقل `language` بصيغة language tag محددة؛ ويبحث في العنوان الأصلي وعناوين الترجمة للغة المطلوبة، مع إبقاء نتائج اللغة الأصلية متاحة كخيار احتياطي.
+- يعيد المسار عنوان ووصف الترجمة عند توفرها للغة المطلوبة، وإلا يعيد بيانات المنتج الأصلية. لا يعتمد على لغة يرسلها المستخدم لتغيير صلاحيات أو بيانات خاصة.
+- لم يتم بعد ربط محدد لغة موحد في واجهة المتجر أو صفحات المنتج وبيانات SEO؛ هذه الدفعة تفعّل طبقة البحث فقط، وتحتاج بقية واجهة locale قبل اعتبار التعدد اللغوي مكتملاً.
+- لم يتم تعديل Prisma schema أو تشغيل migrations أو الاختبارات أو build؛ التحقق الشامل مؤجل إلى نهاية مرحلة البناء.
+
+- أُكمل ربط واجهة البحث بتمرير اللغة من معامل الرابط `?lang=...` إلى API؛ لا يُفترض اختيار لغة تلقائيًا ولا تتغير اللغة الأساسية عند غياب المعامل أو عدم صلاحيته.
+
+- أُضيف دعم اللغة نفسها إلى API تفاصيل المنتج `POST /api/showPostById` وصفحة المنتج؛ عند فتح رابط المنتج مع `?lang=...` تُعرض الترجمة المتاحة، وإلا يبقى العنوان والوصف الأصليان. صفحات المنتجات التجريبية المحلية لا تزال تستخدم بياناتها الثابتة.

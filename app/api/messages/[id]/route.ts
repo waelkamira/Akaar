@@ -52,12 +52,13 @@ export async function GET(_request: Request, { params }: RouteContext) {
       senderId: string;
       body: string;
       createdAt: Date;
+      readAt: Date | null;
       senderName: string;
     }>>`
-      SELECT recent."id", recent."senderId", recent."body", recent."createdAt",
+      SELECT recent."id", recent."senderId", recent."body", recent."createdAt", recent."readAt",
         COALESCE(sender."userName", 'مستخدم') AS "senderName"
       FROM (
-        SELECT "id", "senderId", "body", "createdAt"
+        SELECT "id", "senderId", "body", "createdAt", "readAt"
         FROM public.store_messages
         WHERE "conversationId" = ${id}
         ORDER BY "createdAt" DESC
@@ -73,6 +74,7 @@ export async function GET(_request: Request, { params }: RouteContext) {
         isStoreOwner,
       },
       messages,
+      currentUserId: user.id,
     }, { headers: { 'Cache-Control': 'private, no-store' } });
   } catch (error) {
     console.error('Unable to load store conversation:', error);

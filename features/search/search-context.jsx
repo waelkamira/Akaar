@@ -20,6 +20,8 @@ export function SearchProvider({ children }) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const isSearchPage = pathname.startsWith('/search');
+  const languageParam = searchParams.get('lang') || '';
+  const language = /^[a-z]{2,3}(?:-[A-Za-z0-9]{2,8})*$/i.test(languageParam) ? languageParam.slice(0, 16) : '';
   
   const [searchQuery, setSearchQuery] = useState('');
   const [category, setCategory] = useState(null);
@@ -105,6 +107,7 @@ export function SearchProvider({ children }) {
           signal: controller.signal,
           body: JSON.stringify({
             query: searchQuery,
+            language,
             categoryId: category?.id,
             filters: { ...filters, details: filters.details || {} },
             page: targetPage,
@@ -133,7 +136,7 @@ export function SearchProvider({ children }) {
         if (currentRequestId === requestId.current) setLoading(false);
       }
     },
-    [category, filters, isSearchPage, searchQuery]
+    [category, filters, isSearchPage, language, searchQuery]
   );
 
   useEffect(() => {
@@ -151,7 +154,7 @@ export function SearchProvider({ children }) {
       safeAbort(requestController.current);
       if (requestController.current) requestController.current = null;
     };
-  }, [isSearchPage, searchQuery, category?.id, filters, performSearch]);
+  }, [isSearchPage, searchQuery, language, category?.id, filters, performSearch]);
 
   useEffect(() => {
     if (page > 1 && isSearchPage) performSearch(page, true);

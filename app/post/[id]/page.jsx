@@ -21,7 +21,7 @@ import BackButton from '../../../components/Buttons/BackButton';
 import { FiCopy, FiCheck } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 import { useCommerce } from '@/features/cart/commerce-context';
-import { useParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import demoProducts from '../../../lib/demoProducts';
 import ReviewWidget from '@/components/Reviews/ReviewWidget';
@@ -51,6 +51,9 @@ const UserNameAndPhoto = dynamic(
 
 export default function Page() {
   const { id } = useParams();
+  const searchParams = useSearchParams();
+  const languageParam = searchParams.get('lang') || '';
+  const language = /^[a-z]{2,3}(?:-[A-Za-z0-9]{2,8})*$/i.test(languageParam) ? languageParam.slice(0, 16) : '';
   const [post, setPost] = useState(null);
   const [isClient, setIsClient] = useState(false);
   const [iframeSrc, setIframeSrc] = useState(null);
@@ -124,7 +127,7 @@ export default function Page() {
             'Content-Type': 'application/json',
             Accept: 'application/json',
           },
-          body: JSON.stringify({ id }),
+          body: JSON.stringify({ id, language }),
         });
         const data = await response.json();
         if (cancelled) return;
@@ -156,7 +159,7 @@ export default function Page() {
 
     loadData();
     return () => { cancelled = true; };
-  }, [id]);
+  }, [id, language]);
 
   useEffect(() => {
     if (isClient && post?.categoryName) {
@@ -254,12 +257,28 @@ export default function Page() {
     }
   };
 
-  const handleAddToCart = () => {
+  const handleAddToCart = async () => {
+    if (post?.isDemo) {
+      try {
+        addToCart(post);
+        toast.success('أُضيف المنتج التجريبي إلى السلة المحلية.');
+      } catch (addError) {
+        toast.error(addError.message);
+      }
+      return;
+    }
+    // The cart API supports both authenticated users and guest sessions.
     try {
-      addToCart(post);
-      toast.success('تمت إضافة المنتج إلى السلة');
+      const response = await fetch('/api/cart', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({ productId: post.id, quantity: 1 }),
+      });
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(payload?.error || 'تعذرت إضافة المنتج إلى السلة.');
+      toast.success(payload?.message || 'تمت إضافة المنتج إلى السلة');
     } catch (addError) {
-      toast.error(addError.message);
+      toast.error(addError?.message || 'تعذرت إضافة المنتج إلى السلة.');
     }
   };
 
