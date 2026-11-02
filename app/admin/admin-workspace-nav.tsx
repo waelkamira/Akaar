@@ -133,6 +133,15 @@ const sections = [
     controlPanel: true,
   },
   {
+    href: '/admin/suppliers',
+    label: 'الموردون',
+    description: 'بيانات الموردين ومواقعهم',
+    keywords: 'الموردون الموردين suppliers vendors supply chain',
+    icon: Building2,
+    tone: 'text-emerald-300',
+    controlPanel: true,
+  },
+  {
     href: '/admin/reviews/products',
     label: 'التقييمات والدعم',
     description: 'آراء العملاء والرسائل',
