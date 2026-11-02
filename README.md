@@ -299,3 +299,26 @@ Scope note:
 - فشل workflow السابق في خطوة تكامل البحث مع PostgreSQL؛ فشل تشغيل خادم Next.js التجريبي قبل جاهزية API، بينما نجحت خطوات Prisma والتحقق من المخطط والترحيلات.
 - كانت اختبارات التكامل تستخدم `stdio: 'ignore'` لخادم Next.js، ما أخفى سبب خروجه. عُدّلت الاختبارات لالتقاط stdout/stderr وإظهار آخر سجل عند الفشل.
 - لم يتضح بعد السبب الجذري لخروج خادم Next.js؛ يلزم تشغيل CI مجددًا وقراءة السجل التشخيصي قبل اعتبار المشكلة محلولة.
+
+
+## 2026-11-02 — CI diagnosis and guest-cart integration
+
+### Confirmed CI failure and correction
+- CI run `41500299344` passed Prisma validation, client generation, clean PostgreSQL migration deployment, canonical schema generation, and schema/migration drift checks.
+- The PostgreSQL search integration test failed before its HTTP assertions because Next.js detected two route folders for the same dynamic URL: `app/api/messages/[conversationId]` and `app/api/messages/[id]`.
+- The `[conversationId]` handler was a duplicate legacy implementation; the active inbox and conversation components call the `[id]` endpoint and expect its response contract. Removed the conflicting duplicate handler. A fresh CI run is required to verify this correction.
+
+### Guest cart implementation status
+- Added server-managed guest cart sessions using the existing Prisma `GuestSession`, `Cart`, and `CartItem` models; the session token is stored in an HttpOnly cookie.
+- Cart GET/POST/PATCH/DELETE endpoints now resolve the cart from the authenticated user or guest cookie. Client-supplied user/session identifiers are not trusted.
+- Product detail pages now submit real product additions to `POST /api/cart` for both guests and signed-in users. Demo products remain local-only.
+- The cart page loads its items from the API for both account states. Checkout remains restricted to authenticated users; guests are prompted to sign in, with their cart retained for merging.
+- The cart API merges a valid guest cart into the user's cart when the authenticated cart is first resolved. Product eligibility and available stock are rechecked during the merge.
+- The stock-limit error response now also preserves the guest cookie when a guest cart was initialized by that request.
+
+### Remaining verification
+- Re-run CI and inspect the full output; do not mark search integration, unit tests, lint, or production build as passing until their steps complete.
+- Add focused automated tests for guest cart creation, persistence across requests, item update/removal, stock limits, login merge, duplicate product merge, and invalid/expired cookie handling.
+- Verify the real product-detail add-to-cart flow and cart rendering in a browser session, both signed out and signed in.
+- Verify checkout remains inaccessible to guests and that login does not lose the guest cart.
+- No production database was modified by this work. No destructive migration, `db push`, or reset was run.
