@@ -11,6 +11,7 @@ import { CommerceProvider } from '@/features/cart/commerce-context';
 import Footer from '../components/ReusableComponents/Footer';
 import PageViewTracker from '@/components/analytics/PageViewTracker';
 import { getSiteUrl } from '@/lib/site-url.mjs';
+import { LanguageProvider } from '@/features/i18n/language-context';
 
 const rubik = Rubik({
   subsets: ['arabic', 'latin'],
@@ -51,6 +52,7 @@ export default function RootLayout({ children }) {
       </head>
       <body className={rubik.className}>
         <Toaster position="top-center" />
+        <LanguageProvider>
         <CommerceProvider>
           <AuthContextProvider>
             <InputsContextProvider>
@@ -66,6 +68,7 @@ export default function RootLayout({ children }) {
             </InputsContextProvider>
           </AuthContextProvider>
         </CommerceProvider>
+        </LanguageProvider>
       </body>
     </html>
   );
