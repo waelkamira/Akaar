@@ -16,7 +16,12 @@ export default function CartClient({ initialItems, isAuthenticated = false }: { 
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [paymentMethod, setPaymentMethod] = useState<'CASH_ON_DELIVERY' | 'STRIPE'>('CASH_ON_DELIVERY');
-  useEffect(() => {\n    let active = true;\n    fetch('/api/cart', { cache: 'no-store' }).then(async response => { const data = await response.json(); if (!response.ok) throw new Error(data.error || 'تعذر تحميل السلة.'); if (active) setItems(data.items || []); }).catch(cause => { if (active) setError(cause instanceof Error ? cause.message : 'تعذر تحميل السلة.'); });\n    return () => { active = false; };\n  }, []);\n  const total = useMemo(() => items.reduce((sum, item) => sum + (item.product.basePrice || 0) * item.quantity, 0), [items]);
+  useEffect(() => {
+    let active = true;
+    fetch('/api/cart', { cache: 'no-store' }).then(async response => { const data = await response.json(); if (!response.ok) throw new Error(data.error || 'تعذر تحميل السلة.'); if (active) setItems(data.items || []); }).catch(cause => { if (active) setError(cause instanceof Error ? cause.message : 'تعذر تحميل السلة.'); });
+    return () => { active = false; };
+  }, []);
+  const total = useMemo(() => items.reduce((sum, item) => sum + (item.product.basePrice || 0) * item.quantity, 0), [items]);
 
   async function updateQuantity(productId: string, quantity: number) {
     setError('');
