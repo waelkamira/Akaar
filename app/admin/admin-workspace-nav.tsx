@@ -22,6 +22,7 @@ import {
   Truck,
   TicketPercent,
   Languages,
+  Globe2,
   Users,
 } from 'lucide-react';
 
@@ -120,6 +121,15 @@ const sections = [
     keywords: 'اللغات الترجمة المنتجات localization translations multilingual',
     icon: Languages,
     tone: 'text-violet-300',
+    controlPanel: true,
+  },
+  {
+    href: '/admin/locations',
+    label: 'البلدان والمدن',
+    description: 'دليل المواقع الجغرافي',
+    keywords: 'البلدان الدول المدن locations countries cities geography',
+    icon: Globe2,
+    tone: 'text-sky-300',
     controlPanel: true,
   },
   {
