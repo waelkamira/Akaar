@@ -91,7 +91,8 @@ before(async () => {
   nextServer.stderr?.on('data', captureServerOutput);
 
   let ready = false;
-  for (let attempt = 0; attempt < 90; attempt += 1) {
+  let lastResponse = 'No HTTP response received.';
+  for (let attempt = 0; attempt < 180; attempt += 1) {
     if (nextServer.exitCode !== null) {
       throw new Error(`Next.js development server exited before the search API became ready.\n${nextServerOutput || 'No server output was captured.'}`);
     }
@@ -101,12 +102,14 @@ before(async () => {
         ready = true;
         break;
       }
+      const responseBody = (await response.text()).slice(0, 1000);
+      lastResponse = `HTTP ${response.status}: ${responseBody}`;
     } catch {
       // The server may still be compiling its first route.
     }
     await delay(1000);
   }
-  if (!ready) throw new Error('Timed out waiting for the Next.js search API test server.');
+  if (!ready) throw new Error(`Timed out waiting for the Next.js search API test server.\nLast response: ${lastResponse}\nServer output:\n${nextServerOutput || 'No server output was captured.'}`);
 });
 
 after(async () => {
