@@ -214,3 +214,20 @@ Do not run the destructive test reset against any database containing user or pr
 | Production deployment/database/payment configuration | Not accessible / not verified |
 
 **Rule for future updates:** move an item to “fixed” only after a code change and the relevant test pass are recorded with the commit SHA. Keep unresolved findings visible; do not mark a feature operational just because a page or schema model exists.
+
+
+## 6. Database-Driven Frontend Foundation — 2026-11-02
+
+**Branch:** `feat/database-driven-ui-foundation`
+
+Implemented in this branch:
+- Replaced the fully commented storefront home page with an active responsive marketplace landing page. Product cards load through the existing `POST /api/search` endpoint and include loading, empty, retry/error states, search navigation and product links.
+- Added `features/database-ui/model-registry.js` to map the Prisma domain groups to models, relationships, intended routes and shared UI elements.
+- Added `/platform-map`, a browsable Arabic map of the frontend domains, model relationships, planned routes and reusable UI inventory.
+- Added reusable `EntityStatusBadge`, `EntityEmptyState` and `EntitySectionHeading` components for consistent status, empty and section states.
+- Used the existing operational schema and existing route inventory as the basis; this work does not change Prisma models or run database migrations.
+
+Scope note:
+- The registry is an implementation map, not a claim that every listed route is complete. Existing pages should be extended in place rather than duplicated.
+- Runtime build and database-backed rendering have **not yet been run** from this GitHub-only session. The home page depends on the existing search API and its configured rate-limit service; an API configuration error is displayed rather than hidden.
+- Next implementation chunk: connect the shared primitives to existing catalog/product/category pages, then finish the account/cart/order and seller/admin/property gaps using the actual Prisma relations.
