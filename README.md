@@ -248,3 +248,12 @@ Scope note:
 - Added `/notifications`: authenticated notifications list and unread count from `User → Notification`.
 - Added `/messages`: authenticated conversation inbox from `StoreConversation → StoreMessage`, scoped to the current user as customer or seller. The page clearly marks that sending/opening individual conversations still needs its authorized write/read workflow.
 - Corrected seller order item scoping to use `VendorOrder.items` so one seller does not see another seller's items from the same parent order.
+
+
+### Additional frontend coverage — 2026-11-02
+
+- Added `/categories`: active category tree with parent/child links and counts of active, approved products, based on `Category.parentId` and `Category.products`.
+- Added `/wishlist`: authenticated favorites from `User → Favorite → Product`, filtered to visible products.
+- Added `/my-bookings`: authenticated booking history from `User → BookingRequest → Property`, including quoted price, fee and current property status.
+- Added admin read views at `/admin/users`, `/admin/sellers`, and `/admin/orders`, scoped through the existing `getControlPanelAdmin` authorization helper. They expose relationships and counts but do not pretend to approve, suspend, refund, or mutate records.
+- No database migration or Prisma schema change was made. Build/CI remains unverified in this GitHub-only execution environment; the next pass should use CI/build feedback and continue implementing the remaining functional write workflows (wishlist mutations, booking form, review submission, messaging, checkout/order lifecycle) rather than add more read-only pages.
