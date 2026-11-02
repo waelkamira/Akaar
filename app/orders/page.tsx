@@ -21,6 +21,7 @@ export default async function MyOrdersPage() {
   });
   return <main dir="rtl" className="min-h-screen bg-[#171c1a] px-4 py-8 text-[#f5f3ed] sm:px-8"><div className="mx-auto max-w-6xl">
     <EntitySectionHeading eyebrow="حسابي" title="طلباتي" description="كل طلب مرتبط بحسابك، مع المنتجات التابعة له وحالة الطلب وآخر حالة دفع." href="/search" linkLabel="متابعة التسوق"/>
+    <div className="mb-5 flex justify-start"><Link href="/returns" className="rounded-xl border border-white/15 px-4 py-2 text-sm text-white/80 transition hover:border-orange-200/50 hover:text-orange-100">الإرجاع والاسترداد</Link></div>
     {!orders.length ? <EntityEmptyState title="لا توجد طلبات حتى الآن" description="بعد إتمام أول عملية شراء، ستظهر تفاصيلها هنا." actionLabel="تصفّح المنتجات" actionHref="/search"/> :
       <div className="space-y-4">{orders.map(order=><article key={order.id} className="rounded-2xl border border-white/10 bg-[#202725] p-5">
         <div className="flex flex-wrap items-start justify-between gap-4"><div><p className="text-xs text-white/45">رقم الطلب</p><p className="mt-1 break-all font-mono text-sm">{order.id}</p><p className="mt-2 text-xs text-white/45">{new Intl.DateTimeFormat('ar',{dateStyle:'medium',timeStyle:'short'}).format(order.createdAt)}</p></div><div className="flex flex-wrap items-center gap-2"><EntityStatusBadge status={order.status}/>{order.payments[0] ? <EntityStatusBadge status={order.payments[0].status}/> : null}</div></div>
