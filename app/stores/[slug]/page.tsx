@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/db/prisma';
 import EntityEmptyState from '@/components/DatabaseUI/EntityEmptyState';
+import StoreReviewForm from '@/components/Reviews/StoreReviewForm';
+import { getAuthenticatedUser } from '@/lib/auth/require-auth';
 import EntityStatusBadge from '@/components/DatabaseUI/EntityStatusBadge';
 
 type Props = { params: Promise<{ slug: string }> };
@@ -11,6 +13,7 @@ export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({params}: Props): Promise<Metadata> {
   const {slug}=await params;
+  const user=await getAuthenticatedUser();
   const seller=await prisma.seller.findFirst({where:{slug,status:'ACTIVE'},select:{storeName:true,description:true}});
   return {title:seller ? `${seller.storeName} | Akaar` : 'المتجر غير متاح | Akaar',description:seller?.description || 'تصفح منتجات المتجر على أكار.'};
 }
@@ -29,6 +32,7 @@ export default async function PublicSellerStorePage({params}: Props) {
       </div>
       <div className="mt-6 flex flex-wrap gap-4 border-t border-white/10 pt-5 text-sm text-white/55"><span>{seller.products.length} منتج معروض</span><span>عضو منذ {new Intl.DateTimeFormat('ar',{month:'long',year:'numeric'}).format(seller.createdAt)}</span></div>
     </header>
+    <StoreReviewForm sellerId={seller.id} canReview={Boolean(user && user.id !== (await prisma.seller.findUnique({where:{id:seller.id},select:{userId:true}}))?.userId)}/>
     <section className="mt-9"><div className="mb-5"><h2 className="text-2xl font-bold">منتجات المتجر</h2><p className="mt-2 text-sm text-white/50">تُعرض المنتجات النشطة والموافق عليها فقط.</p></div>
       {seller.products.length ? <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-5 lg:grid-cols-4">{seller.products.map(product=><Link key={product.id} href={`/posts/${encodeURIComponent(product.id)}`} className="group overflow-hidden rounded-2xl border border-white/10 bg-[#202725] hover:border-orange-300/50"><div className="relative aspect-[4/3] bg-white/5">{product.images[0] ? <Image src={product.images[0]} alt={product.title} fill sizes="(max-width: 640px) 50vw, 25vw" className="object-cover transition group-hover:scale-105" unoptimized/> : null}</div><div className="p-4"><p className="line-clamp-2 min-h-10 font-semibold">{product.title}</p><p className="mt-3 font-bold text-orange-200">{product.basePrice===null?'السعر عند الطلب':new Intl.NumberFormat('ar').format(product.basePrice)+' ل.س'}</p><p className="mt-1 text-xs text-white/45">{product.categoryName}{product.city ? ` · ${product.city}` : ''}</p></div></Link>)}</div> : <EntityEmptyState title="لا توجد منتجات منشورة" description="لم ينشر هذا المتجر منتجات متاحة حاليًا." actionLabel="تصفح المتجر العام" actionHref="/search"/>}
     </section>
