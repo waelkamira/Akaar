@@ -241,3 +241,10 @@ Scope note:
 - Added `/admin/catalog`: admin-only read view of products, owner, optional seller profile, approval status and activation state. It deliberately has no fake moderation buttons; mutations must be connected to authorized APIs before being offered.
 - Added `/properties` and `/properties/[id]`: published/available property listings and detail pages using `Property → Store` and `Property → User`, including typed attributes when present.
 - These pages use the existing operational Prisma schema and do not change the schema or database. A local Next.js build has not been run from this GitHub session; compile/runtime validation remains pending.
+
+
+- Added `/stores/[slug]`: public seller storefront that exposes only active sellers and active, approved, non-deleted products.
+- Added `/seller/analytics`: database-backed counts for products, recorded sales counts, vendor orders, pending vendor orders and low-stock products. The page explicitly avoids presenting these counts as financial revenue.
+- Added `/notifications`: authenticated notifications list and unread count from `User → Notification`.
+- Added `/messages`: authenticated conversation inbox from `StoreConversation → StoreMessage`, scoped to the current user as customer or seller. The page clearly marks that sending/opening individual conversations still needs its authorized write/read workflow.
+- Corrected seller order item scoping to use `VendorOrder.items` so one seller does not see another seller's items from the same parent order.
