@@ -21,6 +21,7 @@ import {
   Store,
   Truck,
   TicketPercent,
+  Languages,
   Users,
 } from 'lucide-react';
 
@@ -110,6 +111,15 @@ const sections = [
     keywords: 'الخصومات العروض الكوبونات discounts coupons promotions',
     icon: TicketPercent,
     tone: 'text-amber-300',
+    controlPanel: true,
+  },
+  {
+    href: '/admin/product-translations',
+    label: 'ترجمات المنتجات',
+    description: 'الكتالوج متعدد اللغات',
+    keywords: 'اللغات الترجمة المنتجات localization translations multilingual',
+    icon: Languages,
+    tone: 'text-violet-300',
     controlPanel: true,
   },
   {
