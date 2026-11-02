@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { getAuthenticatedUser } from '@/lib/auth/require-auth';
 import ProfileSettingsForm from '@/components/Profile/ProfileSettingsForm';
+import PasswordSettingsForm from '@/components/Profile/PasswordSettingsForm';
 
 export const dynamic = 'force-dynamic';
 export const metadata: Metadata = {
@@ -23,6 +24,7 @@ export default async function ProfileSettingsPage() {
           <p className="mt-3 text-sm leading-7 text-white/55">حدّث اسم العرض وصورة ملفك الشخصي. يتم حفظ التغييرات في حسابك مباشرة.</p>
         </header>
         <ProfileSettingsForm />
+        <PasswordSettingsForm />
       </div>
     </main>
   );
