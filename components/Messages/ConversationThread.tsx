@@ -19,6 +19,7 @@ export default function ConversationThread({ conversationId }: { conversationId:
       if (!response.ok) throw new Error(data.error || 'تعذر تحميل المحادثة.');
       setMessages(data.messages || []);
       setCurrentUserId(data.currentUserId || '');
+      await fetch(`/api/messages/${encodeURIComponent(conversationId)}`, { method: 'PATCH' });
       setError('');
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : 'تعذر تحميل المحادثة.');
