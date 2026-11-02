@@ -11,6 +11,7 @@ import { useCommerce } from '@/features/cart/commerce-context';
 import Search from '@/components/Search/Search';
 import WebsiteLogo from '@/components/Brand/WebsiteLogo';
 import { isControlPanelAdmin } from '@/lib/auth/control-panel-access.mjs';
+import LanguageSelector from '@/features/i18n/language-selector';
 
 export default function FirstNavBar() {
   const pathname = usePathname();
@@ -224,14 +225,15 @@ export default function FirstNavBar() {
           </ul>
         </nav>
 
+        <LanguageSelector />
         <WebsiteLogo priority />
       </div>
       <div className="mx-auto flex w-full max-w-[1600px] flex-col gap-3 sm:p-3 p-0 xl:hidden">
         <div className=" hidden sm:flex min-w-0 items-center justify-between gap-3">
-          <WebsiteLogo
-            className="h-10 w-24 min-[360px]:w-32"
-            priority
-          />
+          <div className="flex items-center gap-2">
+            <WebsiteLogo className="h-10 w-24 min-[360px]:w-32" priority />
+            <LanguageSelector compact />
+          </div>
           {status === 'authenticated' ? (
             <Link
               href="/profile"
