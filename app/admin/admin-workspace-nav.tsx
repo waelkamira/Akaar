@@ -14,6 +14,7 @@ import {
   LayoutDashboard,
   Megaphone,
   Search,
+  RotateCcw,
   Settings2,
   ShoppingCart,
   Star,
@@ -80,6 +81,15 @@ const sections = [
     keywords: 'المالية المحاسبة الدفع المدفوعات finance accounting payments',
     icon: CircleDollarSign,
     tone: 'text-lime-300',
+    controlPanel: true,
+  },
+  {
+    href: '/admin/returns',
+    label: 'الإرجاع والاسترداد',
+    description: 'طلبات الإرجاع وقرارات المراجعة',
+    keywords: 'الإرجاع الاسترداد refunds returns',
+    icon: RotateCcw,
+    tone: 'text-rose-300',
     controlPanel: true,
   },
   {
