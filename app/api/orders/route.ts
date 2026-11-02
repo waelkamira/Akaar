@@ -173,6 +173,9 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'بعض المنتجات لم تعد متاحة للشراء.' }, { status: 409 });
     }
 
+    if (rawBody?.discountCode !== undefined && typeof rawBody.discountCode !== 'string') {
+      return NextResponse.json({ error: 'رمز الخصم غير صالح.' }, { status: 400 });
+    }
     const discountCode = typeof rawBody?.discountCode === 'string' ? rawBody.discountCode.trim().toUpperCase() : '';
     if (discountCode && paymentMethod === 'STRIPE') {
       return NextResponse.json({ error: 'رموز الخصم غير متاحة حاليًا للدفع بالبطاقة؛ اختر الدفع عند الاستلام أو أزل الرمز.' }, { status: 400 });
