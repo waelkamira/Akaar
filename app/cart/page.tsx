@@ -1,15 +1,13 @@
 import type { Metadata } from 'next';
-import { redirect } from 'next/navigation';
 import { getAuthenticatedUser } from '@/lib/auth/require-auth';
-import { prisma } from '@/lib/db/prisma';
 import CartClient from '@/components/Cart/CartClient';
 
 export const metadata: Metadata = { title: 'سلة التسوق | Akaar', description: 'راجع منتجاتك وأكمل طلب الشراء.' };
 
 export default async function CartPage() {
   const user = await getAuthenticatedUser();
-  if (!user) redirect('/login?callbackUrl=%2Fcart');
-  const cart = await prisma.cart.findUnique({
+  // Guest carts are loaded through the secure session cookie by the cart API.
+  const cart = user ? await prisma.cart.findUnique({
     where: { userId: user.id },
     select: {
       items: {
