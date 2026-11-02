@@ -231,3 +231,13 @@ Scope note:
 - The registry is an implementation map, not a claim that every listed route is complete. Existing pages should be extended in place rather than duplicated.
 - Runtime build and database-backed rendering have **not yet been run** from this GitHub-only session. The home page depends on the existing search API and its configured rate-limit service; an API configuration error is displayed rather than hidden.
 - Next implementation chunk: connect the shared primitives to existing catalog/product/category pages, then finish the account/cart/order and seller/admin/property gaps using the actual Prisma relations.
+
+
+### Follow-on implementation chunk — pages wired to Prisma relations
+
+- Added `/seller/products`: authenticated product inventory from `Product.userId → User`, including approval/active status, category, price, stock, last update, and links to the existing product detail route.
+- Added `/seller/orders`: authenticated vendor orders scoped to the current `Seller.id`, with order status, tracking number and related products through `VendorOrder → Order → OrderItem → Product`. It shows a setup state if the account has no Seller record.
+- Added `/orders`: authenticated customer orders from `User → Order → OrderItem → Product`, with related payment status.
+- Added `/admin/catalog`: admin-only read view of products, owner, optional seller profile, approval status and activation state. It deliberately has no fake moderation buttons; mutations must be connected to authorized APIs before being offered.
+- Added `/properties` and `/properties/[id]`: published/available property listings and detail pages using `Property → Store` and `Property → User`, including typed attributes when present.
+- These pages use the existing operational Prisma schema and do not change the schema or database. A local Next.js build has not been run from this GitHub session; compile/runtime validation remains pending.
