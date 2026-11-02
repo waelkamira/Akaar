@@ -257,3 +257,8 @@ Scope note:
 - Added `/my-bookings`: authenticated booking history from `User → BookingRequest → Property`, including quoted price, fee and current property status.
 - Added admin read views at `/admin/users`, `/admin/sellers`, and `/admin/orders`, scoped through the existing `getControlPanelAdmin` authorization helper. They expose relationships and counts but do not pretend to approve, suspend, refund, or mutate records.
 - No database migration or Prisma schema change was made. Build/CI remains unverified in this GitHub-only execution environment; the next pass should use CI/build feedback and continue implementing the remaining functional write workflows (wishlist mutations, booking form, review submission, messaging, checkout/order lifecycle) rather than add more read-only pages.
+
+
+- Added `/profile`: account overview using User relations/counts, orders, visible favorites, unread notifications, and optional Seller profile.
+- Added `/my-reviews`: product and store review history through `Review → Product` and `StoreReview → Seller`.
+- Added `/property-wishlist`: saved property list from `PropertyWishlist → Property → Store`, showing only published and available properties.
