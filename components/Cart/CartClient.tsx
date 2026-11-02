@@ -13,6 +13,7 @@ export default function CartClient({ initialItems, isAuthenticated = false }: { 
   const [phone, setPhone] = useState('');
   const [city, setCity] = useState('');
   const [address, setAddress] = useState('');
+  const [discountCode, setDiscountCode] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [paymentMethod, setPaymentMethod] = useState<'CASH_ON_DELIVERY' | 'STRIPE'>('CASH_ON_DELIVERY');
@@ -50,7 +51,7 @@ export default function CartClient({ initialItems, isAuthenticated = false }: { 
     try {
       const response = await fetch('/api/orders', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ items: items.map(item => ({ id: item.product.id, quantity: item.quantity })), customerName: name, phoneNumber: phone, shippingCity: city, shippingAddress: address, paymentMethod }),
+        body: JSON.stringify({ items: items.map(item => ({ id: item.product.id, quantity: item.quantity })), customerName: name, phoneNumber: phone, shippingCity: city, shippingAddress: address, paymentMethod, discountCode: discountCode.trim() || undefined }),
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || 'تعذر إنشاء الطلب.');
@@ -79,6 +80,9 @@ export default function CartClient({ initialItems, isAuthenticated = false }: { 
       <input required value={phone} onChange={e=>setPhone(e.target.value)} placeholder="رقم الهاتف" className="w-full rounded-lg border border-white/10 bg-[#171c1a] p-3 text-sm"/>
       <input required maxLength={100} value={city} onChange={e=>setCity(e.target.value)} placeholder="المدينة" className="w-full rounded-lg border border-white/10 bg-[#171c1a] p-3 text-sm"/>
       <textarea required maxLength={300} rows={3} value={address} onChange={e=>setAddress(e.target.value)} placeholder="عنوان التوصيل بالتفصيل" className="w-full rounded-lg border border-white/10 bg-[#171c1a] p-3 text-sm"/>
+      <label className="block text-sm text-white/70">رمز الخصم (اختياري)</label>
+      <input maxLength={40} value={discountCode} onChange={e=>setDiscountCode(e.target.value.toUpperCase())} placeholder="أدخل رمز الخصم" className="w-full rounded-lg border border-white/10 bg-[#171c1a] p-3 text-sm uppercase" />
+      <p className="text-xs leading-5 text-white/40">يُطبق الرمز على المنتج المرتبط به فقط، ويُتحقق من صلاحيته وسعره النهائي على الخادم. رموز الخصم متاحة حاليًا للدفع عند الاستلام فقط.</p>
       <label className="block text-sm text-white/70">طريقة الدفع</label>
       <select value={paymentMethod} onChange={e=>setPaymentMethod(e.target.value as typeof paymentMethod)} className="w-full rounded-lg border border-white/10 bg-[#171c1a] p-3 text-sm"><option value="CASH_ON_DELIVERY">الدفع عند الاستلام</option><option value="STRIPE">بطاقة بنكية (وضع الاختبار)</option></select>
       <button disabled={!items.length || busy} className="w-full rounded-xl bg-orange-400 px-4 py-3 font-bold text-[#21180f] disabled:opacity-40">{busy ? 'جارٍ إنشاء الطلب…' : 'تأكيد الطلب'}</button>
