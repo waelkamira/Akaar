@@ -7,7 +7,7 @@ import { resolveCart, applyCartCookie } from '@/lib/cart/guest-session';
 
 const eligibility = { isActive: true, isDeleted: false, approvalStatus: 'APPROVED', category: { isActive: true }, seller: { status: 'ACTIVE', isVerified: true } };
 const productSelect = { id: true, title: true, images: true, basePrice: true, stockQuantity: true, isActive: true, isDeleted: true, approvalStatus: true, seller: { select: { status: true, isVerified: true, storeName: true } } };
-async function cartContext(request) {
+async function cartContext(request: Request) {
   const user = await getAuthenticatedUser();
   return resolveCart(request, user?.id || null);
 }
@@ -15,14 +15,14 @@ async function loadItems(cartId) {
   const cart = await prisma.cart.findUnique({ where: { id: cartId }, select: { items: { orderBy: { updatedAt: 'desc' }, select: { id: true, quantity: true, product: { select: productSelect } } } } });
   return (cart?.items || []).filter(({ product }) => product.isActive && !product.isDeleted && product.approvalStatus === 'APPROVED' && product.seller?.status === 'ACTIVE' && product.seller.isVerified);
 }
-export async function GET(request) {
+export async function GET(request: Request) {
   try {
     const ctx = await cartContext(request);
     const items = await loadItems(ctx.cartId);
     return applyCartCookie(NextResponse.json({ items, cartCount: items.reduce((sum, item) => sum + item.quantity, 0) }), ctx);
   } catch (error) { console.error('Unable to load cart:', error); return NextResponse.json({ error: 'تعذر تحميل السلة.' }, { status: 500 }); }
 }
-export async function POST(request) {
+export async function POST(request: Request) {
   const parsed = await readJsonBody(request, 8 * 1024);
   if (!parsed.ok) return NextResponse.json({ error: parsed.error }, { status: parsed.status });
   if (!isPlainObject(parsed.value)) return NextResponse.json({ error: 'بيانات المنتج غير صالحة.' }, { status: 400 });
@@ -46,7 +46,7 @@ export async function POST(request) {
     console.error('Unable to add product to cart:', error); return NextResponse.json({ error: 'تعذرت إضافة المنتج إلى السلة.' }, { status: 500 });
   }
 }
-export async function PATCH(request) {
+export async function PATCH(request: Request) {
   const parsed = await readJsonBody(request, 8 * 1024);
   if (!parsed.ok) return NextResponse.json({ error: parsed.error }, { status: parsed.status });
   if (!isPlainObject(parsed.value) || typeof parsed.value.productId !== 'string' || !parsed.value.productId.trim() || !Number.isInteger(parsed.value.quantity) || parsed.value.quantity < 1 || parsed.value.quantity > 100) return NextResponse.json({ error: 'المنتج أو الكمية غير صالحين.' }, { status: 400 });
@@ -58,7 +58,7 @@ export async function PATCH(request) {
     return applyCartCookie(NextResponse.json({ item: updated }), ctx);
   } catch (error) { console.error('Unable to update cart item:', error); return NextResponse.json({ error: 'تعذر تحديث الكمية.' }, { status: 500 }); }
 }
-export async function DELETE(request) {
+export async function DELETE(request: Request) {
   const parsed = await readJsonBody(request, 8 * 1024);
   if (!parsed.ok) return NextResponse.json({ error: parsed.error }, { status: parsed.status });
   if (!isPlainObject(parsed.value) || typeof parsed.value.productId !== 'string' || !parsed.value.productId.trim()) return NextResponse.json({ error: 'معرف المنتج غير صالح.' }, { status: 400 });
