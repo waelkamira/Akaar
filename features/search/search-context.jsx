@@ -12,6 +12,7 @@ import {
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { cities } from '@/components/lists/Cities';
 import categories from '@/components/Categories/categories';
+import { useLanguage } from '@/features/i18n/language-context';
 
 const SearchContext = createContext(undefined);
 
@@ -20,8 +21,7 @@ export function SearchProvider({ children }) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const isSearchPage = pathname.startsWith('/search');
-  const languageParam = searchParams.get('lang') || '';
-  const language = /^[a-z]{2,3}(?:-[A-Za-z0-9]{2,8})*$/i.test(languageParam) ? languageParam.slice(0, 16) : '';
+  const { language } = useLanguage();
   
   const [searchQuery, setSearchQuery] = useState('');
   const [category, setCategory] = useState(null);
