@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/db/prisma';
 import { getAuthenticatedUser } from '@/lib/auth/require-auth';
-import EntityEmptyState from '@/components/DatabaseUI/EntityEmptyState';
 import EntitySectionHeading from '@/components/DatabaseUI/EntitySectionHeading';
 import NotificationsInbox from '@/components/Notifications/NotificationsInbox';
 
