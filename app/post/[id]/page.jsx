@@ -254,12 +254,31 @@ export default function Page() {
     }
   };
 
-  const handleAddToCart = () => {
+  const handleAddToCart = async () => {
+    if (post?.isDemo) {
+      try {
+        addToCart(post);
+        toast.success('أُضيف المنتج التجريبي إلى السلة المحلية.');
+      } catch (addError) {
+        toast.error(addError.message);
+      }
+      return;
+    }
+    if (!userId) {
+      toast.error('سجّل الدخول لإضافة المنتج إلى سلة التسوق.');
+      return;
+    }
     try {
-      addToCart(post);
-      toast.success('تمت إضافة المنتج إلى السلة');
+      const response = await fetch('/api/cart', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({ productId: post.id, quantity: 1 }),
+      });
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(payload?.error || 'تعذرت إضافة المنتج إلى السلة.');
+      toast.success(payload?.message || 'تمت إضافة المنتج إلى السلة');
     } catch (addError) {
-      toast.error(addError.message);
+      toast.error(addError?.message || 'تعذرت إضافة المنتج إلى السلة.');
     }
   };
 
