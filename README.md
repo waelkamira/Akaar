@@ -262,3 +262,18 @@ Scope note:
 - Added `/profile`: account overview using User relations/counts, orders, visible favorites, unread notifications, and optional Seller profile.
 - Added `/my-reviews`: product and store review history through `Review → Product` and `StoreReview → Seller`.
 - Added `/property-wishlist`: saved property list from `PropertyWishlist → Property → Store`, showing only published and available properties.
+
+---
+
+## تنفيذ مبني على مخطط Prisma — تحديث 2026-11-02
+
+### ما أُنجز في هذه الدفعة
+- ربط صفحة تفاصيل العقار `/properties/[id]` بواجهة `POST /api/bookings` الموجودة؛ زر الحجز يرسل `propertyId` ومفتاح idempotency فريد، يعرض أخطاء الخادم، ويوجه المستخدم إلى `/my-bookings` عند نجاح الطلب.
+- توضيح أن الحجز الحالي يسجل طلبًا تجريبيًا فقط ولا يجري تحصيلًا ماليًا.
+- إضافة زر إزالة فعلي إلى `/wishlist` مرتبط بـ `DELETE /api/favorite`، مع تمرير معرف المفضلة ومعرف المستخدم المسجل، وتحديث الصفحة بعد نجاح الحذف.
+- أُبقيت صلاحيات التحقق من المستخدم ومعالجة الملكية داخل واجهات API الحالية؛ لم تُضف تغييرات إلى مخطط Prisma أو قاعدة البيانات في هذه الدفعة.
+
+### التحقق والقيود
+- راجعت مخطط `prisma/schema.prisma` وتأكدت من وجود `Favorite` بمفتاح فريد `[userId, productId]` وحقول `id` و`isDeleted`، ومن وجود واجهة `/api/bookings` التي تسجل طلبات الحجز بمعاملة قاعدة بيانات.
+- لم يُشغّل بناء Next.js أو الاختبارات من خلال اتصال GitHub في هذه الدفعة؛ يلزم تشغيل `npm run build` و`npm test` في بيئة المشروع قبل اعتبار التغييرات متحققة بالكامل.
+- لا تزال دورة الشراء/الدفع منفصلة عن حجز العقارات؛ الحجز لا يعني شراء منتج ولا تحصيل رسوم.
