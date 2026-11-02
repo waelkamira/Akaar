@@ -257,6 +257,7 @@ export default function FirstNavBar() {
             </Link>
           )}
         </div>
+        <div className="flex justify-end px-3 sm:hidden"><LanguageSelector compact /></div>
         {pathname !== '/' && <Search showCategories={false} />}
       </div>
     </motion.header>
