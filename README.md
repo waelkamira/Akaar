@@ -329,3 +329,11 @@ Scope note:
 - The next run still failed in the integration-test setup because the Next.js dev server did not return HTTP 200 from the search suggestions endpoint within 90 seconds. The test output did not include the server's captured stdout/stderr on timeout, so the actual cause remained hidden.
 - Increased the startup wait to 180 seconds and changed the timeout diagnostic to include the last HTTP status/body and captured Next.js server output. This is a diagnostic change only; it does not claim the search integration test is fixed.
 - Prisma schema validation, client generation, clean PostgreSQL migration deployment and drift checks continued to pass in this run. Unit tests, ESLint and production build were skipped because the integration step failed.
+
+
+### Route-collision correction — 2026-11-02
+- CI run `41502761998` confirmed that the extended startup diagnostics were working: the search API returned HTTP 500 because six URLs were defined twice across route groups and top-level route folders.
+- Removed the superseded route-group page files for `/messages`, `/notifications`, `/profile`, `/cart`, `/orders`, and `/properties/[id]`. The canonical top-level pages remain, including the guest-capable cart and property booking action.
+- The duplicate route error is addressed in source, but the latest branch head still requires a fresh CI run. Do not infer that integration tests, lint, or production build pass until that run completes.
+- The former route-group profile editor was removed to unblock the canonical profile overview; restore its edit/password controls under a distinct route such as `/profile/settings` before considering account-management UX complete.
+- Vercel deployment comments reported the account's free-tier daily deployment limit; this is separate from the GitHub Actions validation failure and does not establish an application build result.
