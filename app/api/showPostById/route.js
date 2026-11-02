@@ -21,6 +21,9 @@ export async function POST(request) {
   const body = parsedBody.value;
 
   const id = body?.id;
+  const language = typeof body?.language === 'string' && /^[a-z]{2,3}(?:-[A-Za-z0-9]{2,8})*$/i.test(body.language.trim())
+    ? body.language.trim().slice(0, 16)
+    : '';
   if (!isValidListingIdentifier(id, 100)) {
     return NextResponse.json({ error: 'A valid product ID is required.' }, { status: 400 });
   }
@@ -63,6 +66,7 @@ export async function POST(request) {
         createdAt: true,
         user: { select: { id: true, userName: true, userImage: true } },
         seller: { select: { id: true, storeName: true, slug: true } },
+        ...(language ? { translations: { where: { language }, take: 1, select: { title: true, description: true } } } : {}),
       },
     });
 
@@ -73,6 +77,10 @@ export async function POST(request) {
     const ratings = await getProductRatingSummaries([product.id]);
     return NextResponse.json({
       ...product,
+      ...(product.translations?.[0] ? {
+        title: product.translations[0].title,
+        description: product.translations[0].description ?? product.description,
+      } : {}),
       image1: product.images[0] || null,
       image2: product.images[1] || null,
       image3: product.images[2] || null,
