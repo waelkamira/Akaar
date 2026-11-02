@@ -500,3 +500,9 @@ Scope note:
 - أُكمل ربط واجهة البحث بتمرير اللغة من معامل الرابط `?lang=...` إلى API؛ لا يُفترض اختيار لغة تلقائيًا ولا تتغير اللغة الأساسية عند غياب المعامل أو عدم صلاحيته.
 
 - أُضيف دعم اللغة نفسها إلى API تفاصيل المنتج `POST /api/showPostById` وصفحة المنتج؛ عند فتح رابط المنتج مع `?lang=...` تُعرض الترجمة المتاحة، وإلا يبقى العنوان والوصف الأصليان. صفحات المنتجات التجريبية المحلية لا تزال تستخدم بياناتها الثابتة.
+
+
+## Database ↔ Frontend Integration Map
+
+- The 42-model static inventory, relationships, API/page evidence, integration gaps, cross-model risks, and next verification pass are documented in [`docs/DATABASE-FRONTEND-INTEGRATION-MAP.md`](docs/DATABASE-FRONTEND-INTEGRATION-MAP.md).
+- This is an initial source-inventory baseline, not a claim that all listed journeys have passed runtime tests. Continue by tracing model reads/writes and server-side authorization, then update each status from evidence.
