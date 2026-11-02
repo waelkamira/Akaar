@@ -173,6 +173,21 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'بعض المنتجات لم تعد متاحة للشراء.' }, { status: 409 });
     }
 
+    const discountCode = typeof rawBody?.discountCode === 'string' ? rawBody.discountCode.trim().toUpperCase() : '';
+    if (discountCode && paymentMethod === 'STRIPE') {
+      return NextResponse.json({ error: 'رموز الخصم غير متاحة حاليًا للدفع بالبطاقة؛ اختر الدفع عند الاستلام أو أزل الرمز.' }, { status: 400 });
+    }
+    if (discountCode && !/^[A-Z0-9_-]{3,40}$/.test(discountCode)) {
+      return NextResponse.json({ error: 'صيغة رمز الخصم غير صالحة.' }, { status: 400 });
+    }
+    const discount = discountCode ? await prisma.discount.findFirst({
+      where: { code: discountCode, productId: { in: lines.map((line) => line.id) }, validFrom: { lte: new Date() }, validTo: { gte: new Date() } },
+      select: { id: true, productId: true, percentage: true },
+    }) : null;
+    if (discountCode && !discount) {
+      return NextResponse.json({ error: 'رمز الخصم غير صالح أو منتهي أو لا ينطبق على أي منتج في سلتك.' }, { status: 400 });
+    }
+
     const quantityById = new Map(lines.map((line) => [line.id, line.quantity]));
     const totalPrice = products.reduce((sum, product) => {
       const quantity = quantityById.get(product.id) || 0;
@@ -187,7 +202,10 @@ export async function POST(request: Request) {
       ) {
         throw new Error('PRODUCT_UNAVAILABLE');
       }
-      const lineTotal = product.basePrice * quantity;
+      const unitPrice = discount?.productId === product.id
+        ? Math.floor(product.basePrice * (100 - discount.percentage) / 100)
+        : product.basePrice;
+      const lineTotal = unitPrice * quantity;
       if (!Number.isSafeInteger(lineTotal) || !Number.isSafeInteger(sum + lineTotal)) {
         throw new Error('TOTAL_OUT_OF_RANGE');
       }
@@ -237,6 +255,7 @@ export async function POST(request: Request) {
           shippingCity,
           shippingAddress,
           totalPrice,
+          discountId: discount?.id ?? null,
           status: 'PENDING',
         },
         select: { id: true, totalPrice: true, status: true, createdAt: true },
@@ -255,7 +274,10 @@ export async function POST(request: Request) {
       await transaction.orderItem.createMany({
         data: products.map((product) => {
           const quantity = quantityById.get(product.id) || 0;
-          const unitPrice = product.basePrice as number;
+          const basePrice = product.basePrice as number;
+          const unitPrice = discount?.productId === product.id
+            ? Math.floor(basePrice * (100 - discount.percentage) / 100)
+            : basePrice;
           return {
             orderId: createdOrder.id,
             productId: product.id,
