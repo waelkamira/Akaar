@@ -264,10 +264,7 @@ export default function Page() {
       }
       return;
     }
-    if (!userId) {
-      toast.error('سجّل الدخول لإضافة المنتج إلى سلة التسوق.');
-      return;
-    }
+    // The cart API supports both authenticated users and guest sessions.
     try {
       const response = await fetch('/api/cart', {
         method: 'POST',
