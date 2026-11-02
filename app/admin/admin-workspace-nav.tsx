@@ -20,6 +20,7 @@ import {
   Star,
   Store,
   Truck,
+  TicketPercent,
   Users,
 } from 'lucide-react';
 
@@ -100,6 +101,15 @@ const sections = [
     keywords: 'الشحن التوصيل التتبع shipping delivery',
     icon: Truck,
     tone: 'text-cyan-300',
+    controlPanel: true,
+  },
+  {
+    href: '/admin/discounts',
+    label: 'الخصومات والعروض',
+    description: 'رموز الخصم وفترات الصلاحية',
+    keywords: 'الخصومات العروض الكوبونات discounts coupons promotions',
+    icon: TicketPercent,
+    tone: 'text-amber-300',
     controlPanel: true,
   },
   {
