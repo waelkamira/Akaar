@@ -25,6 +25,7 @@ import { useParams, useSearchParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import demoProducts from '../../../lib/demoProducts';
 import ReviewWidget from '@/components/Reviews/ReviewWidget';
+import { useLanguage } from '@/features/i18n/language-context';
 
 const ImageSlider = dynamic(
   () => import('../../../components/photos/imageSlider'),
@@ -51,9 +52,7 @@ const UserNameAndPhoto = dynamic(
 
 export default function Page() {
   const { id } = useParams();
-  const searchParams = useSearchParams();
-  const languageParam = searchParams.get('lang') || '';
-  const language = /^[a-z]{2,3}(?:-[A-Za-z0-9]{2,8})*$/i.test(languageParam) ? languageParam.slice(0, 16) : '';
+  const { language } = useLanguage();
   const [post, setPost] = useState(null);
   const [isClient, setIsClient] = useState(false);
   const [iframeSrc, setIframeSrc] = useState(null);
