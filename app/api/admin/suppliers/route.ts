@@ -13,7 +13,7 @@ function parseSupplier(body: Record<string, unknown>) {
   const phone = typeof body.phone === 'string' ? body.phone.trim() : null;
   const address = typeof body.address === 'string' ? body.address.trim() : null;
   const countryId = typeof body.countryId === 'string' ? body.countryId.trim() : '';
-  const cityId = body.cityId === null || body.cityId === '' ? null : typeof body.cityId === 'string' ? body.cityId.trim() : undefined;
+  const cityId = body.cityId === undefined || body.cityId === null || body.cityId === '' ? null : typeof body.cityId === 'string' ? body.cityId.trim() : undefined;
   if (!name || name.length > 150 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254
     || (phone !== null && phone.length > 40) || (address !== null && address.length > 500)
     || !countryId || countryId.length > 128 || cityId === undefined || (cityId && cityId.length > 128)) {
