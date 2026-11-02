@@ -1,0 +1,24 @@
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import { redirect } from 'next/navigation';
+import { prisma } from '@/lib/db/prisma';
+import { getAuthenticatedUser } from '@/lib/auth/require-auth';
+import EntitySectionHeading from '@/components/DatabaseUI/EntitySectionHeading';
+import EntityStatusBadge from '@/components/DatabaseUI/EntityStatusBadge';
+
+export const dynamic='force-dynamic';
+export const metadata: Metadata={title:'حسابي | Akaar',description:'ملخص حساب المستخدم وروابط الطلبات والمفضلة والتواصل.'};
+
+export default async function ProfilePage(){
+ const user=await getAuthenticatedUser(); if(!user) redirect('/login?callbackUrl=%2Fprofile');
+ const [profile,orders,favorites,notifications,seller]=await Promise.all([
+  prisma.user.findUnique({where:{id:user.id},select:{id:true,userName:true,email:true,role:true,status:true,emailVerified:true,createdAt:true,_count:{select:{orders:true,reviews:true}}}}),
+  prisma.order.count({where:{userId:user.id}}),
+  prisma.favorite.count({where:{userId:user.id,isDeleted:false,product:{isDeleted:false,isActive:true,approvalStatus:'APPROVED'}}}),
+  prisma.notification.count({where:{userId:user.id,isRead:false}}),
+  prisma.seller.findUnique({where:{userId:user.id},select:{storeName:true,slug:true,status:true}}),
+ ]);
+ if(!profile) redirect('/login');
+ const links=[{href:'/orders',title:'طلباتي',description:'تفاصيل الطلبات والمدفوعات المرتبطة بها',value:orders},{href:'/wishlist',title:'قائمة المفضلة',description:'المنتجات التي حفظتها',value:favorites},{href:'/notifications',title:'الإشعارات',description:'الإشعارات غير المقروءة',value:notifications},{href:'/my-bookings',title:'حجوزات العقارات',description:'طلبات الحجز وحالتها',value:null},{href:'/my-reviews',title:'تقييماتي',description:'تقييمات المنتجات والمتاجر',value:profile._count.reviews}];
+ return <main dir="rtl" className="min-h-screen bg-[#171c1a] px-4 py-8 text-[#f5f3ed] sm:px-8"><div className="mx-auto max-w-6xl"><EntitySectionHeading eyebrow="مساحة المستخدم" title="حسابي" description="ملخص حسابك وروابط إلى البيانات المرتبطة به في قاعدة البيانات." href="/search" linkLabel="متابعة التسوق"/><section className="rounded-3xl border border-white/10 bg-[#202725] p-6 sm:p-8"><div className="flex flex-wrap items-start justify-between gap-4"><div><h2 className="text-2xl font-bold">{profile.userName||'مرحبًا بك في أكار'}</h2><p className="mt-2 break-all text-sm text-white/55">{profile.email}</p><p className="mt-2 text-xs text-white/35">عضو منذ {new Intl.DateTimeFormat('ar',{dateStyle:'long'}).format(profile.createdAt)}</p></div><div className="flex flex-wrap gap-2"><EntityStatusBadge status={profile.role}/><EntityStatusBadge status={profile.status}/><EntityStatusBadge status={profile.emailVerified?'VERIFIED':'UNVERIFIED'}/></div></div><div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4"><div className="rounded-xl bg-white/[.04] p-4"><p className="text-xs text-white/45">الطلبات</p><p className="mt-2 text-2xl font-bold">{orders}</p></div><div className="rounded-xl bg-white/[.04] p-4"><p className="text-xs text-white/45">المفضلة</p><p className="mt-2 text-2xl font-bold">{favorites}</p></div><div className="rounded-xl bg-white/[.04] p-4"><p className="text-xs text-white/45">التقييمات</p><p className="mt-2 text-2xl font-bold">{profile._count.reviews}</p></div><div className="rounded-xl bg-white/[.04] p-4"><p className="text-xs text-white/45">إشعارات غير مقروءة</p><p className="mt-2 text-2xl font-bold">{notifications}</p></div></div></section><div className="mt-6 grid gap-3 sm:grid-cols-2">{links.map(item=><Link key={item.href} href={item.href} className="rounded-2xl border border-white/10 bg-[#202725] p-5 transition hover:border-orange-300/40"><div className="flex items-start justify-between gap-3"><div><h3 className="font-bold">{item.title}</h3><p className="mt-2 text-sm leading-6 text-white/50">{item.description}</p></div>{item.value!==null?<span className="rounded-lg bg-orange-300/10 px-3 py-1 text-sm text-orange-200">{item.value}</span>:null}</div></Link>)}</div>{seller?<section className="mt-6 rounded-2xl border border-white/10 bg-[#202725] p-5"><div className="flex flex-wrap items-center justify-between gap-3"><div><h2 className="font-bold">{seller.storeName}</h2><p className="mt-1 text-sm text-white/50">ملف البائع المرتبط بحسابك</p></div><EntityStatusBadge status={seller.status}/></div><div className="mt-4 flex flex-wrap gap-3"><Link href="/seller/dashboard" className="rounded-xl bg-orange-300 px-4 py-2.5 text-sm font-semibold text-[#21180f]">لوحة البائع</Link><Link href="/seller/products" className="rounded-xl border border-white/15 px-4 py-2.5 text-sm">منتجاتي</Link><Link href={`/stores/${encodeURIComponent(seller.slug)}`} className="rounded-xl border border-white/15 px-4 py-2.5 text-sm">المتجر العام</Link></div></section>:null}</div></main>;
+}
