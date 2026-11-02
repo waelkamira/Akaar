@@ -337,3 +337,11 @@ Scope note:
 - The duplicate route error is addressed in source, but the latest branch head still requires a fresh CI run. Do not infer that integration tests, lint, or production build pass until that run completes.
 - The former route-group profile editor was removed to unblock the canonical profile overview; restore its edit/password controls under a distinct route such as `/profile/settings` before considering account-management UX complete.
 - Vercel deployment comments reported the account's free-tier daily deployment limit; this is separate from the GitHub Actions validation failure and does not establish an application build result.
+
+
+### Production build type-check correction — 2026-11-02
+- CI run `41508150597` passed Prisma validation/client generation, clean PostgreSQL migration deployment, schema drift checks, PostgreSQL search/filter integration tests, unit tests, and ESLint.
+- Production compilation completed, then TypeScript found incorrect inferred component prop contracts: optional empty-state actions were inferred as required, and the shared section heading's optional eyebrow was inferred as required. Updated the JavaScript component defaults so those props are optional at the TypeScript boundary.
+- Fixed the public store page's missing `user` binding by resolving the authenticated user in the page component before passing the review eligibility flag.
+- These changes target all TypeScript errors reported by that build. A fresh CI run is still required to confirm the production build passes; no claim of a successful build is made yet.
+- Existing ESLint step reports 90 warnings and zero errors. These warnings are technical-debt items, not a failed lint step.
