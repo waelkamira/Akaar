@@ -4,7 +4,8 @@ import { consumeDurableRateLimit } from '@/lib/api/durable-rate-limit.mjs';
 import { readJsonBody } from '@/lib/api/read-json-body.mjs';
 import { isSameOriginRequest } from '@/lib/api/same-origin.mjs';
 import { isPlainObject } from '@/lib/api/validation.mjs';
-import { prisma } from '@/lib/db/prisma';
+import { recordDailyPageView } from '@/lib/analytics/service.mjs';
+import { incrementDailyVisit } from '@/lib/analytics/repository';
 
 export async function POST(request: Request) {
   if (!isSameOriginRequest(request)) {
@@ -30,17 +31,8 @@ export async function POST(request: Request) {
   if (!aggregatePath) return new NextResponse(null, { status: 204 });
 
   try {
-    const [table] = await prisma.$queryRaw<Array<{ exists: boolean }>>`
-      SELECT to_regclass('public.daily_site_visits') IS NOT NULL AS "exists"
-    `;
-    if (!table?.exists) return NextResponse.json({ error: 'جدول التحليلات غير مهيأ.' }, { status: 503 });
-    const day = new Date();
-    day.setUTCHours(0, 0, 0, 0);
-    await prisma.dailySiteVisit.upsert({
-      where: { day_path: { day, path: aggregatePath } },
-      create: { day, path: aggregatePath, views: 1 },
-      update: { views: { increment: 1 } },
-    });
+    const recorded = await recordDailyPageView(aggregatePath, { incrementDailyVisit });
+    if (!recorded) return NextResponse.json({ error: 'جدول التحليلات غير مهيأ.' }, { status: 503 });
     return new NextResponse(null, { status: 204 });
   } catch (error) {
     console.error('Unable to record aggregate page view:', error);

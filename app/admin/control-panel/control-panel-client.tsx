@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState, type FormEvent } from 'react';
 import Link from 'next/link';
 import { isControlPanelAdminEmail } from '@/lib/auth/control-panel-access.mjs';
 
-type AdminRole = 'GUEST' | 'CUSTOMER' | 'SELLER' | 'ADMIN';
+type AdminRole = 'CUSTOMER' | 'SELLER' | 'ADMIN';
 type UserStatus = 'ACTIVE' | 'SUSPENDED' | 'DELETED';
 type User = { id: string; email: string; userName: string | null; role: AdminRole; status: UserStatus; createdAt: string };
 type UserPage = { items: User[]; page: number; hasMore: boolean };
@@ -26,7 +26,13 @@ async function readJson<T>(response: Response): Promise<T & { error?: string }> 
   return payload;
 }
 
-export default function ControlPanelClient() {
+export default function ControlPanelClient({
+  canViewInsights,
+  canManageRoles,
+}: {
+  canViewInsights: boolean;
+  canManageRoles: boolean;
+}) {
   const [users, setUsers] = useState<UserPage>({ items: [], page: 1, hasMore: false });
   const [insights, setInsights] = useState<AdminInsights | null>(null);
   const [email, setEmail] = useState('');
@@ -67,6 +73,7 @@ export default function ControlPanelClient() {
   }, []);
 
   useEffect(() => {
+    if (!canViewInsights) return;
     let active = true;
     fetch('/api/admin/dashboard', { cache: 'no-store' })
       .then(readJson<AdminInsights>)
@@ -77,7 +84,7 @@ export default function ControlPanelClient() {
         if (active) setError(loadError instanceof Error ? loadError.message : 'تعذر تحميل مؤشرات لوحة التحكم.');
       });
     return () => { active = false; };
-  }, []);
+  }, [canViewInsights]);
 
   async function addUser(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -172,17 +179,18 @@ export default function ControlPanelClient() {
 
   return (
     <main className="mx-auto max-w-7xl space-y-8 px-4 py-8 sm:py-12">
-      <header>
+      <header className="flex flex-wrap items-end justify-between gap-4">
         <p className="ak-eyebrow">AKaar ADMIN</p>
         <h1 className="mt-2 text-3xl font-black">Control Panel</h1>
         <p className="mt-2 text-sm text-stone-400">إدارة الحسابات والأدوار وحالة المستخدمين وإعدادات المنصة.</p>
+        {canManageRoles && <Link href="/admin/control-panel/roles" className="rounded-lg border border-ak-amber/30 px-4 py-2 text-sm text-ak-honey">إدارة الأدوار والصلاحيات</Link>}
       </header>
 
       {error && <p role="alert" className="rounded-xl border border-rose-400/20 bg-rose-400/10 p-4 text-sm text-rose-200">{error}</p>}
       {notice && <p role="status" className="rounded-xl border border-emerald-400/20 bg-emerald-400/10 p-4 text-sm text-emerald-200">{notice}</p>}
 
       <div className="space-y-6" dir="rtl">
-          <section aria-label="نظرة عامة" className="ak-panel space-y-4 p-5">
+          {canViewInsights && <section aria-label="نظرة عامة" className="ak-panel space-y-4 p-5">
             <div className="flex flex-wrap items-end justify-between gap-3">
               <div><p className="ak-eyebrow">COMMERCE OVERVIEW</p><h2 className="mt-1 text-xl font-bold">مؤشرات المتجر</h2></div>
               <Link href="/admin/dashboard" className="text-xs text-ak-honey underline">فتح لوحة التحليلات</Link>
@@ -224,7 +232,7 @@ export default function ControlPanelClient() {
                 </div>
               </>
             ) : <p className="text-sm text-stone-500" aria-busy="true">جارٍ تحميل المؤشرات...</p>}
-          </section>
+          </section>}
 
       <section id="users" className="ak-panel scroll-mt-24 space-y-5 p-5">
         <div>
@@ -248,7 +256,7 @@ export default function ControlPanelClient() {
           <label htmlFor="new-user-role" className="text-sm font-semibold">
             الدور
             <select id="new-user-role" value={newUserRole} onChange={(event) => setNewUserRole(event.target.value as AdminRole)} className="mt-2 block rounded-lg border border-ak-line bg-ak-ink px-3 py-2 text-white">
-              <option value="GUEST">GUEST</option><option value="CUSTOMER">CUSTOMER</option><option value="SELLER">SELLER</option><option value="ADMIN">ADMIN</option>
+              <option value="CUSTOMER">CUSTOMER</option><option value="SELLER">SELLER</option>{canManageRoles && <option value="ADMIN">ADMIN</option>}
             </select>
           </label>
           <button type="submit" disabled={pendingAction === 'add-user'} className="rounded-lg bg-ak-brand px-4 py-2 text-sm font-bold text-white disabled:opacity-50">
@@ -270,7 +278,7 @@ export default function ControlPanelClient() {
                       <td className="py-3">
                         {protectedAdmin ? user.role : (
                           <select aria-label={`دور ${user.email}`} value={roleDrafts[user.id] ?? user.role} onChange={(event) => setRoleDrafts((current) => ({ ...current, [user.id]: event.target.value as AdminRole }))} className="rounded-lg border border-ak-line bg-ak-ink px-2 py-1 text-white">
-                            <option value="GUEST">GUEST</option><option value="CUSTOMER">CUSTOMER</option><option value="SELLER">SELLER</option><option value="ADMIN">ADMIN</option>
+                            <option value="CUSTOMER">CUSTOMER</option><option value="SELLER">SELLER</option>{(canManageRoles || user.role === 'ADMIN') && <option value="ADMIN">ADMIN</option>}
                           </select>
                         )}
                       </td>

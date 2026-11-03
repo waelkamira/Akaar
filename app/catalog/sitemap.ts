@@ -1,24 +1,17 @@
 import type { MetadataRoute } from 'next';
-import { prisma } from '@/lib/db/prisma';
+import {
+  getSitemapCounts,
+  listSitemapCategories,
+  listSitemapPages,
+  listSitemapProducts,
+  listSitemapProperties,
+  listSitemapStores,
+} from '@/lib/catalog/sitemap-repository';
 import { getSiteUrl } from '@/lib/site-url.mjs';
 
 export const dynamic = 'force-dynamic';
 
 const SITEMAP_PAGE_SIZE = 45_000;
-
-const productWhere = {
-  isActive: true,
-  isDeleted: false,
-  approvalStatus: 'APPROVED' as const,
-  category: { isActive: true },
-  OR: [
-    { sellerId: null },
-    { seller: { is: { status: 'ACTIVE' as const, isVerified: true } } },
-  ],
-};
-
-const propertyWhere = { isPublished: true, status: 'AVAILABLE' as const };
-const sellerWhere = { status: 'ACTIVE' as const, isVerified: true };
 
 type SitemapGroup = 'products' | 'properties' | 'stores' | 'categories' | 'pages';
 
@@ -27,13 +20,7 @@ function getSitemapUrl(path: string) {
 }
 
 export async function generateSitemaps() {
-  const [products, properties, stores, categories, pages] = await Promise.all([
-    prisma.product.count({ where: productWhere }),
-    prisma.property.count({ where: propertyWhere }),
-    prisma.seller.count({ where: sellerWhere }),
-    prisma.category.count({ where: { isActive: true } }),
-    prisma.sitePage.count(),
-  ]);
+  const [products, properties, stores, categories, pages] = await getSitemapCounts();
   const groups: Array<[SitemapGroup, number]> = [
     ['products', products],
     ['properties', properties],
@@ -66,28 +53,16 @@ export default async function sitemap({ id }: { id: Promise<string> }): Promise<
 
   switch (group) {
     case 'products': {
-      const records = await prisma.product.findMany({
-        where: productWhere,
-        select: { id: true, updatedAt: true },
-        orderBy: { id: 'asc' },
-        skip,
-        take: SITEMAP_PAGE_SIZE,
-      });
+      const records = await listSitemapProducts(skip, SITEMAP_PAGE_SIZE);
       return records.map(({ id, updatedAt }) => ({
-        url: getSitemapUrl(`/post/${encodeURIComponent(id)}`),
+        url: getSitemapUrl(`/products/${encodeURIComponent(id)}`),
         lastModified: updatedAt,
         changeFrequency: 'weekly',
         priority: 0.7,
       }));
     }
     case 'properties': {
-      const records = await prisma.property.findMany({
-        where: propertyWhere,
-        select: { id: true, updatedAt: true },
-        orderBy: { id: 'asc' },
-        skip,
-        take: SITEMAP_PAGE_SIZE,
-      });
+      const records = await listSitemapProperties(skip, SITEMAP_PAGE_SIZE);
       return records.map(({ id, updatedAt }) => ({
         url: getSitemapUrl(`/properties/${encodeURIComponent(id)}`),
         lastModified: updatedAt,
@@ -96,13 +71,7 @@ export default async function sitemap({ id }: { id: Promise<string> }): Promise<
       }));
     }
     case 'stores': {
-      const records = await prisma.seller.findMany({
-        where: sellerWhere,
-        select: { slug: true, updatedAt: true },
-        orderBy: { id: 'asc' },
-        skip,
-        take: SITEMAP_PAGE_SIZE,
-      });
+      const records = await listSitemapStores(skip, SITEMAP_PAGE_SIZE);
       return records.map(({ slug, updatedAt }) => ({
         url: getSitemapUrl(`/shop/${encodeURIComponent(slug)}`),
         lastModified: updatedAt,
@@ -111,27 +80,16 @@ export default async function sitemap({ id }: { id: Promise<string> }): Promise<
       }));
     }
     case 'categories': {
-      const records = await prisma.category.findMany({
-        where: { isActive: true },
-        select: { id: true, updatedAt: true },
-        orderBy: { id: 'asc' },
-        skip,
-        take: SITEMAP_PAGE_SIZE,
-      });
-      return records.map(({ id, updatedAt }) => ({
-        url: getSitemapUrl(`/search?categoryId=${id}`),
+      const records = await listSitemapCategories(skip, SITEMAP_PAGE_SIZE);
+      return records.map(({ slug, updatedAt }) => ({
+        url: getSitemapUrl(`/products?category=${encodeURIComponent(slug)}`),
         lastModified: updatedAt,
         changeFrequency: 'daily',
         priority: 0.8,
       }));
     }
     case 'pages': {
-      const records = await prisma.sitePage.findMany({
-        select: { slug: true, updatedAt: true },
-        orderBy: { slug: 'asc' },
-        skip,
-        take: SITEMAP_PAGE_SIZE,
-      });
+      const records = await listSitemapPages(skip, SITEMAP_PAGE_SIZE);
       return records.map(({ slug, updatedAt }) => ({
         url: getSitemapUrl(`/pages/${encodeURIComponent(slug)}`),
         lastModified: updatedAt,

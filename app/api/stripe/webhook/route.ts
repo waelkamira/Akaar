@@ -1,62 +1,78 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
+import { releaseOrderReservations, consumeOrderReservations } from '@/lib/orders/inventory';
 import { verifyStripeSignature } from '@/lib/payments/stripe.mjs';
 
 type StripeEvent = {
   type?: string;
-  data?: { object?: {
-    id?: string;
-    amount_total?: number;
-    currency?: string;
-    livemode?: boolean;
-    payment_status?: string;
-    metadata?: { paymentId?: string; orderId?: string };
-  } };
+  data?: {
+    object?: {
+      id?: string;
+      amount_total?: number;
+      currency?: string;
+      livemode?: boolean;
+      payment_status?: string;
+      metadata?: { paymentId?: string; orderId?: string };
+    };
+  };
 };
 
 async function releaseUnpaidOrder(paymentId: string, sessionId: string, orderId: string) {
   await prisma.$transaction(async (transaction) => {
     const payment = await transaction.payment.findUnique({
       where: { id: paymentId },
-      select: { id: true, orderId: true, method: true, status: true, providerReference: true, order: { select: { status: true } } },
+      select: {
+        id: true,
+        orderId: true,
+        provider: true,
+        status: true,
+        providerReference: true,
+        order: { select: { status: true } },
+      },
     });
-    if (!payment || payment.orderId !== orderId || payment.method !== 'STRIPE' || payment.status !== 'PENDING') return;
+    if (!payment || payment.orderId !== orderId || payment.provider !== 'STRIPE' || payment.status !== 'PENDING') return;
     if (payment.order.status !== 'PENDING') return;
     if (payment.providerReference && payment.providerReference !== sessionId) {
       throw new Error('Stripe session reference did not match the pending payment.');
     }
 
-    const items = await transaction.orderItem.findMany({
-      where: { orderId },
-      select: { productId: true, quantity: true },
-    });
     const changed = await transaction.payment.updateMany({
       where: { id: paymentId, status: 'PENDING' },
       data: { status: 'FAILED', providerReference: sessionId },
     });
     if (changed.count !== 1) return;
 
-    for (const item of items) {
-      await transaction.product.update({
-        where: { id: item.productId },
-        data: { stockQuantity: { increment: item.quantity } },
-      });
-    }
+    await transaction.paymentAttempt.updateMany({
+      where: { paymentId, status: 'PENDING' },
+      data: { status: 'FAILED', providerReference: sessionId, errorCode: 'SESSION_EXPIRED' },
+    });
+    await releaseOrderReservations(transaction, orderId);
     await transaction.order.updateMany({
       where: { id: orderId, status: 'PENDING' },
-      data: { status: 'CANCELLED' },
+      data: { status: 'CANCELLED', cancelledAt: new Date() },
+    });
+    await transaction.orderStatusHistory.create({
+      data: { orderId, status: 'CANCELLED', note: 'Stripe checkout session expired before payment.' },
     });
   });
 }
 
-async function markOrderPaid(paymentId: string, sessionId: string, orderId: string, amount: number) {
+async function markOrderPaid(paymentId: string, sessionId: string, orderId: string, amountTotal: number) {
   await prisma.$transaction(async (transaction) => {
     const payment = await transaction.payment.findUnique({
       where: { id: paymentId },
-      select: { id: true, orderId: true, method: true, amount: true, currency: true, status: true, providerReference: true },
+      select: {
+        id: true,
+        orderId: true,
+        provider: true,
+        amount: true,
+        currency: true,
+        status: true,
+        providerReference: true,
+      },
     });
-    if (!payment || payment.orderId !== orderId || payment.method !== 'STRIPE'
-      || payment.amount !== amount || payment.currency !== 'USD') {
+    if (!payment || payment.orderId !== orderId || payment.provider !== 'STRIPE'
+      || payment.currency !== 'USD' || !payment.amount.mul(100).isEqualTo(amountTotal)) {
       throw new Error('Stripe event does not match the pending payment record.');
     }
     if (payment.providerReference && payment.providerReference !== sessionId) {
@@ -70,11 +86,21 @@ async function markOrderPaid(paymentId: string, sessionId: string, orderId: stri
       data: { status: 'COMPLETED', paidAt: new Date(), providerReference: sessionId },
     });
     if (changed.count !== 1) return;
+
     const updatedOrder = await transaction.order.updateMany({
       where: { id: orderId, status: 'PENDING' },
-      data: { status: 'PAID' },
+      data: { status: 'CONFIRMED' },
     });
     if (updatedOrder.count !== 1) throw new Error('Stripe payment is valid but the order is no longer pending.');
+
+    await transaction.paymentAttempt.updateMany({
+      where: { paymentId, status: 'PENDING' },
+      data: { status: 'SUCCEEDED', providerReference: sessionId },
+    });
+    await consumeOrderReservations(transaction, orderId);
+    await transaction.orderStatusHistory.create({
+      data: { orderId, status: 'CONFIRMED', note: 'Stripe payment confirmed by a verified webhook.' },
+    });
   });
 }
 

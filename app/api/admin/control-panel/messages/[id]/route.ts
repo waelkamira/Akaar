@@ -7,7 +7,7 @@ import { readJsonBody } from '@/lib/api/read-json-body.mjs';
 type RouteContext = { params: Promise<{ id: string }> };
 
 export async function PATCH(request: Request, { params }: RouteContext) {
-  const admin = await getControlPanelAdmin();
+  const admin = await getControlPanelAdmin('control_panel.messages.manage');
   if (!admin) return NextResponse.json({ error: 'صلاحيات مدير لوحة التحكم مطلوبة.' }, { status: 403 });
   const { id } = await params;
   if (!id || id.length > 128) return NextResponse.json({ error: 'معرف الرسالة غير صالح.' }, { status: 400 });
@@ -46,7 +46,7 @@ export async function PATCH(request: Request, { params }: RouteContext) {
 }
 
 export async function DELETE(_request: Request, { params }: RouteContext) {
-  const admin = await getControlPanelAdmin();
+  const admin = await getControlPanelAdmin('control_panel.messages.manage');
   if (!admin) return NextResponse.json({ error: 'صلاحيات مدير لوحة التحكم مطلوبة.' }, { status: 403 });
   const { id } = await params;
   if (!id || id.length > 128) return NextResponse.json({ error: 'معرف الرسالة غير صالح.' }, { status: 400 });

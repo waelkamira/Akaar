@@ -1,13 +1,12 @@
-import { createHash } from 'node:crypto';
 import { NextResponse } from 'next/server';
 import { readJsonBody } from '@/lib/api/read-json-body.mjs';
 import { isSameOriginRequest } from '@/lib/api/same-origin.mjs';
 import { isPlainObject } from '@/lib/api/validation.mjs';
-import { prisma } from '@/lib/db/prisma';
-
-function hashToken(token: string) {
-  return createHash('sha256').update(token).digest('hex');
-}
+import {
+  consumeNewsletterConfirmationToken,
+  consumeNewsletterUnsubscribeToken,
+} from '@/lib/newsletter/repository.mjs';
+import { hashNewsletterToken } from '@/lib/newsletter/tokens.mjs';
 
 export async function POST(request: Request) {
   if (!isSameOriginRequest(request)) {
@@ -25,21 +24,13 @@ export async function POST(request: Request) {
 
   try {
     if (action === 'confirm') {
-      const subscriber = await prisma.newsletterSubscriber.findUnique({ where: { confirmationTokenHash: hashToken(token) }, select: { id: true } });
-      if (!subscriber) return NextResponse.json({ error: 'الرابط غير صالح أو سبق استخدامه.' }, { status: 400 });
-      await prisma.newsletterSubscriber.update({
-        where: { id: subscriber.id },
-        data: { confirmedAt: new Date(), confirmationTokenHash: null },
-      });
+      const consumed = await consumeNewsletterConfirmationToken(hashNewsletterToken(token));
+      if (!consumed) return NextResponse.json({ error: 'الرابط غير صالح أو سبق استخدامه.' }, { status: 400 });
       return NextResponse.json({ message: 'تم تأكيد اشتراكك.' });
     }
 
-    const subscriber = await prisma.newsletterSubscriber.findUnique({ where: { unsubscribeTokenHash: hashToken(token) }, select: { id: true } });
-    if (!subscriber) return NextResponse.json({ error: 'الرابط غير صالح أو سبق استخدامه.' }, { status: 400 });
-    await prisma.newsletterSubscriber.update({
-      where: { id: subscriber.id },
-      data: { unsubscribedAt: new Date(), confirmationTokenHash: null, unsubscribeTokenHash: null },
-    });
+    const consumed = await consumeNewsletterUnsubscribeToken(hashNewsletterToken(token));
+    if (!consumed) return NextResponse.json({ error: 'الرابط غير صالح أو سبق استخدامه.' }, { status: 400 });
     return NextResponse.json({ message: 'تم إلغاء الاشتراك.' });
   } catch (error) {
     console.error('Unable to process newsletter consent:', error);

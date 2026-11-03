@@ -12,13 +12,16 @@ export async function GET(_request: Request, { params }: RouteContext) {
   const { id } = await params;
   const property = await prisma.property.findUnique({
     where: { id },
-    include: { store: { select: { id: true, name: true, slug: true, description: true, logoUrl: true } } },
+    include: {
+      store: { select: { id: true, name: true, slug: true, description: true, logoUrl: true } },
+      media: { orderBy: [{ sortOrder: 'asc' }, { id: 'asc' }] },
+    },
   });
   if (!property) return NextResponse.json({ error: 'Property not found.' }, { status: 404 });
 
   if (!property.isPublished) {
     const actor = await getAuthenticatedUser();
-    if (!actor || (actor.role !== 'ADMIN' && actor.id !== property.userId)) {
+    if (!actor || (actor.role !== 'ADMIN' && actor.id !== property.ownerId)) {
       return NextResponse.json({ error: 'Property not found.' }, { status: 404 });
     }
   }
@@ -53,28 +56,47 @@ export async function PATCH(request: Request, { params }: RouteContext) {
   }
 
   const { id } = await params;
-  const data: Prisma.PropertyUpdateManyMutationInput = {};
+  const data: Prisma.PropertyUpdateInput = {};
   const patch = input.data;
   if (patch.title !== undefined) data.title = patch.title;
   if (patch.description !== undefined) data.description = patch.description;
   if (patch.price !== undefined) data.price = new Prisma.Decimal(patch.price);
   if (patch.currency !== undefined) data.currency = patch.currency;
   if (patch.location !== undefined) data.location = patch.location;
-  if (patch.country !== undefined) data.country = patch.country;
+  if (patch.countryCode !== undefined) data.countryCode = patch.countryCode;
   if (patch.city !== undefined) data.city = patch.city;
-  if (patch.images !== undefined) data.images = patch.images;
+  if (patch.images !== undefined) {
+    data.media = {
+      deleteMany: {},
+      create: patch.images.map((storageKey, sortOrder) => ({
+        storageKey,
+        mediaType: 'IMAGE',
+        sortOrder,
+      })),
+    };
+  }
   if (patch.status !== undefined) data.status = patch.status;
   if (patch.type !== undefined) data.type = patch.type;
   if (patch.attributes !== undefined) data.attributes = patch.attributes;
   if (patch.isPublished !== undefined) data.isPublished = patch.isPublished;
 
   try {
-    const result = await prisma.property.updateMany({
-      where: { id, ...(ownerId ? { userId: ownerId } : {}) },
-      data,
+    const property = await prisma.$transaction(async (transaction) => {
+      const current = await transaction.property.findFirst({
+        where: { id, ...(ownerId ? { ownerId } : {}) },
+        select: { id: true },
+      });
+      if (!current) return null;
+      return transaction.property.update({
+        where: { id },
+        data,
+        include: {
+          store: true,
+          media: { orderBy: [{ sortOrder: 'asc' }, { id: 'asc' }] },
+        },
+      });
     });
-    if (!result.count) return NextResponse.json({ error: 'Property not found or access denied.' }, { status: 404 });
-    const property = await prisma.property.findUnique({ where: { id }, include: { store: true } });
+    if (!property) return NextResponse.json({ error: 'Property not found or access denied.' }, { status: 404 });
     return NextResponse.json({ property });
   } catch (error) {
     console.error('Property update failed:', error);
@@ -97,8 +119,9 @@ export async function DELETE(_request: Request, { params }: RouteContext) {
 
   const { id } = await params;
   try {
-    const result = await prisma.property.deleteMany({
-      where: { id, ...(ownerId ? { userId: ownerId } : {}) },
+    const result = await prisma.property.updateMany({
+      where: { id, ...(ownerId ? { ownerId } : {}) },
+      data: { isPublished: false, status: 'UNAVAILABLE' },
     });
     if (!result.count) return NextResponse.json({ error: 'Property not found or access denied.' }, { status: 404 });
     return new NextResponse(null, { status: 204 });

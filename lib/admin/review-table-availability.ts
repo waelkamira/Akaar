@@ -16,7 +16,7 @@ export async function isStoreReviewTableAvailable() {
 
 export async function isVendorOrderTableAvailable() {
   const [table] = await prisma.$queryRaw<Array<{ exists: boolean }>>`
-    SELECT to_regclass('public."VendorOrder"') IS NOT NULL AS "exists"
+    SELECT to_regclass('public.vendor_orders') IS NOT NULL AS "exists"
   `;
   return table.exists;
 }

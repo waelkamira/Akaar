@@ -7,17 +7,29 @@ export async function GET(
   _request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  const admin = await getControlPanelAdmin();
+  const admin = await getControlPanelAdmin('control_panel.stores.manage');
   if (!admin) {
     return NextResponse.json({ error: 'صلاحيات المدير مطلوبة.' }, { status: 403 });
   }
 
   const { id } = await params;
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id)) {
+    return NextResponse.json({ error: 'معرف البائع غير صالح.' }, { status: 400 });
+  }
   const seller = await prisma.seller.findUnique({
     where: { id },
-    select: { identityDocumentFileId: true },
+    select: {
+      userId: true,
+      documents: {
+        where: { type: 'IDENTITY' },
+        orderBy: { createdAt: 'desc' },
+        take: 1,
+        select: { storageKey: true },
+      },
+    },
   });
-  if (!seller?.identityDocumentFileId) {
+  const identityDocument = seller?.documents[0]?.storageKey;
+  if (!seller || !identityDocument) {
     return NextResponse.json({ error: 'وثيقة الهوية غير متاحة.' }, { status: 404 });
   }
 
@@ -32,9 +44,14 @@ export async function GET(
       privateKey: IMAGEKIT_PRIVATE_KEY,
       urlEndpoint: IMAGEKIT_URL_ENDPOINT,
     });
-    const document = await imagekit.getFileDetails(seller.identityDocumentFileId);
-    if (!document.isPrivateFile) {
-      console.error('Seller identity document is not private:', seller.identityDocumentFileId);
+    const document = await imagekit.getFileDetails(identityDocument);
+    const documentTags = document.tags ?? [];
+    if (
+      !document.isPrivateFile
+      || !documentTags.includes('akaar-seller-identity')
+      || !documentTags.includes(`user-${seller.userId}`)
+    ) {
+      console.error('Seller identity document failed privacy or ownership validation:', seller.id);
       return NextResponse.json({ error: 'تعذر عرض وثيقة الهوية بأمان.' }, { status: 500 });
     }
     const signedUrl = imagekit.url({

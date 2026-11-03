@@ -27,13 +27,17 @@ type Product = {
   basePrice: number | null;
   stockQuantity: number | null;
   isActive: boolean;
-  approvalStatus: 'PENDING' | 'APPROVED' | 'REJECTED';
+  approvalStatus: 'DRAFT' | 'PENDING' | 'APPROVED' | 'REJECTED' | 'ARCHIVED';
+  currency: string | null;
 };
 
 type VendorOrder = {
   id: string;
   status: 'PENDING' | 'PROCESSING' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED';
   trackingNumber: string | null;
+  totalPrice: number;
+  currency: string;
+  carrierName: string | null;
   order: {
     id: string;
     createdAt: string;
@@ -42,7 +46,7 @@ type VendorOrder = {
     shippingCity: string | null;
     shippingAddress: string | null;
   };
-  items: Array<{ id: string; quantity: number; totalPrice: number; product: { title: string } }>;
+  items: Array<{ id: string; quantity: number; totalPrice: number; currency: string; product: { title: string } }>;
 };
 
 type PropertyListing = {
@@ -52,7 +56,7 @@ type PropertyListing = {
   currency: string;
   location: string;
   city: string | null;
-  status: 'AVAILABLE' | 'SOLD' | 'RENTED';
+  status: 'AVAILABLE' | 'RESERVED' | 'SOLD' | 'RENTED' | 'UNAVAILABLE';
   isPublished: boolean;
   createdAt: string;
 };
@@ -79,13 +83,24 @@ type DashboardPayload = {
     youtubeUrl?: string | null;
     twitterUrl?: string | null;
   };
-  metrics?: { productCount: number; stockCount: number; revenue: number; pendingFulfillment: number; propertyCount: number; activePropertyCount: number };
+  metrics?: {
+    productCount: number;
+    stockCount: number;
+    revenue: Array<{ currency: string; amount: number }>;
+    pendingFulfillment: number;
+    propertyCount: number;
+    activePropertyCount: number;
+  };
   products?: Product[];
   vendorOrders?: VendorOrder[];
   properties?: PropertyListing[];
 };
 
-const money = (value: number | null | undefined) => new Intl.NumberFormat('ar-SY').format(value || 0);
+const money = (value: number | null | undefined, currency = 'SYP') => new Intl.NumberFormat('ar', {
+  style: 'currency',
+  currency,
+  maximumFractionDigits: 4,
+}).format(value || 0);
 const statusNames: Record<string, string> = {
   PENDING: 'بانتظار التجهيز',
   PROCESSING: 'قيد التجهيز',
@@ -94,6 +109,8 @@ const statusNames: Record<string, string> = {
   CANCELLED: 'ملغي',
   APPROVED: 'معتمد',
   REJECTED: 'مرفوض',
+  DRAFT: 'مسودة',
+  ARCHIVED: 'مؤرشف',
 };
 
 type SellerApplication = {
@@ -588,7 +605,7 @@ export default function SellerDashboard() {
   const metrics = data.metrics || {
     productCount: 0,
     stockCount: 0,
-    revenue: 0,
+    revenue: [],
     pendingFulfillment: 0,
     propertyCount: 0,
     activePropertyCount: 0,
@@ -610,7 +627,7 @@ export default function SellerDashboard() {
 
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {[
-          ['الإيرادات المسجلة', `${money(metrics.revenue)} ل.س`, 'border-emerald-400/25 bg-emerald-400/10 text-emerald-200'],
+          ['الإيرادات المسجلة', metrics.revenue.length ? metrics.revenue.map((item) => `${money(item.amount)} ${item.currency}`).join(' · ') : '—', 'border-emerald-400/25 bg-emerald-400/10 text-emerald-200'],
           ['المنتجات', money(metrics.productCount), 'border-sky-400/25 bg-sky-400/10 text-sky-200'],
           ['المخزون المتاح', money(metrics.stockCount), 'border-violet-400/25 bg-violet-400/10 text-violet-200'],
           ['طلبات تحتاج متابعة', money(metrics.pendingFulfillment), 'border-amber-400/25 bg-amber-400/10 text-amber-200'],
@@ -689,7 +706,7 @@ export default function SellerDashboard() {
               const nextLabel = order.status === 'PENDING' ? 'بدء التجهيز' : order.status === 'PROCESSING' ? 'تأكيد الشحن' : order.status === 'SHIPPED' ? 'تأكيد التسليم' : null;
               return <article key={order.id} className="rounded-xl border border-ak-line-strong/[.08] p-4">
                 <div className="flex flex-wrap items-center justify-between gap-3"><div><p className="text-xs text-stone-500">طلب {order.order.id.slice(0, 12)} · {new Date(order.order.createdAt).toLocaleDateString('ar')}</p><p className="mt-1 font-semibold">{order.items.map((item) => `${item.product.title} × ${item.quantity}`).join('، ')}</p><p className="mt-2 text-xs text-stone-400">التوصيل إلى: {order.order.customerName || '—'} · {order.order.phoneNumber || '—'} · {order.order.shippingCity || '—'} {order.order.shippingAddress || ''}</p></div><span className={`rounded-full border px-3 py-1 text-xs ${order.status === 'DELIVERED' ? 'border-emerald-400/25 bg-emerald-400/10 text-emerald-200' : order.status === 'SHIPPED' ? 'border-sky-400/25 bg-sky-400/10 text-sky-200' : order.status === 'CANCELLED' ? 'border-rose-400/25 bg-rose-400/10 text-rose-200' : 'border-amber-400/25 bg-amber-400/10 text-amber-200'}`}>{statusNames[order.status] || order.status}</span></div>
-                <div className="mt-3 flex flex-wrap items-center justify-between gap-3 border-t border-ak-line-strong/[.06] pt-3"><span className="text-sm text-stone-400">الإجمالي: {money(order.items.reduce((sum, item) => sum + item.totalPrice, 0))} ل.س{order.trackingNumber ? ` · التتبع: ${order.trackingNumber}` : ''}</span>
+                <div className="mt-3 flex flex-wrap items-center justify-between gap-3 border-t border-ak-line-strong/[.06] pt-3"><span className="text-sm text-stone-400">الإجمالي: {money(order.totalPrice, order.currency)}{order.carrierName ? ` · ${order.carrierName}` : ''}{order.trackingNumber ? ` · التتبع: ${order.trackingNumber}` : ''}</span>
                   {nextLabel && <div className="flex flex-wrap gap-2"><input aria-label="رقم التتبع" placeholder="رقم التتبع (اختياري)" value={tracking[order.id] ?? order.trackingNumber ?? ''} onChange={(event) => setTracking((current) => ({ ...current, [order.id]: event.target.value }))} className="w-44 rounded-lg border border-ak-line bg-ak-canvas px-3 py-2 text-xs" /><button disabled={busy === order.id} onClick={() => void advanceOrder(order)} className="rounded-lg bg-ak-amber px-3 py-2 text-xs font-bold text-ak-cream disabled:opacity-50">{busy === order.id ? 'جارٍ التحديث...' : nextLabel}</button></div>}
                 </div>
               </article>;
@@ -744,7 +761,7 @@ function AgencyPropertyCard({
           <label className="text-xs text-stone-400">عنوان الإعلان<input required maxLength={180} value={title} onChange={(event) => setTitle(event.target.value)} className="mt-1 w-full rounded-lg border border-ak-line bg-ak-canvas px-3 py-2 text-sm text-ak-cream" /></label>
           <label className="text-xs text-stone-400">السعر<input required inputMode="decimal" pattern="\\d+(\\.\\d{1,2})?" value={price} onChange={(event) => setPrice(event.target.value)} className="mt-1 w-full rounded-lg border border-ak-line bg-ak-canvas px-3 py-2 text-sm text-ak-cream" /></label>
           <label className="text-xs text-stone-400 sm:col-span-2">الموقع<input required maxLength={240} value={location} onChange={(event) => setLocation(event.target.value)} className="mt-1 w-full rounded-lg border border-ak-line bg-ak-canvas px-3 py-2 text-sm text-ak-cream" /></label>
-          <label className="text-xs text-stone-400">حالة العقار<select value={status} onChange={(event) => setStatus(event.target.value as PropertyListing['status'])} className="mt-1 w-full rounded-lg border border-ak-line bg-ak-canvas px-3 py-2 text-sm text-ak-cream"><option value="AVAILABLE">متاح</option><option value="SOLD">مباع</option><option value="RENTED">مؤجر</option></select></label>
+          <label className="text-xs text-stone-400">حالة العقار<select value={status} onChange={(event) => setStatus(event.target.value as PropertyListing['status'])} className="mt-1 w-full rounded-lg border border-ak-line bg-ak-canvas px-3 py-2 text-sm text-ak-cream"><option value="AVAILABLE">متاح</option><option value="RESERVED">محجوز</option><option value="SOLD">مباع</option><option value="RENTED">مؤجر</option><option value="UNAVAILABLE">غير متاح</option></select></label>
           <label className="flex items-center gap-2 self-end pb-2 text-xs text-stone-300"><input type="checkbox" checked={isPublished} onChange={(event) => setIsPublished(event.target.checked)} className="accent-ak-amber" />منشور للعامة</label>
           <div className="flex gap-2 sm:col-span-2">
             <button type="submit" disabled={busy} className="rounded-lg bg-ak-amber px-3 py-2 text-xs font-bold text-ak-cream disabled:opacity-50">{busy ? 'جارٍ الحفظ...' : 'حفظ التعديلات'}</button>
@@ -783,7 +800,7 @@ function StockRow({ product, busy, onSave, onDelete }: {
   return (
     <tr className="border-t border-ak-line-strong/[.06]">
       <td className="py-3 font-semibold">{product.title}</td>
-      <td className="py-3">{money(product.basePrice)} ل.س</td>
+      <td className="py-3">{product.basePrice === null ? '—' : `${money(product.basePrice)} ${product.currency || ''}`}</td>
       <td className="py-3"><span className={`rounded-full px-3 py-1 text-xs ${product.approvalStatus === 'APPROVED' && product.isActive ? 'bg-emerald-400/10 text-emerald-200' : product.approvalStatus === 'PENDING' ? 'bg-amber-400/10 text-amber-200' : 'bg-rose-400/10 text-rose-200'}`}>{statusNames[product.approvalStatus] || (product.isActive ? 'ظاهر' : 'غير منشور')}</span></td>
       <td className="py-3"><label className="inline-flex items-center gap-2"><input aria-label={`مخزون ${product.title}`} type="number" min="0" max="1000000" value={value} onChange={(event) => setDraft({ productId: product.id, value: event.target.value })} className="w-24 rounded-lg border border-ak-line bg-ak-canvas px-3 py-2" /><span className={`rounded-full px-2 py-1 text-[10px] ${Number(value) > 5 ? 'bg-emerald-400/10 text-emerald-200' : Number(value) > 0 ? 'bg-amber-400/10 text-amber-200' : 'bg-rose-400/10 text-rose-200'}`}>{Number(value) > 5 ? 'متوفر' : Number(value) > 0 ? 'مخزون منخفض' : 'نفد'}</span></label></td>
       <td className="py-3">

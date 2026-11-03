@@ -1,15 +1,16 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
-import { getAuthenticatedUser } from '@/lib/auth/require-auth';
+import { getAuthenticatedUser, getControlPanelPermissions } from '@/lib/auth/require-auth';
 import { readJsonBody } from '@/lib/api/read-json-body.mjs';
 import { isValidProfileImage } from '@/lib/api/profile-image.mjs';
+import { isControlPanelAdmin } from '@/lib/auth/control-panel-access.mjs';
+import { CONTROL_PANEL_PERMISSION_NAMES, getControlPanelEntryPath } from '@/lib/auth/control-panel-permissions.mjs';
 
 const publicUserSelect = {
   id: true,
   userName: true,
-  userImage: true,
+  imageUrl: true,
   email: true,
-  role: true,
   status: true,
   createdAt: true,
 };
@@ -23,11 +24,21 @@ export async function GET() {
 
     const user = await prisma.user.findUnique({
       where: { id: authenticatedUser.id },
-      select: { ...publicUserSelect, password: true },
+      select: { ...publicUserSelect, passwordHash: true },
     });
     if (!user) return NextResponse.json({ error: 'User not found' }, { status: 404 });
-    const { password, ...safeUser } = user;
-    return NextResponse.json({ ...safeUser, hasPassword: Boolean(password), isAdmin: user.role === 'ADMIN' }, {
+    const { passwordHash, ...safeUser } = user;
+    const controlPanelPermissions = isControlPanelAdmin(authenticatedUser)
+      ? CONTROL_PANEL_PERMISSION_NAMES
+      : await getControlPanelPermissions(authenticatedUser.id);
+    return NextResponse.json({
+      ...safeUser,
+      userImage: safeUser.imageUrl,
+      role: authenticatedUser.role,
+      hasPassword: Boolean(passwordHash),
+      isAdmin: authenticatedUser.role === 'ADMIN',
+      controlPanelEntryPath: getControlPanelEntryPath(controlPanelPermissions),
+    }, {
       headers: { 'Cache-Control': 'private, no-store' },
     });
   } catch (error) {
@@ -61,11 +72,11 @@ export async function PUT(request) {
       }
       data.userName = userName;
     }
-    if (Object.prototype.hasOwnProperty.call(body ?? {}, 'userImage')) {
-      if (!isValidProfileImage(body.userImage)) {
+    if (Object.prototype.hasOwnProperty.call(body ?? {}, 'imageUrl')) {
+      if (!isValidProfileImage(body.imageUrl)) {
         return NextResponse.json({ error: 'Profile image must be a valid HTTP(S) URL or a same-origin path under 2048 characters.' }, { status: 400 });
       }
-      data.userImage = body.userImage === null ? null : body.userImage.trim();
+      data.imageUrl = body.imageUrl === null ? null : body.imageUrl.trim();
     }
     if (!Object.keys(data).length) {
       return NextResponse.json({ error: 'No valid profile fields supplied.' }, { status: 400 });
@@ -76,7 +87,13 @@ export async function PUT(request) {
       data,
       select: publicUserSelect,
     });
-    return NextResponse.json({ user });
+    return NextResponse.json({
+      user: {
+        ...user,
+        userImage: user.imageUrl,
+        role: authenticatedUser.role,
+      },
+    });
   } catch (error) {
     console.error('Unable to update current user:', error);
     return NextResponse.json({ error: 'Unable to update user.' }, { status: 500 });

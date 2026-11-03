@@ -2,22 +2,8 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { getAuthenticatedUser } from '@/lib/auth/require-auth';
-import { prisma } from '@/lib/db/prisma';
+import { listFavoriteProducts } from '@/lib/favorites/repository';
 import FavoriteProducts from './FavoriteProducts';
-
-type FavoriteProduct = {
-  id: string;
-  title: string;
-  description: string | null;
-  images: string[];
-  basePrice: number | null;
-  stockQuantity: number | null;
-  city: string | null;
-  town: string | null;
-  createdAt: Date;
-  categoryId: number;
-  categoryName: string;
-};
 
 export const dynamic = 'force-dynamic';
 export const metadata: Metadata = {
@@ -35,51 +21,7 @@ export default async function FavoritesPage({ searchParams }: {
   const requestedPage = Number(params.page);
   const page = Number.isSafeInteger(requestedPage) && requestedPage > 0 ? Math.min(requestedPage, 100_000) : 1;
   const limit = 24;
-  const [countRows, products] = await Promise.all([
-    prisma.$queryRaw<Array<{ totalCount: number }>>`
-      SELECT COUNT(*)::int AS "totalCount"
-      FROM public.favorites AS favorite
-      INNER JOIN public.products AS product
-        ON product.id = favorite."productId"
-      INNER JOIN public."Category" AS category
-        ON category.id = product."categoryId"
-      WHERE favorite."userId" = ${user.id}
-        AND favorite."isDeleted" = false
-        AND product."isDeleted" = false
-        AND product."isActive" = true
-        AND product."approvalStatus" = 'APPROVED'
-        AND category."isActive" = true
-    `,
-    prisma.$queryRaw<FavoriteProduct[]>`
-      SELECT
-        product.id,
-        product.title,
-        product.description,
-        product.images,
-        product."basePrice",
-        product."stockQuantity",
-        product.city,
-        product.town,
-        product."createdAt",
-        product."categoryId",
-        product."categoryName"
-      FROM public.favorites AS favorite
-      INNER JOIN public.products AS product
-        ON product.id = favorite."productId"
-      INNER JOIN public."Category" AS category
-        ON category.id = product."categoryId"
-      WHERE favorite."userId" = ${user.id}
-        AND favorite."isDeleted" = false
-        AND product."isDeleted" = false
-        AND product."isActive" = true
-        AND product."approvalStatus" = 'APPROVED'
-        AND category."isActive" = true
-      ORDER BY favorite."createdAt" DESC, favorite.id DESC
-      LIMIT ${limit}
-      OFFSET ${(page - 1) * limit}
-    `,
-  ]);
-  const totalCount = countRows[0]?.totalCount ?? 0;
+  const { totalCount, products } = await listFavoriteProducts(user.id, page, limit);
   const hasMore = page * limit < totalCount;
 
   return (

@@ -2,9 +2,10 @@ import { NextResponse } from 'next/server';
 import { getPagination } from '@/lib/api/validation.mjs';
 import { getControlPanelAdmin } from '@/lib/auth/require-auth';
 import { prisma } from '@/lib/db/prisma';
+import { getPlatformRole } from '@/lib/auth/roles.mjs';
 
 export async function GET(request: Request) {
-  const admin = await getControlPanelAdmin();
+  const admin = await getControlPanelAdmin('control_panel.users.manage');
   if (!admin) return NextResponse.json({ error: 'صلاحيات مدير لوحة التحكم مطلوبة.' }, { status: 403 });
 
   const { searchParams } = new URL(request.url);
@@ -16,13 +17,23 @@ export async function GET(request: Request) {
         skip,
         take: limit,
         orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
-        select: { id: true, email: true, userName: true, role: true, status: true, createdAt: true },
+        select: {
+          id: true,
+          email: true,
+          userName: true,
+          status: true,
+          createdAt: true,
+          roles: {
+            where: { scopeType: 'PLATFORM', scopeId: null },
+            select: { role: { select: { name: true } } },
+          },
+        },
       }),
       prisma.user.count(),
     ]);
 
     return NextResponse.json({
-      items,
+      items: items.map(({ roles, ...user }) => ({ ...user, role: getPlatformRole(roles) })),
       page,
       limit,
       totalCount,

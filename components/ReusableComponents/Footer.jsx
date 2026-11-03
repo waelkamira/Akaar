@@ -8,6 +8,7 @@ import NewsletterSignup from '@/components/newsletter/NewsletterSignup';
 
 const FOOTER_LINKS = [
   { href: '/search', label: 'تصفح المنتجات', icon: FaSearch },
+  { href: '/products', label: 'المنتجات المعتمدة', icon: FaShoppingBag },
   { href: '/categories/1', label: 'الأقسام', icon: FaShoppingBag },
   { href: '/favorite', label: 'المفضلة', icon: FaHeart },
   { href: '/orders', label: 'طلباتي', icon: FaShoppingBag },

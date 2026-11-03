@@ -28,6 +28,7 @@ function readStoredArray(key) {
 
       if (!validProduct) return [];
       if (key !== CART_STORAGE_KEY) return [item];
+      if (typeof item.variantId !== 'string') return [];
 
       const stockQuantity = Number.isInteger(item.stockQuantity)
         ? item.stockQuantity
@@ -87,7 +88,9 @@ export function CommerceProvider({ children }) {
     (product, quantity = 1) => {
       if (
         !product?.id ||
+        typeof product.variantId !== 'string' ||
         !product?.title ||
+        typeof product.currency !== 'string' ||
         !Number.isFinite(product.basePrice) ||
         product.basePrice < 0 ||
         !Number.isInteger(quantity) ||
@@ -99,16 +102,19 @@ export function CommerceProvider({ children }) {
       const available = Number.isInteger(product.stockQuantity)
         ? product.stockQuantity
         : 1;
-      const existing = cartItems.find((item) => item.id === product.id);
+      if (cartItems.some((item) => item.currency !== product.currency)) {
+        throw new Error('لا يمكن جمع منتجات بعملات مختلفة في السلة نفسها.');
+      }
+      const existing = cartItems.find((item) => item.variantId === product.variantId);
       if (available < 1 || (existing?.quantity || 0) + quantity > available) {
         throw new Error('The requested quantity is not available.');
       }
 
       setCartItems((items) => {
-        const current = items.find((item) => item.id === product.id);
+        const current = items.find((item) => item.variantId === product.variantId);
         if (current) {
           return items.map((item) =>
-            item.id === product.id
+            item.variantId === product.variantId
               ? { ...item, quantity: item.quantity + quantity }
               : item,
           );
@@ -123,7 +129,7 @@ export function CommerceProvider({ children }) {
     setCartItems((items) =>
       items
         .map((item) =>
-          item.id === productId
+          item.variantId === productId
             ? {
                 ...item,
                 quantity: Math.min(
@@ -138,7 +144,7 @@ export function CommerceProvider({ children }) {
   }, []);
 
   const removeFromCart = useCallback((productId) => {
-    setCartItems((items) => items.filter((item) => item.id !== productId));
+    setCartItems((items) => items.filter((item) => item.variantId !== productId));
   }, []);
 
   const clearCart = useCallback(() => setCartItems([]), []);

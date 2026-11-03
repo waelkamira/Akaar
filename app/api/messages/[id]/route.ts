@@ -1,37 +1,26 @@
-import type { Prisma } from '@prisma/client';
 import { NextResponse } from 'next/server';
 import { getAuthenticatedUser } from '@/lib/auth/require-auth';
-import { isPlainObject } from '@/lib/api/validation.mjs';
-import { prisma } from '@/lib/db/prisma';
 import { isStoreMessagingAvailable } from '@/lib/messages/table-availability';
+<<<<<<< HEAD
 import { insertStoreMessage } from '@/lib/messages/store-messaging';
 import { readJsonBody } from '@/lib/api/read-json-body.mjs';
+=======
+import {
+  findParticipantConversation,
+  insertStoreMessage,
+  listConversationMessages,
+  markConversationMessagesRead,
+  withStoreMessageTransaction,
+} from '@/lib/messages/store-messaging';
+import {
+  loadStoreConversation,
+  markConversationRead,
+  sendConversationMessage,
+} from '@/lib/messages/service.mjs';
+import { parseStoreMessageBody } from '@/lib/messages/validation.mjs';
+>>>>>>> wael-work-in-progress
 
 type RouteContext = { params: Promise<{ id: string }> };
-
-async function findParticipantConversation(
-  database: Pick<Prisma.TransactionClient, '$queryRaw'>,
-  conversationId: string,
-  userId: string,
-) {
-  const [conversation] = await database.$queryRaw<Array<{
-    id: string;
-    customerId: string;
-    sellerUserId: string;
-    storeName: string;
-    customerName: string;
-  }>>`
-    SELECT c."id", c."customerId", s."userId" AS "sellerUserId", s."storeName",
-      COALESCE(customer."userName", 'مستخدم') AS "customerName"
-    FROM public.store_conversations c
-    JOIN public.sellers s ON s."id" = c."sellerId"
-    JOIN public.users customer ON customer."id" = c."customerId"
-    WHERE c."id" = ${conversationId}
-      AND (c."customerId" = ${userId} OR s."userId" = ${userId})
-    LIMIT 1
-  `;
-  return conversation ?? null;
-}
 
 export async function GET(_request: Request, { params }: RouteContext) {
   const user = await getAuthenticatedUser();
@@ -40,9 +29,15 @@ export async function GET(_request: Request, { params }: RouteContext) {
   if (!id || id.length > 128) return NextResponse.json({ error: 'معرف المحادثة غير صالح.' }, { status: 400 });
 
   try {
-    if (!(await isStoreMessagingAvailable())) {
+    const result = await loadStoreConversation(id, user.id, {
+      isAvailable: isStoreMessagingAvailable,
+      findForParticipant: findParticipantConversation,
+      listMessages: listConversationMessages,
+    });
+    if (result.status === 'unavailable') {
       return NextResponse.json({ error: 'نظام الرسائل غير متاح حتى يتم تجهيز قاعدة البيانات.' }, { status: 503 });
     }
+<<<<<<< HEAD
     const conversation = await findParticipantConversation(prisma, id, user.id);
     if (!conversation) return NextResponse.json({ error: 'المحادثة غير موجودة.' }, { status: 404 });
     const isStoreOwner = conversation.sellerUserId === user.id;
@@ -76,6 +71,10 @@ export async function GET(_request: Request, { params }: RouteContext) {
       messages,
       currentUserId: user.id,
     }, { headers: { 'Cache-Control': 'private, no-store' } });
+=======
+    if (result.status === 'not-found') return NextResponse.json({ error: 'المحادثة غير موجودة.' }, { status: 404 });
+    return NextResponse.json({ conversation: result.conversation, messages: result.messages }, { headers: { 'Cache-Control': 'private, no-store' } });
+>>>>>>> wael-work-in-progress
   } catch (error) {
     console.error('Unable to load store conversation:', error);
     return NextResponse.json({ error: 'تعذر تحميل المحادثة.' }, { status: 500 });
@@ -88,6 +87,7 @@ export async function POST(request: Request, { params }: RouteContext) {
   const { id } = await params;
   if (!id || id.length > 128) return NextResponse.json({ error: 'معرف المحادثة غير صالح.' }, { status: 400 });
 
+<<<<<<< HEAD
   const parsedBody = await readJsonBody(request, 16 * 1024);
   if (!parsedBody.ok) return NextResponse.json({ error: parsedBody.error }, { status: parsedBody.status });
   const payload: unknown = parsedBody.value;
@@ -95,27 +95,29 @@ export async function POST(request: Request, { params }: RouteContext) {
   const bodyInput = payload as Record<string, unknown>;
   const body = typeof bodyInput.body === 'string' ? bodyInput.body.trim() : '';
   if (!body || body.length > 4000) return NextResponse.json({ error: 'اكتب رسالة لا تتجاوز 4000 حرف.' }, { status: 400 });
+=======
+  let payload: unknown;
+  try {
+    payload = await request.json();
+  } catch {
+    return NextResponse.json({ error: 'صيغة الطلب غير صالحة.' }, { status: 400 });
+  }
+  const body = parseStoreMessageBody(payload);
+  if (!body) return NextResponse.json({ error: 'اكتب رسالة لا تتجاوز 4000 حرف.' }, { status: 400 });
+>>>>>>> wael-work-in-progress
 
   try {
-    if (!(await isStoreMessagingAvailable())) {
+    const result = await sendConversationMessage(id, user.id, body, {
+      isAvailable: isStoreMessagingAvailable,
+      withTransaction: withStoreMessageTransaction,
+      findForParticipant: findParticipantConversation,
+      insertMessage: insertStoreMessage,
+    });
+    if (result.status === 'unavailable') {
       return NextResponse.json({ error: 'نظام الرسائل غير متاح حتى يتم تجهيز قاعدة البيانات.' }, { status: 503 });
     }
-    const result = await prisma.$transaction(async (transaction) => {
-      const conversation = await findParticipantConversation(transaction, id, user.id);
-      if (!conversation) return null;
-      const recipientId = conversation.customerId === user.id
-        ? conversation.sellerUserId
-        : conversation.customerId;
-      const message = await insertStoreMessage(transaction, {
-        conversationId: conversation.id,
-        senderId: user.id,
-        recipientId,
-        body,
-      });
-      return { message };
-    });
-    if (!result) return NextResponse.json({ error: 'المحادثة غير موجودة.' }, { status: 404 });
-    return NextResponse.json(result, { status: 201 });
+    if (result.status === 'not-found') return NextResponse.json({ error: 'المحادثة غير موجودة.' }, { status: 404 });
+    return NextResponse.json({ message: result.message }, { status: 201 });
   } catch (error) {
     console.error('Unable to send store message:', error);
     return NextResponse.json({ error: 'تعذر إرسال الرسالة.' }, { status: 500 });
@@ -129,19 +131,16 @@ export async function PATCH(_request: Request, { params }: RouteContext) {
   if (!id || id.length > 128) return NextResponse.json({ error: 'معرف المحادثة غير صالح.' }, { status: 400 });
 
   try {
-    if (!(await isStoreMessagingAvailable())) {
+    const result = await markConversationRead(id, user.id, {
+      isAvailable: isStoreMessagingAvailable,
+      withTransaction: withStoreMessageTransaction,
+      findForParticipant: findParticipantConversation,
+      markRead: markConversationMessagesRead,
+    });
+    if (result.status === 'unavailable') {
       return NextResponse.json({ error: 'نظام الرسائل غير متاح حتى يتم تجهيز قاعدة البيانات.' }, { status: 503 });
     }
-    const conversation = await findParticipantConversation(prisma, id, user.id);
-    if (!conversation) return NextResponse.json({ error: 'المحادثة غير موجودة.' }, { status: 404 });
-
-    await prisma.$executeRaw`
-      UPDATE public.store_messages
-      SET "readAt" = NOW()
-      WHERE "conversationId" = ${id}
-        AND "senderId" <> ${user.id}
-        AND "readAt" IS NULL
-    `;
+    if (result.status === 'not-found') return NextResponse.json({ error: 'المحادثة غير موجودة.' }, { status: 404 });
     return NextResponse.json({ read: true });
   } catch (error) {
     console.error('Unable to mark store messages as read:', error);

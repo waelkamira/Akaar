@@ -1,7 +1,6 @@
 import { redirect } from 'next/navigation';
 import { getAdminUser } from '@/lib/auth/require-auth';
-import { prisma } from '@/lib/db/prisma';
-import { isReviewTableAvailable } from '@/lib/admin/review-table-availability';
+import { getProductReviewsOverview } from '@/lib/admin/reviews-repository';
 import AnalyticsPanel from '../../analytics-panel';
 
 export const dynamic = 'force-dynamic';
@@ -10,36 +9,7 @@ export default async function ProductReviewsPage() {
   const admin = await getAdminUser();
   if (!admin) redirect('/admin/dashboard');
 
-  const [reviewsAvailable, products] = await Promise.all([
-    isReviewTableAvailable(),
-    prisma.product.count({ where: { isDeleted: false } }),
-  ]);
-  const [ratings, reviews] = reviewsAvailable ? await Promise.all([
-    prisma.$queryRaw<Array<{ rating: number; count: number }>>`
-      SELECT rating, COUNT(*)::int AS count
-      FROM public.reviews
-      GROUP BY rating
-      ORDER BY rating ASC
-    `,
-    prisma.$queryRaw<Array<{
-      id: string;
-      rating: number;
-      comment: string | null;
-      createdAt: Date;
-      userName: string | null;
-      email: string;
-      productId: string;
-      productTitle: string;
-    }>>`
-      SELECT r.id, r.rating, r.comment, r."createdAt",
-        u."userName", u.email, p.id AS "productId", p.title AS "productTitle"
-      FROM public.reviews r
-      JOIN public.users u ON u.id = r."userId"
-      JOIN public.products p ON p.id = r."productId"
-      ORDER BY r."createdAt" DESC
-      LIMIT 30
-    `,
-  ]) : [[], []];
+  const { reviewsAvailable, products, ratings, reviews } = await getProductReviewsOverview();
   const reviewCount = ratings.reduce((sum, item) => sum + item.count, 0);
   const average = reviewCount ? ratings.reduce((sum, item) => sum + item.rating * item.count, 0) / reviewCount : 0;
 

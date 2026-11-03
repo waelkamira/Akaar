@@ -18,11 +18,12 @@ import Image from 'next/image';
 import LoadingPhoto from '../photos/LoadingPhoto';
 import { useCommerce } from '@/features/cart/commerce-context';
 import CategoryThumbnail from '@/components/Categories/CategoryThumbnail';
-import { isControlPanelAdmin } from '@/lib/auth/control-panel-access.mjs';
+import useControlPanelEntry from './use-control-panel-entry';
 
 export default function SideBarMenu() {
   const [isOpen, setIsOpen] = useState(false);
   const session = useSession();
+  const controlPanelEntryPath = useControlPanelEntry(session.data?.user, session.status);
   const pathname = usePathname();
   const { cartCount } = useCommerce();
   const dockLinks = [
@@ -108,8 +109,8 @@ export default function SideBarMenu() {
                   </div>
                 )}
 
-                {session?.status === 'authenticated' && isControlPanelAdmin(session.data?.user) && (
-                  <Button path={'/admin/control-panel'} title={'Control Panel'} />
+                {session?.status === 'authenticated' && controlPanelEntryPath && (
+                  <Button path={controlPanelEntryPath} title={'Control Panel'} />
                 )}
                 {session?.status === 'authenticated' && session?.data?.user?.role === 'ADMIN' && (
                   <>

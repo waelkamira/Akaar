@@ -5,19 +5,70 @@ import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 import { Search, ShoppingBag, ArrowUpLeft, Sparkles, Store, ShieldCheck, Truck, RefreshCw } from "lucide-react";
 
+<<<<<<< HEAD
 function formatPrice(value) {
   if (value === null || value === undefined || value === "") return "السعر عند الطلب";
   const amount = Number(value);
   return Number.isFinite(amount) ? new Intl.NumberFormat("ar", { maximumFractionDigits: 0 }).format(amount) : "السعر عند الطلب";
+=======
+function formatPrice(value, currency) {
+  if (typeof value !== 'number' || !Number.isFinite(value)) return null;
+  return new Intl.NumberFormat('ar', {
+    style: 'currency',
+    currency,
+    maximumFractionDigits: 4,
+  }).format(value);
+>>>>>>> wael-work-in-progress
 }
 
 function ProductCard({ product }) {
   const image = Array.isArray(product.images) ? product.images[0] : null;
+<<<<<<< HEAD
   return <article className="group overflow-hidden rounded-3xl border border-white/10 bg-[#202725] transition duration-300 hover:-translate-y-1 hover:border-orange-400/60">
     <Link href={`/posts/${encodeURIComponent(product.id)}`} className="block">
       <div className="relative aspect-[4/3] overflow-hidden bg-[#303936]">
         {image ? <Image src={image} alt={product.title || "منتج"} fill sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw" className="object-cover transition duration-500 group-hover:scale-105" unoptimized /> : <div className="flex h-full items-center justify-center text-white/35"><ShoppingBag size={38}/></div>}
         {product.categoryName ? <span className="absolute right-3 top-3 rounded-full bg-black/55 px-3 py-1 text-xs text-white backdrop-blur">{product.categoryName}</span> : null}
+=======
+  const price = formatPrice(product.basePrice, product.currency || 'USD');
+  const href = `/post/${encodeURIComponent(product.id)}`;
+  const available = product.stockQuantity === null || product.stockQuantity === undefined
+    ? true
+    : product.stockQuantity > 0;
+
+  return (
+    <article className="ak-panel group min-w-0 overflow-hidden transition duration-300 hover:-translate-y-1 hover:border-ak-amber/40">
+      <div className="relative aspect-[4/3] overflow-hidden bg-ak-raised">
+        {image ? (
+          <Link href={href} aria-label={`عرض ${product.title}`} className="absolute inset-0">
+            <Image
+              src={image}
+              alt={product.title}
+              fill
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+              className="object-cover transition duration-700 group-hover:scale-105"
+            />
+          </Link>
+        ) : (
+          <Link href={href} className="absolute inset-0 flex items-center justify-center text-4xl text-ak-amber/60" aria-label={`عرض ${product.title}`}>
+            <FaShoppingBag aria-hidden="true" />
+          </Link>
+        )}
+        <FavoriteButton item={product} />
+        {product.salesCount > 0 && (
+          <span className="absolute right-3 top-3 rounded-full border border-ak-line-strong bg-ak-ink/85 px-3 py-1.5 text-[10px] font-semibold text-ak-honey backdrop-blur-lg">
+            الأكثر طلبًا
+          </span>
+        )}
+        {price !== null && (
+          <div className="absolute bottom-3 left-3 rounded-2xl border border-white/20 bg-ak-ink/65 px-3.5 py-2.5 text-white shadow-lg backdrop-blur-xl">
+            <span className="block text-[9px] font-semibold text-white/65">السعر</span>
+            <span className="mt-1 flex items-baseline gap-1">
+              <span className="text-xl font-black leading-none">{price}</span>
+            </span>
+          </div>
+        )}
+>>>>>>> wael-work-in-progress
       </div>
       <div className="space-y-3 p-4"><h3 className="line-clamp-2 min-h-12 font-medium text-white">{product.title || "منتج جديد"}</h3><div className="flex items-end justify-between gap-2"><p className="font-bold text-orange-300">{formatPrice(product.basePrice)} <span className="text-xs font-normal text-white/60">ل.س</span></p><span className="inline-flex items-center gap-1 text-xs text-white/55">{product.city || "تسوّق عالمي"} <ArrowUpLeft size={13}/></span></div></div>
     </Link>
@@ -32,6 +83,7 @@ export default function HomePage() {
   const loadProducts = useCallback(async (searchTerm = "") => {
     setLoading(true); setError("");
     try {
+<<<<<<< HEAD
       const response = await fetch("/api/search", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ query: searchTerm, page: 1, limit: 12, filters: { sortBy: "newest" } }), cache: "no-store" });
       const payload = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(payload.error || "تعذر تحميل المنتجات الآن.");
@@ -42,6 +94,14 @@ export default function HomePage() {
   }, []);
   useEffect(() => { void loadProducts(); }, [loadProducts]);
   function submitSearch(event) { event.preventDefault(); const value = query.trim(); window.location.href = value ? `/search?q=${encodeURIComponent(value)}` : "/search"; }
+=======
+      addToCart(product);
+      toast.success('تمت إضافة المنتج إلى السلة');
+    } catch (error) {
+      toast.error(error?.message || 'تعذرت إضافة المنتج إلى السلة');
+    }
+  };
+>>>>>>> wael-work-in-progress
 
   return <main dir="rtl" className="min-h-screen bg-[#171c1a] text-[#f5f3ed]">
     <section className="relative isolate overflow-hidden border-b border-white/10"><div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_80%_10%,rgba(255,133,0,.22),transparent_38%),radial-gradient(ellipse_at_5%_100%,rgba(132,160,146,.15),transparent_38%)]"/>

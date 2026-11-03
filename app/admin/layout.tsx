@@ -1,13 +1,17 @@
 import { redirect } from 'next/navigation';
 import type { ReactNode } from 'react';
-import { getAuthenticatedUser } from '@/lib/auth/require-auth';
+import { getAuthenticatedUser, getControlPanelPermissions } from '@/lib/auth/require-auth';
 import { isControlPanelAdmin } from '@/lib/auth/control-panel-access.mjs';
+import { CONTROL_PANEL_PERMISSION_NAMES } from '@/lib/auth/control-panel-permissions.mjs';
 import AdminWorkspaceNav from './admin-workspace-nav';
 
 export default async function AdminLayout({ children }: Readonly<{ children: ReactNode }>) {
   const user = await getAuthenticatedUser();
   if (!user) redirect('/login');
-  if (user.role !== 'ADMIN') redirect('/');
+  const permissions = isControlPanelAdmin(user)
+    ? CONTROL_PANEL_PERMISSION_NAMES
+    : await getControlPanelPermissions(user.id);
+  if (user.role !== 'ADMIN' && !permissions.length) redirect('/');
 
   return (
     <div dir="rtl" className="min-h-screen bg-[#0b1020] text-slate-100">
@@ -29,7 +33,7 @@ export default async function AdminLayout({ children }: Readonly<{ children: Rea
         </div>
       </header>
       <div className="mx-auto flex max-w-[1600px] flex-col gap-5 px-3 py-4 sm:px-6 sm:py-6 lg:flex-row lg:items-start lg:gap-6">
-        <AdminWorkspaceNav canManageControlPanel={isControlPanelAdmin(user)} />
+        <AdminWorkspaceNav permissions={permissions} isPlatformAdmin={user.role === 'ADMIN'} />
         <div className="min-w-0 flex-1">{children}</div>
       </div>
     </div>

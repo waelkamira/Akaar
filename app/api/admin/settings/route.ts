@@ -40,7 +40,7 @@ export async function PUT(request: Request) {
     return NextResponse.json({ error: 'إعدادات المنصة غير صالحة.' }, { status: 400 });
   }
   if (entries.some(([key]) => key === 'stripeSandboxCheckoutEnabled')) {
-    if (!(await getControlPanelAdmin())) return NextResponse.json({ error: 'صلاحيات مدير لوحة التحكم مطلوبة لتغيير وسائل الدفع.' }, { status: 403 });
+    if (!(await getControlPanelAdmin('control_panel.finance.manage'))) return NextResponse.json({ error: 'صلاحيات إدارة المدفوعات مطلوبة لتغيير وسائل الدفع.' }, { status: 403 });
     if (body.stripeSandboxCheckoutEnabled === true && !isStripeSandboxConfigured()) {
       return NextResponse.json({ error: 'إعداد Stripe sandbox غير مكتمل.' }, { status: 503 });
     }

@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 import { getAdminUser } from '@/lib/auth/require-auth';
-import { prisma } from '@/lib/db/prisma';
+import { getAdminPropertyOverview } from '@/lib/properties/repository';
 import AnalyticsPanel from '../analytics-panel';
 import PropertiesClient, { type AdminListing } from './properties-client';
 
@@ -10,28 +10,7 @@ export default async function AdminPropertiesPage() {
   const admin = await getAdminUser();
   if (!admin) redirect('/admin/dashboard');
 
-  const [total, byStatus, published, listings] = await Promise.all([
-    prisma.property.count(),
-    prisma.property.groupBy({ by: ['status'], _count: { _all: true } }),
-    prisma.property.count({ where: { isPublished: true } }),
-    prisma.property.findMany({
-      orderBy: [{ createdAt: 'desc' }, { id: 'asc' }],
-      take: 100,
-      select: {
-        id: true,
-        title: true,
-        price: true,
-        currency: true,
-        location: true,
-        city: true,
-        status: true,
-        isPublished: true,
-        createdAt: true,
-        owner: { select: { email: true, userName: true } },
-        store: { select: { name: true } },
-      },
-    }),
-  ]);
+  const { total, byStatus, published, listings } = await getAdminPropertyOverview();
   const statusValue = (status: string) => byStatus.find((item) => item.status === status)?._count._all || 0;
   const items: AdminListing[] = listings.map((item) => ({ ...item, price: item.price.toString(), createdAt: item.createdAt.toISOString() }));
 

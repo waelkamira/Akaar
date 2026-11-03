@@ -16,17 +16,33 @@ import {
   Search,
   RotateCcw,
   Settings2,
+  ShieldCheck,
   ShoppingCart,
   Star,
   Store,
   Truck,
+<<<<<<< HEAD
   TicketPercent,
   Languages,
   Globe2,
+=======
+  type LucideIcon,
+>>>>>>> wael-work-in-progress
   Users,
 } from 'lucide-react';
 
-const sections = [
+type AdminSection = {
+  href: string;
+  label: string;
+  description: string;
+  keywords: string;
+  icon: LucideIcon;
+  tone?: string;
+  requiredPermission?: string;
+  platformAdminOnly?: boolean;
+};
+
+const sections: AdminSection[] = [
   {
     href: '/admin/dashboard',
     label: 'نظرة عامة',
@@ -34,6 +50,7 @@ const sections = [
     keywords: 'الرئيسية مؤشرات overview dashboard',
     icon: LayoutDashboard,
     tone: 'text-amber-300',
+    platformAdminOnly: true,
   },
   {
     href: '/admin/control-panel/products',
@@ -42,7 +59,16 @@ const sections = [
     keywords: 'المنتجات المخزون الكتالوج inventory catalog',
     icon: Boxes,
     tone: 'text-emerald-300',
-    controlPanel: true,
+    requiredPermission: 'control_panel.catalog.manage',
+  },
+  {
+    href: '/admin/control-panel/shipping',
+    label: 'الشحن والتوصيل',
+    description: 'شركات وخدمات ومناطق وأسعار الشحن',
+    keywords: 'الشحن التوصيل الناقل الخدمات المناطق الأسعار shipping delivery carrier rates',
+    icon: Truck,
+    tone: 'text-cyan-300',
+    requiredPermission: 'control_panel.shipping.manage',
   },
   {
     href: '/admin/dashboard#orders-fulfillment',
@@ -50,6 +76,7 @@ const sections = [
     description: 'حركة الطلبات والمبيعات',
     keywords: 'الطلبات الشحن التنفيذ orders sales fulfillment',
     icon: ShoppingCart,
+    platformAdminOnly: true,
   },
   {
     href: '/admin/control-panel/stores',
@@ -58,7 +85,7 @@ const sections = [
     keywords: 'البائعين المتاجر الموردين vendors sellers stores',
     icon: Store,
     tone: 'text-sky-300',
-    controlPanel: true,
+    requiredPermission: 'control_panel.stores.manage',
   },
   {
     href: '/admin/control-panel',
@@ -67,7 +94,7 @@ const sections = [
     keywords: 'العملاء المستخدمين الحسابات customers users',
     icon: Users,
     tone: 'text-violet-300',
-    controlPanel: true,
+    requiredPermission: 'control_panel.users.manage',
   },
   {
     href: '/admin/control-panel/subscribers',
@@ -76,7 +103,7 @@ const sections = [
     keywords: 'التسويق الاعلانات النشرة البريدية marketing advertising campaigns',
     icon: Megaphone,
     tone: 'text-pink-300',
-    controlPanel: true,
+    requiredPermission: 'control_panel.marketing.manage',
   },
   {
     href: '/admin/control-panel/payments',
@@ -85,7 +112,7 @@ const sections = [
     keywords: 'المالية المحاسبة الدفع المدفوعات finance accounting payments',
     icon: CircleDollarSign,
     tone: 'text-lime-300',
-    controlPanel: true,
+    requiredPermission: 'control_panel.finance.manage',
   },
   {
     href: '/admin/returns',
@@ -148,6 +175,7 @@ const sections = [
     keywords: 'التقييمات المراجعات الدعم الرسائل reviews support messages',
     icon: Headphones,
     tone: 'text-orange-300',
+    platformAdminOnly: true,
   },
   {
     href: '/admin/settings',
@@ -156,6 +184,7 @@ const sections = [
     keywords: 'الاعدادات المحتوى صفحات الموقع cms settings',
     icon: Settings2,
     tone: 'text-cyan-300',
+    platformAdminOnly: true,
   },
   {
     href: '/admin/dashboard#system-health',
@@ -164,6 +193,7 @@ const sections = [
     keywords: 'صحة النظام المراقبة التشغيل system health monitoring',
     icon: Activity,
     tone: 'text-teal-300',
+    platformAdminOnly: true,
   },
   {
     href: '/admin/reviews/stores',
@@ -172,6 +202,7 @@ const sections = [
     keywords: 'تقييمات المتاجر store reviews',
     icon: Star,
     tone: 'text-yellow-300',
+    platformAdminOnly: true,
   },
   {
     href: '/admin/control-panel/site-pages',
@@ -180,7 +211,7 @@ const sections = [
     keywords: 'صفحات الموقع محتوى cms site pages',
     icon: BarChart3,
     tone: 'text-indigo-300',
-    controlPanel: true,
+    requiredPermission: 'control_panel.content.manage',
   },
   {
     href: '/admin/properties',
@@ -189,22 +220,39 @@ const sections = [
     keywords: 'العقارات الاعلانات properties listings',
     icon: Building2,
     tone: 'text-fuchsia-300',
+    platformAdminOnly: true,
+  },
+  {
+    href: '/admin/control-panel/roles',
+    label: 'الأدوار والصلاحيات',
+    description: 'صلاحيات الوصول للوحة التحكم',
+    keywords: 'الأدوار الصلاحيات permissions roles rbac',
+    icon: ShieldCheck,
+    tone: 'text-rose-300',
+    requiredPermission: 'control_panel.roles.manage',
   },
 ];
 
-export default function AdminWorkspaceNav({ canManageControlPanel }: { canManageControlPanel: boolean }) {
+export default function AdminWorkspaceNav({
+  permissions,
+  isPlatformAdmin,
+}: {
+  permissions: string[];
+  isPlatformAdmin: boolean;
+}) {
   const pathname = usePathname();
   const [query, setQuery] = useState('');
   const visibleSections = useMemo(() => {
     const normalizedQuery = query.trim().toLocaleLowerCase();
     return sections.filter((section) => {
-      if (section.controlPanel && !canManageControlPanel) return false;
+      if (section.platformAdminOnly && !isPlatformAdmin) return false;
+      if (section.requiredPermission && !permissions.includes(section.requiredPermission)) return false;
       if (!normalizedQuery) return true;
       return `${section.label} ${section.description} ${section.keywords}`
         .toLocaleLowerCase()
         .includes(normalizedQuery);
     });
-  }, [canManageControlPanel, query]);
+  }, [isPlatformAdmin, permissions, query]);
 
   return (
     <aside className="w-full shrink-0 self-start lg:sticky lg:top-5 lg:w-[17rem]">

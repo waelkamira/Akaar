@@ -12,14 +12,14 @@ type PropertySummary = {
   city: string | null;
   location: string;
   images: string[];
-  status: 'AVAILABLE' | 'SOLD' | 'RENTED';
+  status: 'AVAILABLE' | 'RESERVED' | 'SOLD' | 'RENTED' | 'UNAVAILABLE';
 };
 
 type Booking = {
   id: string;
   quotedPrice: string;
   feeAmount: string;
-  feeCurrency: string;
+  currency: string;
   status: string;
   createdAt: string;
 };
@@ -72,7 +72,7 @@ export default function BookingCheckout({ property }: { property: PropertySummar
             <p className="mt-3 text-sm leading-7 text-stone-300">هذا طلب تجريبي بانتظار المراجعة. لم يتم تحصيل الرسوم ولم تُحجز أموال في حساب ضمان.</p>
             <dl className="mt-6 grid gap-4 rounded-2xl bg-ak-canvas p-4 sm:grid-cols-2">
               <div><dt className="text-xs text-stone-500">رقم الطلب</dt><dd className="mt-1 break-all font-mono text-sm">{booking.id}</dd></div>
-              <div><dt className="text-xs text-stone-500">رسوم الحجز التجريبية</dt><dd className="mt-1 font-bold text-ak-honey">{Number(booking.feeAmount).toFixed(2)} {booking.feeCurrency} · غير مدفوعة</dd></div>
+              <div><dt className="text-xs text-stone-500">رسوم طلب الحجز المرجعية</dt><dd className="mt-1 font-bold text-ak-honey">{Number(booking.feeAmount).toFixed(2)} {booking.currency} · غير مدفوعة</dd></div>
               <div><dt className="text-xs text-stone-500">سعر العقار وقت الطلب</dt><dd className="mt-1">{Number(booking.quotedPrice).toLocaleString()} {property.currency}</dd></div>
               <div><dt className="text-xs text-stone-500">الحالة</dt><dd className="mt-1">{booking.status === 'PENDING' ? 'قيد المراجعة' : booking.status}</dd></div>
             </dl>
@@ -92,7 +92,7 @@ export default function BookingCheckout({ property }: { property: PropertySummar
                 <>
                   <dl className="mt-5 space-y-4 rounded-2xl bg-ak-canvas p-4 text-sm">
                     <div className="flex justify-between gap-3"><dt className="text-stone-400">السعر المعروض</dt><dd>{Number(property.price).toLocaleString()} {property.currency}</dd></div>
-                    <div className="flex justify-between gap-3"><dt className="text-stone-400">رسوم طلب الحجز التجريبية</dt><dd className="font-bold">1.00 USD</dd></div>
+                    <div className="flex justify-between gap-3"><dt className="text-stone-400">رسوم طلب الحجز المرجعية</dt><dd className="font-bold">1.00 {property.currency}</dd></div>
                     <div className="border-t border-ak-line pt-3 text-xs leading-6 text-stone-500">سيعيد الخادم قراءة سعر العقار الحالي ويخزّن نسخة السعر عند إنشاء الطلب. لا نقبل السعر أو الرسوم من المتصفح.</div>
                   </dl>
                   <button type="button" onClick={() => { setStep(1); setError(''); }} className="mt-auto rounded-xl bg-ak-amber px-5 py-3 font-bold text-ak-ink">متابعة</button>
@@ -101,7 +101,7 @@ export default function BookingCheckout({ property }: { property: PropertySummar
                 <>
                   <div className="mt-5 rounded-2xl border border-amber-400/20 bg-amber-400/5 p-4 text-sm leading-7 text-amber-100">
                     <p className="font-bold">محاكاة فقط — ليست عملية دفع أو ضمان</p>
-                    <p className="mt-2 text-amber-100/70">رسوم 1 USD مرجعية لطلب الحجز فقط. لا يوجد مزود دفع متصل، ولن يتم خصم أو حجز أي مبلغ. سيتم إرسال الطلب للبائع للمراجعة.</p>
+                    <p className="mt-2 text-amber-100/70">قيمة 1 {property.currency} مرجعية لطلب الحجز فقط. لا يوجد مزود دفع متصل، ولن يتم خصم أو حجز أي مبلغ. سيتم إرسال الطلب للبائع للمراجعة.</p>
                   </div>
                   <label className="mt-5 flex items-start gap-3 text-sm leading-6 text-stone-300"><input type="checkbox" checked={accepted} onChange={(event) => setAccepted(event.target.checked)} className="mt-1 accent-ak-amber" />أفهم أنني أرسل طلب اهتمام تجريبيًا فقط، ولا أدفع رسومًا ولا أودع أموالًا.</label>
                   {error && <p role="alert" className="mt-4 rounded-xl border border-rose-400/20 bg-rose-400/10 p-3 text-sm text-rose-200">{error}</p>}

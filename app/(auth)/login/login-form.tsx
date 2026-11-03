@@ -62,6 +62,10 @@ export default function LoginForm() {
               <label className="block text-sm font-semibold">كلمة المرور
                 <input type="password" autoComplete="current-password" required value={password} onChange={(event) => setPassword(event.target.value)} className="mt-2 w-full rounded-xl border border-ak-line bg-ak-ink/70 px-4 py-3.5 outline-none transition duration-200 focus:border-ak-amber focus:ring-4 focus:ring-ak-amber/10" />
               </label>
+              <div className="flex flex-wrap justify-between gap-2 text-sm">
+                <Link href="/forgot-password" className="text-ak-honey hover:text-white">نسيت كلمة المرور؟</Link>
+                <Link href="/verify-email" className="text-ak-honey hover:text-white">إعادة إرسال رابط التفعيل</Link>
+              </div>
               {error && <p role="alert" className="rounded-xl border border-rose-400/20 bg-rose-400/10 p-3 text-sm text-rose-200">{error}</p>}
               <button type="submit" disabled={submitting} className="flex w-full items-center justify-center gap-2 rounded-xl bg-ak-amber px-5 py-3.5 font-bold text-ak-ink transition hover:bg-ak-honey disabled:cursor-wait disabled:opacity-60">{submitting && <span className="size-4 animate-spin rounded-full border-2 border-ak-canvas/30 border-t-ak-canvas" />}{submitting ? 'جارٍ التحقق...' : 'دخول إلى حسابي'}</button>
             </form>

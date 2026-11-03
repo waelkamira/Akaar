@@ -9,8 +9,8 @@ export const metadata: Metadata = {
 };
 
 export default async function ControlPanelPage() {
-  const admin = await getControlPanelAdmin();
+  const admin = await getControlPanelAdmin('control_panel.users.manage');
   if (!admin) redirect('/admin/dashboard');
 
-  return <ControlPanelClient />;
+  return <ControlPanelClient canViewInsights={admin.role === 'ADMIN'} canManageRoles={admin.permissions.includes('control_panel.roles.manage')} />;
 }

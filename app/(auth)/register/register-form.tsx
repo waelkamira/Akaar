@@ -2,23 +2,23 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 import { FormEvent, useState } from 'react';
 import WebsiteLogo from '@/components/Brand/WebsiteLogo';
 
 export default function RegisterForm() {
-  const router = useRouter();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [accountType, setAccountType] = useState<'CUSTOMER' | 'SELLER'>('CUSTOMER');
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError('');
+    setSuccess('');
     setSubmitting(true);
     try {
       const response = await fetch('/api/register', {
@@ -29,18 +29,8 @@ export default function RegisterForm() {
       const payload = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(payload?.error || 'تعذر إنشاء الحساب.');
 
-      const result = await signIn('credentials', {
-        email,
-        password,
-        redirect: false,
-        callbackUrl: '/',
-      });
-      if (result?.ok && !result.error) {
-        router.replace('/');
-        router.refresh();
-      } else {
-        router.replace('/login?registered=1');
-      }
+      setSuccess(payload?.message || 'تم إنشاء الحساب. تحقق من بريدك الإلكتروني لتفعيله.');
+      setSubmitting(false);
     } catch (submitError) {
       setError(submitError instanceof Error ? submitError.message : 'تعذر إنشاء الحساب حاليًا.');
       setSubmitting(false);
@@ -81,7 +71,8 @@ export default function RegisterForm() {
                 <span className="mt-2 block text-xs text-ak-quiet">8 أحرف على الأقل.</span>
               </label>
               {error && <p role="alert" className="rounded-xl border border-rose-400/20 bg-rose-400/10 p-3 text-sm text-rose-200">{error}</p>}
-              <button type="submit" disabled={submitting} className="flex w-full items-center justify-center gap-2 rounded-xl bg-ak-amber px-5 py-3.5 font-bold text-ak-ink transition hover:bg-ak-honey disabled:cursor-wait disabled:opacity-60">{submitting && <span className="size-4 animate-spin rounded-full border-2 border-ak-canvas/30 border-t-ak-canvas" />}{submitting ? 'جارٍ إنشاء الحساب...' : 'إنشاء حساب'}</button>
+              {success && <p role="status" className="rounded-xl border border-emerald-400/20 bg-emerald-400/10 p-3 text-sm text-emerald-100">{success} <Link href="/verify-email" className="font-bold underline">إعادة إرسال رابط التحقق</Link> · <Link href="/login" className="font-bold underline">تسجيل الدخول</Link></p>}
+              <button type="submit" disabled={submitting || Boolean(success)} className="flex w-full items-center justify-center gap-2 rounded-xl bg-ak-amber px-5 py-3.5 font-bold text-ak-ink transition hover:bg-ak-honey disabled:cursor-wait disabled:opacity-60">{submitting && <span className="size-4 animate-spin rounded-full border-2 border-ak-canvas/30 border-t-ak-canvas" />}{submitting ? 'جارٍ إنشاء الحساب...' : 'إنشاء حساب'}</button>
             </form>
             <div className="my-6 flex items-center gap-3 text-xs text-ak-quiet"><span className="h-px flex-1 bg-ak-line" />أو أنشئ حسابًا باستخدام<span className="h-px flex-1 bg-ak-line" /></div>
             <button type="button" onClick={() => void signIn('google', { callbackUrl: '/' })} className="flex w-full items-center justify-center gap-3 rounded-xl border border-ak-line-strong bg-ak-ink/25 px-4 py-3 text-sm font-semibold transition hover:border-ak-amber/35 hover:bg-ak-brand-soft"><Image src="/google.png" alt="" width={22} height={22} />Google</button>

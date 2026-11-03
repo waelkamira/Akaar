@@ -5,14 +5,17 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ChangeEvent, DragEvent, useEffect, useMemo, useRef, useState } from 'react';
 
-type PreviewImage = { id: string; name: string; url: string };
-type PropertyType = 'APARTMENT' | 'VILLA' | 'LAND';
+type PreviewImage = { id: string; name: string; url: string; file: File };
+type PropertyType = 'APARTMENT' | 'VILLA' | 'LAND' | 'COMMERCIAL' | 'OFFICE' | 'OTHER';
 
 const steps = ['بيانات العقار', 'الموقع', 'مراجعة الإعلان'];
 const typeNames: Record<PropertyType, string> = {
   APARTMENT: 'شقة',
   VILLA: 'فيلا',
   LAND: 'أرض',
+  COMMERCIAL: 'عقار تجاري',
+  OFFICE: 'مكتب',
+  OTHER: 'نوع آخر',
 };
 
 export default function PropertyCreateForm() {
@@ -25,7 +28,7 @@ export default function PropertyCreateForm() {
   const [price, setPrice] = useState('');
   const [currency, setCurrency] = useState('USD');
   const [type, setType] = useState<PropertyType>('APARTMENT');
-  const [country, setCountry] = useState('');
+  const [countryCode, setCountryCode] = useState('');
   const [city, setCity] = useState('');
   const [location, setLocation] = useState('');
   const [images, setImages] = useState<PreviewImage[]>([]);
@@ -59,7 +62,7 @@ export default function PropertyCreateForm() {
       }
       const url = URL.createObjectURL(file);
       imageUrlsRef.current.add(url);
-      accepted.push({ id: crypto.randomUUID(), name: file.name, url });
+      accepted.push({ id: crypto.randomUUID(), name: file.name, url, file });
     }
     if (selected.length > remaining) setError('يمكن إضافة 8 صور كحد أقصى.');
     if (accepted.length) setImages((current) => [...current, ...accepted]);
@@ -115,6 +118,19 @@ export default function PropertyCreateForm() {
     setSubmitting(true);
     setError('');
     try {
+      const uploadedImages = await Promise.all(images.map(async ({ file }) => {
+        const formData = new FormData();
+        formData.append('file', file);
+        const uploadResponse = await fetch('/api/uploadImageToImageKit', {
+          method: 'POST',
+          body: formData,
+        });
+        const uploadResult = await uploadResponse.json().catch(() => ({}));
+        if (!uploadResponse.ok || typeof uploadResult?.data?.url !== 'string') {
+          throw new Error(uploadResult?.error || 'تعذر رفع إحدى صور العقار.');
+        }
+        return uploadResult.data.url as string;
+      }));
       const response = await fetch('/api/properties', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -125,9 +141,9 @@ export default function PropertyCreateForm() {
           currency,
           type,
           location: location.trim(),
-          country: country.trim() || null,
+          countryCode: countryCode.trim() || null,
           city: city.trim() || null,
-          images: [],
+          images: uploadedImages,
           isPublished: true,
         }),
       });
@@ -194,7 +210,7 @@ export default function PropertyCreateForm() {
             <div className="space-y-5">
               <div className="grid gap-4 sm:grid-cols-2">
                 <label className="block text-sm font-semibold">الدولة
-                  <input value={country} onChange={(event) => setCountry(event.target.value)} maxLength={100} placeholder="الدولة" className="mt-2 w-full rounded-xl border border-ak-line bg-ak-canvas px-4 py-3 outline-none focus:border-ak-amber" />
+                  <input value={countryCode} onChange={(event) => setCountryCode(event.target.value.toUpperCase())} maxLength={2} placeholder="رمز الدولة (SY)" className="mt-2 w-full rounded-xl border border-ak-line bg-ak-canvas px-4 py-3 outline-none focus:border-ak-amber" />
                 </label>
                 <label className="block text-sm font-semibold">المدينة
                   <input value={city} onChange={(event) => setCity(event.target.value)} maxLength={120} placeholder="المدينة" className="mt-2 w-full rounded-xl border border-ak-line bg-ak-canvas px-4 py-3 outline-none focus:border-ak-amber" />
@@ -213,7 +229,7 @@ export default function PropertyCreateForm() {
                 <input ref={inputRef} type="file" accept="image/*" multiple onChange={handleFileChange} className="sr-only" aria-label="اختر صورًا للمعاينة" />
                 <span className="text-3xl" aria-hidden="true">↥</span>
                 <p className="mt-2 font-semibold">اسحب الصور إلى هنا أو اخترها من جهازك</p>
-                <p className="mt-1 text-xs text-stone-500">حتى 8 صور، 8 ميغابايت للصورة. معاينة محلية فقط؛ الملفات لن تُرفع أو تُحفظ ضمن الإعلان.</p>
+                <p className="mt-1 text-xs text-stone-500">حتى 8 صور، 8 ميغابايت للصورة. ستُرفع الصور وتُحفظ مع الإعلان عند النشر.</p>
               </label>
               {!!images.length && <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
                 {images.map((image) => <div key={image.id} className="relative aspect-square overflow-hidden rounded-xl border border-ak-line"><Image src={image.url} alt={`معاينة ${image.name}`} fill unoptimized sizes="25vw" className="object-cover" /><button type="button" onClick={() => removeImage(image.id)} aria-label={`إزالة ${image.name}`} className="absolute left-2 top-2 rounded-full bg-black/70 px-2 py-1 text-xs text-white">إزالة</button></div>)}
@@ -226,10 +242,10 @@ export default function PropertyCreateForm() {
               <div className="rounded-2xl border border-ak-line bg-ak-canvas p-5">
                 <p className="text-xs text-stone-500">معاينة الإعلان</p>
                 <h2 className="mt-2 text-2xl font-bold">{title}</h2>
-                <p className="mt-2 text-sm text-stone-400">{typeNames[type]} · {[city, country].filter(Boolean).join('، ') || location}</p>
+                <p className="mt-2 text-sm text-stone-400">{typeNames[type]} · {[city, countryCode].filter(Boolean).join('، ') || location}</p>
                 <p className="mt-4 text-2xl font-black text-ak-honey">{formattedPrice}</p>
                 <p className="mt-4 whitespace-pre-wrap text-sm leading-7 text-stone-300">{description || 'لم تتم إضافة وصف.'}</p>
-                <p className="mt-5 border-t border-ak-line pt-4 text-xs text-amber-200">صور المعاينة محلية ولن تُحفظ. أضف الصور بعد إعداد خدمة رفع الصور.</p>
+                <p className="mt-5 border-t border-ak-line pt-4 text-xs text-ak-quiet">تُرفع صور العقار بأمان عند نشر الإعلان.</p>
               </div>
               <p className="text-sm leading-6 text-stone-400">بالنشر، تؤكد أن بيانات الإعلان والسعر والموقع صحيحة.</p>
             </div>

@@ -3,10 +3,21 @@ import { consumeDurableRateLimit } from '@/lib/api/durable-rate-limit.mjs';
 import bcrypt from 'bcrypt';
 import { validateRegistrationInput } from '@/lib/auth/registration-validation.mjs';
 import { readJsonBody } from '@/lib/api/read-json-body.mjs';
+import { isSameOriginRequest } from '@/lib/api/same-origin.mjs';
+import { assignPlatformRole } from '@/lib/auth/roles.mjs';
+import { isAuthEmailConfigured } from '@/lib/auth/email.mjs';
+import { issueVerificationEmail } from '@/lib/auth/email-token-service.mjs';
 
 const MAX_REGISTRATION_BODY_BYTES = 16 * 1024;
 
 export async function POST(req) {
+  if (!isSameOriginRequest(req)) {
+    return new Response(JSON.stringify({ error: 'الطلب غير مسموح.' }), {
+      status: 403,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+
   const rateLimit = await consumeDurableRateLimit({
     request: req,
     scope: 'register',
@@ -35,6 +46,12 @@ export async function POST(req) {
     });
   }
   const { name, email, password, accountType } = validation;
+  if (!isAuthEmailConfigured()) {
+    return new Response(JSON.stringify({ error: 'خدمة التحقق من البريد غير مهيأة.' }), {
+      status: 503,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
 
   try {
     const existingUser = await prisma.user.findUnique({ where: { email } });
@@ -52,18 +69,36 @@ export async function POST(req) {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await prisma.user.create({
-      data: {
-        userName: name,
-        email,
-        password: hashedPassword,
-        userImage: '/placeholder.jpg',
-        role: accountType,
-      },
-      select: { id: true, userName: true, email: true, userImage: true },
+    const user = await prisma.$transaction(async (transaction) => {
+      const created = await transaction.user.create({
+        data: {
+          userName: name,
+          email,
+          passwordHash: hashedPassword,
+          imageUrl: '/placeholder.jpg',
+        },
+        select: { id: true, userName: true, email: true, imageUrl: true },
+      });
+      await assignPlatformRole(transaction, created.id, accountType);
+      return created;
     });
 
-    return new Response(JSON.stringify(user), {
+    try {
+      await issueVerificationEmail(user.email);
+    } catch (error) {
+      console.error('Unable to deliver registration verification email:', error);
+      return new Response(JSON.stringify({
+        error: 'تم إنشاء الحساب، لكن تعذر إرسال رابط التحقق. حاول طلب رابط جديد بعد قليل.',
+      }), {
+        status: 502,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+
+    return new Response(JSON.stringify({
+      created: true,
+      message: 'تم إنشاء الحساب. تحقق من بريدك الإلكتروني لتفعيله.',
+    }), {
       status: 201,
       headers: { 'Content-Type': 'application/json' },
     });

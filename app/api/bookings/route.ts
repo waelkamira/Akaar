@@ -11,27 +11,7 @@ const requestSchema = z.object({
   idempotencyKey: z.string().uuid(),
 });
 
-type LockedProperty = {
-  id: string;
-  title: string;
-  price: string;
-  currency: string;
-  status: 'AVAILABLE' | 'SOLD' | 'RENTED';
-  isPublished: boolean;
-};
-
-type BookingRow = {
-  id: string;
-  propertyId: string;
-  quotedPrice: string;
-  feeAmount: string;
-  feeCurrency: string;
-  status: 'PENDING' | 'CONFIRMED' | 'CANCELLED';
-  createdAt: Date;
-};
-
-const feeAmount = new Prisma.Decimal('1.00');
-const feeCurrency = 'USD';
+const referenceFee = new Prisma.Decimal('1.00');
 
 export async function POST(request: Request) {
   const user = await getAuthenticatedUser();
@@ -63,45 +43,44 @@ export async function POST(request: Request) {
   const { propertyId, idempotencyKey } = parsed.data;
   try {
     const result = await prisma.$transaction(async (transaction) => {
-      const [existingKey] = await transaction.$queryRaw<BookingRow[]>`
-        SELECT "id", "propertyId", "quotedPrice"::text, "feeAmount"::text, "feeCurrency", "status", "createdAt"
-        FROM "booking_requests"
-        WHERE "idempotencyKey" = ${idempotencyKey}
-        FOR UPDATE
-      `;
+      const existingKey = await transaction.bookingRequest.findUnique({
+        where: { idempotencyKey },
+      });
       if (existingKey) {
         if (existingKey.propertyId !== propertyId) throw new Error('IDEMPOTENCY_KEY_REUSED');
         return { booking: existingKey, reused: true };
       }
 
-      const [property] = await transaction.$queryRaw<LockedProperty[]>`
-        SELECT "id", "title", "price"::text, "currency", "status", "isPublished"
-        FROM "properties"
-        WHERE "id" = ${propertyId}
-        FOR UPDATE
-      `;
+      const pending = await transaction.bookingRequest.findFirst({
+        where: { userId: user.id, propertyId, status: 'PENDING' },
+        orderBy: { createdAt: 'desc' },
+      });
+      if (pending) return { booking: pending, reused: true };
+
+      const property = await transaction.property.findUnique({
+        where: { id: propertyId },
+        select: { id: true, price: true, currency: true, status: true, isPublished: true },
+      });
       if (!property || !property.isPublished) throw new Error('PROPERTY_NOT_FOUND');
       if (property.status !== 'AVAILABLE') throw new Error('PROPERTY_UNAVAILABLE');
 
-      const [pending] = await transaction.$queryRaw<BookingRow[]>`
-        SELECT "id", "propertyId", "quotedPrice"::text, "feeAmount"::text, "feeCurrency", "status", "createdAt"
-        FROM "booking_requests"
-        WHERE "userId" = ${user.id}
-          AND "propertyId" = ${propertyId}
-          AND "status" = 'PENDING'
-        ORDER BY "createdAt" DESC
-        LIMIT 1
-      `;
-      if (pending) return { booking: pending, reused: true };
+      const reservation = await transaction.property.updateMany({
+        where: { id: propertyId, isPublished: true, status: 'AVAILABLE' },
+        data: { status: 'RESERVED' },
+      });
+      if (reservation.count !== 1) throw new Error('PROPERTY_UNAVAILABLE');
 
-      const id = crypto.randomUUID();
-      const [booking] = await transaction.$queryRaw<BookingRow[]>`
-        INSERT INTO "booking_requests"
-          ("id", "idempotencyKey", "userId", "propertyId", "quotedPrice", "feeAmount", "feeCurrency", "status", "createdAt", "updatedAt")
-        VALUES
-          (${id}, ${idempotencyKey}, ${user.id}, ${propertyId}, ${property.price}::numeric, ${feeAmount.toString()}::numeric, ${feeCurrency}, 'PENDING', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
-        RETURNING "id", "propertyId", "quotedPrice"::text, "feeAmount"::text, "feeCurrency", "status", "createdAt"
-      `;
+      const booking = await transaction.bookingRequest.create({
+        data: {
+          idempotencyKey,
+          userId: user.id,
+          propertyId,
+          quotedPrice: property.price,
+          currency: property.currency,
+          feeAmount: referenceFee,
+          status: 'PENDING',
+        },
+      });
       return { booking, reused: false };
     }, { isolationLevel: Prisma.TransactionIsolationLevel.Serializable });
 
@@ -123,6 +102,18 @@ export async function POST(request: Request) {
     }
     if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2034') {
       return NextResponse.json({ error: 'Booking state changed concurrently. Please retry.' }, { status: 409 });
+    }
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+      const existing = await prisma.bookingRequest.findUnique({ where: { idempotencyKey } });
+      if (existing?.propertyId === propertyId && existing.userId === user.id) {
+        return NextResponse.json({
+          booking: existing,
+          reused: true,
+          simulated: true,
+          paymentProcessed: false,
+        }, { headers: { 'Cache-Control': 'private, no-store' } });
+      }
+      return NextResponse.json({ error: 'This booking request key has already been used.' }, { status: 409 });
     }
     console.error('Property booking request failed:', error);
     return NextResponse.json({ error: 'Unable to submit the booking request.' }, { status: 500 });

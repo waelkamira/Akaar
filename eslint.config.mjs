@@ -20,6 +20,30 @@ export default defineConfig([
       '@typescript-eslint/no-require-imports': 'off',
     },
   },
+  {
+    files: [
+      'components/**/*.{js,jsx,ts,tsx}',
+      'features/**/*.{js,jsx,ts,tsx}',
+      'app/**/{page,layout,loading,not-found,error,template,default,global-error}.{js,jsx,ts,tsx}',
+      'app/**/{sitemap,robots}.{js,ts}',
+    ],
+    rules: {
+      'no-restricted-imports': ['error', {
+        paths: [
+          {
+            name: '@prisma/client',
+            message: 'UI and feature modules must use application APIs instead of Prisma.',
+          },
+        ],
+        patterns: [
+          {
+            group: ['@/lib/db/**'],
+            message: 'UI and feature modules must use application APIs instead of database clients.',
+          },
+        ],
+      }],
+    },
+  },
   globalIgnores([
     '.next/**',
     'out/**',
