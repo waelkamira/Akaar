@@ -96,7 +96,7 @@ export default function ProfilePage() {
       const user = await responseJson<UserProfile & { user?: UserProfile }>(await fetch('/api/user', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userName: name, userImage: image.trim() || null }),
+        body: JSON.stringify({ userName: name, imageUrl: image.trim() || null }),
       }));
       const updatedProfile = user.user || user;
       setProfile((current) => current ? { ...current, ...updatedProfile } : updatedProfile);

@@ -19,18 +19,6 @@ function readPageParams(searchParams) {
   return getPagination(searchParams, { defaultPage: 1, defaultLimit: 5, maxLimit: MAX_PAGE_SIZE });
 }
 
-async function filterProductsForActiveStores(products) {
-  const sellerIds = [...new Set(products.map((product) => product.sellerId).filter(Boolean))];
-  if (!sellerIds.length) return products;
-
-  const activeSellers = await prisma.seller.findMany({
-    where: { id: { in: sellerIds }, status: 'ACTIVE', isVerified: true },
-    select: { id: true },
-  });
-  const activeSellerIds = new Set(activeSellers.map((seller) => seller.id));
-  return products.filter((product) => !product.sellerId || activeSellerIds.has(product.sellerId));
-}
-
 async function readJson(request) {
   const parsedBody = await readJsonBody(request, 128 * 1024);
   if (!parsedBody.ok || !isPlainObject(parsedBody.value)) return parsedBody;
@@ -50,28 +38,42 @@ export async function GET(request) {
 
   const { searchParams } = new URL(request.url);
   const { page, limit, skip } = readPageParams(searchParams);
-  const cacheKey = `products-page-v2-${page}-limit-${limit}`;
+  const requestedCurrency = searchParams.get('currency') || 'USD';
+  if (!/^[A-Za-z]{3}$/.test(requestedCurrency)) {
+    return NextResponse.json({ error: 'العملة المحددة غير صالحة.' }, { status: 400 });
+  }
+  const currency = requestedCurrency.toUpperCase();
+  const cacheKey = `products-page-v3-${page}-limit-${limit}-${currency}`;
   const cached = cache.get(cacheKey);
   try {
     if (cached) {
-      const visibleProducts = await filterProductsForActiveStores(cached);
-      const ratings = await getProductRatingSummaries(visibleProducts.map((product) => product.id));
-      return NextResponse.json(visibleProducts.map(({ sellerId, ...product }) => ({
+      const ratings = await getProductRatingSummaries(cached.map((product) => product.id));
+      return NextResponse.json(cached.map((product) => ({
         ...product,
         averageRating: ratings.get(product.id)?.average ?? null,
         reviewCount: ratings.get(product.id)?.count ?? 0,
       })));
     }
 
+    const now = new Date();
     const where = {
-      isDeleted: false,
       isActive: true,
-      approvalStatus: 'APPROVED',
-      category: { isActive: true },
-      OR: [
-        { sellerId: null },
-        { seller: { is: { status: 'ACTIVE', isVerified: true } } },
-      ],
+      status: 'APPROVED',
+      store: { isActive: true, seller: { status: 'ACTIVE', isVerified: true } },
+      categories: { some: { category: { isActive: true } } },
+      variants: {
+        some: {
+          status: 'ACTIVE',
+          prices: {
+            some: {
+              currency,
+              validFrom: { lte: now },
+              OR: [{ validUntil: null }, { validUntil: { gt: now } }],
+              currencyRef: { isActive: true },
+            },
+          },
+        },
+      },
     };
     // Avoid an extra COUNT query for normal catalog pages; verify unusually deep
     // offsets before asking PostgreSQL to skip through a large result set.
@@ -86,22 +88,102 @@ export async function GET(request) {
       skip,
       take: limit,
       orderBy: { createdAt: 'desc' },
-      select: {
-        id: true,
-        sellerId: true,
-        title: true,
-        categoryName: true,
-        images: true,
-        basePrice: true,
-        stockQuantity: true,
-        salesCount: true,
-        user: { select: productOwnerSelect },
+      include: {
+        categories: {
+          where: { category: { isActive: true } },
+          take: 1,
+          include: { category: { select: { name: true } } },
+        },
+        media: {
+          where: { mediaType: 'IMAGE' },
+          orderBy: [{ isPrimary: 'desc' }, { sortOrder: 'asc' }],
+          select: { storageKey: true },
+        },
+        store: {
+          select: {
+            name: true,
+            slug: true,
+            defaultLanguage: true,
+            seller: {
+              select: {
+                warehouses: {
+                  where: { isActive: true },
+                  select: { city: true },
+                  take: 1,
+                },
+              },
+            },
+          },
+        },
+        translations: { where: { language: 'ar' }, take: 1, select: { title: true, description: true } },
+        variants: {
+          where: {
+            status: 'ACTIVE',
+            prices: {
+              some: {
+                currency,
+                validFrom: { lte: now },
+                OR: [{ validUntil: null }, { validUntil: { gt: now } }],
+                currencyRef: { isActive: true },
+              },
+            },
+          },
+          orderBy: { createdAt: 'asc' },
+          take: 10,
+          include: {
+            prices: {
+              where: {
+                currency,
+                validFrom: { lte: now },
+                OR: [{ validUntil: null }, { validUntil: { gt: now } }],
+                currencyRef: { isActive: true },
+              },
+              orderBy: { validFrom: 'desc' },
+              take: 1,
+              include: { currencyRef: { select: { code: true, symbol: true, minorUnits: true } } },
+            },
+            inventory: {
+              where: { warehouse: { isActive: true } },
+              select: { onHand: true, reserved: true },
+            },
+          },
+        },
       },
     });
-    cache.set(cacheKey, products);
-    const visibleProducts = await filterProductsForActiveStores(products);
-    const ratings = await getProductRatingSummaries(visibleProducts.map((product) => product.id));
-    return NextResponse.json(visibleProducts.map(({ sellerId, ...product }) => ({
+    const productsForResponse = products.flatMap((product) => {
+      const variant = product.variants.find((candidate) => candidate.prices.length > 0);
+      const price = variant?.prices[0];
+      if (!variant || !price) return [];
+      const stockQuantity = variant.inventory.reduce(
+        (total, inventory) => total + Math.max(0, inventory.onHand - inventory.reserved),
+        0,
+      );
+      const images = product.media.map((media) => media.storageKey);
+      const basePrice = Number(price.amount);
+      const usdPriceCents = price.currencyRef.code === 'USD' ? Math.round(basePrice * 100) : null;
+      const translation = product.translations[0];
+      return [{
+        id: product.id,
+        variantId: variant.id,
+        title: translation?.title || product.title,
+        description: translation?.description || product.description,
+        categoryName: product.categories[0]?.category.name || '',
+        images,
+        image1: images[0] || '/placeholder.jpg',
+        basePrice,
+        compareAt: price.compareAt === null ? null : Number(price.compareAt),
+        currency: price.currencyRef.code,
+        currencySymbol: price.currencyRef.symbol || price.currencyRef.code,
+        usdPriceCents,
+        stockQuantity,
+        city: product.store.seller.warehouses[0]?.city || '',
+        storeName: product.store.name,
+        storeSlug: product.store.slug,
+      }];
+    });
+    cache.set(cacheKey, productsForResponse);
+    const ratings = await getProductRatingSummaries(productsForResponse.map((product) => product.id));
+    return NextResponse.json(productsForResponse.map((product) => ({
       ...product,
       averageRating: ratings.get(product.id)?.average ?? null,
       reviewCount: ratings.get(product.id)?.count ?? 0,

@@ -142,7 +142,7 @@ export default function StoresClient() {
   }
 
   async function deleteStore(store: Store) {
-    if (!window.confirm(`حذف متجر "${store.storeName}"؟ ستبقى المنتجات محفوظة، ولا يمكن حذف متجر له طلبات سابقة.`)) return;
+    if (!window.confirm(`إيقاف متجر "${store.storeName}"؟ ستبقى بيانات البائع والطلبات محفوظة في السجل.`)) return;
     setPending(true);
     setError('');
     setNotice('');
@@ -151,7 +151,7 @@ export default function StoresClient() {
       await readJson(await fetch(`/api/admin/control-panel/stores/${encodeURIComponent(store.id)}`, { method: 'DELETE' }));
       if (editingId === store.id) resetForm();
       await load(1, false, searchQuery);
-      setNotice('تم حذف المتجر.');
+      setNotice('تم إيقاف المتجر مع الحفاظ على سجلاته.');
     } catch (deleteError) {
       setError(deleteError instanceof Error ? deleteError.message : 'تعذر حذف المتجر.');
     } finally {

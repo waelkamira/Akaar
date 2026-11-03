@@ -301,14 +301,18 @@ import ManagedSiteBanner from '@/components/site/ManagedSiteBanner';
 
 const PAGE_SIZE = 12;
 
-function formatPrice(value) {
+function formatPrice(value, currency) {
   if (typeof value !== 'number' || !Number.isFinite(value)) return null;
-  return new Intl.NumberFormat('ar', { maximumFractionDigits: 0 }).format(value);
+  return new Intl.NumberFormat('ar', {
+    style: 'currency',
+    currency,
+    maximumFractionDigits: 4,
+  }).format(value);
 }
 
 function ProductCard({ product, onAddToCart }) {
   const image = Array.isArray(product.images) ? product.images[0] : null;
-  const price = formatPrice(product.basePrice);
+  const price = formatPrice(product.basePrice, product.currency || 'USD');
   const href = `/post/${encodeURIComponent(product.id)}`;
   const available = product.stockQuantity === null || product.stockQuantity === undefined
     ? true
@@ -343,7 +347,6 @@ function ProductCard({ product, onAddToCart }) {
             <span className="block text-[9px] font-semibold text-white/65">السعر</span>
             <span className="mt-1 flex items-baseline gap-1">
               <span className="text-xl font-black leading-none">{price}</span>
-              <span className="text-[10px] font-semibold text-white/75">ل.س</span>
             </span>
           </div>
         )}
@@ -442,14 +445,7 @@ export default function HomePage() {
 
   const handleAddToCart = (product) => {
     try {
-      addToCart({
-        id: product.id,
-        title: product.title,
-        basePrice: product.basePrice,
-        stockQuantity: Number.isInteger(product.stockQuantity) ? product.stockQuantity : 1,
-        images: product.images || [],
-        categoryName: product.categoryName,
-      });
+      addToCart(product);
       toast.success('تمت إضافة المنتج إلى السلة');
     } catch (error) {
       toast.error(error?.message || 'تعذرت إضافة المنتج إلى السلة');

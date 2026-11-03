@@ -6,12 +6,10 @@ import StorefrontProductCard from './storefront-product-card';
 type Product = {
   id: string;
   title: string;
-  description: string | null;
-  images: string[];
-  basePrice: number | null;
-  stockQuantity: number | null;
+  image: string | null;
+  priceLabel: string | null;
+  availableStock: number;
   categoryName: string;
-  city: string | null;
   averageRating: number | null;
   reviewCount: number;
 };
@@ -26,7 +24,7 @@ export default function StorefrontCatalog({
   selectedCategory,
 }: {
   products: Product[];
-  categories: string[];
+  categories: Array<{ slug: string; name: string }>;
   slug: string;
   page: number;
   hasMore: boolean;
@@ -53,7 +51,7 @@ export default function StorefrontCatalog({
         <label className="sr-only" htmlFor="shop-category">تصفية حسب الفئة</label>
         <select id="shop-category" name="category" defaultValue={selectedCategory} className="rounded-xl border border-ak-line bg-ak-surface px-4 py-3 text-sm outline-none focus:border-ak-amber/50">
           <option value="">كل الفئات</option>
-          {categories.map((item) => <option key={item} value={item}>{item}</option>)}
+          {categories.map((item) => <option key={item.slug} value={item.slug}>{item.name}</option>)}
         </select>
         <button type="submit" className="rounded-xl bg-ak-amber px-5 py-3 text-sm font-bold text-ak-ink">تصفية</button>
       </form>

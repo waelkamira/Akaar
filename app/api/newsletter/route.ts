@@ -1,44 +1,12 @@
-import { createHash, randomBytes } from 'node:crypto';
 import { NextResponse } from 'next/server';
 import { consumeDurableRateLimit } from '@/lib/api/durable-rate-limit.mjs';
 import { readJsonBody } from '@/lib/api/read-json-body.mjs';
 import { isSameOriginRequest } from '@/lib/api/same-origin.mjs';
 import { isPlainObject } from '@/lib/api/validation.mjs';
-import { prisma } from '@/lib/db/prisma';
-
-function hashToken(token: string) {
-  return createHash('sha256').update(token).digest('hex');
-}
+import { subscribeToNewsletter } from '@/lib/newsletter/service.mjs';
 
 function isEmail(value: string) {
   return value.length <= 254 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-}
-
-async function sendConfirmation(to: string, confirmationToken: string, unsubscribeToken: string) {
-  const baseUrl = process.env.APP_URL || process.env.NEXTAUTH_URL;
-  if (!baseUrl || !process.env.RESEND_API_KEY || !process.env.RESEND_FROM_EMAIL) {
-    throw new Error('NEWSLETTER_EMAIL_NOT_CONFIGURED');
-  }
-  const base = new URL(baseUrl);
-  if (base.protocol !== 'https:' && process.env.NODE_ENV === 'production') {
-    throw new Error('NEWSLETTER_APP_URL_MUST_USE_HTTPS');
-  }
-  const confirmUrl = new URL(`/newsletter/confirm?token=${encodeURIComponent(confirmationToken)}`, base).toString();
-  const unsubscribeUrl = new URL(`/newsletter/unsubscribe?token=${encodeURIComponent(unsubscribeToken)}`, base).toString();
-  const response = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: {
-      Authorization: 'Bearer ' + process.env.RESEND_API_KEY,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      from: process.env.RESEND_FROM_EMAIL,
-      to: [to],
-      subject: 'تأكيد الاشتراك في أخبار عقار',
-      text: `لتأكيد اشتراكك، افتح الرابط:\n${confirmUrl}\n\nلإلغاء الاشتراك في أي وقت:\n${unsubscribeUrl}`,
-    }),
-  });
-  if (!response.ok) throw new Error(`RESEND_DELIVERY_FAILED_${response.status}`);
 }
 
 export async function POST(request: Request) {
@@ -62,28 +30,8 @@ export async function POST(request: Request) {
   const email = typeof parsed.value.email === 'string' ? parsed.value.email.trim().toLowerCase() : '';
   if (!isEmail(email)) return NextResponse.json({ error: 'أدخل بريدًا إلكترونيًا صالحًا.' }, { status: 400 });
 
-  const existing = await prisma.newsletterSubscriber.findUnique({ where: { email } });
-  if (existing?.confirmedAt && !existing.unsubscribedAt) {
-    return NextResponse.json({ message: 'إذا كان الاشتراك متاحًا لهذا البريد فستصلك رسالة تأكيد.' }, { status: 202 });
-  }
-
-  const confirmationToken = randomBytes(32).toString('base64url');
-  const unsubscribeToken = randomBytes(32).toString('base64url');
-  const data = {
-    confirmationTokenHash: hashToken(confirmationToken),
-    unsubscribeTokenHash: hashToken(unsubscribeToken),
-    confirmedAt: null,
-    unsubscribedAt: null,
-    updatedAt: new Date(),
-  };
-
   try {
-    await prisma.newsletterSubscriber.upsert({
-      where: { email },
-      create: { email, ...data },
-      update: data,
-    });
-    await sendConfirmation(email, confirmationToken, unsubscribeToken);
+    await subscribeToNewsletter(email);
     return NextResponse.json({ message: 'إذا كان الاشتراك متاحًا لهذا البريد فستصلك رسالة تأكيد.' }, { status: 202 });
   } catch (error) {
     console.error('Unable to create or deliver newsletter confirmation:', error);

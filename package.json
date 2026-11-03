@@ -16,7 +16,8 @@
     "db:test:setup": "node scripts/prisma-test-db.mjs setup",
     "db:test:reset": "node scripts/prisma-test-db.mjs reset",
     "db:test:stop": "node scripts/prisma-test-db.mjs stop",
-    "test:search-db:local": "node scripts/prisma-test-db.mjs test"
+    "test:search-db:local": "node scripts/prisma-test-db.mjs test",
+    "verify:prisma-env": "node scripts/verify-prisma-env.mjs"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",

@@ -7,6 +7,14 @@ import { FaMinus, FaPlus, FaTrash, FaShoppingCart, FaCheckCircle } from 'react-i
 import { useCommerce } from '@/features/cart/commerce-context';
 import { motion } from 'framer-motion';
 
+function formatMoney(value, currency) {
+  return new Intl.NumberFormat('ar', {
+    style: 'currency',
+    currency,
+    maximumFractionDigits: 4,
+  }).format(value);
+}
+
 export default function CartPage() {
   const {
     cartItems,
@@ -23,6 +31,11 @@ export default function CartPage() {
   const [submitting, setSubmitting] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState('CASH_ON_DELIVERY');
   const [paymentMethods, setPaymentMethods] = useState({ cashOnDeliveryEnabled: true, stripeSandboxCheckoutEnabled: false });
+  const [countries, setCountries] = useState([]);
+  const [countryError, setCountryError] = useState('');
+  const [shippingCountryCode, setShippingCountryCode] = useState('SY');
+  const [shippingRateId, setShippingRateId] = useState('');
+  const [shippingQuoteResult, setShippingQuoteResult] = useState({ key: '', quotes: [], error: '' });
 
   useEffect(() => {
     let active = true;
@@ -41,13 +54,93 @@ export default function CartPage() {
     return () => { active = false; };
   }, []);
 
-  const stripePricesAvailable = cartItems.length > 0 && cartItems.every(
-    (item) => Number.isSafeInteger(item.usdPriceCents) && item.usdPriceCents >= 50,
+  useEffect(() => {
+    let active = true;
+    fetch('/api/shipping/countries', { cache: 'no-store' })
+      .then(async (response) => {
+        const payload = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(payload?.error || 'تعذر تحميل بلدان الشحن.');
+        return payload;
+      })
+      .then((payload) => {
+        if (!active) return;
+        const availableCountries = Array.isArray(payload.countries) ? payload.countries : [];
+        setCountries(availableCountries);
+        setCountryError('');
+        setShippingCountryCode((current) => availableCountries.some((country) => country.code === current)
+          ? current
+          : availableCountries[0]?.code || '');
+      })
+      .catch((error) => {
+        console.error('Unable to load shipping countries:', error);
+        if (active) setCountryError(error.message);
+      });
+    return () => { active = false; };
+  }, []);
+
+  const currency = cartItems[0]?.currency || 'USD';
+  const quoteRequestKey = `${shippingCountryCode}:${currency}:${cartItems
+    .map(({ variantId, quantity }) => `${variantId}:${quantity}`)
+    .sort()
+    .join(',')}`;
+  const currentShippingQuoteResult = shippingQuoteResult.key === quoteRequestKey
+    ? shippingQuoteResult
+    : null;
+  const shippingQuotes = currentShippingQuoteResult?.quotes || [];
+  const shippingQuoteError = currentShippingQuoteResult?.error || '';
+  const loadingShippingQuotes = Boolean(
+    hasHydrated && cartItems.length && shippingCountryCode && !currentShippingQuoteResult,
   );
+
+  useEffect(() => {
+    if (!hasHydrated || !cartItems.length || !shippingCountryCode) {
+      return undefined;
+    }
+
+    const controller = new AbortController();
+    fetch('/api/shipping/quote', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        countryCode: shippingCountryCode,
+        currency,
+        items: cartItems.map(({ variantId, quantity }) => ({ variantId, quantity })),
+      }),
+      cache: 'no-store',
+      signal: controller.signal,
+    })
+      .then(async (response) => {
+        const payload = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(payload?.error || 'تعذر حساب أسعار الشحن.');
+        return payload;
+      })
+      .then((payload) => {
+        const quotes = Array.isArray(payload.quotes) ? payload.quotes : [];
+        setShippingQuoteResult({ key: quoteRequestKey, quotes, error: '' });
+        setShippingRateId((current) => quotes.some((quote) => quote.rateId === current)
+          ? current
+          : quotes[0]?.rateId || '');
+      })
+      .catch((error) => {
+        if (error.name !== 'AbortError') {
+          console.error('Unable to load shipping quotes:', error);
+          setShippingQuoteResult({ key: quoteRequestKey, quotes: [], error: error.message });
+          setShippingRateId('');
+        }
+      });
+
+    return () => controller.abort();
+  }, [cartItems, currency, hasHydrated, quoteRequestKey, shippingCountryCode]);
+
+  const selectedShippingQuote = shippingQuotes.find((quote) => quote.rateId === shippingRateId);
   const stripeTotalCents = cartItems.reduce(
     (sum, item) => sum + (Number.isSafeInteger(item.usdPriceCents) ? item.usdPriceCents * item.quantity : 0),
     0,
-  );
+  ) + (selectedShippingQuote?.currency === 'USD' ? Math.round(selectedShippingQuote.amount * 100) : 0);
+  const stripePricesAvailable = currency === 'USD'
+    && cartItems.length > 0
+    && cartItems.every((item) => Number.isSafeInteger(item.usdPriceCents) && item.usdPriceCents > 0)
+    && stripeTotalCents >= 50;
 
   const handleCheckout = async (event) => {
     event.preventDefault();
@@ -61,11 +154,14 @@ export default function CartPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          items: cartItems.map(({ id, quantity }) => ({ id, quantity })),
+          items: cartItems.map(({ variantId, quantity }) => ({ variantId, quantity })),
+          currency,
           customerName: formData.get('name'),
           phoneNumber: formData.get('phone'),
           shippingCity: formData.get('city'),
           shippingAddress: formData.get('address'),
+          shippingCountryCode,
+          shippingRateId,
           paymentMethod,
         }),
       });
@@ -197,7 +293,7 @@ export default function CartPage() {
                   <div className="space-y-3 flex flex-col justify-center">
                     <h2 className="font-bold text-white text-lg line-clamp-1">{item.title}</h2>
                     <p className="text-lg font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-400">
-                      {item.basePrice.toLocaleString('ar-SY')} <span className="text-sm font-bold text-neutral-400">ل.س</span>
+                      {formatMoney(item.basePrice, item.currency)}
                     </p>
                     
                     <div className="flex items-center gap-4">
@@ -206,7 +302,7 @@ export default function CartPage() {
                           type="button"
                           aria-label="زيادة الكمية"
                           disabled={item.quantity >= item.stockQuantity}
-                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                          onClick={() => updateQuantity(item.variantId, item.quantity + 1)}
                           className="w-8 h-8 flex items-center justify-center rounded-lg bg-neutral-700 hover:bg-orange-600 hover:text-white text-neutral-300 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                         >
                           <FaPlus className="text-xs" />
@@ -216,7 +312,7 @@ export default function CartPage() {
                           type="button"
                           aria-label="تقليل الكمية"
                           disabled={item.quantity <= 1}
-                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                          onClick={() => updateQuantity(item.variantId, item.quantity - 1)}
                           className="w-8 h-8 flex items-center justify-center rounded-lg bg-neutral-700 hover:bg-orange-600 hover:text-white text-neutral-300 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                         >
                           <FaMinus className="text-xs" />
@@ -226,7 +322,7 @@ export default function CartPage() {
                       <button
                         type="button"
                         aria-label={`إزالة ${item.title} من السلة`}
-                        onClick={() => removeFromCart(item.id)}
+                        onClick={() => removeFromCart(item.variantId)}
                         className="flex items-center gap-2 text-sm font-bold text-red-400 hover:text-red-300 hover:bg-red-500/10 px-3 py-2 rounded-xl transition-colors"
                       >
                         <FaTrash className="text-xs" />
@@ -253,16 +349,22 @@ export default function CartPage() {
               <div className="space-y-3 mb-6">
                 <div className="flex justify-between text-neutral-400">
                   <span>المجموع الفرعي</span>
-                  <span className="text-white font-bold">{cartTotal.toLocaleString('ar-SY')} ل.س</span>
+                  <span className="text-white font-bold">{formatMoney(cartTotal, currency)}</span>
                 </div>
                 <div className="flex justify-between text-neutral-400">
-                  <span>الشحن التجريبي</span>
-                  <span className="text-emerald-400 font-bold">مجاني</span>
+                  <span>الشحن</span>
+                  <span className="text-white font-bold">
+                    {loadingShippingQuotes
+                      ? 'جارٍ الحساب...'
+                      : selectedShippingQuote
+                        ? formatMoney(selectedShippingQuote.amount, selectedShippingQuote.currency)
+                        : 'اختر خدمة شحن'}
+                  </span>
                 </div>
                 <div className="flex justify-between border-t border-neutral-800 pt-4 mt-4">
                   <span className="text-lg font-black text-white">الإجمالي</span>
                   <span className="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-400">
-                    {cartTotal.toLocaleString('ar-SY')} ل.س
+                    {formatMoney(cartTotal + (selectedShippingQuote?.amount || 0), currency)}
                   </span>
                 </div>
               </div>
@@ -313,6 +415,23 @@ export default function CartPage() {
                     className="w-full bg-neutral-800/50 border border-neutral-700/50 focus-within:border-orange-500/50 focus-within:ring-1 focus-within:ring-orange-500/20 rounded-xl px-4 py-3 text-white placeholder-neutral-500 focus:outline-none transition-all"
                   />
                 </div>
+
+                <div className="space-y-1.5">
+                  <label htmlFor="shipping-country" className="block text-sm font-bold text-neutral-300">بلد التوصيل</label>
+                  <select
+                    id="shipping-country"
+                    name="countryCode"
+                    required
+                    value={shippingCountryCode}
+                    onChange={(event) => setShippingCountryCode(event.target.value)}
+                    disabled={!countries.length}
+                    className="w-full rounded-xl border border-neutral-700/50 bg-neutral-800/50 px-4 py-3 text-white focus:outline-none"
+                  >
+                    {countries.map((country) => (
+                      <option key={country.code} value={country.code}>{country.name}</option>
+                    ))}
+                  </select>
+                </div>
                 
                 <div className="space-y-1.5">
                   <label className="block text-sm font-bold text-neutral-300">المدينة</label>
@@ -337,6 +456,34 @@ export default function CartPage() {
                   />
                 </div>
 
+                <fieldset className="space-y-2 rounded-xl border border-neutral-700 p-3">
+                  <legend className="px-1 text-sm font-bold text-neutral-300">خدمة الشحن</legend>
+                  {loadingShippingQuotes && <p className="text-xs text-neutral-400">جارٍ حساب تكلفة الشحن...</p>}
+                  {!loadingShippingQuotes && shippingQuotes.map((quote) => (
+                    <label key={quote.rateId} className="flex items-center justify-between gap-3 text-sm text-neutral-200">
+                      <span className="flex items-center gap-2">
+                        <input
+                          type="radio"
+                          name="shipping-service"
+                          value={quote.rateId}
+                          checked={shippingRateId === quote.rateId}
+                          onChange={() => setShippingRateId(quote.rateId)}
+                        />
+                        {quote.carrierName} · {quote.serviceName}
+                      </span>
+                      <span className="font-bold">{formatMoney(quote.amount, quote.currency)}</span>
+                    </label>
+                  ))}
+                  {!loadingShippingQuotes && shippingQuotes.length === 0 && (
+                    <p className="text-xs text-amber-200">
+                      {countryError || shippingQuoteError || 'لا توجد خدمة شحن مهيأة لهذا البلد والعملة.'}
+                    </p>
+                  )}
+                  {shippingQuoteError && shippingQuotes.length > 0 && (
+                    <p role="alert" className="text-xs text-rose-200">{shippingQuoteError}</p>
+                  )}
+                </fieldset>
+
                 {checkoutError && (
                   <p role="alert" className="rounded-xl border border-rose-500/30 bg-rose-500/10 p-3 text-sm text-rose-200">
                     {checkoutError} {requiresLogin && <Link href="/login?callbackUrl=%2Fcart" className="underline">تسجيل الدخول</Link>}
@@ -345,7 +492,7 @@ export default function CartPage() {
 
                 <button
                   type="submit"
-                  disabled={submitting || (paymentMethod === 'STRIPE' && !stripePricesAvailable) || (paymentMethod === 'CASH_ON_DELIVERY' && !paymentMethods.cashOnDeliveryEnabled)}
+                  disabled={submitting || loadingShippingQuotes || !selectedShippingQuote || (paymentMethod === 'STRIPE' && (!stripePricesAvailable || currency !== 'USD')) || (paymentMethod === 'CASH_ON_DELIVERY' && !paymentMethods.cashOnDeliveryEnabled)}
                   className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 px-6 py-4 font-black text-white transition-all hover:from-orange-700 hover:to-amber-700 disabled:cursor-wait disabled:opacity-60"
                 >
                   <FaCheckCircle />
@@ -355,7 +502,7 @@ export default function CartPage() {
               
               <p className="mt-4 text-xs leading-5 text-neutral-500 text-center bg-neutral-800/30 p-3 rounded-xl border border-neutral-800">
                 {paymentMethod === 'STRIPE'
-                  ? 'سيظهر مبلغ الدولار المحدد من الإدارة. لا يُعد الطلب مدفوعًا حتى يؤكد Stripe الدفع عبر webhook موثّق.'
+                  ? 'يُعاد احتساب سعر المنتجات والشحن من الخادم. لا يُعد الطلب مدفوعًا حتى يؤكد Stripe الدفع عبر webhook موثّق.'
                   : 'لا يتم تحصيل الدفع إلكترونيًا؛ سيبقى المبلغ غير مدفوع حتى اكتمال التسليم.'}
               </p>
             </motion.aside>

@@ -10,7 +10,7 @@ import mainButtons from '../lists/mainButtons';
 import { useCommerce } from '@/features/cart/commerce-context';
 import Search from '@/components/Search/Search';
 import WebsiteLogo from '@/components/Brand/WebsiteLogo';
-import { isControlPanelAdmin } from '@/lib/auth/control-panel-access.mjs';
+import useControlPanelEntry from './use-control-panel-entry';
 
 export default function FirstNavBar() {
   const pathname = usePathname();
@@ -19,6 +19,7 @@ export default function FirstNavBar() {
   const [profileOpen, setProfileOpen] = useState(false);
   const profileRef = useRef(null);
   const user = session?.user;
+  const controlPanelEntryPath = useControlPanelEntry(user, status);
   const userName = user?.userName || user?.name || user?.email?.split('@')[0] || 'مستخدم';
   const userImage = user?.userImage || user?.image;
 
@@ -124,6 +125,16 @@ export default function FirstNavBar() {
                           <FaUserCircle aria-hidden="true" /> لوحة الإدارة
                         </Link>
                       )}
+                      {controlPanelEntryPath && (
+                        <Link
+                          href={controlPanelEntryPath}
+                          role="menuitem"
+                          onClick={() => setProfileOpen(false)}
+                          className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-semibold text-white transition hover:bg-ak-brand-soft hover:text-ak-honey"
+                        >
+                          لوحة التحكم
+                        </Link>
+                      )}
                       <Link
                         href="/notifications"
                         role="menuitem"
@@ -210,11 +221,11 @@ export default function FirstNavBar() {
                 </li>
               );
             })}
-            {isControlPanelAdmin(user) && (
+            {controlPanelEntryPath && (
               <li className="shrink-0">
                 <Link
-                  href="/admin/control-panel"
-                  aria-current={pathname === '/admin/control-panel' ? 'page' : undefined}
+                  href={controlPanelEntryPath}
+                  aria-current={pathname === controlPanelEntryPath ? 'page' : undefined}
                   className="inline-flex h-11 items-center justify-center rounded-xl border border-ak-amber/30 bg-ak-brand-soft px-3.5 text-xs font-bold text-ak-honey transition hover:bg-ak-amber/20"
                 >
                   Control Panel

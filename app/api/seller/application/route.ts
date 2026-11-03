@@ -4,6 +4,7 @@ import ImageKit from 'imagekit';
 import { getAuthenticatedUser } from '@/lib/auth/require-auth';
 import { isMarketplaceEnabled } from '@/lib/marketplace/settings';
 import { prisma } from '@/lib/db/prisma';
+import { serializeSellerApplicationDetails } from '@/lib/seller/application.mjs';
 
 function makeSlug(value: string) {
   const slug = value
@@ -130,35 +131,75 @@ export async function POST(request: Request) {
   }
 
   try {
-    const existing = await prisma.seller.findUnique({ where: { userId: user.id } });
-    if (existing) {
-      return NextResponse.json({ error: 'لديك طلب بائع أو متجر مسجل بالفعل.' }, { status: 409 });
-    }
-
-    const seller = await prisma.seller.create({
-      data: {
-        userId: user.id,
-        storeName,
-        description: description || null,
-        contactName,
-        contactEmail,
-        phoneNumber,
-        residence,
-        latitude,
-        longitude,
-        businessType,
-        sellingCategories,
-        intendedProducts,
-        identityDocumentFileId: identityDocumentFileId || null,
-        ...socialUrls,
-        slug: makeSlug(storeName),
-        status: 'PENDING',
-        isVerified: false,
-      },
-      select: { id: true, storeName: true, slug: true, status: true },
+    const slug = makeSlug(storeName);
+    const seller = await prisma.$transaction(async (transaction) => {
+      const createdSeller = await transaction.seller.create({
+        data: {
+          userId: user.id,
+          displayName: storeName,
+          slug,
+          sellerType: businessType,
+          description: description || null,
+          status: 'PENDING',
+          isVerified: false,
+        },
+        select: { id: true, displayName: true, slug: true, status: true },
+      });
+      await transaction.store.create({
+        data: {
+          sellerId: createdSeller.id,
+          name: storeName,
+          slug,
+          description: description || null,
+          defaultLanguage: 'ar',
+          isActive: false,
+        },
+      });
+      const verification = await transaction.sellerVerification.create({
+        data: {
+          sellerId: createdSeller.id,
+          status: 'PENDING',
+          submittedAt: new Date(),
+          notes: serializeSellerApplicationDetails({
+            contactName,
+            contactEmail,
+            phoneNumber,
+            residence,
+            sellingCategories,
+            intendedProducts,
+            ...socialUrls,
+            latitude,
+            longitude,
+          }),
+        },
+        select: { id: true },
+      });
+      if (identityDocumentFileId) {
+        await transaction.sellerDocument.create({
+          data: {
+            sellerId: createdSeller.id,
+            verificationId: verification.id,
+            type: 'IDENTITY',
+            storageKey: identityDocumentFileId,
+            status: 'PENDING',
+          },
+        });
+      }
+      await transaction.user.update({
+        where: { id: user.id },
+        data: { phone: normalizedPhone },
+      });
+      return createdSeller;
     });
 
-    return NextResponse.json({ seller }, { status: 201 });
+    return NextResponse.json({
+      seller: {
+        id: seller.id,
+        storeName: seller.displayName,
+        slug: seller.slug,
+        status: seller.status,
+      },
+    }, { status: 201 });
   } catch (error) {
     if (typeof error === 'object' && error !== null && 'code' in error && error.code === 'P2002') {
       return NextResponse.json({ error: 'لديك طلب بائع أو متجر مسجل بالفعل.' }, { status: 409 });

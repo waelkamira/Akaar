@@ -12,12 +12,12 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'Search filters are invalid.', details: filters.error.flatten() }, { status: 400 });
   }
 
-  const { q, minPrice, maxPrice, type, status, country, city, location, cursor, limit } = filters.data;
+  const { q, minPrice, maxPrice, type, status, countryCode, city, location, cursor, limit } = filters.data;
   const where: Prisma.PropertyWhereInput = {
     isPublished: true,
     status: status as PropertyStatus,
     ...(type ? { type: type as PropertyType } : {}),
-    ...(country ? { country: { equals: country, mode: 'insensitive' } } : {}),
+    ...(countryCode ? { countryCode } : {}),
     ...(city ? { city: { equals: city, mode: 'insensitive' } } : {}),
     ...(location ? { location: { contains: location, mode: 'insensitive' } } : {}),
     ...((minPrice !== undefined || maxPrice !== undefined) ? {
@@ -32,7 +32,7 @@ export async function GET(request: Request) {
         { description: { contains: q, mode: 'insensitive' } },
         { location: { contains: q, mode: 'insensitive' } },
         { city: { contains: q, mode: 'insensitive' } },
-        { country: { contains: q, mode: 'insensitive' } },
+        { countryCode: { contains: q, mode: 'insensitive' } },
       ],
     } : {}),
   };
@@ -50,9 +50,9 @@ export async function GET(request: Request) {
         price: true,
         currency: true,
         location: true,
-        country: true,
+        countryCode: true,
         city: true,
-        images: true,
+        media: { orderBy: [{ sortOrder: 'asc' }, { id: 'asc' }], select: { storageKey: true } },
         status: true,
         type: true,
         attributes: true,
@@ -62,7 +62,10 @@ export async function GET(request: Request) {
     });
 
     const hasMore = items.length > limit;
-    const properties = hasMore ? items.slice(0, limit) : items;
+    const properties = (hasMore ? items.slice(0, limit) : items).map(({ media, ...property }) => ({
+      ...property,
+      images: media.map((item) => item.storageKey),
+    }));
     return NextResponse.json({
       properties,
       hasMore,
@@ -98,52 +101,60 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Property details are invalid.', details: input.error.flatten() }, { status: 400 });
   }
 
-  let ownerId: string;
   let seller: {
     id: string;
     userId: string;
-    storeName: string;
+    displayName: string;
     slug: string;
     description: string | null;
-    logo: string | null;
     status: string;
     isVerified: boolean;
   } | null = null;
   if (actor.role === 'ADMIN') {
     const vendorId = 'vendorId' in payload && typeof payload.vendorId === 'string' ? payload.vendorId : '';
     if (!vendorId) return NextResponse.json({ error: 'vendorId is required for admin-created listings.' }, { status: 400 });
-    seller = await prisma.seller.findUnique({ where: { userId: vendorId } });
+    seller = await prisma.seller.findUnique({
+      where: { userId: vendorId },
+      select: {
+        id: true,
+        userId: true,
+        displayName: true,
+        slug: true,
+        description: true,
+        status: true,
+        isVerified: true,
+      },
+    });
     if (!seller || seller.status !== 'ACTIVE' || !seller.isVerified) {
       return NextResponse.json({ error: 'An active, verified vendor is required.' }, { status: 422 });
     }
-    ownerId = seller.userId;
   } else {
     const activeSeller = await getActiveSeller();
     if (!activeSeller.user || !activeSeller.seller) {
       return NextResponse.json({ error: 'An active, verified vendor account is required.' }, { status: 403 });
     }
-    ownerId = activeSeller.user.id;
     seller = activeSeller.seller;
   }
 
   try {
     const property = await prisma.$transaction(async (transaction) => {
-      const store = await transaction.store.upsert({
-        where: { vendorId: ownerId },
-        update: {
-          name: seller!.storeName,
-          description: seller!.description,
-          logoUrl: seller!.logo,
-        },
-        create: {
-          vendorId: ownerId,
-          name: seller!.storeName,
-          slug: seller!.slug,
-          description: seller!.description,
-          logoUrl: seller!.logo,
-        },
+      let store = await transaction.store.findFirst({
+        where: { sellerId: seller!.id, isActive: true },
+        orderBy: { createdAt: 'asc' },
         select: { id: true },
       });
+      if (!store) {
+        store = await transaction.store.create({
+          data: {
+            sellerId: seller!.id,
+            name: seller!.displayName,
+            slug: seller!.slug,
+            description: seller!.description,
+            defaultLanguage: 'ar',
+          },
+          select: { id: true },
+        });
+      }
 
       return transaction.property.create({
         data: {
@@ -152,20 +163,35 @@ export async function POST(request: Request) {
           price: new Prisma.Decimal(input.data.price),
           currency: input.data.currency,
           location: input.data.location,
-          country: input.data.country,
+          countryCode: input.data.countryCode,
           city: input.data.city,
-          images: input.data.images,
+          media: {
+            create: input.data.images.map((storageKey, sortOrder) => ({
+              storageKey,
+              mediaType: 'IMAGE',
+              sortOrder,
+            })),
+          },
           status: input.data.status,
           type: input.data.type,
           attributes: input.data.attributes,
           isPublished: input.data.isPublished,
-          userId: ownerId,
+          ownerId: seller!.userId,
           storeId: store.id,
+        },
+        include: {
+          media: { orderBy: [{ sortOrder: 'asc' }, { id: 'asc' }] },
+          store: { select: { id: true, name: true, slug: true } },
         },
       });
     });
 
-    return NextResponse.json({ property }, { status: 201 });
+    return NextResponse.json({
+      property: {
+        ...property,
+        images: property.media.map((item) => item.storageKey),
+      },
+    }, { status: 201 });
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
       return NextResponse.json({ error: 'The vendor store slug is already in use.' }, { status: 409 });

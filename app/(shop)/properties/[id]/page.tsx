@@ -2,16 +2,13 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { prisma } from '@/lib/db/prisma';
+import { findPublishedPropertyDetails, findPublishedPropertyMetadata } from '@/lib/properties/repository';
 
 type Props = { params: Promise<{ id: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
-  const property = await prisma.property.findFirst({
-    where: { id, isPublished: true },
-    select: { title: true, description: true },
-  });
+  const property = await findPublishedPropertyMetadata(id);
   if (!property) return { title: 'العقار غير متاح | Akaar' };
   return {
     title: `${property.title} | Akaar`,
@@ -21,28 +18,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function PropertyDetailsPage({ params }: Props) {
   const { id } = await params;
-  const property = await prisma.property.findFirst({
-    where: { id, isPublished: true },
-    select: {
-      id: true,
-      title: true,
-      description: true,
-      price: true,
-      currency: true,
-      location: true,
-      city: true,
-      country: true,
-      images: true,
-      type: true,
-      status: true,
-      attributes: true,
-      store: { select: { name: true, slug: true, description: true } },
-    },
-  });
+  const property = await findPublishedPropertyDetails(id);
   if (!property) notFound();
 
+  const images = property.media.map((image) => image.storageKey);
   const typeNames: Record<string, string> = { APARTMENT: 'شقة', VILLA: 'فيلا', LAND: 'أرض' };
-  const statusNames: Record<string, string> = { AVAILABLE: 'متاح', SOLD: 'مباع', RENTED: 'مؤجر' };
+  const statusNames: Record<string, string> = {
+    AVAILABLE: 'متاح',
+    RESERVED: 'محجوز',
+    SOLD: 'مباع',
+    RENTED: 'مؤجر',
+    UNAVAILABLE: 'غير متاح',
+  };
   const attributes = property.attributes && typeof property.attributes === 'object' && !Array.isArray(property.attributes)
     ? Object.entries(property.attributes as Record<string, unknown>)
     : [];
@@ -53,15 +40,15 @@ export default async function PropertyDetailsPage({ params }: Props) {
         <Link href="/search" className="text-sm text-ak-honey transition hover:text-white">← العودة إلى التصفح</Link>
         <div className="mt-6 grid gap-8 lg:grid-cols-[1.4fr_1fr]">
           <div className="space-y-3">
-            {property.images[0]
-              ? <div className="relative aspect-[4/3] overflow-hidden rounded-3xl border border-ak-line-strong shadow-ak-panel"><Image src={property.images[0]} alt={property.title} fill priority sizes="(max-width: 1024px) 100vw, 60vw" className="object-cover" /></div>
+            {images[0]
+              ? <div className="relative aspect-[4/3] overflow-hidden rounded-3xl border border-ak-line-strong shadow-ak-panel"><Image src={images[0]} alt={property.title} fill priority sizes="(max-width: 1024px) 100vw, 60vw" className="object-cover" /></div>
               : <div className="flex aspect-[4/3] items-center justify-center rounded-3xl border border-ak-line bg-ak-surface text-6xl text-ak-amber/50" aria-label="لا توجد صورة مرفوعة">⌂</div>}
-            {!!property.images.length && property.images.length > 1 && <div className="grid grid-cols-4 gap-3">{property.images.slice(1, 5).map((image, index) => <div key={`${image}-${index}`} className="relative aspect-square overflow-hidden rounded-xl"><Image src={image} alt={`${property.title} ${index + 2}`} fill sizes="20vw" className="object-cover" /></div>)}</div>}
+            {!!images.length && images.length > 1 && <div className="grid grid-cols-4 gap-3">{images.slice(1, 5).map((image, index) => <div key={`${image}-${index}`} className="relative aspect-square overflow-hidden rounded-xl"><Image src={image} alt={`${property.title} ${index + 2}`} fill sizes="20vw" className="object-cover" /></div>)}</div>}
           </div>
           <section className="ak-panel-raised p-6 sm:p-8">
             <div className="flex items-center justify-between gap-3"><span className="rounded-full border border-ak-amber/25 bg-ak-brand-soft px-3 py-1 text-xs text-ak-honey">{typeNames[property.type] || property.type}</span><span className="text-xs text-white">{statusNames[property.status] || property.status}</span></div>
             <h1 className="mt-5 text-3xl font-black leading-tight">{property.title}</h1>
-            <p className="mt-3 text-sm text-white">{[property.location, property.city, property.country].filter(Boolean).join('، ')}</p>
+            <p className="mt-3 text-sm text-white">{[property.location, property.city, property.countryCode].filter(Boolean).join('، ')}</p>
             <p className="mt-7 text-3xl font-black text-ak-honey">{new Intl.NumberFormat('ar', { style: 'currency', currency: property.currency }).format(Number(property.price))}</p>
             <div className="my-7 border-t border-ak-line" />
             <h2 className="font-bold">عن العقار</h2>

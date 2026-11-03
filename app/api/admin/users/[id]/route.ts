@@ -3,11 +3,12 @@ import { Prisma } from '@prisma/client';
 import { getControlPanelAdmin } from '@/lib/auth/require-auth';
 import { isControlPanelAdminEmail } from '@/lib/auth/control-panel-access.mjs';
 import { prisma } from '@/lib/db/prisma';
+import { getPlatformRole, replacePlatformRole } from '@/lib/auth/roles.mjs';
 
 type RouteContext = { params: Promise<{ id: string }> };
 
 export async function DELETE(_request: Request, { params }: RouteContext) {
-  const admin = await getControlPanelAdmin();
+  const admin = await getControlPanelAdmin('control_panel.users.manage');
   if (!admin) return NextResponse.json({ error: 'صلاحيات المدير مطلوبة.' }, { status: 403 });
 
   const { id } = await params;
@@ -18,20 +19,32 @@ export async function DELETE(_request: Request, { params }: RouteContext) {
     await prisma.$transaction(async (transaction) => {
       const user = await transaction.user.findUnique({
         where: { id },
-        select: { id: true, email: true, role: true },
+        select: {
+          id: true,
+          email: true,
+          status: true,
+          roles: {
+            where: { scopeType: 'PLATFORM', scopeId: null },
+            select: { role: { select: { name: true } } },
+          },
+        },
       });
       if (!user) throw new Error('ADMIN_USER_NOT_FOUND');
       if (isControlPanelAdminEmail(user.email)) throw new Error('PROTECTED_CONTROL_PANEL_ADMIN');
 
-      if (user.role === 'ADMIN') {
-        const remainingAdmins = await transaction.user.count({
-          where: { role: 'ADMIN', status: 'ACTIVE', id: { not: id } },
+      if (getPlatformRole(user.roles) === 'ADMIN' && user.status === 'ACTIVE') {
+        const remainingAdmins = await transaction.userRoleAssignment.count({
+          where: {
+            scopeType: 'PLATFORM',
+            scopeId: null,
+            role: { name: 'ADMIN' },
+            user: { status: 'ACTIVE', id: { not: id } },
+          },
         });
         if (remainingAdmins === 0) throw new Error('LAST_ACTIVE_ADMIN');
       }
 
-      await transaction.product.deleteMany({ where: { userId: id } });
-      await transaction.user.delete({ where: { id } });
+      await transaction.user.update({ where: { id }, data: { status: 'DELETED' } });
     }, { isolationLevel: Prisma.TransactionIsolationLevel.Serializable });
 
     return NextResponse.json({ deleted: true });
@@ -59,7 +72,7 @@ export async function DELETE(_request: Request, { params }: RouteContext) {
 }
 
 export async function PATCH(request: Request, { params }: RouteContext) {
-  const admin = await getControlPanelAdmin();
+  const admin = await getControlPanelAdmin('control_panel.users.manage');
   if (!admin) return NextResponse.json({ error: 'صلاحيات مدير لوحة التحكم مطلوبة.' }, { status: 403 });
 
   const { id } = await params;
@@ -81,8 +94,11 @@ export async function PATCH(request: Request, { params }: RouteContext) {
   }
   const role = body.role;
   const status = body.status;
-  if (hasRole && role !== 'GUEST' && role !== 'CUSTOMER' && role !== 'SELLER' && role !== 'ADMIN') {
+  if (hasRole && role !== 'CUSTOMER' && role !== 'SELLER' && role !== 'ADMIN') {
     return NextResponse.json({ error: 'دور المستخدم غير صالح.' }, { status: 400 });
+  }
+  if (hasRole && role === 'ADMIN' && !(await getControlPanelAdmin('control_panel.roles.manage'))) {
+    return NextResponse.json({ error: 'صلاحية إدارة الأدوار مطلوبة لتعيين دور المدير.' }, { status: 403 });
   }
   if (hasStatus && status !== 'ACTIVE' && status !== 'SUSPENDED') {
     return NextResponse.json({ error: 'حالة المستخدم غير صالحة.' }, { status: 400 });
@@ -93,29 +109,47 @@ export async function PATCH(request: Request, { params }: RouteContext) {
     const updatedUser = await prisma.$transaction(async (transaction) => {
       const user = await transaction.user.findUnique({
         where: { id },
-        select: { id: true, email: true, role: true, status: true },
+        select: {
+          id: true,
+          email: true,
+          status: true,
+          roles: {
+            where: { scopeType: 'PLATFORM', scopeId: null },
+            select: { role: { select: { name: true } } },
+          },
+        },
       });
       if (!user) throw new Error('ADMIN_USER_NOT_FOUND');
+      const currentRole = getPlatformRole(user.roles);
       if (isControlPanelAdminEmail(user.email)
         && ((hasRole && role !== 'ADMIN') || (hasStatus && status !== 'ACTIVE'))) {
         throw new Error('PROTECTED_CONTROL_PANEL_ADMIN');
       }
 
-      const removingActiveAdmin = user.role === 'ADMIN'
+      const removingActiveAdmin = currentRole === 'ADMIN'
         && user.status === 'ACTIVE'
         && ((hasRole && role !== 'ADMIN') || (hasStatus && status === 'SUSPENDED'));
       if (removingActiveAdmin) {
-        const remainingAdmins = await transaction.user.count({
-          where: { role: 'ADMIN', status: 'ACTIVE', id: { not: id } },
+        const remainingAdmins = await transaction.userRoleAssignment.count({
+          where: {
+            scopeType: 'PLATFORM',
+            scopeId: null,
+            role: { name: 'ADMIN' },
+            user: { status: 'ACTIVE', id: { not: id } },
+          },
         });
         if (remainingAdmins === 0) throw new Error('LAST_ACTIVE_ADMIN');
       }
 
-      return transaction.user.update({
-        where: { id },
-        data: hasRole ? { role: role as 'GUEST' | 'CUSTOMER' | 'SELLER' | 'ADMIN' } : { status: status as 'ACTIVE' | 'SUSPENDED' },
-        select: { id: true, role: true, status: true },
-      });
+      if (hasRole) await replacePlatformRole(transaction, id, role as 'CUSTOMER' | 'SELLER' | 'ADMIN');
+      const updated = hasStatus
+        ? await transaction.user.update({
+            where: { id },
+            data: { status: status as 'ACTIVE' | 'SUSPENDED' },
+            select: { id: true, status: true },
+          })
+        : { id: user.id, status: user.status };
+      return { ...updated, role: hasRole ? role : currentRole };
     }, { isolationLevel: Prisma.TransactionIsolationLevel.Serializable });
 
     return NextResponse.json(updatedUser);

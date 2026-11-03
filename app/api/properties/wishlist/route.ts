@@ -21,7 +21,10 @@ export async function GET() {
             currency: true,
             location: true,
             city: true,
-            images: true,
+            media: {
+              orderBy: [{ sortOrder: 'asc' }, { id: 'asc' }],
+              select: { storageKey: true },
+            },
             status: true,
             type: true,
             store: { select: { name: true, slug: true } },
@@ -29,7 +32,12 @@ export async function GET() {
         },
       },
     });
-    return NextResponse.json({ properties: items.map((item) => ({ ...item.property, savedAt: item.createdAt })) }, {
+    return NextResponse.json({
+      properties: items.map((item) => {
+        const { media, ...property } = item.property;
+        return { ...property, images: media.map((image) => image.storageKey), savedAt: item.createdAt };
+      }),
+    }, {
       headers: { 'Cache-Control': 'private, no-store' },
     });
   } catch (error) {

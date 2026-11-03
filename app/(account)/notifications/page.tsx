@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getAuthenticatedUser } from '@/lib/auth/require-auth';
-import { prisma } from '@/lib/db/prisma';
+import { listUserNotifications, markUserNotificationsRead } from '@/lib/notifications/repository';
 
 export const dynamic = 'force-dynamic';
 
@@ -9,17 +9,9 @@ export default async function NotificationsPage() {
   const user = await getAuthenticatedUser();
   if (!user) redirect('/login?callbackUrl=%2Fnotifications');
 
-  const notifications = await prisma.notification.findMany({
-    where: { userId: user.id },
-    orderBy: { createdAt: 'desc' },
-    take: 50,
-    select: { id: true, type: true, message: true, isRead: true, createdAt: true },
-  });
+  const notifications = await listUserNotifications(user.id);
   if (notifications.some((notification) => !notification.isRead)) {
-    await prisma.notification.updateMany({
-      where: { userId: user.id, isRead: false },
-      data: { isRead: true },
-    });
+    await markUserNotificationsRead(user.id);
   }
 
   return (

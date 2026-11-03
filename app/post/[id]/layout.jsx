@@ -1,26 +1,8 @@
-import { prisma } from '@/lib/db/prisma';
+import { findPublicProductMetadata } from '@/lib/products/public-metadata';
 
 export async function generateMetadata({ params }) {
   const { id } = await params;
-  const product = await prisma.product.findFirst({
-    where: {
-      id,
-      isActive: true,
-      isDeleted: false,
-      approvalStatus: 'APPROVED',
-      category: { isActive: true },
-      OR: [
-        { sellerId: null },
-        { seller: { is: { status: 'ACTIVE', isVerified: true } } },
-      ],
-    },
-    select: {
-      title: true,
-      description: true,
-      categoryName: true,
-      images: true,
-    },
-  });
+  const product = await findPublicProductMetadata(id);
 
   if (!product) {
     return {

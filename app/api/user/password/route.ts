@@ -28,19 +28,19 @@ export async function PUT(request: Request) {
   try {
     const account = await prisma.user.findUnique({
       where: { id: user.id },
-      select: { password: true },
+      select: { passwordHash: true },
     });
-    if (!account?.password) {
+    if (!account?.passwordHash) {
       return NextResponse.json({ error: 'This account does not use password sign-in. Use your identity provider account settings.' }, { status: 409 });
     }
-    const currentMatches = await bcrypt.compare(values.currentPassword, account.password);
+    const currentMatches = await bcrypt.compare(values.currentPassword, account.passwordHash);
     if (!currentMatches) return NextResponse.json({ error: 'Current password is incorrect.' }, { status: 400 });
     if (values.currentPassword === values.newPassword) {
       return NextResponse.json({ error: 'Choose a password different from your current password.' }, { status: 400 });
     }
 
-    const password = await bcrypt.hash(values.newPassword, 12);
-    await prisma.user.update({ where: { id: user.id }, data: { password } });
+    const passwordHash = await bcrypt.hash(values.newPassword, 12);
+    await prisma.user.update({ where: { id: user.id }, data: { passwordHash } });
     return NextResponse.json({ updated: true });
   } catch (error) {
     console.error('Unable to update account password:', error);

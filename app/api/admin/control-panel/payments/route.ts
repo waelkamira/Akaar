@@ -17,7 +17,7 @@ function isPaymentProvider(value: unknown): value is PaymentProvider {
 }
 
 export async function GET() {
-  const admin = await getControlPanelAdmin();
+  const admin = await getControlPanelAdmin('control_panel.finance.manage');
   if (!admin) return NextResponse.json({ error: 'صلاحيات مدير لوحة التحكم مطلوبة.' }, { status: 403 });
 
   try {
@@ -47,7 +47,7 @@ export async function GET() {
 }
 
 export async function PUT(request: Request) {
-  const admin = await getControlPanelAdmin();
+  const admin = await getControlPanelAdmin('control_panel.finance.manage');
   if (!admin) return NextResponse.json({ error: 'صلاحيات مدير لوحة التحكم مطلوبة.' }, { status: 403 });
 
   const parsed = await readJsonBody(request, 4 * 1024);
@@ -79,7 +79,7 @@ export async function PUT(request: Request) {
 }
 
 export async function POST(request: Request) {
-  const admin = await getControlPanelAdmin();
+  const admin = await getControlPanelAdmin('control_panel.finance.manage');
   if (!admin) return NextResponse.json({ error: 'صلاحيات مدير لوحة التحكم مطلوبة.' }, { status: 403 });
 
   const parsed = await readJsonBody(request, 4 * 1024);

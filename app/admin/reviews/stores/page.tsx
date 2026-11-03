@@ -1,7 +1,6 @@
 import { redirect } from 'next/navigation';
 import { getAdminUser } from '@/lib/auth/require-auth';
-import { prisma } from '@/lib/db/prisma';
-import { isStoreReviewTableAvailable, isVendorOrderTableAvailable } from '@/lib/admin/review-table-availability';
+import { getStoreReviewsOverview } from '@/lib/admin/reviews-repository';
 import AnalyticsPanel from '../../analytics-panel';
 
 export const dynamic = 'force-dynamic';
@@ -10,75 +9,29 @@ export default async function StoreReviewsPage() {
   const admin = await getAdminUser();
   if (!admin) redirect('/admin/dashboard');
 
-  const [sellers, storeReviewsAvailable, vendorOrdersAvailable] = await Promise.all([
-    prisma.seller.findMany({
-      orderBy: [{ createdAt: 'desc' }, { id: 'asc' }],
-      take: 100,
-      select: {
-        id: true,
-        storeName: true,
-        status: true,
-        isVerified: true,
-        _count: { select: { products: true } },
-      },
-    }),
-    isStoreReviewTableAvailable(),
-    isVendorOrderTableAvailable(),
-  ]);
-
   const orderCounts = new Map<string, number>();
-  if (vendorOrdersAvailable) {
-    const sellerOrderCounts = await prisma.$queryRaw<Array<{ sellerId: string; count: bigint }>>`
-      SELECT "sellerId", COUNT(*)::bigint AS "count"
-      FROM public."VendorOrder"
-      GROUP BY "sellerId"
-    `;
-    for (const orderCount of sellerOrderCounts) {
-      orderCounts.set(orderCount.sellerId, Number(orderCount.count));
-    }
+  const {
+    sellers,
+    storeReviewsAvailable,
+    vendorOrdersAvailable,
+    sellerOrderCounts,
+    sellerScores,
+    distribution,
+    reviews: latestReviews,
+  } = await getStoreReviewsOverview();
+  for (const orderCount of sellerOrderCounts) {
+    orderCounts.set(orderCount.sellerId, Number(orderCount.count));
   }
 
   const scores = new Map<string, { count: number; average: number }>();
-  let latestReviews: Array<{
-    id: string;
-    rating: number;
-    comment: string | null;
-    createdAt: Date;
-    storeName: string;
-    userName: string | null;
-    email: string;
-  }> = [];
   const ratingDistribution = new Map<number, number>();
   let reviewCount = 0;
   let totalRating = 0;
-  if (storeReviewsAvailable) {
-    const [sellerScores, distribution, reviews] = await Promise.all([
-      prisma.$queryRaw<Array<{ sellerId: string; count: number; average: number }>>`
-        SELECT "sellerId", COUNT(*)::int AS count, AVG(rating)::float8 AS average
-        FROM public.store_reviews
-        GROUP BY "sellerId"
-      `,
-      prisma.$queryRaw<Array<{ rating: number; count: number }>>`
-        SELECT rating, COUNT(*)::int AS count
-        FROM public.store_reviews
-        GROUP BY rating
-      `,
-      prisma.$queryRaw<typeof latestReviews>`
-        SELECT r.id, r.rating, r.comment, r."createdAt", s."storeName", u."userName", u.email
-        FROM public.store_reviews r
-        JOIN public.sellers s ON s.id = r."sellerId"
-        JOIN public.users u ON u.id = r."userId"
-        ORDER BY r."createdAt" DESC
-        LIMIT 30
-      `,
-    ]);
-    latestReviews = reviews;
-    for (const item of distribution) ratingDistribution.set(item.rating, item.count);
-    for (const score of sellerScores) {
-      scores.set(score.sellerId, { count: score.count, average: score.average });
-      reviewCount += score.count;
-      totalRating += score.average * score.count;
-    }
+  for (const item of distribution) ratingDistribution.set(item.rating, item.count);
+  for (const score of sellerScores) {
+    scores.set(score.sellerId, { count: score.count, average: score.average });
+    reviewCount += score.count;
+    totalRating += score.average * score.count;
   }
   const average = reviewCount ? totalRating / reviewCount : 0;
   return (

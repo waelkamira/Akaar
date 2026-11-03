@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getAdminUser } from '@/lib/auth/require-auth';
 import { prisma } from '@/lib/db/prisma';
 import { getPagination } from '@/lib/api/validation.mjs';
+import { parseSellerApplicationDetails } from '@/lib/seller/application.mjs';
 
 export async function GET(request: Request) {
   const admin = await getAdminUser();
@@ -34,39 +35,47 @@ export async function GET(request: Request) {
             take: limit,
             select: {
               id: true,
-              storeName: true,
+              userId: true,
+              displayName: true,
               slug: true,
               createdAt: true,
-              contactName: true,
-              contactEmail: true,
-              phoneNumber: true,
-              residence: true,
-              latitude: true,
-              longitude: true,
-              businessType: true,
-              sellingCategories: true,
-              intendedProducts: true,
               description: true,
-              facebookUrl: true,
-              youtubeUrl: true,
-              twitterUrl: true,
-              identityDocumentFileId: true,
-              user: { select: { email: true } },
+              sellerType: true,
+              countryCode: true,
+              user: { select: { email: true, userName: true, phone: true } },
+              verifications: {
+                where: { status: { in: ['PENDING', 'UNDER_REVIEW'] } },
+                orderBy: [{ submittedAt: 'desc' }, { createdAt: 'desc' }],
+                take: 1,
+                select: { notes: true },
+              },
+              documents: { where: { type: 'IDENTITY' }, select: { id: true }, take: 1 },
             },
           }),
           prisma.seller.count({ where: { status: 'PENDING' } }),
-        ]);
-
-    const responseItems = type === 'sellers'
-      ? items.map((item) => {
-          if (!('identityDocumentFileId' in item)) return item;
-          const { identityDocumentFileId, ...seller } = item;
-          return { ...seller, hasIdentityDocument: Boolean(identityDocumentFileId) };
-        })
-      : items;
+        ]).then(([sellers, count]) => [
+          sellers.map(({ verifications, documents, userId, displayName, sellerType, countryCode, user, ...seller }) => {
+            const application = parseSellerApplicationDetails(verifications[0]?.notes);
+            return {
+              ...seller,
+              userId,
+              storeName: displayName,
+              businessType: sellerType,
+              residence: application?.residence ?? countryCode,
+              contactName: application?.contactName ?? user.userName,
+              contactEmail: application?.contactEmail ?? user.email,
+              phoneNumber: application?.phoneNumber ?? user.phone,
+              sellingCategories: application?.sellingCategories ?? null,
+              intendedProducts: application?.intendedProducts ?? null,
+              hasIdentityDocument: documents.length > 0,
+              user: { email: user.email },
+            };
+          }),
+          count,
+        ] as const);
 
     return NextResponse.json({
-      items: responseItems,
+      items,
       page,
       limit,
       totalCount,

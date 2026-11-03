@@ -4,6 +4,9 @@ import bcrypt from 'bcrypt';
 import { getAdminUser, getControlPanelAdmin } from '@/lib/auth/require-auth';
 import { getPagination } from '@/lib/api/validation.mjs';
 import { prisma } from '@/lib/db/prisma';
+import { assignPlatformRole, getPlatformRole } from '@/lib/auth/roles.mjs';
+import { isAuthEmailConfigured } from '@/lib/auth/email.mjs';
+import { issueVerificationEmail } from '@/lib/auth/email-token-service.mjs';
 
 export async function GET(request: Request) {
   const admin = await getAdminUser();
@@ -22,18 +25,26 @@ export async function GET(request: Request) {
           id: true,
           email: true,
           userName: true,
-          role: true,
           status: true,
           createdAt: true,
-          seller: { select: { storeName: true } },
-          _count: { select: { properties: true } },
+          seller: { select: { displayName: true } },
+          roles: {
+            where: { scopeType: 'PLATFORM', scopeId: null },
+            select: { role: { select: { name: true } } },
+          },
+          _count: { select: { ownedProperties: true } },
         },
       }),
       prisma.user.count(),
     ]);
 
     return NextResponse.json({
-      items: users,
+      items: users.map(({ roles, ...user }) => ({
+        ...user,
+        role: getPlatformRole(roles),
+        seller: user.seller ? { storeName: user.seller.displayName } : null,
+        _count: { properties: user._count.ownedProperties },
+      })),
       page,
       limit,
       totalCount,
@@ -46,7 +57,7 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  const admin = await getControlPanelAdmin();
+  const admin = await getControlPanelAdmin('control_panel.users.manage');
   if (!admin) return NextResponse.json({ error: 'صلاحيات مدير لوحة التحكم مطلوبة.' }, { status: 403 });
 
   let payload: unknown;
@@ -73,8 +84,14 @@ export async function POST(request: Request) {
   if (passwordBytes < 8 || passwordBytes > 72) {
     return NextResponse.json({ error: 'كلمة المرور مطلوبة ويجب أن تكون بين 8 و72 بايتًا.' }, { status: 400 });
   }
-  if (role !== 'GUEST' && role !== 'CUSTOMER' && role !== 'SELLER' && role !== 'ADMIN') {
+  if (role !== 'CUSTOMER' && role !== 'SELLER' && role !== 'ADMIN') {
     return NextResponse.json({ error: 'دور المستخدم غير صالح.' }, { status: 400 });
+  }
+  if (role === 'ADMIN' && !(await getControlPanelAdmin('control_panel.roles.manage'))) {
+    return NextResponse.json({ error: 'صلاحية إدارة الأدوار مطلوبة لتعيين دور المدير.' }, { status: 403 });
+  }
+  if (!isAuthEmailConfigured()) {
+    return NextResponse.json({ error: 'خدمة التحقق من البريد غير مهيأة.' }, { status: 503 });
   }
 
   try {
@@ -87,10 +104,22 @@ export async function POST(request: Request) {
     }
 
     const hashedPassword = await bcrypt.hash(password, 12);
-    const user = await prisma.user.create({
-      data: { email, userName: userName || null, password: hashedPassword, role, status: 'ACTIVE' },
-      select: { id: true, email: true, userName: true, role: true, status: true },
+    const user = await prisma.$transaction(async (transaction) => {
+      const created = await transaction.user.create({
+        data: { email, userName: userName || null, passwordHash: hashedPassword, status: 'ACTIVE' },
+        select: { id: true, email: true, userName: true, status: true },
+      });
+      await assignPlatformRole(transaction, created.id, role);
+      return { ...created, role };
     });
+    try {
+      await issueVerificationEmail(user.email);
+    } catch (error) {
+      console.error('Unable to deliver administrator-created account verification:', error);
+      return NextResponse.json({
+        error: 'تم إنشاء الحساب، لكن تعذر إرسال رابط التحقق. أعد إرسال الرابط بعد قليل.',
+      }, { status: 502 });
+    }
     return NextResponse.json({ created: true, user }, { status: 201 });
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {

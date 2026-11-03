@@ -13,9 +13,12 @@ export async function DELETE(_request: Request, { params }: RouteContext) {
   if (!id || id.length > 128) return NextResponse.json({ error: 'معرف الإعلان غير صالح.' }, { status: 400 });
 
   try {
-    const deleted = await prisma.property.deleteMany({ where: { id } });
-    if (!deleted.count) return NextResponse.json({ error: 'الإعلان غير موجود.' }, { status: 404 });
-    return NextResponse.json({ deleted: true });
+    const hidden = await prisma.property.updateMany({
+      where: { id },
+      data: { isPublished: false, status: 'UNAVAILABLE' },
+    });
+    if (!hidden.count) return NextResponse.json({ error: 'الإعلان غير موجود.' }, { status: 404 });
+    return NextResponse.json({ hidden: true });
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
       return NextResponse.json({ error: 'الإعلان غير موجود.' }, { status: 404 });

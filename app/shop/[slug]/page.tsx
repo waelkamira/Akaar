@@ -1,9 +1,16 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { prisma } from '@/lib/db/prisma';
 import { getProductRatingSummaries, getStoreRatingSummaries } from '@/lib/reviews/ratings';
 import ReviewWidget from '@/components/Reviews/ReviewWidget';
+import { findPublicStoreHeader } from '@/lib/stores/public-store';
+import { listPublicCatalogProducts } from '@/lib/catalog/public-products';
+import {
+  formatCatalogPrice,
+  getAvailableInventory,
+  getCatalogImageSource,
+  getCurrentCatalogPrices,
+} from '@/lib/catalog/presentation.mjs';
 import StorefrontCatalog from './storefront-catalog';
 
 export const dynamic = 'force-dynamic';
@@ -13,88 +20,62 @@ type Props = {
   searchParams: Promise<{ page?: string; category?: string; q?: string }>;
 };
 
-async function getStoreHeader(slug: string) {
-  return prisma.seller.findFirst({
-    where: { slug, status: 'ACTIVE', isVerified: true },
-    select: {
-      id: true,
-      storeName: true,
-      slug: true,
-      description: true,
-      logo: true,
-    },
-  });
-}
-
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const store = await getStoreHeader(slug);
+  const store = await findPublicStoreHeader(slug);
   if (!store) return { title: 'المتجر غير موجود | Akaar' };
 
-  const description = store.description?.trim() || `تصفح منتجات ${store.storeName} على Akaar.`;
+  const description = store.description?.trim() || `تصفح منتجات ${store.name} على Akaar.`;
   return {
-    title: `${store.storeName} | Akaar`,
+    title: `${store.name} | Akaar`,
     description,
-    openGraph: { title: `${store.storeName} | Akaar`, description, images: store.logo ? [store.logo] : undefined },
+    openGraph: { title: `${store.name} | Akaar`, description, images: store.logoUrl ? [store.logoUrl] : undefined },
   };
 }
 
 export default async function PublicShopPage({ params, searchParams }: Props) {
   const { slug } = await params;
   const paramsValue = await searchParams;
-  const store = await getStoreHeader(slug);
+  const store = await findPublicStoreHeader(slug);
   if (!store) notFound();
 
   const requestedPage = Number(paramsValue.page);
   const page = Number.isSafeInteger(requestedPage) && requestedPage > 0 ? Math.min(requestedPage, 100_000) : 1;
-  const limit = 24;
-  const category = typeof paramsValue.category === 'string' ? paramsValue.category.trim().slice(0, 100) : '';
+  const category = typeof paramsValue.category === 'string' ? paramsValue.category.trim().slice(0, 80) : '';
   const query = typeof paramsValue.q === 'string' ? paramsValue.q.trim().slice(0, 100) : '';
-  const baseWhere = {
-    sellerId: store.id,
-    isDeleted: false,
-    isActive: true,
-    approvalStatus: 'APPROVED' as const,
-    category: { isActive: true },
-  };
-  const where = {
-    ...baseWhere,
-    ...(category ? { categoryName: category } : {}),
-    ...(query ? { OR: [{ title: { contains: query, mode: 'insensitive' as const } }, { description: { contains: query, mode: 'insensitive' as const } }] } : {}),
-  };
-  const [products, totalCount, categories, storeRatings] = await Promise.all([
-    prisma.product.findMany({
-      where,
-      orderBy: { createdAt: 'desc' },
-      skip: (page - 1) * limit,
-      take: limit,
-      select: {
-        id: true,
-        title: true,
-        description: true,
-        images: true,
-        basePrice: true,
-        stockQuantity: true,
-        categoryName: true,
-        city: true,
-      },
+  const [{ products, totalCount, categories, limit }, storeRatings] = await Promise.all([
+    listPublicCatalogProducts({
+      page,
+      query,
+      categorySlug: category,
+      sort: 'newest',
+      storeId: store.id,
     }),
-    prisma.product.count({ where }),
-    prisma.product.findMany({
-      where: baseWhere,
-      distinct: ['categoryName'],
-      orderBy: { categoryName: 'asc' },
-      select: { categoryName: true },
-    }),
-    getStoreRatingSummaries([store.id]),
+    getStoreRatingSummaries([store.seller.id]),
   ]);
   const productRatings = await getProductRatingSummaries(products.map((product) => product.id));
-  const storeRating = storeRatings.get(store.id);
-  const ratedProducts = products.map((product) => ({
-    ...product,
-    averageRating: productRatings.get(product.id)?.average ?? null,
-    reviewCount: productRatings.get(product.id)?.count ?? 0,
-  }));
+  const storeRating = storeRatings.get(store.seller.id);
+  const ratedProducts = products.map((product) => {
+    const image = product.media.find((media) => media.mediaType === 'IMAGE');
+    const price = product.variants.flatMap((variant) => getCurrentCatalogPrices(variant.prices))[0];
+    return {
+      id: product.id,
+      title: product.title,
+      image: getCatalogImageSource(image?.storageKey),
+      priceLabel: price ? formatCatalogPrice({
+        amount: price.amount.toString(),
+        currency: price.currency,
+        currencyRef: price.currencyRef,
+      }) : null,
+      availableStock: product.variants.reduce(
+        (sum, variant) => sum + getAvailableInventory(variant.inventory, store.seller.id),
+        0,
+      ),
+      categoryName: product.categories[0]?.category.name ?? 'منتجات المتجر',
+      averageRating: productRatings.get(product.id)?.average ?? null,
+      reviewCount: productRatings.get(product.id)?.count ?? 0,
+    };
+  });
 
   return (
     <main dir="rtl" className="min-h-screen bg-ak-ink px-4 py-8 text-white sm:py-12">
@@ -102,15 +83,15 @@ export default async function PublicShopPage({ params, searchParams }: Props) {
         <header className="relative overflow-hidden rounded-3xl border border-ak-line bg-gradient-to-br from-ak-raised via-ak-surface to-ak-canvas p-6 sm:p-10 shadow-ak-panel">
           <div className="absolute -left-12 -top-20 h-64 w-64 rounded-full bg-ak-amber/10 blur-3xl" />
           <div className="relative flex flex-wrap items-center gap-5">
-            {store.logo ? (
+            {store.logoUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={store.logo} alt="" className="h-20 w-20 rounded-2xl border border-ak-line object-cover" />
+              <img src={store.logoUrl} alt="" className="h-20 w-20 rounded-2xl border border-ak-line object-cover" />
             ) : (
-              <div aria-hidden="true" className="flex h-20 w-20 items-center justify-center rounded-2xl border border-ak-amber/30 bg-ak-amber/10 text-3xl font-black text-ak-honey">{store.storeName.slice(0, 1)}</div>
+              <div aria-hidden="true" className="flex h-20 w-20 items-center justify-center rounded-2xl border border-ak-amber/30 bg-ak-amber/10 text-3xl font-black text-ak-honey">{store.name.slice(0, 1)}</div>
             )}
             <div className="min-w-0 flex-1">
               <p className="text-xs font-semibold tracking-widest text-ak-amber">متجر معتمد</p>
-              <h1 className="mt-2 text-3xl font-black sm:text-4xl">{store.storeName}</h1>
+              <h1 className="mt-2 text-3xl font-black sm:text-4xl">{store.name}</h1>
               <p className="mt-2 text-sm text-amber-300">{storeRating ? `★ ${storeRating.average.toFixed(1)} · ${storeRating.count} تقييم` : 'لا توجد تقييمات للمتجر بعد'}</p>
               {store.description && <p className="mt-3 max-w-3xl whitespace-pre-wrap text-sm leading-7 text-stone-300">{store.description}</p>}
             </div>
@@ -127,7 +108,7 @@ export default async function PublicShopPage({ params, searchParams }: Props) {
         </header>
 
         <div className="mt-6">
-          <ReviewWidget targetType="store" targetId={store.id} title={`قيّم متجر ${store.storeName}`} />
+          <ReviewWidget targetType="store" targetId={store.seller.id} title={`قيّم متجر ${store.name}`} />
         </div>
 
         <section className="mt-9">
@@ -137,7 +118,7 @@ export default async function PublicShopPage({ params, searchParams }: Props) {
           </div>
           <StorefrontCatalog
             products={ratedProducts}
-            categories={categories.map(({ categoryName }) => categoryName)}
+            categories={categories.map(({ slug, name }) => ({ slug, name }))}
             slug={store.slug}
             page={page}
             hasMore={page * limit < totalCount}

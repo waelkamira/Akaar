@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { Prisma } from '@prisma/client';
 import { getActiveSeller } from '@/lib/auth/require-seller';
 import { prisma } from '@/lib/db/prisma';
 
@@ -16,27 +17,32 @@ export async function PATCH(request: Request) {
     return NextResponse.json({ error: 'صيغة الطلب غير صالحة.' }, { status: 400 });
   }
   const body = payload as { storeName?: unknown; slug?: unknown; description?: unknown; logo?: unknown };
+  const sellerData: Prisma.SellerUpdateInput = {};
+  const storeData: Prisma.StoreUpdateInput = {};
 
-  const data: { storeName?: string; slug?: string; description?: string | null; logo?: string | null } = {};
   if (body.storeName !== undefined) {
-    if (typeof body.storeName !== 'string' || !body.storeName.trim() || body.storeName.trim().length > 100) {
+    if (typeof body.storeName !== 'string' || !body.storeName.trim() || body.storeName.trim().length > 160) {
       return NextResponse.json({ error: 'اسم المتجر غير صالح.' }, { status: 400 });
     }
-    data.storeName = body.storeName.trim();
+    sellerData.displayName = body.storeName.trim();
+    storeData.name = body.storeName.trim();
   }
   if (body.slug !== undefined) {
     if (typeof body.slug !== 'string') return NextResponse.json({ error: 'رابط المتجر غير صالح.' }, { status: 400 });
     const slug = body.slug.trim().toLowerCase();
-    if (!/^[\p{Letter}\p{Number}]+(?:-[\p{Letter}\p{Number}]+)*$/u.test(slug) || slug.length > 80) {
+    if (!/^[\p{Letter}\p{Number}]+(?:-[\p{Letter}\p{Number}]+)*$/u.test(slug) || slug.length > 100) {
       return NextResponse.json({ error: 'استخدم أحرفًا وأرقامًا وافصل بينها بشرطة.' }, { status: 400 });
     }
-    data.slug = slug;
+    sellerData.slug = slug;
+    storeData.slug = slug;
   }
   if (body.description !== undefined) {
-    if (body.description !== null && (typeof body.description !== 'string' || body.description.length > 2000)) {
+    if (body.description !== null && (typeof body.description !== 'string' || body.description.length > 10000)) {
       return NextResponse.json({ error: 'وصف المتجر غير صالح.' }, { status: 400 });
     }
-    data.description = typeof body.description === 'string' ? body.description.trim() || null : null;
+    const description = typeof body.description === 'string' ? body.description.trim() || null : null;
+    sellerData.description = description;
+    storeData.description = description;
   }
   if (body.logo !== undefined) {
     if (body.logo !== null && (typeof body.logo !== 'string' || body.logo.length > 2048)) {
@@ -50,47 +56,58 @@ export async function PATCH(request: Request) {
         return NextResponse.json({ error: 'أدخل رابط شعار HTTP أو HTTPS صالحًا.' }, { status: 400 });
       }
     }
-    data.logo = typeof body.logo === 'string' ? body.logo : null;
+    storeData.logoUrl = typeof body.logo === 'string' ? body.logo : null;
   }
-  if (Object.keys(data).length === 0) {
+  if (!Object.keys(sellerData).length && !Object.keys(storeData).length) {
     return NextResponse.json({ error: 'لا توجد تغييرات للحفظ.' }, { status: 400 });
   }
 
   try {
     const updated = await prisma.$transaction(async (transaction) => {
-      const updatedSeller = await transaction.seller.update({
-        where: { id: seller.id },
-        data,
-        select: {
-          id: true,
-          userId: true,
-          storeName: true,
-          slug: true,
-          description: true,
-          logo: true,
-        },
+      const currentSeller = Object.keys(sellerData).length
+        ? await transaction.seller.update({
+            where: { id: seller.id },
+            data: sellerData,
+            select: { id: true, displayName: true, slug: true, description: true },
+          })
+        : await transaction.seller.findUniqueOrThrow({
+            where: { id: seller.id },
+            select: { id: true, displayName: true, slug: true, description: true },
+          });
+      const currentStore = await transaction.store.findFirst({
+        where: { sellerId: seller.id, isActive: true },
+        orderBy: [{ createdAt: 'asc' }, { id: 'asc' }],
+        select: { id: true },
       });
-      await transaction.store.upsert({
-        where: { vendorId: updatedSeller.userId },
-        update: {
-          name: updatedSeller.storeName,
-          slug: updatedSeller.slug,
-          description: updatedSeller.description,
-          logoUrl: updatedSeller.logo,
-        },
-        create: {
-          vendorId: updatedSeller.userId,
-          name: updatedSeller.storeName,
-          slug: updatedSeller.slug,
-          description: updatedSeller.description,
-          logoUrl: updatedSeller.logo,
-        },
-      });
-      return updatedSeller;
+      const store = currentStore
+        ? await transaction.store.update({
+            where: { id: currentStore.id },
+            data: storeData,
+            select: { name: true, slug: true, description: true, logoUrl: true },
+          })
+        : await transaction.store.create({
+            data: {
+              sellerId: seller.id,
+              name: typeof storeData.name === 'string' ? storeData.name : currentSeller.displayName,
+              slug: typeof storeData.slug === 'string' ? storeData.slug : currentSeller.slug,
+              description: typeof storeData.description === 'string' ? storeData.description : currentSeller.description,
+              logoUrl: typeof storeData.logoUrl === 'string' ? storeData.logoUrl : null,
+              defaultLanguage: 'ar',
+              isActive: true,
+            },
+            select: { name: true, slug: true, description: true, logoUrl: true },
+          });
+      return {
+        id: currentSeller.id,
+        storeName: store.name,
+        slug: store.slug,
+        description: store.description,
+        logo: store.logoUrl,
+      };
     });
     return NextResponse.json({ seller: updated });
   } catch (error) {
-    if (typeof error === 'object' && error !== null && 'code' in error && error.code === 'P2002') {
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
       return NextResponse.json({ error: 'رابط المتجر مستخدم بالفعل.' }, { status: 409 });
     }
     console.error('Unable to update seller store:', error);
