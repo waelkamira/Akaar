@@ -613,3 +613,32 @@ When the model map or schema changes, regenerate/review `docs/architecture/prism
 ---
 
 **Copilot instruction:** Before implementing a system, read this blueprint, `docs/PROJECT_AUDIT.md`, `docs/architecture/prisma-model-usage-map.md`, and `prisma/schema.prisma`. Trace the existing route → service → repository → model path first. Reuse the canonical schema. Do not invent tables, routes, or completed functionality. Implement one dependency-ready vertical slice, test it, and document the result before moving on.
+
+## 11. Integrity re-check — 2026-11-03
+
+A fresh static scan of the current default-branch files was performed while updating this blueprint. It found critical inconsistencies that must take precedence over older status statements in this document and in the companion model map.
+
+| ID | Current finding | Evidence | Required response |
+|---|---|---|---|
+| SNAP-01 | The canonical Prisma schema contains unresolved Git conflict markers. | `prisma/schema.prisma`: line 1161 `<<<<<<< HEAD`; line 1471 `=======`; line 1472 `>>>>>>> wael-work-in-progress`. | Reconcile both versions intentionally before running migrations or adding models. |
+| SNAP-02 | The schema has 152 model declarations but only 138 unique model names. Fourteen model names are declared twice. | Static scan of `model <Name> {` declarations in the current `prisma/schema.prisma`. | Merge duplicate definitions and reconcile all fields, relations, indexes, mappings and migrations. |
+| SNAP-03 | Duplicate model names found: `Role`, `Permission`, `Country`, `City`, `Category`, `Product`, `ProductTranslation`, `Supplier`, `Property`, `PropertyWishlist`, `BookingRequest`, `Favorite`, `Review`, `StoreReview`. | Same static scan. | Do not choose one definition solely by position; compare both definitions and their callsites. |
+| SNAP-04 | README contains unresolved Git conflict markers. | `README.md`: line 248 `<<<<<<< HEAD`; line 687 `=======`; line 1682 `>>>>>>> wael-work-in-progress`. | Resolve the README conflict while preserving the execution roadmap and audit history. |
+| SNAP-05 | The model-usage map is not synchronized with the current schema snapshot. | `docs/architecture/prisma-model-usage-map.md` describes 136 models and references snapshot `c259e7cd68ed63ce239e3fdf9f9913296b74e87e`; current schema scan reports 138 unique names before duplicate reconciliation. | Regenerate the map only after the canonical schema is repaired and validated. |
+
+### Immediate P0 gate
+
+Until SNAP-01 through SNAP-05 are resolved:
+- Do not add or rename Prisma models for any of the 49 systems.
+- Do not create a migration from the conflicted schema.
+- Do not treat prior validation, generation, migration, build or CI results as proof for the current default-branch snapshot.
+- Do not mark any system Complete based only on a page, API route, model declaration or older audit entry.
+
+After reconciliation, run and record at minimum:
+1. `npx prisma validate --schema=prisma/schema.prisma`
+2. `npx prisma generate --schema=prisma/schema.prisma`
+3. Apply the committed migrations to a clean isolated PostgreSQL test database.
+4. Run the schema-to-migration drift check and the full automated test/lint/build suite.
+5. Regenerate `docs/architecture/prisma-model-usage-map.md` and review every changed model against its owning system in this blueprint.
+
+**Scope note:** this was a remote static file inspection, not a local runtime validation. No application code, Prisma schema, migration or test was changed or executed as part of this documentation update.
