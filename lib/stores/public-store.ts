@@ -13,6 +13,13 @@ export function findPublicStoreHeader(slug: string) {
       slug: true,
       description: true,
       logoUrl: true,
+      contactEmail: true,
+      contactPhone: true,
+      pages: {
+        where: { isPublished: true },
+        select: { slug: true, title: true, content: true },
+        orderBy: { updatedAt: 'desc' },
+      },
       seller: { select: { id: true, displayName: true } },
     },
   });

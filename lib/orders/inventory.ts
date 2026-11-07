@@ -4,9 +4,13 @@ import { Prisma } from '@prisma/client';
 export async function releaseOrderReservations(
   transaction: Prisma.TransactionClient,
   orderId: string,
+  vendorOrderId?: string,
 ) {
   const reservations = await transaction.inventoryReservation.findMany({
-    where: { orderItem: { orderId }, status: 'ACTIVE' },
+    where: {
+      orderItem: { orderId, ...(vendorOrderId ? { vendorOrderId } : {}) },
+      status: 'ACTIVE',
+    },
     select: { id: true, variantId: true, warehouseId: true, quantity: true },
   });
 

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { Prisma } from '@prisma/client';
-import { getSellerAccount } from '@/lib/auth/require-seller';
+import { getActiveSeller, getSellerAccount } from '@/lib/auth/require-seller';
 import { parseSellerApplicationDetails } from '@/lib/seller/application.mjs';
 import { prisma } from '@/lib/db/prisma';
 
@@ -9,12 +9,15 @@ const availableVendorStatuses = ['PENDING', 'ACCEPTED', 'PROCESSING', 'READY_TO_
 export async function GET() {
   const { user, seller: accountSeller } = await getSellerAccount();
   if (!user) return NextResponse.json({ error: 'سجّل الدخول لفتح لوحة البائع.' }, { status: 401 });
-  if (!accountSeller) return NextResponse.json({ seller: null });
+  const sellerAccount = user.role === 'SELLER'
+    ? accountSeller
+    : (await getActiveSeller('seller.dashboard.read')).seller;
+  if (!sellerAccount) return NextResponse.json({ seller: null });
 
   try {
     const [seller, account] = await Promise.all([
       prisma.seller.findUnique({
-        where: { id: accountSeller.id },
+        where: { id: sellerAccount.id },
         select: {
           id: true,
           displayName: true,
@@ -66,7 +69,7 @@ export async function GET() {
       twitterUrl: application?.twitterUrl ?? null,
     };
 
-    if (seller.status !== 'ACTIVE' || !seller.isVerified || user.role !== 'SELLER') {
+    if (seller.status !== 'ACTIVE' || !seller.isVerified) {
       return NextResponse.json({ seller: sellerProfile }, { headers: { 'Cache-Control': 'private, no-store' } });
     }
 

@@ -105,7 +105,18 @@ export default async function PublicShopPage({ params, searchParams }: Props) {
               <Link href="/search" className="rounded-xl border border-ak-line px-4 py-3 text-sm hover:border-ak-amber/50">اكتشف المزيد</Link>
             </div>
           </div>
+          {(store.contactEmail || store.contactPhone) && <div className="relative mt-6 flex flex-wrap gap-4 border-t border-ak-line pt-4 text-sm text-stone-300">
+            {store.contactEmail && <a href={`mailto:${store.contactEmail}`} className="hover:text-ak-honey">{store.contactEmail}</a>}
+            {store.contactPhone && <a href={`tel:${store.contactPhone}`} dir="ltr" className="hover:text-ak-honey">{store.contactPhone}</a>}
+          </div>}
         </header>
+
+        {store.pages.length > 0 && <section className="mt-7 grid gap-4 md:grid-cols-2">
+          {store.pages.map((page) => <article key={page.slug} id={page.slug} className="rounded-2xl border border-ak-line bg-ak-surface p-5">
+            <h2 className="text-lg font-bold">{page.title}</h2>
+            <p className="mt-3 whitespace-pre-wrap text-sm leading-7 text-stone-300">{page.content}</p>
+          </article>)}
+        </section>}
 
         <div className="mt-6">
           <ReviewWidget targetType="store" targetId={store.seller.id} title={`قيّم متجر ${store.name}`} />

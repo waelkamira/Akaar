@@ -1,0 +1,28 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "incremental": false
+  },
+  "include": [
+    "app/api/seller/application/route.ts",
+    "app/api/seller/dashboard/route.ts",
+    "app/api/seller/orders/route.ts",
+    "app/api/seller/products/route.ts",
+    "app/api/seller/products/[id]/route.ts",
+    "app/api/seller/store/route.ts",
+    "app/api/seller/[module]/route.ts",
+    "app/seller/layout.tsx",
+    "app/seller/seller-navigation.tsx",
+    "app/seller/[module]/page.tsx",
+    "app/seller/seller-module-client.tsx",
+    "app/seller/orders/page.tsx",
+    "app/seller/orders/orders-client.tsx",
+    "app/seller/products/page.tsx",
+    "app/seller/products/products-client.tsx",
+    "app/seller/analytics/page.tsx",
+    "app/shop/[slug]/page.tsx",
+    "lib/auth/require-seller.ts",
+    "lib/orders/inventory.ts",
+    "lib/stores/public-store.ts"
+  ]
+}

@@ -4,11 +4,8 @@ import ImageKit from 'imagekit';
 import { getAuthenticatedUser } from '@/lib/auth/require-auth';
 import { isMarketplaceEnabled } from '@/lib/marketplace/settings';
 import { prisma } from '@/lib/db/prisma';
-<<<<<<< HEAD
 import { readJsonBody } from '@/lib/api/read-json-body.mjs';
-=======
 import { serializeSellerApplicationDetails } from '@/lib/seller/application.mjs';
->>>>>>> wael-work-in-progress
 
 function makeSlug(value: string) {
   const slug = value

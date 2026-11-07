@@ -351,11 +351,15 @@ model OAuthAccount {
 
 model Role {
   id          String               @id @default(uuid()) @db.Uuid
-  name        String               @unique
+  sellerId    String?              @db.Uuid
+  name        String
   permissions RolePermission[]
   assignments UserRoleAssignment[]
   sellerStaff SellerStaff[]
+  seller      Seller?              @relation("SellerRoles", fields: [sellerId], references: [id], onDelete: Cascade)
 
+  @@unique([sellerId, name])
+  @@index([sellerId])
   @@map("roles")
 }
 
@@ -579,6 +583,7 @@ model Seller {
   documents          SellerDocument[]
   taxRegistrations   SellerTaxRegistration[]
   staff              SellerStaff[]
+  roles              Role[]                  @relation("SellerRoles")
   warehouses         Warehouse[]
   vendorOrders       VendorOrder[]
   ledger             SellerLedgerEntry[]
@@ -652,6 +657,8 @@ model Store {
   slug            String             @unique
   description     String?            @db.Text
   logoUrl         String?
+  contactEmail    String?            @db.VarChar(320)
+  contactPhone    String?            @db.VarChar(32)
   defaultLanguage String             @default("en")
   isActive        Boolean            @default(true)
   createdAt       DateTime           @default(now())
@@ -659,6 +666,7 @@ model Store {
   seller          Seller             @relation(fields: [sellerId], references: [id], onDelete: Restrict)
   products        Product[]
   translations    StoreTranslation[]
+  pages           StorePage[]
   properties      Property[]
 
   @@index([sellerId, isActive])
@@ -675,6 +683,22 @@ model StoreTranslation {
 
   @@unique([storeId, language])
   @@map("store_translations")
+}
+
+model StorePage {
+  id          String   @id @default(uuid()) @db.Uuid
+  storeId     String   @db.Uuid
+  slug        String
+  title       String
+  content     String   @db.Text
+  isPublished Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  store       Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+
+  @@unique([storeId, slug])
+  @@index([storeId, isPublished])
+  @@map("store_pages")
 }
 
 model SellerStaff {
@@ -1158,318 +1182,6 @@ model GuestSession {
   @@map("guest_sessions")
 }
 
-<<<<<<< HEAD
-model Product {
-  id             String                @id @default(uuid())
-  title          String
-  userId         String
-  sellerId       String?
-  userImage      String?
-  userName       String?
-  categoryId     Int                   @default(1)
-  categoryName   String
-  images         String[]
-  /// Storefront unit price. Application code treats this as `price`.
-  basePrice      Int?
-  /// Optional USD price in cents for sandbox card checkout.
-  usdPriceCents  Int?
-  adCategory     String?
-  city           String?
-  town           String?
-  phoneNumber    String?
-  lng            Float?
-  lat            Float?
-  link           String?               @default("")
-  details        Json?
-  description    String?
-  /// On-hand quantity. Application code treats this as `stock`.
-  stockQuantity  Int?                  @default(1)
-  salesCount     Int                   @default(0)
-  isActive       Boolean               @default(true)
-  approvalStatus ProductApprovalStatus @default(APPROVED)
-  isDeleted      Boolean               @default(false)
-  deletedAt      DateTime?
-  createdAt      DateTime              @default(now())
-  updatedAt      DateTime              @updatedAt
-
-  user            User                  @relation(fields: [userId], references: [id], onDelete: Restrict)
-  seller          Seller?               @relation(fields: [sellerId], references: [id], onDelete: SetNull)
-  category        Category              @relation(fields: [categoryId], references: [id], onDelete: Restrict)
-  favorites       Favorite[]
-  reviews         Review[]
-  orderItems      OrderItem[]
-  cartItems       CartItem[]
-  recommendations Recommendation[]
-  priceHistory    ProductPriceHistory[]
-  discounts       Discount[]
-  translations    ProductTranslation[]
-  media           ProductImage[]
-
-  @@index([userId])
-  @@index([sellerId])
-  @@index([categoryId])
-  @@index([basePrice])
-  @@index([salesCount])
-  @@index([isActive])
-  @@index([approvalStatus, isActive, createdAt])
-  @@index([approvalStatus, isDeleted, createdAt])
-  @@index([sellerId, approvalStatus, isActive, createdAt])
-  @@index([title], map: "products_title_btree_idx")
-  @@index([title(ops: raw("gin_trgm_ops"))], type: Gin, map: "products_title_trgm_idx")
-  @@index([categoryName(ops: raw("gin_trgm_ops"))], type: Gin, map: "products_category_name_trgm_idx")
-  @@index([userName(ops: raw("gin_trgm_ops"))], type: Gin, map: "products_user_name_trgm_idx")
-  @@index([description(ops: raw("gin_trgm_ops"))], type: Gin, map: "products_description_trgm_idx")
-  @@index([categoryId, basePrice])
-  @@index([categoryId, createdAt])
-  @@index([city])
-  @@index([isDeleted])
-  @@index([createdAt])
-  @@index([isDeleted, isActive, createdAt])
-  @@index([isDeleted, isActive, basePrice])
-  @@index([isDeleted, isActive, salesCount])
-  @@index([categoryId, isDeleted, isActive])
-  @@map("products")
-}
-
-model Property {
-  id          String         @id @default(uuid())
-  title       String         @db.VarChar(180)
-  description String?        @db.Text
-  price       Decimal        @db.Decimal(16, 2)
-  currency    String         @default("USD") @db.VarChar(3)
-  location    String         @db.VarChar(240)
-  country     String?        @db.VarChar(100)
-  city        String?        @db.VarChar(120)
-  images      String[]       @default([])
-  status      PropertyStatus @default(AVAILABLE)
-  type        PropertyType   @default(APARTMENT)
-  attributes  Json           @default("{}")
-  isPublished Boolean        @default(true)
-  createdAt   DateTime       @default(now())
-  updatedAt   DateTime       @updatedAt
-  userId      String
-  storeId     String
-
-  owner           User               @relation("PropertyOwner", fields: [userId], references: [id], onDelete: Cascade)
-  store           Store              @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  wishlists       PropertyWishlist[]
-  bookingRequests BookingRequest[]
-
-  @@index([status, createdAt, id])
-  @@index([type, status, createdAt, id])
-  @@index([country, status, city, createdAt])
-  @@index([city, status, createdAt])
-  @@index([price])
-  @@index([storeId, createdAt])
-  @@index([userId, status, createdAt])
-  @@index([isPublished, status, createdAt])
-  @@index([title(ops: raw("gin_trgm_ops"))], type: Gin, map: "properties_title_trgm_idx")
-  @@index([description(ops: raw("gin_trgm_ops"))], type: Gin, map: "properties_description_trgm_idx")
-  @@index([location(ops: raw("gin_trgm_ops"))], type: Gin, map: "properties_location_trgm_idx")
-  @@index([attributes(ops: JsonbPathOps)], type: Gin, map: "properties_attributes_gin_idx")
-  @@map("properties")
-}
-
-model PropertyWishlist {
-  id         String   @id @default(uuid())
-  userId     String
-  propertyId String
-  createdAt  DateTime @default(now())
-
-  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, propertyId])
-  @@index([userId, createdAt])
-  @@index([propertyId])
-  @@map("property_wishlist")
-}
-
-model BookingRequest {
-  id             String               @id @default(uuid())
-  idempotencyKey String               @unique
-  userId         String
-  propertyId     String
-  quotedPrice    Decimal              @db.Decimal(16, 2)
-  feeAmount      Decimal              @db.Decimal(10, 2)
-  feeCurrency    String               @default("USD") @db.VarChar(3)
-  status         BookingRequestStatus @default(PENDING)
-  createdAt      DateTime             @default(now())
-  updatedAt      DateTime             @updatedAt
-
-  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
-
-  @@index([userId, status, createdAt])
-  @@index([propertyId, status, createdAt])
-  @@map("booking_requests")
-}
-
-model Favorite {
-  id        String   @id @default(uuid())
-  userId    String
-  productId String
-  createdAt DateTime @default(now())
-  isDeleted Boolean  @default(false)
-
-  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, productId])
-  @@index([userId, isDeleted])
-  @@index([productId])
-  @@map("favorites")
-}
-
-model ProductImage {
-  id        String  @id @default(uuid())
-  productId String
-  url       String
-  sortOrder Int     @default(0)
-  isPrimary Boolean @default(false)
-
-  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-
-  @@index([productId, sortOrder])
-}
-
-model Role {
-  id          String       @id @default(uuid())
-  name        String       @unique
-  permissions Permission[]
-  users       User[]
-}
-
-model Permission {
-  id    String @id @default(uuid())
-  name  String @unique
-  roles Role[]
-}
-
-model Category {
-  id          Int      @id
-  name        String
-  slug        String   @unique
-  description String?
-  parentId    Int?
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  parent   Category?  @relation("CategoryTree", fields: [parentId], references: [id], onDelete: SetNull)
-  children Category[] @relation("CategoryTree")
-  products Product[]
-
-  @@unique([name])
-  @@index([name])
-  @@index([parentId])
-  @@index([isActive])
-}
-
-model Country {
-  id        String     @id @default(uuid())
-  name      String     @unique
-  code      String     @unique
-  cities    City[]
-  suppliers Supplier[]
-
-  @@index([name])
-  @@index([code])
-}
-
-model City {
-  id        String @id @default(uuid())
-  name      String
-  countryId String
-
-  country   Country    @relation(fields: [countryId], references: [id], onDelete: Cascade)
-  suppliers Supplier[]
-
-  @@unique([name, countryId])
-  @@index([name])
-  @@index([countryId])
-}
-
-model Supplier {
-  id        String  @id @default(uuid())
-  name      String  @unique
-  email     String  @unique
-  phone     String?
-  address   String?
-  countryId String
-  cityId    String?
-
-  country Country @relation(fields: [countryId], references: [id], onDelete: Cascade)
-  city    City?   @relation(fields: [cityId], references: [id], onDelete: SetNull)
-
-  @@index([name])
-  @@index([email])
-  @@index([countryId])
-  @@index([cityId])
-}
-
-model ProductTranslation {
-  id          String  @id @default(uuid())
-  productId   String
-  language    String
-  title       String
-  description String?
-
-  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-
-  @@unique([productId, language])
-  @@index([language])
-  @@index([title])
-  @@index([productId])
-}
-
-model ProductPriceHistory {
-  id        String   @id @default(uuid())
-  productId String
-  price     Int
-  changedAt DateTime @default(now())
-
-  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-
-  @@index([productId, changedAt])
-}
-
-model Review {
-  id        String   @id @default(uuid())
-  userId    String
-  productId String
-  rating    Int
-  comment   String?
-  createdAt DateTime @default(now())
-
-  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, productId])
-  @@index([productId, rating])
-  @@index([userId])
-  @@map("reviews")
-}
-
-model StoreReview {
-  id        String   @id @default(uuid())
-  userId    String
-  sellerId  String
-  rating    Int
-  comment   String?
-  createdAt DateTime @default(now())
-
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  seller Seller @relation(fields: [sellerId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, sellerId])
-  @@index([sellerId, rating])
-  @@index([userId])
-  @@map("store_reviews")
-}
-
-=======
->>>>>>> wael-work-in-progress
 model Cart {
   id             String        @id @default(uuid()) @db.Uuid
   userId         String?       @unique @db.Uuid
@@ -2278,20 +1990,22 @@ model GiftCardTransaction {
 // 17. REVIEWS & PRODUCT QUESTIONS
 // ============================================================
 model Review {
-  id          String        @id @default(uuid()) @db.Uuid
-  userId      String        @db.Uuid
-  productId   String        @db.Uuid
-  orderItemId String?       @db.Uuid
-  rating      Int
-  title       String?
-  comment     String?       @db.Text
-  isVerified  Boolean       @default(false)
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  user        User          @relation(fields: [userId], references: [id], onDelete: Restrict)
-  product     Product       @relation(fields: [productId], references: [id], onDelete: Restrict)
-  orderItem   OrderItem?    @relation(fields: [orderItemId], references: [id], onDelete: SetNull)
-  media       ReviewMedia[]
+  id              String        @id @default(uuid()) @db.Uuid
+  userId          String        @db.Uuid
+  productId       String        @db.Uuid
+  orderItemId     String?       @db.Uuid
+  rating          Int
+  title           String?
+  comment         String?       @db.Text
+  sellerReply     String?       @db.Text
+  sellerRepliedAt DateTime?
+  isVerified      Boolean       @default(false)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  user            User          @relation(fields: [userId], references: [id], onDelete: Restrict)
+  product         Product       @relation(fields: [productId], references: [id], onDelete: Restrict)
+  orderItem       OrderItem?    @relation(fields: [orderItemId], references: [id], onDelete: SetNull)
+  media           ReviewMedia[]
 
   @@unique([userId, productId])
   @@index([productId, rating, createdAt])
@@ -2309,14 +2023,16 @@ model ReviewMedia {
 }
 
 model StoreReview {
-  id        String   @id @default(uuid()) @db.Uuid
-  userId    String   @db.Uuid
-  sellerId  String   @db.Uuid
-  rating    Int
-  comment   String?
-  createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id], onDelete: Restrict)
-  seller    Seller   @relation(fields: [sellerId], references: [id], onDelete: Restrict)
+  id              String    @id @default(uuid()) @db.Uuid
+  userId          String    @db.Uuid
+  sellerId        String    @db.Uuid
+  rating          Int
+  comment         String?
+  sellerReply     String?   @db.Text
+  sellerRepliedAt DateTime?
+  createdAt       DateTime  @default(now())
+  user            User      @relation(fields: [userId], references: [id], onDelete: Restrict)
+  seller          Seller    @relation(fields: [sellerId], references: [id], onDelete: Restrict)
 
   @@unique([userId, sellerId])
   @@index([sellerId, rating])

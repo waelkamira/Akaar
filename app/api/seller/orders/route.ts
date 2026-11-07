@@ -1,10 +1,8 @@
 import { NextResponse } from 'next/server';
 import { getActiveSeller } from '@/lib/auth/require-seller';
 import { prisma } from '@/lib/db/prisma';
-<<<<<<< HEAD
 import { readJsonBody } from '@/lib/api/read-json-body.mjs';
-=======
-import { consumeOrderReservations } from '@/lib/orders/inventory';
+import { consumeOrderReservations, releaseOrderReservations } from '@/lib/orders/inventory';
 
 function mapSellerOrder(order: {
   id: string;
@@ -60,10 +58,9 @@ function mapSellerOrder(order: {
     })),
   };
 }
->>>>>>> wael-work-in-progress
 
 export async function GET() {
-  const { seller } = await getActiveSeller();
+  const { seller } = await getActiveSeller('seller.orders.manage');
   if (!seller) return NextResponse.json({ error: 'صلاحيات البائع المفعّل مطلوبة.' }, { status: 403 });
 
   try {
@@ -115,7 +112,7 @@ export async function GET() {
 }
 
 export async function PATCH(request: Request) {
-  const { seller } = await getActiveSeller();
+  const { seller } = await getActiveSeller('seller.orders.manage');
   if (!seller) return NextResponse.json({ error: 'صلاحيات البائع المفعّل مطلوبة.' }, { status: 403 });
 
   const parsedBody = await readJsonBody(request, 16 * 1024);
@@ -127,7 +124,7 @@ export async function PATCH(request: Request) {
   const body = payload as { vendorOrderId?: unknown; status?: unknown; trackingNumber?: unknown };
   if (typeof body.vendorOrderId !== 'string'
     || !body.vendorOrderId.trim()
-    || !['PROCESSING', 'SHIPPED', 'DELIVERED'].includes(String(body.status))) {
+    || !['PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED'].includes(String(body.status))) {
     return NextResponse.json({ error: 'بيانات تحديث الشحنة غير صالحة.' }, { status: 400 });
   }
   const trackingNumber = typeof body.trackingNumber === 'string' ? body.trackingNumber.trim() : '';
@@ -143,10 +140,69 @@ export async function PATCH(request: Request) {
       });
       if (!current) return { error: 'الطلب غير موجود في متجرك.', status: 404 as const };
 
+      if (body.status === 'CANCELLED') {
+        if (!['PENDING', 'ACCEPTED', 'PROCESSING', 'READY_TO_SHIP'].includes(current.status)) {
+          return { error: 'لا يمكن إلغاء طلب تم شحنه أو تسليمه.', status: 409 as const };
+        }
+        const [paidPayment, pendingOnlinePayment, activeShipment] = await Promise.all([
+          transaction.payment.findFirst({
+            where: { orderId: current.orderId, status: { in: ['COMPLETED', 'PARTIALLY_REFUNDED', 'REFUNDED'] } },
+            select: { id: true },
+          }),
+          transaction.payment.findFirst({
+            where: { orderId: current.orderId, status: { in: ['PENDING', 'PROCESSING'] }, provider: { not: 'CASH_ON_DELIVERY' } },
+            select: { id: true },
+          }),
+          transaction.shipment.findFirst({
+            where: { vendorOrderId: current.id, status: { in: ['IN_TRANSIT', 'OUT_FOR_DELIVERY', 'DELIVERED', 'RETURNED'] } },
+            select: { id: true },
+          }),
+        ]);
+        if (paidPayment || pendingOnlinePayment) {
+          return { error: 'لا يمكن الإلغاء بعد الدفع أو أثناء معالجة الدفع؛ اطلب معالجة الإرجاع من خدمة الدعم.', status: 409 as const };
+        }
+        if (activeShipment) return { error: 'لا يمكن إلغاء طلب بدأ شحنه.', status: 409 as const };
+
+        const cancelled = await transaction.vendorOrder.updateMany({
+          where: { id: current.id, sellerId: seller.id, status: current.status },
+          data: { status: 'CANCELLED' },
+        });
+        if (cancelled.count !== 1) return { error: 'تغيرت حالة الطلب. أعد تحميل الصفحة.', status: 409 as const };
+        await releaseOrderReservations(transaction, current.orderId, current.id);
+        await transaction.shipment.updateMany({
+          where: { vendorOrderId: current.id, status: { in: ['PENDING', 'LABEL_CREATED'] } },
+          data: { status: 'CANCELLED' },
+        });
+        const vendorOrders = await transaction.vendorOrder.findMany({
+          where: { orderId: current.orderId },
+          select: { status: true },
+        });
+        if (vendorOrders.every((item) => item.status === 'CANCELLED' || item.status === 'DELIVERED')) {
+          const orderStatus = vendorOrders.every((item) => item.status === 'CANCELLED')
+            ? 'CANCELLED'
+            : vendorOrders.every((item) => item.status === 'DELIVERED')
+              ? 'DELIVERED'
+              : 'PARTIALLY_DELIVERED';
+          await transaction.order.update({ where: { id: current.orderId }, data: { status: orderStatus } });
+          await transaction.orderStatusHistory.create({
+            data: { orderId: current.orderId, status: orderStatus, note: 'Seller fulfillment completed with a cancellation.' },
+          });
+          if (orderStatus === 'CANCELLED') {
+            await transaction.payment.updateMany({
+              where: { orderId: current.orderId, provider: 'CASH_ON_DELIVERY', status: 'PENDING' },
+              data: { status: 'FAILED' },
+            });
+          }
+        }
+        return { id: current.id, status: 'CANCELLED' };
+      }
+
       const nextStatus = body.status as 'PROCESSING' | 'SHIPPED' | 'DELIVERED';
       const allowedNext: Record<string, string[]> = {
         PENDING: ['PROCESSING'],
+        ACCEPTED: ['PROCESSING'],
         PROCESSING: ['SHIPPED'],
+        READY_TO_SHIP: ['SHIPPED'],
         SHIPPED: ['DELIVERED'],
       };
       if (!allowedNext[current.status]?.includes(nextStatus)) {
