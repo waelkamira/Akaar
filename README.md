@@ -245,7 +245,6 @@ Support a global commerce platform with correct local pricing and region-aware b
 
 ## Phase 3: Addresses
 
-<<<<<<< HEAD
 This structure provides a solid, scalable foundation. It is recommended to build this in **phases** (e.g., Phase 1: Core buying/selling; Phase 2: Advanced analytics and multi-language; Phase 3: AI recommendations) to manage development costs and time-to-market.
 
 ---
@@ -684,7 +683,6 @@ Scope note:
 - أُكمل ربط واجهة البحث بتمرير اللغة من معامل الرابط `?lang=...` إلى API؛ لا يُفترض اختيار لغة تلقائيًا ولا تتغير اللغة الأساسية عند غياب المعامل أو عدم صلاحيته.
 
 - أُضيف دعم اللغة نفسها إلى API تفاصيل المنتج `POST /api/showPostById` وصفحة المنتج؛ عند فتح رابط المنتج مع `?lang=...` تُعرض الترجمة المتاحة، وإلا يبقى العنوان والوصف الأصليان. صفحات المنتجات التجريبية المحلية لا تزال تستخدم بياناتها الثابتة.
-=======
 ### Goal
 Support shipping, billing, and regional address data for a global customer base.
 
@@ -1679,4 +1677,3 @@ To keep the project reliable, execute in this order:
 25. Real estate (only if explicitly required)
 
 This plan keeps the system coherent, maintainable, and production-safe.
->>>>>>> wael-work-in-progress
