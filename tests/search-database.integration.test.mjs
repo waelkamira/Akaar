@@ -247,3 +247,26 @@ test('Next.js search API paginates with stable order and accurate hasMore values
   assert.equal(first.hasMore, true);
   assert.equal(second.hasMore, false);
 });
+
+
+test('Next.js search returns 503 when the product review table is unavailable', { skip: !enabled }, async () => {
+  await prisma.$executeRawUnsafe('ALTER TABLE public.reviews RENAME TO reviews_temporarily_unavailable');
+  try {
+    const response = await fetch(`${searchApiBaseUrl}/api/search`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        query: 'Akaar Phone',
+        categoryId,
+        limit: 10,
+        page: 1,
+        filters: { rating: '4' },
+      }),
+    });
+    assert.equal(response.status, 503);
+    const payload = await response.json();
+    assert.match(payload.error, /ratings are temporarily unavailable/i);
+  } finally {
+    await prisma.$executeRawUnsafe('ALTER TABLE public.reviews_temporarily_unavailable RENAME TO reviews');
+  }
+});
